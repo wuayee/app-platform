@@ -17,8 +17,9 @@
         <module>app-base</module>
         <module>app-eval</module>
         <module>knowledge-base</module>
-        <module>simple-uid-generator</module>
         <module>voice-text-adapter</module>
+        <module>schema-validator</module>
+        <module>simple-uid-generator</module>
     </modules>
 
     <build>

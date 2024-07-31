@@ -7,7 +7,7 @@ package com.huawei.jade.common.test;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
-import com.huawei.jade.common.code.CommonRetCodeEnum;
+import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
 
 /**
@@ -71,7 +71,7 @@ public class TestController {
      */
     @GetMapping("/nonsupport/result")
     public HttpResult<Void> test6() {
-        return HttpResult.error(CommonRetCodeEnum.INTERNAL_ERROR);
+        return HttpResult.error(CommonRetCode.INTERNAL_ERROR);
     }
 
     /**

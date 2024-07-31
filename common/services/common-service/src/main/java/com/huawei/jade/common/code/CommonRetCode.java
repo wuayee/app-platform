@@ -12,14 +12,14 @@ import com.huawei.jade.common.model.ModelInfo;
  * @author 易文渊
  * @since 2024-07-18
  */
-public enum CommonRetCodeEnum implements RetCode {
+public enum CommonRetCode implements RetCode {
     SUCCESS(0, "Success"),
     INTERNAL_ERROR(500, "Unknown error");
 
     private final int code;
     private final String msg;
 
-    CommonRetCodeEnum(int code, String msg) {
+    CommonRetCode(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

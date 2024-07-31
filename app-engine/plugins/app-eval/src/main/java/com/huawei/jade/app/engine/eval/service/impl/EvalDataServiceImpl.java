@@ -6,7 +6,7 @@ package com.huawei.jade.app.engine.eval.service.impl;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.jade.app.engine.eval.code.AppEvalRetCodeEnum;
+import com.huawei.jade.app.engine.eval.code.AppEvalRetCode;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.exception.AppEvalException;
@@ -60,7 +60,7 @@ public class EvalDataServiceImpl implements EvalDataService {
         long version = versionManager.applyVersion();
         int effectRows = softDelete(Collections.singletonList(dataId), version);
         if (effectRows == 0) {
-            throw new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_DELETED_ERROR, dataId);
+            throw new AppEvalException(AppEvalRetCode.EVAL_DATA_DELETED_ERROR, dataId);
         }
         insert(datasetId, Collections.singletonList(content), version);
     }

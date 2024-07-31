@@ -48,6 +48,7 @@
         <caffeine.version>2.9.3</caffeine.version>
         <pdfbox.version>2.0.30</pdfbox.version>
         <opentelemetry.version>1.31.0</opentelemetry.version>
+        <json-schema.version>1.14.4</json-schema.version>
 
         <!-- Test framework versions -->
         <assertj.version>3.24.2</assertj.version>
@@ -125,7 +126,11 @@
                 <artifactId>fit-data-repository-service</artifactId>
                 <version>${fit.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.huawei.fit.plugin</groupId>
+                <artifactId>fit-message-serializer-json-jackson</artifactId>
+                <version>${fit.version}</version>
+            </dependency>
             <!-- WaterFlow -->
             <dependency>
                 <groupId>com.huawei.fit.jade.waterflow</groupId>
@@ -305,6 +310,11 @@
                 <artifactId>uid-generator-service</artifactId>
                 <version>${app-engine.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.huawei.jade.service</groupId>
+                <artifactId>app-engine-schema-validator</artifactId>
+                <version>${app-engine.version}</version>
+            </dependency>
 
             <!-- Common -->
             <dependency>
@@ -385,6 +395,11 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.erosb</groupId>
+                <artifactId>everit-json-schema</artifactId>
+                <version>${json-schema.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.opentelemetry</groupId>

@@ -12,7 +12,7 @@ import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.util.TypeUtils;
-import com.huawei.jade.common.code.CommonRetCodeEnum;
+import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.filter.config.DefaultHttpResponseWrapperConfig;
 import com.huawei.jade.common.test.TestController;
@@ -45,8 +45,8 @@ public class DefaultHttpResponseWrapperTest {
         HttpClassicClientResponse<HttpResult<String>> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {String.class})));
         assertThat(response.objectEntity().get().object()).hasFieldOrPropertyWithValue("code",
-                        CommonRetCodeEnum.SUCCESS.getCode())
-                .hasFieldOrPropertyWithValue("msg", CommonRetCodeEnum.SUCCESS.getMsg())
+                        CommonRetCode.SUCCESS.getCode())
+                .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
                 .hasFieldOrPropertyWithValue("data", "test");
     }
 
@@ -57,8 +57,8 @@ public class DefaultHttpResponseWrapperTest {
         HttpClassicClientResponse<HttpResult<String>> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
         assertThat(response.objectEntity().get().object()).hasFieldOrPropertyWithValue("code",
-                        CommonRetCodeEnum.SUCCESS.getCode())
-                .hasFieldOrPropertyWithValue("msg", CommonRetCodeEnum.SUCCESS.getMsg())
+                        CommonRetCode.SUCCESS.getCode())
+                .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
                 .hasFieldOrPropertyWithValue("data", null);
     }
 
@@ -69,8 +69,8 @@ public class DefaultHttpResponseWrapperTest {
         HttpClassicClientResponse<HttpResult<String>> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Integer.class})));
         assertThat(response.objectEntity().get().object()).hasFieldOrPropertyWithValue("code",
-                        CommonRetCodeEnum.SUCCESS.getCode())
-                .hasFieldOrPropertyWithValue("msg", CommonRetCodeEnum.SUCCESS.getMsg())
+                        CommonRetCode.SUCCESS.getCode())
+                .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
                 .hasFieldOrPropertyWithValue("data", 0);
     }
 
@@ -90,8 +90,8 @@ public class DefaultHttpResponseWrapperTest {
         HttpClassicClientResponse<HttpResult<String>> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
         assertThat(response.objectEntity().get().object()).hasFieldOrPropertyWithValue("code",
-                        CommonRetCodeEnum.INTERNAL_ERROR.getCode())
-                .hasFieldOrPropertyWithValue("msg", CommonRetCodeEnum.INTERNAL_ERROR.getMsg())
+                        CommonRetCode.INTERNAL_ERROR.getCode())
+                .hasFieldOrPropertyWithValue("msg", CommonRetCode.INTERNAL_ERROR.getMsg())
                 .hasFieldOrPropertyWithValue("data", null);
     }
 }
