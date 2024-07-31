@@ -543,11 +543,10 @@ public class FlowContextsService {
         }).collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
     private void publishStartNodeData(String flowDefinitionId, String traceId, String nodeId, FlowData flowData) {
         Map<String, Object> businessData = flowData.getBusinessData();
-        Map<String, Object> inputData = (Map<String, Object>) businessData.getOrDefault("startNodeInputParams",
-                new HashMap<String, Object>());
+        Map<String, Object> inputData = ObjectUtils.cast(
+                businessData.getOrDefault("startNodeInputParams", new HashMap<String, Object>()));
         if (!inputData.isEmpty()) {
             FlowExecuteInfoUtil.addInputMap2ExecuteInfoMap(flowData, inputData, nodeId, "start");
             FlowExecuteInfoUtil.addOutputMap2ExecuteInfoMap(flowData, inputData, nodeId, "start");
