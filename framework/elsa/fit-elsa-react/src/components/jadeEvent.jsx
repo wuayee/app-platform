@@ -69,7 +69,8 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
             // 正式release之前，先保存release之前的toShape.
             self.isFocused = false;
             toRelease.call(self.toConnector, position);
-            if (isConnectorPairUsed()) {
+            // 当前线条的两个connector已被占用，或者当前线条两端连接的是同一个图形，则删除线条
+            if (isConnectorPairUsed() || self.fromShape === self.toShape) {
                 self.remove();
             } else {
                 if (self.toShape === "") {
