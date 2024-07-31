@@ -55,13 +55,13 @@ public class EvalDataControllerTest {
 
     @AfterEach
     void teardown() throws IOException {
-        response.close();
+        this.response.close();
     }
 
     @Test
     @DisplayName("批量创建评估数据接口成功")
     void shouldOkWhenCreateEvalData() {
-        Mockito.doNothing().when(evalDataService).insertAll(anyLong(), anyList());
+        Mockito.doNothing().when(this.evalDataService).insertAll(anyLong(), anyList());
 
         EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
         evalDataCreateDto.setDatasetId(1L);
@@ -69,8 +69,8 @@ public class EvalDataControllerTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
-        response = this.mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(200);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class EvalDataControllerTest {
         entity.setId(1L);
         entity.setContent("abcd");
         List<EvalDataEntity> entities = Collections.singletonList(entity);
-        Mockito.when(evalDataService.listEvalData(any())).thenReturn(PageVo.of(1, entities));
+        Mockito.when(this.evalDataService.listEvalData(any())).thenReturn(PageVo.of(1, entities));
 
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/eval/data")
                 .param("datasetId", "1")
@@ -89,10 +89,10 @@ public class EvalDataControllerTest {
                 .param("pageSize", "10")
                 .responseType(TypeUtils.parameterized(PageVo.class, new Type[] {EvalDataEntity.class}));
 
-        response = this.mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.objectEntity()).isPresent();
-        PageVo<EvalDataEntity> target = ObjectUtils.cast(response.objectEntity().get().object());
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
+        assertThat(this.response.objectEntity()).isPresent();
+        PageVo<EvalDataEntity> target = ObjectUtils.cast(this.response.objectEntity().get().object());
         assertThat(target.getTotal()).isEqualTo(1);
         assertThat(target.getItems()).isNotEmpty().extracting(EvalDataEntity::getContent).contains("abcd");
     }
@@ -100,7 +100,7 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("修改评估数据接口成功")
     public void shouldOkWhenUpdateEvalData() {
-        Mockito.doNothing().when(evalDataService).update(anyLong(), anyLong(), anyString());
+        Mockito.doNothing().when(this.evalDataService).update(anyLong(), anyLong(), anyString());
 
         EvalDataUpdateDto evalDataUpdateDto = new EvalDataUpdateDto();
         evalDataUpdateDto.setDatasetId(1L);
@@ -109,8 +109,8 @@ public class EvalDataControllerTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.put("/eval/data").jsonEntity(evalDataUpdateDto).responseType(Void.class);
-        response = mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(200);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
     }
 
     @Test
@@ -124,8 +124,8 @@ public class EvalDataControllerTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
-        response = this.mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(500);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(500);
     }
 
     @Test
@@ -138,8 +138,8 @@ public class EvalDataControllerTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteDto).responseType(Void.class);
-        response = this.mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(500);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(500);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class EvalDataControllerTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteDto).responseType(Void.class);
-        response = this.mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(200);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
     }
 }

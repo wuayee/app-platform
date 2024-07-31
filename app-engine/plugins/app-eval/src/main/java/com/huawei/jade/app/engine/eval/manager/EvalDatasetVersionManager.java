@@ -12,7 +12,7 @@ package com.huawei.jade.app.engine.eval.manager;
  */
 public interface EvalDatasetVersionManager {
     /**
-     * 分配版本号。
+     * 分配数据集版本号。
      *
      * @return 表示评估数据版本的 {@code long}。
      */

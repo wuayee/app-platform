@@ -69,7 +69,7 @@ public class EvalDataServiceImplTest {
 
     @AfterEach
     void teardown() {
-        clearInvocations(evalDataMapper, evalDataValidator, evalDatasetVersionManager);
+        clearInvocations(this.evalDataMapper, this.evalDataValidator, this.evalDatasetVersionManager);
     }
 
     @Test
@@ -90,17 +90,17 @@ public class EvalDataServiceImplTest {
     @Test
     @DisplayName("更新评估数据成功")
     void shouldOkWhenUpdate() {
-        evalDataService.update(1L, 1L, "test1");
-        verify(evalDataMapper, times(1)).updateExpiredVersion(anyList(), anyLong());
-        verify(evalDataMapper, times(1)).insertAll(anyList());
+        this.evalDataService.update(1L, 1L, "test1");
+        verify(this.evalDataMapper, times(1)).updateExpiredVersion(anyList(), anyLong());
+        verify(this.evalDataMapper, times(1)).insertAll(anyList());
     }
 
     @Test
     @DisplayName("更新评估数据失败")
     void shouldFailWhenUpdate() {
-        when(evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(0);
+        when(this.evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(0);
         assertThatThrownBy(() ->
-                evalDataService.update(1L, 2L, "test")).isInstanceOf(AppEvalException.class);
+                this.evalDataService.update(1L, 2L, "test")).isInstanceOf(AppEvalException.class);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class EvalDataServiceImplTest {
         doThrow(new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_INVALID_ERROR, "a", "b")).when(this.evalDataValidator)
                 .verify(anyLong(), anyList());
         assertThatThrownBy(() ->
-                evalDataService.insertAll(1L, TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
+                this.evalDataService.insertAll(1L, TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
     }
 
     @Test

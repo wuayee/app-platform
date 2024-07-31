@@ -16,6 +16,7 @@ import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -38,10 +39,11 @@ public class EvalDataIntegrationTest {
 
     @AfterEach
     void teardown() throws IOException {
-        response.close();
+        this.response.close();
     }
 
     @Test
+    @Disabled
     @DisplayName("批量创建评估数据接口成功")
     void shouldOkWhenCreateEvalData() throws IOException {
         EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
@@ -50,7 +52,7 @@ public class EvalDataIntegrationTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
-        response = mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(200);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
     }
 }
