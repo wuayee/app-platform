@@ -10,7 +10,7 @@ import com.huawei.jade.common.query.PageQueryParam;
 import lombok.Data;
 
 /**
- * 表示数据集查询参数。
+ * 表示数据查询参数。
  *
  * @author 兰宇晨
  * @see com.huawei.jade.app.engine.eval.controller.EvalDataController#queryEvalData。

@@ -20,7 +20,7 @@ comment on column t_app_engine_eval_dataset.created_at is '数据集创建时间
 comment on column t_app_engine_eval_dataset.updated_at is '数据集修改时间';
 comment on column t_app_engine_eval_dataset.created_by is '数据集创建者';
 comment on column t_app_engine_eval_dataset.updated_by is '数据集最近更新者';
-comment on column t_app_engine_eval_dataset.application_id is '外键，关联应用 ID';
+comment on column t_app_engine_eval_dataset.app_id is '外键，关联应用 ID';
 
 create table if not exists t_app_engine_eval_data
 (

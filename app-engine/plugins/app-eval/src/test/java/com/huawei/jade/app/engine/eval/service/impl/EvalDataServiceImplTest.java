@@ -131,8 +131,8 @@ public class EvalDataServiceImplTest {
         queryParam.setPageSize(2);
 
         PageVo<EvalDataEntity> response = this.evalDataService.listEvalData(queryParam);
-        assertThat(response.getTotal()).isEqualTo(1);
-        assertThat(response.getItems().size()).isEqualTo(1);
-        assertThat(response.getItems().get(0).getContent()).isEqualTo("abcd");
+        assertThat(response).extracting(PageVo::getTotal,
+                res -> res.getItems().size(),
+                res -> res.getItems().get(0).getContent()).containsExactly(1, 1, "abcd");
     }
 }
