@@ -181,6 +181,7 @@ const ChatPreview = (props) => {
   };
   // 开始对话
   const queryInstance = (params) => {
+    runningInstanceId.current = null;
     controller.current = new AbortController();
     fetch(`/api/jober/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
       method: 'POST',
@@ -225,6 +226,11 @@ const ChatPreview = (props) => {
   // sse接收消息回调
   const sseReceiveProcess = (messageData) => {
     try {
+      // 初始化设置instanceId
+      if (messageData.status === 'READY') {
+        runningInstanceId.current = messageData.instance_id;
+        return;
+      }
       // 用户自勾选
       if (messageData.memory === 'UserSelect') {
         selfSelect(messageData.instanceId, messageData.initContext);
@@ -367,12 +373,12 @@ const ChatPreview = (props) => {
   // 终止进行中的对话
   async function chatRunningStop(params) {
     let str = params.content ? params.content : '已终止对话';
+    if (!runningInstanceId.current) return;
     const res = await stopInstance(tenantId, runningInstanceId.current, {content: str});
     if (res.code === 0) {
       onStop(str);
       Message({ type: 'success', content: '已终止对话' });
-      controller.current?.abort();
-      controller.current = null;
+      closeConnected();
       return res.code;
     } else {
       Message({ type: 'error', content: '终止对话失败' });
