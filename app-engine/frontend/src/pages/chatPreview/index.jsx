@@ -183,7 +183,7 @@ const ChatPreview = (props) => {
   const queryInstance = (params) => {
     runningInstanceId.current = null;
     controller.current = new AbortController();
-    fetch(`/sseApi/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
+    fetch(`/api/jober/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
