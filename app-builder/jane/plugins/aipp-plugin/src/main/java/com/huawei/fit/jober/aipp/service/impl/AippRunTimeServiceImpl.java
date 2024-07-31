@@ -1131,7 +1131,7 @@ public class AippRunTimeServiceImpl
             String respContent = EntityUtils.toString(response.getEntity());
             return JsonUtils.parseObject(respContent);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AippException(AippErrCode.UNKNOWN);
         }
     }
 

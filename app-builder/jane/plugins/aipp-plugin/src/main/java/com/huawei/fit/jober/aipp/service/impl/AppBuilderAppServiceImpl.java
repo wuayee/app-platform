@@ -1251,7 +1251,7 @@ public class AppBuilderAppServiceImpl
                 // 2024/4/29 0029 暂时先不删除了，仅修改现存的内容
                 continue;
             } else {
-                if (null == nameValue.get(formProperty.getName())) {
+                if (nameValue.get(formProperty.getName()) == null) {
                     continue;
                 }
             }
@@ -1313,21 +1313,27 @@ public class AppBuilderAppServiceImpl
             JSONObject jsonObject = value.getJSONObject(index);
             if (StringUtils.equalsIgnoreCase("Input", jsonObject.getString("from"))) {
                 result.add(jsonObject.get("value"));
+                continue;
             }
             if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
-                if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
-                    List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
-                    result.add(array);
-                }
-                if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
-                    Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
-                    if (MapUtils.isNotEmpty(map)) {
-                        result.add(map);
-                    }
-                }
+                this.handleExpandType(jsonObject, result);
             }
         }
         return result;
+    }
+
+    private void handleExpandType(JSONObject jsonObject, List<Object> result) {
+        if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
+            List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
+            result.add(array);
+            return;
+        }
+        if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
+            Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
+            if (MapUtils.isNotEmpty(map)) {
+                result.add(map);
+            }
+        }
     }
 
     // 如果type是Object，那么调用这个方法获取一个Map<String, Object>
@@ -1337,18 +1343,26 @@ public class AppBuilderAppServiceImpl
             JSONObject jsonObject = value.getJSONObject(index);
             if (StringUtils.equalsIgnoreCase("Input", jsonObject.getString("from"))) {
                 result.put(jsonObject.getString("name"), jsonObject.get("value"));
-            } else if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
-                if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
-                    List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
-                    result.put(jsonObject.getString("name"), array);
-                } else if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
-                    Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
-                    if (MapUtils.isNotEmpty(map)) {
-                        result.put(jsonObject.getString("name"), map);
-                    }
-                }
+                continue;
+            }
+            if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
+                this.handleExpandType(jsonObject, result);
             }
         }
         return result;
+    }
+
+    private void handleExpandType(JSONObject jsonObject, Map<String, Object> result) {
+        if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
+            List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
+            result.put(jsonObject.getString("name"), array);
+            return;
+        }
+        if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
+            Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
+            if (MapUtils.isNotEmpty(map)) {
+                result.put(jsonObject.getString("name"), map);
+            }
+        }
     }
 }

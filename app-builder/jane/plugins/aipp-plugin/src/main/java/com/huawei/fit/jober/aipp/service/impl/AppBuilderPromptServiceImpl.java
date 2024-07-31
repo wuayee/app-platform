@@ -91,23 +91,6 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
         return CollectionUtils.isEmpty(category.getChildren());
     }
 
-    private List<AppBuilderPromptCategoryDto> findChildCategoryById(List<AppBuilderPromptCategoryDto> categories,
-            String flagId) {
-        if (CollectionUtils.isEmpty(categories)) {
-            return null;
-        }
-        for (AppBuilderPromptCategoryDto category : categories) {
-            if (category.getId().equals(flagId)) {
-                return category.getChildren();
-            }
-            List<AppBuilderPromptCategoryDto> categoryById = findChildCategoryById(category.getChildren(), flagId);
-            if (CollectionUtils.isNotEmpty(categoryById)) {
-                return categoryById;
-            }
-        }
-        return null;
-    }
-
     private AppBuilderFormProperty findInspirationProperty(String appId) {
         AppBuilderApp appBuilderApp = this.appFactory.create(appId);
         List<AppBuilderFormProperty> formProperties = appBuilderApp.getConfig().getForm().getFormProperties();

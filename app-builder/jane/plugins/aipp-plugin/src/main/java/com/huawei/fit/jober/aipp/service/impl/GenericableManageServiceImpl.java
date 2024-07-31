@@ -12,6 +12,7 @@ import com.huawei.fit.jober.aipp.service.GenericableManageService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -73,8 +74,8 @@ public class GenericableManageServiceImpl implements GenericableManageService {
             res = this.client.getRouter(genericableId)
                 .route(new FitableIdFilter(fitableId))
                 .invoke(new HashMap<>(), appId, appType, operationContext);
-        } catch (Throwable t) {
-            log.error("Error occurred when running inspiration fitable, error: {}", t.getMessage());
+        } catch (FitException e) {
+            log.error("Error occurred when running inspiration fitable, error: {}", e.getMessage());
             throw new AippException(AippErrCode.EXECUTE_INSPIRATION_FITABLE_FAILED);
         }
         return res;

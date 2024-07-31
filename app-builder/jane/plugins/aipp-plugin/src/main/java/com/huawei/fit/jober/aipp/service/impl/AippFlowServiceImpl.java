@@ -897,7 +897,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                 this.flowDefinitionService.deleteFlows(flowInfo.getFlowDefinitionId(), context);
             }
             this.metaService.delete(versionId, context);
-        } catch (Exception e) {
+        } catch (AippException e) {
             log.error("rollbackAipp failed, versionId {}, e = {}", versionId, e);
         }
     }
@@ -969,7 +969,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                     uniqueName);
             this.metaService.patch(meta.getVersionId(), declaration, context);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
-        } catch (Exception e) {
+        } catch (AippException e) {
             log.error("publish aipp {} failed.", aippId, e);
             rollbackAipp(meta.getVersionId(), flowInfo, context);
             throw e;

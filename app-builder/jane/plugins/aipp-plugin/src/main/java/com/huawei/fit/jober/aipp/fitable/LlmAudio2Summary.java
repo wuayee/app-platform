@@ -22,6 +22,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.thread.DefaultThreadFactory;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;
 import com.huawei.jade.voice.service.VoiceService;
@@ -39,7 +40,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,7 +62,13 @@ public class LlmAudio2Summary implements FlowableService {
             + "Video: <文本摘要旨在将文本或文本集合转换为包含关键信息的简短摘要...>\n" + "Output JSON:\n"
             + "{\"title\": \"文本摘要简介\", \"text\": \"文本摘要...\"}\n\n" + "--------\n" + "Video: <%s>\n"
             + "Output JSON:\n";
-    private static final ExecutorService SUMMARY_EXECUTOR = Executors.newFixedThreadPool(8);
+    private static final ExecutorService SUMMARY_EXECUTOR = new ThreadPoolExecutor(0, 10, 60L,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+            new DefaultThreadFactory("flows-event-handler-thread-pool", false, (thread, throwable) -> {
+                log.error("[flows-event-handler-thread-pool]: The pool run failed, error cause: {}, message: {}.",
+                        throwable.getCause(), throwable.getMessage());
+                log.error("The flows event handler pool run failed details: ", throwable);
+            }), new java.util.concurrent.ThreadPoolExecutor.AbortPolicy());
 
     private final OpenAiClient openAiClient;
 

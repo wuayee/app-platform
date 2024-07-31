@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.tool.impl;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppCreateDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
@@ -19,6 +20,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.serialization.SerializationException;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.core.formatters.OutputParser;
@@ -71,7 +73,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
                     new MarkdownParser<>(JsonOutputParser.create(this.objectSerializer, AppCreateToolDto.class),
                             "json");
             dto = parser.parse(appInfo);
-        } catch (Exception exception) {
+        } catch (SerializationException exception) {
             log.error("Failed to create app, parse json str error: {}", appInfo, exception);
             log.info("use default app attributes.");
             dto = AppCreateToolDto.builder()
@@ -93,7 +95,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
         AppBuilderAppDto appDto;
         try {
             appDto = this.appService.create(DEFAULT_TEMPLATE_ID, this.convert(dto), context, false);
-        } catch (Exception exception) {
+        } catch (AippException exception) {
             log.error("Failed to create app: {}", exception.getMessage(), exception);
             return "创建应用失败：" + exception.getMessage();
         }

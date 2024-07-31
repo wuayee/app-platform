@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -98,7 +101,7 @@ public class HttpUtils {
                     .evictIdleConnections(MAX_IDLE_TIME, TimeUnit.SECONDS)
                     .evictExpiredConnections();
             return httpClientBuilder.build();
-        } catch (Throwable e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             log.error("create PoolingHttpClient fail.", e);
         }
         return null;
