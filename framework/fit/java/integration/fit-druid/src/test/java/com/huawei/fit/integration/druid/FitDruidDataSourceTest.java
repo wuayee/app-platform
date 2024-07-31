@@ -4,34 +4,40 @@
 
 package com.huawei.fit.integration.druid;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.conf.support.MapConfig;
+import com.huawei.fitframework.datasource.FitDataSource;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanRegistry;
-import com.huawei.fitframework.util.MapBuilder;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.sql.DataSource;
-
-class DruidBeanContainerInitializedObserverTest {
+/**
+ * 表示 {@link FitDruidDataSource} 的测试集。
+ *
+ * @author 梁济时 l00815032
+ * @author 易文渊
+ * @since 2022-08-02
+ */
+@DisplayName("测试 FitDruidDataSource 类")
+class FitDruidDataSourceTest {
     @Test
-    void should_register_data_source_to_container() {
+    @DisplayName("当配置存在时，正确注册数据源")
+    void shouldRegisterDataSourceToContainer() throws SQLException {
         Map<String, Object> properties = new HashMap<>();
         properties.put("druid.driver", "org.h2.Driver");
         properties.put("druid.url", "jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1");
@@ -40,37 +46,19 @@ class DruidBeanContainerInitializedObserverTest {
         properties.put("druid.redundant-value", "1");
 
         Config config = new MapConfig("p", properties);
-        DruidPropertiesHandler handler = mock(DruidPropertiesHandler.class);
 
         BeanContainer.Beans beans = mock(BeanContainer.Beans.class);
         when(beans.get(Config.class)).thenReturn(config);
-        when(beans.list(DruidPropertiesHandler.class)).thenReturn(MapBuilder.<String, DruidPropertiesHandler>get()
-                .put("my-handler", handler)
-                .build());
 
         BeanContainer container = mock(BeanContainer.class);
+        when(container.all()).thenReturn(Collections.emptyList());
         when(container.beans()).thenReturn(beans);
 
-        BeanRegistry registry = mock(BeanRegistry.class);
-        when(container.registry()).thenReturn(registry);
+        FitDataSource fitDruidDataSource = new FitDruidDataSource(container, config);
 
-        DruidBeanContainerInitializedObserver observer = new DruidBeanContainerInitializedObserver(container);
-        observer.onBeanContainerInitialized(container);
-
-        verify(registry, times(1)).register(argThat((Object arg) -> {
-            if (arg instanceof DataSource) {
-                DataSource dataSource = (DataSource) arg;
-                try (Connection connection = dataSource.getConnection()) {
-                    return testConnection(connection);
-                } catch (SQLException ex) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }));
-        verify(handler, times(1)).handleDruidProperties(argThat((Properties values) ->
-                values.containsKey("redundantValue") && !values.containsKey("redundant-value")));
+        try (Connection connection = fitDruidDataSource.get().getConnection()) {
+            assertThat(testConnection(connection)).isEqualTo(true);
+        }
     }
 
     private static boolean testConnection(Connection connection) throws SQLException {
@@ -81,7 +69,8 @@ class DruidBeanContainerInitializedObserverTest {
     }
 
     @Test
-    void should_not_register_data_source_if_config_not_supplied() {
+    @DisplayName("当配置不正确时，抛出异常")
+    void shouldNotRegisterDataSourceIfConfigNotSupplied() {
         MapConfig config = new MapConfig("m", null);
         config.set("druid", null);
 
@@ -94,9 +83,7 @@ class DruidBeanContainerInitializedObserverTest {
         when(container.registry()).thenReturn(registry);
         when(container.beans()).thenReturn(beans);
 
-        DruidBeanContainerInitializedObserver observer = new DruidBeanContainerInitializedObserver(container);
-        observer.onBeanContainerInitialized(container);
-
-        verify(registry, times(0)).register(any(Object.class));
+        assertThatThrownBy(() -> new FitDruidDataSource(container,
+                config).get()).isInstanceOf(IllegalStateException.class);
     }
 }

@@ -60,6 +60,33 @@ class ConfigConversionServiceTest {
     }
 
     @Nested
+    @DisplayName("测试枚举转换")
+    class EnumTest {
+        Class<?> enumClass = DemoEnum.class;
+
+        @Test
+        @DisplayName("当字符串为小写时，转化枚举")
+        void getEnumWhenLowerCase() {
+            Object resEnum = ConversionService.forConfig().convert("shared", enumClass);
+            assertThat(resEnum.toString()).isEqualTo("SHARED");
+        }
+
+        @Test
+        @DisplayName("当字符串为大写时，转化枚举")
+        void getEnumWhenUpperCase() {
+            Object resEnum = ConversionService.forConfig().convert("SHARED", enumClass);
+            assertThat(resEnum.toString()).isEqualTo("SHARED");
+        }
+
+        @Test
+        @DisplayName("当字符串忽略大小写，仍不匹配时，转化枚举")
+        void getEnumWhenNotMatched() {
+            Object resEnum = ConversionService.forConfig().convert("hello", enumClass);
+            assertThat(resEnum).isNull();
+        }
+    }
+
+    @Nested
     @DisplayName("测试转换标量")
     class ConvertToScalarTest {
         @Test
@@ -299,5 +326,13 @@ class ConfigConversionServiceTest {
             Object object = cast(ConversionService.forConfig().convert(null, type));
             assertThat(object).isNull();
         }
+    }
+
+    enum DemoEnum {
+        /** 表示第一个枚举项。 */
+        EXCLUSIVE,
+
+        /** 表示第二个枚举项。 */
+        SHARED;
     }
 }
