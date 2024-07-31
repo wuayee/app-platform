@@ -116,24 +116,27 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
       !uidArr.includes(item.uid) && uidArr.push(item.uid);
     })
     let fileConfirmList = fileData.current.filter(item => uidArr.includes(item.uid));
+    
     customRequest(fileConfirmList, nameArr);
   }
   // 上传文件
   const customRequest = (fileArr, nameArr) => {
+    setLoading(true);
     let formData = new FormData();
     fileArr.forEach(item => {
       formData.append('file', item);
     });
-    setLoading(true);
-    try {
-      uploadPlugin(formData, nameArr.join(',')).then(res => {
+    uploadPlugin(formData, nameArr.join(',')).then(res => {
+      if (res.code === 0) {
         setOpen(false);
         Message({ type: 'success', content: '添加插件成功' });
         refreshPluginList();
-      });
-    } finally {
+      } else {
+        setLoading(false);
+      }
+    }).catch(() => {
       setLoading(false);
-    }
+    });
   }
   const itemClick = (item) => {
     pluginList.current.forEach(pItem => {

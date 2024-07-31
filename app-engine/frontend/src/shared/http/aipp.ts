@@ -127,13 +127,13 @@ export function queryInspirationSelect(tenantId, fitableid, params) {
   return post(`${AIPP_URL}/${tenantId}/genericables/fitables/${fitableid}`, params);
 }
 // 文件上传
-export function uploadChatFile(tenantId, appId, data, headers) {
-  return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { headers });
+export function uploadChatFile(tenantId, appId='', data, headers) {
+  return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { ...headers, 'Content-Type': 'multipart/form-data' });
 }
 
 // 文件上传
 export function uploadImage(tenantId, data, headers) {
-  return post(`${AIPP_URL}/${tenantId}/file`, data, { headers });
+  return post(`${AIPP_URL}/${tenantId}/file`, data, { ...headers, 'Content-Type': 'multipart/form-data' });
 }
 // 图片预览
 export function picturePreview(tenantId, params) {
