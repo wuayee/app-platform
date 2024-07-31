@@ -41,6 +41,7 @@ public interface TaskAgendaService {
      * @param pagination 表示分页查询的 {@link Pagination}。
      * @param templateId 表示模板id的 {@link String}。
      * @param context 表示操作上下文的 {@link OperationContext}。
+     * @param orderBys 表示排序条件的{@link List}{@code <}{@link OrderBy}{@code >}
      * @return 表示查询到的任务定义的 {@link List<String>}。
      */
     List<String> listTaskIds(TaskInstance.Filter filter, Pagination pagination, String templateId,

@@ -5,12 +5,12 @@
 package com.huawei.fit.finance;
 
 /**
- * NLRouter
+ * NlRouter
  *
  * @author 易文渊
  * @since 2024-04-27
  */
-public class NLRouter {
+public class NlRouter {
     private String result;
     private boolean isMatched;
 

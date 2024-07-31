@@ -19,7 +19,7 @@ import com.huawei.fit.jober.dataengine.biz.service.EventPublishService;
 import com.huawei.fit.jober.dataengine.biz.service.TimeSchedulerDataEngine;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fit.jober.entity.Filter;
 import com.huawei.fitframework.broker.client.BrokerClient;
 
@@ -83,7 +83,7 @@ public class TimeSchedulerDataEngineTest {
         @Test
         @DisplayName("入参正确时，创建定时任务成功")
         void givenRightParamThenCreateTaskSuccessfully() {
-            StaticMetaDataTaskDTO createEntity = getCreateEntity();
+            StaticMetaDataTaskDto createEntity = getCreateEntity();
 
             TimeScheduler timeScheduler = getTimeScheduler();
             when(timeSchedulerConverter.converter(any())).thenReturn(timeScheduler);
@@ -95,7 +95,7 @@ public class TimeSchedulerDataEngineTest {
         @Test
         @DisplayName("入参中taskSourceId字段为空字符串时，抛出异常信息")
         void givenBlankNullTaskSourceIdThenFailedAndThrowException() {
-            StaticMetaDataTaskDTO createEntity = getCreateEntity();
+            StaticMetaDataTaskDto createEntity = getCreateEntity();
             createEntity.setTaskSourceId("");
             JobberException jobberException = Assertions.assertThrows(JobberException.class,
                     () -> timeSchedulerDataEngine.create(createEntity));
@@ -106,7 +106,7 @@ public class TimeSchedulerDataEngineTest {
         @Test
         @DisplayName("入参中taskSourceId字段为null时，抛出异常信息")
         void givenNullTaskSourceIdThenFailedAndThrowException() {
-            StaticMetaDataTaskDTO createEntity = getCreateEntity();
+            StaticMetaDataTaskDto createEntity = getCreateEntity();
             createEntity.setTaskSourceId(null);
             JobberException jobberException = Assertions.assertThrows(JobberException.class,
                     () -> timeSchedulerDataEngine.create(createEntity));
@@ -117,7 +117,7 @@ public class TimeSchedulerDataEngineTest {
         @Test
         @DisplayName("入参中sourceApp字段为空字符串时，抛出异常信息")
         void givenBlankSourceAppThenFailedAndThrowException() {
-            StaticMetaDataTaskDTO createEntity = getCreateEntity();
+            StaticMetaDataTaskDto createEntity = getCreateEntity();
             createEntity.setSourceApp("");
             JobberException jobberException = Assertions.assertThrows(JobberException.class,
                     () -> timeSchedulerDataEngine.create(createEntity));
@@ -128,7 +128,7 @@ public class TimeSchedulerDataEngineTest {
         @Test
         @DisplayName("入参中sourceApp字段为null时，抛出异常信息")
         void givenNullSourceAppThenFailedAndThrowException() {
-            StaticMetaDataTaskDTO createEntity = getCreateEntity();
+            StaticMetaDataTaskDto createEntity = getCreateEntity();
             createEntity.setSourceApp(null);
             JobberException jobberException = Assertions.assertThrows(JobberException.class,
                     () -> timeSchedulerDataEngine.create(createEntity));
@@ -184,10 +184,10 @@ public class TimeSchedulerDataEngineTest {
                 .build();
     }
 
-    private StaticMetaDataTaskDTO getCreateEntity() {
+    private StaticMetaDataTaskDto getCreateEntity() {
         HashMap<String, String> map = new HashMap<>();
         map.put(Constant.SCHEDULER_INTERVAL, String.valueOf(5000));
-        return StaticMetaDataTaskDTO.builder()
+        return StaticMetaDataTaskDto.builder()
                 .taskSourceId(TASK_SOURCE_ID)
                 .taskDefinitionId(TASK_DEFINITION_ID)
                 .sourceApp(SOURCE_APP)

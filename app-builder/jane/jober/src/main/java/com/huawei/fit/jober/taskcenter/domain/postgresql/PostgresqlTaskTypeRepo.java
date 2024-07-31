@@ -161,7 +161,7 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         sql.value("updated_at", type.lastModificationTime());
         sql.conflict("task_id", "name");
 
-        // TODO 待删除，兼容逻辑
+        // 待删除，兼容逻辑
         sql.value("tree_id", this.obtainTreeId(actualTaskId));
 
         List<Map<String, Object>> rows = sql.executeAndReturn(this.executor, "id");

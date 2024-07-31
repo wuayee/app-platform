@@ -15,7 +15,7 @@ import com.huawei.fit.jober.common.event.entity.SourceMetaData;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.dataengine.genericable.StaticDataEngine;
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fit.jober.entity.Filter;
 import com.huawei.fit.jober.taskcenter.domain.ScheduleSourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
@@ -118,7 +118,7 @@ public class ScheduleSourceEventHandlerImpl implements EventHandler<ScheduleSour
         }
     }
 
-    private StaticMetaDataTaskDTO constructStaticMetaDataTaskDTO(TaskEntity taskEntity, String sourceId,
+    private StaticMetaDataTaskDto constructStaticMetaDataTaskDTO(TaskEntity taskEntity, String sourceId,
             String taskTypeId) {
         SourceEntity sourceEntity = taskEntity.getSources()
                 .stream()
@@ -148,7 +148,7 @@ public class ScheduleSourceEventHandlerImpl implements EventHandler<ScheduleSour
         });
         stringFilter.put("dataFetchType", scheduleSourceEntity.getFitableId());
         stringFilter.put("schedulerInterval", String.valueOf(scheduleSourceEntity.getInterval()));
-        return StaticMetaDataTaskDTO.builder()
+        return StaticMetaDataTaskDto.builder()
                 .taskSourceId(sourceId)
                 .taskDefinitionId(taskEntity.getId())
                 .taskTypeId(taskTypeId)

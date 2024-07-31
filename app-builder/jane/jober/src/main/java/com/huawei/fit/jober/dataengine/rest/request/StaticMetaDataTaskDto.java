@@ -25,7 +25,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StaticMetaDataTaskDTO {
+public class StaticMetaDataTaskDto {
     /**
      * 任务数据源定义唯一标识
      */

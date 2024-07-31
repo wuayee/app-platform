@@ -9,7 +9,7 @@ import static com.huawei.fit.jober.aipp.util.HttpUtils.sendHttpRequest;
 import com.huawei.fit.finance.AutoGraph;
 import com.huawei.fit.finance.ChartType;
 import com.huawei.fit.finance.FinanceService;
-import com.huawei.fit.finance.NLRouter;
+import com.huawei.fit.finance.NlRouter;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
@@ -40,12 +40,12 @@ import java.util.stream.Collectors;
 public class DefaultFinanceService implements FinanceService {
     @Fitable("default")
     @Override
-    public NLRouter nlRouter(String query) {
+    public NlRouter nlRouter(String query) {
         // 临时方案，暂时走模型网关转发，待整改
         HttpPost httpPost = new HttpPost("http://tzaip-beta.paas.huawei.com/model-gateway/v1/emodelchain/router");
         String body = JsonUtils.toJsonString(MapBuilder.<String, String>get().put("query", query).build());
         httpPost.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
-        NLRouter nlRouter = new NLRouter();
+        NlRouter nlRouter = new NlRouter();
         try {
             Map<String, Object> map = JsonUtils.parseObject(sendHttpRequest(httpPost));
             nlRouter.setResult(ObjectUtils.cast(map.get("result")));

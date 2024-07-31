@@ -240,6 +240,12 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
         return nullIf(categories.get(propertyId), Collections.emptyList());
     }
 
+    /**
+     * 获取属性类目
+     *
+     * @param propertyIds 表示属性id的{@link List}
+     * @return 属性类目匹配器
+     */
     protected Map<String, List<PropertyCategory>> getCategories(List<String> propertyIds) {
         return categoryService.matchers(propertyIds);
     }

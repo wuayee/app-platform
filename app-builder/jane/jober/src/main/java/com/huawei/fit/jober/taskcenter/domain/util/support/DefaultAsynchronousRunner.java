@@ -10,7 +10,9 @@ import com.huawei.fitframework.annotation.Component;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 /**
@@ -31,7 +33,11 @@ public class DefaultAsynchronousRunner implements AsynchronousRunner {
     private final ExecutorService executors;
 
     private DefaultAsynchronousRunner() {
-        this.executors = Executors.newFixedThreadPool(INITIAL_SIZE);
+        this.executors = new ThreadPoolExecutor(INITIAL_SIZE,
+                INITIAL_SIZE,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>());
     }
 
     @Override

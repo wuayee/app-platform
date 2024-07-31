@@ -276,7 +276,6 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
     @Override
     @Transactional
     public TaskTemplate retrieve(String id, OperationContext context) {
-
         String actualId = Entities.validateId(id, () -> new BadRequestException(ErrorCodes.TASK_TEMPLATE_ID_INVALID));
 
         String sql = this.generateSelectBaseSql() + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";

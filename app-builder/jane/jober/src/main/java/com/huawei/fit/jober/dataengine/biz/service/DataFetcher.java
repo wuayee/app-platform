@@ -67,7 +67,7 @@ public class DataFetcher {
                         timeScheduler.getSourceApp(), times, e);
                 times++;
                 SleepUtil.sleep(Constant.RETRY_INTERVAL);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 times = printLogAndSleep(dataFetchType, times, e);
             }
         }
@@ -110,7 +110,7 @@ public class DataFetcher {
                         pullDataFilter.getMetaData(), times, e);
                 times++;
                 SleepUtil.sleep(Constant.RETRY_INTERVAL);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.error("Catch throwable when remote invoke, fitableId is {}, retry times: {}, error: {}.",
                         dataFetchType, times, e);
                 times++;

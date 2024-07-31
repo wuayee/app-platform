@@ -98,6 +98,9 @@ public class TaskInstanceRow {
      */
     public static final String PROPERTY_CATEGORIES = "categories";
 
+    /**
+     * 表示任务实例的信息前缀。
+     */
     public static final String INFO_PREFIX = "info_";
 
     private static final int PROPERTY_COUNT = 7;
@@ -464,6 +467,14 @@ public class TaskInstanceRow {
         return select(executor, task, primary, TABLE);
     }
 
+    /**
+     * 从数据库中选择指定的已删除的任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param primary 表示任务实例的主键值的 {@link PrimaryValue}。
+     * @return 表示任务实例的数据对象的 {@link TaskInstanceRow}。
+     */
     public static TaskInstanceRow selectHistory(DynamicSqlExecutor executor, TaskEntity task, PrimaryValue primary) {
         return select(executor, task, primary, TABLE_DELETED);
     }

@@ -205,7 +205,8 @@ public class OperationRecordAspect {
         return json.toJSONString();
     }
 
-    private OperationContext getOperationContext(int contextIndex, Object[] args) {
+    private OperationContext getOperationContext(int index, Object[] args) {
+        int contextIndex = index;
         if (contextIndex == -1) {
             contextIndex = args.length - 1;
         }

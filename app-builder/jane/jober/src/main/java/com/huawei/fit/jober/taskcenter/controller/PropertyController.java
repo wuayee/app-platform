@@ -36,7 +36,7 @@ import java.util.Map;
 public class PropertyController extends AbstractController {
     private final TaskProperty.Repo repo;
 
-    public PropertyController(Authenticator authenticator, TaskProperty.Repo repo) {
+    PropertyController(Authenticator authenticator, TaskProperty.Repo repo) {
         super(authenticator);
         this.repo = repo;
     }

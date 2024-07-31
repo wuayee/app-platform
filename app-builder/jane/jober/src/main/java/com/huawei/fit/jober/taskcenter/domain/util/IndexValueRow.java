@@ -232,7 +232,7 @@ public class IndexValueRow {
                 .appendIdentifier(COLUMN_VALUE).append(" FROM ").appendIdentifier(table).append(" WHERE ");
         List<Object> args = new LinkedList<>();
         Condition condition = Condition.expectEqual(COLUMN_INSTANCE_ID, instanceId);
-        condition = condition.and(Condition.expectIn(COLUMN_PROPERTY_ID, propertyIds));
+        condition = Condition.and(condition, Condition.expectIn(COLUMN_PROPERTY_ID, propertyIds));
         condition.toSql(sql, args);
         List<Map<String, Object>> rows = executor.executeQuery(sql.toString(), args);
         return rows.stream().map(IndexValueRow::new).collect(Collectors.toList());

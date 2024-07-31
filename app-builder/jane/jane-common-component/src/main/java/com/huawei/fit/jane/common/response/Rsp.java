@@ -34,8 +34,8 @@ public class Rsp<T> {
      * 静态构造函数
      *
      * @param data 数据
-     * @return HispRsp构造的对象
      * @param <T> 数据泛型类型
+     * @return HispRsp构造的对象
      */
     public static <T> Rsp<T> ok(T data) {
         Rsp<T> rsp = new Rsp<>();
@@ -48,8 +48,8 @@ public class Rsp<T> {
     /**
      * 静态构造函数
      *
-     * @return HispRsp构造对象
      * @param <T> 数据泛型类型
+     * @return HispRsp构造对象
      */
     public static <T> Rsp<T> ok() {
         Rsp<T> rsp = new Rsp<>();
@@ -64,8 +64,8 @@ public class Rsp<T> {
      *
      * @param code 状态码
      * @param msg 消息体
-     * @return HispRsp构造对象
      * @param <T> 数据泛型
+     * @return HispRsp构造对象
      */
     public static <T> Rsp<T> err(int code, String msg) {
         Rsp<T> rsp = new Rsp<>();
@@ -79,8 +79,8 @@ public class Rsp<T> {
      * 静态构造函数
      *
      * @param status 状态码
-     * @return HispRsp构造函数
      * @param <T> 数据泛型
+     * @return HispRsp构造函数
      */
     public static <T> Rsp<T> err(ErrorCode status) {
         Rsp<T> rsp = new Rsp<>();

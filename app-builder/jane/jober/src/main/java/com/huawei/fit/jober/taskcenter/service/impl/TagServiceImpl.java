@@ -13,6 +13,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.validation.TagValidator;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.transaction.Transaction;
+import com.huawei.fitframework.transaction.TransactionException;
 import com.huawei.fitframework.transaction.TransactionIsolationLevel;
 import com.huawei.fitframework.transaction.TransactionManager;
 import com.huawei.fitframework.transaction.TransactionMetadata;
@@ -192,7 +193,7 @@ public class TagServiceImpl implements TagService {
                     .collect(Collectors.toMap(row -> ObjectUtils.cast(row.get("name")),
                             row -> ObjectUtils.cast(row.get("id"))));
             transaction.commit();
-        } catch (RuntimeException t) {
+        } catch (ClassCastException | IllegalArgumentException | TransactionException t) {
             transaction.rollback();
             throw t;
         }
