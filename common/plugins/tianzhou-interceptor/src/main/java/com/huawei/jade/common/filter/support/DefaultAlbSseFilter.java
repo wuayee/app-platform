@@ -25,7 +25,6 @@ import java.util.List;
  */
 @Component
 public class DefaultAlbSseFilter implements HttpServerFilter {
-
     @Override
     public String name() {
         return "DefaultAlbSseFilter";
