@@ -12,7 +12,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
@@ -48,7 +48,7 @@ public class EvalDataControllerTest {
     @Fit
     private MockMvc mockMvc;
 
-    @Mocked
+    @Mock
     private EvalDataService evalDataService;
 
     private HttpClassicClientResponse<?> response;

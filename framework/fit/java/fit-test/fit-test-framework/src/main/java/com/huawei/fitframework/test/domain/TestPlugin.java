@@ -17,6 +17,8 @@ import com.huawei.fitframework.plugin.support.DefaultPluginKey;
 import com.huawei.fitframework.plugin.support.DefaultPluginMetadata;
 import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.runtime.support.AbstractRootPlugin;
+import com.huawei.fitframework.test.domain.mockito.MockitoMockBean;
+import com.huawei.fitframework.test.domain.mockito.SpyInterceptor;
 import com.huawei.fitframework.test.domain.resolver.MockBean;
 import com.huawei.fitframework.test.domain.resolver.TestContextConfiguration;
 
@@ -25,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 测试框架使用的插件类。
@@ -57,9 +60,10 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
                 new DefaultPluginMetadata(pluginKey, this.runtime.location(), PluginCategory.SYSTEM, Integer.MIN_VALUE);
         this.configuration =
                 Validation.notNull(configuration, "The configuration to create test plugin cannot be null.");
-        this.packageScanner = this.scanner((packageScanner, clazz) -> this.onClassDetected(packageScanner,
-                clazz,
-                Arrays.stream(this.configuration.classes()).collect(Collectors.toSet())));
+        this.packageScanner = this.scanner((packageScanner, clazz) -> this.onClassDetected(packageScanner, clazz,
+                // 包含的类已经提前注册，因此需要将包含的和排除的类进行合并。
+                Stream.concat(Arrays.stream(this.configuration.includeClasses()),
+                        Arrays.stream(this.configuration.excludeClasses())).collect(Collectors.toSet())));
     }
 
     @Override
@@ -78,17 +82,24 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
     }
 
     @Override
+    protected void registerSystemBeans() {
+        super.registerSystemBeans();
+        this.container().registry().register(new SpyInterceptor(this.configuration.toSpyClasses()));
+        this.container().registry().register(new MockitoMockBean());
+    }
+
+    @Override
     protected void scanBeans() {
-        this.registerBean(configuration.classes());
-        this.scan(configuration.scannedPackages());
-        this.registerMockedBean(configuration.mockedBeanFields());
+        this.registerBeans(this.configuration.includeClasses());
+        this.scan(this.configuration.scannedPackages());
+        this.registerMockedBeans(this.configuration.mockedBeanFields());
     }
 
     @Override
     protected void loadPlugins() {}
 
-    private void onClassDetected(PackageScanner scanner, Class<?> clazz, Set<Class<?>> classes) {
-        if (classes.contains(clazz)) {
+    private void onClassDetected(PackageScanner scanner, Class<?> clazz, Set<Class<?>> excludeClasses) {
+        if (excludeClasses.contains(clazz)) {
             return;
         }
         List<BeanMetadata> beans = this.container().registry().register(clazz);
@@ -98,7 +109,7 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
         }
     }
 
-    private void registerBean(Class<?>[] classArray) {
+    private void registerBeans(Class<?>[] classArray) {
         Arrays.stream(classArray)
                 .filter(clazz -> !this.container().lookup(clazz).isPresent())
                 .forEach(clazz -> this.container().registry().register(clazz));
@@ -108,7 +119,7 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
         this.packageScanner.scan(basePackages);
     }
 
-    private void registerMockedBean(Set<Field> mockedBeanFields) {
+    private void registerMockedBeans(Set<Field> mockedBeanFields) {
         for (Field field : mockedBeanFields) {
             Object bean = this.container()
                     .lookup(MockBean.class)

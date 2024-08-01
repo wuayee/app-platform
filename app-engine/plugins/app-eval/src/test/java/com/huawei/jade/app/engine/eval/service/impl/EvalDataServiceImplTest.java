@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.eval.code.AppEvalRetCode;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
@@ -44,20 +44,20 @@ import java.util.List;
  * @author 易文渊
  * @since 2024-07-22
  */
-@FitTestWithJunit(classes = EvalDataServiceImpl.class)
+@FitTestWithJunit(includeClasses = EvalDataServiceImpl.class)
 public class EvalDataServiceImplTest {
     private static final List<String> TEST_CONTENTS = Arrays.asList("test1", "test2");
 
     @Fit
     private EvalDataService evalDataService;
 
-    @Mocked
+    @Mock
     private EvalDataMapper evalDataMapper;
 
-    @Mocked
+    @Mock
     private EvalDataValidator evalDataValidator;
 
-    @Mocked
+    @Mock
     private EvalDatasetVersionManager evalDatasetVersionManager;
 
     @BeforeEach

@@ -83,7 +83,7 @@ public class AspectMethodMatcher implements MethodMatcher {
             if (BaseParser.logicReferenceTypes.contains(result.type().getValue())) {
                 boolExpressions.add(result.type().getValue());
             } else {
-                boolExpressions.add(result.match(method) + "");
+                boolExpressions.add(String.valueOf(result.match(method)));
             }
             if (PointcutSupportedType.ARGS.equals(result.type())) {
                 ArgsParser.ArgsResult.ArgsModel content = ObjectUtils.cast(result.content());

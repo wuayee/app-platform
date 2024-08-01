@@ -15,7 +15,6 @@
 
     <modules>
         <module>fit-druid</module>
-        <module>fit-mockito</module>
         <module>fit-mybatis</module>
         <module>fit-mybatis-common</module>
     </modules>

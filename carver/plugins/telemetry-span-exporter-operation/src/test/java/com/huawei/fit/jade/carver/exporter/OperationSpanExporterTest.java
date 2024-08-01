@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.carver.exporter.OperationLogExporter;
 import com.huawei.jade.carver.exporter.OperationSpanExporter;
 
@@ -32,7 +32,7 @@ import java.util.Collections;
  * @author 刘信宏
  * @since 2024-07-25
  */
-@FitTestWithJunit(classes = {OperationSpanExporter.class})
+@FitTestWithJunit(includeClasses = {OperationSpanExporter.class})
 public class OperationSpanExporterTest {
     private static final String STUB_SPAN_NAME = "operation.stub";
     private static final String STUB_ATTRIBUTE_KEY = "stubAttributeKey";
@@ -42,9 +42,9 @@ public class OperationSpanExporterTest {
 
     @Fit
     private OperationSpanExporter spanExporter;
-    @Mocked
+    @Mock
     private OperationLogExporter logExporter;
-    @Mocked
+    @Mock
     private SpanData spanData;
 
     private void mockSucceedSpanData() {

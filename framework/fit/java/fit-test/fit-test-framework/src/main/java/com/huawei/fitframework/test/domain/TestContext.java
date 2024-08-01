@@ -38,17 +38,6 @@ public class TestContext {
     }
 
     /**
-     * 注册观察者。
-     *
-     * @param listener 表示待注册的观察者 {@link TestListener}。
-     */
-    public void registerListener(TestListener listener) {
-        if (listener != null) {
-            this.listeners.add(listener);
-        }
-    }
-
-    /**
      * 获取观察者列表。
      *
      * @return 表示观察者列表的 {@link List}{@code <}{@link TestListener}{@code >}。

@@ -164,6 +164,7 @@
                 <groupId>com.huawei.fitframework</groupId>
                 <artifactId>fit-test-framework</artifactId>
                 <version>${fit.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -333,11 +334,6 @@
             <dependency>
                 <groupId>com.huawei.fit.integration</groupId>
                 <artifactId>fit-druid</artifactId>
-                <version>${fit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
-                <artifactId>fit-mockito</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>

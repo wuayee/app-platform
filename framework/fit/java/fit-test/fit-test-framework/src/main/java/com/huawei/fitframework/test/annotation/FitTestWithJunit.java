@@ -31,9 +31,16 @@ import java.lang.annotation.Target;
 @ExtendWith(FitExtension.class)
 public @interface FitTestWithJunit {
     /**
-     * 需要注入到容器的组件类型数组。
+     * 获取需要注入到容器中的组件类型的数组。
      *
-     * @return 表示需要注入到容器的组件类型数组的 {@link Class}{@code <?>[]}。
+     * @return 表示需要注入到容器中的组件类型数组的 {@link Class}{@code <?>[]}。
      */
-    Class<?>[] classes() default {};
+    Class<?>[] includeClasses() default {};
+
+    /**
+     * 获取不需要注入到容器中的组件类型的数组。
+     *
+     * @return 表示不需要注入到容器中的组件类型数组的 {@link Class}{@code <?>[]}。
+     */
+    Class<?>[] excludeClasses() default {};
 }

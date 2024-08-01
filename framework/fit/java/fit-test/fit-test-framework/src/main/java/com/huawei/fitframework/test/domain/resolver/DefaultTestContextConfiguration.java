@@ -4,7 +4,10 @@
 
 package com.huawei.fitframework.test.domain.resolver;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -18,29 +21,37 @@ import java.util.Set;
  * 默认的测试上下文的配置类。
  *
  * @author 邬涨财 w00575064
+ * @author 季聿阶
  * @since 2023-01-20
  */
 public class DefaultTestContextConfiguration implements TestContextConfiguration {
     private final Class<?> testClass;
-    private final List<Class<?>> classes;
+    private final List<Class<?>> includeClasses;
+    private final List<Class<?>> excludeClasses;
     private final Set<String> scannedPackages;
     private final Set<Field> mockedBeanFields;
+    private final Set<Class<?>> toSpyClasses;
 
     /**
      * 默认测试上下文的配置类构造函数。
      *
      * @param testClass 表示测试类的 {@link Class}。
-     * @param classes 表示注入 bean 类型的 {@code Class[]}。
+     * @param includeClasses 表示注入 Bean 类型数组的 {@code Class[]}。
+     * @param excludeClasses 表示排除 Bean 类型数组的 {@code Class[]}。
      * @param scannedPackages 表示扫描包路径的 {@link Set}{@code <}{@link String}{@code >}。
      * @param mockedBeanFields 表示 mocked bean 字段的 {@link Set}{@code <}{@link Field}{@code >}。
+     * @param toSpyClasses 表示需要侦听的类集合的 {@link Set}{@code <}{@link Class}{@code <?>>}。
      */
-    public DefaultTestContextConfiguration(Class<?> testClass, Class<?>[] classes, Set<String> scannedPackages,
-            Set<Field> mockedBeanFields) {
-        List<Class<?>> classList = classes == null ? Collections.emptyList() : Arrays.asList(classes);
-        this.testClass = Validation.notNull(testClass, "The test class cannot be null.");
-        this.classes = new ArrayList<>(classList);
-        this.scannedPackages = Validation.notNull(scannedPackages, "The scanned packages cannot be null.");
-        this.mockedBeanFields = Validation.notNull(mockedBeanFields, "The mocked bean fields cannot be null.");
+    public DefaultTestContextConfiguration(Class<?> testClass, Class<?>[] includeClasses, Class<?>[] excludeClasses,
+            Set<String> scannedPackages, Set<Field> mockedBeanFields, Set<Class<?>> toSpyClasses) {
+        this.testClass = notNull(testClass, "The test class cannot be null.");
+        this.includeClasses =
+                new ArrayList<>(includeClasses == null ? Collections.emptyList() : Arrays.asList(includeClasses));
+        this.excludeClasses =
+                new ArrayList<>(excludeClasses == null ? Collections.emptyList() : Arrays.asList(excludeClasses));
+        this.scannedPackages = notNull(scannedPackages, "The scanned packages cannot be null.");
+        this.mockedBeanFields = notNull(mockedBeanFields, "The mocked bean fields cannot be null.");
+        this.toSpyClasses = ObjectUtils.nullIf(toSpyClasses, Collections.emptySet());
     }
 
     @Override
@@ -49,8 +60,13 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
     }
 
     @Override
-    public Class<?>[] classes() {
-        return this.classes.toArray(new Class[0]);
+    public Class<?>[] includeClasses() {
+        return this.includeClasses.toArray(new Class[0]);
+    }
+
+    @Override
+    public Class<?>[] excludeClasses() {
+        return this.excludeClasses.toArray(new Class[0]);
     }
 
     @Override
@@ -64,16 +80,23 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
     }
 
     @Override
+    public Set<Class<?>> toSpyClasses() {
+        return Collections.unmodifiableSet(this.toSpyClasses);
+    }
+
+    @Override
     public void merge(TestContextConfiguration configuration) {
         Validation.equals(this.testClass, configuration.testClass(), "The test class must equal");
-        this.classes.addAll(Arrays.asList(configuration.classes()));
+        this.includeClasses.addAll(Arrays.asList(configuration.includeClasses()));
+        this.excludeClasses.addAll(Arrays.asList(configuration.excludeClasses()));
         this.scannedPackages.addAll(configuration.scannedPackages());
         this.mockedBeanFields.addAll(configuration.mockedBeanFields());
+        this.toSpyClasses.addAll(configuration.toSpyClasses());
     }
 
     @Override
     public int hashCode() {
-        return this.classes.hashCode();
+        return this.includeClasses.hashCode();
     }
 
     /**
@@ -81,9 +104,11 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
      */
     public static final class Builder implements TestContextConfiguration.Builder {
         private Class<?> testClass;
-        private Class<?>[] classes;
+        private Class<?>[] includeClasses;
+        private Class<?>[] excludeClasses;
         private Set<String> scannedPackages = new HashSet<>();
         private Set<Field> mockedBeanFields = new HashSet<>();
+        private Set<Class<?>> toSpyClasses = new HashSet<>();
 
         @Override
         public TestContextConfiguration.Builder testClass(Class<?> testClass) {
@@ -92,8 +117,14 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
         }
 
         @Override
-        public TestContextConfiguration.Builder classes(Class<?>[] classes) {
-            this.classes = classes;
+        public TestContextConfiguration.Builder includeClasses(Class<?>[] classes) {
+            this.includeClasses = classes;
+            return this;
+        }
+
+        @Override
+        public TestContextConfiguration.Builder excludeClasses(Class<?>[] classes) {
+            this.excludeClasses = classes;
             return this;
         }
 
@@ -110,11 +141,19 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
         }
 
         @Override
+        public TestContextConfiguration.Builder toSpyClasses(Set<Class<?>> toSpyClasses) {
+            this.toSpyClasses = toSpyClasses;
+            return this;
+        }
+
+        @Override
         public TestContextConfiguration build() {
             return new DefaultTestContextConfiguration(this.testClass,
-                    this.classes,
+                    this.includeClasses,
+                    this.excludeClasses,
                     this.scannedPackages,
-                    this.mockedBeanFields);
+                    this.mockedBeanFields,
+                    this.toSpyClasses);
         }
     }
 }

@@ -18,6 +18,7 @@ import java.util.Optional;
 public class ResolverListener implements TestListener {
     @Override
     public Optional<TestContextConfiguration> config(Class<?> clazz) {
-        return Optional.of(TestClassResolver.create().resolve(clazz));
+        TestContextConfiguration configuration = TestClassResolver.create().resolve(clazz);
+        return Optional.of(configuration);
     }
 }

@@ -4,6 +4,8 @@
 
 package com.huawei.fitframework.test.domain;
 
+import static com.huawei.fitframework.inspection.Validation.notBlank;
+
 import com.huawei.fitframework.plugin.RootPlugin;
 import com.huawei.fitframework.runtime.support.AbstractFitRuntime;
 import com.huawei.fitframework.test.domain.resolver.TestContextConfiguration;
@@ -34,7 +36,8 @@ public class TestFitRuntime extends AbstractFitRuntime {
     @Override
     protected URL locateRuntime() {
         try {
-            return new File(System.getProperty(USER_DIR_KEY)).toURI().toURL();
+            String userDir = notBlank(System.getProperty(USER_DIR_KEY), "User dir cannot be blank.");
+            return new File(userDir).toURI().toURL();
         } catch (MalformedURLException e) {
             throw new IllegalStateException("Failed to get locate runtime when run test framework.");
         }
@@ -47,6 +50,6 @@ public class TestFitRuntime extends AbstractFitRuntime {
 
     @Override
     protected RootPlugin createRootPlugin() {
-        return new TestPlugin(this, configuration);
+        return new TestPlugin(this, this.configuration);
     }
 }
