@@ -1008,9 +1008,11 @@ public class AippFlowServiceImpl implements AippFlowService {
             }
         }
         itemData.setSource(appCategory.getSource());
-        itemData.setTags(new HashSet<String>() {{
+        itemData.setTags(new HashSet<String>() {
+            {
             add(appCategory.getTag());
-        }});
+            }
+        });
         itemData.setRunnables(this.buildRunnables(aippDto));
         return itemData;
     }

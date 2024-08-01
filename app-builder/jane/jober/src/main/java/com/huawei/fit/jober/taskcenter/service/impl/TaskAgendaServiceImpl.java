@@ -370,11 +370,11 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
             sql.append(" AS ").appendIdentifier(alias);
         }
         sql.append(" FROM ").appendIdentifier(TABLE_WIDE).append(" AS ").appendIdentifier("ins");
-        Condition condition = Condition.expectIn(ColumnRef.of("ins", COLUMN_TASK_ID), taskIds);
-        condition = condition.and(whereCategories(sql, whereArgs, filter).orElse(null));
-        condition = condition.and(whereTags(filter, context).orElse(null));
-        condition = condition.and(whereInstances(filter).orElse(null));
-        condition = condition.and(whereProperties(filter.infos(), templateId));
+        Condition condition = Condition.expectIn(ColumnRef.of("ins", COLUMN_TASK_ID), taskIds)
+            .and(whereCategories(sql, whereArgs, filter).orElse(null))
+            .and(whereTags(filter, context).orElse(null))
+            .and(whereInstances(filter).orElse(null))
+            .and(whereProperties(filter.infos(), templateId));
         sql.append(" WHERE ");
         condition.toSql(sql, whereArgs);
         orderBySql(orderBys, sql, templateId);

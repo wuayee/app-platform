@@ -115,8 +115,8 @@ public class DefaultDynamicSqlExecutor implements DynamicSqlExecutor {
             session.commit();
             return result;
         } catch (SQLException | PersistenceException ex) {
-            log.error("Failed to executor dynamic sql: {}, exception message: {}", sql, ex.getMessage());
-            log.debug("details: ", ex);
+            String errorMsg = ex.getMessage();
+            log.error("Failed to executor dynamic sql: {}, exception message: {}", sql, errorMsg);
             if (session != null) {
                 session.rollback();
             }
