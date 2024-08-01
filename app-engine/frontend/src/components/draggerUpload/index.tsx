@@ -23,10 +23,14 @@ const DraggerUpload = (props) => {
           res.file(item)?.async('blob').then((data) => {
             let fileStr = new File([data], item, { type: 'application/json' });
             fileStr.text().then(res => {
-              const toolJson = JSON.parse(res);
-              const fileJson = validatePlugin(toolJson);
-              fileObj[val.file.uid].push(fileJson);
-              props.addFileData(fileObj, val.file);
+              try {
+                const toolJson = JSON.parse(res);
+                const fileJson = validatePlugin(toolJson);
+                fileObj[val.file.uid].push(fileJson);
+                props.addFileData(fileObj, val.file);
+              } catch {
+                Message({ type: 'warning', content: `${val.file.name} tools.json文件解析错误` })
+              }
             });
           });
         }
