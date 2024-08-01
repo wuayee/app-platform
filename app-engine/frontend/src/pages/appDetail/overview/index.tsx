@@ -97,7 +97,7 @@ const AppOverview: React.FC = () => {
               </Flex> */}
             </Flex>
           </Flex>
-          <Flex gap='middle'>
+          {/* <Flex gap='middle'>
             <Flex vertical align={'center'}>
               <span className='font-size-24'>4</span>
               <span>知识库</span>
@@ -112,7 +112,7 @@ const AppOverview: React.FC = () => {
               <span className='font-size-24'>5</span>
               <span>创意灵感</span>
             </Flex>
-          </Flex>
+          </Flex> */}
         </Flex>
         <div className='app-desc' title={detail?.attributes?.description}>
           {detail?.attributes?.description}
@@ -130,7 +130,7 @@ const AppOverview: React.FC = () => {
             </div>
           </Flex>
         </div>
-        <div>
+        {/* <div>
           <div style={{
             border: '1px solid rgb(230, 230, 230)',
             borderRadius: '8px',
@@ -155,8 +155,8 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                {/* <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button> */}
+                <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
@@ -186,13 +186,13 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                {/* <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
                 <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />查阅API文档</Flex></Button>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button> */}
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
-        </div>
+        </div> */}
       </Flex>
     </div>
   )
