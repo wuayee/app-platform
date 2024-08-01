@@ -38,7 +38,7 @@ public class EvalDataValidatorImpl implements EvalDataValidator {
 
     @Override
     public void verify(Long datasetId, List<String> contents) throws AppEvalException {
-        String schema = datasetMapper.getSchema(datasetId);
+        String schema = this.datasetMapper.getSchema(datasetId);
         for (String content : contents) {
             try {
                 this.schemaValidator.validate(schema, contents);

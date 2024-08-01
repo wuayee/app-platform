@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 表示评估数据的实体对象
+ * 表示评估数据的实体对象。
  *
  * @author 兰宇晨
  * @since 2024-07-24
