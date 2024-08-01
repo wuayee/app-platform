@@ -12,7 +12,6 @@ import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
-import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.common.RangedResultSet;
 
 import org.mockito.Mockito;
@@ -101,15 +100,14 @@ public class TestUtils {
                 .when(metaServiceMock).list(any(), eq(true), eq(0L), eq(1), any(), any());
     }
 
-    public static CountDownLatch mockTerminateFlow(FlowInstanceService flowInstanceServiceMock,
-            MetaService metaServiceMock, AippLogService aippLogServiceMock) {
+    public static CountDownLatch mockFailAsyncJob(FlowInstanceService flowInstanceServiceMock,
+            MetaService metaServiceMock) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Mockito.when(metaServiceMock.retrieve(any(), any())).thenReturn(buildMeta());
-        Mockito.doAnswer((Answer<Void>) invocation -> null).when(aippLogServiceMock).insertErrorLog(any(), any());
         Mockito.doAnswer((Answer<Void>) invocation -> {
             countDownLatch.countDown();
             return null;
-        }).when(flowInstanceServiceMock).terminateFlows(any(), any(), any(), any());
+        }).when(flowInstanceServiceMock).failAsyncJob(any(), any(), any(), any());
         return countDownLatch;
     }
 }

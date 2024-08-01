@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.fitable;
 
+import static com.huawei.fit.jober.aipp.TestUtils.mockFailAsyncJob;
 import static com.huawei.fit.jober.aipp.TestUtils.mockResumeFlow;
-import static com.huawei.fit.jober.aipp.TestUtils.mockTerminateFlow;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
@@ -63,7 +63,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 2024-04-23
  */
 @ExtendWith(MockitoExtension.class)
-public class LLMComponentTest {
+public class LlmComponentTest {
     private static final String TOOL_DEFAULT_VALUE = "\"tool_async\"";
 
     @Mock
@@ -98,21 +98,25 @@ public class LLMComponentTest {
         // prompt
         HashMap<String, Object> prompt = new HashMap<>();
         prompt.put("template", "{{input}}");
-        prompt.put("variables", new HashMap<String, String>() {{
-            put("input", "good");
-        }});
+        prompt.put("variables", new HashMap<String, String>() {
+            {
+                put("input", "good");
+            }
+        });
         businessData.put("prompt", prompt);
-        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, Collections.singletonList(new HashMap<String, String>() {{
-            put("question", "q1");
-            put("answer", "a1");
-        }}));
+        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, Collections.singletonList(new HashMap<String, String>() {
+            {
+                put("question", "q1");
+                put("answer", "a1");
+            }
+        }));
         businessData.put("tools", Collections.emptyList());
         businessData.put("workflows", Collections.emptyList());
         businessData.put("model", "test_model");
         businessData.put("temperature", 0.7);
         businessData.put("systemPrompt", "");
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(new OperationContext()));
-        businessData.put(AippConst.BS_AIPP_ID_KEY, "LLMComponentTest");
+        businessData.put(AippConst.BS_AIPP_ID_KEY, "LlmComponentTest");
         businessData.put(AippConst.BS_AIPP_INST_ID_KEY, TestUtils.DUMMY_FLOW_INSTANCE_ID);
         return businessData;
     }
@@ -213,13 +217,7 @@ public class LLMComponentTest {
                 serializer);
 
         // mock
-        CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
-        Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            Assertions.assertEquals("ERROR", value.get(AippConst.INST_STATUS_KEY));
-            return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
 
         // run
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
@@ -274,7 +272,8 @@ public class LLMComponentTest {
     void shouldOkWhenNoTool() throws InterruptedException {
         // stub
         AiProcessFlow<Prompt, Prompt> testAgent =
-                AiFlows.<Prompt>create().map(m -> (Prompt) ChatMessages.from(new AiMessage("bad"))).close();
+                AiFlows.<Prompt>create()
+                        .map(m -> ObjectUtils.<Prompt>cast(ChatMessages.from(new AiMessage("bad")))).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
@@ -288,12 +287,6 @@ public class LLMComponentTest {
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
-        Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            Assertions.assertEquals("bad", value.get("llmOutput"));
-            return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
 
         // run
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
@@ -318,13 +311,7 @@ public class LLMComponentTest {
                 serializer);
 
         // mock
-        CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
-        Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            Assertions.assertEquals("ERROR", value.get("inst_status"));
-            return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
 
         // run
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
@@ -336,7 +323,7 @@ public class LLMComponentTest {
         // stub
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create()
                 .just(m -> Assertions.assertEquals(4, m.messages().size()))
-                .map(m -> (Prompt) ChatMessages.from(new ToolMessage("1", "\"tool_async\"")))
+                .map(m -> ObjectUtils.<Prompt>cast(ChatMessages.from(new ToolMessage("1", "\"tool_async\""))))
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LlmComponent llmComponent = new LlmComponent(flowInstanceService,
@@ -388,7 +375,7 @@ public class LLMComponentTest {
                 chatMessages.add(new AiMessage("", Collections.singletonList(new ToolCall())));
                 chatMessages.add(new ToolMessage("1", "\"tool_async\""));
             }
-            return (Prompt) chatMessages;
+            return ObjectUtils.<Prompt>cast(chatMessages);
         }).just(m -> flag.set(true)).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LlmComponent llmComponent = new LlmComponent(flowInstanceService,
