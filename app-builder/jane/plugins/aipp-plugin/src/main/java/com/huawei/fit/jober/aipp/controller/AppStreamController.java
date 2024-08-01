@@ -22,7 +22,7 @@ import com.huawei.fitframework.util.StringUtils;
  * @author 姚江 yWX1299574
  * @since 2024-07-23
  */
-@WebSocketEndpoint(path = "/v1/api/{tenant_id}/connect/app/{appId}")
+@WebSocketEndpoint(path = "/v1/api/ws/{tenant_id}/app/{app_id}")
 @Component
 public class AppStreamController {
     private static final Logger log = Logger.get(AippStreamController.class);
@@ -40,7 +40,7 @@ public class AppStreamController {
      * @param appId app应用id {@link String}。
      */
     @OnOpen
-    public void onOpen(Session session, @PathVariable("appId") String appId) {
+    public void onOpen(Session session, @PathVariable("app_id") String appId) {
         log.warn(StringUtils.format("WebSocket connection open by client. [appId={0}]", appId));
         session.send(session.getId());
         this.aippStreamService.addSession(session);
