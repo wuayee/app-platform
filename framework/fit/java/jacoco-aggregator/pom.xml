@@ -216,10 +216,6 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.integration</groupId>
-            <artifactId>fit-mockito</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>

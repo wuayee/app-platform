@@ -474,12 +474,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
-                <artifactId>fit-mockito</artifactId>
-                <version>${fit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>

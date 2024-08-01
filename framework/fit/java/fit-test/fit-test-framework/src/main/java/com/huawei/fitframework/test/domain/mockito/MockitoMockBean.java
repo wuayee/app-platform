@@ -1,10 +1,9 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fit.integration.mockito;
+package com.huawei.fitframework.test.domain.mockito;
 
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.test.domain.resolver.MockBean;
 
 import org.mockito.Mockito;
@@ -17,7 +16,6 @@ import java.lang.reflect.Field;
  * @author 邬涨财 w00575064
  * @since 2023-01-31
  */
-@Component
 public class MockitoMockBean implements MockBean {
     /**
      * 根据字段获得实例对象。

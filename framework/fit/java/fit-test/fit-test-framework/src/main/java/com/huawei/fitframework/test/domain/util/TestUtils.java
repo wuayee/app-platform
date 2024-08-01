@@ -15,24 +15,17 @@ import java.net.ServerSocket;
  * @author 王攀博 w00561424
  * @since 2024-04-09
  */
-public class TestUtil {
+public class TestUtils {
     /**
      * 获取当前设备可用的端口。
      *
      * @return 返回当前设备可用的端口号 {@link int}。
      */
     public static int getLocalAvailablePort() {
-        int port = 0;
-        try {
-            ServerSocket serverSocket = new ServerSocket(0);
-            try {
-                port = serverSocket.getLocalPort();
-            } finally {
-                serverSocket.close();
-            }
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
+            return serverSocket.getLocalPort();
         } catch (IOException e) {
-            throw new IllegalStateException("Get local available port failed.");
+            throw new IllegalStateException("Failed to get local available port.", e);
         }
-        return port;
     }
 }

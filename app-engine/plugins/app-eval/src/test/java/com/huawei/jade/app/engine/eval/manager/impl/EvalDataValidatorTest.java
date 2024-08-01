@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.eval.exception.AppEvalException;
 import com.huawei.jade.app.engine.eval.manager.EvalDataValidator;
 import com.huawei.jade.app.engine.eval.mapper.EvalDatasetMapper;
@@ -36,7 +36,7 @@ import java.util.List;
  * @author 兰宇晨 l00816134
  * @since 2024-7-27
  */
-@FitTestWithJunit(classes = EvalDataValidatorImpl.class)
+@FitTestWithJunit(includeClasses = EvalDataValidatorImpl.class)
 public class EvalDataValidatorTest {
     private static final String SCHEMA =
             "{\"title\": \"UserInfo\", \"type\": \"object\", \"properties\": {\"name\": {\"type\": \"string\"}}}}";
@@ -48,10 +48,10 @@ public class EvalDataValidatorTest {
     @Fit
     private EvalDataValidator validator;
 
-    @Mocked
+    @Mock
     private EvalDatasetMapper datasetMapperMock;
 
-    @Mocked
+    @Mock
     private SchemaValidator schemaValidatorMock;
 
     @Test

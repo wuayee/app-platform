@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 
@@ -28,11 +28,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author 何嘉斌
  * @since 2024-07-29
  */
-@FitTestWithJunit(classes = SimpleSnowflakeUidGenerator.class)
+@FitTestWithJunit(includeClasses = SimpleSnowflakeUidGenerator.class)
 public class SimpleSnowflakeUidGeneratorTest {
     private static final long MAX_INT = 1L << 32;
 
-    @Mocked
+    @Mock
     private WorkerGenerator workerGenerator;
 
     @BeforeEach

@@ -29,7 +29,7 @@ public @interface MybatisTest {
      *
      * @return 表示需要注入到容器的组件类型数组的 {@link Class}{@code <?>[]}。
      */
-    @Forward(annotation = FitTestWithJunit.class, property = "classes") Class<?>[] classes() default {};
+    @Forward(annotation = FitTestWithJunit.class, property = "includeClasses") Class<?>[] classes() default {};
 
     /**
      * 获取测试数据源兼容模式。

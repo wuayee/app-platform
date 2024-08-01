@@ -11,6 +11,7 @@ import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
 import com.huawei.fitframework.flowable.util.OnSubscribedObserver;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -58,7 +59,7 @@ public class FlexibleEmitterChoir<T> extends AbstractChoir<T> implements OnSubsc
     }
 
     @Override
-    protected void subscribe0(Subscriber<T> subscriber) {
+    protected void subscribe0(@Nonnull Subscriber<T> subscriber) {
         this.subscriber = subscriber;
         this.subscription = new FlexibleEmitterChoirSubscription<>(subscriber, this.requestHandler, this.cancelHandler);
         this.subscribeHandler.accept(this);

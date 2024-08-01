@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.eval.manager.EvalDatasetVersionManager;
 import com.huawei.jade.app.engine.uid.UidGenerator;
 
@@ -21,10 +21,10 @@ import org.junit.jupiter.api.Test;
  * @author 何嘉斌
  * @since 2024-07-24
  */
-@FitTestWithJunit(classes = {EvalVersionManagerImpl.class})
+@FitTestWithJunit(includeClasses = {EvalVersionManagerImpl.class})
 @DisplayName("测试 EvalVersionManagerImpl")
 public class EvalVersionManagerImplTest {
-    @Mocked
+    @Mock
     private UidGenerator generator;
 
     @Test

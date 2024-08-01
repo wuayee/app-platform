@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2022-2022. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.ioc.annotation.support;
@@ -18,7 +18,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.ServiceLoader;
 
 /**
@@ -31,9 +30,8 @@ public class DefaultAnnotationMetadataResolver implements AnnotationMetadataReso
     /**
      * 表示空的注解元数据解析程序。
      */
-    public static final AnnotationMetadataResolver EMPTY = element ->
-            new DefaultAnnotationMetadata(Arrays.asList(element.getAnnotations()));
-    private static final AnnotationPropertyForwarder EMPTY_FORWARDER = propertyMethod -> Optional.empty();
+    public static final AnnotationMetadataResolver EMPTY =
+            element -> new DefaultAnnotationMetadata(Arrays.asList(element.getAnnotations()));
 
     private final AnnotationPropertyForwarder forwarder;
     private final AnnotationEliminator eliminator;
@@ -89,8 +87,10 @@ public class DefaultAnnotationMetadataResolver implements AnnotationMetadataReso
 
         Method[] methods = annotation.annotationType().getDeclaredMethods();
         for (Method method : methods) {
-            this.forwarder.forward(method).ifPresent(forward -> node.forward(method.getName(), forward.target(),
-                    converters.get(forward.converterClass())));
+            this.forwarder.forward(method)
+                    .ifPresent(forward -> node.forward(method.getName(),
+                            forward.target(),
+                            converters.get(forward.converterClass())));
         }
     }
 }

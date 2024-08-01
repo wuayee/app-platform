@@ -23,11 +23,18 @@ public interface TestContextConfiguration {
     Class<?> testClass();
 
     /**
-     * 需要往容器上下文注入的类对象。
+     * 获取需要向容器上下文注入的类对象列表。
      *
-     * @return 表示需要注入的类对象的 {@link Class}{@code <?>[]}。
+     * @return 表示需要向容器上下文注入的类对象列表的 {@link Class}{@code <?>[]}。
      */
-    Class<?>[] classes();
+    Class<?>[] includeClasses();
+
+    /**
+     * 获取不需要向容器上下文注入的类对象列表。
+     *
+     * @return 表示不需要向容器上下文注入的类对象列表的 {@link Class}{@code <?>[]}。
+     */
+    Class<?>[] excludeClasses();
 
     /**
      * 获取测试类依赖的扫描出的包。
@@ -44,6 +51,13 @@ public interface TestContextConfiguration {
     Set<Field> mockedBeanFields();
 
     /**
+     * 获取需要被侦听的类对象集合。
+     *
+     * @return 表示需要被侦听的类对象集合的 {@link Set}{@code <}{@link Class}{@code <?>>}。
+     */
+    Set<Class<?>> toSpyClasses();
+
+    /**
      * 合并另外一个 {@link TestContextConfiguration}。
      *
      * @param configuration 表示另一个上下文配置的 {@link TestContextConfiguration}。
@@ -55,36 +69,52 @@ public interface TestContextConfiguration {
      */
     interface Builder {
         /**
-         * 设置单测类的类对象。
+         * 向当前构建器中设置单测类的类对象。
          *
-         * @param testClass 需要设置的单测类的类对象的 {@link Class}{@code <?>}。
+         * @param testClass 表示待设置的单测类的类对象的 {@link Class}{@code <?>}。
          * @return 表示当前构建程序的 {@link Builder}。
          */
         Builder testClass(Class<?> testClass);
 
         /**
-         * 设置注入的类对象。
+         * 向当前构建器中设置需注入的类对象列表。
          *
-         * @param classes 需要设置的注入的类对象的 {@link Class}{@code <?>[]}。
-         * @return 表示当前构建程序的 {@link Builder}。
+         * @param classes 表示待设置的需注入的类对象列表的 {@link Class}{@code <?>[]}。
+         * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder classes(Class<?>[] classes);
+        Builder includeClasses(Class<?>[] classes);
 
         /**
-         * 设置扫描出的包。
+         * 向当前构建器中设置不需注入的类对象列表。
          *
-         * @param basePackages 设置测试类扫描出的依赖包 {@link Set}{@code <}{@link String}{@code >}。
-         * @return 表示当前构建程序的 {@link Builder}。
+         * @param classes 表示待设置的不需注入的类对象列表的 {@link Class}{@code <?>[]}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder excludeClasses(Class<?>[] classes);
+
+        /**
+         * 向当前构建器中设置待扫描的包。
+         *
+         * @param basePackages 表示待设置的测试类扫描的包路径的 {@link Set}{@code <}{@link String}{@code >}。
+         * @return 表示当前构建器的 {@link Builder}。
          */
         Builder scannedPackages(Set<String> basePackages);
 
         /**
-         * 设置 mocked bean 字段集合。
+         * 向当前构建器中设置 mocked bean 字段集合。
          *
          * @param mockedBeanFields 设置测试类扫描出的 mocked bean 字段集合 {@link Set}{@code <}{@link Field}{@code >}。
-         * @return 表示当前构建程序的 {@link Builder}。
+         * @return 表示当前构建器的 {@link Builder}。
          */
         Builder mockedBeanFields(Set<Field> mockedBeanFields);
+
+        /**
+         * 向当前构建器中设置需要被侦听的类对象集合。
+         *
+         * @param toSpyClasses 表示待设置的需要被侦听的类对象集合的 {@link Set}{@code <}{@link Class}{@code <?>>}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder toSpyClasses(Set<Class<?>> toSpyClasses);
 
         /**
          * 构建对象。

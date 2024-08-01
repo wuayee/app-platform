@@ -6,7 +6,8 @@ package com.huawei.fitframework.test.domain.resolver;
 
 import com.huawei.fitframework.annotation.ScanPackages;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
+import com.huawei.fitframework.test.annotation.Spy;
 import com.huawei.fitframework.test.domain.util.AnnotationUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 
@@ -35,27 +36,30 @@ public class DefaultTestClassResolver implements TestClassResolver {
 
     @Override
     public TestContextConfiguration resolve(Class<?> clazz) {
-        Class<?>[] classes = this.resolveClass(this.getTestConfigurationClass(clazz));
+        Class<?> testConfigurationClass = this.getTestConfigurationClass(clazz);
+        Class<?>[] includeClasses = this.resolveIncludeClasses(testConfigurationClass);
         return TestContextConfiguration.custom()
                 .testClass(clazz)
-                .classes(classes)
-                .scannedPackages(this.scanBeans(classes))
+                .includeClasses(includeClasses)
+                .excludeClasses(this.resolveExcludeClasses(clazz))
+                .scannedPackages(this.scanBeans(includeClasses))
                 .mockedBeanFields(this.scanMockBeansFieldSet(clazz))
+                .toSpyClasses(this.scanSpyBeansFieldSet(clazz))
                 .build();
     }
 
-    private Class<?>[] resolveClass(AnnotatedElement element) {
+    private Class<?>[] resolveIncludeClasses(AnnotatedElement element) {
         return AnnotationUtils.getAnnotation(element, FitTestWithJunit.class)
-                .map(FitTestWithJunit::classes)
+                .map(FitTestWithJunit::includeClasses)
                 .orElseGet(() -> new Class<?>[0]);
     }
 
-    /**
-     * 递归向父类查找，是否有测试标识，有则返回。
-     *
-     * @param clazz 表示需要解析的类对象的 {@link Class}{@code <?>}。
-     * @return 表示含有测试标识的测试类。
-     */
+    private Class<?>[] resolveExcludeClasses(AnnotatedElement element) {
+        return AnnotationUtils.getAnnotation(element, FitTestWithJunit.class)
+                .map(FitTestWithJunit::excludeClasses)
+                .orElseGet(() -> new Class<?>[0]);
+    }
+
     private Class<?> getTestConfigurationClass(Class<?> clazz) {
         Class<?> superclass = clazz;
         while (superclass != null) {
@@ -93,7 +97,14 @@ public class DefaultTestClassResolver implements TestClassResolver {
 
     private Set<Field> scanMockBeansFieldSet(Class<?> clazz) {
         return Arrays.stream(ReflectionUtils.getDeclaredFields(clazz))
-                .filter(field -> field.isAnnotationPresent(Mocked.class))
+                .filter(field -> field.isAnnotationPresent(Mock.class))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Class<?>> scanSpyBeansFieldSet(Class<?> clazz) {
+        return Arrays.stream(ReflectionUtils.getDeclaredFields(clazz))
+                .filter(field -> field.isAnnotationPresent(Spy.class))
+                .map(Field::getType)
                 .collect(Collectors.toSet());
     }
 }

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.uid.mapper.WorkerGeneratorMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,13 +25,13 @@ import org.junit.jupiter.api.Test;
  * @author 何嘉斌
  * @since 2024-07-29
  */
-@FitTestWithJunit(classes = {WorkerGenerator.class})
+@FitTestWithJunit(includeClasses = {WorkerGenerator.class})
 @DisplayName("测试 WorkerGenerator")
 public class WorkerGeneratorTest {
     @Fit
     private WorkerGenerator workerGenerator;
 
-    @Mocked
+    @Mock
     private WorkerGeneratorMapper workerGeneratorMapper;
 
     @BeforeEach

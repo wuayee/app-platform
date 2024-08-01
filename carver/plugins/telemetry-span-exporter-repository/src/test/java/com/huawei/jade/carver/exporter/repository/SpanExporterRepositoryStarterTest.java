@@ -38,7 +38,7 @@ public class SpanExporterRepositoryStarterTest {
         return ObjectUtils.cast(exportersContainer.get(repositoryStarter));
     }
 
-    @FitTestWithJunit(classes = {SpanExporterRepositoryStarter.class, DefaultSpanExporterRepository.class,
+    @FitTestWithJunit(includeClasses = {SpanExporterRepositoryStarter.class, DefaultSpanExporterRepository.class,
             SpanExporterSub.class, SpanProcessorConfig.class})
     @Nested
     @DisplayName("测试插件带有 SpanExporter 的场景")
@@ -88,7 +88,7 @@ public class SpanExporterRepositoryStarterTest {
         }
     }
 
-    @FitTestWithJunit(classes = {SpanExporterRepositoryStarter.class, DefaultSpanExporterRepository.class,
+    @FitTestWithJunit(includeClasses = {SpanExporterRepositoryStarter.class, DefaultSpanExporterRepository.class,
             SpanProcessorConfig.class})
     @Nested
     @DisplayName("测试插件无 SpanExporter 的场景")

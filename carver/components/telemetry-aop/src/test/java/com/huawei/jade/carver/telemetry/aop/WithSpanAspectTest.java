@@ -22,7 +22,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanService;
 import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanServiceImpl;
@@ -51,19 +51,19 @@ import org.mockito.MockedStatic;
  * @since 2024-07-25
  */
 @FitTestWithJunit(
-        classes = {WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class})
+        includeClasses = {WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class})
 public class WithSpanAspectTest {
     private static final String EXCEPTION_MESSAGE = " exception message.";
     private static final String SPAN_ATTRIBUTE_KEY = "player";
     private static final String PARENT_SPAN_NAME = "operation.handle.nested";
 
-    @Mocked
+    @Mock
     private OpenTelemetry mockOpenTelemetry;
-    @Mocked
+    @Mock
     private Tracer mockTrace;
-    @Mocked
+    @Mock
     private SpanBuilder mockSpanBuilder;
-    @Mocked
+    @Mock
     private Span mockSpan;
     @Fit
     private WithSpanDemo withSpanDemo;
@@ -98,8 +98,8 @@ public class WithSpanAspectTest {
     @DisplayName("触发切面，业务异常，成功设置异常 Span 属性。")
     void shouldOkWhenHandleExceptionThenSetSpanEvent() {
         String playerArg = "playerArg";
-        assertThatThrownBy(() -> this.withSpanDemo.handleException(playerArg))
-                .isInstanceOf(IllegalStateException.class);
+        WithSpanDemo handler = this.withSpanDemo;
+        assertThatThrownBy(() -> handler.handleException(playerArg)).isInstanceOf(IllegalStateException.class);
 
         verify(this.mockSpan).recordException(argThat(throwable -> {
             assertThat(throwable.getMessage()).isEqualTo(playerArg + EXCEPTION_MESSAGE);
