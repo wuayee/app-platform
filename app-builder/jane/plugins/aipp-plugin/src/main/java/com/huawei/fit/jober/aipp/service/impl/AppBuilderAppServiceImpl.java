@@ -679,7 +679,6 @@ public class AppBuilderAppServiceImpl
         // step5 删除store相关
         // step6 删除应用收藏记录相关
         usrAppCollectionService.deleteByAppId(appId);
-
     }
 
     @Override
@@ -1022,34 +1021,39 @@ public class AppBuilderAppServiceImpl
             return;
         }
         for (Map.Entry<String, String> param : params.entrySet()) {
-            if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
-                if (singleLayerParams.contains(param.getKey())) {
-                    this.handleParamTemperature(node, param);
-                    continue;
-                }
+            handleParam(node, param, singleLayerParams, doubleLayerParams);
+        }
+    }
 
-                if (doubleLayerParams.contains(param.getKey())) {
-                    ArrayNode valueArrayNode = convertList(param.getValue());
-                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
-                    continue;
-                }
+    private void handleParam(JsonNode node, Map.Entry<String, String> param, List<String> singleLayerParams,
+            List<String> doubleLayerParams) {
+        if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
+            if (singleLayerParams.contains(param.getKey())) {
+                this.handleParamTemperature(node, param);
+                return;
+            }
 
-                if (StringUtils.equals("knowledge", param.getKey())) {
-                    this.handleParamKnowledge(node, param);
-                    continue;
-                }
+            if (doubleLayerParams.contains(param.getKey())) {
+                ArrayNode valueArrayNode = convertList(param.getValue());
+                ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
+                return;
+            }
 
-                if (StringUtils.equals("memory", param.getKey())) {
-                    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-                    ArrayNode valueArrayNode = nodeFactory.arrayNode();
-                    Map<String, Object> res = JsonUtils.parseObject(param.getValue(), Map.class);
-                    if (Objects.equals(res.get("type"), "UserSelect")) {
-                        this.parseUserSelect(res, valueArrayNode);
-                    } else {
-                        this.parseOtherMemoryType(res, valueArrayNode);
-                    }
-                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
+            if (StringUtils.equals("knowledge", param.getKey())) {
+                this.handleParamKnowledge(node, param);
+                return;
+            }
+
+            if (StringUtils.equals("memory", param.getKey())) {
+                JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+                ArrayNode valueArrayNode = nodeFactory.arrayNode();
+                Map<String, Object> res = JsonUtils.parseObject(param.getValue(), Map.class);
+                if (Objects.equals(res.get("type"), "UserSelect")) {
+                    this.parseUserSelect(res, valueArrayNode);
+                } else {
+                    this.parseOtherMemoryType(res, valueArrayNode);
                 }
+                ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
             }
         }
     }

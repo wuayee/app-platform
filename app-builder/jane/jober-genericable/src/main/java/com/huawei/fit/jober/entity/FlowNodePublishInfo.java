@@ -43,9 +43,7 @@ public class FlowNodePublishInfo {
     /**
      * 流程节点信息推送对象的无参构造方法。
      */
-    public FlowNodePublishInfo() {
-
-    }
+    public FlowNodePublishInfo() {}
 
     public String getFlowDefinitionId() {
         return flowDefinitionId;

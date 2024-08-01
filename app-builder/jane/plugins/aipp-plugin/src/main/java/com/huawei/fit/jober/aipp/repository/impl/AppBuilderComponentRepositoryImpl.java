@@ -21,8 +21,8 @@ public class AppBuilderComponentRepositoryImpl implements AppBuilderComponentRep
     private final AppBuilderComponentMapper appBuilderComponentMapper;
     private final AppBuilderComponentSerializer serializer;
 
-    public AppBuilderComponentRepositoryImpl(AppBuilderComponentMapper AppBuilderComponentMapper) {
-        this.appBuilderComponentMapper = AppBuilderComponentMapper;
+    public AppBuilderComponentRepositoryImpl(AppBuilderComponentMapper appBuilderComponentMapper) {
+        this.appBuilderComponentMapper = appBuilderComponentMapper;
         this.serializer = new AppBuilderComponentSerializer();
     }
 

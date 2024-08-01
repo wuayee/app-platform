@@ -88,17 +88,10 @@ public class TimeSchedulerTask implements Runnable {
         log.info("[dataEngine]timeSchedulerRunner(): Get lock:scheduler:{} success.", schedulerId);
 
         try {
-            String curAddress = HostUtil.getHostAddress();
-            String savedAddress = timeScheduler.getOwnerAddress();
-            if (!Objects.equals(curAddress, savedAddress)) {
-                if ((System.currentTimeMillis() - timeScheduler.getModifyTime())
-                        <= timeScheduler.getSchedulerInterval()) {
-                    log.info("[dataEngine]: Time Scheduler is modified at {}, skip this operation.",
-                            timeScheduler.getModifyTime());
-                    return;
-                }
-                timeScheduler.setOwnerAddress(curAddress);
-                log.info("[dataEngine]: Set time scheduler ownerAddress: {}.", curAddress);
+            if (checkAndSetSchedulerOwnerAddress(timeScheduler)) {
+                log.info("[dataEngine]: Time Scheduler is modified at {}, skip this operation.",
+                        timeScheduler.getModifyTime());
+                return;
             }
 
             Filter dataBaseFilter = JSON.parseObject(timeScheduler.getFilter(), Filter.class);
@@ -139,6 +132,20 @@ public class TimeSchedulerTask implements Runnable {
         }
     }
 
+    private boolean checkAndSetSchedulerOwnerAddress(TimeScheduler timeScheduler) {
+        String curAddress = HostUtil.getHostAddress();
+        String savedAddress = timeScheduler.getOwnerAddress();
+        if (!Objects.equals(curAddress, savedAddress)) {
+            if ((System.currentTimeMillis() - timeScheduler.getModifyTime())
+                    <= timeScheduler.getSchedulerInterval()) {
+                return true;
+            }
+            timeScheduler.setOwnerAddress(curAddress);
+            log.info("[dataEngine]: Set time scheduler ownerAddress: {}.", curAddress);
+        }
+        return false;
+    }
+
     private boolean isFirstTimeExecute(TimeScheduler timeScheduler) {
         return timeScheduler.getLatestExecutorTime() == 0;
     }
@@ -160,6 +167,10 @@ public class TimeSchedulerTask implements Runnable {
                 if (taskEntities.size() < Integer.parseInt(Constant.PAGE_SIZE)) {
                     break;
                 }
+            } catch (NumberFormatException e) {
+                occurException.set(true);
+                log.error("Number format error.");
+                return;
             } catch (Exception e) {
                 occurException.set(true);
                 log.error(
