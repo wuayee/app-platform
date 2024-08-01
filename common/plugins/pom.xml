@@ -15,5 +15,6 @@
 
     <modules>
         <module>http-interceptor</module>
+        <module>tianzhou-interceptor</module>
     </modules>
 </project>
