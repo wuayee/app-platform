@@ -4,8 +4,6 @@ import { Message } from '../utils/message';
 let baseAxios = axios.create();
 baseAxios.defaults.timeout = 100000;
 baseAxios.defaults.withCredentials = true;
-baseAxios.defaults.headers["Content-Type"] = "application/json";
-
 baseAxios.interceptors.request.use(
   (req) => {
     return req;
