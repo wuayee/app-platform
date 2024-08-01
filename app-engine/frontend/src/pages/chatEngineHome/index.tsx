@@ -10,9 +10,9 @@ import { setCurAppId } from '@/store/collection/collection';
 import { setHistorySwitch } from '@/store/common/common';
 import { getUser } from '../helper';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
+import { HOME_APP_ID } from '../chatPreview/components/send-editor/common/config';
 import './index.scss'
 
-const xiaohaiAppId='3a617d8aeb1d41a9ad7453f2f0f70d61';
 const ChatRunning = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
@@ -39,7 +39,7 @@ const ChatRunning = () => {
 
   const getAppDetails=async ()=>{
     // 设置当前应用
-    const res = await getAppInfo(tenantId, curAppId || xiaohaiAppId);
+    const res = await getAppInfo(tenantId, curAppId || HOME_APP_ID);
     if (res.code === 0) {
       res.data.notShowHistory = true;
       dispatch(setAppInfo(res.data));

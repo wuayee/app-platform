@@ -11,9 +11,10 @@ import { setCollectionValue } from '../../store/collection/collection';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
+import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 
 const Apps: React.FC = () => {
-  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
+  const tenantId = TENANT_ID;
   const navigate = useNavigate();
   const [appData, setAppData] = useState<any[]>([]);
   const [total, setTotal] = useState(1);

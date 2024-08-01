@@ -8,6 +8,7 @@ import { uploadChatFile, updateAppInfo, createAipp } from '@/shared/http/aipp';
 import { httpUrlMap } from '@/shared/http/httpConfig';
 import { fileValidate } from '@/shared/utils/common';
 import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
+import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
@@ -16,7 +17,7 @@ const EditModal = (props) => {
   const { modalRef, appInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();
   const { appId } = useParams();
-  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
+  const tenantId = TENANT_ID;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filePath, setFilePath] = useState('');

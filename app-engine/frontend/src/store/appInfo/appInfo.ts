@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TENANT_ID } from '../../pages/chatPreview/components/send-editor/common/config'
 import type { RootState } from '../index';
 
 // 为 slice state 定义一个类型
@@ -13,7 +14,7 @@ interface AppI {
 // 使用该类型定义初始 state
 const initialState: AppI = {
   appId: '',
-  tenantId: '31f20efc7e0848deab6a6bc10fc3021e',
+  tenantId: TENANT_ID,
   appInfo: {},
   atAppId: null,
   atAppInfo: null,

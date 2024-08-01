@@ -15,6 +15,7 @@ import { setAtChatId, setOpenStar } from '@/store/chatStore/chatStore';
 import { setAtAppId, setAtAppInfo } from "@/store/appInfo/appInfo";
 import { Message } from '@shared/utils/message';
 import avatarNormal from '@/assets/images/knowledge/knowledge-base.png';
+import { HOME_APP_ID } from '../send-editor/common/config';
 import './style.scoped.scss';
 
 interface StarAppsProps {
@@ -39,7 +40,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     },
     3: async (item: AnyAction) => {
       try {
-        await updateCollectionApp(getLocalUser(), '3a617d8aeb1d41a9ad7453f2f0f70d61')
+        await updateCollectionApp(getLocalUser(), HOME_APP_ID);
         getUserCollectionList();
       } catch (error) {
         

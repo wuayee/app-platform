@@ -18,7 +18,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { Message } from '@shared/utils/message';
 import { queryDepartMent, queryInspiration } from '@/shared/http/aipp';
 import { storage } from '@/shared/storage';
-import {pduMap} from '../common/config';
+import { pduMap } from '../common/config';
+import { HOME_APP_ID, FINANCE_APP_ID, TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
 import '../styles/inspiration.scss';
 
 const Inspiration = (props) => {
@@ -27,9 +28,6 @@ const Inspiration = (props) => {
     messageChecked,
     reloadInspiration
   } = useContext(AippContext);
-  const defaultTenantId = '31f20efc7e0848deab6a6bc10fc3021e';
-  const defaultAppId = '3a617d8aeb1d41a9ad7453f2f0f70d61';
-  const demissionAppId = '8ac7a00620bc4840b7e3aa908b313614';
   const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { Search } = Input;
@@ -56,8 +54,8 @@ const Inspiration = (props) => {
       tenantIdVal.current = tenantId;
       appIdVal.current = appId;
     } else {
-      tenantIdVal.current = defaultTenantId;
-      appIdVal.current = defaultAppId;
+      tenantIdVal.current = TENANT_ID;
+      appIdVal.current = HOME_APP_ID;
     }
     setCurrentNodeId('');
     getList();
@@ -179,7 +177,7 @@ const Inspiration = (props) => {
   }
   // 分类点击回调
   function nodeClick(id, name, parentId) {
-    if (demissionAppId === appId && pduMap[name]) {
+    if (FINANCE_APP_ID === appId && pduMap[name]) {
       storage.set('dimension', { id, value: pduMap[name]});
     }
     dispatch(setDimension(pduMap[name] || name));
