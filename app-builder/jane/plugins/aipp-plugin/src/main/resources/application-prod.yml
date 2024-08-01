@@ -8,9 +8,6 @@ fit:
     basename: i18n/messages
 jackson:
   datetime-format: 'yyyy-MM-dd HH:mm:ss'
-aipp:
-  agent_search_aipp:
-  agent_mind_aipp:
 jane:
   endpoint:
 app-engine:
@@ -22,7 +19,6 @@ elsa:
   endpoint:
   elsaKey:
 xiaohai:
-  search_w3_url:
   upload_chat_history_url:
   share_url:
 model:
@@ -47,9 +43,3 @@ druid:
   url:
   username:
   password:
-tender:
-  url:
-w3-task:
-  taskId:
-  typeId:
-  taskEndpoint:
