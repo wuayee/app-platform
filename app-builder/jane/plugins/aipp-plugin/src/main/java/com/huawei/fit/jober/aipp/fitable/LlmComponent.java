@@ -16,7 +16,6 @@ import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
-import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.fel.AippLlmMeta;
 import com.huawei.fit.jober.aipp.fel.AippMemory;
 import com.huawei.fit.jober.aipp.service.AippLogService;
@@ -24,6 +23,7 @@ import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
+import com.huawei.fit.jober.entity.JoberErrorInfo;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -55,7 +55,6 @@ import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.tool.ToolProvider;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -164,7 +163,8 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, parentInstanceId, childBusinessData))
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, ObjectUtils.cast(msg)))
-                .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
+                .doOnError(throwable -> doOnAgentError(llmMeta,
+                        throwable.getCause() == null ? throwable.getMessage() : throwable.getCause().getMessage()))
                 .offer(AGENT_NODE_ID, Collections.singletonList(chatMessages));
     }
 
@@ -202,7 +202,8 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
                 .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORIES_KEY))))
                 .bind(AippConst.TOOL_CONTEXT_KEY, toolContext)
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
-                .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
+                .doOnError(throwable -> doOnAgentError(llmMeta,
+                        throwable.getCause() == null ? throwable.getMessage() : throwable.getCause().getMessage()))
                 .bind(buildChatOptions(businessData))
                 .offer(Tip.fromArray(systemPrompt, buildInputText(businessData)));
         return flowData;
@@ -305,29 +306,18 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
         // 删除cache
         llmCache.remove(llmMeta.getInstId());
         // resumeFlow
-        flowInstanceService.resumeAsyncJob(llmMeta.getFlowDefinitionId(),
+        this.flowInstanceService.resumeAsyncJob(llmMeta.getFlowDefinitionId(),
                 llmMeta.getFlowTraceId(),
                 llmMeta.getBusinessData(),
                 llmMeta.getContext());
     }
 
     private void doOnAgentError(AippLlmMeta llmMeta, String errorMessage) {
-        // 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
         log.error("versionId {} errorMessage {}", llmMeta.getVersionId(), errorMessage);
-        String msg = "很抱歉，模型节点遇到了问题，请稍后重试。";
-        this.aippLogService.insertErrorLog(msg, llmMeta.getFlowData());
-        InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
-                .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
-                .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
-                .build();
-        metaInstanceService.patchMetaInstance(llmMeta.getVersionId(),
-                llmMeta.getInstId(),
-                declarationInfo,
-                llmMeta.getContext());
-        flowInstanceService.terminateFlows(llmMeta.getFlowDefinitionId(),
+        this.flowInstanceService.failAsyncJob(llmMeta.getFlowDefinitionId(),
                 llmMeta.getFlowTraceId(),
-                Collections.emptyMap(),
-                llmMeta.getContext());
+                new JoberErrorInfo(errorMessage),
+                DataUtils.getOpContext(llmMeta.getBusinessData()));
     }
 
     /**
