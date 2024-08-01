@@ -1,17 +1,17 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Input, Spin } from 'antd';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
-import { getAippList } from '@/shared/http/aipp';
 import { useAppSelector } from '@/store/hook';
 import { SearchOutlined } from '@ant-design/icons';
+import { queryAppsApi } from '@/shared/http/apps';
+import { FINANCE_APP_ID } from '../common/config';
 import '../styles/referencing-app.scss'
-import { queryAppsApi } from "../../../../../shared/http/apps";
+
 
 const ReferencingApp = (props) => {
   const { atItemClick, atClick, searchKey, setSearchKey } = props;
   const [appArr, setAppArr] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
-  const [total, setTotal] = useState(1);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const pageNo = useRef(1);
 
@@ -37,8 +37,11 @@ const ReferencingApp = (props) => {
       const res = await queryAppsApi(tenantId, params);
       if (res.code === 0) {
         const { data, total } = res;
-        setAppArr(data);
-        setTotal(total);
+        const list = data.filter(item => {
+          let appId = item.runnables.APP.appId;
+          return appId !== FINANCE_APP_ID;
+        })
+        setAppArr(list);
       }
     } finally {
       setTableLoading(false);

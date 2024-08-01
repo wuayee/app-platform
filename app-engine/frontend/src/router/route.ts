@@ -5,7 +5,7 @@ import KnowledgeBase from '../pages/knowledge-base';
 import KnowledgeBaseCreate from '../pages/knowledge-base/create';
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Plugin from '../pages/plugin';
-import Demo from '../pages/demo';
+import PageNormal from '../pages/page-normal';
 import ChatHome from '../pages/chatEngineHome/index';
 import ChatRunning from '../pages/chatRunning/index';
 import AppDetail from '../pages/appDetail';
@@ -16,15 +16,9 @@ import ChatShare from '../pages/chatShare';
 import Apps from '../pages/apps';
 import KnowledgeBaseDetailCreateTable from '../pages/knowledge-base/knowledge-detail/create-table';
 import KnowledgeBaseDetailImportData from '../pages/knowledge-base/knowledge-detail/import-data';
-import Model from '../pages/model';
-import ModelBase from '../pages/model-base';
-import ModelTraining from '../pages/model-training';
-import ModelDetail from '../pages/model/model-detail';
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
-import ModelBaseDetail from '../pages/model-base/detail';
 import PlugeDetail from '../pages/plugin/detail/detail';
-import ModelTrainingCreate from '../pages/model-training/create-task';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -107,7 +101,7 @@ export const routeList: MenuItem[] = [
     key: '/robot-market',
     icon: Icons.app({}),
     label: '机器人市场',
-    component: Demo,
+    component: PageNormal,
     hidden: true,
   },
   {
@@ -175,21 +169,21 @@ export const routeList: MenuItem[] = [
     key: '/Tooling',
     icon: Icons.app({}),
     label: '工具',
-    component: Demo,
+    component: PageNormal,
     hidden: true,
   },
   {
     key: '/WorkStream',
     icon: Icons.app({}),
     label: '工作流',
-    component: Demo,
+    component: PageNormal,
     hidden: true,
   },
   {
     key: '/group',
     icon: Icons.app({}),
     label: '团队',
-    component: Demo,
+    component: PageNormal,
     hidden: true,
   },
 ];

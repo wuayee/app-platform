@@ -27,6 +27,7 @@ import { setAtAppInfo, setAtAppId } from '@/store/appInfo/appInfo';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setUseMemory } from '@/store/common/common';
 import { updateChatId } from "@/shared/utils/common";
+import { HOME_APP_ID } from '../common/config';
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
@@ -199,7 +200,7 @@ const EditorBtnHome = (props) => {
             { atAppId && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
            <LinkIcon onClick={uploadClick} />
-           { (!atAppId) && <AtIcon onClick={atClick} /> }
+           { (!atAppId && appId === HOME_APP_ID) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className='inner-right'>

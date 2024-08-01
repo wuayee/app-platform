@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, Tabs } from 'antd';
 import { useNavigate } from 'react-router-dom';
-
 import { Icons } from '@/components/icons';
 import AppCard from '@/components/appCard';
 import EditModal from '../components/edit-modal';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
-
 import { deleteAppApi, getUserCollectionNoDesc, queryAppDevApi } from '@/shared/http/appDev.js';
 import { debounce } from '@/shared/utils/common';
 import { useAppDispatch } from '@/store/hook';
 import { setCollectionValue } from '@/store/collection/collection';
+import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import './index.scoped.scss';
 
 const AppDev: React.FC = () => {
-  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
+  const tenantId = TENANT_ID;
   const navigate = useNavigate();
 
   // 数据初始化
