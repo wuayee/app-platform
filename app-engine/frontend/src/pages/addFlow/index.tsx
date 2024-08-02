@@ -12,13 +12,15 @@ import './styles/index.scss';
 import FlowTest from "./components/flow-test";
 
 const AddFlow = (props) => {
-  const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus } = props;
+  const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus,
+    showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [ dragData, setDragData ] = useState([]);
   const [ flowInfo, setFlowInfo ] = useState({});
   const [ showTime, setShowTime ] = useState(false);
   const [ showMenu, setShowMenu ] = useState(false);
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
+  const [ showToolFlowChangeWarning, setShowToolFlowChangeWarning ] = useState(false);
   const { tenantId, appId } = useParams();
   const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(0);
@@ -93,6 +95,7 @@ const AddFlow = (props) => {
                   debugTypes={debugTypes}
                   appRef={appRef}
                   elsaRunningCtl={elsaRunningCtl}
+                  setShowFlowChangeWarning={type ? setShowFlowChangeWarning : setShowToolFlowChangeWarning}
         />
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
@@ -116,6 +119,8 @@ const AddFlow = (props) => {
             flowIdRef={flowIdRef}
             setTestStatus={type ? setFlowTestStatus : setTestStatus}
             elsaRunningCtl={elsaRunningCtl}
+            showFlowChangeWarning={type ? showFlowChangeWarning : showToolFlowChangeWarning}
+            setShowFlowChangeWarning={type ? setShowFlowChangeWarning : setShowToolFlowChangeWarning}
           />
         </div>
       </FlowContext.Provider>

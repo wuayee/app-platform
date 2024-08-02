@@ -177,6 +177,14 @@
         z-index: 200;
       }
     }
+    .flow-change-warning-content {
+      height: 60px;
+      width: 70%;
+      position: absolute;
+      left: 15%;
+      top: 20px;
+      z-index: 999;
+    }
   }
   .content-add {
     height: calc(100vh - 55px);
