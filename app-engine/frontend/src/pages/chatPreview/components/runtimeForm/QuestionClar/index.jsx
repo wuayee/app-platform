@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useMemo, useContext} from 'react';
-import styled from 'styled-components';
 import { throttle } from 'lodash';
 import { Message } from '@shared/utils/message';
 import {Button, DatePicker, Select, TreeSelect} from 'antd';
@@ -17,68 +16,10 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { resumeInstance } from '@shared/http/aipp';
 import { ChatContext } from '../../../../aippIndex/context';
+import './index.scoped.scss';
+
 dayjs.extend(customParseFormat);
-const QuestionClarWrap = styled.div`
-  .question_clar_root {
-    .title {
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-    .question_item {
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      .select_box {
-        width: 160px;
-        .date_picker {
-          width: 100%;
-        }
-      }
-      .text {
-        display: inline-block;
-        background-color: rgb(214, 238, 255);
-        border-radius: 4px;
-        padding: 4px 15px;
-        margin: 0 6px;
-      }
-      .text_value {
-        background-color: rgb(217, 252, 230);
-        border-radius: 4px;
-        padding: 4px 15px;
-        margin: 0 6px;
-      }
-    }
-    .footer {
-      padding: 10px 0;
-      padding-left: 20px;
-    }
-    .mr10 {
-      margin-right: 10px;
-    }
-    /deep/.dv-select__selection {
-      height: 30px;
-    }
-    .cascader_box {
-      display: flex;
-      .cascader {
-        width: 250px;
-      }
-      /deep/.tiny-input__inner {
-        min-height: 30px !important;
-      }
-    }
-    .ambiguous_box {
-      .ambiguous {
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        .label {
-          min-width: 50px;
-        }
-      }
-    }
-  }
-`;
+
 const QuestionClar = (props) => {
   const id = 'questionClarResult';
   const { data, mode } = props;
@@ -342,8 +283,8 @@ const QuestionClar = (props) => {
     const res = await resumeInstance(tenantId, data?.formData?.instanceId, params);
   }
 
-  return (
-    <QuestionClarWrap>
+  return (<>
+    <div className='question-clar-wrap'>
       <div className='question_clar_root'>
         <div className='title'>
           为了更精确回答这个问题，小魔方希望向您确认几个细节：</div>
@@ -473,8 +414,8 @@ const QuestionClar = (props) => {
           <Button onClick={rejectClar}>拒绝澄清</Button>
         </div> }
 </div>
-    </QuestionClarWrap>
-  )
+    </div>
+  </>);
 }
 
 export default QuestionClar;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Button, Typography } from 'antd';
 import {saveContent} from '@shared/http/appBuilder';
-import styled from 'styled-components';
 import { Message } from '@shared/utils/message';
 import { useAppSelector } from '@/store/hook';
 import './styles/file-content.scoped.scss';

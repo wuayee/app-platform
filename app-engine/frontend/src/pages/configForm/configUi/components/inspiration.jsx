@@ -5,10 +5,10 @@ import { Form, Select, Col, Row, Input, Modal, Switch, Table, Button, TreeSelect
 import TreeComponent from '../tree.jsx';
 import { getFitables } from '@shared/http/appBuilder';
 import { sourceTypes } from '../../common/common';
-import { InspirationWrap } from '../styled';
 import { uuid } from '../../../../common/utils';
 import '../styles/inspiration.scss';
-import {Message} from '@/shared/utils/message';
+import { Message } from '@/shared/utils/message';
+import '../styles/inspiration.scoped.scss';
 
 const Inspiration = (props) => {
   const { updateData } = props;
@@ -345,7 +345,7 @@ const Inspiration = (props) => {
             </Form.Item>
           </div>
             <Modal title='添加新的灵感' open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='50vw'>
-              <InspirationWrap>
+              <div className='inspiration-wrap'>
                 <Form
                   form={modalForm}
                   {...formItemLayout}
@@ -456,7 +456,7 @@ const Inspiration = (props) => {
                     <Switch />
                   </Form.Item>
                 </Form>
-              </InspirationWrap>
+              </div>
             </Modal>
             <Modal title='类目配置' destroyOnClose open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='50vw'>
               <TreeComponent tree={treeData}

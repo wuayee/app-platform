@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
-import { ConfigFormWrap } from './styled';
 import ConfigUI from './configUi/index.jsx';
+import './index.scoped.scss';
 
 const ConfigForm = (props) => {
   const { 
@@ -23,8 +22,8 @@ const ConfigForm = (props) => {
   const handleClick = (key) => {
     setActiveKey(key);
   }
-  return <>{(
-    <ConfigFormWrap>
+  return (<>{(
+    <div className='config-form-wrap'>
       <div className={['config-form', showElsa ? 'config-form-elsa' : null].join(' ')}>
         <div className='config-title'>
           <span className='config-left'>
@@ -49,9 +48,9 @@ const ConfigForm = (props) => {
             activeKey={activeKey}
           />
       </div>
-    </ConfigFormWrap>
+    </div>
     )}
-  </>
+  </>);
 };
 
 export default ConfigForm;
