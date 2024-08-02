@@ -38,7 +38,6 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>${mybatis.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- ByteBuddy 当携带该依赖后，动态代理会优先使用 -->
