@@ -5,6 +5,7 @@
 package com.huawei.jade.app.engine.eval.convertor;
 
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetCreateDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDatasetUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDatasetPo;
 
@@ -30,7 +31,15 @@ public interface EvalDatasetConvertor {
      * @param createDto 表示待转换的 {@link EvalDatasetCreateDto}。
      * @return 转换完成的 {@link EvalDatasetEntity}。
      */
-    EvalDatasetEntity createDtoToBo(EvalDatasetCreateDto createDto);
+    EvalDatasetEntity convertDtoToEntity(EvalDatasetCreateDto createDto);
+
+    /**
+     * 将 {@link EvalDatasetUpdateDto} 转化为 {@link EvalDatasetEntity}。
+     *
+     * @param updateDto 表示待转换的 {@link EvalDatasetUpdateDto}。
+     * @return 转换完成的 {@link EvalDatasetEntity}。
+     */
+    EvalDatasetEntity convertDtoToEntity(EvalDatasetUpdateDto updateDto);
 
     /**
      * 将 {@link EvalDatasetEntity} 转化为 {@link EvalDatasetPo}。

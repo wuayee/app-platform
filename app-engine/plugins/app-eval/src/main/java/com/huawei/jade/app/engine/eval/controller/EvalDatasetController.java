@@ -7,6 +7,7 @@ package com.huawei.jade.app.engine.eval.controller;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
+import com.huawei.fit.http.annotation.PutMapping;
 import com.huawei.fit.http.annotation.RequestBean;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.huawei.fitframework.validation.constraints.Range;
 import com.huawei.jade.app.engine.eval.convertor.EvalDatasetConvertor;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetCreateDto;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetQueryParam;
+import com.huawei.jade.app.engine.eval.dto.EvalDatasetUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDatasetService;
 import com.huawei.jade.common.vo.PageVo;
@@ -47,8 +49,8 @@ public class EvalDatasetController {
      */
     @PostMapping(description = "创建评估数据集")
     public void createEvalDataset(@RequestBody @Validated EvalDatasetCreateDto createDto) {
-        EvalDatasetEntity bo = EvalDatasetConvertor.INSTANCE.createDtoToBo(createDto);
-        this.evaldatasetService.create(bo);
+        EvalDatasetEntity entity = EvalDatasetConvertor.INSTANCE.convertDtoToEntity(createDto);
+        this.evaldatasetService.create(entity);
     }
 
     /**
@@ -73,5 +75,16 @@ public class EvalDatasetController {
             @Validated @PathVariable("id") @Range(min = 1, max = Long.MAX_VALUE, message = "Min dataset ID is 1")
             Long datasetId) {
         return this.evaldatasetService.getEvalDatasetById(datasetId);
+    }
+
+    /**
+     * 修改评估数据集信息。
+     *
+     * @param updateDto 表示评估数据集信息传输对象的 {@link EvalDatasetUpdateDto}。
+     */
+    @PutMapping(description = "修改评估数据集信息")
+    public void updateEvalDataset(@RequestBody @Validated EvalDatasetUpdateDto updateDto) {
+        EvalDatasetEntity bo = EvalDatasetConvertor.INSTANCE.convertDtoToEntity(updateDto);
+        this.evaldatasetService.updateEvalDataset(bo);
     }
 }

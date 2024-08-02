@@ -17,6 +17,7 @@ import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetCreateDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDatasetUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDatasetService;
 import com.huawei.jade.common.vo.PageVo;
@@ -167,10 +168,38 @@ public class EvalDatasetControllerTest {
     }
 
     @Test
-    @DisplayName("参数错误导致根据 ID 查询评估数据集接口成功")
+    @DisplayName("参数错误导致根据 ID 查询评估数据集接口失败")
     void shouldNotOkWhenQueryEvalDatasetById() {
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.get("/eval/dataset/-1").responseType(EvalDatasetEntity.class);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("修改数据集信息接口成功")
+    void shouldOkWhenUpdateDataset() {
+        Mockito.doNothing().when(this.evalDatasetService).updateEvalDataset(any());
+        EvalDatasetUpdateDto updateDto = new EvalDatasetUpdateDto();
+        updateDto.setId(1L);
+        updateDto.setName("name1");
+        updateDto.setDescription("desc1");
+
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.put("/eval/dataset").jsonEntity(updateDto).responseType(Void.class);
+
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("缺少参数导致修改数据集信息接口失败")
+    void shouldNotOkWhenUpdateDataset() {
+        EvalDatasetUpdateDto updateDto = new EvalDatasetUpdateDto();
+        updateDto.setName("name1");
+        updateDto.setDescription("desc1");
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.put("/eval/dataset").jsonEntity(updateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }

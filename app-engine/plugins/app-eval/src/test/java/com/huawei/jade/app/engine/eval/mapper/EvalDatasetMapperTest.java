@@ -76,7 +76,7 @@ public class EvalDatasetMapperTest {
 
     @Test
     @Sql(scripts = "sql/test_create_dataset.sql")
-    @DisplayName("根据数据集 ID 查询数据集元数据成功")
+    @DisplayName("根据数据集唯一标识查询数据集元数据成功")
     void shouldOkWhenGetEvalDatasetById() {
         EvalDatasetEntity entity = this.evalDatasetMapper.getEvalDatasetById(3L);
         assertThat(entity).extracting(EvalDatasetEntity::getSchema,
@@ -84,5 +84,56 @@ public class EvalDatasetMapperTest {
                 EvalDatasetEntity::getDescription,
                 EvalDatasetEntity::getCreatedBy,
                 EvalDatasetEntity::getUpdatedBy).containsExactly("Fake schema 3", "name3", "desc3", "Sky3", "Fang3");
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_create_dataset.sql")
+    @DisplayName("修改数据集名称成功")
+    void shouldOKWhenUpdateEvalDatasetName() {
+        String name = "datasetName1";
+        Long id = 1L;
+        EvalDatasetPo evalDatasetPo = new EvalDatasetPo();
+        evalDatasetPo.setName(name);
+        evalDatasetPo.setId(id);
+
+        this.evalDatasetMapper.updateEvaldataset(evalDatasetPo);
+        EvalDatasetEntity entity = this.evalDatasetMapper.getEvalDatasetById(id);
+        assertThat(entity).hasFieldOrPropertyWithValue("name", name);
+        assertThat(entity).hasFieldOrPropertyWithValue("description", "desc1");
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_create_dataset.sql")
+    @DisplayName("修改数据集描述成功")
+    void shouldOKWhenUpdateEvalDatasetDesc() {
+        String desc = "datasetDesc1";
+        Long id = 1L;
+        EvalDatasetPo evalDatasetPo = new EvalDatasetPo();
+        evalDatasetPo.setDescription(desc);
+        evalDatasetPo.setId(id);
+
+        this.evalDatasetMapper.updateEvaldataset(evalDatasetPo);
+        EvalDatasetEntity entity = this.evalDatasetMapper.getEvalDatasetById(id);
+        assertThat(entity).hasFieldOrPropertyWithValue("name", "name1");
+        assertThat(entity).hasFieldOrPropertyWithValue("description", desc);
+    }
+
+
+    @Test
+    @Sql(scripts = "sql/test_create_dataset.sql")
+    @DisplayName("修改数据集描述和名字成功")
+    void shouldOKWhenUpdateEvalDatasetDescAndName() {
+        String name = "datasetName1";
+        String desc = "datasetDesc1";
+        Long id = 1L;
+        EvalDatasetPo evalDatasetPo = new EvalDatasetPo();
+        evalDatasetPo.setDescription(desc);
+        evalDatasetPo.setName(name);
+        evalDatasetPo.setId(id);
+
+        this.evalDatasetMapper.updateEvaldataset(evalDatasetPo);
+        EvalDatasetEntity entity = this.evalDatasetMapper.getEvalDatasetById(id);
+        assertThat(entity).hasFieldOrPropertyWithValue("name", name);
+        assertThat(entity).hasFieldOrPropertyWithValue("description", desc);
     }
 }

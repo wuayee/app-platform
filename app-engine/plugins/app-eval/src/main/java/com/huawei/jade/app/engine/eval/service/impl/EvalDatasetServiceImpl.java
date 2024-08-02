@@ -59,4 +59,10 @@ public class EvalDatasetServiceImpl implements EvalDatasetService {
     public EvalDatasetEntity getEvalDatasetById(Long datasetId) {
         return this.datasetMapper.getEvalDatasetById(datasetId);
     }
+
+    @Override
+    public void updateEvalDataset(EvalDatasetEntity updateEntity) {
+        EvalDatasetPo evalDatasetPo = EvalDatasetConvertor.INSTANCE.entityToPo(updateEntity);
+        this.datasetMapper.updateEvaldataset(evalDatasetPo);
+    }
 }

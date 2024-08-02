@@ -30,12 +30,18 @@ public interface EvalDatasetService {
      */
     PageVo<EvalDatasetEntity> listEvalDataset(EvalDatasetQueryParam queryParam);
 
-
     /**
      * 通过 ID 查询评估数据集元数据。
      *
-     * @param datasetId 表示评估数据集 ID 的 {@link Long}。
+     * @param datasetId 表示评估数据集唯一标识的 {@link Long}。
      * @return 表示评估数据集元数据查询结果的 {@link EvalDatasetEntity}。
      */
     EvalDatasetEntity getEvalDatasetById(Long datasetId);
+
+    /**
+     * 更新评估数据集信息。
+     *
+     * @param updateEntity 表示新的评估数据集信息的 {@link EvalDatasetEntity}。
+     */
+    void updateEvalDataset(EvalDatasetEntity updateEntity);
 }
