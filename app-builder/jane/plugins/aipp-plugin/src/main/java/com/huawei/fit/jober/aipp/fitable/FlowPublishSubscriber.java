@@ -126,11 +126,14 @@ public class FlowPublishSubscriber implements FlowPublishService {
         }).collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
     private <T> Optional<T> getValueByKeys(Map<String, Object> map, List<String> keys, Class<T> clz) {
         Map<String, Object> tmp = map;
         for (int i = 0; i < keys.size() - 1; i++) {
-            tmp = ObjectUtils.as(tmp.get(keys.get(i)), Map.class);
+            if (tmp.get(keys.get(i)) instanceof Map) {
+                tmp = ObjectUtils.cast(tmp.get(keys.get(i)));
+            } else {
+                tmp = null;
+            }
             if (Objects.isNull(tmp)) {
                 throw new IllegalArgumentException(
                         StringUtils.format("No keys in businessData.keys: []", String.join(",", keys)));
