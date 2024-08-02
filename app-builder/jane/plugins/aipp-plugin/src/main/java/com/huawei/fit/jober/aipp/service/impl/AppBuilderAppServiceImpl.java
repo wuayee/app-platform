@@ -221,6 +221,18 @@ public class AppBuilderAppServiceImpl
     }
 
     @Override
+    @Fitable(id = "default")
+    public void updateFlow(String appId, OperationContext contextOf) {
+        AppBuilderApp app = this.appFactory.create(appId);
+        if (ObjectUtils.cast(app.getAttributes().getOrDefault(AippConst.ATTR_APP_IS_UPDATE, false))) {
+            AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(this.buildFullAppDto(app));
+            this.aippFlowService.previewAipp(app.getVersion(), aippDto, contextOf);
+            app.getAttributes().put(AippConst.ATTR_APP_IS_UPDATE, false);
+            this.appFactory.update(app);
+        }
+    }
+
+    @Override
     public AppBuilderAppDto queryLatestOrchestration(String appId, OperationContext context) {
         String aippId = this.getAippIdByAppId(appId, context);
         MetaFilter filter = new MetaFilter();
@@ -526,6 +538,7 @@ public class AppBuilderAppServiceImpl
     private void updateAttributes(AppBuilderApp update, Map<String, Object> attributes) {
         Map<String, Object> attributesOld = update.getAttributes();
         attributesOld.putAll(attributes);
+        attributesOld.put(AippConst.ATTR_APP_IS_UPDATE, true);
     }
 
     private void addGraphIntoApp(AppBuilderFlowGraphDto graphDto, AppBuilderApp app) {
@@ -612,6 +625,7 @@ public class AppBuilderAppServiceImpl
         // 最后更新app主表
         oldApp.setUpdateAt(operateTime);
         oldApp.setUpdateBy(context.getOperator());
+        this.updateAttributes(oldApp, new HashMap<>());
         this.appFactory.update(oldApp);
         return Rsp.ok(this.buildFullAppDto(oldApp));
     }
@@ -654,6 +668,7 @@ public class AppBuilderAppServiceImpl
         // 最后更新app主表
         oldApp.setUpdateAt(operateTime);
         oldApp.setUpdateBy(context.getOperator());
+        this.updateAttributes(oldApp, new HashMap<>());
         this.appFactory.update(oldApp);
         return Rsp.ok(this.buildFullAppDto(oldApp));
     }

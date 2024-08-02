@@ -36,6 +36,15 @@ public interface AppBuilderAppService {
     AippCreate debug(AppBuilderAppDto appDto, OperationContext contextOf);
 
     /**
+     * 如果app更新过则调试 app。
+     *
+     * @param appId 表示 app 应用的id。
+     * @param contextOf 表示操作者上下文的 {@link OperationContext}。
+     */
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.updateFlow")
+    void updateFlow(String appId, OperationContext contextOf);
+
+    /**
      * 查询 app 最新可编排的版本。
      *
      * @param appId 表示 app 唯一标识的 {@link String}。
