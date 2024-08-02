@@ -28,8 +28,6 @@ import java.lang.reflect.Proxy;
  * @since 2024-08-01
  */
 public class InvocationHandlerHelper {
-    private static final String BYTE_BUDDY_CLASSNAME = "net.bytebuddy.ByteBuddy";
-
     /**
      * 通过 JDK 获取动态代理。
      *
@@ -75,20 +73,6 @@ public class InvocationHandlerHelper {
             return Object.class.getConstructor((Class<?>[]) null);
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException(e);
-        }
-    }
-
-    /**
-     * 检查 ByteBuddy 是否可用。
-     *
-     * @return 如果 ByteBuddy 可用，则返回 {@code true}；否则返回 {@code false}。
-     */
-    public static boolean isByteBuddyAvailable() {
-        try {
-            Class.forName(BYTE_BUDDY_CLASSNAME, false, MapperInvocationHandler.class.getClassLoader());
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
         }
     }
 }
