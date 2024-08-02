@@ -4,10 +4,14 @@
 
 package com.huawei.jade.carver.telemetry.aop;
 
-import com.huawei.jade.carver.telemetry.aop.parsers.DefaultSpanAttributeParser;
+import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.ioc.BeanFactory;
+import com.huawei.fitframework.util.LazyLoader;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 表达式解析器的仓库。
@@ -15,17 +19,23 @@ import java.util.List;
  * @author 刘信宏
  * @since 2024-07-25
  */
+@Component
 public class SpanAttributeParserRepository {
-    private static final List<SpanAttributeParser> PARSERS = Arrays.asList(
-            new DefaultSpanAttributeParser()
-    );
+    private final BeanContainer container;
+    private final LazyLoader<List<SpanAttributeParser>> parser;
+
+    public SpanAttributeParserRepository(BeanContainer container) {
+        this.container = Validation.notNull(container, "The container cannot be null.");
+        this.parser = new LazyLoader<>(() -> this.container.all(SpanAttributeParser.class).stream()
+                .map(BeanFactory::<SpanAttributeParser>get).collect(Collectors.toList()));
+    }
 
     /**
      * 获取表达式解析器。
      *
      * @return 表示表达式解析器列表的 {@link List}{@code <}{@link SpanAttributeParser}{@code >}。
      */
-    public static List<SpanAttributeParser> get() {
-        return PARSERS;
+    public List<SpanAttributeParser> get() {
+        return this.parser.get();
     }
 }

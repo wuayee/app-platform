@@ -8,7 +8,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 import com.huawei.jade.service.CarverSpanExporter;
-import com.huawei.jade.service.SpanExporterContainer;
+import com.huawei.jade.service.SpanExporterRepository;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
@@ -25,13 +25,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * 表示 {@link SpanExporterContainer} 的默认实现。
+ * 表示 {@link SpanExporterRepository} 的默认实现。
  *
  * @author 刘信宏
  * @since 2024-07-22
  */
 @Component
-public class DefaultSpanExporterRepository implements SpanExporterContainer {
+public class DefaultSpanExporterRepository implements SpanExporterRepository {
     private final List<CarverSpanExporter> exporters = Collections.synchronizedList(new ArrayList<>());
 
     private final SpanProcessorConfig processorConfig;

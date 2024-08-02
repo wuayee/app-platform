@@ -13,7 +13,7 @@ import java.util.function.Predicate;
  * @author 刘信宏
  * @since 2024-07-22
  */
-public interface SpanExporterContainer {
+public interface SpanExporterRepository {
     /**
      * 注册操作单元导出器。
      *

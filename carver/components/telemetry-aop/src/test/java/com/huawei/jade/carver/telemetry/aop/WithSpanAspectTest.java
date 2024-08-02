@@ -23,9 +23,14 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mock;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.carver.telemetry.aop.parsers.ComplexSpanAttributeParser;
+import com.huawei.jade.carver.telemetry.aop.parsers.DefaultSpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanService;
 import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanServiceImpl;
+import com.huawei.jade.carver.telemetry.aop.stub.WithSpanObjectParse;
+import com.huawei.jade.carver.telemetry.aop.stub.WithSpanParserDemo;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 
 import io.opentelemetry.api.OpenTelemetry;
@@ -44,14 +49,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+import java.util.Collections;
+
 /**
  * {@link WithSpanAspect} 的测试。
  *
  * @author 刘信宏
  * @since 2024-07-25
  */
-@FitTestWithJunit(
-        includeClasses = {WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class})
+@FitTestWithJunit(includeClasses = {
+        WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class,
+        SpanAttributeParserRepository.class, DefaultSpanAttributeParser.class, ComplexSpanAttributeParser.class,
+        WithSpanParserDemo.class
+})
 public class WithSpanAspectTest {
     private static final String EXCEPTION_MESSAGE = " exception message.";
     private static final String SPAN_ATTRIBUTE_KEY = "player";
@@ -67,6 +77,8 @@ public class WithSpanAspectTest {
     private Span mockSpan;
     @Fit
     private WithSpanDemo withSpanDemo;
+    @Fit
+    private WithSpanParserDemo withSpanParserDemo;
     private MockedStatic<CarverGlobalOpenTelemetry> telemetryScopedMock;
 
     @BeforeEach
@@ -127,6 +139,50 @@ public class WithSpanAspectTest {
         verify(this.mockSpan).setAttribute(eq(SPAN_ATTRIBUTE_KEY), eq(playerArg));
         verify(this.mockSpan).setAttribute(eq(NestedWithSpanService.NESTED_ATTR_KEY), eq(playerArg));
         verify(this.mockSpan, times(2)).end();
+    }
+
+    @Test
+    @DisplayName("触发解析器解析基本类型，成功设置 Span 属性。")
+    void shouldOkWhenMatchPrimitiveExpression() {
+        Object kvObj = 10;
+        this.withSpanParserDemo.handleKVParser(kvObj);
+        verify(this.mockSpan).setAttribute(eq("player"), eq(""));
+        verify(this.mockSpan).end();
+    }
+
+    @Test
+    @DisplayName("触发解析器解析键值对，成功设置 Span 属性。")
+    void shouldOkWhenMatchKVExpression() {
+        Object kvObj = MapBuilder.<String, Object>get()
+                .put("k1", MapBuilder.<String, Object>get().put("k2", "v").build())
+                .put("k11", MapBuilder.<String, Object>get().put("k22", "v").build())
+                .build();
+        this.withSpanParserDemo.handleKVParser(kvObj);
+        verify(this.mockSpan).setAttribute(eq("player"), eq("v"));
+        verify(this.mockSpan).setAttribute(eq("player2"), eq("v"));
+        verify(this.mockSpan).end();
+    }
+
+    @Test
+    @DisplayName("触发解析器解析对象，成功设置 Span 属性。")
+    void shouldOkWhenMatchObjectExpression() {
+        Object obj = new WithSpanObjectParse.Outer(new WithSpanObjectParse.Inner("v"));
+        this.withSpanParserDemo.handleObjectParser(obj);
+        verify(this.mockSpan).setAttribute(eq("player"), eq("{k2=v}"));
+        verify(this.mockSpan).setAttribute(eq("player2"), eq("v"));
+        verify(this.mockSpan).setAttribute(eq("player3"), eq("v"));
+        verify(this.mockSpan).end();
+    }
+
+    @Test
+    @DisplayName("触发解析器解析列表，成功设置 Span 属性。")
+    void shouldOkWhenMatchListExpression() {
+        Object outers = Collections.singletonList(new WithSpanObjectParse.Outer(new WithSpanObjectParse.Inner("v1")));
+        this.withSpanParserDemo.handleListParser(outers);
+        verify(this.mockSpan).setAttribute(eq("player"), eq("{k2=v1}"));
+        verify(this.mockSpan).setAttribute(eq("player2"), eq("v1"));
+        verify(this.mockSpan).setAttribute(eq("player3"), eq(""));
+        verify(this.mockSpan).end();
     }
 
     @Component
