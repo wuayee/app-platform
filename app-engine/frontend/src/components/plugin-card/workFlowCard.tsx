@@ -62,7 +62,7 @@ const WorkflowCard = ({ pluginData }: any) => {
       <Flex gap={14}>
         <span>
           {
-            pluginData?.state==='active' ? 
+            pluginData?.attributes?.latest_version ? 
             <Tag bordered={false} color="processing" className='footer-type'>已发布</Tag> :
             <Tag bordered={false} className='footer-type'>草稿</Tag>
           }
