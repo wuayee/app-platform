@@ -15,7 +15,7 @@ const ChatMessaga = (props) => {
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
-  const dataDimension = useAppSelector((state) => state.commonStore.dimension);
+  const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
   const [ list, setList ] = useState([]);
   const { 
     showCheck, 

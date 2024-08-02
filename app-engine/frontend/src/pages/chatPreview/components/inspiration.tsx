@@ -21,6 +21,7 @@ import { storage } from '@/shared/storage';
 import { pduMap } from '../common/config';
 import { HOME_APP_ID, FINANCE_APP_ID, TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
 import '../styles/inspiration.scss';
+import { DEMISSIONAPPID } from '@/shared/utils/configvar';
 
 const Inspiration = (props) => {
   const { inspirationClick, setEditorSelect } = props;
@@ -177,10 +178,10 @@ const Inspiration = (props) => {
   }
   // 分类点击回调
   function nodeClick(id, name, parentId) {
-    if (FINANCE_APP_ID === appId && pduMap[name]) {
-      storage.set('dimension', { id, value: pduMap[name]});
+    if (FINANCE_APP_ID === appId) {
+      storage.set('dimension', { id, value: pduMap[name] || name});
     }
-    dispatch(setDimension(pduMap[name] || name));
+    dispatch(setDimension({ id, value: pduMap[name] || name}));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: '全部', id: parentId }];

@@ -2,6 +2,8 @@
  * 本地缓存的操作对象
  * @type {{set(*=, *=): void, get(*=): (any|undefined), remove(*=): void}}
  */
+import { DEMISSIONAPPID } from "../utils/configvar";
+  
 export const storage = {
   set(key, value) {
     if (value instanceof Object) {
@@ -21,5 +23,21 @@ export const storage = {
   },
   remove(key) {
     localStorage.removeItem(key);
+  },
+  /**
+   * 获取应用对话chatId
+   * @param {String} appId 应用Id
+   * @return {String} 对话的chatId
+   */
+  getChatId(appId) {
+    return storage.get('appChatMap')?.[appId]?.chatId || '';
+  },
+  /**
+   * 获取小魔方应用产品线对话chatId
+   * @param {String} dimensionId 应用Id
+   * @return {String} 对话的chatId
+   */
+  getDimensionChatId(dimensionId) {
+    return storage.get('appChatMap')?.[DEMISSIONAPPID]?.dimensions?.[dimensionId] || '';
   },
 };

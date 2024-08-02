@@ -2,6 +2,8 @@ import {useLocation} from "react-router-dom";
 import {useCallback, useMemo, useState} from "react";
 import DOMPurify from 'dompurify';
 import { Message } from '@shared/utils/message';
+import { DEMISSIONAPPID } from './configvar';
+import { storage } from "../storage";
 
 /**
  * 获取url中status的类型
@@ -234,11 +236,34 @@ export const versionStringCompare = (preVersion='', lastVersion='') => {
  * @param {String} appId 应用Id
  * @Return void
  */
-export const updateChatId = function (chatId, appId) {
-  let appChatMap = JSON.parse(localStorage.getItem('appChatMap'));
-  appChatMap[appId] = {chatId: chatId};
-  localStorage.setItem('appChatMap', JSON.stringify(appChatMap));
-}
+export const updateChatId = function (chatId, appId, dimension) {
+  let appChatMap = storage.get('appChatMap') || {};
+  // 如果不是小魔方
+  if (!isBusinessMagicCube(appId)) {
+    appChatMap[appId] = { chatId: chatId };
+  } else {
+    if (!appChatMap?.[appId]) {
+      appChatMap[appId] = {
+        dimensions: {
+          default: { ...dimension },
+          [dimension.id]: chatId,
+        }
+      };
+    } else {
+      appChatMap[appId].dimensions[dimension.id] = chatId;
+    };
+  };
+  storage.set('appChatMap', appChatMap);
+};
+
+/**
+ * 检查是否为小魔方页面
+ * @param {String} appId 应用Id
+ * @return {boolean}
+ */
+export const isBusinessMagicCube = function (appId) {
+  return appId === DEMISSIONAPPID;
+};
 
 /**
  * 验证文件是否符合要求

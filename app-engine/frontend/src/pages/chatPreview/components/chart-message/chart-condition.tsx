@@ -10,7 +10,7 @@ import './styles/chart-condition.scss';
 
 const ChartCondition = (props) => {
   const { data, confirm } = props;
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
+  const dimension = useAppSelector((state) => state.commonStore.dimension.name);
   const { showCheck } = useContext(ChatContext);
   const [isDisabled, setIsDisabled] = useState(false);
   const [filter1, setFilter1] = useState([]);

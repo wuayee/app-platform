@@ -42,6 +42,7 @@ const EditorBtnHome = (props) => {
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
+  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
@@ -159,7 +160,7 @@ const EditorBtnHome = (props) => {
   //点击“新聊天”按钮回调
   const onClickNewChat = () => {
     dispatch(setChatRunning(false));
-    updateChatId(null, appId);
+    updateChatId(null, appId, dimension);
     dispatch(setChatId(null));
     dispatch(setChatList([]));
     dispatch(setAtAppInfo(null));
