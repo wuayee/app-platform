@@ -517,7 +517,7 @@ public class AippConst {
     /**
      * use memory
      */
-    public static final String BS_AIPP_USE_MEMORY_KEY = "use_memory";
+    public static final String BS_AIPP_USE_MEMORY_KEY = "useMemory";
 
     /**
      * 多轮对话开关在 config 中的 key。
@@ -673,6 +673,11 @@ public class AippConst {
      * business中的会话的id的key
      */
     public static final String BS_CHAT_ID = "chat_id";
+
+    /**
+     * app的attributes的key：is_update
+     */
+    public static final String ATTR_APP_IS_UPDATE = "is_update";
 
     // *** aipp initial static meta items ***
     /**

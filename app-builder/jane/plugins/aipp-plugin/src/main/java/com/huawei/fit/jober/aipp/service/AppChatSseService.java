@@ -38,7 +38,7 @@ public interface AppChatSseService {
      * @param instanceId 实例id.
      * @return {@link Optional}{@code <}{@link Object}{@code >}对象.
      */
-    Optional<Object> getEmitter(String instanceId);
+    Optional<Emitter<Object>> getEmitter(String instanceId);
 
     /**
      * 推送数据到前端.

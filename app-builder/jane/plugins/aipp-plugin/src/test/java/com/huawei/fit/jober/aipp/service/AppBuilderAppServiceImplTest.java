@@ -6,6 +6,7 @@ package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -26,18 +27,21 @@ import com.huawei.jade.app.engine.base.service.UsrAppCollectionService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 姚江 yWX1299574
@@ -78,8 +82,13 @@ public class AppBuilderAppServiceImplTest {
                 configPropertyRepository,
                 formPropertyRepository,
                 appRepository);
-        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository,
-                64, metaService, usrAppCollectionService, null);
+        appBuilderAppService = new AppBuilderAppServiceImpl(factory,
+                aippFlowService,
+                appRepository,
+                64,
+                metaService,
+                usrAppCollectionService,
+                null);
     }
 
     private AppBuilderApp mockApp() {
@@ -129,7 +138,7 @@ public class AppBuilderAppServiceImplTest {
         config.setForm(mockForm());
         config.setFormId(config.getForm().getId());
         config.setConfigProperties(mockConfigProperties());
-        for (int i = 0; i< 8; i++) {
+        for (int i = 0; i < 8; i++) {
             AppBuilderConfigProperty configProperty = config.getConfigProperties().get(i);
             configProperty.setConfig(config);
             configProperty.setFormProperty(config.getForm().getFormProperties().get(i));
@@ -285,7 +294,7 @@ public class AppBuilderAppServiceImplTest {
     }
 
     /**
-     * 为 {@link AppBuilderAppServiceImpl#create(String, AppBuilderAppCreateDto, OperationContext)} 提供测试
+     * 为 {@link AppBuilderAppServiceImpl#create(String, AppBuilderAppCreateDto, OperationContext, boolean)} 提供测试
      */
     @Nested
     @DisplayName("创建测试")
@@ -294,6 +303,30 @@ public class AppBuilderAppServiceImplTest {
         @DisplayName("测试创建成功")
         public void test01() {
 
+        }
+    }
+
+    /**
+     * 为 {@link AppBuilderAppServiceImpl#updateFlow(String, OperationContext)} 提供测试
+     */
+    @Nested
+    @DisplayName("测试根据是否更新debug")
+    class TestUpdateFlow {
+        @Test
+        @DisplayName("测试需要更新")
+        void testTrue() {
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put(AippConst.ATTR_APP_IS_UPDATE, true);
+            Mockito.when(appRepository.selectWithId("hello"))
+                    .thenReturn(AppBuilderApp.builder()
+                            .attributes(attributes)
+                            .flowGraph(AppBuilderFlowGraph.builder().appearance("{}").build())
+                            .config(AppBuilderConfig.builder()
+                                    .form(AppBuilderForm.builder().formProperties(new ArrayList<>()).build())
+                                    .configProperties(new ArrayList<>())
+                                    .build())
+                            .build());
+            Assertions.assertDoesNotThrow(() -> appBuilderAppService.updateFlow("hello", new OperationContext()));
 
         }
     }
