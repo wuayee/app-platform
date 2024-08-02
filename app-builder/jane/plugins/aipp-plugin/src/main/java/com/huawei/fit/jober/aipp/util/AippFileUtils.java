@@ -4,6 +4,11 @@
 
 package com.huawei.fit.jober.aipp.util;
 
+import com.huawei.fit.http.client.HttpClassicClient;
+import com.huawei.fit.http.client.HttpClassicClientRequest;
+import com.huawei.fit.http.client.HttpClassicClientResponse;
+import com.huawei.fit.http.protocol.HttpRequestMethod;
+import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.inspection.Validation;
@@ -11,10 +16,7 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,20 +86,22 @@ public class AippFileUtils {
      * @param instId 表示实例唯一标识的 {@link String}, 作为子目录名称。
      * @param s3Url 表示s3的访问地址的 {@link String}。
      * @param fileType 表示文件类型的 {@link String}。
+     * @param httpClient 表示发送http请求的客户端的{@link HttpClassicClient}
      * @return 表示下载下来的临时文件的 {@link File}。
      * @throws JobberException 下载文件异常时抛出
      */
-    public static File getFileFromS3(String instId, String s3Url, String fileType) throws JobberException {
-        HttpGet httpGetImage = new HttpGet(s3Url);
+    public static File getFileFromS3(String instId, String s3Url, String fileType, HttpClassicClient httpClient)
+            throws JobberException {
+        HttpClassicClientRequest request = httpClient.createRequest(HttpRequestMethod.GET, s3Url);
         File tmpFile;
-        try (CloseableHttpResponse response = HttpUtils.execute(httpGetImage)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(request)) {
+            if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
                 throw new IOException(String.format(Locale.ROOT,
                         "bad result code=%d",
-                        response.getStatusLine().getStatusCode()));
+                        response.statusCode()));
             }
             tmpFile = createFile(instId, fileType + "_" + UUIDUtil.uuid());
-            try (InputStream inStream = response.getEntity().getContent();
+            try (InputStream inStream = new ByteArrayInputStream(response.entityBytes());
                  OutputStream outStream = Files.newOutputStream(tmpFile.toPath())) {
                 byte[] buffer = new byte[4096];
                 int bytesRead;
