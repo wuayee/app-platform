@@ -16,6 +16,7 @@ import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaItem;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
+import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
@@ -54,6 +55,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -103,6 +105,8 @@ public class AippRunTimeServiceTest {
     private FlowInstanceService flowInstanceServiceMock;
     @Mock
     private UploadedFileManageService uploadedFileManageServiceMock;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private HttpClassicClientFactory httpClientFactoryMock;
 
     OperationContext genTestOpContext() {
         OperationContext context = new OperationContext();

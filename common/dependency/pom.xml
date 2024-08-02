@@ -58,9 +58,7 @@
 
         <!-- Not Necessary versions -->
         <commons-io.version>2.15.1</commons-io.version>
-
-        <!-- Not correct versions -->
-        <httpclient.version>4.5.14</httpclient.version>
+        
     </properties>
 
     <dependencyManagement>
@@ -451,19 +449,6 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-scratchpad</artifactId>
                 <version>${poi.version}</version>
-            </dependency>
-
-            <!-- Not correct -->
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpmime</artifactId>
-                <version>${httpclient.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- Test -->

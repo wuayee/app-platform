@@ -10,6 +10,12 @@ import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
+import com.huawei.fit.http.client.HttpClassicClientFactory;
+import com.huawei.fit.http.client.HttpClassicClientRequest;
+import com.huawei.fit.http.client.HttpClassicClientResponse;
+import com.huawei.fit.http.entity.ObjectEntity;
+import com.huawei.fit.http.protocol.HttpRequestMethod;
+import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
@@ -89,14 +95,6 @@ import com.huawei.fitframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -147,6 +145,7 @@ public class AippRunTimeServiceImpl
     private final AopAippLogService aopAippLogService;
     private final AppChatSseService appChatSSEService;
     private final AippLogService logService;
+    private final HttpClassicClientFactory httpClientFactory;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
             @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
@@ -156,7 +155,7 @@ public class AippRunTimeServiceImpl
             @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl,
             @Fit AippStreamService aippStreamService, @Value("${app-engine.endpoint}") String appEngineUrl,
             @Fit AopAippLogService aopAippLogService, @Fit AppChatSseService appChatSSEService,
-            @Fit AippLogService logService) {
+            @Fit AippLogService logService, @Fit HttpClassicClientFactory httpClientFactory) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -172,6 +171,7 @@ public class AippRunTimeServiceImpl
         this.aippStreamService = aippStreamService;
         this.appEngineUrl = appEngineUrl;
         this.aopAippLogService = aopAippLogService;
+        this.httpClientFactory = httpClientFactory;
         this.appChatSSEService = appChatSSEService;
         this.logService = logService;
     }
@@ -911,15 +911,15 @@ public class AippRunTimeServiceImpl
     }
 
     private void uploadChatHistory(String aippId, OperationContext context, Map<String, Object> businessData) {
-        HttpPost httpPost = new HttpPost(uploadChatHistoryUrl);
-        httpPost.setEntity(new StringEntity(this.buildUploadHttpBody(businessData, context),
-                ContentType.APPLICATION_JSON));
-        try (CloseableHttpResponse response = HttpUtils.execute(httpPost)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("aipp {} uploadChatHistory fail:{}", aippId, response.getStatusLine());
+        HttpClassicClientRequest postRequest = httpClientFactory.create()
+                .createRequest(HttpRequestMethod.POST, uploadChatHistoryUrl);
+        postRequest.entity(ObjectEntity.create(postRequest, this.buildUploadHttpBody(businessData, context)));
+        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(postRequest)) {
+            if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
+                log.error("aipp {} uploadChatHistory fail:{}", aippId, response.reasonPhrase());
                 throw new AippException(context, AippErrCode.XIAOHAI_UPLOAD_CHAT_HISTORY_HTTP_ERROR);
             }
-            String respContent = EntityUtils.toString(response.getEntity());
+            String respContent = response.textEntity().get().content();
             Map<String, Object> respObj = JsonUtils.parseObject(respContent);
             int code = (int) respObj.get("code");
             if (code != 0) {
@@ -982,6 +982,14 @@ public class AippRunTimeServiceImpl
         return xiaohaiAnswer;
     }
 
+    /**
+     * 更新表单数据，并恢复实例任务执行
+     *
+     * @param instanceId 实例id
+     * @param formArgs 用于填充表单的数据
+     * @param context 操作上下文
+     * @return 返回一个Choir对象，用于流式处理
+     */
     @Override
     public Choir<Object> resumeAndUpdateAippInstance(String instanceId, Map<String, Object> formArgs,
             OperationContext context) {
@@ -1111,14 +1119,11 @@ public class AippRunTimeServiceImpl
 
     @Override
     public Map<String, Object> shared(List<Map<String, Object>> chats) {
-        HttpPost httpPost = new HttpPost(this.sharedUrl);
-        httpPost.setEntity(new StringEntity(JsonUtils.toJsonString(chats), ContentType.APPLICATION_JSON));
-        try (CloseableHttpResponse response = HttpUtils.execute(httpPost)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("Failed to share.", response.getStatusLine());
-                throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
-            }
-            String respContent = EntityUtils.toString(response.getEntity());
+        HttpClassicClientRequest postRequest = httpClientFactory.create()
+                .createRequest(HttpRequestMethod.POST, this.sharedUrl);
+        postRequest.entity(ObjectEntity.create(postRequest, JsonUtils.toJsonString(chats)));
+        try {
+            String respContent = HttpUtils.sendHttpRequest(postRequest);
             return JsonUtils.parseObject(respContent);
         } catch (IOException e) {
             log.error("Failed to share:", e.getMessage());
@@ -1128,15 +1133,11 @@ public class AippRunTimeServiceImpl
 
     @Override
     public Map<String, Object> getShareData(String shareId) {
-        HttpGet httpGet = new HttpGet(this.sharedUrl + "?shareId=" + shareId);
-        try (CloseableHttpResponse response = HttpUtils.execute(httpGet)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new IOException(String.format(Locale.ROOT,
-                        "send http fail. url=%s result=%d",
-                        httpGet.getURI(),
-                        response.getStatusLine().getStatusCode()));
-            }
-            String respContent = EntityUtils.toString(response.getEntity());
+        HttpClassicClientRequest getRequest = this.httpClientFactory.create().createRequest(
+                HttpRequestMethod.GET,
+                this.sharedUrl + "?shareId=" + shareId);
+        try {
+            String respContent = HttpUtils.sendHttpRequest(getRequest);
             return JsonUtils.parseObject(respContent);
         } catch (IOException e) {
             throw new AippException(AippErrCode.UNKNOWN);
