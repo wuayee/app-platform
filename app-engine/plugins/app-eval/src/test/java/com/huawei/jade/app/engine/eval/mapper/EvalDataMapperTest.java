@@ -77,7 +77,7 @@ public class EvalDataMapperTest {
     @ArgumentsSource(QueryTestCaseProvider.class)
     @DisplayName("分页查询数据成功")
     @Sql(scripts = "sql/insert_data.sql")
-    void TestQueryEvalData(EvalDataQueryParam queryParam, int expectedSize, String expectedContent) {
+    void TestListEvalData(EvalDataQueryParam queryParam, int expectedSize, String expectedContent) {
         List<EvalDataEntity> response = this.evalDataMapper.listEvalData(queryParam);
         assertThat(response.get(0).getContent()).isEqualTo(expectedContent);
         assertThat(response.size()).isEqualTo(expectedSize);

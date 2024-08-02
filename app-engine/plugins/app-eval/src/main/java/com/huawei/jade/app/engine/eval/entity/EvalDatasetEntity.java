@@ -6,16 +6,23 @@ package com.huawei.jade.app.engine.eval.entity;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * 表示评估数据集的实体对象。
  *
  * @author 何嘉斌
- * @since 2024-08-01
+ * @author 兰宇晨
+ * @since 2024-07-31
  */
 @Data
 public class EvalDatasetEntity {
+    /**
+     * 主键。
+     */
+    private Long id;
+
     /**
      * 评估数据集名字。
      */
@@ -40,4 +47,24 @@ public class EvalDatasetEntity {
      * 应用唯一标识。
      */
     private String appId;
+
+    /**
+     * 数据集创建人。
+     */
+    private String createdBy;
+
+    /**
+     * 数据集修改人。
+     */
+    private String updatedBy;
+
+    /**
+     * 数据集创建时间。
+     */
+    private LocalDateTime createdAt;
+
+    /**
+     * 数据集修改时间。
+     */
+    private LocalDateTime updatedAt;
 }

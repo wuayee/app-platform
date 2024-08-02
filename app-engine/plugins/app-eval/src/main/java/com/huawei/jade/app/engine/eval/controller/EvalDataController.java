@@ -58,7 +58,7 @@ public class EvalDataController {
      * @return 表示评估数据查询结果的 {@link PageVo}{@code <}{@link EvalDataEntity}{@code >}。
      */
     @GetMapping(description = "查询评估数据")
-    public PageVo<EvalDataEntity> queryEvalData(@RequestBean EvalDataQueryParam queryParam) {
+    public PageVo<EvalDataEntity> queryEvalData(@RequestBean @Validated EvalDataQueryParam queryParam) {
         return evalDataService.listEvalData(queryParam);
     }
 

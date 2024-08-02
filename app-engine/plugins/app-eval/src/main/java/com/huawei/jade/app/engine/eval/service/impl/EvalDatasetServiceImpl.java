@@ -7,11 +7,15 @@ package com.huawei.jade.app.engine.eval.service.impl;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.jade.app.engine.eval.convertor.EvalDatasetConvertor;
+import com.huawei.jade.app.engine.eval.dto.EvalDatasetQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.mapper.EvalDatasetMapper;
 import com.huawei.jade.app.engine.eval.po.EvalDatasetPo;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 import com.huawei.jade.app.engine.eval.service.EvalDatasetService;
+import com.huawei.jade.common.vo.PageVo;
+
+import java.util.List;
 
 /**
  * 表示 {@link EvalDatasetService} 的默认实现。
@@ -41,5 +45,18 @@ public class EvalDatasetServiceImpl implements EvalDatasetService {
         EvalDatasetPo evalDatasetPo = EvalDatasetConvertor.INSTANCE.entityToPo(entity);
         this.datasetMapper.create(evalDatasetPo);
         this.dataService.insertAll(evalDatasetPo.getId(), entity.getContents());
+    }
+
+    @Override
+    @Transactional
+    public PageVo<EvalDatasetEntity> listEvalDataset(EvalDatasetQueryParam queryParam) {
+        List<EvalDatasetEntity> evalDataset = this.datasetMapper.listEvalDataset(queryParam);
+        int evalDatasetCount = this.datasetMapper.countEvalDataset(queryParam);
+        return PageVo.of(evalDatasetCount, evalDataset);
+    }
+
+    @Override
+    public EvalDatasetEntity getEvalDatasetById(Long datasetId) {
+        return this.datasetMapper.getEvalDatasetById(datasetId);
     }
 }
