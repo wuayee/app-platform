@@ -32,8 +32,10 @@ import {
   setChatId,
   setChatList,
   setChatRunning,
-  setFormReceived
+  setFormReceived,
 } from '@/store/chatStore/chatStore';
+import { storage } from '@shared/storage';
+import { isBusinessMagicCube } from '@shared/utils/common';
 
 const ChatPreview = (props) => {
   const { previewBack, chatType } = props;
@@ -82,8 +84,17 @@ const ChatPreview = (props) => {
 
   // 切换App时，chatId为应用上次会话id
   useEffect(() => {
-    dispatch(setChatId(JSON.parse(localStorage.getItem('appChatMap'))[appId]?.chatId || null));
-  }, [appId])
+    if (!appId) {
+      return;
+    };
+    // 如果不是小魔方
+    if (!isBusinessMagicCube(appId)) {
+      dispatch(setChatId(storage.getChatId(appId)));
+    } else {
+      const dimensionId = storage.get('dimension')?.id;
+      dispatch(setChatId(storage.getDimensionChatId(dimensionId)));
+    };
+  }, [appId, dimension]);
 
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
@@ -113,8 +124,7 @@ const ChatPreview = (props) => {
       dispatch(setChatList([]));
       (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
     }
-  }, [appInfo.id]);
-  
+  }, [appInfo.id, chatId]);
   // 发送消息
   const onSend = (value, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
@@ -164,7 +174,7 @@ const ChatPreview = (props) => {
       'question': value,
       'context': {
         'use_memory': useMemory,
-        dimension
+        dimension: dimension.name
       }
     };
     if (chatId) {
@@ -266,7 +276,7 @@ const ChatPreview = (props) => {
   const saveLocalChatId = (data) => {
     let { chat_id, at_chat_id } = data;
     if (chat_id) {
-      updateChatId(chat_id, appId);
+      updateChatId(chat_id, appId, dimension);
       dispatch(setChatId(chat_id));
     }
     if (at_chat_id) {

@@ -29,6 +29,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
+  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [isClearOpen,setClearOpen]=useState(false);
@@ -61,7 +62,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         await deleteChat(tenantId, currentChat?.current?.chat_id);
         if (chatId === currentChat?.current?.chat_id) {
           dispatch(setChatId(null));
-          updateChatId(null, appId);
+          updateChatId(null, appId, dimension);
           dispatch(setChatList([]));
         }
         refreshList();
@@ -77,7 +78,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     await dispatch(setChatList(chatArr));
     setOpen(false);
     dispatch(setChatId(chat_id));
-    updateChatId(chat_id, appId);
+    updateChatId(chat_id, appId, dimension);
   }
 
   useEffect(() => {
@@ -91,7 +92,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     refreshList();
     dispatch(setChatList([]));
     dispatch(setChatId(null));
-    updateChatId(null, appId);
+    updateChatId(null, appId, dimension);
     setClearOpen(false);
     setOpen(false);
   }
