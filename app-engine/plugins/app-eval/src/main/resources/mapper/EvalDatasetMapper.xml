@@ -17,23 +17,31 @@
     <!-- 分页查询数据集元数据 -->
     <select id="listEvalDataset" resultType="com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity"
             resultMap="EvalDatasetEntityResultMap">
-        SELECT
-            id, name, description, created_at, updated_at, created_by, updated_by
+        SELECT id,
+               name,
+               description,
+               created_at,
+               updated_at,
+               created_by,
+               updated_by
         FROM t_app_engine_eval_dataset
-        WHERE
-        app_id = #{appId}
+        WHERE app_id = #{appId}
         ORDER BY id
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
-    <!-- 按照 ID 查询指定数据集元数据 -->
+    <!-- 按照数据集唯一标识查询指定数据集元数据 -->
     <select id="getEvalDatasetById" resultType="com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity"
             resultMap="EvalDatasetEntityResultMap">
-        SELECT
-            name, description, schema, created_at, updated_at, created_by, updated_by
+        SELECT name,
+               description,
+               schema,
+               created_at,
+               updated_at,
+               created_by,
+               updated_by
         FROM t_app_engine_eval_dataset
-        WHERE
-            id = #{datasetId}
+        WHERE id = #{datasetId}
     </select>
 
     <!-- 查询数据集个数 -->
@@ -48,4 +56,13 @@
         values (#{name}, #{description}, #{schema}, #{appId})
     </insert>
 
+    <!-- 更新数据集相关信息 -->
+    <update id="updateEvaldataset">
+        update t_app_engine_eval_dataset
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description}</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

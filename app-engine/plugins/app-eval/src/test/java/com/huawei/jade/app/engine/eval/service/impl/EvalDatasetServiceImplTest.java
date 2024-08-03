@@ -100,7 +100,7 @@ public class EvalDatasetServiceImplTest {
     }
 
     @Test
-    @DisplayName("根据数据集 ID 查询评估数据集元数据成功")
+    @DisplayName("根据数据集唯一标识查询评估数据集元数据成功")
     void shouldOkWhenGetEvalDatasetById() {
         Long id = 1L;
         String name = "name";
@@ -114,12 +114,21 @@ public class EvalDatasetServiceImplTest {
         entity.setSchema(schema);
 
         when(this.evalDatasetMapper.getEvalDatasetById(id)).thenReturn(entity);
-
         EvalDatasetEntity response = this.evalDatasetService.getEvalDatasetById(id);
-
         assertThat(response).extracting(EvalDatasetEntity::getId,
                 EvalDatasetEntity::getName,
                 EvalDatasetEntity::getDescription,
                 EvalDatasetEntity::getSchema).containsExactly(null, name, desc, schema);
+    }
+
+    @Test
+    @DisplayName("修改数据集信息成功")
+    void shouldOkWhenUpdateDataset() {
+        EvalDatasetEntity entity = new EvalDatasetEntity();
+        entity.setName("datasetName1");
+        entity.setDescription("datasetDesc1");
+
+        this.evalDatasetService.updateEvalDataset(entity);
+        verify(this.evalDatasetMapper, times(1)).updateEvaldataset(any());
     }
 }

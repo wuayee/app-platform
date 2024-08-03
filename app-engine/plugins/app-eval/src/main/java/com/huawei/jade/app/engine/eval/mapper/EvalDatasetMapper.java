@@ -23,7 +23,7 @@ public interface EvalDatasetMapper {
     /**
      * 创建评估数据集。
      *
-     * @param evalDatasetPo 表示评估数据集的 {@link EvalDatasetPo}。
+     * @param evalDatasetPo 表示评估数据集信息的 {@link EvalDatasetPo}。
      */
     void create(EvalDatasetPo evalDatasetPo);
 
@@ -44,9 +44,9 @@ public interface EvalDatasetMapper {
     List<EvalDatasetEntity> listEvalDataset(EvalDatasetQueryParam queryParam);
 
     /**
-     * 根据数据集 ID 查询评估数据集元数据。
+     * 根据数据集唯一标识查询评估数据集元数据。
      *
-     * @param datasetId 表示评估数据集查询参数的 {@link Long}。
+     * @param datasetId 表示评估数据集数据集唯一标识的 {@link Long}。
      * @return 表示评估数据集元数据查询结果的 {@link EvalDatasetEntity}。
      */
     EvalDatasetEntity getEvalDatasetById(Long datasetId);
@@ -58,4 +58,11 @@ public interface EvalDatasetMapper {
      * @return 表示评估数据集统计结果的 {@code int}。
      */
     int countEvalDataset(EvalDatasetQueryParam queryParam);
+
+    /**
+     * 修改评估数据集信息。
+     *
+     * @param evalDatasetPo 表示评估数据集信息的 {@link EvalDatasetPo}。
+     */
+    void updateEvaldataset(EvalDatasetPo evalDatasetPo);
 }
