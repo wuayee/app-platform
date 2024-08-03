@@ -19,13 +19,6 @@ import java.time.Duration;
  * @since 2024-07-17
  */
 public class DefaultTextEvent implements TextEvent {
-    private static final String EVENT_ID = "id";
-    private static final String EVENT_NAME = "event";
-    private static final String EVENT_RETRY = "retry";
-    private static final String EVENT_DATA = "data";
-    private static final String LF = "\n";
-    private static final String COLON = ":";
-
     private final String id;
     private final String event;
     private final Duration retry;
