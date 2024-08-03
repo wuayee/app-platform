@@ -160,6 +160,11 @@
                 <artifactId>waterflow-service</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.jade</groupId>
+                <artifactId>waterflow-task-event-handler</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
 
             <!-- FEL -->
             <dependency>

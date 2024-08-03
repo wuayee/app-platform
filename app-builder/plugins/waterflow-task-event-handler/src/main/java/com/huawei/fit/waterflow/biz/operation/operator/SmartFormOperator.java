@@ -2,12 +2,12 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.manual.operation.operator;
+package com.huawei.fit.waterflow.biz.operation.operator;
 
-import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
-import static com.huawei.fit.jober.common.Constant.FLOW_CONTEXT_ID_KEY;
-import static com.huawei.fit.jober.common.Constant.NODE_ID_KEY;
-import static com.huawei.fit.jober.common.Constant.TRACE_ID_KEY;
+import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_KEY;
+import static com.huawei.fit.waterflow.common.Constant.FLOW_CONTEXT_ID_KEY;
+import static com.huawei.fit.waterflow.common.Constant.NODE_ID_KEY;
+import static com.huawei.fit.waterflow.common.Constant.TRACE_ID_KEY;
 
 import com.huawei.fit.jober.FlowSmartFormService;
 import com.huawei.fit.jober.common.ErrorCodes;
