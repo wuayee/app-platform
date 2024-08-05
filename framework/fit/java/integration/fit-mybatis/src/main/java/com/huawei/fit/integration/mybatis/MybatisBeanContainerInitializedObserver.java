@@ -16,13 +16,16 @@ import com.huawei.fitframework.ioc.lifecycle.container.BeanContainerInitializedO
 import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.plugin.PluginKey;
 import com.huawei.fitframework.transaction.TransactionManager;
+import com.huawei.fitframework.util.LockUtils;
 
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.locks.Lock;
 
 /**
  * 为 {@link BeanContainerInitializedObserver} 提供用以整合 MyBatis 的实现。
@@ -33,7 +36,11 @@ import java.util.Properties;
 @Component
 @Order(Order.NEARLY_HIGH)
 public class MybatisBeanContainerInitializedObserver implements BeanContainerInitializedObserver {
+    private static final String BYTEBUDDY_PREFIX = "mybatis.use-bytebuddy.";
+
+    private final Lock lock = LockUtils.newReentrantLock();
     private final BeanContainer container;
+    private Boolean isUseBybeBuddy = null;
 
     MybatisBeanContainerInitializedObserver(BeanContainer container) {
         this.container = notNull(container, "The bean container cannot be null.");
@@ -61,8 +68,20 @@ public class MybatisBeanContainerInitializedObserver implements BeanContainerIni
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         container.registry().register(sessionFactory);
         configuration.getMapperRegistry().getMappers().forEach(mapperClass -> {
-            Object mapper = MapperInvocationHandler.proxy(sessionFactory, mapperClass);
+            Object mapper = MapperInvocationHandler.proxy(sessionFactory, mapperClass, getByteBuddy(config));
             container.registry().register(mapper, mapperClass);
         });
+    }
+
+    private boolean getByteBuddy(Config config) {
+        if (this.isUseBybeBuddy != null) {
+            return this.isUseBybeBuddy;
+        }
+        LockUtils.synchronize(this.lock, () -> {
+            if (this.isUseBybeBuddy == null) {
+                this.isUseBybeBuddy = Optional.ofNullable(config.get(BYTEBUDDY_PREFIX, Boolean.class)).orElse(false);
+            }
+        });
+        return this.isUseBybeBuddy;
     }
 }
