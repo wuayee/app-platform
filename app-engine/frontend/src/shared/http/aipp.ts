@@ -1,7 +1,7 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+const { JANE_URL, AIPP_URL, PLUGIN_URL, AI_URL } = httpUrlMap[process.env.NODE_ENV];
 const sso_url = '/v1/user/sso_login_info';
 
 // 获取当前用户信息
@@ -181,4 +181,13 @@ export function resumeInstance(tenantId, instanceId, params) {
 // 溯源表单重新生成对话
 export function reSendChat(tenant_id, current_instance_id, data) {
   return post(`${AIPP_URL}/${tenant_id}/chat/instances/${current_instance_id}`, data);
+}
+
+// 获取澄清字段下拉
+export function getClarifyOptions(data) {
+  return post(`${AI_URL}/api/v1/platform/finance/option-nodes-name`,data);
+}
+// 澄清-辅产品
+export function getFuClarifyOptions(params) {
+  return get(`${AI_URL}/api/v1/platform/finance/option-nodes`, params);
 }
