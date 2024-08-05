@@ -183,7 +183,7 @@ const ChatPreview = (props) => {
   const queryInstance = (params) => {
     runningInstanceId.current = null;
     controller.current = new AbortController();
-    fetch(`/api/jober/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
+    fetch(`/sseApi/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -247,6 +247,7 @@ const ChatPreview = (props) => {
         if (log.type === 'FORM') {
           let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
           chatForm(obj);
+          saveLocalChatId(messageData);
         }
         if (log.type === 'MSG' && log.content) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
