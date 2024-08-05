@@ -43,7 +43,7 @@ public class OpenAiModelServiceTest {
     @BeforeEach
     public void setUp() throws IOException {
         this.server = new MockWebServer();
-        this.client = new OpenAiClient("http://localhost:" + this.server.getPort(), false);
+        this.client = new OpenAiClient("http://localhost:" + this.server.getPort());
     }
 
     @AfterEach
