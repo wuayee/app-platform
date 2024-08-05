@@ -97,7 +97,7 @@ const AppOverview: React.FC = () => {
               </Flex> */}
             </Flex>
           </Flex>
-          <Flex gap='middle'>
+          {/* <Flex gap='middle'>
             <Flex vertical align={'center'}>
               <span className='font-size-24'>4</span>
               <span>知识库</span>
@@ -112,7 +112,7 @@ const AppOverview: React.FC = () => {
               <span className='font-size-24'>5</span>
               <span>创意灵感</span>
             </Flex>
-          </Flex>
+          </Flex> */}
         </Flex>
         <div className='app-desc' title={detail?.attributes?.description}>
           {detail?.attributes?.description}

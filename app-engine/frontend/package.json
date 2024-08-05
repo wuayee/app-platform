@@ -75,7 +75,6 @@
         "react-router-dom": "6.11.1",
         "react-syntax-highlighter": "^15.5.0",
         "redux": "^4.2.1",
-        "scoped-css-loader": "^1.0.0",
         "screenfull": "5.2.0",
         "styled-components": "^6.0.9"
     },

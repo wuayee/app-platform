@@ -344,7 +344,7 @@ const Inspiration = (props) => {
               }
             </Form.Item>
           </div>
-            <Modal title='添加新的灵感' open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='50vw'>
+            <Modal title='添加新的灵感' open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='1000px'>
               <InspirationWrap>
                 <Form
                   form={modalForm}
