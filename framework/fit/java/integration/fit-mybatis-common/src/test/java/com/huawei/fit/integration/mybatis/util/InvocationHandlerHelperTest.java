@@ -36,13 +36,6 @@ public class InvocationHandlerHelperTest {
         assertThat(mapper).isNotNull();
     }
 
-    @Test
-    @DisplayName("测试依赖中包含 byte-buddy，则 byte-buddy 的动态代理能力可用")
-    void byteBuddyIsAvailable() {
-        boolean actual = InvocationHandlerHelper.isByteBuddyAvailable();
-        assertThat(actual).isTrue();
-    }
-
     /**
      * 表示测试的 Mapper 对象。
      */

@@ -4,6 +4,7 @@
 
 package com.huawei.fit.integration.mybatis;
 
+import com.huawei.fit.integration.mybatis.util.ByteBuddyHelper;
 import com.huawei.fit.integration.mybatis.util.InvocationHandlerHelper;
 import com.huawei.fitframework.transaction.DataAccessException;
 
@@ -60,9 +61,9 @@ public final class MapperInvocationHandler implements InvocationHandler {
         }
     }
 
-    static <M> M proxy(SqlSessionFactory sessionFactory, Class<M> mapperClass) {
+    static <M> M proxy(SqlSessionFactory sessionFactory, Class<M> mapperClass, boolean shouldUseByteBuddy) {
         MapperInvocationHandler handler = new MapperInvocationHandler(sessionFactory, mapperClass);
-        if (InvocationHandlerHelper.isByteBuddyAvailable()) {
+        if (shouldUseByteBuddy && ByteBuddyHelper.isByteBuddyAvailable()) {
             // 通过 ByteBuddy 生成的代理为非 final，允许测试过程中进行 Mock/Spy 操作。
             return InvocationHandlerHelper.proxyByByteBuddy(mapperClass, handler);
         }
