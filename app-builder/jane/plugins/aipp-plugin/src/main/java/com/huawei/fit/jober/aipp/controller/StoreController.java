@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
+import static com.huawei.jade.common.Result.calculateOffset;
+
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.RequestMapping;
@@ -19,7 +21,9 @@ import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.ToolDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -89,7 +93,8 @@ public class StoreController extends AbstractController {
      * 获取已发布的所有指定类型的插件配置
      *
      * @param httpRequest 请求
-     * @param tag 标签
+     * @param includeTags 包含标签
+     * @param excludeTags 排除标签
      * @param tenantId 租户Id
      * @param mode tag拼接方式
      * @param pageNum 页数
@@ -98,13 +103,21 @@ public class StoreController extends AbstractController {
      */
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
     public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest,
-            @RequestParam(value = "tag", defaultValue = "", required = false) String tag,
+            @RequestParam(value = "includeTags", defaultValue = "", required = false) List<String> includeTags,
+            @RequestParam(value = "excludeTags", defaultValue = "", required = false) List<String> excludeTags,
             @PathVariable("tenant_id") String tenantId,
             @RequestParam(value = "mode", defaultValue = "AND", required = false) String mode,
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getPlugins(tag, mode, pageNum, pageSize,
-                this.contextOf(httpRequest, tenantId)));
+        ToolQuery toolQuery = new ToolQuery.Builder()
+                .includeTags(new HashSet<>(includeTags))
+                .excludeTags(new HashSet<>(excludeTags))
+                .mode(mode)
+                .offset(calculateOffset(pageNum, pageSize))
+                .limit(pageSize)
+                .version("")
+                .build();
+        return Rsp.ok(this.storeService.getPlugins(toolQuery, this.contextOf(httpRequest, tenantId)));
     }
 
     /**

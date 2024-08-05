@@ -10,7 +10,7 @@ import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.ToolDto;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
 import java.util.List;
 
@@ -48,14 +48,11 @@ public interface StoreService {
     /**
      * 获取指定插件列表。
      *
-     * @param tag 表示插件的类型。
-     * @param mode 表示选择标签的与和或逻辑的 {@link String}。
-     * @param pageNum 表示分页的页数的 {@link int}。
-     * @param pageSize 表示分页的每页个数的 {@link int}。
+     * @param toolQuery 表示插件的动态查询条件的 {@link ToolQuery}。
      * @param operationContext 表示操作上下文的 {@link OperationContext}。
-     * @return 表示插件列表的 {@link List}{@code <}{@link ToolData}{@code >}。
+     * @return 表示插件列表和总数的 {@link ToolDto}。
      */
-    ToolDto getPlugins(String tag, String mode, int pageNum, int pageSize, OperationContext operationContext);
+    ToolDto getPlugins(ToolQuery toolQuery, OperationContext operationContext);
 
     /**
      * 获取基础节点列表。

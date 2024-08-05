@@ -38,7 +38,7 @@ const MarketItems = () => {
   }, [selectedSource, name, pageNum, pageSize]);
 
   const getPluginList = () => {
-    getPlugins({ pageNum: pageNum, pageSize, includeTags: selectedSource==='ALL'?undefined:selectedSource,isPublished:true, name })
+    getPlugins({ pageNum: pageNum, pageSize, includeTags: selectedSource === 'ALL' ? undefined : selectedSource, isPublished: true, name })
       .then(({ data, total }) => {
         setTotal(total);
         setPluginData(data);
