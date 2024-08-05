@@ -201,6 +201,11 @@
             <!-- Carver -->
             <dependency>
                 <groupId>com.huawei.fit.jade.service</groupId>
+                <artifactId>operation-log-service</artifactId>
+                <version>${carver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.jade.service</groupId>
                 <artifactId>tool-service</artifactId>
                 <version>${carver.version}</version>
             </dependency>
