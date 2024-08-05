@@ -244,7 +244,11 @@ const ChatPreview = (props) => {
       }
       // 普通日志
       messageData.answer?.forEach(log => {
-        if (log.content && log.content.length) {
+        if (log.type === 'FORM') {
+          let obj = messageProcess(instanceId, log.content, atAppInfo);
+          chatForm(obj);
+        }
+        if (log.type === 'MSG' && log.content) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
           if (log.msgId !== null) {
             chatSplicing(log, msg, recieveChatItem, messageData.status);
