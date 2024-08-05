@@ -8,6 +8,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.EnumSet;
@@ -56,7 +57,7 @@ public final class Enums {
     public static <T extends Enum<T>> T parse(Class<T> enumClass, String value) {
         Map<String, Object> values = getValues(enumClass);
         String key = StringUtils.toUpperCase(value);
-        @SuppressWarnings("unchecked") T result = (T) values.get(key);
+        T result = ObjectUtils.<T>cast(values.get(key));
         if (result == null) {
             throw new IllegalArgumentException(
                     StringUtils.format("Undefined value of enum. [enumClass={0}, value={1}", enumClass.getName(),
@@ -130,7 +131,7 @@ public final class Enums {
             Supplier<RuntimeException> exceptionSupplier) {
         Map<String, Object> values = getValues(enumClass);
         String key = StringUtils.toUpperCase(value);
-        @SuppressWarnings("unchecked") T result = (T) values.get(key);
+        T result = ObjectUtils.cast(values.get(key));
         if (result == null) {
             throw exceptionSupplier.get();
         }

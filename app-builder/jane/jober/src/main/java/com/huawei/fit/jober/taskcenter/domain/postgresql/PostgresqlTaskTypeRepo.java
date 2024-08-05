@@ -549,7 +549,7 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         }
 
         List<TaskTypeRow> children() {
-            @SuppressWarnings("unchecked") List<TaskTypeRow> children = (List<TaskTypeRow>) this.row.get("children");
+            List<TaskTypeRow> children = ObjectUtils.cast(this.row.get("children"));
             return nullIf(children, Collections.emptyList());
         }
 
@@ -558,7 +558,7 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         }
 
         List<SourceEntity> sources() {
-            @SuppressWarnings("unchecked") List<SourceEntity> sources = (List<SourceEntity>) this.row.get("sources");
+            List<SourceEntity> sources = ObjectUtils.cast(this.row.get("sources"));
             return nullIf(sources, Collections.emptyList());
         }
 
