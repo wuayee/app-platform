@@ -233,19 +233,19 @@ const ChatPreview = (props) => {
       }
       // 用户自勾选
       if (messageData.memory === 'UserSelect') {
-        selfSelect(messageData.instanceId, messageData.initContext);
+        selfSelect(runningInstanceId.current, messageData.initContext);
         return;
       }
       // 智能表单
       if (messageData.formAppearance?.length) {
-        let obj = messageProcess(instanceId, messageData, atAppInfo);
+        let obj = messageProcess(runningInstanceId.current, messageData, atAppInfo);
         chatForm(obj);
         return;
       }
       // 普通日志
       messageData.answer?.forEach(log => {
         if (log.type === 'FORM') {
-          let obj = messageProcess(instanceId, log.content, atAppInfo);
+          let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
           chatForm(obj);
         }
         if (log.type === 'MSG' && log.content) {
