@@ -23,7 +23,8 @@ const ChatMessaga = (props) => {
     setEditorShow, 
     feedRef, 
     chatRunningStop, 
-    conditionConfirm 
+    conditionConfirm,
+    questionClarConfirm, 
   } = props;
   const initFeedbackStatus = async (id) => {
     let arr = JSON.parse(JSON.stringify(chatList))
@@ -77,7 +78,7 @@ const ChatMessaga = (props) => {
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id='chat-list-dom'>
       { !list?.length && <ChatDetail /> }
       <ChatContext.Provider
-        value={{ checkCallBack, setShareClass, showCheck, handleRejectClar, useMemory, dataDimension, conditionConfirm, tenantId}}>
+        value={{ checkCallBack, setShareClass, showCheck, handleRejectClar, useMemory, dataDimension, conditionConfirm, tenantId, questionClarConfirm}}>
         <div className='message-box'>
           {
             list?.map((item, index) => {

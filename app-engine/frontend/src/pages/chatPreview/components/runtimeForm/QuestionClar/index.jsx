@@ -24,7 +24,7 @@ const QuestionClar = (props) => {
   const { data, mode } = props;
   const [questionInfo, setQuestionInfo] = useState(null);
   const { RangePicker } = DatePicker;
-  const { handleRejectClar, dataDimension, tenantId } = useContext(ChatContext);
+  const { handleRejectClar, dataDimension, tenantId, questionClarConfirm } = useContext(ChatContext);
   useEffect(() => {
     if (!data?.formData) return;
     if (data.formData[id]) {
@@ -347,7 +347,7 @@ const QuestionClar = (props) => {
         [id]: JSON.stringify(info),
       },
     };
-    const res = await resumeInstance(tenantId, data?.formData?.instanceId, params);
+    questionClarConfirm(params, data?.formData?.instanceId)
   }
 
   return (<>

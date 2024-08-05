@@ -34,7 +34,7 @@ const RuntimeForm = (props) => {
                   saveCallBack={saveCallBack}
                 />
         break;
-      case 'QuestionClar':
+      case 'questionClar':
         return <QuestionClar data={props.formConfig} mode={props.formConfig.type}/>
         break;
       case 'conditionForm':

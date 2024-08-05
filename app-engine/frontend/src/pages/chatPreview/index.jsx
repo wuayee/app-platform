@@ -14,7 +14,7 @@ import {
   updateFlowInfo,
   stopInstance,
   getReportInstance,
-  getChatRecentLog
+  getChatRecentLog,
 } from '@shared/http/aipp';
 import {
   historyChatProcess,
@@ -77,25 +77,25 @@ const ChatPreview = (props) => {
     currentInfo.current = appInfo;
     return () => {
       closeConnected();
-    }
+    };
   }, []);
 
   useEffect(() => {
     testRef.current = formReceived;
-  }, [formReceived])
+  }, [formReceived]);
 
   // 切换App时，chatId为应用上次会话id
   useEffect(() => {
     if (!appId) {
       return;
-    };
+    }
     // 如果不是小魔方
     if (!isBusinessMagicCube(appId)) {
       dispatch(setChatId(storage.getChatId(appId)));
     } else {
       const dimensionId = storage.get('dimension')?.id;
       dispatch(setChatId(storage.getDimensionChatId(dimensionId)));
-    };
+    }
   }, [appId, dimension]);
 
   // 灵感大全设置下拉列表
@@ -124,7 +124,7 @@ const ChatPreview = (props) => {
     if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
       dispatch(setChatRunning(false));
       dispatch(setChatList([]));
-      (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+      appInfo.name && !appInfo.notShowHistory && initChatHistory();
     }
   }, [appInfo.id, chatId]);
   // 发送消息
@@ -192,16 +192,23 @@ const ChatPreview = (props) => {
     queryInstance(chatParams);
   };
   // 开始对话
-  const queryInstance = (params) => {
+  const queryInstance = (params, type = undefined, instanceId = '') => {
     runningInstanceId.current = null;
     controller.current = new AbortController();
-    fetch(`/api/jober/v1/api/${tenantId}/${chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
-      method: 'POST',
+    let url = '';
+    // 继续对话
+    if (type === 'clar') {
+      url = `/api/jober/v1/api/${tenantId}/app/instances/${instanceId}`;
+    } else {
+      url = `/api/jober/v1/api/${tenantId}/${chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`;
+    }
+    fetch(url, {
+      method: type === 'clar' ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(params),
-      signal: controller.current.signal
+      signal: controller.current.signal,
     }).then(async (res) => {
       if (res.status !== 200) {
         onStop('启动会话失败');
@@ -233,8 +240,8 @@ const ChatPreview = (props) => {
           }
         }
       }
-    })
-  }
+    });
+  };
   // sse接收消息回调
   const sseReceiveProcess = (messageData) => {
     try {
@@ -255,7 +262,7 @@ const ChatPreview = (props) => {
         return;
       }
       // 普通日志
-      messageData.answer?.forEach(log => {
+      messageData.answer?.forEach((log) => {
         if (log.type === 'FORM') {
           let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
           chatForm(obj);
@@ -269,7 +276,7 @@ const ChatPreview = (props) => {
             chatStrInit(msg, recieveChatItem, messageData.status);
           }
         }
-      })
+      });
       if (chatStatus.includes(messageData.status)) {
         saveLocalChatId(messageData);
         dispatch(setChatRunning(false));
@@ -278,7 +285,7 @@ const ChatPreview = (props) => {
       onStop('数据解析异常');
       dispatch(setChatRunning(false));
     }
-  }
+  };
   // sse回调保存chatId
   const saveLocalChatId = (data) => {
     let { chat_id, at_chat_id } = data;
@@ -289,14 +296,14 @@ const ChatPreview = (props) => {
     if (at_chat_id) {
       dispatch(setAtChatId(at_chat_id));
     }
-  }
+  };
   // 聊天表单
   const chatForm = (chatObj) => {
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, chatObj);
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
-  }
+  };
   // 用户自勾选
   function selfSelect(instanceId, initContext) {
     reportInstance.current = instanceId;
@@ -314,9 +321,9 @@ const ChatPreview = (props) => {
       initContext: {
         Question: listRef.current[listRef.current.length - 2].content,
         ...reportIContext.current.initContext,
-        memories: JSON.stringify(memoriesList)
-      }
-    }
+        memories: JSON.stringify(memoriesList),
+      },
+    };
     try {
       const startes = await getReportInstance(tenantId, reportInstance.current, params);
       if (startes.code === 0 && startes.data) {
@@ -342,8 +349,8 @@ const ChatPreview = (props) => {
       }
     }
     initObj.loading = false;
-    initObj.finished = (status === 'ARCHIVED');
-    idx = listRef.current.length - 1
+    initObj.finished = status === 'ARCHIVED';
+    idx = listRef.current.length - 1;
     if (testRef.current) {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
@@ -355,9 +362,7 @@ const ChatPreview = (props) => {
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
     let msgId = log.msgId;
-    let currentChatItem = listRef.current.filter(
-      (item) => item.logId === msgId
-    )[0];
+    let currentChatItem = listRef.current.filter((item) => item.logId === msgId)[0];
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
       let item = listRef.current[index];
@@ -401,6 +406,14 @@ const ChatPreview = (props) => {
       Message({ type: 'error', content: '终止对话失败' });
     }
   }
+  // 澄清表单重新对话
+  function questionClarConfirm(params, instanceId) {
+    queryInstance(params, 'clar', instanceId);
+  }
+  // 澄清表单重新对话
+  function questionClarConfirm(params, instanceId) {
+    queryInstance(params, 'clar', instanceId);
+  }
   // 溯源表单重新对话
   function conditionConfirm(logId, instanceId) {
     const reciveInitObj = deepClone(initChat);
@@ -420,9 +433,10 @@ const ChatPreview = (props) => {
     dispatch(setChatRunning(false));
     controller.current?.abort();
     controller.current = null;
-  }
+  };
   return (
-    <div className={`
+    <div
+      className={`
         chat-preview 
         ${showElsa ? 'chat-preview-elsa' : ''} 
         ${detailPage ? 'chat-preview-inner' : ''} 
@@ -440,6 +454,7 @@ const ChatPreview = (props) => {
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               conditionConfirm={conditionConfirm}
+              questionClarConfirm={questionClarConfirm}
               showCheck={showCheck} />
             {showCheck ?
               <CheckGroup
@@ -453,7 +468,8 @@ const ChatPreview = (props) => {
                 onStop={chatRunningStop}
                 filterRef={editorRef}
                 chatType={chatType}
-                inspirationOpen={inspirationOpen} />
+                inspirationOpen={inspirationOpen}
+              />
             }
           </div>
           <div className={`chat-inner-right ${inspirationOpen ? 'chat-right-close' : ''}`}>
@@ -462,7 +478,7 @@ const ChatPreview = (props) => {
         </div>
       </Spin>
     </div>
-  )
+  );
 };
 
 export default ChatPreview;
