@@ -1,1 +1,0 @@
-UPDATE "index" SET "updated_by" = ?, "updated_at" = ?, "name" = ? WHERE "id" = ?

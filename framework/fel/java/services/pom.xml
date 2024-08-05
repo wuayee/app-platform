@@ -15,8 +15,5 @@
 
     <modules>
         <module>fel-service</module>
-        <module>fel-langchain-service</module>
-        <module>fel-pipeline-service</module>
-        <module>rag-service</module>
     </modules>
 </project>

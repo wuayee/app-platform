@@ -1,1 +1,0 @@
-SELECT COUNT(1) FROM "task" WHERE "tenant_id" = ?

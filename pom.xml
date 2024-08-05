@@ -9,13 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>app-engine</module>
-        <module>app-builder</module>
-        <module>carver</module>
-        <module>common</module>
-        <module>eco</module>
         <module>framework</module>
-        <module>store</module>
     </modules>
 
     <properties>

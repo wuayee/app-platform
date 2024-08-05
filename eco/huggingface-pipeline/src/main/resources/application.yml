@@ -1,5 +1,0 @@
-fit:
-  beans:
-    packages: 'com.huawei.jade.fel.pipeline.huggingface'
-
-gateway-url: 'http://model-io-gateway:8009'

@@ -1,5 +1,0 @@
-let input = ext::context;
-let prompt = input.get(0).get("businessData").get("prompt");
-input.get(0).get("businessData").put("prompt", prompt+"abc");
-input.get(0).get("businessData").put("newKey", prompt);
-input

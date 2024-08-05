@@ -1,1 +1,0 @@
-INSERT INTO "task_instance_deleted" SELECT * FROM "task_instance_wide" WHERE "id" = ? AND "task_id" = ?

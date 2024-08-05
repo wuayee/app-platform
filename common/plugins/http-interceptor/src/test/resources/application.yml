@@ -1,6 +1,0 @@
-fit:
-  application:
-    http:
-      wrapper:
-        support: "/support/**"
-        nonsupport: "/nonsupport/**"

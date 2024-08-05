@@ -1,1 +1,0 @@
-SELECT COUNT(1) FROM "index_property" WHERE "property_id" = ?

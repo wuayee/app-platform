@@ -1,7 +1,0 @@
-namespace DataBus.Common;
-
-table Heartbeat {
-    time_stamp: uint32;
-}
-
-root_type Heartbeat;

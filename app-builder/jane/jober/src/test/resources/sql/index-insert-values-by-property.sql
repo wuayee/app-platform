@@ -1,1 +1,0 @@
-INSERT INTO "index_integer"("id", "instance_id", "property_id", "value") SELECT generate_uuid_text(), "id", ?, "integer_1" FROM "task_instance_wide" WHERE "task_id" = ?

@@ -1,9 +1,0 @@
-include "common.fbs";
-
-namespace DataBus.Common;
-
-table ErrorMessageResponse {
-    error_type: ErrorType;
-}
-
-root_type ErrorMessageResponse;

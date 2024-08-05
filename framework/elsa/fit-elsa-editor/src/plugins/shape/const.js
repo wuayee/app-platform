@@ -1,1 +1,0 @@
-export const EXTERNAL_ID_NAME = "externalid";

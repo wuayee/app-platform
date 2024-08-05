@@ -1,1 +1,0 @@
-INSERT INTO "task_category_trigger"("id", "task_id", "category_id", "fitable_id") VALUES

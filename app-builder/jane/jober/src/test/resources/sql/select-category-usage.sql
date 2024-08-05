@@ -1,1 +1,0 @@
-SELECT "id", "object_type", "object_id", "category_group_id", "category_id", "created_by", "created_at", "updated_by", "updated_at" FROM "category_usage" WHERE "object_id" = ? AND "object_type" = ?

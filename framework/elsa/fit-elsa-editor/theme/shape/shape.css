@@ -1,8 +1,0 @@
-.shape-external {
-    outline-offset: -2px;
-    line-height: 1em;
-}
-
-.shape-external::selection {
-    display: none;
-}

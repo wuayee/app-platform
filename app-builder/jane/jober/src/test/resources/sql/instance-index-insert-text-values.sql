@@ -1,1 +1,0 @@
-INSERT INTO "index_text"("id", "instance_id", "property_id", "value") VALUES(?, ?, ?, ?), (?, ?, ?, ?)

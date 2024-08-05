@@ -1,1 +1,0 @@
-SELECT "id", "name", "task_id", "created_by", "created_at", "updated_by", "updated_at" FROM "index" WHERE "task_id" IN (?)

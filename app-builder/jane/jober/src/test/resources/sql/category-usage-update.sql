@@ -1,1 +1,0 @@
-UPDATE "category_usage" SET "category_id" = ?, "updated_by" = ?, "updated_at" = ? WHERE "id" = ?

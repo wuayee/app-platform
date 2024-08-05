@@ -1,1 +1,0 @@
-DELETE FROM "index" WHERE "id" = ?

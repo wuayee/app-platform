@@ -1,1 +1,0 @@
-DELETE FROM "list_text" WHERE "instance_id" = ?

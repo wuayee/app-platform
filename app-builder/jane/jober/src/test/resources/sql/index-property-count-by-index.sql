@@ -1,1 +1,0 @@
-SELECT "index_id", COUNT(1) AS "count" FROM "index_property" WHERE "index_id" IN (SELECT DISTINCT "index_id" FROM "index_property" WHERE "property_id" = ?) GROUP BY "index_id"

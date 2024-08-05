@@ -13,7 +13,6 @@
         <module>waterflow-core</module>
         <module>waterflow-dependency</module>
         <module>waterflow-genericable</module>
-        <module>waterflow-service</module>
     </modules>
 
     <properties>

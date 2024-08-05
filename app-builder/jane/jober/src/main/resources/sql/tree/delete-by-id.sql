@@ -1,1 +1,0 @@
-DELETE FROM "task_tree_v2" WHERE "id" = ?

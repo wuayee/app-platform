@@ -1,1 +1,0 @@
-DELETE FROM "tenant_member" WHERE "tenant_id" = ? AND "id" IN

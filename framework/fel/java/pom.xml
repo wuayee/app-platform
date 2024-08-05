@@ -12,10 +12,7 @@
         <module>fel-core</module>
         <module>fel-dependency</module>
         <module>fel-flow</module>
-        <module>fel-langchain</module>
-        <module>fel-pipeline-core</module>
         <module>services</module>
-        <module>plugins</module>
     </modules>
 
     <properties>

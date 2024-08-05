@@ -1,1 +1,0 @@
-UPDATE "task_instance_wide" SET "task_type_id" = ?, "source_id" = ? WHERE "id" = ?

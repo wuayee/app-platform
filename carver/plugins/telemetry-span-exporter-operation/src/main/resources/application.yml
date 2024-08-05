@@ -1,4 +1,0 @@
-fit:
-  beans:
-    packages:
-    - 'com.huawei.jade.carver.exporter'

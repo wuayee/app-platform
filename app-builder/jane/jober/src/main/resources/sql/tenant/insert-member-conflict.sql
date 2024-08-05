@@ -1,1 +1,0 @@
-ON CONFLICT ("tenant_id", "user_id")

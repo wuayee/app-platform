@@ -1,1 +1,0 @@
-SELECT COUNT(1) FROM "authorization" WHERE "id" IN (?) AND "user" IN (?) AND ("system" LIKE ? ESCAPE '\')

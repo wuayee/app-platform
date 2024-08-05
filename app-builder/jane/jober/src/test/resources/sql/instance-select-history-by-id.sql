@@ -1,1 +1,0 @@
-SELECT "ins"."id", "ins"."task_id", "ins"."task_type_id", "ins"."source_id", "ins"."text_1" AS "info_id", "ins"."text_2" AS "info_status" FROM "task_instance_deleted" AS "ins" WHERE "ins"."id" = ? AND "ins"."task_id" = ?

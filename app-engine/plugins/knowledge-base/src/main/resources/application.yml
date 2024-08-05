@@ -1,7 +1,0 @@
-fit:
-  beans:
-    packages:
-      - 'com.huawei.jade.app.engine'
-server:
-  http:
-    port: 12755

@@ -1,1 +1,0 @@
-SELECT "id" FROM "task_instance_wide" WHERE "source_id" = ?

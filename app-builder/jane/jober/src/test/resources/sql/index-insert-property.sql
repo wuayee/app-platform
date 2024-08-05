@@ -1,1 +1,0 @@
-INSERT INTO "index_property"("id", "index_id", "property_id") VALUES(?, ?, ?)

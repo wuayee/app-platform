@@ -1,1 +1,0 @@
-DELETE FROM "task_instance_wide" WHERE "id" = ? AND "task_id" = ?

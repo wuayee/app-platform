@@ -1,7 +1,0 @@
-#Fit
-/fit/.dependency
-# IDE index cache
-.cache
-.dependency
-.mm
-build-*

@@ -1,1 +1,0 @@
-SELECT "id", "metadata", "create_fitable_id", "patch_fitable_id", "delete_fitable_id", "retrieve_fitable_id", "list_fitable_id" FROM "task_source_refresh_in_time" WHERE "id" IN (?)

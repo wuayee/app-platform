@@ -1,1 +1,0 @@
-DELETE FROM "category_usage" WHERE "id" = ?

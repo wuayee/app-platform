@@ -1,1 +1,0 @@
-SELECT "id", "instance_id", "property_id", "index", "value" FROM "list_text" WHERE "instance_id" = ? AND "property_id" = ?

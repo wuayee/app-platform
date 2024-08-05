@@ -1,1 +1,0 @@
-DELETE FROM "task_source_refresh_in_time" WHERE "id" = ?
