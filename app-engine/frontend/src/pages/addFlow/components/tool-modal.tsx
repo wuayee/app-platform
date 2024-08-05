@@ -95,7 +95,7 @@ const ToolDrawer = (props) => {
     } else {
       let params = { pageNum, pageSize };
       modalType ? params.tag = 'FIT' : '';
-      res = await getMyPlugin(tenantId, params);
+      res = await getMyPlugin(tenantId, params, modalType ? 'modal' : '');
     }
 
     setLoading(false);

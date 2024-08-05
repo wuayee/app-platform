@@ -8,7 +8,7 @@ export function getPlugins(data: {
   pageSize: number;
   includeTags: string;
   name: string;
-}, excludeTags:string) {
+}, excludeTags:string = '') {
   const url = `${PLUGIN_URL}/store/plugins/search?${excludeTags}`;
   return get(url, { ...data });
 }
@@ -24,8 +24,8 @@ export function getToolsList(params) {
 }
 
 // 我的-工具
-export function getPluginTool(tenantId, data: { pageNum: number; pageSize: number; tag: string }) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins`;
+export function getPluginTool(tenantId, data: { pageNum: number; pageSize: number; }) {
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins?excludeTags=APP&excludeTags=WATERFLOW`;
   return get(url, data);
 }
 
@@ -39,8 +39,9 @@ export function getPluginWaterFlow(
 }
 
 // 我的-已发布（工具+工具流)
-export function getMyPlugin(tenantId, data) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins`;
+export function getMyPlugin(tenantId, data, type = '') {
+  let str = type !== 'modal' ? 'excludeTags=APP' : 'excludeTags=APP&excludeTags=WATERFLOW';
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins?${str}`;
   return get(url, data);
 }
 // 解析工具插件包内容

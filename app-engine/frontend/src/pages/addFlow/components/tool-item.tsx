@@ -56,7 +56,7 @@ const ToolItem = () => {
         pageNum,
         pageSize:100,
         tag: 'FIT'
-      });
+      }, 'modal');
     }
     const data=listType.current === PluginTypeE.MARKET? res?.data : res?.data?.toolData;
       setLoading(false);
