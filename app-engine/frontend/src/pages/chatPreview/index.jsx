@@ -243,18 +243,23 @@ const ChatPreview = (props) => {
       }
       // 用户自勾选
       if (messageData.memory === 'UserSelect') {
-        selfSelect(messageData.instanceId, messageData.initContext);
+        selfSelect(runningInstanceId.current, messageData.initContext);
         return;
       }
       // 智能表单
       if (messageData.formAppearance?.length) {
-        let obj = messageProcess(instanceId, messageData, atAppInfo);
+        let obj = messageProcess(runningInstanceId.current, messageData, atAppInfo);
         chatForm(obj);
         return;
       }
       // 普通日志
       messageData.answer?.forEach(log => {
-        if (log.content && log.content.length) {
+        if (log.type === 'FORM') {
+          let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
+          chatForm(obj);
+          saveLocalChatId(messageData);
+        }
+        if (log.type === 'MSG' && log.content) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
           if (log.msgId !== null) {
             chatSplicing(log, msg, recieveChatItem, messageData.status);

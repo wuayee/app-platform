@@ -34,9 +34,6 @@ module.exports = merge(common, {
             },
           },
         },
-        {
-          loader: 'scoped-css-loader'
-        },
         'postcss-loader',
         {
           loader: 'sass-loader',
