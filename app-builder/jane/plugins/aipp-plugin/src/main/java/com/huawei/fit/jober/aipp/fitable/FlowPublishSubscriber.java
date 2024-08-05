@@ -110,11 +110,10 @@ public class FlowPublishSubscriber implements FlowPublishService {
         return app.isPublished();
     }
 
-    @SuppressWarnings("unchecked")
     private List<Parameter> buildParameters(Map<String, Object> businessData, String nodeId) {
         // 如果根据nodeId找不到，则说明节点没有出入参.
-        List<Map<String, Object>> executeInfos = this.getValueByKeys(businessData,
-                Arrays.asList("_internal", "executeInfo", nodeId), List.class).orElseGet(Collections::emptyList);
+        List<Map<String, Object>> executeInfos = ObjectUtils.cast(this.getValueByKeys(businessData,
+                Arrays.asList("_internal", "executeInfo", nodeId), List.class).orElseGet(Collections::emptyList));
         if (executeInfos.isEmpty()) {
             return Collections.emptyList();
         }
