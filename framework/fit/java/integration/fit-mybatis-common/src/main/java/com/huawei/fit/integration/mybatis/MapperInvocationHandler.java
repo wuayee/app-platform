@@ -61,9 +61,9 @@ public final class MapperInvocationHandler implements InvocationHandler {
         }
     }
 
-    static <M> M proxy(SqlSessionFactory sessionFactory, Class<M> mapperClass, boolean isUseByteBuddy) {
+    static <M> M proxy(SqlSessionFactory sessionFactory, Class<M> mapperClass, boolean shouldUseByteBuddy) {
         MapperInvocationHandler handler = new MapperInvocationHandler(sessionFactory, mapperClass);
-        if (isUseByteBuddy && ByteBuddyHelper.isByteBuddyAvailable()) {
+        if (shouldUseByteBuddy && ByteBuddyHelper.isByteBuddyAvailable()) {
             // 通过 ByteBuddy 生成的代理为非 final，允许测试过程中进行 Mock/Spy 操作。
             return InvocationHandlerHelper.proxyByByteBuddy(mapperClass, handler);
         }
