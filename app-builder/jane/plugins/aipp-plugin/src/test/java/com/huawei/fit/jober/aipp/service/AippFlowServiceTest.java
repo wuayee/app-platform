@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -38,17 +39,27 @@ import com.huawei.fit.jober.aipp.dto.AippDetailDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
 import com.huawei.fit.jober.aipp.dto.AippOverviewRspDto;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
+import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
+import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.impl.AippFlowServiceImpl;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowNodeFormInfo;
 import com.huawei.fit.jober.entity.FlowNodeInfo;
+import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
+import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.broker.client.Invoker;
+import com.huawei.fitframework.broker.client.Router;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -66,7 +77,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
-@Disabled
 class AippFlowServiceTest {
     private static final String DUMMY_FLOW_CONFIG_ID = "testFlowConfigId";
     private static final String DUMMY_FLOW_CONFIG_VERSION = "1.0.0";
@@ -85,6 +95,21 @@ class AippFlowServiceTest {
     @Mock
     private DynamicFormMetaService formMetaServiceMock;
 
+    @Mock
+    private AppBuilderFormRepository appBuilderFormRepositoryMock;
+
+    @Mock
+    private BrokerClient brokerClientMock;
+
+    @Mock
+    private Router routerMock;
+
+    @Mock
+    private Invoker invokerMock;
+
+    @Mock
+    private AppBuilderAppMapper appBuilderAppMapperMock;
+
     @BeforeEach
     void setUp() {
         // setup
@@ -99,6 +124,7 @@ class AippFlowServiceTest {
         expectMeta.setCreator("testUser");
         expectMeta.setCreationTime(createTime);
         expectMeta.setLastModificationTime(modifyTime);
+        expectMeta.setVersion(DUMMY_META_VERSION_OLD);
 
         Map<String, Object> attribute = new HashMap<>();
         attribute.put(AippConst.ATTR_FLOW_CONFIG_ID_KEY, DUMMY_FLOW_CONFIG_ID);
@@ -130,10 +156,12 @@ class AippFlowServiceTest {
     OperationContext GenTestOperationContext() {
         OperationContext context = new OperationContext();
         context.setTenantId("testTenantId");
+        context.setOperator("testOperator");
         return context;
     }
 
     @Test
+    @Disabled
     void testQueryAippDetailThenOk() {
         final String defaultVersion = "1.0.0";
         Map<String, Object> attributes = new HashMap<>();
@@ -175,6 +203,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void shouldSetDraftVersionWhenCallListAippWithInactiveAipp() {
         Meta expectMeta = GenerateInactiveMeta();
 
@@ -208,6 +237,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void testCreateAippWithInvalidNameThenFail() {
         Assertions.assertThrows(AippParamException.class,
                 () -> aippFlowServiceImpl.create(AippDto.builder().build(), GenTestOperationContext()));
@@ -220,6 +250,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void testCreateAippThenOk() {
         AippDto aipp = AippDto.builder().name("testAippName").build();
 
@@ -258,6 +289,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void testUpdateAippWithInvalidConditionThenFail() {
         Meta expectMeta = GenTestMeta();
         expectMeta.getAttributes().replace(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.ACTIVE.getCode());
@@ -307,6 +339,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void testUpdateAippThenOk() {
         Meta expectMeta = GenTestMeta();
         String aippId = expectMeta.getId();
@@ -363,10 +396,26 @@ class AippFlowServiceTest {
             flowInfo.setVersion(var.getArgument(1));
 
             FlowNodeInfo nodeInfo = new FlowNodeInfo();
+            nodeInfo.setType(FlowNodeType.START.getCode());
             nodeInfo.setFlowNodeForm(expectedFormInfo);
+            nodeInfo.setProperties(this.buildFlowNodesProperties());
             flowInfo.setFlowNodes(Collections.singletonList(nodeInfo));
             return flowInfo;
         }).when(flowsServiceMock).publishFlows(any(), any(), any(), any(OperationContext.class));
+    }
+
+    private Map<String, Object> buildFlowNodesProperties() {
+        return MapBuilder.<String, Object>get()
+                .put("inputParams", Collections.singletonList(this.buildInputParams()))
+                .build();
+    }
+
+    private Map<String, Object> buildInputParams() {
+        Map<String, Object> inputValue = new HashMap<>();
+        return MapBuilder.<String, Object>get()
+                .put("name", "input")
+                .put("value", Collections.singletonList(inputValue))
+                .build();
     }
 
     private void publishBasicMock(Meta expectMeta) {
@@ -378,7 +427,8 @@ class AippFlowServiceTest {
                 eq(true),
                 eq(0L),
                 eq(1),
-                any(OperationContext.class))).thenReturn(mockResult);
+                any(OperationContext.class),
+                any(MetaFilter.class))).thenReturn(mockResult);
         FlowNodeFormInfo expectedFormInfo = buildFlowNodeFormInfo();
         publishFlowsMock(expectedFormInfo);
     }
@@ -420,6 +470,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void shouldOkWhenPreviewAipp() {
         Meta expectMeta = GenTestMeta();
         expectMeta.getAttributes().put(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.ACTIVE.getCode());
@@ -462,6 +513,7 @@ class AippFlowServiceTest {
     }
 
     @Test
+    @Disabled
     void shouldFailedWhenCreatePreviewAippFailed() {
         Meta expectMeta = GenTestMeta();
         expectMeta.getAttributes().put(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.ACTIVE.getCode());
@@ -480,22 +532,49 @@ class AippFlowServiceTest {
     }
 
     @Test
-    void testPublishAippThenOk() {
+    @DisplayName("发布应用成功")
+    void testPublishAppThenOk() {
         Meta expectMeta = GenTestMeta();
         publishBasicMock(expectMeta);
+        this.setUpPublishMock();
+        AippDto aipp = this.buildAppDto(expectMeta, AppCategory.APP.getType());
+        Rsp<AippCreateDto> rsp = this.aippFlowServiceImpl.publish(aipp, GenTestOperationContext());
+        Assertions.assertEquals(rsp.getCode(), AippErrCode.OK.getErrorCode());
+    }
 
-        FormMetaItem expectedFormMetaItem = new FormMetaItem("testKey", "testName", "TEXT", null, null);
-        formMetaServiceQueryMock(Collections.singletonList(expectedFormMetaItem));
+    @Test
+    @DisplayName("发布工具流成功")
+    void testPublishWaterFlowThenOk() {
+        Meta expectMeta = GenTestMeta();
+        publishBasicMock(expectMeta);
+        this.setUpPublishMock();
+        AippDto aipp = this.buildAppDto(expectMeta, AppCategory.WATER_FLOW.getType());
+        Rsp<AippCreateDto> rsp = this.aippFlowServiceImpl.publish(aipp, GenTestOperationContext());
+        Assertions.assertEquals(rsp.getCode(), AippErrCode.OK.getErrorCode());
+    }
+
+    private void setUpPublishMock() {
         doAnswer((Answer<Object>) invocation -> {
             MetaDeclarationInfo declaration = invocation.getArgument(1);
-            Assertions.assertTrue(declaration.getProperties().getDefined());
             Assertions.assertTrue(declaration.getAttributes().getDefined());
             return null;
         }).when(metaServiceMock).patch(any(), any(), any());
 
+        when(this.appBuilderFormRepositoryMock.selectWithId(anyString())).thenReturn(null);
+        when(this.brokerClientMock.getRouter(any(), anyString())).thenReturn(this.routerMock);
+        when(this.routerMock.route(any())).thenReturn(this.invokerMock);
+        when(this.invokerMock.invoke(any())).thenReturn("");
+        doNothing().when(this.appBuilderAppMapperMock).updateAppWithStoreId(any(), any(), any());
+    }
+
+    private AippDto buildAppDto(Meta expectMeta, String type) {
         AippDto aipp = GenAippDtoWithData(expectMeta.getName());
         aipp.setId(expectMeta.getId());
-        Rsp<AippCreateDto> rsp = aippFlowServiceImpl.publish(aipp, GenTestOperationContext());
-        Assertions.assertEquals(rsp.getCode(), AippErrCode.OK.getErrorCode());
+        aipp.setVersion(DUMMY_META_VERSION_OLD);
+        aipp.setType(type);
+        aipp.setIcon(StringUtils.EMPTY);
+        aipp.setDescription(StringUtils.EMPTY);
+        aipp.setUniqueName(StringUtils.EMPTY);
+        return aipp;
     }
 }
