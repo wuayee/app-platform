@@ -28,8 +28,8 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
     /**
      * @override
      */
-    self.serializerJadeConfig = () => {
-        self.flowMeta.task = self.getLatestJadeConfig();
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.task = jadeConfig;
     };
 
     return self;

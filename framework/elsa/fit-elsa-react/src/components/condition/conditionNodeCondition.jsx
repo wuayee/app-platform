@@ -40,8 +40,8 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
     /**
      * @override
      */
-    self.serializerJadeConfig = () => {
-        self.flowMeta.conditionParams = self.getLatestJadeConfig();
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.conditionParams = jadeConfig;
     };
 
     /**
@@ -89,7 +89,7 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
      * 条件节点默认的测试报告章节
      */
     self.getRunReportSections = () => {
-        const branches = self.getLatestJadeConfig().branches;
+        const branches = self.drawer.getLatestJadeConfig().branches;
         const sectionSource = self.input ? self.input.branches : transformData(branches);
         // 过滤掉else分支
         return sectionSource.filter(branch => !branch.conditions.some(condition => condition.condition === 'true')).map((branch, index) => {

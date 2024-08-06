@@ -42,15 +42,15 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
     /**
      * @override
      */
-    self.serializerJadeConfig = () => {
-        self.flowMeta.inputParams = self.getLatestJadeConfig();
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.inputParams = jadeConfig;
     };
 
     /**
      * 获取试运行入参
      */
     self.getRunInputParams = () => {
-        return self.getLatestJadeConfig().find(config => config.name === "input").value;
+        return self.drawer.getLatestJadeConfig().find(config => config.name === "input").value;
     };
 
     /**
