@@ -81,7 +81,7 @@ const ToolDrawer = (props) => {
   const getPluginList = async () => {
     setLoading(true);
     let res;
-    let params:any = {
+    let params: any = {
       pageNum,
       pageSize,
       includeTags: activeKey,
@@ -99,7 +99,7 @@ const ToolDrawer = (props) => {
     }
 
     setLoading(false);
-    const data=listType.current === PluginTypeE.MARKET? res?.data : res?.data?.toolData;
+    const data = listType.current === PluginTypeE.MARKET ? res?.data : res?.data?.toolData;
     setTotal(res?.data?.total);
     setDefaultCheck(data);
     setPluginData(data);
@@ -107,8 +107,8 @@ const ToolDrawer = (props) => {
 
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
-      setPageNum(curPage);
-      setPageSize(curPageSize);
+    setPageNum(curPage);
+    setPageSize(curPageSize);
   };
   // 名称搜索
   const filterByName = (value: string) => {
@@ -126,7 +126,7 @@ const ToolDrawer = (props) => {
   };
 
   // 添加工作流
-  const workflowAdd=()=>{
+  const workflowAdd = () => {
     const workFlowList: any = [];
     const fitList: any = [];
     checkedList.current.forEach((item) => {
@@ -162,6 +162,7 @@ const ToolDrawer = (props) => {
       workflowAdd();
     }
     setShowModal(false);
+    checkedList.current = [];
   };
   // 设置默认选中
   const setDefaultCheck = (data) => {
@@ -224,7 +225,7 @@ const ToolDrawer = (props) => {
               <div className='mashup-add-inner'>
                 {pluginData.map((card: any) => (
                   <div className='mashup-add-item' key={card.uniqueName}>
-                    <ToolCard pluginData={card} tenantId={tenantId}/>
+                    <ToolCard pluginData={card} tenantId={tenantId} />
                     <span className='opration-item'>
                       <Checkbox checked={card.checked} onChange={(e) => onChange(e, card)} />
                     </span>

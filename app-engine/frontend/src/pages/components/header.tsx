@@ -7,21 +7,21 @@ import EditModal from './edit-modal';
 import TestStatus from './test-status';
 import TestModal from './test-modal';
 import './styles/header.scss'
-import {Message} from "@/shared/utils/message";
+import { Message } from "@/shared/utils/message";
 import { useAppDispatch } from "@/store/hook";
 import { updateChatId } from "../../shared/utils/common";
 import { setChatId, setChatList } from "@/store/chatStore/chatStore";
 
 const ChoreographyHead = (props) => {
-  const { 
+  const {
     showElsa, appInfo,
     updateAippCallBack,
     mashupClick,
     openDebug, testTime,
     testStatus, showTime
   } = props;
-  const [ currentTime, setCurrentTime ] = useState('');
-  const [ open, setOpen ] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
+  const [open, setOpen] = useState(false);
   let modalRef = React.createRef();
   let editRef = React.createRef();
   let testRef = React.createRef();
@@ -46,7 +46,11 @@ const ChoreographyHead = (props) => {
   }
   // 返回编排页面
   const backClick = () => {
-    showElsa && mashupClick();
+    if (showElsa) {
+      mashupClick();
+    } else {
+      navigate(`/app-develop/${tenantId}/appDetail/${appId}`);
+    }
   }
   // 打开调试抽屉
   const handleOpenDebug = () => {
@@ -69,34 +73,34 @@ const ChoreographyHead = (props) => {
   return <>{(
     <div className='app-header'>
       <div className='logo'>
-        { showElsa && <LeftArrowIcon className='back-icon' onClick={backClick}/> }
-        { appInfo?.attributes?.icon ?
+        <LeftArrowIcon className='back-icon' onClick={backClick} />
+        {appInfo?.attributes?.icon ?
           <img src={appInfo.attributes?.icon} onClick={backClick} /> :
-          <img src='/src/assets/images/knowledge/knowledge-base.png' onClick={backClick}/>
+          <img src='/src/assets/images/knowledge/knowledge-base.png' onClick={backClick} />
         }
-        <span className='header-text' title={appInfo?.name}>{ appInfo?.name }</span>
-        <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
+        <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
+        <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={handleEditClick} />
         {
           appInfo.attributes?.latest_version ?
-          (
-            <div className='status-tag'>
-              <img src='/src/assets/images/ai/complate.png' />
-              <span>已发布</span>
-            </div>
-          ) :
-          (
-            <div className='status-tag'>
-              <img src='/src/assets/images/ai/publish.png' />
-              <span>未发布</span>
-            </div>
-          )
+            (
+              <div className='status-tag'>
+                <img src='/src/assets/images/ai/complate.png' />
+                <span>已发布</span>
+              </div>
+            ) :
+            (
+              <div className='status-tag'>
+                <img src='/src/assets/images/ai/publish.png' />
+                <span>未发布</span>
+              </div>
+            )
         }
-        { showTime && <span>自动保存：{currentTime}</span> }
-        {showElsa && <TestStatus testTime={testTime} testStatus={testStatus}/>}
+        {showTime && <span>自动保存：{currentTime}</span>}
+        {showElsa && <TestStatus testTime={testTime} testStatus={testStatus} />}
       </div>
       <div className='header-grid'>
         {
-          appInfo.attributes?.latest_version && 
+          appInfo.attributes?.latest_version &&
           <div className='header-grid-btn'>
             <span className='history' onClick={versionDetail}>
               <img src='/src/assets/images/ai/time.png' />
@@ -107,13 +111,13 @@ const ChoreographyHead = (props) => {
             </span>
           </div>
         }
-        { showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>调试</span> }
+        {showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>调试</span>}
         <span className='header-btn' onClick={handleUploadApp}><UploadIcon />发布</span>
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType='app' />
-      <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
+      <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack} />
       <TimeLineDrawer open={open} setOpen={setOpen} />
-      <TestModal testRef={testRef} handleDebugClick={openDebug} type='edit'/>
+      <TestModal testRef={testRef} handleDebugClick={openDebug} type='edit' />
     </div>
   )} </>;
 };

@@ -8,7 +8,7 @@ import ChatMessage from './components/chat-message';
 import SendEditor from './components/send-editor/send-editor.jsx';
 import CheckGroup from './components/check-group';
 import Inspiration from './components/inspiration';
-import { initChat} from './common/config';
+import { initChat } from './common/config';
 import { AippContext } from '../aippIndex/context';
 import {
   updateFlowInfo,
@@ -16,15 +16,16 @@ import {
   getReportInstance,
   getChatRecentLog
 } from '@shared/http/aipp';
-import { 
-  historyChatProcess, 
+import {
+  historyChatProcess,
   inspirationProcess,
   reportProcess,
   messageProcess,
   messageProcessNormal,
   beforeSend,
   deepClone,
-  scrollBottom } from './utils/chat-process';
+  scrollBottom
+} from './utils/chat-process';
 import './styles/chat-preview.scss';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import {
@@ -66,8 +67,9 @@ const ChatPreview = (props) => {
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
   const listRef = useRef([]);
-  const detailPage =  location.pathname.indexOf('app-detail') !== -1;
+  const detailPage = location.pathname.indexOf('app-detail') !== -1;
   const chatStatus = ['ARCHIVED', 'ERROR'];
+  const messageType = ['MSG', 'ERROR'];
 
   useEffect(() => {
     currentInfo.current = appInfo;
@@ -114,7 +116,7 @@ const ChatPreview = (props) => {
       (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
     }
   }, [appInfo.id]);
-  
+
   // 发送消息
   const onSend = (value, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
@@ -161,10 +163,10 @@ const ChatPreview = (props) => {
   const chatMissionStart = async (value, type) => {
     let chatParams = {
       'app_id': appId,
-      'question': value,
+      'question': type ? '请解析以下文件' : value,
       'context': {
         'use_memory': useMemory,
-        dimension
+        'dimension': dimension
       }
     };
     if (chatId) {
@@ -183,7 +185,7 @@ const ChatPreview = (props) => {
   const queryInstance = (params) => {
     runningInstanceId.current = null;
     controller.current = new AbortController();
-    fetch(`/api/jober/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
+    fetch(`/api/jober/v1/api/${tenantId}/${chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -213,7 +215,7 @@ const ChatPreview = (props) => {
             } else {
               sseReceiveProcess(val);
             }
-          } catch (e) { 
+          } catch (e) {
             console.info(e);
           }
           if (done) {
@@ -249,7 +251,7 @@ const ChatPreview = (props) => {
           chatForm(obj);
           saveLocalChatId(messageData);
         }
-        if (log.type === 'MSG' && log.content) {
+        if (messageType.includes(log.type)) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
           if (log.msgId !== null) {
             chatSplicing(log, msg, recieveChatItem, messageData.status);
@@ -262,7 +264,7 @@ const ChatPreview = (props) => {
         saveLocalChatId(messageData);
         dispatch(setChatRunning(false));
       }
-    } catch (err){
+    } catch (err) {
       onStop('数据解析异常');
       dispatch(setChatRunning(false));
     }
@@ -362,7 +364,7 @@ const ChatPreview = (props) => {
     }
   }
   // 显示问答组
-  function setEditorShow(val, type='share') {
+  function setEditorShow(val, type = 'share') {
     !val && setCheckedList([]);
     setShowCheck(val);
     val && setGroupType(type);
@@ -379,7 +381,7 @@ const ChatPreview = (props) => {
   async function chatRunningStop(params) {
     let str = params.content ? params.content : '已终止对话';
     if (!runningInstanceId.current) return;
-    const res = await stopInstance(tenantId, runningInstanceId.current, {content: str});
+    const res = await stopInstance(tenantId, runningInstanceId.current, { content: str });
     if (res.code === 0) {
       onStop(str);
       Message({ type: 'success', content: '已终止对话' });
@@ -412,30 +414,30 @@ const ChatPreview = (props) => {
   return (
     <div className={`
         chat-preview 
-        ${ showElsa ? 'chat-preview-elsa': ''} 
-        ${ detailPage ? 'chat-preview-inner' : '' } 
+        ${showElsa ? 'chat-preview-elsa' : ''} 
+        ${detailPage ? 'chat-preview-inner' : ''} 
         ${(showElsa && inspirationOpen) ? 'chat-preview-mr' : ''}`}
     >
       <Spin spinning={loading}>
         <span className='icon-back' onClick={previewBack}>
-          { showElsa && <LeftArrowIcon /> }
+          {showElsa && <LeftArrowIcon />}
         </span>
-        <div className={ `chat-inner ${ !detailPage ? 'chat-page-inner' : ''}`}>
-          <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
+        <div className={`chat-inner ${!detailPage ? 'chat-page-inner' : ''}`}>
+          <div className={`chat-inner-left ${inspirationOpen ? 'chat-left-close' : 'no-border'}`}>
             <ChatMessage
               feedRef={feedRef}
               chatRunningStop={chatRunningStop}
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               conditionConfirm={conditionConfirm}
-              showCheck={showCheck}/>
-            { showCheck ?
+              showCheck={showCheck} />
+            {showCheck ?
               <CheckGroup
                 type={groupType}
                 setEditorShow={setEditorShow}
                 checkedList={checkedList}
                 reportClick={reportClick} />
-              : 
+              :
               <SendEditor
                 onSend={onSend}
                 onStop={chatRunningStop}
@@ -444,7 +446,7 @@ const ChatPreview = (props) => {
                 inspirationOpen={inspirationOpen} />
             }
           </div>
-          <div className={`chat-inner-right ${ inspirationOpen ? 'chat-right-close' : '' }`}>
+          <div className={`chat-inner-right ${inspirationOpen ? 'chat-right-close' : ''}`}>
             <Inspiration inspirationClick={onSend} setEditorSelect={setEditorSelect} />
           </div>
         </div>

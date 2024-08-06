@@ -1,8 +1,8 @@
 import React from 'react';
 import { KnowledgeIcons, Icons } from '../icons';
 
-const HeaderFolderMenu = ({openMenuFunc, style}: {openMenuFunc: any, style: any})=> {
-  const openMenu = ()=> {
+const HeaderFolderMenu = ({ openMenuFunc, style }: { openMenuFunc: any, style: any }) => {
+  const openMenu = () => {
     openMenuFunc()
   }
   return (
@@ -18,16 +18,16 @@ const HeaderFolderMenu = ({openMenuFunc, style}: {openMenuFunc: any, style: any}
       }}>
         <KnowledgeIcons.menuFolder style={{
           cursor: 'pointer',
-        }} onClick={openMenu}/>
+        }} onClick={openMenu} />
         <div style={{
           fontSize: 16,
           display: 'flex',
           alignItems: 'center'
         }}>
-          <Icons.logo width = {24} height={24} />
+          <Icons.logo width={24} height={24} />
           <span style={{
             marginLeft: 8
-          }}>Model Engine</span>
+          }}>ModelEngine</span>
         </div>
       </div>
     </>
