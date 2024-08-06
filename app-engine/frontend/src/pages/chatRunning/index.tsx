@@ -18,7 +18,7 @@ const ChatRunning = () => {
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const navigate = useHistory().push;
-  
+
   // 获取aipp详情
   const getAippDetails = async () => {
     const res = await getAppInfo(tenantId, appId);
@@ -49,7 +49,7 @@ const ChatRunning = () => {
         if (!versionItem) {
           chatVersionListMap.push({ id, version });
           setModalContent(data, chatVersionListMap);
-        } else if (versionItem && versionItem.version !== version){
+        } else if (versionItem && versionItem.version !== version) {
           let index = chatVersionListMap.findIndex(item => item.id === id);
           chatVersionListMap[index].version = version;
           setModalContent(data, chatVersionListMap);
@@ -83,19 +83,19 @@ const ChatRunning = () => {
   return (
     <div className='chat-running-container'>
       <div className='chat-running-chat'>
-        <Button type='text' onClick={()=> { navigate(-1)}}>返回</Button>
-        <span className='running-app-name'>{ appInfo.name }</span> 
+        <Button type='text' onClick={() => { navigate(-1) }}>返回</Button>
+        <span className='running-app-name'>{appInfo.name}</span>
       </div>
       <CommonChat chatType='active' />
-      <Modal 
-        title='更新日志' 
+      <Modal
+        title='更新日志'
         width={800}
-        open={isModalOpen} 
+        open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         centered
         footer={null}>
-        <div style={{ maxHeight: '400px', overflow: 'auto'}}>
-          <div dangerouslySetInnerHTML={{ __html: trans(notice)}}></div>
+        <div style={{ maxHeight: '400px', overflow: 'auto' }}>
+          <div dangerouslySetInnerHTML={{ __html: trans(notice) }}></div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Button onClick={() => setIsModalOpen(false)}>我知道了</Button>

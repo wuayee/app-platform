@@ -38,11 +38,11 @@ const ChatDetail = () => {
   }
   return <>{(
     <div className='chat-details-content'>
-       {appInfo?.name ? ( isHomepage ? (
+      {appInfo?.name ? (isHomepage ? (
         <div className='home-top'>
           <div className='head-inner'>
             <div className='inner-left'>
-              <div className='title'>Model Engine</div>
+              <div className='title'>ModelEngine</div>
               <div className='sub-title'>你的专属AI智能编排研发平台</div>
               <div className='desc'>AI助力研发，开始创建专属应用吧～</div>
             </div>
@@ -52,8 +52,7 @@ const ChatDetail = () => {
               </div>
             </div>
             <div className='inner-right-chat'>
-              Hi~我是Model
-              Engine的超级应用 <strong>小海</strong>，我可以<strong>呼唤其他应用</strong>协同工作，也可以<strong>解答存储领域相关任何问题</strong>，试试向我提问吧~
+              Hi~我是ModelEngine的超级应用 <strong>小海</strong>，我可以<strong>呼唤其他应用</strong>协同工作，也可以<strong>解答存储领域相关任何问题</strong>，试试向我提问吧~
             </div>
           </div>
           <div className='head-nav'>
@@ -82,23 +81,23 @@ const ChatDetail = () => {
           </div>
         </div>
       ) : (
-        <div className='top'>
-          <div className='head'>
-            <Img icon={appInfo.attributes?.icon} />
-          </div>
-          <div className='title'>{appInfo.name}</div>
-          <div className='text'>{appInfo.attributes?.description}</div>
-          <div className='bottom'>
-            <div className='left'>
+          <div className='top'>
+            <div className='head'>
               <Img icon={appInfo.attributes?.icon} />
             </div>
-            <div className='right'>
-              {appInfo.attributes?.greeting || '你好'}
+            <div className='title'>{appInfo.name}</div>
+            <div className='text'>{appInfo.attributes?.description}</div>
+            <div className='bottom'>
+              <div className='left'>
+                <Img icon={appInfo.attributes?.icon} />
+              </div>
+              <div className='right'>
+                {appInfo.attributes?.greeting || '你好'}
+              </div>
             </div>
           </div>
-        </div>
-      ) ) : ''}
-       <EditModal type='add' modalRef={modalRef} appInfo={modalInfo} addAippCallBack={addAippCallBack}/>
+        )) : ''}
+      <EditModal type='add' modalRef={modalRef} appInfo={modalInfo} addAippCallBack={addAippCallBack} />
     </div>
   )}</>;
 };

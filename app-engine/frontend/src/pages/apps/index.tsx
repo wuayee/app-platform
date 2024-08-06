@@ -114,7 +114,7 @@ const Apps: React.FC = () => {
         <div className='operatorArea'>
           <Input
             showCount
-            maxLength={20}
+            maxLength={64}
             placeholder='搜索'
             style={{ width: '200px', height: '35px' }}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />}

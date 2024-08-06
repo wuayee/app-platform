@@ -115,29 +115,29 @@ const KnowledgeBaseDetailCreateTable = () => {
   // 创建知识表
   const createKnowledgeTable = async (value: FieldType) => {
     setLoading(true);
-    const res = await createKnowledgeTableRow(id, {
-      name: value.knowledgeBaseName,
-      serviceType: value.knowledgeBaseType,
-      serviceId: value.knowledgeBaseRemoteService,
-      format: textMap[value.knowledgeBaseFormat as any] as any,
-      repositoryId: id,
-    })
-
-    if (value.importData && res) {
-      // 创建成功保存id，跳转至导入数据表单
-      navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true });
-      return;
+    try {
+      const res = await createKnowledgeTableRow(id, {
+        name: value.knowledgeBaseName,
+        serviceType: value.knowledgeBaseType,
+        serviceId: value.knowledgeBaseRemoteService,
+        format: textMap[value.knowledgeBaseFormat as any] as any,
+        repositoryId: id,
+      });
+      if (value.importData && res) {
+        // 创建成功保存id，跳转至导入数据表单
+        navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true });
+        return;
+      };
+      if (res) {
+        navigate(-1);
+      };
+    } finally {
+      setLoading(false);
     }
-
-    if (res) {
-      navigate(-1)
-    }
-
-    setLoading(false)
   }
 
   const onCancle = () => {
-    navigate(-1)
+    navigate(-1);
   }
 
   useEffect(() => {

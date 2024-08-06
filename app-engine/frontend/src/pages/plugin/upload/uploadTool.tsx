@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Drawer, Select, Table, Tag } from 'antd';
+import { Button, Checkbox, Drawer, Select, Table, Tag, Spin } from 'antd';
 import { GetProp } from 'antd/lib';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import DraggerUpload from '@/components/draggerUpload';
 import { uploadPlugin } from '@shared/http/plugin';
 import { Message } from '@shared/utils/message';
@@ -33,10 +33,10 @@ const columns = [
 
 const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const [open, setOpen] = useState(false);
-  const [result,setResult] =useState([]);
-  const [checkedList,setCheckedList]=useState([]);
-  const [fileList,setFileList]=useState([]);
-  const [loading,setLoading]=useState(false);
+  const [result, setResult] = useState([]);
+  const [checkedList, setCheckedList] = useState([]);
+  const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const pluginList = useRef([]);
   const fileData = useRef([]);
   const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
@@ -51,8 +51,8 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     setResult([...pluginList.current]);
     setCheckedList(checkedValues);
   };
-  
-  const onChangeSpace = (value) => {};
+
+  const onChangeSpace = (value) => { };
   // 添加数据
   const addFileData = (data, file) => {
     if (fileData.current.length > 4) return;
@@ -60,7 +60,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     setFileList(fileData.current);
     Object.keys(data).forEach(key => {
       data[key].forEach(item => {
-        let pluginObj:any = {
+        let pluginObj: any = {
           open: true,
           checkedNum: 0
         };
@@ -72,7 +72,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
               ...tItem,
               uid: key,
               open: false,
-              id: uuidv4() ,
+              id: uuidv4(),
               parameterEntities: setTableData(tItem.schema?.parameters)
             }
           });
@@ -116,7 +116,6 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
       !uidArr.includes(item.uid) && uidArr.push(item.uid);
     })
     let fileConfirmList = fileData.current.filter(item => uidArr.includes(item.uid));
-    
     customRequest(fileConfirmList, nameArr);
   }
   // 上传文件
@@ -169,7 +168,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
       dataReset();
     }
   }, [openSignal]);
-  
+
   return (
     <Drawer
       title='上传工具'
@@ -188,6 +187,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
         <div className='drawer-footer'>
           <Button
             style={{ width: 90 }}
+            disabled={loading}
             onClick={() => {
               setOpen(false);
             }}
@@ -208,75 +208,78 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
         <img src='/src/assets/images/ai/info-upload.png' />
         <span>建议用户在本地调试插件，避免部署失败；相同工具将会覆盖。</span>
       </div>
-      <div>
-        上传至：
+      <Spin tip='上传插件中' size='small' spinning={loading}>
+        <div>
+          上传至：
         <Select
-          disabled={true}
-          defaultValue='user'
-          className='select-space'
-          onChange={onChangeSpace}
-          options={uploadSpaceOptions}
-        />
-        <DraggerUpload 
-          accept='.zip' 
-          multiple 
-          addFileData={addFileData} 
-          fileList={fileList}
-          removeFileData={removeFileData}
-        />
-        <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
-          {
-            result?.map(item => (
-              <div className={['collapse-plugin', item.open ? 'collapse-plugin-open': ''].join(' ')} key={item.key}>
-                <div className='collapse-plugin-head' onClick={() => itemClick(item)}>
-                  <div className='head-left'>
-                    <img src='/src/assets/images/ai/down.png' />
-                    <span>{item.name}</span>
+            disabled={true}
+            defaultValue='user'
+            className='select-space'
+            onChange={onChangeSpace}
+            options={uploadSpaceOptions}
+          />
+          <DraggerUpload
+            accept='.zip'
+            multiple
+            addFileData={addFileData}
+            fileList={fileList}
+            removeFileData={removeFileData}
+          />
+          <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
+            {
+              result?.map(item => (
+                <div className={['collapse-plugin', item.open ? 'collapse-plugin-open' : ''].join(' ')} key={item.key}>
+                  <div className='collapse-plugin-head' onClick={() => itemClick(item)}>
+                    <div className='head-left'>
+                      <img src='./src/assets/images/ai/down.png' />
+                      <span>{item.name}</span>
+                    </div>
+                    <div className='head-right'>
+                      {item.checkedNum > 0 && <img src='./src/assets/images/ai/complate.png' />}
+                      <span className='text'>{item.checkedNum > 0 ? '解析成功' : '解析失败'}</span>
+                      <span>{item.list.length}/{item.checkedNum}</span>
+                    </div>
                   </div>
-                  <div className='head-right'>
-                    <img src='/src/assets/images/ai/complate.png' />
-                    <span className='text'>解析成功</span>
-                    <span>{item.list.length}/{item.checkedNum}</span>
-                  </div>
-                </div>
-                <div className='collapse-plugin-content'>
-                  {item.list?.map((lItem, index) => (
-                    <div className='param-card' key={index}>
-                      <div style={{ float: 'right' }}>
-                        <Checkbox value={lItem}/>
-                      </div>
-                      <div className='card-header-left'>
-                        <img src='/src/assets/images/knowledge/knowledge-base.png' />
-                        <div>
-                          <div style={{ fontSize: 20, marginBottom: 8, wordBreak: 'break-all' }}>{lItem.schema?.name}</div>
-                          <div className='card-user'>
-                            {lItem?.tags?.map((tag: string, index: number) => (
-                              <Tag style={{ margin: 0 }} key={index}>
-                                {tag}
-                              </Tag>
-                            ))}
-                            <span className='card-detail-btn' onClick={() => pluginDetailClick(item, lItem)}>查看参数</span>
+                  <div className='collapse-plugin-content'>
+                    {item.list?.map((lItem, index) => (
+                      <div className='param-card' key={index}>
+                        <div style={{ float: 'right' }}>
+                          <Checkbox value={lItem} />
+                        </div>
+                        <div className='card-header-left'>
+                          <img src='./src/assets/images/knowledge/knowledge-base.png' />
+                          <div>
+                            <div style={{ fontSize: 20, marginBottom: 8, wordBreak: 'break-all' }}>{lItem.schema?.name}</div>
+                            <div className='card-user'>
+                              {lItem?.tags?.map((tag: string, index: number) => (
+                                <Tag style={{ margin: 0 }} key={index}>
+                                  {tag}
+                                </Tag>
+                              ))}
+                              <span className='card-detail-btn' onClick={() => pluginDetailClick(item, lItem)}>查看参数</span>
+                            </div>
                           </div>
                         </div>
+                        <div className='card-des'>{lItem?.schema?.description}</div>
+                        <div className='card-table' style={{ display: lItem.open ? 'block' : 'none' }}>
+                          <Table
+                            dataSource={lItem?.parameterEntities}
+                            columns={columns}
+                            virtual
+                            rowKey='name'
+                            pagination={false}
+                          />
+                        </div>
                       </div>
-                      <div className='card-des'>{lItem?.schema?.description}</div>
-                      <div className='card-table' style={{ display: lItem.open ? 'block' : 'none' }}>
-                        <Table
-                          dataSource={lItem?.parameterEntities}
-                          columns={columns}
-                          virtual
-                          rowKey='name'
-                          pagination={false}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))
-          }
-        </Checkbox.Group>
-      </div>
+              ))
+            }
+          </Checkbox.Group>
+        </div>
+      </Spin>
+
     </Drawer>
   );
 };

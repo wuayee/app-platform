@@ -99,7 +99,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           </Tooltip>
           <div className='title_info'>
             <img width={18} height={18}  src='/src/assets/images/ai/user.jpg' alt='' />
-            <div className='createBy'>{cardInfo.createBy}</div>
+            <div className='createBy'>{cardInfo.createBy || cardInfo.creator}</div>
           </div>
         </div>
       </div>
