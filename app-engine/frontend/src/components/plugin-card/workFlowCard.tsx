@@ -1,14 +1,14 @@
 import React from 'react';
 import { Dropdown, Flex, MenuProps, Tag } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import { Icons } from '../icons';
 import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
 import './style.scoped.scss';
 
 const WorkflowCard = ({ pluginData }: any) => {
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
     {

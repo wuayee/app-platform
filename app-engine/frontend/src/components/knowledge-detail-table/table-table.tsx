@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, Input } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Icons, KnowledgeIcons } from '../icons';
 import DetailCard from '../knowledge-card/detail-card';
 import Pagination from '@/components/pagination/index';
@@ -17,7 +17,7 @@ interface props {
 }
  
 const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
  
   // 展示的数据
   const [data, setData] = useState<any[]>([]);

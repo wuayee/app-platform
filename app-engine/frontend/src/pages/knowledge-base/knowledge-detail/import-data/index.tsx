@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Steps } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useHistory, useLocation} from 'react-router-dom';
+import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { SelectForm } from '../../../../components/select-form';
 import SegmentPreview from '../../../../components/select-form/segment-preview';
@@ -43,19 +43,19 @@ const segmentData = new Array(4).fill(0).map((_, i) => ({
 }));
 
 const KnowledgeBaseDetailImportData = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = qs.parse(useLocation().search.replace('?', ''));
+  const navigate = useHistory().push;
 
   const [currentSteps, setCurrentSteps] = useState(0);
 
   // 知识表id
-  const id = searchParams.get('id') || 0;
+  const id = searchParams.id || 0;
 
   // 知识表id
-  const table_id = searchParams.get('tableid') || 0;
+  const table_id = searchParams.tableid || 0;
 
   // 知识表格式 表格或者是文本，先做文本
-  const table_type = searchParams.get('tabletype') as any as 'text' | 'table';
+  const table_type = searchParams.tabletype as any as 'text' | 'table';
 
   // 是否在提交中
   const [loading, setLoading] = useState(false);

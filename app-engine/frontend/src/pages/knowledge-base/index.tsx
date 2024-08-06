@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, Modal }from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
@@ -11,7 +11,7 @@ import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowl
 
 const KnowledgeBase = () => {
   // 路由
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   // 总条数
   const [total, setTotal] = useState(0);

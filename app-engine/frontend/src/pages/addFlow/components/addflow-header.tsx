@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { LeftArrowIcon, UploadIcon } from '@assets/icon';
 import { updateAppInfo } from '@shared/http/aipp';
 import { Message } from '@shared/utils/message';
@@ -20,7 +20,7 @@ const AddHeader = (props) => {
   let modalRef:any = useRef(null);
   let testRef:any = useRef(null);
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   // 发布工具流
   const handleUploadFlow = () => {
     if (testStatus !== 'Finished') {

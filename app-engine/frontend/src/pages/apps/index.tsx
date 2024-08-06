@@ -5,7 +5,7 @@ import { queryAppsApi } from '../../shared/http/apps.js';
 import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
-import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
+import { HashRouter, Route, useHistory } from 'react-router-dom';
 import { deleteAppApi, getUserCollection, getUserCollectionNoDesc } from '../../shared/http/appDev';
 import { setCollectionValue } from '../../store/collection/collection';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
@@ -15,7 +15,7 @@ import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 
 const Apps: React.FC = () => {
   const tenantId = TENANT_ID;
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const [appData, setAppData] = useState<any[]>([]);
   const [total, setTotal] = useState(1);
   const [page, setPage] = useState(1);

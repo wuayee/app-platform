@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
-
+import { useHistory,useLocation } from 'react-router-dom';
+import qs from 'qs';
 import BreadcrumbSelf from '../../../components/breadcrumb';
 import { Icons } from '../../../components/icons';
 import { createKnowledgeBase, getKnowledgeBaseById, modifyKnowledgeBase } from '@/shared/http/knowledge';
@@ -22,8 +21,8 @@ type FieldType = {
 
 const KnowledgeBaseCreate = () => {
 
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get('id');
+  const searchParams = qs.parse(useLocation().search.replace('?', ''));
+  const id = searchParams.id;
 
   const [form] = Form.useForm();
 
@@ -88,7 +87,7 @@ const KnowledgeBaseCreate = () => {
   }
 
   // 创建知识库
-  const navigate = useNavigate()
+  const navigate = useHistory().push
 
   // 取消提交
   const onCancle = () => {

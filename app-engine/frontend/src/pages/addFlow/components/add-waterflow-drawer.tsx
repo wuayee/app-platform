@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { createAipp } from "@shared/http/aipp";
 import { CloseOutlined } from '@ant-design/icons';
 
@@ -10,7 +10,7 @@ const AddWaterFlow = (props) => {
   const [ loading, setLoading ] = useState(false);
   const [ form ] = Form.useForm();
   const { tenantId, appId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   useEffect(() => {
     form.setFieldsValue({
