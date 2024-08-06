@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactElement } from "react";
 import { Button, Input } from "antd";
-import { HashRouter, Route, useLocation, Routes } from "react-router-dom";
+import { HashRouter, Route, useLocation, Switch } from "react-router-dom";
 import GoBack from "../../../components/go-back/GoBack";
 
 import DetailCard from "./components/detail-card";

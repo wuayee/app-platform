@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Form }from 'antd';
 import { Button, Table } from 'antd';
 import type { TableProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from "react-router-dom";
-
+import { useHistory,useLocation } from 'react-router-dom';
+import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../../components/icons';
 import { getKnowledgeTableById } from '../../../../shared/http/knowledge';
@@ -14,10 +13,10 @@ import { ImportTable } from '../../../../components/knowledge-detail-table/impor
 
 
 const IndustryTerminology = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const rowid = searchParams.get("rowid");
-  const id = searchParams.get("id");
+  const searchParams = qs.parse(useLocation().search.replace('?', ''));
+  const id = searchParams.id;
+  const navigate = useHistory().push;
+  const rowid = searchParams.rowid;
 
   // 获取子组件
   const tableRef = React.useRef<any>(null);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, message, Space, Tooltip } from 'antd';
 import type { TableProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { ModelItem } from './cards-tab';
 import { deleteModelByName, getModelList } from '../../shared/http/model';
@@ -14,7 +14,7 @@ interface TableTabProps {
 }
 
 const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openModify }) => {
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const toModelDetail = (id: string) => {
     navigate('/model/detail', { state: { modelId: id } });
   };

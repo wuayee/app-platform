@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './style.scoped.scss';
 import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
-import { useNavigate, useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
 import { AvatarIcon } from '../../../assets/icon';
 import { AppDefaultIcon } from '../../../assets/icon';
@@ -12,7 +12,7 @@ import { setAppInfo } from "../../../store/appInfo/appInfo";
 
 const AppOverview: React.FC = () => {
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const { appId, tenantId } = useParams();
   const [detail, setDetail] = useState({});
   const [appIcon, setAppIcon] = useState('');

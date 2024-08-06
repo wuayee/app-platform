@@ -2,7 +2,7 @@ import { Button, Flex, Progress, Space, Table } from 'antd';
 import type { PaginationProps, TableColumnsType } from 'antd';
 import React, { useEffect, useState } from 'react';
 import TableTextSearch from '../../components/table-text-search';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import { AppIcons } from '../../components/icons/app';
 import ArchiveCheckpoint from './archive';
 import { queryModelTaskList } from '../../shared/http/model-train';
@@ -16,7 +16,7 @@ const ModelTraining = () => {
   //单独设置一个，用于归档后回调时刷新页面时使用
   const [queryBody, setQueryBody] = useState({ page: 0, limit: 10 });
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   useEffect(() => {
     getModelTaskList(queryBody);

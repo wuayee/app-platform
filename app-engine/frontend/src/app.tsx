@@ -19,7 +19,7 @@ export default function App() {
   return (
     <ConfigProvider locale={zhCN} autoInsertSpace={true}>
       {/* <StoreProvider> */}
-        <Router hashType='hash'>
+        <Router>
           <AppLayout />
         </Router>
       {/* </StoreProvider> */}

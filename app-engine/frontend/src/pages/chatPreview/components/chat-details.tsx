@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import EditModal from '../../components/edit-modal';
 import { AppBoxIcon, CreateAppIcon } from '@assets/icon';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
@@ -15,7 +15,7 @@ const ChatDetail = () => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const location = useLocation();
   let modalRef = useRef();
   const isHomepage = appInfo.name === '小海' && !location.pathname.includes('app-detail');

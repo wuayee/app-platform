@@ -1,6 +1,6 @@
 
 import React, {  useState, useImperativeHandle } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Input, Modal, Button, Select, Form } from 'antd';
 import TextEditor from './text-editor';
 import { Message } from '@shared/utils/message';
@@ -21,7 +21,7 @@ const PublishModal = (props) => {
   const [loading, setLoading ] = useState(false);
   const [text, setText] = useState('');
   const [form] = Form.useForm();
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   
   const tagOptions = [
     { value: '编程开发', label: '编程开发' },

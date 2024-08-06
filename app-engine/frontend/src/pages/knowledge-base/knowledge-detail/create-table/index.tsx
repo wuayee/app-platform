@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import type { TableProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from "react-router-dom";
+import { useHistory,useLocation } from 'react-router-dom';
+import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../../components/icons';
 import { createKnowledgeTableRow, getKnowledgeTableType } from '../../../../shared/http/knowledge';
@@ -31,13 +31,13 @@ type FieldType = {
 
 
 const KnowledgeBaseDetailCreateTable = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = qs.parse(useLocation().search.replace('?', ''));
+  const id = searchParams.id;
+  const navigate = useHistory().push;
   const [ selectValue, setSelectValue ] = useState();
-  const id = searchParams.get("id") as string;
 
   // 表格id判断提交还是修改
-  const table_id = searchParams.get("tableid");
+  const table_id = searchParams.tableid;
 
   const [form] = Form.useForm();
 
