@@ -16,6 +16,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { resumeInstance, getClarifyOptions, getFuClarifyOptions } from '@shared/http/aipp';
 import { ChatContext } from '../../../../aippIndex/context';
 import './index.scoped.scss';
+import { useAppSelector } from '@/store/hook';
 
 dayjs.extend(customParseFormat);
 
@@ -24,7 +25,9 @@ const QuestionClar = (props) => {
   const { data, mode } = props;
   const [questionInfo, setQuestionInfo] = useState(null);
   const { RangePicker } = DatePicker;
-  const { handleRejectClar, dataDimension, tenantId, questionClarConfirm } = useContext(ChatContext);
+  const { handleRejectClar, tenantId, questionClarConfirm } = useContext(ChatContext);
+  const dataDimension = useAppSelector((state) => state.commonStore.dimension).name;
+
   useEffect(() => {
     if (!data?.formData) return;
     if (data.formData[id]) {

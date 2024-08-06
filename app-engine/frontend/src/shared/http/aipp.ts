@@ -185,9 +185,9 @@ export function reSendChat(tenant_id, current_instance_id, data) {
 
 // 获取澄清字段下拉
 export function getClarifyOptions(data) {
-  return post(`${AI_URL}/api/v1/platform/finance/option-nodes-name`,data);
+  return post(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes-name`,data);
 }
 // 澄清-辅产品
 export function getFuClarifyOptions(params) {
-  return get(`${AI_URL}/api/v1/platform/finance/option-nodes`, params);
+  return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, params);
 }

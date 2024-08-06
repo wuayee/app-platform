@@ -181,7 +181,7 @@ const Inspiration = (props) => {
     if (FINANCE_APP_ID === appId) {
       storage.set('dimension', { id, value: pduMap[name] || name});
     }
-    dispatch(setDimension({ id, value: pduMap[name] || name}));
+    dispatch(setDimension({ id, name, value: pduMap[name] || name}));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: '全部', id: parentId }];
