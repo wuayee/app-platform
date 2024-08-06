@@ -42,6 +42,8 @@ public abstract class AbstractTaskInstanceEventNotifier implements Runnable {
     private void publishEvent(Event event) {
         try {
             this.plugin.publisherOfEvents().publishEvent(event);
+        } catch (NullPointerException e) {
+            log.error("Get null publisher");
         } catch (RuntimeException ex) {
             log.error("Failed to publish instance event. {}", event);
             log.error(ex.getClass().getName(), ex);

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './style.scoped.scss';
 import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
-import { useNavigate, useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
 import { AvatarIcon } from '../../../assets/icon';
 import { AppDefaultIcon } from '../../../assets/icon';
@@ -12,7 +12,7 @@ import { setAppInfo } from "../../../store/appInfo/appInfo";
 
 const AppOverview: React.FC = () => {
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const { appId, tenantId } = useParams();
   const [detail, setDetail] = useState({});
   const [appIcon, setAppIcon] = useState('');
@@ -130,7 +130,7 @@ const AppOverview: React.FC = () => {
             </div>
           </Flex>
         </div>
-        <div>
+        {/* <div>
           <div style={{
             border: '1px solid rgb(230, 230, 230)',
             borderRadius: '8px',
@@ -155,8 +155,8 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                {/* <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button> */}
+                <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
@@ -186,13 +186,13 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                {/* <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
                 <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />查阅API文档</Flex></Button>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button> */}
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
-        </div>
+        </div> */}
       </Flex>
     </div>
   )

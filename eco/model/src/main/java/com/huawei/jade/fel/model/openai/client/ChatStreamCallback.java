@@ -58,10 +58,7 @@ public class ChatStreamCallback implements Callback<ResponseBody> {
                 emitter.emit(OpenAiMessageUtils.buildFelAiMessage(response));
                 data = null;
             } else {
-                OpenAiChatCompletionResponse response =
-                        OpenAiMessageUtils.OBJECT_MAPPER.readValue(line, OpenAiChatCompletionResponse.class);
-                emitter.emit(OpenAiMessageUtils.buildFelAiMessage(response));
-                return;
+                throw new IllegalArgumentException("Unrecognized data format: " + line);
             }
         }
     }

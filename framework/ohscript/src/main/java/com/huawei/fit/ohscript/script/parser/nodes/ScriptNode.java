@@ -110,6 +110,9 @@ public class ScriptNode extends NonTerminalNode {
 
     private static final OhFunction<String, Object> TRIM = (host, value, env, context) -> host.trim();
 
+    private static final OhFunction<String, Object> CONTAINS = (host, value, env, context) -> host.contains(
+            ObjectUtils.cast(value.get(0).value()));
+
     private static final OhFunction<String, Number> TO_NUM = (host, value, env, context) -> {
         if (host.contains(".")) {
             return Double.valueOf(host);
@@ -302,6 +305,7 @@ public class ScriptNode extends NonTerminalNode {
         addStringEndsWithMethod(start);
         addStringToNumMethod(start);
         addStringIsNumMethod(start);
+        addStringContainsMethod(start);
     }
 
     private static void addStringSubStrMethod(ScriptNode start) {
@@ -356,6 +360,10 @@ public class ScriptNode extends NonTerminalNode {
 
     private static void addStringIsNumMethod(ScriptNode start) {
         addStringMethod(start, new MethodInfo(".is_num", 0, IS_NUM, TypeExprFactory.createBool(start)));
+    }
+
+    private static void addStringContainsMethod(ScriptNode start) {
+        addStringMethod(start, new MethodInfo(".contains", 1, CONTAINS, TypeExprFactory.createBool(start)));
     }
 
     private static void addStringMethod(ScriptNode start, MethodInfo methodInfo) {

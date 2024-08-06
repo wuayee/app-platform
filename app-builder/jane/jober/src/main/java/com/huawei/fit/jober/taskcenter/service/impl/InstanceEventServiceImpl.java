@@ -53,28 +53,8 @@ public class InstanceEventServiceImpl implements InstanceEventService {
             return;
         }
         InsertSql sql = InsertSql.custom().into("task_instance_event");
-        int count = 0;
         List<String> clearSourceIds = new LinkedList<>();
-        for (Map.Entry<String, List<InstanceEventDeclaration>> entry : declarations.entrySet()) {
-            String sourceId = this.validator.sourceId(entry.getKey());
-            if (CollectionUtils.isEmpty(entry.getValue())) {
-                clearSourceIds.add(sourceId);
-                continue;
-            }
-            for (InstanceEventDeclaration declaration : entry.getValue()) {
-                if (declaration == null) {
-                    continue;
-                }
-                count++;
-                sql.next();
-                sql.value("id", Entities.generateId());
-                sql.value("source_id", sourceId);
-                sql.value("event_type", this.validator.type(declaration.type()
-                        .required(() -> new BadRequestException(ErrorCodes.INSTANCE_EVENT_TYPE_REQUIRED))));
-                sql.value("fitable_id", this.validator.fitableId(declaration.fitableId()
-                        .required(() -> new BadRequestException(ErrorCodes.INSTANCE_EVENT_FITABLE_REQUIRED))));
-            }
-        }
+        int count = fillSqlValue(declarations, clearSourceIds, sql);
         SqlBuilder deleteSql = SqlBuilder.custom();
         List<Object> deleteArgs = new LinkedList<>();
         deleteSql.append("DELETE FROM ").appendIdentifier("task_instance_event").append(" WHERE ");
@@ -85,9 +65,9 @@ public class InstanceEventServiceImpl implements InstanceEventService {
             if (rows.size() != count) {
                 throw new ServerInternalException("Failed to insert task instance events into database.");
             }
-            Map<String, List<String>> groupedIds = rows.stream().collect(Collectors.groupingBy(
-                    row -> ObjectUtils.cast(row.get("source_id")),
-                    Collectors.mapping(row -> ObjectUtils.cast(row.get("id")), Collectors.toList())));
+            Map<String, List<String>> groupedIds = rows.stream()
+                    .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
+                            Collectors.mapping(row -> ObjectUtils.cast(row.get("id")), Collectors.toList())));
             for (Map.Entry<String, List<String>> entry : groupedIds.entrySet()) {
                 SqlBuilder conditionSql = SqlBuilder.custom();
                 conditionSql.appendIdentifier("source_id")
@@ -119,27 +99,63 @@ public class InstanceEventServiceImpl implements InstanceEventService {
         this.executor.executeUpdate(deleteSql.toString(), deleteArgs);
     }
 
+    private int fillSqlValue(Map<String, List<InstanceEventDeclaration>> declarations, List<String> clearSourceIds,
+            InsertSql sql) {
+        int count = 0;
+        for (Map.Entry<String, List<InstanceEventDeclaration>> entry : declarations.entrySet()) {
+            String sourceId = this.validator.sourceId(entry.getKey());
+            if (CollectionUtils.isEmpty(entry.getValue())) {
+                clearSourceIds.add(sourceId);
+                continue;
+            }
+            for (InstanceEventDeclaration declaration : entry.getValue()) {
+                if (declaration == null) {
+                    continue;
+                }
+                count++;
+                sql.next();
+                sql.value("id", Entities.generateId());
+                sql.value("source_id", sourceId);
+                sql.value("event_type",
+                        this.validator.type(declaration.type()
+                                .required(() -> new BadRequestException(ErrorCodes.INSTANCE_EVENT_TYPE_REQUIRED))));
+                sql.value("fitable_id",
+                        this.validator.fitableId(declaration.fitableId()
+                                .required(() -> new BadRequestException(ErrorCodes.INSTANCE_EVENT_FITABLE_REQUIRED))));
+            }
+        }
+        return count;
+    }
+
     @Override
     public Map<String, List<InstanceEvent>> lookupByTaskSources(List<String> taskSourceIds) {
         List<String> actualSourceIds = Optional.ofNullable(taskSourceIds)
-                .map(Collection::stream).orElseGet(Stream::empty)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
                 .filter(Entities::isId)
                 .collect(Collectors.toList());
         if (actualSourceIds.isEmpty()) {
             return Collections.emptyMap();
         }
         SqlBuilder sql = SqlBuilder.custom();
-        sql.append("SELECT ").appendIdentifier("id")
-                .append(", ").appendIdentifier("source_id")
-                .append(", ").appendIdentifier("event_type")
-                .append(", ").appendIdentifier("fitable_id")
-                .append(" FROM ").appendIdentifier("task_instance_event")
-                .append(" WHERE ").appendIdentifier("source_id").append(" IN (")
-                .appendRepeatedly("?, ", actualSourceIds.size()).backspace(2).append(')');
+        sql.append("SELECT ")
+                .appendIdentifier("id").append(", ").appendIdentifier("source_id").append(", ")
+                .appendIdentifier("event_type")
+                .append(", ")
+                .appendIdentifier("fitable_id")
+                .append(" FROM ")
+                .appendIdentifier("task_instance_event")
+                .append(" WHERE ")
+                .appendIdentifier("source_id")
+                .append(" IN (")
+                .appendRepeatedly("?, ", actualSourceIds.size())
+                .backspace(2)
+                .append(')');
         List<Object> args = new LinkedList<>(actualSourceIds);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        return rows.stream().collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
-                Collectors.mapping(InstanceEventServiceImpl::readInstanceEvent, Collectors.toList())));
+        return rows.stream()
+                .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
+                        Collectors.mapping(InstanceEventServiceImpl::readInstanceEvent, Collectors.toList())));
     }
 
     @Override
@@ -148,34 +164,61 @@ public class InstanceEventServiceImpl implements InstanceEventService {
             return Collections.emptyMap();
         }
         SqlBuilder sql = SqlBuilder.custom();
-        sql.append("SELECT ").appendIdentifier("id")
-                .append(", ").appendIdentifier("source_id")
-                .append(", ").appendIdentifier("event_type")
-                .append(", ").appendIdentifier("fitable_id")
-                .append(" FROM ").appendIdentifier("task_instance_event").append(" AS ").appendIdentifier("tie")
-                .append(" INNER JOIN ").appendIdentifier("task_node_source").append(" AS ").appendIdentifier("tns")
-                .append(" ON ").appendIdentifier("tns").append('.').appendIdentifier("source_id")
-                .append(" = ").appendIdentifier("tie").append('.').appendIdentifier("source_id")
-                .append(" WHERE ").appendIdentifier("tns").append('.').appendIdentifier("node_id").append(" = ?");
+        sql.append("SELECT ")
+                .appendIdentifier("id")
+                .append(", ")
+                .appendIdentifier("source_id")
+                .append(", ")
+                .appendIdentifier("event_type")
+                .append(", ")
+                .appendIdentifier("fitable_id")
+                .append(" FROM ")
+                .appendIdentifier("task_instance_event")
+                .append(" AS ")
+                .appendIdentifier("tie")
+                .append(" INNER JOIN ")
+                .appendIdentifier("task_node_source")
+                .append(" AS ")
+                .appendIdentifier("tns")
+                .append(" ON ")
+                .appendIdentifier("tns")
+                .append('.')
+                .appendIdentifier("source_id")
+                .append(" = ")
+                .appendIdentifier("tie")
+                .append('.')
+                .appendIdentifier("source_id")
+                .append(" WHERE ")
+                .appendIdentifier("tns")
+                .append('.')
+                .appendIdentifier("node_id")
+                .append(" = ?");
         List<Object> args = Collections.singletonList(taskTypeId);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        return rows.stream().collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
-                Collectors.mapping(InstanceEventServiceImpl::readInstanceEvent, Collectors.toList())));
+        return rows.stream()
+                .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
+                        Collectors.mapping(InstanceEventServiceImpl::readInstanceEvent, Collectors.toList())));
     }
 
     @Override
     public void deleteByTaskSources(List<String> taskSourceIds) {
         List<String> actualSourceIds = Optional.ofNullable(taskSourceIds)
-                .map(Collection::stream).orElseGet(Stream::empty)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
                 .filter(Entities::isId)
                 .collect(Collectors.toList());
         if (actualSourceIds.isEmpty()) {
             return;
         }
         SqlBuilder sql = SqlBuilder.custom();
-        sql.append("DELETE FROM ").appendIdentifier("task_instance_event")
-                .append(" WHERE ").appendIdentifier("source_id").append(" IN (")
-                .appendRepeatedly("?, ", actualSourceIds.size()).backspace(2).append(')');
+        sql.append("DELETE FROM ")
+                .appendIdentifier("task_instance_event")
+                .append(" WHERE ")
+                .appendIdentifier("source_id")
+                .append(" IN (")
+                .appendRepeatedly("?, ", actualSourceIds.size())
+                .backspace(2)
+                .append(')');
         List<Object> args = new LinkedList<>(actualSourceIds);
         this.executor.executeUpdate(sql.toString(), args);
     }
@@ -186,11 +229,27 @@ public class InstanceEventServiceImpl implements InstanceEventService {
             return;
         }
         SqlBuilder sql = SqlBuilder.custom();
-        sql.append("DELETE FROM ").appendIdentifier("task_instance_event").append(" AS ").appendIdentifier("tie")
-                .append(" USING ").appendIdentifier("task_node_source").append(" AS ").appendIdentifier("tns")
-                .append(" = ").appendIdentifier("tie").append('.').appendIdentifier("source_id")
-                .append(" WHERE ").appendIdentifier("tns").append('.').appendIdentifier("source_id")
-                .append(" AND ").appendIdentifier("tns").append('.').appendIdentifier("node_id").append(" = ?");
+        sql.append("DELETE FROM ")
+                .appendIdentifier("task_instance_event")
+                .append(" AS ")
+                .appendIdentifier("tie")
+                .append(" USING ")
+                .appendIdentifier("task_node_source")
+                .append(" AS ")
+                .appendIdentifier("tns")
+                .append(" = ")
+                .appendIdentifier("tie")
+                .append('.')
+                .appendIdentifier("source_id")
+                .append(" WHERE ")
+                .appendIdentifier("tns")
+                .append('.')
+                .appendIdentifier("source_id")
+                .append(" AND ")
+                .appendIdentifier("tns")
+                .append('.')
+                .appendIdentifier("node_id")
+                .append(" = ?");
         List<Object> args = Collections.singletonList(taskTypeId);
         this.executor.executeUpdate(sql.toString(), args);
     }

@@ -80,6 +80,7 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
                 .chatId(log.getChatId())
                 .atChatId(log.getAtChatId())
                 .status(status)
+                .instanceId(instanceId)
                 .answer(Collections.singletonList(answer))
                 .build();
     }

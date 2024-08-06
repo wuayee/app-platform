@@ -221,6 +221,18 @@ public class AppBuilderAppServiceImpl
     }
 
     @Override
+    @Fitable(id = "default")
+    public void updateFlow(String appId, OperationContext contextOf) {
+        AppBuilderApp app = this.appFactory.create(appId);
+        if (ObjectUtils.cast(app.getAttributes().getOrDefault(AippConst.ATTR_APP_IS_UPDATE, false))) {
+            AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(this.buildFullAppDto(app));
+            this.aippFlowService.previewAipp(app.getVersion(), aippDto, contextOf);
+            app.getAttributes().put(AippConst.ATTR_APP_IS_UPDATE, false);
+            this.appFactory.update(app);
+        }
+    }
+
+    @Override
     public AppBuilderAppDto queryLatestOrchestration(String appId, OperationContext context) {
         String aippId = this.getAippIdByAppId(appId, context);
         MetaFilter filter = new MetaFilter();
@@ -526,6 +538,7 @@ public class AppBuilderAppServiceImpl
     private void updateAttributes(AppBuilderApp update, Map<String, Object> attributes) {
         Map<String, Object> attributesOld = update.getAttributes();
         attributesOld.putAll(attributes);
+        attributesOld.put(AippConst.ATTR_APP_IS_UPDATE, true);
     }
 
     private void addGraphIntoApp(AppBuilderFlowGraphDto graphDto, AppBuilderApp app) {
@@ -612,6 +625,7 @@ public class AppBuilderAppServiceImpl
         // 最后更新app主表
         oldApp.setUpdateAt(operateTime);
         oldApp.setUpdateBy(context.getOperator());
+        this.updateAttributes(oldApp, new HashMap<>());
         this.appFactory.update(oldApp);
         return Rsp.ok(this.buildFullAppDto(oldApp));
     }
@@ -654,6 +668,7 @@ public class AppBuilderAppServiceImpl
         // 最后更新app主表
         oldApp.setUpdateAt(operateTime);
         oldApp.setUpdateBy(context.getOperator());
+        this.updateAttributes(oldApp, new HashMap<>());
         this.appFactory.update(oldApp);
         return Rsp.ok(this.buildFullAppDto(oldApp));
     }
@@ -679,7 +694,6 @@ public class AppBuilderAppServiceImpl
         // step5 删除store相关
         // step6 删除应用收藏记录相关
         usrAppCollectionService.deleteByAppId(appId);
-
     }
 
     @Override
@@ -1022,34 +1036,39 @@ public class AppBuilderAppServiceImpl
             return;
         }
         for (Map.Entry<String, String> param : params.entrySet()) {
-            if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
-                if (singleLayerParams.contains(param.getKey())) {
-                    this.handleParamTemperature(node, param);
-                    continue;
-                }
+            handleParam(node, param, singleLayerParams, doubleLayerParams);
+        }
+    }
 
-                if (doubleLayerParams.contains(param.getKey())) {
-                    ArrayNode valueArrayNode = convertList(param.getValue());
-                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
-                    continue;
-                }
+    private void handleParam(JsonNode node, Map.Entry<String, String> param, List<String> singleLayerParams,
+            List<String> doubleLayerParams) {
+        if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
+            if (singleLayerParams.contains(param.getKey())) {
+                this.handleParamTemperature(node, param);
+                return;
+            }
 
-                if (StringUtils.equals("knowledge", param.getKey())) {
-                    this.handleParamKnowledge(node, param);
-                    continue;
-                }
+            if (doubleLayerParams.contains(param.getKey())) {
+                ArrayNode valueArrayNode = convertList(param.getValue());
+                ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
+                return;
+            }
 
-                if (StringUtils.equals("memory", param.getKey())) {
-                    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-                    ArrayNode valueArrayNode = nodeFactory.arrayNode();
-                    Map<String, Object> res = JsonUtils.parseObject(param.getValue(), Map.class);
-                    if (Objects.equals(res.get("type"), "UserSelect")) {
-                        this.parseUserSelect(res, valueArrayNode);
-                    } else {
-                        this.parseOtherMemoryType(res, valueArrayNode);
-                    }
-                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
+            if (StringUtils.equals("knowledge", param.getKey())) {
+                this.handleParamKnowledge(node, param);
+                return;
+            }
+
+            if (StringUtils.equals("memory", param.getKey())) {
+                JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+                ArrayNode valueArrayNode = nodeFactory.arrayNode();
+                Map<String, Object> res = JsonUtils.parseObject(param.getValue(), Map.class);
+                if (Objects.equals(res.get("type"), "UserSelect")) {
+                    this.parseUserSelect(res, valueArrayNode);
+                } else {
+                    this.parseOtherMemoryType(res, valueArrayNode);
                 }
+                ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
             }
         }
     }

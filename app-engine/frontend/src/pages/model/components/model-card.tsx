@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Card } from 'antd';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Icons } from '../../../components/icons';
 import { ModelItem } from '../cards-tab';
 import { deleteModelByName, getModelList } from '../../../shared/http/model';
@@ -29,7 +29,7 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
     },
   ];
   // 路由
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   const toModelDetail = (id: string) => {
     navigate('/model/detail', { state: { modelId: id } });

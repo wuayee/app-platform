@@ -67,6 +67,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -81,6 +87,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class PortalServiceImpl implements PortalService {
     private static final Logger log = Logger.get(PortalServiceImpl.class);
+
+    private static final ThreadPoolExecutor EXECUTOR =
+            new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
     private static final String TASK_TEMPLATE_NAME = "普通任务";
 
@@ -160,32 +169,42 @@ public class PortalServiceImpl implements PortalService {
     @Override
     public List<TagCountEntity> count(List<String> owners, List<String> creators, List<String> tags,
             List<String> taskIds, OperationContext context) {
+        List<Callable<Integer>> tasks = Arrays.asList(
+                () -> {
+                    List<String> categories = Collections.singletonList("未开始");
+                    return this.count(owners, creators, tags, categories, taskIds, context);
+                },
+                () -> {
+                    List<String> categories = Collections.singletonList("处理中");
+                    return this.count(owners, creators, tags, categories, taskIds, context);
+                },
+                () -> {
+                    List<String> categories = Arrays.asList("未开始", "处理中", "风险");
+                    return this.count(owners, creators, tags, categories, taskIds, context);
+                }
+        );
+
+        List<Future<Integer>> futures;
         AtomicLong nonStarted = new AtomicLong();
         AtomicLong processing = new AtomicLong();
         AtomicLong risk = new AtomicLong();
-        Thread nonStartedThread = new Thread(() -> {
-            List<String> categories = Collections.singletonList("未开始");
-            int count = this.count(owners, creators, tags, categories, taskIds, context);
-            nonStarted.set(count);
-        });
-        Thread processingThread = new Thread(() -> {
-            List<String> categories = Collections.singletonList("处理中");
-            int count = this.count(owners, creators, tags, categories, taskIds, context);
-            processing.set(count);
-        });
-        Thread riskThread = new Thread(() -> {
-            List<String> categories = Arrays.asList("未开始", "处理中", "风险");
-            int count = this.count(owners, creators, tags, categories, taskIds, context);
-            risk.set(count);
-        });
         try {
-            nonStartedThread.start();
-            processingThread.start();
-            riskThread.start();
-            nonStartedThread.join();
-            processingThread.join();
-            riskThread.join();
-        } catch (InterruptedException ex) {
+            futures = EXECUTOR.invokeAll(tasks);
+
+            for (int i = 0; i < futures.size(); i++) {
+                Future<Integer> future = futures.get(i);
+                int count = future.get();
+                if (i == 0) {
+                    nonStarted.set(count);
+                } else if (i == 1) {
+                    processing.set(count);
+                } else if (i == 2) {
+                    risk.set(count);
+                } else {
+                    throw new IllegalStateException();
+                }
+            }
+        } catch (InterruptedException | ExecutionException ex) {
             log.error("Failed to get thread result: {}", ex.getMessage());
             log.debug("details: ", ex);
             throw new JobberException(FAILED_TO_GET_THREAD_RESULT);

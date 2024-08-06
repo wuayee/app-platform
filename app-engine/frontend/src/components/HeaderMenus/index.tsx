@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 import Link from 'antd/es/typography/Link';
 
 function itemRender(currentRoute, params, items, paths) {
-  const navigate=useNavigate();
+  const navigate = useHistory().push;
   const isLast = currentRoute?.path === items[items.length - 1]?.path;
   return isLast ? (
     <span>{currentRoute.title}</span>

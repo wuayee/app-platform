@@ -44,7 +44,7 @@ public class EvalDataController {
     /**
      * 批量创建评估数据。
      *
-     * @param createDto 表示评估数据集创建传输对象的 {@link EvalDataCreateDto}。
+     * @param createDto 表示评估数据创建传输对象的 {@link EvalDataCreateDto}。
      */
     @PostMapping(description = "批量创建评估数据")
     public void createEvalData(@RequestBody @Validated EvalDataCreateDto createDto) {
@@ -58,16 +58,16 @@ public class EvalDataController {
      * @return 表示评估数据查询结果的 {@link PageVo}{@code <}{@link EvalDataEntity}{@code >}。
      */
     @GetMapping(description = "查询评估数据")
-    public PageVo<EvalDataEntity> queryEvalData(@RequestBean EvalDataQueryParam queryParam) {
+    public PageVo<EvalDataEntity> queryEvalData(@RequestBean @Validated EvalDataQueryParam queryParam) {
         return evalDataService.listEvalData(queryParam);
     }
 
     /**
-     * 批量软删除评估数据。
+     * 批量删除评估数据。
      *
-     * @param deleteDto 表示评估数据集软删除传输对象的 {@link EvalDataDeleteDto}。
+     * @param deleteDto 表示评估数据删除传输对象的 {@link EvalDataDeleteDto}。
      */
-    @DeleteMapping(description = "批量软删除评估数据")
+    @DeleteMapping(description = "批量删除评估数据")
     public void deleteEvalData(@RequestBody @Validated EvalDataDeleteDto deleteDto) {
         this.evalDataService.delete(deleteDto.getDataIds());
     }

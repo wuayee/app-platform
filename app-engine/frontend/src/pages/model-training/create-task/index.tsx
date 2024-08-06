@@ -1,6 +1,6 @@
 import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import GoBack from '../../../components/go-back/GoBack';
 import { queryModelbaseList, queryModelVersionList } from '../../../shared/http/model-base';
 import './index.scoped.scss';
@@ -72,7 +72,7 @@ const ModelTrainingCreate = () => {
   }
 
   const inputWidth = 380;
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   const typeOptions = [
     {

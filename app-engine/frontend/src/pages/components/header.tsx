@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { LeftArrowIcon, UploadIcon } from '@assets/icon';
 import TimeLineDrawer from '@/components/timeLine';
 import PublishModal from './publish-modal';
@@ -26,7 +26,7 @@ const ChoreographyHead = (props) => {
   let editRef = React.createRef();
   let testRef = React.createRef();
   const { tenantId, appId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const dispatch = useAppDispatch();
   useEffect(() => {
     showTime && getCurrentTime();

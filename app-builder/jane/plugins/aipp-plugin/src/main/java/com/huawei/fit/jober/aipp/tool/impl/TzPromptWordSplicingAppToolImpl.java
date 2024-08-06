@@ -88,6 +88,9 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
             // 将改写后的写入历史记录
             writePromptLog(instanceId, overridePromptTemplate);
             return overridePromptTemplate;
+        } catch (IllegalArgumentException e) {
+            log.error("regex syntax error, error is {}", e.getMessage());
+            return "天舟AI提示词拼接工具失败：" + e.getMessage();
         } catch (Exception e) {
             log.error("Failed to prompt word splice, error is {}", e.getMessage(), e);
             return "天舟AI提示词拼接工具失败：" + e.getMessage();

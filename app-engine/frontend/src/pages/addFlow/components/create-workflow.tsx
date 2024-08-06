@@ -2,7 +2,7 @@ import { Button, Form, Input, Modal, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import TextArea from 'antd/es/input/TextArea';
 import { ToTopOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import { createAipp, uploadImage } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useAppSelector } from '@/store/hook';
@@ -20,7 +20,7 @@ const CreateWorkflow = (props) => {
   const [fileName, setFileName] = useState(undefined);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const appId = useAppSelector((state) => state.appStore.appId);
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   // 上传图片
   async function pictureUpload(file) {

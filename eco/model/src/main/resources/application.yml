@@ -1,2 +1,4 @@
-url-path-splicing: false
 openai-url: 'http://model-io-gateway:8009/'
+fit:
+  beans:
+    packages: 'com.huawei.jade.fel.model.openai.client'

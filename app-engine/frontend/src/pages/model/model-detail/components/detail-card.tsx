@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { Card } from "antd";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Space } from "antd";
-import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
+import { HashRouter, Route, useHistory, Switch } from "react-router-dom";
 import { url } from "inspector";
 interface DetailItem {
   title: string;

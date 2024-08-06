@@ -58,9 +58,7 @@
 
         <!-- Not Necessary versions -->
         <commons-io.version>2.15.1</commons-io.version>
-
-        <!-- Not correct versions -->
-        <httpclient.version>4.5.14</httpclient.version>
+        
     </properties>
 
     <dependencyManagement>
@@ -162,6 +160,11 @@
                 <artifactId>waterflow-service</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.jade</groupId>
+                <artifactId>waterflow-task-event-handler</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
 
             <!-- FEL -->
             <dependency>
@@ -196,6 +199,11 @@
             </dependency>
 
             <!-- Carver -->
+            <dependency>
+                <groupId>com.huawei.fit.jade.service</groupId>
+                <artifactId>operation-log-service</artifactId>
+                <version>${carver.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.huawei.fit.jade.service</groupId>
                 <artifactId>tool-service</artifactId>
@@ -451,19 +459,6 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-scratchpad</artifactId>
                 <version>${poi.version}</version>
-            </dependency>
-
-            <!-- Not correct -->
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpmime</artifactId>
-                <version>${httpclient.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- Test -->

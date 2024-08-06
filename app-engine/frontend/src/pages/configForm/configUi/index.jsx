@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import {Form, Collapse, theme, Switch} from 'antd';
-import { ConfigWrap } from './styled';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { debounce } from '@shared/utils/common';
 import LLM from './components/llm';
@@ -11,6 +10,7 @@ import Inspiration from './components/inspiration';
 import Recommend from './components/recommend';
 import { setHistorySwitch } from '@/store/common/common';
 import { MultiConversationContent } from '@fit-elsa/elsa-react';
+import './index.scoped.scss';
 
 function ConfigUI(props) {
     const { formData, handleConfigDataChange, inspirationChange, status, activeKey } = props;
@@ -196,9 +196,8 @@ function ConfigUI(props) {
       }
     }
 
-    return (
-      <>
-        <ConfigWrap>
+    return (<>
+        <div className='config-wrap'>
           <Form
             form={form}
             layout='vertical'
@@ -229,8 +228,7 @@ function ConfigUI(props) {
               )
             }
           </Form>
-        </ConfigWrap>
-      </>
-    )
+        </div>
+    </>);
 }
 export default ConfigUI;

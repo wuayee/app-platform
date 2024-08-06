@@ -33,6 +33,13 @@ public class EvalDataServiceImpl implements EvalDataService {
     private final EvalDataValidator dataValidator;
     private final EvalDatasetVersionManager versionManager;
 
+    /**
+     * 表示评估数据服务实现的构建器。
+     *
+     * @param dataMapper 表示评估数据持久层接口的 {@link EvalDataMapper}。
+     * @param dataValidator 评估数据校验器的 {@link EvalDataValidator}。
+     * @param versionManager 表示评估数据集版本管理器的 {@link EvalDatasetVersionManager}。
+     */
     public EvalDataServiceImpl(EvalDataMapper dataMapper, EvalDataValidator dataValidator,
             EvalDatasetVersionManager versionManager) {
         this.dataMapper = dataMapper;
@@ -42,22 +49,22 @@ public class EvalDataServiceImpl implements EvalDataService {
 
     @Override
     public void insertAll(Long datasetId, List<String> contents) {
-        dataValidator.verify(datasetId, contents);
-        long version = versionManager.applyVersion();
+        this.dataValidator.verify(datasetId, contents);
+        long version = this.versionManager.applyVersion();
         insert(datasetId, contents, version);
     }
 
     @Override
     public void delete(List<Long> dataIds) {
-        long version = versionManager.applyVersion();
+        long version = this.versionManager.applyVersion();
         softDelete(dataIds, version);
     }
 
     @Override
     @Transactional
     public void update(Long datasetId, Long dataId, String content) throws AppEvalException {
-        dataValidator.verify(datasetId, content);
-        long version = versionManager.applyVersion();
+        this.dataValidator.verify(datasetId, content);
+        long version = this.versionManager.applyVersion();
         int effectRows = softDelete(Collections.singletonList(dataId), version);
         if (effectRows == 0) {
             throw new AppEvalException(AppEvalRetCode.EVAL_DATA_DELETED_ERROR, dataId);

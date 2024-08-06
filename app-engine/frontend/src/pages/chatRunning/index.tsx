@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import CommonChat from '../chatPreview/chatComminPage';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
@@ -17,7 +17,7 @@ const ChatRunning = () => {
   const { appId, tenantId } = useParams();
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   // 获取aipp详情
   const getAippDetails = async () => {

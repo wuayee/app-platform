@@ -6,6 +6,10 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import static com.huawei.fit.jober.aipp.util.HttpUtils.sendHttpRequest;
 
+import com.huawei.fit.http.client.HttpClassicClientFactory;
+import com.huawei.fit.http.client.HttpClassicClientRequest;
+import com.huawei.fit.http.entity.ObjectEntity;
+import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
@@ -33,10 +37,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,13 +66,14 @@ public class LLMServiceImpl implements LLMService {
     private final String appengineEndPoint;
     private final String pathPrefix;
     private final VoiceService voiceService;
+    private final HttpClassicClientFactory httpClientFactory;
 
     public LLMServiceImpl(@Value("${model.xiaohai.knowledge}") String xiaoHaiKnowledgeUrl,
             @Value("${model.xiaohai.file}") String xiaoHaiFileUrl,
             @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout,
             @Value("${app-engine.endpoint}") String endpoint, @Value("${app-engine.pathPrefix}") String pathPrefix,
-            @Fit OpenAiClient openAiClient,
-            @Fit VoiceService voiceService) {
+            @Fit OpenAiClient openAiClient, @Fit VoiceService voiceService,
+            @Fit HttpClassicClientFactory httpClientFactory) {
         this.xiaoHaiKnowledgeUrl = xiaoHaiKnowledgeUrl;
         this.xiaoHaiFileUrl = xiaoHaiFileUrl;
         this.xiaoHaiReadTimeout = xiaoHaiReadTimeout;
@@ -80,6 +81,7 @@ public class LLMServiceImpl implements LLMService {
         this.appengineEndPoint = endpoint;
         this.pathPrefix = pathPrefix;
         this.voiceService = voiceService;
+        this.httpClientFactory = httpClientFactory;
     }
 
     /**
@@ -186,10 +188,11 @@ public class LLMServiceImpl implements LLMService {
     }
 
     private <T> T askXiaoHai(String w3Id, String question, String url, Class<T> respDtoCls) throws IOException {
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setConfig(HttpUtils.requestConfig(this.xiaoHaiReadTimeout));
-        httpPost.setEntity(new StringEntity(getAskXiaoHaiReqBody(w3Id, question), ContentType.APPLICATION_JSON));
-        String respContent = sendHttpRequest(httpPost);
+        HttpClassicClientRequest postRequest = httpClientFactory
+                .create(HttpUtils.requestConfig(this.xiaoHaiReadTimeout))
+                .createRequest(HttpRequestMethod.POST, url);
+        postRequest.entity(ObjectEntity.create(postRequest, getAskXiaoHaiReqBody(w3Id, question)));
+        String respContent = sendHttpRequest(postRequest);
         return JsonUtils.parseObject(respContent, respDtoCls);
     }
 

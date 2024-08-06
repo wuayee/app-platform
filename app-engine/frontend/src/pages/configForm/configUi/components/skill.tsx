@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getToolsList } from '@shared/http/plugin';
@@ -10,7 +10,7 @@ const Skill = (props) => {
   const { pluginData, updateData } = props;
   const [ skillList, setSkillList] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useHistory().push;
   const { tenantId } = useParams();
   const pluginMap = useRef([]);
 

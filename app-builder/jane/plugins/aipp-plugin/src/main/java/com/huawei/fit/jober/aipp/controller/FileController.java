@@ -12,9 +12,14 @@ import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestHeader;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
+import com.huawei.fit.http.client.HttpClassicClientFactory;
+import com.huawei.fit.http.client.HttpClassicClientRequest;
+import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.PartitionedEntity;
+import com.huawei.fit.http.protocol.HttpRequestMethod;
+import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.jane.common.controller.AbstractController;
@@ -35,10 +40,6 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -68,6 +69,7 @@ public class FileController extends AbstractController {
     private final int xiaoHaiReadTimeout;
     private final UploadedFileManageService uploadedFileManageService;
     private final OperatorService operatorService;
+    private final HttpClassicClientFactory factory;
 
     /**
      * 构造函数
@@ -78,11 +80,13 @@ public class FileController extends AbstractController {
      * @param operatorService 操作服务
      */
     public FileController(Authenticator authenticator, UploadedFileManageService uploadedFileManageService,
-            @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout, OperatorService operatorService) {
+            @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout, OperatorService operatorService,
+            HttpClassicClientFactory factory) {
         super(authenticator);
         this.xiaoHaiReadTimeout = xiaoHaiReadTimeout;
         this.uploadedFileManageService = uploadedFileManageService;
         this.operatorService = operatorService;
+        this.factory = factory;
     }
 
     /**
@@ -106,16 +110,16 @@ public class FileController extends AbstractController {
         String baseUrl = new String(Base64.getDecoder().decode(base64fileUrl.getBytes(StandardCharsets.UTF_8)),
                 StandardCharsets.UTF_8);
         log.info("getFile url={}", baseUrl);
-        HttpGet httpGet = new HttpGet(baseUrl);
-        httpGet.setConfig(HttpUtils.requestConfig(this.xiaoHaiReadTimeout));
-        try (CloseableHttpResponse response = HttpUtils.execute(httpGet)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+        HttpClassicClientRequest request = factory.create(HttpUtils.requestConfig(this.xiaoHaiReadTimeout))
+                .createRequest(HttpRequestMethod.GET, baseUrl);
+        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(request)) {
+            if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
                 throw new IOException(String.format(Locale.ROOT,
                         "send http fail. url=%s result=%d",
-                        httpGet.getURI(),
-                        response.getStatusLine().getStatusCode()));
+                        request.requestUri(),
+                        response.statusCode()));
             }
-            return EntityUtils.toByteArray(response.getEntity());
+            return response.entityBytes();
         }
     }
 

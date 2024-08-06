@@ -17,7 +17,6 @@ import com.huawei.fitframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -51,24 +50,21 @@ public class AppChatSseServiceImpl implements AppChatSseService {
     }
 
     @Override
-    public Optional<Object> getEmitter(String instanceId) {
+    public Optional<Emitter<Object>> getEmitter(String instanceId) {
         return Optional.ofNullable(this.emitterMap.get(instanceId));
     }
 
     @Override
     public void send(String instanceId, Object data) {
-        if (Objects.isNull(data)) {
-            return;
+        if (data != null) {
+            this.getEmitter(instanceId).ifPresent(e -> e.emit(data));
         }
-        Emitter<Object> emitter = this.emitterMap.get(instanceId);
-        Optional.ofNullable(emitter).ifPresent(e -> e.emit(data));
     }
 
     @Override
     public void sendLastData(String instanceId, Object data) {
         this.send(instanceId, data);
-        Emitter<Object> emitter = this.emitterMap.get(instanceId);
-        emitter.complete();
+        this.getEmitter(instanceId).ifPresent(Emitter::complete);
         this.removeEmitter(instanceId);
     }
 

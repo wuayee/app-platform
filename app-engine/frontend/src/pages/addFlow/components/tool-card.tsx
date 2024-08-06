@@ -2,13 +2,13 @@ import React from 'react';
 import { Flex, Tag } from 'antd';
 import { Icons } from '../../../components/icons';
 import { StarOutlined, UserOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import '../styles/tool-card.scss';
 import { useAppSelector } from '../../../store/hook';
 import { getAppInfoByVersion } from '../../../shared/http/aipp';
 
 const ToolCard = ({ pluginData, tenantId }: any) => {
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const appId = useAppSelector((state) => state.appStore.appId);
 
   // 类型处理

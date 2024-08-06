@@ -65,7 +65,7 @@ const MyPlugins = () => {
   const getPluginList = () => {
     const { pageNum, pageSize } = pagination;
     if (currentTab === tabItemE.TOOL) {
-      getPluginTool(tenantId, { pageNum, pageSize, tag: currentTab, name }).then(({ data }) => {
+      getPluginTool(tenantId, { pageNum, pageSize, name }).then(({ data }) => {
         setTotal(data?.total);
         setPluginData(data?.toolData);
       });

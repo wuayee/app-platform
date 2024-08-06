@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
 @Component
 public class OperatorServiceImpl implements OperatorService {
     private static final Logger log = Logger.get(OperatorServiceImpl.class);
-
+    private static final Function<File, String> EXCEL_EXTRACTOR = OperatorServiceImpl::getExcelContent;
     private static final Function<File, String> PDF_EXTRACTOR = pdfFile -> {
         try {
             try (PDDocument doc = PDDocument.load(pdfFile)) {
@@ -103,13 +103,62 @@ public class OperatorServiceImpl implements OperatorService {
         return "";
     };
 
+    private static final Function<File, String> DOC_OUTLINE_EXTRACTOR = docFile -> {
+        try {
+            try (InputStream fis = new BufferedInputStream(Files.newInputStream(docFile.toPath()))) {
+                if (FileMagic.valueOf(fis) == FileMagic.OOXML) {
+                    try (XWPFDocument doc = new XWPFDocument(fis)) {
+                        XWPFStyles styles = doc.getStyles();
+                        List<XWPFParagraph> paragraphs = doc.getParagraphs();
+                        // 最多6级标题
+                        List<Integer> titleCounter = new ArrayList<>(Collections.nCopies(6, 0));
+                        return paragraphs.stream()
+                                // 过滤掉所有没有样式的正文
+                                .filter(paragraph -> Objects.nonNull(styles.getStyle(paragraph.getStyleID())))
+                                // 转换为形如 1.1 章节名 的标题
+                                .map(paragraph -> extractHeadings(paragraph,
+                                        styles.getStyle(paragraph.getStyleID()).getName().toLowerCase(Locale.ROOT),
+                                        titleCounter))
+                                // 对于不认识的样式返回的是null, 过滤掉
+                                .filter(Objects::nonNull).collect(Collectors.joining("\n"));
+                    }
+                } else {
+                    log.error("not support: {}, file name:{}", FileMagic.valueOf(fis).name(), docFile.getName());
+                }
+            }
+        } catch (IOException e) {
+            log.error("read doc fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
+        }
+        return "";
+    };
+
     private final LLMService llmService;
-
     private final BrokerClient client;
-
     private final Function<File, String> imageExtractor = this::getImageContent;
-
     private final Function<File, String> audioExtractor = this::getAudioContent;
+    private final EnumMap<FileType, Function<File, String>> outlineOperatorMap =
+            new EnumMap<FileType, Function<File, String>>(FileType.class) {
+                {
+                    put(FileType.WORD, DOC_OUTLINE_EXTRACTOR);
+                }
+            };
+
+    private final EnumMap<FileType, Function<File, String>> fileOperatorMap =
+            new EnumMap<FileType, Function<File, String>>(FileType.class) {
+                {
+                    put(FileType.PDF, PDF_EXTRACTOR);
+                    put(FileType.WORD, DOC_EXTRACTOR);
+                    put(FileType.EXCEL, EXCEL_EXTRACTOR);
+                    put(FileType.IMAGE, imageExtractor);
+                    put(FileType.AUDIO, audioExtractor);
+                }
+            };
+
+    public OperatorServiceImpl(LLMService llmService, BrokerClient client) {
+        this.llmService = llmService;
+        this.client = client;
+    }
 
     private static String getExcelContent(File file) {
         StringBuilder excelContent = new StringBuilder();
@@ -156,61 +205,6 @@ public class OperatorServiceImpl implements OperatorService {
             default:
                 return "";
         }
-    }
-
-    private static final Function<File, String> EXCEL_EXTRACTOR = OperatorServiceImpl::getExcelContent;
-
-    private static final Function<File, String> DOC_OUTLINE_EXTRACTOR = docFile -> {
-        try {
-            try (InputStream fis = new BufferedInputStream(Files.newInputStream(docFile.toPath()))) {
-                if (FileMagic.valueOf(fis) == FileMagic.OOXML) {
-                    try (XWPFDocument doc = new XWPFDocument(fis)) {
-                        XWPFStyles styles = doc.getStyles();
-                        List<XWPFParagraph> paragraphs = doc.getParagraphs();
-                        // 最多6级标题
-                        List<Integer> titleCounter = new ArrayList<>(Collections.nCopies(6, 0));
-                        return paragraphs.stream()
-                                // 过滤掉所有没有样式的正文
-                                .filter(paragraph -> Objects.nonNull(styles.getStyle(paragraph.getStyleID())))
-                                // 转换为形如 1.1 章节名 的标题
-                                .map(paragraph -> extractHeadings(paragraph,
-                                        styles.getStyle(paragraph.getStyleID()).getName().toLowerCase(Locale.ROOT),
-                                        titleCounter))
-                                // 对于不认识的样式返回的是null, 过滤掉
-                                .filter(Objects::nonNull).collect(Collectors.joining("\n"));
-                    }
-                } else {
-                    log.error("not support: {}, file name:{}", FileMagic.valueOf(fis).name(), docFile.getName());
-                }
-            }
-        } catch (IOException e) {
-            log.error("read doc fail.", e);
-            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
-        }
-        return "";
-    };
-
-    private final EnumMap<FileType, Function<File, String>> outlineOperatorMap =
-            new EnumMap<FileType, Function<File, String>>(FileType.class) {
-                {
-                    put(FileType.WORD, DOC_OUTLINE_EXTRACTOR);
-                }
-            };
-
-    private final EnumMap<FileType, Function<File, String>> fileOperatorMap =
-            new EnumMap<FileType, Function<File, String>>(FileType.class) {
-                {
-                    put(FileType.PDF, PDF_EXTRACTOR);
-                    put(FileType.WORD, DOC_EXTRACTOR);
-                    put(FileType.EXCEL, EXCEL_EXTRACTOR);
-                    put(FileType.IMAGE, imageExtractor);
-                    put(FileType.AUDIO, audioExtractor);
-                }
-            };
-
-    public OperatorServiceImpl(LLMService llmService, BrokerClient client) {
-        this.llmService = llmService;
-        this.client = client;
     }
 
     private static String extractDocHandle(InputStream fis, String fileName) throws IOException {

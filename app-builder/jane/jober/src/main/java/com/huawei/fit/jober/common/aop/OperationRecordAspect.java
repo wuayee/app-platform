@@ -33,6 +33,7 @@ import com.huawei.fitframework.aop.ProceedingJoinPoint;
 import com.huawei.fitframework.aop.annotation.Around;
 import com.huawei.fitframework.aop.annotation.Aspect;
 import com.huawei.fitframework.aop.annotation.Pointcut;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -97,7 +98,7 @@ public class OperationRecordAspect {
 
         String objectId;
         if (annotation.objectId() == -2) {
-            assert taskRelation != null;
+            Validation.notNull(taskRelation, "task relation is null.");
             objectId = taskRelation.objectId1();
         } else if (annotation.objectId() >= 0 && pjp.getArgs().length > annotation.objectId()) {
             objectId = ObjectUtils.cast(pjp.getArgs()[annotation.objectId()]) ;

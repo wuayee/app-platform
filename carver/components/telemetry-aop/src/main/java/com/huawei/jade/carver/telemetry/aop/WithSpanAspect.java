@@ -40,6 +40,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class WithSpanAspect {
     private static final ContextKey<String> TRACE_CONTEXT_KEY = ContextKey.named("carver-trace-scope-name");
 
+    private final SpanAttributeParserRepository repository;
+
+    public WithSpanAspect(SpanAttributeParserRepository repository) {
+        this.repository = repository;
+    }
+
     @Around("@annotation(io.opentelemetry.instrumentation.annotations.WithSpan)")
     private Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
         AtomicReference<Span> spanRef = new AtomicReference<>();
@@ -106,7 +112,7 @@ public class WithSpanAspect {
     }
 
     private void setAttribute(Span span, String expression, Object paramValue) {
-        List<SpanAttributeParser> parsers = SpanAttributeParserRepository.get();
+        List<SpanAttributeParser> parsers = this.repository.get();
         Map<String, String> attributeMap = parsers.stream()
                 .filter(parser -> parser.match(expression))
                 .findFirst()

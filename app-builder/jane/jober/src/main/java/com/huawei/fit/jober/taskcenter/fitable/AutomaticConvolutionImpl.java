@@ -75,19 +75,9 @@ public class AutomaticConvolutionImpl implements OnInstancesCategoryChanged {
         // 查询兄弟姐妹 如果兄弟姐妹都是这个category，父亲不是
         TaskInstance.Filter instanceFilter = filterOfInfo("decomposed_from", parentId.get());
         List<OrderBy> orderBys = Collections.singletonList(OrderBy.of("id"));
-        PagedResultSet<TaskInstance> results = this.repo.list(task, instanceFilter, Pagination.create(0, LIMIT),
-                orderBys, ViewMode.LIST, context);
         String newCategory = changed.getNewCategory();
-        if (hasInstanceNotOwningSpecifyCategory(newCategory, results)) {
+        if (checkInstanceNotOwningCategories(task, context, newCategory, instanceFilter, orderBys)) {
             return;
-        }
-        long total = results.pagination().total();
-        for (long offset = LIMIT; offset < total; offset += LIMIT) {
-            Pagination pagination = Pagination.create(offset, LIMIT);
-            results = this.repo.list(task, instanceFilter, pagination, orderBys, ViewMode.LIST, context);
-            if (hasInstanceNotOwningSpecifyCategory(newCategory, results)) {
-                return;
-            }
         }
         instanceFilter = filterOfInfo("id", parentId.get());
         // 所有兄弟姐妹都是这个category,查询父亲是否为该category
@@ -118,6 +108,24 @@ public class AutomaticConvolutionImpl implements OnInstancesCategoryChanged {
                     .info(Collections.singletonMap(key, category.getValue())).build();
             this.repo.patch(task, parentInstance.id(), declaration, context);
         });
+    }
+
+    private boolean checkInstanceNotOwningCategories(TaskEntity task, OperationContext context,
+            String newCategory, TaskInstance.Filter instanceFilter, List<OrderBy> orderBys) {
+        PagedResultSet<TaskInstance> results = this.repo.list(task, instanceFilter, Pagination.create(0, LIMIT),
+                orderBys, ViewMode.LIST, context);
+        if (hasInstanceNotOwningSpecifyCategory(newCategory, results)) {
+            return true;
+        }
+        long total = results.pagination().total();
+        for (long offset = LIMIT; offset < total; offset += LIMIT) {
+            Pagination pagination = Pagination.create(offset, LIMIT);
+            results = this.repo.list(task, instanceFilter, pagination, orderBys, ViewMode.LIST, context);
+            if (hasInstanceNotOwningSpecifyCategory(newCategory, results)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static TaskInstance.Filter filterOfInfo(String key, String value) {

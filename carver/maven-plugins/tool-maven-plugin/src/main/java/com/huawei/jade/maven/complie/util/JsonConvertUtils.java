@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,9 +50,8 @@ public class JsonConvertUtils {
         schema.put("parameters", parameters);
         Object properties = parameters.get("properties");
         if (properties instanceof Map) {
-            Map<?, ?> pr = (Map<?, ?>) properties;
-            // 后续统一整改，order提取至其他位置
-            schema.put("order", pr.keySet());
+            Map<?, ?> mapProperties = (Map<?, ?>) properties;
+            schema.put("order", mapProperties.keySet());
         }
 
         Map<String, Object> returnDetails = new HashMap<>();
@@ -82,8 +81,8 @@ public class JsonConvertUtils {
     private static Map<String, Object> getParameters(MethodEntity methodEntity) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("type", "object");
-        Map<String, Object> variableInfo = new HashMap<>();
-        Set<String> requiredKey = new HashSet<>();
+        Map<String, Object> variableInfo = new LinkedHashMap<>();
+        Set<String> requiredKey = new LinkedHashSet<>();
         for (ParameterEntity parameterEntity : methodEntity.getParameterEntities()) {
             Map<String, Object> paramDetails = new HashMap<>();
             if (parameterEntity.getDescription() != null) {

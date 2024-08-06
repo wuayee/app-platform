@@ -4,10 +4,10 @@ import { Layout, Menu } from 'antd';
 import { MenuFoldOutlined } from '@ant-design/icons';
 import {
   Route,
-  useNavigate,
-  Routes,
+  useHistory,
   useLocation,
-  Navigate,
+  Redirect,
+  Switch
 } from 'react-router-dom';
 import {
   routeList,
@@ -35,7 +35,7 @@ const AppLayout: React.FC = () => {
   // 默认的选中的菜单
   const [defaultActive, setDefaultActive] = useState<string[]>([])
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   const location = useLocation();
 
@@ -134,16 +134,19 @@ const AppLayout: React.FC = () => {
         </Header>
         <Provider store={store}>
           <Content style={{ padding: '0 16px', background: colorBgContainer }}>
-            <Routes>
-              <Route path='/' element={<Navigate to='/home' replace />} />
+            <Switch>
               {flattenRouteList.map((route) => (
                 <Route
+                  exact
                   path={route.key}
                   key={route.key}
-                  Component={route.component}
+                  component={route.component}
                 />
               ))}
-            </Routes>
+              <Route exact path='/' key='/' >
+                <Redirect to='/home' />
+              </Route>
+            </Switch>
           </Content>
         </Provider>
       </Layout>

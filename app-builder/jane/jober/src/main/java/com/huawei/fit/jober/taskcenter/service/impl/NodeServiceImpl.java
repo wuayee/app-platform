@@ -314,7 +314,7 @@ public class NodeServiceImpl implements NodeService {
     @Transactional
     public RangedResultSet<NodeEntity> list(String treeId, NodeFilter filter, long offset, int limit,
             OperationContext context) {
-        treeId = Entities.validateId(treeId, () -> new BadRequestException(ErrorCodes.TREE_ID_INVALID,
+        String treeIdvalidated = Entities.validateId(treeId, () -> new BadRequestException(ErrorCodes.TREE_ID_INVALID,
                 ParamUtils.convertOperationContext(context)));
         StringBuilder whereSql = new StringBuilder();
         List<Object> whereArgs = new LinkedList<>();
@@ -325,7 +325,7 @@ public class NodeServiceImpl implements NodeService {
         }
 
         String countSql = "SELECT COUNT(1) FROM task_type" + whereSql + " AND tree_id = ?";
-        whereArgs.add(treeId);
+        whereArgs.add(treeIdvalidated);
         long count = longValue(this.executor.executeScalar(countSql, whereArgs));
 
         String sql = "SELECT id, tree_id, parent_id, name, created_by, created_at, updated_by, updated_at "

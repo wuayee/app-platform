@@ -1,6 +1,6 @@
 
 import React, { useImperativeHandle, useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Drawer, Pagination, Table, Button, Input, Dropdown, Select, Tag } from 'antd';
 import { CloseOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
 import { getKnowledges, getKnowledgesList } from '@shared/http/appBuilder';
@@ -20,7 +20,7 @@ const AddKnowledge = (props) => {
   const [ total, setTotal ] = useState(0);
   const searchName = useRef('');
   const knowledgeCurrent = useRef([]);
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const columns = [
     {
       title: '名称',

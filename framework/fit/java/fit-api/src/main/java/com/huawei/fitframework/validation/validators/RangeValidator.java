@@ -29,16 +29,16 @@ public class RangeValidator implements ConstraintValidator<Range, Object> {
         if (value == null) {
             return false;
         } else if (value instanceof Integer) {
-            Integer convertedValue = ObjectUtils.cast(value);
+            int convertedValue = ObjectUtils.cast(value);
             return convertedValue >= this.min && convertedValue <= this.max;
         } else if (value instanceof Long) {
-            Long convertedValue = ObjectUtils.cast(value);
+            long convertedValue = ObjectUtils.cast(value);
             return convertedValue >= this.min && convertedValue <= this.max;
         } else if (value instanceof Float) {
-            Float convertedValue = ObjectUtils.cast(value);
+            float convertedValue = ObjectUtils.cast(value);
             return convertedValue >= this.min && convertedValue <= this.max;
         } else if (value instanceof Double) {
-            Double convertedValue = ObjectUtils.cast(value);
+            double convertedValue = ObjectUtils.cast(value);
             return convertedValue >= this.min && convertedValue <= this.max;
         } else {
             throw new UnsupportedOperationException("Failed to validate value: invalid value.");

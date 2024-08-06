@@ -3,7 +3,7 @@ import { Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import type { TableColumnsType, PaginationProps } from 'antd';
 import TableTextSearch from '../../../components/table-text-search';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import { getModelSeries, queryModelbaseList } from '../../../shared/http/model-base';
 import { deleteModel } from './delete';
 
@@ -15,7 +15,7 @@ const ModelBaseTable = () => {
   const [total, setTotal] = useState(0);
   const [seriesOptions, setSeriesOptions] = useState([]);
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   useEffect(() => {
     getModelbaseList({ offset: 0, limit: 10 });

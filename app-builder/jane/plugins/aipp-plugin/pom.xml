@@ -134,15 +134,6 @@
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.huawei.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
@@ -195,6 +186,19 @@
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>voice-service</artifactId>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-test-framework</artifactId>
+            <version>${fit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

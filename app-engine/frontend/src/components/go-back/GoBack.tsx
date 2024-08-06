@@ -1,9 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Icons } from '../icons';
 
 const GoBack: React.FC<{ path, title }> = ({ path, title }) => {
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   return (
     <div
       onClick={(): void => {

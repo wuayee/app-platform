@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { categoryItems } from '../../configForm/common/common';
@@ -32,7 +32,7 @@ const ToolDrawer = (props) => {
   const pluginList = useRef([]);
   const searchName = useRef(undefined);
   const listType = useRef('market');
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const tab = [
     { name: '全部', key: '' },
@@ -95,7 +95,7 @@ const ToolDrawer = (props) => {
     } else {
       let params = { pageNum, pageSize };
       modalType ? params.tag = 'FIT' : '';
-      res = await getMyPlugin(tenantId, params);
+      res = await getMyPlugin(tenantId, params, modalType ? 'modal' : '');
     }
 
     setLoading(false);

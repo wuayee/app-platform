@@ -78,9 +78,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ToolDto getPlugins(String tag, String mode, int pageNum, int pageSize,
-            OperationContext operationContext) {
-        ListResult<ToolData> toolDataListResult = this.buildToolNodesConfig(tag, mode, pageNum, pageSize, "");
+    public ToolDto getPlugins(ToolQuery toolQuery, OperationContext operationContext) {
+        ListResult<ToolData> toolDataListResult = this.toolService.searchTools(toolQuery);
         return ToolDto.builder().toolData(toolDataListResult.getData()).total(toolDataListResult.getCount()).build();
     }
 

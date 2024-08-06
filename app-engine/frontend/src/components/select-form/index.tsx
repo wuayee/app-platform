@@ -4,7 +4,7 @@ import SelectDataSource from './select-data-source';
 import Preview from './preview';
 import { TextSplitClear } from './text-split-clear';
 import TableSecondForm from './table-second-form';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 interface inputProps {
   currentSteps: number;
@@ -26,7 +26,7 @@ interface inputProps {
 }
 
 const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inputProps) => {
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   return (
     <>
       {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource} />}
