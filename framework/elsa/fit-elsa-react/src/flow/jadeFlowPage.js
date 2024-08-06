@@ -41,6 +41,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
                 {observableId: "useMemory", value: "useMemory", type: "Boolean"},
                 {observableId: "userId", value: "userId", type: "String"},
                 {observableId: "fileUrl", value: "fileUrl", type: "String"},
+                {observableId: "chatId", value: "chatId", type: "String"},
             ];
 
             virtualNodeInfoList.forEach(({observableId, value, type}) => {
