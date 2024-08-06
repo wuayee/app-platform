@@ -66,7 +66,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
 
     @Override
     @Fitable("default")
-    public String createApp(String appInfo) {
+    public String createApp(String appInfo, String userId) {
         AppCreateToolDto dto;
         try {
             OutputParser<AppCreateToolDto> parser =
@@ -91,7 +91,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
         dto.setDescription(StringUtils.isEmpty(dto.getDescription()) ? StringUtils.EMPTY : dto.getDescription());
         dto.setIcon(StringUtils.isEmpty(dto.getIcon()) ? StringUtils.EMPTY : dto.getIcon());
         dto.setType(StringUtils.isEmpty(dto.getType()) ? AppTypeEnum.APP.code() : dto.getType());
-        OperationContext context = this.buildOperationContext();
+        OperationContext context = this.buildOperationContext(userId);
         AppBuilderAppDto appDto;
         try {
             appDto = this.appService.create(DEFAULT_TEMPLATE_ID, this.convert(dto), context, false);
@@ -139,10 +139,10 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
                 .build();
     }
 
-    private OperationContext buildOperationContext() {
+    private OperationContext buildOperationContext(String userId) {
         OperationContext context = new OperationContext();
         context.setTenantId(DEFAULT_TENANT_ID);
-        context.setOperator("com.huawei.jade");
+        context.setOperator(userId);
         return context;
     }
 }
