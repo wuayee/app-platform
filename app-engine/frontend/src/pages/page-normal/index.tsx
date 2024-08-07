@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'antd';
 import Link from 'antd/es/typography/Link';
 import React from 'react';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import HeaderMenus from '../../components/HeaderMenus';
 
 const Demo: React.FC = () => {

@@ -22,6 +22,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -33,6 +34,8 @@ import java.util.Properties;
 @Component
 @Order(Order.NEARLY_HIGH)
 public class MybatisBeanContainerInitializedObserver implements BeanContainerInitializedObserver {
+    private static final String BYTEBUDDY_CONFIG = "mybatis.use-bytebuddy";
+
     private final BeanContainer container;
 
     MybatisBeanContainerInitializedObserver(BeanContainer container) {
@@ -60,8 +63,9 @@ public class MybatisBeanContainerInitializedObserver implements BeanContainerIni
         SqlSessionFactoryHelper.loadMappers(properties, plugin, configuration);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         container.registry().register(sessionFactory);
+        boolean shouldUseByteBuddy = Optional.ofNullable(config.get(BYTEBUDDY_CONFIG, Boolean.class)).orElse(false);
         configuration.getMapperRegistry().getMappers().forEach(mapperClass -> {
-            Object mapper = MapperInvocationHandler.proxy(sessionFactory, mapperClass);
+            Object mapper = MapperInvocationHandler.proxy(sessionFactory, mapperClass, shouldUseByteBuddy);
             container.registry().register(mapper, mapperClass);
         });
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Drawer, Input, Dropdown } from 'antd';
 import { AnyAction } from 'redux';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   SearchOutlined,
   EllipsisOutlined,

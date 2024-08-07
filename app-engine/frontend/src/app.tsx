@@ -13,12 +13,13 @@ localStorage.getItem('currentUser') || localStorage.setItem('currentUser', '');
 localStorage.getItem('currentUserId') || localStorage.setItem('currentUserId', '');
 localStorage.getItem('currentUserIdComplete') || localStorage.setItem('currentUserIdComplete', '');
 localStorage.getItem('appChatMap') || localStorage.setItem('appChatMap', JSON.stringify({}));
+localStorage.getItem('showFlowChangeWarning') || localStorage.setItem('showFlowChangeWarning', 'true');
 
 export default function App() {
   return (
     <ConfigProvider locale={zhCN} autoInsertSpace={true}>
       {/* <StoreProvider> */}
-        <Router hashType='hash'>
+        <Router>
           <AppLayout />
         </Router>
       {/* </StoreProvider> */}

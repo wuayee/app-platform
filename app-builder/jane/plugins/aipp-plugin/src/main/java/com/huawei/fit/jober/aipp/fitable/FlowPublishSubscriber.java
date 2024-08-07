@@ -110,11 +110,10 @@ public class FlowPublishSubscriber implements FlowPublishService {
         return app.isPublished();
     }
 
-    @SuppressWarnings("unchecked")
     private List<Parameter> buildParameters(Map<String, Object> businessData, String nodeId) {
         // 如果根据nodeId找不到，则说明节点没有出入参.
-        List<Map<String, Object>> executeInfos = this.getValueByKeys(businessData,
-                Arrays.asList("_internal", "executeInfo", nodeId), List.class).orElseGet(Collections::emptyList);
+        List<Map<String, Object>> executeInfos = ObjectUtils.cast(this.getValueByKeys(businessData,
+                Arrays.asList("_internal", "executeInfo", nodeId), List.class).orElseGet(Collections::emptyList));
         if (executeInfos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -126,11 +125,14 @@ public class FlowPublishSubscriber implements FlowPublishService {
         }).collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
     private <T> Optional<T> getValueByKeys(Map<String, Object> map, List<String> keys, Class<T> clz) {
         Map<String, Object> tmp = map;
         for (int i = 0; i < keys.size() - 1; i++) {
-            tmp = ObjectUtils.as(tmp.get(keys.get(i)), Map.class);
+            if (tmp.get(keys.get(i)) instanceof Map) {
+                tmp = ObjectUtils.cast(tmp.get(keys.get(i)));
+            } else {
+                tmp = null;
+            }
             if (Objects.isNull(tmp)) {
                 throw new IllegalArgumentException(
                         StringUtils.format("No keys in businessData.keys: []", String.join(",", keys)));

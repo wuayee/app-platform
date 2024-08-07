@@ -13,7 +13,7 @@ import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.carver.exporter.repository.stub.SpanExporterSub;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
-import com.huawei.jade.service.SpanExporterContainer;
+import com.huawei.jade.service.SpanExporterRepository;
 
 import io.opentelemetry.api.OpenTelemetry;
 
@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
  * @since 2024-07-25
  */
 public class SpanExporterRepositoryStarterTest {
-    private SpanExporterContainer getExporterContainer(SpanExporterRepositoryStarter repositoryStarter)
+    private SpanExporterRepository getExporterContainer(SpanExporterRepositoryStarter repositoryStarter)
             throws NoSuchFieldException, IllegalAccessException {
         Field exportersContainer = repositoryStarter.getClass().getDeclaredField("exportersRepository");
         exportersContainer.setAccessible(true);
@@ -60,7 +60,7 @@ public class SpanExporterRepositoryStarterTest {
             // 插件启动，自动触发一次 onPluginStarted
             assertThat(CarverGlobalOpenTelemetry.get()).isNotEqualTo(OpenTelemetry.noop());
 
-            SpanExporterContainer exporterContainer = getExporterContainer(this.repositoryStarter);
+            SpanExporterRepository exporterContainer = getExporterContainer(this.repositoryStarter);
             assertThat(exporterContainer.get(exporter -> true).size()).isEqualTo(1);
 
             this.repositoryStarter.onPluginStopping(this.plugin);
@@ -76,7 +76,7 @@ public class SpanExporterRepositoryStarterTest {
         public void shouldFailWhenRegisterExporterOverMaxSize()
                 throws NoSuchFieldException, IllegalAccessException {
             this.repositoryStarter.onPluginStopping(this.plugin);
-            SpanExporterContainer exporterContainer = getExporterContainer(this.repositoryStarter);
+            SpanExporterRepository exporterContainer = getExporterContainer(this.repositoryStarter);
             assertThat(exporterContainer.get(exporter -> true).size()).isEqualTo(0);
 
             for (int i = 0; i < 10; i++) {
@@ -102,7 +102,7 @@ public class SpanExporterRepositoryStarterTest {
                 throws NoSuchFieldException, IllegalAccessException {
             assertThat(CarverGlobalOpenTelemetry.get()).isEqualTo(OpenTelemetry.noop());
 
-            SpanExporterContainer exporterContainer = getExporterContainer(this.containerStarter);
+            SpanExporterRepository exporterContainer = getExporterContainer(this.containerStarter);
             assertThat(exporterContainer.get(exporter -> true).size()).isEqualTo(0);
 
             SpanExporterSub exporterStub = new SpanExporterSub();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, Tabs } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Icons } from '@/components/icons';
 import AppCard from '@/components/appCard';
 import EditModal from '../components/edit-modal';
@@ -15,7 +15,7 @@ import './index.scoped.scss';
 
 const AppDev: React.FC = () => {
   const tenantId = TENANT_ID;
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   // 数据初始化
   const [appData, setAppData] = useState([]);
@@ -169,7 +169,7 @@ const AppDev: React.FC = () => {
           </Button>
           <Input
             showCount
-            maxLength={20}
+            maxLength={64}
             placeholder='搜索'
             style={{ width: '200px', height: '35px', marginLeft: '16px' }}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />}

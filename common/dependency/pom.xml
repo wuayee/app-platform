@@ -160,6 +160,11 @@
                 <artifactId>waterflow-service</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.jade</groupId>
+                <artifactId>waterflow-task-event-handler</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
 
             <!-- FEL -->
             <dependency>
@@ -194,6 +199,11 @@
             </dependency>
 
             <!-- Carver -->
+            <dependency>
+                <groupId>com.huawei.fit.jade.service</groupId>
+                <artifactId>operation-log-service</artifactId>
+                <version>${carver.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.huawei.fit.jade.service</groupId>
                 <artifactId>tool-service</artifactId>

@@ -4,14 +4,17 @@ import type { RootState } from '../index';
 // 为 slice state 定义一个类型
 interface CommonI {
   historySwitch: boolean;
-  dimension: string;
+  dimension: object;
   useMemory: boolean;
 }
 
 // 使用该类型定义初始 state
 const initialState: CommonI = {
   historySwitch: false,
-  dimension: null,
+  dimension: {
+    id: '',
+    name:''
+  },
   useMemory: true,
 } as CommonI;
 

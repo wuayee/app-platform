@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { LeftArrowIcon } from '@assets/icon';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { getAppInfo } from '@shared/http/aipp';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { configMap } from '../addFlow/config';
@@ -9,8 +9,8 @@ import './index.scss'
 
 const FlowDetail = () => {
   const { appId, tenantId } = useParams();
-  const [ appInfo, setAppInfo] = useState(false);
-  const navigate = useNavigate();
+  const [appInfo, setAppInfo] = useState(false);
+  const navigate = useHistory().push;
   const { CONFIGS } = configMap[process.env.NODE_ENV];
 
   useEffect(() => {
@@ -44,20 +44,20 @@ const FlowDetail = () => {
     })
   }
   function handleBackClick() {
-    navigate(-1);
+    window.history.back();
   }
   return <>{(
     <div className='graph-detail'>
       <div className='header'>
-          <div className='header-left'>
-            <LeftArrowIcon className='icon-back' onClick={ handleBackClick } />
-            <span className='header-text' title={appInfo?.name}>{ appInfo.name }</span>
-          </div>
-          <div className='header-right'>
-            <span className='header-text'>创建人：{ appInfo.createBy }</span>
-            <span className='header-text'>发布时间：{ appInfo.updateAt }</span>
-          </div>
+        <div className='header-left'>
+          <LeftArrowIcon className='icon-back' onClick={handleBackClick} />
+          <span className='header-text' title={appInfo?.name}>{appInfo.name}</span>
         </div>
+        <div className='header-right'>
+          <span className='header-text'>创建人：{appInfo.createBy}</span>
+          <span className='header-text'>发布时间：{appInfo.updateAt}</span>
+        </div>
+      </div>
       <div id='stageDetail'></div>
     </div>
   )}</>

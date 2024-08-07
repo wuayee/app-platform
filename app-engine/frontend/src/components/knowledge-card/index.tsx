@@ -2,7 +2,7 @@ import React from 'react';
 import type { ReactElement } from 'react';
 import { Card, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Icons } from '../icons/index';
 import './index.scoped.scss';
 
@@ -23,7 +23,7 @@ const App = ({
   clickMore: (type: 'delete') => void;
 }) => {
   // 路由
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const operatorItems: MenuProps['items'] = [
     {
       key: 'modify',

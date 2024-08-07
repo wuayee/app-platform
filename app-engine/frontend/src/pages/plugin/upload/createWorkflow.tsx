@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CloseOutlined, ToTopOutlined } from '@ant-design/icons';
 import { Button, Drawer, Form, Input, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import { useAppSelector } from '@/store/hook';
 import { httpUrlMap } from '@/shared/http/httpConfig';
 import { createAipp, uploadImage } from '@/shared/http/aipp';
@@ -20,7 +20,7 @@ const CreateWorkfowDrawer = (props) => {
   const [filePath, setFilePath] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   // 上传图片
   async function pictureUpload(file) {
@@ -80,11 +80,12 @@ const CreateWorkfowDrawer = (props) => {
           </Button>
           <Button
             style={{ width: 90, backgroundColor: '#2673e5', color: '#ffffff' }}
-            onClick={async() => {
+            onClick={async () => {
               await form.validateFields();
-              const icon = filePath&&`${AIPP_URL}/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
-              const res= await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: form.getFieldValue('name'),icon:icon, description: form.getFieldValue('description')});
+              const icon = filePath && `${AIPP_URL}/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
+              const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: form.getFieldValue('name'), icon: icon, description: form.getFieldValue('description') });
               const aippId = res.data.id;
+              sessionStorage.setItem('add-type', 'plugin');
               navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
               setOpen(false);
             }}
@@ -104,8 +105,8 @@ const CreateWorkfowDrawer = (props) => {
                   src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}
                 />
               ) : (
-                <img src='/src/assets/images/knowledge/knowledge-base.png' />
-              )}
+                  <img src='./src/assets/images/knowledge/knowledge-base.png' />
+                )}
               <Upload
                 beforeUpload={beforeUpload}
                 onChange={onChange}

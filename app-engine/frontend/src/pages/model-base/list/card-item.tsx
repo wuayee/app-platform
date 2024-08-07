@@ -2,13 +2,13 @@ import React from 'react';
 import { Card, Dropdown, Flex, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useHistory } from 'react-router';
 import { deleteModel } from './delete';
 import { AvatarIcon } from '../../../assets/icon';
 
 const CardItem = ({ data, deleteCallback }: any) => {
   
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
   const operatorItems: MenuProps['items'] = [
     {
       key: '1',

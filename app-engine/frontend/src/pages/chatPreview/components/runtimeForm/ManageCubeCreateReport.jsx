@@ -1,61 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {Input, Button} from "antd";
 import {EditOutlined} from '@ant-design/icons';
-import styled from 'styled-components';
 import ReportChart from "./ReportChart.jsx";
 import {saveContent} from "@shared/http/appBuilder";
 import chartImg from "@/assets/images/chart.png";
 import tableImg from "@/assets/images/table.png";
 import {Message} from "@shared/utils/message";
+import './styles/manage-cube-create-report.scoped.scss';
 
 
-const FormWrap = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    color: rgb(37, 43, 58);
-    .report-title {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding-right: 10px;
-      margin-bottom:12px;
-      position: relative;
-    }
-    .ant-input {
-      //border: none !important;
-      color: rgb(37, 43, 58)
-    }
-    .report-query {
-      font-size: 16px;
-      font-weight: 600;
-    }
-    .ant-input-disabled {
-      border: none !important;
-      background-color: white;
-      color: rgb(37, 43, 58);
-    }
-    .report-btn {
-      display: flex;
-      justify-content: center;
-    }
-    .save-button {
-      background-color: rgb(4, 123, 252);
-      border-radius: 4px;
-      font-size: 14px;
-      color: white;
-      border-color: white;
-      width: 60px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-`;
 
 const ManageCubeCreateReport = (props) => {
   const id = "reportResult";
@@ -141,9 +94,8 @@ const ManageCubeCreateReport = (props) => {
     }
   }, [editTime])
 
-  return (
-    <>
-      <FormWrap>
+  return (<>
+      <div className='form-wrap '>
         <div>
           <div className="report-title">
             <div style={{fontSize: "28px", fontWeight: "600"}}>{title}</div>
@@ -174,9 +126,8 @@ const ManageCubeCreateReport = (props) => {
               { mode !== "history" && <Button onClick={handleSave} disabled={!canSave} className="save-button">保存</Button> } 
             </div>
         </div>
-      </FormWrap>
-    </>
-  )
+      </div>
+  </>);
 }
 
 export default ManageCubeCreateReport;

@@ -1123,4 +1123,26 @@ class InterpreterTest {
         ASTEnv env = new ASTEnv(ast);
         assertEquals(true, env.execute());
     }
+
+    @Test
+    void test_string_methods_from_json() throws OhPanic {
+        Map<String, String> map = new HashMap<>();
+        map.put("testString", "testString");
+        this.parserBuilder.addExternalOh("context", JSONObject.toJSONString(map));
+
+        assertExecution(true, "json.get(\"testString\").contains(\"stStr\")");
+        assertExecution(false, "json.get(\"testString\").contains(\"gni\")");
+        assertExecution(10, "json.get(\"testString\").len()");
+        assertExecution(true, "json.get(\"testString\").starts_with(\"testS\")");
+        assertExecution(false, "json.get(\"testString\").starts_with(\"estSt\")");
+        assertExecution(true, "json.get(\"testString\").ends_with(\"tring\")");
+        assertExecution(false, "json.get(\"testString\").ends_with(\"Strin\")");
+    }
+
+    private void assertExecution(Object expected, String codeSuffix) throws OhPanic {
+        String code = "let json = ext::util.stringToJson(context); " + codeSuffix;
+        AST ast = this.parserBuilder.parseString("", code);
+        ASTEnv env = new ASTEnv(ast);
+        assertEquals(expected, env.execute());
+    }
 }

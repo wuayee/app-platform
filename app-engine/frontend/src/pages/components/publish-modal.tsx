@@ -1,6 +1,6 @@
 
-import React, {  useState, useImperativeHandle } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useImperativeHandle } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { Input, Modal, Button, Select, Form } from 'antd';
 import TextEditor from './text-editor';
 import { Message } from '@shared/utils/message';
@@ -18,11 +18,11 @@ const PublishModal = (props) => {
   const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [text, setText] = useState('');
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-  
+  const navigate = useHistory().push;
+
   const tagOptions = [
     { value: '编程开发', label: '编程开发' },
     { value: '决策分析', label: '决策分析' },
@@ -88,7 +88,12 @@ const PublishModal = (props) => {
         Message({ type: 'success', content: `发布工具流成功` });
         sessionStorage.setItem('uniqueName', res.data.tool_unique_name);
         const appEngineId = sessionStorage.getItem('appId');
-        appEngineId && navigate(`/app-develop/${tenantId}/app-detail/${appEngineId}`);
+        if (appEngineId) {
+          appEngineId && navigate(`/app-develop/${tenantId}/app-detail/${appEngineId}`);
+        } else {
+          sessionStorage.setItem('pluginType', 'workflow');
+          navigate(`/plugin`);
+        }
       }
     } finally {
       setLoading(false)
@@ -115,7 +120,7 @@ const PublishModal = (props) => {
   })
   return <>{(
     <Modal
-      title={ publishType === 'app' ? '发布应用' : '发布工具流' }
+      title={publishType === 'app' ? '发布应用' : '发布工具流'}
       width={700}
       maskClosable={false}
       centered
@@ -131,19 +136,20 @@ const PublishModal = (props) => {
         </Button>
       ]}>
       <div className='search-list'>
-        { appInfo.attributes?.latest_version ? 
-          (
-            <div className="publish-tag">
-              <img src='/src/assets/images/ai/info.png' />
-              <span>新版本将覆盖历史版本，并不可回退</span>
-            </div>
-          ) :
-          (
-            <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none'}}>
-              <img src='/src/assets/images/ai/info.png' />
-              <span>请调试应用，确认无误后发布</span>
-            </div>
-          )
+        {
+          (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
+            (
+              <div className="publish-tag">
+                <img src='./src/assets/images/ai/info.png' />
+                <span>新版本将覆盖历史版本，并不可回退</span>
+              </div>
+            ) :
+            (
+              <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none' }}>
+                <img src='./src/assets/images/ai/info.png' />
+                <span>请调试应用，确认无误后发布</span>
+              </div>
+            )
         }
         <Form
           form={form}
@@ -151,7 +157,7 @@ const PublishModal = (props) => {
           autoComplete="off"
           className='edit-form-content'
         > {
-            publishType === 'app' && 
+            publishType === 'app' &&
             <Form.Item
               label="分类"
               name="app_type"
@@ -160,13 +166,13 @@ const PublishModal = (props) => {
               <Select options={tagOptions} />
             </Form.Item>
           }
-          
+
           <Form.Item
             label="版本名称"
             name="version"
             rules={[
-              { required: true, message: '请输入版本名称' }, 
-              { pattern:/^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }
+              { required: true, message: '请输入版本名称' },
+              { pattern: /^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }
             ]}
           >
             <Input showCount maxLength={8} />

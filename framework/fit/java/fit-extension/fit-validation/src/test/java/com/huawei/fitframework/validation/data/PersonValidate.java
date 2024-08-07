@@ -16,12 +16,25 @@ import com.huawei.fitframework.validation.group.PersonGroup;
  */
 @Validated
 public class PersonValidate {
-    public void validate1(@Validated Person person) {
-    }
+    /**
+     * Person 类的校验方法一。
+     *
+     * @param person 表示校验的 Person 对象 {@link Person}。
+     */
+    public void validate1(@Validated Person person) {}
 
-    public void validate2(@Range(min = 0, max = 1, message = "耳朵数量范围只能在0和1！") int ears, int mouth) {
-    }
+    /**
+     * Person 类的校验方法二。
+     *
+     * @param ears 表示输入的耳朵数量 {@link int}。
+     * @param mouth 表示输入的嘴巴数量 {@link int}。
+     */
+    public void validate2(@Range(min = 0, max = 1, message = "耳朵数量范围只能在0和1！") int ears, int mouth) {}
 
-    public void validate3(@Validated(PersonGroup.class) Person person) {
-    }
+    /**
+     * Person 类的校验方法三。
+     *
+     * @param person 表示校验的 Person 对象 {@link Person}。
+     */
+    public void validate3(@Validated(PersonGroup.class) Person person) {}
 }

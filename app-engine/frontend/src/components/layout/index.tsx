@@ -4,10 +4,10 @@ import { Layout, Menu } from 'antd';
 import { MenuFoldOutlined } from '@ant-design/icons';
 import {
   Route,
-  useNavigate,
-  Routes,
+  useHistory,
   useLocation,
-  Navigate,
+  Redirect,
+  Switch
 } from 'react-router-dom';
 import {
   routeList,
@@ -35,29 +35,29 @@ const AppLayout: React.FC = () => {
   // 默认的选中的菜单
   const [defaultActive, setDefaultActive] = useState<string[]>([])
 
-  const navigate = useNavigate();
+  const navigate = useHistory().push;
 
   const location = useLocation();
 
   /**
    * @description 从后往前遍历路由 父子路由，子路由前缀需要是父路由
    * @pathname 当前路径
-   * */ 
+   * */
   const getCurrentRoute = (pathname: string) => {
 
     // 拆开路由
-    const pathGroup = pathname.split('/').filter(item=> item!=='');
-    if(pathGroup?.length) {
+    const pathGroup = pathname.split('/').filter(item => item !== '');
+    if (pathGroup?.length) {
       let len = pathGroup?.length - 1;
-      while(len >= 0) {
+      while (len >= 0) {
         const key = '/' + pathGroup.slice(0, len + 1).join('/');
         let route = getRouteByKey(flattenRouteList, key);
-        if(route && !route?.hidden) {
+        if (route && !route?.hidden) {
           setDefaultActive([key]);
           break;
         }
         len--;
-      } 
+      }
     } else {
       // 默认路由为home
       setDefaultActive(['/home']);
@@ -70,7 +70,7 @@ const AppLayout: React.FC = () => {
 
   const colorBgContainer = '#F0F2F4';
   const setClassName = () => {
-    if ( location.pathname.includes('home')) {
+    if (location.pathname.includes('home')) {
       return 'home-chat'
     } else if (location.pathname.includes('app')) {
       return 'home-app'
@@ -106,7 +106,7 @@ const AppLayout: React.FC = () => {
         <div className='layout-sider-header'>
           <div className='layout-sider-content'>
             <Icons.logo />
-            <span className='layout-sider-title'>Model Engine</span>
+            <span className='layout-sider-title'>ModelEngine</span>
           </div>
           <MenuFoldOutlined
             style={{ color: '#6d6e72' }}
@@ -133,18 +133,21 @@ const AppLayout: React.FC = () => {
           <HeaderUser />
         </Header>
         <Provider store={store}>
-        <Content style={{ padding: '0 16px', background: colorBgContainer }}>
-          <Routes>
-            <Route path='/' element={<Navigate to='/home' replace />} />
-            {flattenRouteList.map((route) => (
-              <Route
-                path={route.key}
-                key={route.key}
-                Component={route.component}
-              />
-            ))}
-          </Routes>
-        </Content>
+          <Content style={{ padding: '0 16px', background: colorBgContainer }}>
+            <Switch>
+              {flattenRouteList.map((route) => (
+                <Route
+                  exact
+                  path={route.key}
+                  key={route.key}
+                  component={route.component}
+                />
+              ))}
+              <Route exact path='/' key='/' >
+                <Redirect to='/home' />
+              </Route>
+            </Switch>
+          </Content>
         </Provider>
       </Layout>
     </Layout>

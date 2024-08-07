@@ -14,7 +14,7 @@ import com.huawei.fitframework.plugin.PluginStartingObserver;
 import com.huawei.fitframework.plugin.PluginStoppingObserver;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.service.CarverSpanExporter;
-import com.huawei.jade.service.SpanExporterContainer;
+import com.huawei.jade.service.SpanExporterRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,16 +29,16 @@ import java.util.stream.Collectors;
 @Component
 public class SpanExporterRepositoryStarter
         implements PluginStartingObserver, PluginStartedObserver, PluginStoppingObserver {
-    private final SpanExporterContainer exportersRepository;
+    private final SpanExporterRepository exportersRepository;
     private final int exporterMaxSize;
 
     /**
      * 使用操作单元导出器的容器初始化 {@link SpanExporterRepositoryStarter} 对象。
      *
-     * @param exportersRepository 表示操作单元导出器的 {@link SpanExporterContainer}。
+     * @param exportersRepository 表示操作单元导出器的 {@link SpanExporterRepository}。
      * @param exporterMaxSize 表示操作单元导出器最大数量的 {@code int}。
      */
-    public SpanExporterRepositoryStarter(SpanExporterContainer exportersRepository,
+    public SpanExporterRepositoryStarter(SpanExporterRepository exportersRepository,
             @Value("${exporter.maxSize}") int exporterMaxSize) {
         this.exportersRepository = Validation.notNull(exportersRepository, "The exporters container cannot be null.");
         this.exporterMaxSize = Validation.greaterThan(exporterMaxSize, 0,

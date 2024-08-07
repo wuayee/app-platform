@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>operation-log-locale</module>
         <module>telemetry-span-exporter-operation</module>
         <module>telemetry-span-exporter-repository</module>
         <module>tool-eco-huggingface</module>

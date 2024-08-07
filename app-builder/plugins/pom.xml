@@ -16,6 +16,7 @@
         <module>tool-waterflow</module>
         <module>waterflow-biz-common</module>
         <module>waterflow-graph-service</module>
+        <module>waterflow-task-event-handler</module>
         <module>waterflow-edatamate</module>
         <module>waterflow-jane</module>
         <module>waterflow-appfactory</module>

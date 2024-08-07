@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Form }from 'antd';
 import { Button, Table } from 'antd';
 import type { TableProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from "react-router-dom";
-
+import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import qs from 'qs';
 import BreadcrumbSelf from '../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../components/icons';
 import { getKnowledgeBaseById, getKnowledgeDetailById } from '../../../shared/http/knowledge';
@@ -13,9 +13,9 @@ import Pagination from '../../../components/pagination/index';
 import { ModifyTable } from './modify-table';
 
 const KnowledgeBaseDetail = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const id = searchParams.get("id");
+  const searchParams = qs.parse(useLocation().search.replace('?', ''));
+  const navigate = useHistory().push;
+  const id = searchParams.id;
 
   const [knowledgeDetail, setKnowledgeDetail] = useState<any>(null)
   const [data, setData] = useState<any>([]);

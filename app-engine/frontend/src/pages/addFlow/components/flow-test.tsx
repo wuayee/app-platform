@@ -15,7 +15,8 @@ const Index = (props) => {
     setTestStatus,
     setShowDebug,
     showDebug,
-    elsaRunningCtl
+    elsaRunningCtl,
+    setShowFlowChangeWarning
   } = props;
   const { appInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
@@ -26,6 +27,7 @@ const Index = (props) => {
     setShowDebug(false);
   }
   const handleRunTest = () => {
+    setShowFlowChangeWarning(false);
     elsaRunningCtl.current?.reset();
     setTestStatus(null);
     setTestTime(0);

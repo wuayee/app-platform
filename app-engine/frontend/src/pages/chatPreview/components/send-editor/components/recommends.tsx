@@ -52,8 +52,8 @@ const Recommends = (props) => {
     if (modelItem === undefined) return;
     let model = modelItem.defaultValue || '';
     let chatLength = chatList.length;
-    let question = chatList[chatLength - 2].content;
-    let answer = chatList[chatLength - 1].content;
+    let question = chatList[chatLength - 2]?.content;
+    let answer = chatList[chatLength - 1]?.content;
     let params = {
       question,
       answer,

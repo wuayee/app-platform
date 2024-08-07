@@ -46,18 +46,13 @@ public class OpenAiClient {
 
     private String openAiBaseUrl;
 
-    private Boolean shouldSplicePath;
-
     /**
      * OpenAiClient 构造方法。
      *
      * @param baseUrl 大模型服务端地址。
-     * @param shouldSplicePath 如果为 {@code true} ，那么会在 {@link OpenAiClient#openAiBaseUrl} 后拼接模型名称。
      */
-    public OpenAiClient(@Value("${openai-url}") String baseUrl,
-                        @Value("${url-path-splicing}") Boolean shouldSplicePath) {
+    public OpenAiClient(@Value("${openai-url}") String baseUrl) {
         this.openAiBaseUrl = Validation.notBlank(baseUrl, "The OpenAI base URL is empty.");
-        this.shouldSplicePath = Validation.notNull(shouldSplicePath, "The url-path-splicing option is null.");
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(OpenAiClient.HTTP_CLIENT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(OpenAiClient.HTTP_CLIENT_TIMEOUT, TimeUnit.SECONDS)
@@ -79,7 +74,7 @@ public class OpenAiClient {
     public OpenAiChatCompletionResponse createChatCompletion(OpenAiChatCompletionRequest request)
             throws IOException {
         Validation.notNull(request, "The request cannot be null");
-        return createChatCompletion(getUrl(request.getModel(), OpenAiApi.CHAT_ENDPOINT), request);
+        return createChatCompletion(getUrl(OpenAiApi.CHAT_ENDPOINT), request);
     }
 
     /**
@@ -114,7 +109,7 @@ public class OpenAiClient {
      */
     public OpenAiEmbeddingResponse createEmbeddings(OpenAiEmbeddingRequest request) throws IOException {
         Validation.notNull(request, "The request cannot be null");
-        return createEmbeddings(getUrl(request.getModel(), OpenAiApi.EMBEDDING_ENDPOINT), request);
+        return createEmbeddings(getUrl(OpenAiApi.EMBEDDING_ENDPOINT), request);
     }
 
     /**
@@ -144,7 +139,7 @@ public class OpenAiClient {
      */
     public Call<ResponseBody> createChatCompletionStream(OpenAiChatCompletionRequest request) {
         Validation.notNull(request, "The request cannot be null");
-        return createChatCompletionStream(getUrl(request.getModel(), OpenAiApi.CHAT_ENDPOINT), request);
+        return createChatCompletionStream(getUrl(OpenAiApi.CHAT_ENDPOINT), request);
     }
 
     /**
@@ -160,12 +155,9 @@ public class OpenAiClient {
         return api.createChatCompletionStream(url, getApiKey(request.getApiKey()), request);
     }
 
-    private String getUrl(String modelName, String endpoint) {
-        Validation.notBlank(modelName, "The model name cannot be blank.");
+    private String getUrl(String endpoint) {
         Validation.notNull(endpoint, "The endpoint cannot be null.");
-        String url = shouldSplicePath ? openAiBaseUrl + modelName + "/" : openAiBaseUrl;
-        url += endpoint;
-        return url;
+        return openAiBaseUrl + endpoint;
     }
 
     private String getApiKey(String apiKey) {

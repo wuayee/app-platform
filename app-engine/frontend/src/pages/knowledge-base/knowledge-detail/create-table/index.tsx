@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import type { TableProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from "react-router-dom";
+import { useHistory,useLocation } from 'react-router-dom';
+import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../../components/icons';
 import { createKnowledgeTableRow, getKnowledgeTableType } from '../../../../shared/http/knowledge';
@@ -31,13 +31,13 @@ type FieldType = {
 
 
 const KnowledgeBaseDetailCreateTable = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = qs.parse(useLocation().search.replace('?', ''));
+  const id = searchParams.id;
+  const navigate = useHistory().push;
   const [ selectValue, setSelectValue ] = useState();
-  const id = searchParams.get("id") as string;
 
   // 表格id判断提交还是修改
-  const table_id = searchParams.get("tableid");
+  const table_id = searchParams.tableid;
 
   const [form] = Form.useForm();
 
@@ -115,29 +115,29 @@ const KnowledgeBaseDetailCreateTable = () => {
   // 创建知识表
   const createKnowledgeTable = async (value: FieldType) => {
     setLoading(true);
-    const res = await createKnowledgeTableRow(id, {
-      name: value.knowledgeBaseName,
-      serviceType: value.knowledgeBaseType,
-      serviceId: value.knowledgeBaseRemoteService,
-      format: textMap[value.knowledgeBaseFormat as any] as any,
-      repositoryId: id,
-    })
-
-    if (value.importData && res) {
-      // 创建成功保存id，跳转至导入数据表单
-      navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true });
-      return;
+    try {
+      const res = await createKnowledgeTableRow(id, {
+        name: value.knowledgeBaseName,
+        serviceType: value.knowledgeBaseType,
+        serviceId: value.knowledgeBaseRemoteService,
+        format: textMap[value.knowledgeBaseFormat as any] as any,
+        repositoryId: id,
+      });
+      if (value.importData && res) {
+        // 创建成功保存id，跳转至导入数据表单
+        navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true });
+        return;
+      };
+      if (res) {
+        navigate(-1);
+      };
+    } finally {
+      setLoading(false);
     }
-
-    if (res) {
-      navigate(-1)
-    }
-
-    setLoading(false)
   }
 
   const onCancle = () => {
-    navigate(-1)
+    navigate(-1);
   }
 
   useEffect(() => {
