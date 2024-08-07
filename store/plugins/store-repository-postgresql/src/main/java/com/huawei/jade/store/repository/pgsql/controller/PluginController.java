@@ -25,6 +25,9 @@ import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.PluginService;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -54,8 +57,10 @@ public class PluginController {
      * @param pluginData 表示 Http 请求的参数的 {@link PluginData}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan("operation.plugin.upload")
     @PostMapping
-    public Result<String> addPlugin(@RequestBody PluginData pluginData) {
+    public Result<String> addPlugin(
+            @RequestBody @SpanAttribute("name:$.name,version:$.version") PluginData pluginData) {
         notNull(pluginData.getSchema(), "The tool schema cannot be null.");
         Object name = pluginData.getSchema().get("name");
         notNull(name, "The tool name cannot be null.");
@@ -106,8 +111,7 @@ public class PluginController {
             @RequestQuery(value = "version", required = false) String version) {
         notNegative(pageNum, "The page number cannot be negative.");
         notNegative(pageSize, "The page size cannot be negative.");
-        PluginQuery pluginQuery = new PluginQuery.Builder()
-                .toolName(name)
+        PluginQuery pluginQuery = new PluginQuery.Builder().toolName(name)
                 .includeTags(new HashSet<>(includeTags))
                 .excludeTags(new HashSet<>(excludeTags))
                 .mode(validateTagMode(mode))
@@ -128,6 +132,7 @@ public class PluginController {
      * @param uniqueName 表示插件的唯一索引的 {@link String}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan("operation.plugin.delete")
     @DeleteMapping("/{uniqueName}")
     public Result<String> deletePlugin(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");

@@ -25,7 +25,15 @@
         <!-- Services -->
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>operation-log-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>telemetry-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
         </dependency>
 
         <!-- OpenTelemetry  -->

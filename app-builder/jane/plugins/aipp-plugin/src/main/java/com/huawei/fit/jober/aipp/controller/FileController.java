@@ -39,6 +39,9 @@ import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.ByteArrayInputStream;
@@ -171,11 +174,12 @@ public class FileController extends AbstractController {
      * @return 文件响应DTO
      * @throws IOException 文件读取异常
      */
+    @WithSpan(value = "operation.file.upload")
     @PostMapping(path = "/file", description = "上传文件")
     public Rsp<FileRspDto> uploadFile(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @RequestHeader(value = "attachment-filename", defaultValue = "blank") String fileName,
-            @RequestParam(value = "aipp_id", required = false) String aippId, PartitionedEntity receivedFile)
-            throws IOException {
+            @RequestHeader(value = "attachment-filename", defaultValue = "blank") @SpanAttribute("fileName")
+            String fileName, @RequestParam(value = "aipp_id", required = false) String aippId,
+            PartitionedEntity receivedFile) throws IOException {
         String uniqueFileName = generateUniqueFileName(fileName);
         log.info("upload file fileName={} uniqueFileName={}", fileName, uniqueFileName);
         File targetFile = Paths.get(AippFileUtils.NAS_SHARE_DIR, uniqueFileName).toFile();
@@ -219,8 +223,7 @@ public class FileController extends AbstractController {
     public String extractFileContent(@RequestParam(value = "filePath") String filePath,
             @RequestParam(value = "token", defaultValue = "20000") Integer token) {
         File file = Paths.get(filePath).toFile();
-        String fileContent = this.operatorService.fileExtractor(
-                file, FileExtensionEnum.findType(file.getName()));
+        String fileContent = this.operatorService.fileExtractor(file, FileExtensionEnum.findType(file.getName()));
         return AippStringUtils.textLenLimit(fileContent, token);
     }
 }

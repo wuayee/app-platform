@@ -19,6 +19,9 @@ import com.huawei.fit.jober.aipp.service.GenericableManageService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.ObjectUtils;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 import java.util.Map;
 
@@ -71,9 +74,11 @@ public class GenericableController extends AbstractController {
      * @param body 请求体，包含appId和appType
      * @return 返回执行结果
      */
+    @WithSpan(value = "operation.genericable.idea")
     @PostMapping(path = "/fitables/{fitable_id}", description = "调用灵感大全fitable")
     public Rsp<List<Map<String, Object>>> executeInspirationFitable(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("fitable_id") String fitableId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("fitable_id") @SpanAttribute("fitable_id") String fitableId,
             @RequestBody Map<String, Object> body) {
         String appId = ObjectUtils.cast(body.get("appId"));
         String appType = ObjectUtils.cast(body.get("appType"));
