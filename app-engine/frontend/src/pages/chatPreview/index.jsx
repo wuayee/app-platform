@@ -176,7 +176,7 @@ const ChatPreview = (props) => {
       'question': type ? '请解析以下文件' : value,
       'context': {
         'use_memory': useMemory,
-        dimension: dimension.name
+        dimension: dimension.value,
       }
     };
     if (chatId) {
