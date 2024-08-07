@@ -9,7 +9,7 @@ import './index.scss'
 
 const FlowDetail = () => {
   const { appId, tenantId } = useParams();
-  const [ appInfo, setAppInfo] = useState(false);
+  const [appInfo, setAppInfo] = useState(false);
   const navigate = useHistory().push;
   const { CONFIGS } = configMap[process.env.NODE_ENV];
 
@@ -44,20 +44,20 @@ const FlowDetail = () => {
     })
   }
   function handleBackClick() {
-    navigate(-1);
+    window.history.back();
   }
   return <>{(
     <div className='graph-detail'>
       <div className='header'>
-          <div className='header-left'>
-            <LeftArrowIcon className='icon-back' onClick={ handleBackClick } />
-            <span className='header-text' title={appInfo?.name}>{ appInfo.name }</span>
-          </div>
-          <div className='header-right'>
-            <span className='header-text'>创建人：{ appInfo.createBy }</span>
-            <span className='header-text'>发布时间：{ appInfo.updateAt }</span>
-          </div>
+        <div className='header-left'>
+          <LeftArrowIcon className='icon-back' onClick={handleBackClick} />
+          <span className='header-text' title={appInfo?.name}>{appInfo.name}</span>
         </div>
+        <div className='header-right'>
+          <span className='header-text'>创建人：{appInfo.createBy}</span>
+          <span className='header-text'>发布时间：{appInfo.updateAt}</span>
+        </div>
+      </div>
       <div id='stageDetail'></div>
     </div>
   )}</>

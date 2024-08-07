@@ -25,65 +25,65 @@ const WorkflowCard = ({ pluginData }: any) => {
     }
     navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
   }
-  return(
-  <div className='plugin-card'
-   onClick={async()=>{
-    let id=pluginData?.id;
-    if(pluginData?.state==='active')
-    {
-      const res= await getAppInfoByVersion(tenantId,id);
-      id=res?.data?.id;
-    }
-    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
-  }}
+  return (
+    <div className='plugin-card'
+      onClick={async () => {
+        let id = pluginData?.id;
+        if (pluginData?.state === 'active') {
+          const res = await getAppInfoByVersion(tenantId, id);
+          id = res?.data?.id;
+        }
+        navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
+      }}
     >
-    <div className='plugin-card-header'>
-      <img src='/src/assets/images/knowledge/knowledge-base.png' />
-      <div>
-        <div className='plugin-title'>
-          <div className='plugin-head'>
-            <span className='text' title={pluginData?.name}>{pluginData?.name}</span>
-            <Tag className='version'>V{pluginData?.version}</Tag>
+      <div className='plugin-card-header'>
+        <img src='./src/assets/images/knowledge/knowledge-base.png' />
+        <div>
+          <div className='plugin-title'>
+            <div className='plugin-head'>
+              <span className='text' title={pluginData?.name}>{pluginData?.name}</span>
+              <Tag className='version'>V{pluginData?.version}</Tag>
+            </div>
+          </div>
+          <div className='plugin-card-user'>
+            <Icons.user />
+            <span style={{ marginRight: 8 }}>{pluginData?.createBy}</span>
+            {pluginData?.tags?.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
           </div>
         </div>
-        <div className='plugin-card-user'>
-          <Icons.user />
-          <span style={{ marginRight: 8 }}>{pluginData?.createBy}</span>
-          {pluginData?.tags?.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
+      </div>
+      <div className='card-content'>
+        {pluginData?.attributes?.description}
+      </div>
+      {/* 卡片底部 */}
+      <div className='card-footer'>
+        <div>
+          <Flex gap={14}>
+            <span>
+              {
+                (pluginData?.attributes?.latest_version || pluginData.state === 'active') ?
+                  <Tag bordered={false} color="processing" className='footer-type'>已发布</Tag> :
+                  <Tag bordered={false} className='footer-type'>草稿</Tag>
+              }
+            </span>
+            <span hidden>
+              <UserOutlined style={{ marginRight: 8 }} />
+              {pluginData?.downloadCount}
+            </span>
+            <span hidden>
+              <StarOutlined style={{ marginRight: 8 }} />
+              {pluginData?.likeCount}
+            </span>
+          </Flex>
+        </div>
+        <div onClick={(e) => { e.stopPropagation(); }}>
+          <Dropdown menu={{ items: operatItems }} trigger={['click']}>
+            <EllipsisOutlined className='footer-more' />
+          </Dropdown>
         </div>
       </div>
-    </div>
-    <div className='card-content'>
-      {pluginData?.attributes?.description}
-    </div>
-    {/* 卡片底部 */}
-    <div className='card-footer'>
-      <div>
-      <Flex gap={14}>
-        <span>
-          {
-            pluginData?.attributes?.latest_version ? 
-            <Tag bordered={false} color="processing" className='footer-type'>已发布</Tag> :
-            <Tag bordered={false} className='footer-type'>草稿</Tag>
-          }
-        </span>
-        <span hidden>
-          <UserOutlined style={{ marginRight: 8 }} />
-          {pluginData?.downloadCount}
-        </span>
-        <span hidden>
-          <StarOutlined style={{ marginRight: 8 }} />
-          {pluginData?.likeCount}
-        </span>
-      </Flex>
-      </div>
-      <div onClick={(e)=>{e.stopPropagation();}}>
-        <Dropdown menu={{items:operatItems}} trigger={['click']}>
-           <EllipsisOutlined className='footer-more'/>
-        </Dropdown>
-      </div>
-    </div>
-  </div >
-)}
+    </div >
+  )
+}
 
 export default WorkflowCard;

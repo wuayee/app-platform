@@ -81,16 +81,16 @@ const ChoreographyHead = (props) => {
         <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
         <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={handleEditClick} />
         {
-          appInfo.attributes?.latest_version ?
+          (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
             (
               <div className='status-tag'>
-                <img src='/src/assets/images/ai/complate.png' />
+                <img src='./src/assets/images/ai/complate.png' />
                 <span>已发布</span>
               </div>
             ) :
             (
               <div className='status-tag'>
-                <img src='/src/assets/images/ai/publish.png' />
+                <img src='./src/assets/images/ai/publish.png' />
                 <span>未发布</span>
               </div>
             )
@@ -100,7 +100,7 @@ const ChoreographyHead = (props) => {
       </div>
       <div className='header-grid'>
         {
-          appInfo.attributes?.latest_version &&
+          (appInfo.attributes?.latest_version || appInfo.state === 'active') &&
           <div className='header-grid-btn'>
             <span className='history' onClick={versionDetail}>
               <img src='/src/assets/images/ai/time.png' />

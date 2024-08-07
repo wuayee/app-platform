@@ -14,20 +14,20 @@ import FlowTest from "./components/flow-test";
 const AddFlow = (props) => {
   const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus,
     showFlowChangeWarning, setShowFlowChangeWarning } = props;
-  const [ dragData, setDragData ] = useState([]);
-  const [ flowInfo, setFlowInfo ] = useState({});
-  const [ showTime, setShowTime ] = useState(false);
-  const [ showMenu, setShowMenu ] = useState(false);
-  const [ debugTypes, setDebugTypes ] = useState([]);
-  const [ showDebug, setShowDebug ] = useState(false);
-  const [ showToolFlowChangeWarning, setShowToolFlowChangeWarning ] = useState(false);
+  const [dragData, setDragData] = useState([]);
+  const [flowInfo, setFlowInfo] = useState({});
+  const [showTime, setShowTime] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [debugTypes, setDebugTypes] = useState([]);
+  const [showDebug, setShowDebug] = useState(false);
+  const [showToolFlowChangeWarning, setShowToolFlowChangeWarning] = useState(false);
   const { tenantId, appId } = useParams();
-  const [ testStatus, setTestStatus ] = useState(null);
-  const [ testTime, setTestTime ] = useState(0);
+  const [testStatus, setTestStatus] = useState(null);
+  const [testTime, setTestTime] = useState(0);
   const appRef = useRef(null);
   const flowIdRef = useRef(null);
   const elsaRunningCtl = useRef(null);
-  const flowContext ={
+  const flowContext = {
     type,
     appInfo: type ? appInfo : flowInfo,
     showMenu,
@@ -47,9 +47,7 @@ const AddFlow = (props) => {
     }
   }
   useEffect(() => {
-    if (!type) {
-      return;
-    }
+    if (!type) return;
     setShowMenu(true)
     setFlowTestTime(null);
     setFlowTestStatus(null);
@@ -62,12 +60,12 @@ const AddFlow = (props) => {
   }
   // 测试
   const handleDebugClick = () => {
-    window.agent.validate().then(()=> {
+    window.agent.validate().then(() => {
       setDebugTypes(window.agent.getFlowRunInputMetaData());
       setShowDebug(true);
     }).catch(err => {
-      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-      Message({ type: "warning", content: str});
+      let str = typeof (err) === 'string' ? err : '请输入流程必填项';
+      Message({ type: "warning", content: str });
     })
   }
   // 给父组件的测试回调
@@ -79,43 +77,43 @@ const AddFlow = (props) => {
   return <>{(
     <div className='add-flow-container'>
       <FlowContext.Provider value={flowContext}>
-        {!type && 
-          <FlowHeader 
+        {!type &&
+          <FlowHeader
             debugTypes={debugTypes}
             handleDebugClick={handleDebugClick}
             showDebug={showDebug}
             setShowDebug={setShowDebug}
             testStatus={testStatus}
             testTime={testTime}
-        />}
+          />}
         <FlowTest setTestStatus={type ? setFlowTestStatus : setTestStatus}
-                  setTestTime={type ? setFlowTestTime : setTestTime}
-                  setShowDebug={setShowDebug}
-                  showDebug={showDebug}
-                  debugTypes={debugTypes}
-                  appRef={appRef}
-                  elsaRunningCtl={elsaRunningCtl}
-                  setShowFlowChangeWarning={type ? setShowFlowChangeWarning : setShowToolFlowChangeWarning}
+          setTestTime={type ? setFlowTestTime : setTestTime}
+          setShowDebug={setShowDebug}
+          showDebug={showDebug}
+          debugTypes={debugTypes}
+          appRef={appRef}
+          elsaRunningCtl={elsaRunningCtl}
+          setShowFlowChangeWarning={type ? setShowFlowChangeWarning : setShowToolFlowChangeWarning}
         />
-        <div className={['content', !type ? 'content-add' : null ].join(' ')}>
+        <div className={['content', !type ? 'content-add' : null].join(' ')}>
           {
             showMenu ? (
-              <LeftMenu 
+              <LeftMenu
                 menuClick={menuClick}
-                dragData={dragData} 
+                dragData={dragData}
                 setDragData={setDragData}
               />
             ) : (
-              <Tooltip placement="rightTop" title="展开编排区">
-                <div className="menu-icon" onClick={menuClick}>
-                  <ConfigFlowIcon />
-                </div>
-              </Tooltip>
-            )
+                <Tooltip placement="rightTop" title="展开编排区">
+                  <div className="menu-icon" onClick={menuClick}>
+                    <ConfigFlowIcon />
+                  </div>
+                </Tooltip>
+              )
           }
           <Stage
-            setDragData={setDragData} 
-            appRef={appRef} 
+            setDragData={setDragData}
+            appRef={appRef}
             flowIdRef={flowIdRef}
             setTestStatus={type ? setFlowTestStatus : setTestStatus}
             elsaRunningCtl={elsaRunningCtl}
