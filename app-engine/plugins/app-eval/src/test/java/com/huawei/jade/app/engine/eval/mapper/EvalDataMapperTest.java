@@ -16,6 +16,7 @@ import com.huawei.fitframework.test.domain.db.DatabaseModel;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
+import com.huawei.jade.app.engine.eval.entity.EvalVersionEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDataPo;
 
 import org.junit.jupiter.api.DisplayName;
@@ -144,5 +145,22 @@ public class EvalDataMapperTest {
         assertThat(effectRows).isEqualTo(1);
         this.evalDataMapper.insertAll(Collections.singletonList(evalDataPo));
         assertThat(evalDataPo.getId()).isEqualTo(3L);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("查询数据集全部版本")
+    void shouldOKWhenGetVersions() {
+        List<EvalVersionEntity> response = this.evalDataMapper.getAllVersion(1L);
+        assertThat(response.size()).isEqualTo(2);
+        Long lastVersion = null;
+        for (EvalVersionEntity entity : response) {
+            if (lastVersion != null) {
+                assertThat(lastVersion).isGreaterThan(entity.getVersion());
+            }
+            lastVersion = entity.getVersion();
+            assertThat(entity.getVersion()).isNotEqualTo(null).isGreaterThan(0);
+            assertThat(entity.getCreatedTime()).isNotNull();
+        }
     }
 }

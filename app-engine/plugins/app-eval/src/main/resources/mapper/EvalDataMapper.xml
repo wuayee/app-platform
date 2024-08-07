@@ -9,17 +9,34 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+    <resultMap id="EvalVersionEntityResultMap" type="com.huawei.jade.app.engine.eval.entity.EvalVersionEntity">
+        <id property="version" column="version"/>
+        <result property="createdTime" column="version_time"/>
+    </resultMap>
+
     <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
-        insert into t_app_engine_eval_data (content, created_version, dataset_id) values
+        INSERT INTO t_app_engine_eval_data (content, created_version, dataset_id) VALUES
         <foreach collection="list" separator="," item="item">
             (#{item.content}, #{item.createdVersion}, #{item.datasetId})
         </foreach>
     </insert>
 
     <sql id="select_by_version">
-        dataset_id = #{datasetId}
-        AND expired_version > #{version}
-        AND created_version &lt;= #{version}
+        dataset_id
+        =
+        #{datasetId}
+        AND
+        expired_version
+        >
+        #{version}
+        AND
+        created_version
+        &lt;=
+        #{version}
+    </sql>
+
+    <sql id="MAX_LONG">
+        9223372036854775807
     </sql>
 
     <select id="listEvalData" resultType="com.huawei.jade.app.engine.eval.entity.EvalDataEntity"
@@ -40,12 +57,25 @@
     </select>
 
     <update id="updateExpiredVersion">
-        update t_app_engine_eval_data
-        set expired_version = #{version}
-        where (expired_version = 9223372036854775807) AND id in
+        UPDATE t_app_engine_eval_data
+        SET expired_version = #{version}
+        WHERE (expired_version = <include refid="MAX_LONG"/>) AND id IN
         <foreach collection="list" separator="," item="item" open="(" close=")">
             (#{item.id})
         </foreach>
     </update>
 
+    <select id="getAllVersion" resultType="com.huawei.jade.app.engine.eval.entity.EvalVersionEntity"
+            resultMap="EvalVersionEntityResultMap">
+        SELECT version, version_time
+        FROM (SELECT created_version AS version, created_at AS version_time
+              FROM t_app_engine_eval_data
+              WHERE dataset_id = #{datasetId}
+              UNION
+              SELECT expired_version AS version, updated_at AS version_time
+              FROM t_app_engine_eval_data
+              WHERE dataset_id = #{datasetId}
+                AND (expired_version != <include refid="MAX_LONG"/>)) AS combined
+        ORDER BY version DESC
+    </select>
 </mapper>

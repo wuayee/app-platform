@@ -6,6 +6,7 @@ package com.huawei.jade.app.engine.eval.mapper;
 
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
+import com.huawei.jade.app.engine.eval.entity.EvalVersionEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDataPo;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -52,4 +53,12 @@ public interface EvalDataMapper {
      * @return 表示成功修改的行数 {@code int}。
      */
     int updateExpiredVersion(@Param("list") List<EvalDataPo> evalDataList, @Param("version") Long expiredVersion);
+
+    /**
+     * 查询数据集的全部版本。
+     *
+     * @param datasetId 表示评估数据查询参数的 {@link Long}。
+     * @return 表示评估数据版本查询结果的 {@link List}{@code <}{@link EvalVersionEntity}{@code >}。
+     */
+    List<EvalVersionEntity> getAllVersion(Long datasetId);
 }
