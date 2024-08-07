@@ -29,7 +29,11 @@ const convert = (data, level) => {
 };
 
 JadeInputTree.propTypes = {
-    data: PropTypes.array.isRequired, updateItem: PropTypes.func.isRequired
+    data: PropTypes.array.isRequired,
+    updateItem: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    getOptions: PropTypes.func
+
 };
 
 const INPUT_WIDTH = 100;
@@ -41,10 +45,11 @@ const LEVEL_DISTANCE = 24;
  * @param data 数据.
  * @param updateItem 修改方法.
  * @param disabled 是否禁用.
+ * @param getOptions 获取options的方法.
  * @return {JSX.Element}
  * @constructor
  */
-export default function JadeInputTree({data, updateItem, disabled}) {
+export default function JadeInputTree({data, updateItem, disabled, getOptions = defaultGetOptions}) {
     const form = useFormContext();
     const treeData = data.map(d => convert(d, 0));
 
@@ -149,29 +154,6 @@ export default function JadeInputTree({data, updateItem, disabled}) {
     };
 
     /**
-     * 获取options数据.
-     *
-     * @param node 节点.
-     * @return {[{label: string, value: string}]|[{label: string, value: string},{label: string, value: string}]} 选项数组.
-     */
-    const getOptions = (node) => {
-        switch (node.type) {
-            case "Object":
-                if (node.hasOwnProperty("generic") || node.props === undefined) {
-                    return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
-                } else {
-                    return [{value: "Reference", label: "引用"},
-                        {value: "Input", label: "输入"},
-                        {value: "Expand", label: "展开"}
-                    ];
-                }
-            case "Array":
-            default:
-                return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
-        }
-    };
-
-    /**
      * 自定义标题展示.
      *
      * @param node 节点数据.
@@ -251,6 +233,26 @@ export default function JadeInputTree({data, updateItem, disabled}) {
             {renderTreeNodes(treeData)}
         </Tree>
     </>);
+}
+
+/*
+ * 获取options数据.
+ */
+const defaultGetOptions = (node) => {
+    switch (node.type) {
+        case "Object":
+            if (node.hasOwnProperty("generic") || node.props === undefined) {
+                return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
+            } else {
+                return [{value: "Reference", label: "引用"},
+                    {value: "Input", label: "输入"},
+                    {value: "Expand", label: "展开"}
+                ];
+            }
+        case "Array":
+        default:
+            return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
+    }
 };
 
 /**
@@ -303,4 +305,11 @@ const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
                 options={options}
         />
     </>);
+};
+
+JadeInputTreeSelect.propTypes = {
+    node: PropTypes.object.isRequired,
+    options: PropTypes.array.isRequired,
+    updateItem: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired
 };
