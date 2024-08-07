@@ -45,30 +45,30 @@ const AppOverview: React.FC = () => {
     <div className='tab-content'>
       <Flex vertical gap={20}>
         <Flex justify={'space-between'}>
-          <Flex className='details-content'  gap='middle'>
+          <Flex className='details-content' gap='middle'>
             {appIcon ?
               <img width={100} height={100} src={appIcon} />
               :
               <AppDefaultIcon />
-          }
+            }
 
             <Flex className='details-content' vertical gap='middle'>
               <div className='detail-name'>
                 <span className='text'>{detail?.name || 'Test AppName'}</span>
                 {
-                  detail.attributes?.latest_version ?
-                  (
-                    <div className="status-tag">
-                      <img src='/src/assets/images/ai/complate.png' />
-                      <span>已发布</span>
-                    </div>
-                  ) :
-                  (
-                    <div className="status-tag">
-                      <img src='/src/assets/images/ai/publish.png' />
-                      <span>未发布</span>
-                    </div>
-                  )
+                  (detail.attributes?.latest_version || detail.state === 'active') ?
+                    (
+                      <div className="status-tag">
+                        <img src='./src/assets/images/ai/complate.png' />
+                        <span>已发布</span>
+                      </div>
+                    ) :
+                    (
+                      <div className="status-tag">
+                        <img src='./src/assets/images/ai/publish.png' />
+                        <span>未发布</span>
+                      </div>
+                    )
                 }
               </div>
               <Flex gap={20}>

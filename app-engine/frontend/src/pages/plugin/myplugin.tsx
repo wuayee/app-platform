@@ -54,6 +54,7 @@ const MyPlugins = () => {
   const [currentTab, setCurrentTab] = useState(tabItemE.TOOL);
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [refreshSignal, setRefreshSignal] = useState(0);
+  const [activeKey, setActiveKey] = useState('');
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
 
   const onTabChange = (activeKey) => {
@@ -82,7 +83,7 @@ const MyPlugins = () => {
       });
     }
   };
-  
+
   const selectPage = (curPage: number, curPageSize: number) => {
     setPagination({ pageNum: curPage, pageSize: curPageSize });
     setRefreshSignal(new Date().valueOf());
@@ -108,12 +109,12 @@ const MyPlugins = () => {
     let showDrawer = sessionStorage.getItem('pluginType');
     if (showDrawer) {
       sessionStorage.removeItem('pluginType');
-      setOpenUploadDrawer(1);
+      showDrawer === 'plugin' ? setOpenUploadDrawer(1) : '';
     }
   }, [])
   return (
     <div className='aui-block myplugin'>
-      <Tabs defaultActiveKey={tabItemE.TOOL} items={tabItems} onChange={onTabChange} />
+      <Tabs defaultActiveKey={activeKey} items={tabItems} onChange={onTabChange} />
       <div className='top-operate'>
         <div className='button-display'>
           <Button
@@ -123,9 +124,9 @@ const MyPlugins = () => {
               if (currentTab === tabItemE.TOOL) {
                 setOpenUploadDrawer(e.timeStamp);
               }
-              if(currentTab === tabItemE.TOOLFLOW){
+              if (currentTab === tabItemE.TOOLFLOW) {
                 setOpenCreateDrawer(e.timeStamp)
-              } 
+              }
             }}
           >
             创建
@@ -156,20 +157,20 @@ const MyPlugins = () => {
           currentTab === tabItemE.TOOL ? (
             <PluginCard key={card.uniqueName} pluginData={card} />
           ) : (
-            <WorkflowCard key={card.uniqueName} pluginData={card} />
-          )
+              <WorkflowCard key={card.uniqueName} pluginData={card} />
+            )
         )}
       </div>
       <div style={{ paddingTop: 16 }}>
         <Pagination
           total={total}
-          current={pagination?.pageNum} 
+          current={pagination?.pageNum}
           onChange={selectPage}
           pageSize={pagination?.pageSize}
         />
       </div>
       <UploadToolDrawer openSignal={openUploadDrawer} refreshPluginList={refreshPluginList} />
-      <CreateWorkfowDrawer openSignal={openCreateDrawer}/>
+      <CreateWorkfowDrawer openSignal={openCreateDrawer} />
     </div>
   );
 };

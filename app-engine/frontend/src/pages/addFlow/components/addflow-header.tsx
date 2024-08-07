@@ -35,7 +35,7 @@ const AddHeader = (props) => {
   }
   // 返回上一页
   const handleBackClick = () => {
-    navigate(-1);
+    window.history.back();
   }
   const getCurrentTime = () => {
     let str = new Date().toTimeString().substring(0, 8);
@@ -73,7 +73,7 @@ const AddHeader = (props) => {
           <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
           <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={handleEditClick} />
           {
-            appInfo.attributes?.latest_version ?
+            (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
               (
                 <div className='status-tag'>
                   <img src='/src/assets/images/ai/complate.png' />
@@ -92,7 +92,7 @@ const AddHeader = (props) => {
         </div>
         <div className='header-grid'>
           {
-            appInfo.attributes?.latest_version &&
+            (appInfo.attributes?.latest_version || appInfo.state === 'active') &&
             <span className='history' onClick={versionDetail}>
               <img src='/src/assets/images/ai/time.png' />
             </span>
