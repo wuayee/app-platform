@@ -5,11 +5,13 @@
 package com.huawei.jade.app.engine.eval.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.MybatisTest;
 import com.huawei.fitframework.test.annotation.Sql;
 import com.huawei.fitframework.test.domain.db.DatabaseModel;
+import com.huawei.fitframework.transaction.DataAccessException;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
@@ -18,6 +20,7 @@ import com.huawei.jade.app.engine.eval.po.EvalDatasetPo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,7 +37,7 @@ public class EvalDatasetMapperTest {
     private EvalDatasetMapper evalDatasetMapper;
 
     @Test
-    @DisplayName("插入数据后，回填主键成功")
+    @DisplayName("插入数据集后，回填主键成功")
     void shouldOkWhenInsert() {
         EvalDatasetPo evalDatasetPo = new EvalDatasetPo();
         evalDatasetPo.setName("ds1");
@@ -44,6 +47,49 @@ public class EvalDatasetMapperTest {
 
         this.evalDatasetMapper.create(evalDatasetPo);
         assertThat(evalDatasetPo.getId()).isNotEqualTo(null);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("删除单个数据集时，不存在未删除数据，返回正确的删除行数")
+    void shouldOkWhenDeleteSingleDataset() {
+        assertThat(this.evalDatasetMapper.deleteById(2L)).isEqualTo(1);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("删除单个数据集时，数据集不存在，删除行数为 0")
+    void shouldOKWhenDeleteSingleNonexistentDataset() {
+        assertThat(this.evalDatasetMapper.deleteById(4L)).isEqualTo(0);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("删除单个数据集时，存在未删除数据，删除失败")
+    void shouldFailWhenDeleteSingleDatasetWithRemainingData() {
+        assertThatThrownBy(() -> this.evalDatasetMapper.deleteById(1L)).isInstanceOf(DataAccessException.class);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("删除数据集时，不存在未删除数据，返回正确的删除行数")
+    void shouldOkWhenDeleteDataset() {
+        assertThat(this.evalDatasetMapper.delete(Arrays.asList(2L, 3L))).isEqualTo(2);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("删除数据集时，存在已删除数据集，返回正确的删除行数")
+    void shouldOkWhenDeleteDatasetWithNonexistentDataset() {
+        assertThat(this.evalDatasetMapper.delete(Arrays.asList(2L, 4L))).isEqualTo(1);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("删除数据集时，存在未删除数据，删除失败")
+    void shouldFailWhenDeleteDatasetsWithRemainingData() {
+        assertThatThrownBy(() -> this.evalDatasetMapper.delete(Arrays.asList(1L,
+                2L))).isInstanceOf(DataAccessException.class);
     }
 
     @Test

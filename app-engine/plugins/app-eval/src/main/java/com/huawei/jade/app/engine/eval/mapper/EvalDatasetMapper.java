@@ -9,6 +9,7 @@ import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDatasetPo;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,10 +29,26 @@ public interface EvalDatasetMapper {
     void create(EvalDatasetPo evalDatasetPo);
 
     /**
+     * 根据数据集编号删除评估数据集。
+     *
+     * @param datasetId 表示评估数据集编号的 {@link Long}。
+     * @return 表示成功删除的行数 {@code int}。
+     */
+    int deleteById(Long datasetId);
+
+    /**
+     * 根据数据集编号删除评估数据集。
+     *
+     * @param datasetIds 表示评估数据集的 {@link List}{@code <}{@link Long}{@code >}。
+     * @return 表示成功删除的行数 {@code int}。
+     */
+    int delete(@Param("list") List<Long> datasetIds);
+
+    /**
      * 表示获取数据集数据规范。
      *
      * @param datasetId 表示评估数据查询参数的 {@link Long}。
-     * @return 表示数据集对应的 Schema 的 {@link String}。
+     * @return 表示数据集对应的数据规范的 {@link String}。
      */
     String getSchema(Long datasetId);
 

@@ -24,15 +24,15 @@ comment on column t_app_engine_eval_dataset.app_id is '外键，关联应用 ID'
 
 create table if not exists t_app_engine_eval_data
 (
-    "id"              bigserial primary key                   not null,
-    "content"         text                                    not null,
-    "created_version" bigint                                  not null,
-    "expired_version" bigint      default 9223372036854775807 not null,
-    "created_at"      timestamp   default current_timestamp   not null,
-    "updated_at"      timestamp   default current_timestamp   not null,
-    "created_by"      varchar(10) default 'system'            not null,
-    "updated_by"      varchar(10) default 'system'            not null,
-    "dataset_id"      bigint                                  not null
+    "id"              bigserial primary key                       not null,
+    "content"         text                                        not null,
+    "created_version" bigint                                      not null,
+    "expired_version" bigint      default 9223372036854775807     not null,
+    "created_at"      timestamp   default current_timestamp       not null,
+    "updated_at"      timestamp   default current_timestamp       not null,
+    "created_by"      varchar(10) default 'system'                not null,
+    "updated_by"      varchar(10) default 'system'                not null,
+    "dataset_id"      bigint references t_app_engine_eval_dataset not null
 );
 
 create index if not exists idx_ds_id_created_version_expired_version on t_app_engine_eval_data ("dataset_id", "created_version", "expired_version");

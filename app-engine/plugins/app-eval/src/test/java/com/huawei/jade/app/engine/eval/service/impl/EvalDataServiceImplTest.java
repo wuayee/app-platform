@@ -135,4 +135,11 @@ public class EvalDataServiceImplTest {
                 res -> res.getItems().size(),
                 res -> res.getItems().get(0).getContent()).containsExactly(1, 1, "abcd");
     }
+
+    @Test
+    @DisplayName("硬删除评估数据成功")
+    void shouldOkWhenHardDelete() {
+        this.evalDataService.hardDelete(Collections.singletonList(1L));
+        verify(this.evalDataMapper, times(1)).deleteAll(anyList());
+    }
 }

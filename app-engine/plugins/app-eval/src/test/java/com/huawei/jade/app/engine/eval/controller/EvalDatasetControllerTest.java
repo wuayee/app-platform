@@ -6,6 +6,10 @@ package com.huawei.jade.app.engine.eval.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
@@ -14,9 +18,11 @@ import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
+import com.huawei.fitframework.transaction.DataAccessException;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetCreateDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDatasetDeleteParam;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDatasetService;
@@ -29,6 +35,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,8 +65,8 @@ public class EvalDatasetControllerTest {
 
     @Test
     @DisplayName("创建评估数据集接口成功")
-    void shouldOkWhenCreateEvalData() {
-        Mockito.doNothing().when(this.evalDatasetService).create(any());
+    void shouldOkWhenCreateEvalDataset() {
+        doNothing().when(this.evalDatasetService).create(any());
 
         EvalDatasetCreateDto evalDatasetCreateDto = new EvalDatasetCreateDto();
         evalDatasetCreateDto.setName("ds1");
@@ -76,8 +83,8 @@ public class EvalDatasetControllerTest {
 
     @Test
     @DisplayName("创建评估数据集接口失败")
-    void shouldNotOkWhenCreateEvalDataWithoutApplicationId() {
-        Mockito.doNothing().when(this.evalDatasetService).create(any());
+    void shouldNotOkWhenCreateEvalDatasetWithoutApplicationId() {
+        doNothing().when(this.evalDatasetService).create(any());
 
         EvalDatasetCreateDto evalDatasetCreateDto = new EvalDatasetCreateDto();
         evalDatasetCreateDto.setName("ds1");
@@ -87,6 +94,61 @@ public class EvalDatasetControllerTest {
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.post("/eval/dataset").jsonEntity(evalDatasetCreateDto).responseType(Void.class);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("删除单个评估数据集接口成功")
+    void shouldOkWhenDeleteSingleEvalDataset() {
+        doNothing().when(this.evalDatasetService).delete(anyList());
+
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "1")
+                .responseType(Void.class);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("非法入参删除单个评估数据集接口失败")
+    void shouldFailWhenDeleteSingleEvalDatasetWithInvalidId() {
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "-1")
+                .param("datasetIds", "2")
+                .responseType(Void.class);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("删除评估数据集接口成功")
+    void shouldOkWhenDeleteEvalDataset() {
+        doNothing().when(this.evalDatasetService).delete(anyList());
+
+        EvalDatasetDeleteParam evalDatasetDeleteParam = new EvalDatasetDeleteParam();
+        evalDatasetDeleteParam.setDatasetIds(Arrays.asList(1L, 2L));
+
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "1")
+                .param("datasetIds", "2")
+                .responseType(Void.class);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("删除评估数据集接口失败")
+    void shouldFailWhenDeleteEvalDataset() {
+        doThrow(new DataAccessException("Fail message")).when(this.evalDatasetService).delete(anyList());
+
+        EvalDatasetDeleteParam evalDatasetDeleteParam = new EvalDatasetDeleteParam();
+        evalDatasetDeleteParam.setDatasetIds(Arrays.asList(1L, 2L));
+
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "1")
+                .param("datasetIds", "2")
+                .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }
@@ -106,7 +168,7 @@ public class EvalDatasetControllerTest {
         entity.setSchema(schema);
         List<EvalDatasetEntity> entities = Collections.singletonList(entity);
 
-        Mockito.when(this.evalDatasetService.listEvalDataset(any())).thenReturn(PageVo.of(1, entities));
+        when(this.evalDatasetService.listEvalDataset(any())).thenReturn(PageVo.of(1, entities));
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/eval/dataset")
                 .param("appId", "1")
                 .param("pageIndex", "1")
@@ -152,7 +214,7 @@ public class EvalDatasetControllerTest {
         entity.setDescription(description);
         entity.setSchema(schema);
 
-        Mockito.when(this.evalDatasetService.getEvalDatasetById(any())).thenReturn(entity);
+        when(this.evalDatasetService.getEvalDatasetById(any())).thenReturn(entity);
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.get("/eval/dataset/1").responseType(EvalDatasetEntity.class);
 

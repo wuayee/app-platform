@@ -9,9 +9,9 @@
     </resultMap>
 
     <select id="getSchema" resultType="String">
-        SELECT schema
-        FROM t_app_engine_eval_dataset
-        WHERE id = #{datasetId}
+        select schema
+        from t_app_engine_eval_dataset
+        where id = #{datasetId}
     </select>
 
     <!-- 分页查询数据集元数据 -->
@@ -50,6 +50,21 @@
         FROM t_app_engine_eval_dataset
         WHERE app_id = #{appId}
     </select>
+
+    <delete id="deleteById">
+        delete
+        from t_app_engine_eval_dataset
+        where id = #{datasetId}
+    </delete>
+
+    <delete id="delete">
+        delete
+        from t_app_engine_eval_dataset
+        where id in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item})
+        </foreach>
+    </delete>
 
     <insert id="create" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_app_engine_eval_dataset (name, description, schema, app_id)

@@ -49,6 +49,13 @@ public class EvalDatasetServiceImpl implements EvalDatasetService {
 
     @Override
     @Transactional
+    public void delete(List<Long> datasetIds) {
+        this.dataService.hardDelete(datasetIds);
+        this.datasetMapper.delete(datasetIds);
+    }
+
+    @Override
+    @Transactional
     public PageVo<EvalDatasetEntity> listEvalDataset(EvalDatasetQueryParam queryParam) {
         List<EvalDatasetEntity> evalDataset = this.datasetMapper.listEvalDataset(queryParam);
         int evalDatasetCount = this.datasetMapper.countEvalDataset(queryParam);

@@ -32,7 +32,7 @@ public interface EvalDataMapper {
     /**
      * 查询评估数据。
      *
-     * @param queryParam 表示评估数据查询参数的 {@code EvalDataQueryParam}。
+     * @param queryParam 表示评估数据查询参数的 {@link EvalDataQueryParam}。
      * @return 表示评估数据查询结果的 {@link List}{@code <}{@link EvalDataEntity}{@code >}。
      */
     List<EvalDataEntity> listEvalData(EvalDataQueryParam queryParam);
@@ -40,7 +40,7 @@ public interface EvalDataMapper {
     /**
      * 统计评估数据数量。
      *
-     * @param queryParam 表示评估数据查询参数的 {@code EvalDataQueryParam}。
+     * @param queryParam 表示评估数据查询参数的 {@link EvalDataQueryParam}。
      * @return 表示评估数据查询结果的 {@code int}。
      */
     int countEvalData(EvalDataQueryParam queryParam);
@@ -53,6 +53,14 @@ public interface EvalDataMapper {
      * @return 表示成功修改的行数 {@code int}。
      */
     int updateExpiredVersion(@Param("list") List<EvalDataPo> evalDataList, @Param("version") Long expiredVersion);
+
+    /**
+     * 批量硬删除指定数据集的所有评估数据。
+     *
+     * @param datasetIds 表示数据集编号的 {@link List}{@code <}{@link Long}{@code >}。
+     * @return 表示成功删除的行数 {@code int}。
+     */
+    int deleteAll(List<Long> datasetIds);
 
     /**
      * 查询数据集的全部版本。

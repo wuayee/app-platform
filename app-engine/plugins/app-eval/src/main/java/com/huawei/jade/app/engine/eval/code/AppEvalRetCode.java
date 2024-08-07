@@ -24,7 +24,13 @@ public enum AppEvalRetCode implements RetCode, ModelInfo {
     /**
      * 评估数据已被删除，占位符代表评估数据id。
      */
-    EVAL_DATA_DELETED_ERROR(2, "The data with id `{0}` is already deleted");
+    EVAL_DATA_DELETED_ERROR(2, "The data with id `{0}` is already deleted"),
+
+    /**
+     * 评估数据集删除时有数据插入，占位符代表评估数据id。
+     */
+    EVAL_DATASET_DELETION_ERROR(3,
+            "New data inserted during dataset deletion. Please retry to delete dataset with id(s) `{0}`");
 
     private final int code;
     private final String msg;

@@ -48,4 +48,11 @@ public interface EvalDataService {
      * @param content 表示评估内容的 {@link String}。
      */
     void update(Long datasetId, Long dataId, String content);
+
+    /**
+     * 删除指定评估数据集的全部评估数据。
+     *
+     * @param datasetIds 表示评估数据编号的 {@link List}{@code <}{@link Long}{@code >}。
+     */
+    void hardDelete(List<Long> datasetIds);
 }

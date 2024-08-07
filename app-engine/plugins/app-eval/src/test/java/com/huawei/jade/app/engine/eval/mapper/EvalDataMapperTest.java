@@ -47,6 +47,7 @@ public class EvalDataMapperTest {
     private EvalDataMapper evalDataMapper;
 
     @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
     @DisplayName("插入数据后，回填主键成功")
     void shouldOkWhenInsert() {
         EvalDataPo evalDataPo = new EvalDataPo();
@@ -145,6 +146,22 @@ public class EvalDataMapperTest {
         assertThat(effectRows).isEqualTo(1);
         this.evalDataMapper.insertAll(Collections.singletonList(evalDataPo));
         assertThat(evalDataPo.getId()).isEqualTo(3L);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("硬删除指定数据集全部数据成功")
+    void shouldOkWhenHardDelete() {
+        int effectRows = this.evalDataMapper.deleteAll(Collections.singletonList(1L));
+        assertThat(effectRows).isEqualTo(2);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("硬删除指定数据集没有数据时，删除行数为 0")
+    void shouldOkWhenHardDeleteWithNoRecord() {
+        int effectRows = this.evalDataMapper.deleteAll(Collections.singletonList(2L));
+        assertThat(effectRows).isEqualTo(0);
     }
 
     @Test
