@@ -33,6 +33,9 @@ import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.validation.Validated;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +84,7 @@ public class AppRunTimeController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @RequestParam(value = "version", required = false) String version,
             @Property(description = "edge表示端侧节点，取值为start或者end", example = "start") @PathVariable("edge")
-                    String startOrEnd) {
+            String startOrEnd) {
         return Rsp.ok(aippRunTimeService.queryEdgeSheetData(aippId,
                 version,
                 startOrEnd,
@@ -94,6 +97,7 @@ public class AppRunTimeController extends AbstractController {
      * @param queries 问答对
      * @return 分享唯一标识
      */
+    @WithSpan(value = "operation.appRuntime.share")
     @PostMapping(value = "/share", description = "分享对话")
     public Map<String, Object> shared(@RequestBody List<Map<String, Object>> queries) {
         return this.aippRunTimeService.shared(queries);
@@ -120,12 +124,14 @@ public class AppRunTimeController extends AbstractController {
      * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
      * @return 实例id
      */
+    @WithSpan(value = "operation.appRuntime.run")
     @PostMapping(path = "/aipp/{aipp_id}", description = "启动一个Aipp")
     public Rsp<String> createAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
             @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
-                    example = "图片url, 文本输入, prompt")
-            @RequestBody Map<String, Object> initContext, @RequestParam(value = "version") String version) {
+                    example = "图片url, 文本输入, prompt") @RequestBody Map<String, Object> initContext,
+            @RequestParam(value = "version") @SpanAttribute("version") String version) {
         return Rsp.ok(this.aippRunTimeGenericable.createAippInstance(aippId,
                 version,
                 initContext,
@@ -141,12 +147,13 @@ public class AppRunTimeController extends AbstractController {
      * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
      * @return 实例id
      */
+    @WithSpan(value = "operation.appRuntime.history")
     @PostMapping(path = "/start/instances/{instance_id}", description = "用户选择历史后启动流程")
     public Rsp<String> startFlowByUserSelectMemory(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String metaInstId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("instance_id") @SpanAttribute("instance_id") String metaInstId,
             @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
-                    example = "图片url, 文本输入, prompt")
-            @RequestBody Map<String, Object> initContext) {
+                    example = "图片url, 文本输入, prompt") @RequestBody Map<String, Object> initContext) {
         OperationContext context = this.contextOf(httpRequest, tenantId);
         return Rsp.ok(aippRunTimeService.startFlowWithUserSelectMemory(metaInstId, initContext, context));
     }
@@ -161,9 +168,11 @@ public class AppRunTimeController extends AbstractController {
      * @param version aipp版本
      * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
+    @WithSpan(value = "operation.appRuntime.delete")
     @DeleteMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "删除应用实例")
     public Rsp<Void> deleteInstance(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId, @PathVariable("instance_id") String instanceId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
+            @PathVariable("instance_id") @SpanAttribute("instance_id") String instanceId,
             @RequestParam(value = "version") String version) {
         aippRunTimeService.deleteAippInstance(aippId, version, instanceId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
@@ -179,7 +188,8 @@ public class AppRunTimeController extends AbstractController {
      * @param version aipp版本
      * @return 返回单个应用实例信息的 {@link Rsp}{@code <}{@link AippInstanceDto}{@code >}
      */
-    @GetMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "查询单个应用实例信息，实例运行期间前端定时调用")
+    @GetMapping(path = "/aipp/{aipp_id}/instances/{instance_id}",
+            description = "查询单个应用实例信息，实例运行期间前端定时调用")
     public Rsp<AippInstanceDto> getInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId, @RequestParam(value = "version") String version) {
@@ -199,12 +209,14 @@ public class AppRunTimeController extends AbstractController {
      * @param formArgs 用于填充表单的数据
      * @return {@link Rsp}{@code <}{@link Void}{@code >}
      */
+    @WithSpan(value = "operation.appRuntime.update2Xiaohai")
     @PutMapping(path = "/aipp/{aipp_id}/instances/{instance_id}/form", description = "更新表单数据并上传到小海")
     public Rsp<Void> updateAndUploadAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息")
-            @RequestBody Map<String, Object> formArgs) {
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody
+            Map<String, Object> formArgs) {
         aippRunTimeService.updateAndUploadAippInstance(aippId,
                 instanceId,
                 formArgs,
@@ -221,9 +233,11 @@ public class AppRunTimeController extends AbstractController {
      * @param formArgs 用于填充表单的数据
      * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
+    @WithSpan(value = "operation.appRuntime.updateResume")
     @PutMapping(path = "/app/instances/{instance_id}", description = "更新表单数据，并恢复实例任务执行")
     public Choir<Object> resumeAndUpdateAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("instance_id") @SpanAttribute("instance_id") String instanceId,
             @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody
             Map<String, Object> formArgs) {
         return this.aippRunTimeService.resumeAndUpdateAippInstance(instanceId,
@@ -240,9 +254,11 @@ public class AppRunTimeController extends AbstractController {
      * @param msgArgs 用于终止时返回的信息
      * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
+    @WithSpan(value = "operation.appRuntime.terminate")
     @PutMapping(path = "/instances/{instance_id}/terminate", description = "终止实例任务")
     public Rsp<Void> terminateAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("instance_id") @SpanAttribute("instance_id") String instanceId,
             @RequestBody Map<String, Object> msgArgs) {
         this.aippRunTimeService.terminateInstance(instanceId, msgArgs, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
@@ -275,18 +291,18 @@ public class AppRunTimeController extends AbstractController {
      * 启动对话实例
      *
      * @param httpRequest 操作上下文
-     * @param tenantId    租户id
+     * @param tenantId 租户id
      * @param appBuilderAippCreateDto 启动对话结构体
      * @return 实例id
      */
+    @WithSpan(value = "operation.appRuntime.createInstance")
     @PostMapping(path = "/aipp/{app_id}/start", description = "启动一个对话实例")
     public Rsp<AppBuilderAppStartDto> startInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId,
             @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
-                    example = "图片url, 文本输入, prompt")
-            @RequestBody @Validated AppBuilderAippCreateDto appBuilderAippCreateDto) {
-        return Rsp.ok(aippRunTimeService.startInstance(
-                appBuilderAippCreateDto.getAppDto(),
+                    example = "图片url, 文本输入, prompt") @RequestBody @Validated
+            AppBuilderAippCreateDto appBuilderAippCreateDto) {
+        return Rsp.ok(aippRunTimeService.startInstance(appBuilderAippCreateDto.getAppDto(),
                 appBuilderAippCreateDto.getContext(),
                 this.contextOf(httpRequest, tenantId)));
     }

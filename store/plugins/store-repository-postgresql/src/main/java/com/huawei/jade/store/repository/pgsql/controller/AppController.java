@@ -25,6 +25,9 @@ import com.huawei.jade.store.entity.query.AppQuery;
 import com.huawei.jade.store.entity.transfer.AppData;
 import com.huawei.jade.store.service.AppService;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -54,8 +57,9 @@ public class AppController {
      * @param appData 表示 Http 请求的参数的 {@link AppData}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan(value = "operation.app.upload")
     @PostMapping
-    public Result<String> addApp(@RequestBody AppData appData) {
+    public Result<String> addApp(@RequestBody @SpanAttribute("name:$.name,version:$.version") AppData appData) {
         notNull(appData.getSchema(), "The app schema cannot be null.");
         Object name = appData.getSchema().get("name");
         notNull(name, "The app name cannot be null.");
@@ -90,8 +94,7 @@ public class AppController {
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link AppData}{@code >}{@code >}。
      */
     @GetMapping("/search")
-    public Result<List<AppData>> searchApps(
-            @RequestQuery(value = "name", required = false) String name,
+    public Result<List<AppData>> searchApps(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
             @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
@@ -100,8 +103,7 @@ public class AppController {
             @RequestQuery(value = "version", required = false) String version) {
         notNegative(pageNum, "The page number cannot be negative.");
         notNegative(pageSize, "The page size cannot be negative.");
-        AppQuery appQuery = new AppQuery.Builder()
-                .toolName(name)
+        AppQuery appQuery = new AppQuery.Builder().toolName(name)
                 .includeTags(new HashSet<>(includeTags))
                 .excludeTags(new HashSet<>(excludeTags))
                 .mode(validateTagMode(mode))
@@ -119,8 +121,9 @@ public class AppController {
      * @param uniqueName 表示应用的唯一索引的 {@link String}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan(value = "operation.app.delete")
     @DeleteMapping("/{uniqueName}")
-    public Result<String> deleteApp(@PathVariable("uniqueName") String uniqueName) {
+    public Result<String> deleteApp(@PathVariable("uniqueName") @SpanAttribute("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
         return Result.ok(this.appService.deleteApp(uniqueName), 1);
     }

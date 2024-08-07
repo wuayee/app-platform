@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.exporter;
 
-import java.util.Map;
+import com.huawei.jade.carver.operation.support.CompositParam;
 
 /**
  * 操作日志导出器。
@@ -22,15 +22,15 @@ public interface OperationLogExporter {
      * 导出成功操作日志。
      *
      * @param operation 表示操作名称的 {@link String}。
-     * @param params 表示操作日志参数键值对的 {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
+     * @param params 表示操作日志参数键值对的 {@link CompositParam}。
      */
-    void succeed(String operation, Map<String, String> params);
+    void succeed(String operation, CompositParam params);
 
     /**
      * 导出异常操作日志。
      *
      * @param operation 表示操作名称的 {@link String}。
-     * @param params 表示操作日志参数键值对的 {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
+     * @param params 表示操作日志参数键值对的 {@link CompositParam}。
      */
-    void failed(String operation, Map<String, String> params);
+    void failed(String operation, CompositParam params);
 }

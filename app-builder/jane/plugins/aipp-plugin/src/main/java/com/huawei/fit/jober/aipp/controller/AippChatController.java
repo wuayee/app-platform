@@ -20,6 +20,9 @@ import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
 import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fitframework.annotation.Component;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +58,7 @@ public class AippChatController extends AbstractController {
      * @param body body
      * @return Rsp<QueryChatRsp>
      */
+    @WithSpan(value = "operation.aippChat.create")
     @PostMapping(path = "", description = "创建会话接口")
     public Rsp<QueryChatRsp> createChat(HttpClassicServerRequest httpRequest,
                                         @PathVariable("tenant_id") String tenantId,
@@ -72,10 +76,11 @@ public class AippChatController extends AbstractController {
      * @param body body
      * @return Rsp<QueryChatRsp>
      */
+    @WithSpan(value = "operation.aippChat.query")
     @PostMapping(path = "/chat_list/{chat_id}", description = "查询会话接口")
     public Rsp<QueryChatRsp> queryChat(HttpClassicServerRequest httpRequest,
                                        @PathVariable("tenant_id") String tenantId,
-                                       @PathVariable("chat_id") String chatId,
+                                       @PathVariable("chat_id") @SpanAttribute("chat_id") String chatId,
                                        @RequestBody QueryChatRequest body) {
         return Rsp.ok(this.aippChatService.queryChat(body, chatId, this.contextOf(httpRequest, tenantId)));
     }
@@ -89,6 +94,7 @@ public class AippChatController extends AbstractController {
      * @param body body
      * @return Rsp<List<QueryChatRsp>>
      */
+    @WithSpan(value = "operation.aippChat.queryList")
     @PostMapping(path = "/chat_list", description = "查询会话列表接口")
     public Rsp<List<QueryChatRsp>> queryChatList(HttpClassicServerRequest httpRequest,
                                                  @PathVariable("tenant_id") String tenantId,
@@ -106,11 +112,12 @@ public class AippChatController extends AbstractController {
      * @param chatId chatId
      * @return Rsp<Void>
      */
+    @WithSpan(value = "operation.aippChat.delete")
     @DeleteMapping(path = "", description = "删除会话接口")
     public Rsp<Void> deleteChat(HttpClassicServerRequest httpRequest,
                                 @PathVariable("tenant_id") String tenantId,
                                 @RequestParam(value = "app_id", required = false) String appId,
-                                @RequestParam("chat_id") String chatId) {
+                                @RequestParam("chat_id") @SpanAttribute("chat_id") String chatId) {
         this.aippChatService.deleteChat(chatId, appId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
@@ -125,10 +132,11 @@ public class AippChatController extends AbstractController {
      * @param body body
      * @return Rsp<QueryChatRsp>
      */
+    @WithSpan(value = "operation.aippChat.update")
     @PostMapping(path = "/{chat_id}", description = "更新会话接口")
     public Rsp<QueryChatRsp> updateChat(HttpClassicServerRequest httpRequest,
                                         @PathVariable("tenant_id") String tenantId,
-                                        @PathVariable("chat_id") String chatId,
+                                        @PathVariable("chat_id") @SpanAttribute("chat_id") String chatId,
                                         @RequestBody CreateChatRequest body) {
         return Rsp.ok(this.aippChatService.updateChat(chatId, body, this.contextOf(httpRequest, tenantId)));
     }
@@ -142,10 +150,11 @@ public class AippChatController extends AbstractController {
      * @param additionalContext 重新会话需要的信息，如是否使用多轮对话等等。
      * @return 表示会话相应体的 {@link Rsp}{@code <}{@link QueryChatRsp}{@code >}。
      */
+    @WithSpan(value = "operation.aippChat.rechat")
     @PostMapping(path = "/instances/{current_instance_id}", description = "重新发起会话接口")
     public Rsp<QueryChatRsp> restartChat(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId,
-            @PathVariable("current_instance_id") String currentInstanceId,
+            @PathVariable("current_instance_id") @SpanAttribute("current_instance_id") String currentInstanceId,
             @RequestBody Map<String, Object> additionalContext) {
         return Rsp.ok(this.aippChatService.restartChat(currentInstanceId,
                 additionalContext,

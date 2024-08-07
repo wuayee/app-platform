@@ -4,18 +4,27 @@
 
 package com.huawei.jade.carver.exporter;
 
+import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYSTEM_ATTRIBUTE_EVENT_NAME;
+import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_FAILED;
+import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_RESULT_KEY;
+import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_SUCCEED;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.service.CarverSpanExporter;
 
 import io.opentelemetry.api.common.AttributeKey;
+import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.sdk.common.CompletableResultCode;
+import io.opentelemetry.sdk.trace.data.EventData;
 import io.opentelemetry.sdk.trace.data.SpanData;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -79,11 +88,26 @@ public class OperationSpanExporter implements CarverSpanExporter {
 
     private void exporterHandle(SpanData spanData) {
         Optional<String> exceptionMessage = this.getExceptionMessage(spanData);
-        if (exceptionMessage.isPresent()) {
-            this.exportFailDetail(spanData, exceptionMessage.get());
-        } else {
-            this.exportSuccessDetail(spanData);
+        Map<String, String> systemAttributes = this.getSystemEventAttribute(spanData);
+        if (systemAttributes.isEmpty()) {
+            log.warn("No operation system event found.");
+            return;
         }
+        if (exceptionMessage.isPresent()) {
+            this.exportFailDetail(spanData, exceptionMessage.get(), systemAttributes);
+        } else {
+            this.exportSuccessDetail(spanData, systemAttributes);
+        }
+    }
+
+    private Map<String, String> getSystemEventAttribute(SpanData spanData) {
+        return spanData.getEvents()
+                .stream()
+                .filter(event -> Objects.equals(SYSTEM_ATTRIBUTE_EVENT_NAME, event.getName()))
+                .findFirst()
+                .map(EventData::getAttributes)
+                .map(this::convertAttributesToMap)
+                .orElseGet(Collections::emptyMap);
     }
 
     private Optional<String> getExceptionMessage(SpanData spanData) {
@@ -94,19 +118,24 @@ public class OperationSpanExporter implements CarverSpanExporter {
                 .map(event -> event.getAttributes().get(AttributeKey.stringKey(EXCEPTION_EVENT_MSG_KEY)));
     }
 
-    private void exportFailDetail(SpanData spanData, String errorMessage) {
-        this.logExporter.failed(spanData.getName(),
-                MapBuilder.<String, String>get().put(OperationLogExporter.EXCEPTION_DETAIL_KEY, errorMessage).build());
+    private void exportFailDetail(SpanData spanData, String errorMessage, Map<String, String> systemAttribute) {
+        Map<String, String> userAttributeOnFail =
+                MapBuilder.<String, String>get().put(OperationLogExporter.EXCEPTION_DETAIL_KEY, errorMessage).build();
+        systemAttribute.put(SYS_OP_RESULT_KEY, SYS_OP_FAILED);
+        this.logExporter.failed(spanData.getName(), new CompositParam(userAttributeOnFail, systemAttribute));
     }
 
-    private void exportSuccessDetail(SpanData spanData) {
-        Map<String, String> detailParams = spanData.getAttributes()
-                .asMap()
+    private void exportSuccessDetail(SpanData spanData, Map<String, String> systemAttribute) {
+        Map<String, String> userAttributesOnSucceed = this.convertAttributesToMap(spanData.getAttributes());
+        systemAttribute.put(SYS_OP_RESULT_KEY, SYS_OP_SUCCEED);
+        this.logExporter.succeed(spanData.getName(), new CompositParam(userAttributesOnSucceed, systemAttribute));
+    }
+
+    private Map<String, String> convertAttributesToMap(Attributes attributes) {
+        return attributes.asMap()
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey() != null && entry.getValue() != null)
                 .collect(Collectors.toMap(entry -> entry.getKey().getKey(), entry -> entry.getValue().toString()));
-
-        this.logExporter.succeed(spanData.getName(), detailParams);
     }
 }

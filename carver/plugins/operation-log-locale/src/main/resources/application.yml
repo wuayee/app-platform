@@ -2,3 +2,5 @@ fit:
   beans:
     packages:
     - 'com.huawei.jade.carver.operation'
+  messages:
+    basename: i18n/messages

@@ -9,7 +9,6 @@ import com.huawei.fitframework.aop.ProceedingJoinPoint;
 import com.huawei.fitframework.aop.annotation.Around;
 import com.huawei.fitframework.aop.annotation.Aspect;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 
 import io.opentelemetry.api.trace.Span;
@@ -19,14 +18,9 @@ import io.opentelemetry.context.Context;
 import io.opentelemetry.context.ContextKey;
 import io.opentelemetry.context.ContextStorage;
 import io.opentelemetry.context.Scope;
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -40,22 +34,24 @@ import java.util.concurrent.atomic.AtomicReference;
 public class WithSpanAspect {
     private static final ContextKey<String> TRACE_CONTEXT_KEY = ContextKey.named("carver-trace-scope-name");
 
-    private final SpanAttributeParserRepository repository;
+    private final SpanEndObserverRepository repository;
 
-    public WithSpanAspect(SpanAttributeParserRepository repository) {
+    public WithSpanAspect(SpanEndObserverRepository repository) {
         this.repository = repository;
     }
 
     @Around("@annotation(io.opentelemetry.instrumentation.annotations.WithSpan)")
     private Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
         AtomicReference<Span> spanRef = new AtomicReference<>();
+        Object proceedResult = null;
         try (Scope scope = this.makeCurrentScope(joinPoint, spanRef)) {
-            return joinPoint.proceed();
+            proceedResult = joinPoint.proceed();
+            return proceedResult;
         } catch (Throwable throwable) {
             this.recordException(throwable, spanRef.get());
             throw throwable;
         } finally {
-            this.setParamSpanAttribute(joinPoint, spanRef.get());
+            this.notifyAllSpanEndObserver(spanRef.get(), joinPoint.getMethod(), joinPoint.getArgs(), proceedResult);
             this.finishSpan(spanRef.get());
         }
     }
@@ -96,28 +92,7 @@ public class WithSpanAspect {
         return tracer.spanBuilder(withSpanAnnotation.value()).startSpan();
     }
 
-    private void setParamSpanAttribute(ProceedingJoinPoint joinPoint, Span span) {
-        if (span == null) {
-            return;
-        }
-        Annotation[][] parameterAnnotations = joinPoint.getMethod().getParameterAnnotations();
-        for (int index = 0; index < parameterAnnotations.length; index++) {
-            int currentIndex = index;
-            Arrays.stream(parameterAnnotations[index])
-                    .filter(annotation -> annotation.annotationType() == SpanAttribute.class)
-                    .map(ObjectUtils::<SpanAttribute>cast)
-                    .forEach(annotation -> this.setAttribute(span,
-                            annotation.value(), joinPoint.getArgs()[currentIndex]));
-        }
-    }
-
-    private void setAttribute(Span span, String expression, Object paramValue) {
-        List<SpanAttributeParser> parsers = this.repository.get();
-        Map<String, String> attributeMap = parsers.stream()
-                .filter(parser -> parser.match(expression))
-                .findFirst()
-                .map(parser -> parser.parse(expression, paramValue))
-                .orElseGet(Collections::emptyMap);
-        attributeMap.forEach(span::setAttribute);
+    private void notifyAllSpanEndObserver(Span span, Method method, Object[] args, Object result) {
+        this.repository.get().forEach(observer -> observer.onSpanEnd(span, method, args, result));
     }
 }

@@ -25,6 +25,9 @@ import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.common.Result;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -54,8 +57,9 @@ public class ToolController {
      * @param tool 表示 Http 请求的参数的 {@link ToolData}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan("operation.tool.upload")
     @PostMapping
-    public Result<String> addTool(@RequestBody ToolData tool) {
+    public Result<String> addTool(@RequestBody @SpanAttribute("name:$.name,version:$.version") ToolData tool) {
         notNull(tool.getSchema(), "The tool schema cannot be null.");
         Object name = tool.getSchema().get("name");
         notNull(name, "The tool name cannot be null.");
@@ -200,8 +204,9 @@ public class ToolController {
      * @param uniqueName 表示工具的唯一索引的 {@link String}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan("operation.tool.delete")
     @DeleteMapping("/{uniqueName}")
-    public Result<String> deleteTool(@PathVariable("uniqueName") String uniqueName) {
+    public Result<String> deleteTool(@PathVariable("uniqueName") @SpanAttribute("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
         return Result.ok(this.toolService.deleteTool(uniqueName));
     }
@@ -213,10 +218,11 @@ public class ToolController {
      * @param version 表示工具版本的 {@link String}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan("operation.tool.deleteVersion")
     @DeleteMapping("/{uniqueName}/{version}")
     public Result<String> deleteToolByVersion(
-            @PathVariable("uniqueName") String uniqueName,
-            @PathVariable("version") String version) {
+            @PathVariable("uniqueName") @SpanAttribute("uniqueName") String uniqueName,
+            @PathVariable("version") @SpanAttribute("version") String version) {
         notBlank(uniqueName, "The unique name cannot be blank.");
         return Result.ok(this.toolService.deleteToolByVersion(uniqueName, version));
     }
