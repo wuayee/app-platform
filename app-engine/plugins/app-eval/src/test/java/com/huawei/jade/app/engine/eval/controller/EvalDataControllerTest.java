@@ -20,7 +20,7 @@ import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
-import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteParam;
 import com.huawei.jade.app.engine.eval.dto.EvalDataUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
@@ -135,11 +135,11 @@ public class EvalDataControllerTest {
     void shouldFailWhenDeleteEvalDataWithInvalidDataId() {
         Mockito.doNothing().when(this.evalDataService).delete(anyList());
 
-        EvalDataDeleteDto evalDataDeleteDto = new EvalDataDeleteDto();
-        evalDataDeleteDto.setDataIds(Collections.singletonList(-1L));
+        EvalDataDeleteParam evalDataDeleteParam = new EvalDataDeleteParam();
+        evalDataDeleteParam.setDataIds(Collections.singletonList(-1L));
 
         MockRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteDto).responseType(Void.class);
+                MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteParam).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }
@@ -149,11 +149,8 @@ public class EvalDataControllerTest {
     void shouldOkWhenDeleteEvalData() {
         Mockito.doNothing().when(this.evalDataService).delete(anyList());
 
-        EvalDataDeleteDto evalDataDeleteDto = new EvalDataDeleteDto();
-        evalDataDeleteDto.setDataIds(Collections.singletonList(1L));
-
         MockRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteDto).responseType(Void.class);
+                MockMvcRequestBuilders.delete("/eval/data").param("dataIds", "1").responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }

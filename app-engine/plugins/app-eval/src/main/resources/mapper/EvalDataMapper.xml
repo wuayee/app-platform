@@ -65,6 +65,15 @@
         </foreach>
     </update>
 
+    <delete id="deleteAll">
+        delete
+        from t_app_engine_eval_data
+        where dataset_id in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item})
+        </foreach>
+    </delete>
+
     <select id="getAllVersion" resultType="com.huawei.jade.app.engine.eval.entity.EvalVersionEntity"
             resultMap="EvalVersionEntityResultMap">
         SELECT version, version_time

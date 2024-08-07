@@ -8,6 +8,8 @@ import com.huawei.jade.app.engine.eval.dto.EvalDatasetQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.common.vo.PageVo;
 
+import java.util.List;
+
 /**
  * 表示评估数据集服务。
  *
@@ -18,9 +20,16 @@ public interface EvalDatasetService {
     /**
      * 插入评估数据集。
      *
-     * @param entity 评估数据集业务对象的 {@link EvalDatasetEntity}。
+     * @param entity 表示评估数据集业务对象的 {@link EvalDatasetEntity}。
      */
     void create(EvalDatasetEntity entity);
+
+    /**
+     * 删除评估数据集。
+     *
+     * @param datasetIds 表示评估数据集编号的 {@link List}{@code <}{@link Long}{@code >}。
+     */
+    void delete(List<Long> datasetIds);
 
     /**
      * 分页查询评估数据集元数据。
@@ -31,7 +40,7 @@ public interface EvalDatasetService {
     PageVo<EvalDatasetEntity> listEvalDataset(EvalDatasetQueryParam queryParam);
 
     /**
-     * 通过 ID 查询评估数据集元数据。
+     * 通过唯一标识查询评估数据集元数据。
      *
      * @param datasetId 表示评估数据集唯一标识的 {@link Long}。
      * @return 表示评估数据集元数据查询结果的 {@link EvalDatasetEntity}。

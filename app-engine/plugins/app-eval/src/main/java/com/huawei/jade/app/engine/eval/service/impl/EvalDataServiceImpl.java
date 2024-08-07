@@ -79,6 +79,11 @@ public class EvalDataServiceImpl implements EvalDataService {
         return PageVo.of(evalDataCount, evalData);
     }
 
+    @Override
+    public void hardDelete(List<Long> datasetIds) {
+        this.dataMapper.deleteAll(datasetIds);
+    }
+
     private void insert(Long datasetId, List<String> contents, long createdVersion) {
         List<EvalDataPo> evalDataPoList = contents.stream().map(content -> {
             EvalDataPo evalDataPo = new EvalDataPo();

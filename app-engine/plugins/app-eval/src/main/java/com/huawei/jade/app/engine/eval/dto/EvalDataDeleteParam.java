@@ -6,7 +6,7 @@ package com.huawei.jade.app.engine.eval.dto;
 
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.validation.constraints.NotEmpty;
-import com.huawei.jade.app.engine.eval.constraint.ValidListIds;
+import com.huawei.jade.app.engine.eval.constraint.ValidList;
 
 import lombok.Data;
 
@@ -20,9 +20,9 @@ import java.util.List;
  * @since 2024-07-23
  */
 @Data
-public class EvalDataDeleteDto {
+public class EvalDataDeleteParam {
     @Property(description = "数据编号", required = true)
     @NotEmpty(message = "The dataIds cannot be empty.")
-    @ValidListIds
+    @ValidList(min = 1, max = Long.MAX_VALUE, message = "Some ids are invalid.")
     private List<Long> dataIds;
 }
