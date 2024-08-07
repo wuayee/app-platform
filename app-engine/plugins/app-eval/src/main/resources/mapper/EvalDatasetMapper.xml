@@ -52,17 +52,17 @@
     </select>
 
     <insert id="create" useGeneratedKeys="true" keyProperty="id">
-        insert into t_app_engine_eval_dataset (name, description, schema, app_id)
-        values (#{name}, #{description}, #{schema}, #{appId})
+        INSERT INTO t_app_engine_eval_dataset (name, description, schema, app_id)
+        VALUES (#{name}, #{description}, #{schema}, #{appId})
     </insert>
 
     <!-- 更新数据集相关信息 -->
     <update id="updateEvaldataset">
-        update t_app_engine_eval_dataset
+        UPDATE t_app_engine_eval_dataset
         <set>
             <if test="name != null">name = #{name},</if>
             <if test="description != null">description = #{description}</if>
         </set>
-        where id = #{id}
+        WHERE id = #{id}
     </update>
 </mapper>
