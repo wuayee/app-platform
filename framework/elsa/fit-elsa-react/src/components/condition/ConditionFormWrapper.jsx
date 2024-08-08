@@ -1,4 +1,4 @@
-import {IfForm} from "@/components/condition/IfForm.jsx";
+import IfForm from "@/components/condition/IfForm.jsx";
 import ElseForm from "@/components/condition/ElseForm.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import {Button} from "antd";
