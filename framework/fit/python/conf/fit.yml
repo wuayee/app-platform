@@ -468,3 +468,21 @@ fit.public.genericables.com.huawei.fit.bigdata.cache.get.info:
     default: 'local-worker'
   tags:
     - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.security.decrypt:
+  name: 'com.huawei.fit.security.decrypt'
+  fitables:
+    com.huawei.fit.security.scc.decrypt:
+  route:
+    default: 'com.huawei.fit.security.scc.decrypt'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.security.encrypt:
+  name: 'com.huawei.fit.security.encrypt'
+  fitables:
+    com.huawei.fit.security.scc.encrypt:
+  route:
+    default: 'com.huawei.fit.security.scc.encrypt'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'
