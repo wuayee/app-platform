@@ -141,10 +141,10 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
             // 将当前形状的名称和获取到的info添加到formerNodes中
             formerNodesInfo.push({
-                id: currentShape.id,
+                id: currentShapeId,
                 node: currentShape,
                 name: currentShape.text,
-                observableList: currentShape.page.getObservableList(currentShape.id)
+                observableList: currentShape.page.getObservableList(currentShapeId)
             });
 
             // 找到当前形状连接的所有线
