@@ -12,12 +12,14 @@ import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.plugin.Plugin;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.carver.operation.support.OperationLogFields;
 import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,7 +31,7 @@ import java.util.Map;
  * @since 2024-07-30
  */
 @Component
-public class OperationLogLocaleTool implements OperationLogLocaleService {
+public class OperationLogLocaleServiceImpl implements OperationLogLocaleService {
     private static final String FUNCTION_MODULE_KEY = "module";
     private static final String LEVEL_KEY = "level";
     private static final String SUCCESS_DETAIL_KEY = "succeed.detail";
@@ -41,51 +43,63 @@ public class OperationLogLocaleTool implements OperationLogLocaleService {
 
     private final Plugin plugin;
 
-    OperationLogLocaleTool(Plugin plugin) {
+    OperationLogLocaleServiceImpl(Plugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public OperationLogFields getLocaleMessage(String operation, CompositParam params) {
-        String language = params.getSystemAttribute().get(SYS_OP_LANGUAGE_KEY);
+        Map<String, String> systemAttribute = ObjectUtils.getIfNull(params.getSystemAttribute(), Collections::emptyMap);
+        String language = systemAttribute.get(SYS_OP_LANGUAGE_KEY);
         List<Locale.LanguageRange> list = Locale.LanguageRange.parse(language);
         Locale locale = StringUtils.isNotEmpty(language) ? Locale.lookup(list, LOCALES) : Locale.getDefault();
-        MessgaeGetter messgaeGetter = new MessgaeGetter(plugin, operation, locale);
+        MessageGetter msgGetter = new MessageGetter(plugin, operation, locale);
         OperationLogFields.OperationLogFieldsBuilder builder = OperationLogFields.builder()
-                .name(messgaeGetter.getMessage(""))
-                .level(messgaeGetter.getMessage(LEVEL_KEY))
-                .functionModule(messgaeGetter.getMessage(FUNCTION_MODULE_KEY))
-                .resourceName(messgaeGetter.getMessage(TARGET_RESOURCE_KEY))
-                .requestUri(messgaeGetter.getMessage(URI_KEY))
-                .operationResult(params.getSystemAttribute().get(SYS_OP_RESULT_KEY))
-                .operator(params.getSystemAttribute().get(SYS_OP_OPERATOR_KEY))
-                .ipAddr(params.getSystemAttribute().get(SYS_OP_IPADDR_KEY));
-        if (StringUtils.equals(params.getSystemAttribute().get(SYS_OP_RESULT_KEY), SYS_OP_SUCCEED)) {
-            return builder.details(messgaeGetter.getMessage(SUCCESS_DETAIL_KEY, params.getUserAttribute())).build();
+                .name(msgGetter.get())
+                .level(msgGetter.get(LEVEL_KEY))
+                .functionModule(msgGetter.get(FUNCTION_MODULE_KEY))
+                .resourceName(msgGetter.get(TARGET_RESOURCE_KEY))
+                .requestUri(msgGetter.get(URI_KEY))
+                .operationResult(systemAttribute.get(SYS_OP_RESULT_KEY))
+                .operator(systemAttribute.get(SYS_OP_OPERATOR_KEY))
+                .ipAddr(systemAttribute.get(SYS_OP_IPADDR_KEY));
+        if (StringUtils.equals(systemAttribute.get(SYS_OP_RESULT_KEY), SYS_OP_SUCCEED)) {
+            return builder.details(msgGetter.get(SUCCESS_DETAIL_KEY, params.getUserAttribute())).build();
         } else {
-            return builder.details(messgaeGetter.getMessage(FAIL_DETAIL_KEY, params.getSystemAttribute())).build();
+            return builder.details(msgGetter.get(FAIL_DETAIL_KEY, params.getUserAttribute())).build();
         }
     }
 
-    static class MessgaeGetter {
+    static class MessageGetter {
         private static final String DELIMITER = ".";
 
         private final Plugin plugin;
         private final String baseKey;
         private final Locale locale;
 
-        MessgaeGetter(Plugin plugin, String baseKey, Locale locale) {
+        /**
+         * MessageGetter 构造函数。
+         *
+         * @param plugin 表示插件的{@link Plugin}。
+         * @param baseKey 表示资源中的键值的{@link String}。
+         * @param locale 表示使用的国际化的资源的{@link Locale}。
+         */
+        MessageGetter(Plugin plugin, String baseKey, Locale locale) {
             this.plugin = plugin;
             this.baseKey = baseKey;
             this.locale = locale;
         }
 
-        String getMessage(String subKey) {
+        String get() {
+            return this.plugin.sr().getMessage(locale, baseKey);
+        }
+
+        String get(String subKey) {
             String path = StringUtils.isBlank(subKey) ? baseKey : baseKey + DELIMITER + subKey;
             return this.plugin.sr().getMessage(locale, path);
         }
 
-        String getMessage(String subKey, Map<String, String> params) {
+        String get(String subKey, Map<String, String> params) {
             String template = this.plugin.sr().getMessage(locale, baseKey + DELIMITER + subKey);
             return new DefaultStringTemplate(template).render(params);
         }

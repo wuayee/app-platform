@@ -80,18 +80,18 @@ public class OperationLogToolTest {
     @DisplayName("测试获取字符串资源")
     void testGetMessage() {
         Locale locale = new Locale("en");
-        OperationLogLocaleTool.MessgaeGetter messgaeGetter =
-                new OperationLogLocaleTool.MessgaeGetter(pluginMock, "base", locale);
-        assertThat(messgaeGetter).extracting(obj -> obj.getMessage(""),
-                obj -> obj.getMessage("result"),
-                obj -> obj.getMessage("succeed.detail", params.getUserAttribute()))
+        OperationLogLocaleServiceImpl.MessageGetter messgaeGetter =
+                new OperationLogLocaleServiceImpl.MessageGetter(pluginMock, "base", locale);
+        assertThat(messgaeGetter).extracting(obj -> obj.get(""),
+                obj -> obj.get("result"),
+                obj -> obj.get("succeed.detail", params.getUserAttribute()))
                 .containsExactly("hello", "success", "hello : world");
     }
 
     @Test
     @DisplayName("测试获取成功的国际化操作日志")
     void testGetLocaleMessageSuccess() {
-        OperationLogLocaleService localeService = new OperationLogLocaleTool(pluginMock);
+        OperationLogLocaleService localeService = new OperationLogLocaleServiceImpl(pluginMock);
         OperationLogFields fields = localeService.getLocaleMessage("base", params);
         assertThat(fields).extracting(OperationLogFields::getName,
                         OperationLogFields::getLevel,
