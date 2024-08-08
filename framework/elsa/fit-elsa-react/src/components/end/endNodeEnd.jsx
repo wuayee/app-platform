@@ -66,8 +66,8 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      *
      * @override
      */
-    self.serializerJadeConfig = () => {
-        self.flowMeta.callback.converter.entity = self.getLatestJadeConfig();
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.callback.converter.entity = jadeConfig;
     };
 
     /**

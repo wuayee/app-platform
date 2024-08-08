@@ -1,8 +1,9 @@
-import React, {createContext, useContext, useEffect, useReducer, useRef} from "react";
+import React, {createContext, forwardRef, useContext, useEffect, useImperativeHandle, useReducer, useRef} from "react";
 import "./contentStyle.css";
 import {ConfigProvider, Form} from "antd";
 import {useUpdateEffect} from "@/components/common/UseUpdateEffect.jsx";
 import {EVENT_TYPE} from "@fit-elsa/elsa-core";
+import PropTypes from "prop-types";
 
 const DataContext = createContext(null);
 const ShapeContext = createContext(null);
@@ -18,20 +19,20 @@ const FormContext = createContext(null);
  * @return {JSX.Element}
  * @constructor
  */
-export const DefaultRoot = ({shape, component, disabled}) => {
+export const DefaultRoot = forwardRef(function ({shape, component, disabled}, ref) {
     const [data, dispatch] = useReducer(component.reducers, component.getJadeConfig());
     const id = "react-root-" + shape.id;
     const [form] = Form.useForm();
     const domRef = useRef();
 
-    /**
-     * 用于图形可获取组件中的数据.
-     *
-     * @return {any} 组件中的数据.
-     */
-    shape.getLatestJadeConfig = () => {
-        return JSON.parse(JSON.stringify(data));
-    };
+    // 对外暴露方法.
+    useImperativeHandle(ref, () => {
+        return {
+            getData: () => {
+                return JSON.parse(JSON.stringify(data));
+            }
+        }
+    });
 
     /**
      * 校验当前节点的form输入是否合法.
@@ -99,6 +100,12 @@ export const DefaultRoot = ({shape, component, disabled}) => {
             </div>
         </ConfigProvider>
     </>);
+});
+
+DefaultRoot.propTypes = {
+    shape: PropTypes.object,
+    component: PropTypes.object,
+    disabled: PropTypes.bool
 };
 
 export function useDataContext() {

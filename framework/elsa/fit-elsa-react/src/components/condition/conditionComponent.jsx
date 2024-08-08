@@ -14,6 +14,7 @@ export const conditionComponent = (jadeConfig) => {
                     id: uuidv4(),
                     conditionRelation: "and",
                     type: "if",
+                    runnable: true,
                     conditions: [
                         {
                             id: uuidv4(),
@@ -47,6 +48,7 @@ export const conditionComponent = (jadeConfig) => {
                     id: uuidv4(),
                     conditionRelation: "and",
                     type: "else",
+                    runnable: true,
                     conditions: [
                         {
                             id: uuidv4(),
@@ -170,6 +172,7 @@ class Branch {
             id: uuidv4(),
             conditionRelation: "and",
             type: "if",
+            runnable: true,
             conditions: [
                 {
                     id: uuidv4(),
