@@ -81,42 +81,77 @@ export const retrievalComponent = (jadeConfig) => {
             });
         };
 
-        const _addKnowledge = () => {
-            getKnowledgeValue().push({
-                id: action.id,
-                name: "",
-                type: "Object",
-                from: "Expand",
-                value: []
+        const _getTypeOfValue = (value) => {
+            if (typeof itemValue === 'number') {
+                return 'Integer';
+            } else if (typeof itemValue === 'boolean') {
+                return 'Boolean';
+            } else {
+                return 'String';
+            }
+        }
+
+        const _updateKnowledge = () => {
+            const knowledgeValue = getKnowledgeValue();
+            // 将 knowledgeValue 转换成更易操作的格式
+            const knowledgeMap = knowledgeValue.reduce((map, item) => {
+                if (item.value && item.value.length > 0) {
+                    const repoIdObj = item.value.find(v => v.name === 'repoId');
+                    const tableIdObj = item.value.find(v => v.name === 'tableId');
+
+                    if (repoIdObj && tableIdObj) {
+                        const repoId = repoIdObj.value;
+                        const tableId = tableIdObj.value;
+                        map[`${repoId}-${tableId}`] = item;
+                    }
+                }
+                return map;
+            }, {});
+
+            const actionValue = action.value;
+            // 处理 actionValue 中的每个项
+            actionValue.forEach(actionItem => {
+                const key = `${actionItem.repoId}-${actionItem.tableId}`;
+                if (knowledgeMap[key]) {
+                    // 更新现有条目
+                    knowledgeMap[key].value.forEach(v => {
+                        if (actionItem[v.name] !== undefined) {
+                            v.value = actionItem[v.name];
+                        }
+                    });
+                } else {
+                    // 添加新条目
+                    knowledgeValue.push({
+                        id: uuidv4(),
+                        type: "Object",
+                        from: "Expand",
+                        value: Object.keys(actionItem).map(key => ({
+                            id: uuidv4(),
+                            from: "input",
+                            name: key,
+                            type: _getTypeOfValue(actionItem[key]),
+                            value: actionItem[key]
+                        }))
+                    });
+                }
             });
+
+            // 删除多余的条目
+            Object.keys(knowledgeMap).forEach(key => {
+                const [repoId, tableId] = key.split('-').map(Number);
+                if (!actionValue.find(item => item.repoId === repoId && item.tableId === tableId)) {
+                    knowledgeValue.splice(knowledgeValue.indexOf(knowledgeMap[key]), 1);
+                }
+            });
+
+            newConfig.inputParams.find(newTask => newTask.name === "knowledge").value = knowledgeValue;
         };
 
         const _deleteKnowledge = () => {
             const knowledgeValue = getKnowledgeValue();
             const indexToDelete = knowledgeValue.findIndex(item => item.id === action.id);
             indexToDelete !== -1 && knowledgeValue.splice(indexToDelete, 1);
-        };
-
-        const _editKnowledge = () => {
-            if (!action.value) {
-                return;
-            }
-            const knowledgeId = action.value.id;
-            const knowledgeName = action.value.name;
-            const value = getKnowledgeValue().find(item => item.id === action.id).value;
-            if (value.length === 0) {
-                value.push({id: uuidv4(), name: 'id', from: 'Input', type: 'String', value: knowledgeId});
-                value.push({id: uuidv4(), name: 'name', from: 'Input', type: 'String', value: knowledgeName});
-            } else {
-                value.forEach(item => {
-                    if (item.name === 'id') {
-                        item.value = knowledgeId;
-                    }
-                    if (item.name === 'name') {
-                        item.value = knowledgeName;
-                    }
-                });
-            }
+            newConfig.inputParams.find(newTask => newTask.name === "knowledge").value = knowledgeValue;
         };
 
         const _changeMaximum = () => {
@@ -125,11 +160,7 @@ export const retrievalComponent = (jadeConfig) => {
             });
         };
 
-        const getKnowledgeValue = () => newConfig.inputParams.find(newTask => newTask.name === "knowledge").value;
-
-        const _clearKnowledge = () => {
-            getKnowledgeValue().find(item => item.id === action.id).value = [];
-        };
+        const getKnowledgeValue = () => [...newConfig.inputParams.find(newTask => newTask.name === "knowledge").value];
 
         let newConfig = {...config};
         switch (action.type) {
@@ -137,23 +168,16 @@ export const retrievalComponent = (jadeConfig) => {
             case 'editInput':
                 _editInput();
                 return newConfig;
-            case 'addKnowledge':
-                _addKnowledge();
+            case 'updateKnowledge':
+                _updateKnowledge();
                 return newConfig;
             // 格式：dispatch({type: 'deleteOutputVariable', id:"id")
             case 'deleteKnowledge':
                 _deleteKnowledge();
                 return newConfig;
-            // 格式：dispatch({type: 'editKnowledge', item:{id: 0, name: "", type: "", from: "value", value: ""})
-            case 'editKnowledge':
-                _editKnowledge();
-                return newConfig;
             // 格式：dispatch({type: 'changemaximum', value:"")
             case 'changeMaximum':
                 _changeMaximum();
-                return newConfig;
-            case 'clearKnowledge':
-                _clearKnowledge();
                 return newConfig;
             default: {
                 throw Error('Unknown action: ' + action.type);
