@@ -486,3 +486,39 @@ fit.public.genericables.com.huawei.fit.security.encrypt:
   tags:
     - 'localOnly'
     - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.get.running.async.task.count:
+  name: 'com.huawei.fit.get.running.async.task.count'
+  fitables:
+    local-worker:
+  route:
+    default: 'local-worker'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.get.should.terminate.main:
+  name: 'com.huawei.fit.get.should.terminate.main'
+  fitables:
+    local-worker:
+  route:
+    default: 'local-worker'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.get.last.success.time:
+  name: 'com.huawei.fit.get.last.success.time'
+  fitables:
+    local-worker:
+  route:
+    default: 'local-worker'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.get.earliest.start.time:
+  name: 'com.huawei.fit.get.earliest.start.time'
+  fitables:
+    local-worker:
+  route:
+    default: 'local-worker'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'
