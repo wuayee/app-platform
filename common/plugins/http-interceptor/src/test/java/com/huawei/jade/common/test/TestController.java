@@ -7,6 +7,7 @@ package com.huawei.jade.common.test;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
 
@@ -82,5 +83,15 @@ public class TestController {
     @GetMapping("/nonsupport/exception")
     public String test7() {
         throw new FitException(404, "test error");
+    }
+
+    /**
+     * {@link com.huawei.jade.common.filter.support.DefaultHttpResponseWrapperTest#shouldOkWhenNoInterceptStream}。
+     *
+     * @return 表示测试结果的 {@link Choir}{@code <}{@link Integer}{@code >}。
+     */
+    @GetMapping("/support/stream")
+    public Choir<Integer> test8() {
+        return Choir.just(1, 2, 3);
     }
 }

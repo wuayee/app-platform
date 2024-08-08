@@ -8,11 +8,13 @@ import static com.huawei.fit.http.protocol.MimeType.APPLICATION_JSON;
 import static com.huawei.fit.http.protocol.MimeType.APPLICATION_X_WWW_FORM_URLENCODED;
 import static com.huawei.fit.http.protocol.MimeType.MULTIPART_FORM_DATA;
 import static com.huawei.fit.http.protocol.MimeType.MULTIPART_MIXED;
+import static com.huawei.fit.http.protocol.MimeType.TEXT_EVENT_STREAM;
 import static com.huawei.fit.http.protocol.MimeType.TEXT_PLAIN;
 
 import com.huawei.fit.http.Serializers;
 import com.huawei.fit.http.entity.EntitySerializer;
 import com.huawei.fit.http.entity.ObjectEntity;
+import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.LazyLoader;
@@ -50,20 +52,26 @@ public class DefaultSerializers implements Serializers {
     }
 
     @Override
+    public Optional<EntitySerializer<TextEventStreamEntity>> textEventStreamEntity(Type type) {
+        return this.json().map(jsonSerializer -> EntitySerializer.textEventStreamSerializer(jsonSerializer, type));
+    }
+
+    @Override
     public Map<MimeType, EntitySerializer<?>> entities() {
         return this.entitySerializersLoader.get();
     }
 
     private Map<MimeType, EntitySerializer<?>> loadEntitySerializers() {
-        Map<MimeType, EntitySerializer<?>> mimeTypeEntitySerializers = MapBuilder.<MimeType, EntitySerializer<?>>get()
+        Map<MimeType, EntitySerializer<?>> curSerializers = MapBuilder.<MimeType, EntitySerializer<?>>get()
                 .put(APPLICATION_X_WWW_FORM_URLENCODED, EntitySerializer.formUrlEncodedSerializer())
                 .put(MULTIPART_FORM_DATA, EntitySerializer.multiPartSerializer())
                 .put(MULTIPART_MIXED, EntitySerializer.multiPartSerializer())
                 .put(TEXT_PLAIN, EntitySerializer.textSerializer())
                 .build();
-        this.json()
-                .ifPresent(jsonSerializer -> mimeTypeEntitySerializers.put(APPLICATION_JSON,
-                        EntitySerializer.jsonSerializer(jsonSerializer)));
-        return mimeTypeEntitySerializers;
+        this.json().ifPresent(serializer -> {
+            curSerializers.put(APPLICATION_JSON, EntitySerializer.jsonSerializer(serializer));
+            curSerializers.put(TEXT_EVENT_STREAM, EntitySerializer.textEventStreamSerializer(serializer, String.class));
+        });
+        return curSerializers;
     }
 }
