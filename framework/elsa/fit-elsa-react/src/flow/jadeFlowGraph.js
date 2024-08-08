@@ -25,6 +25,12 @@ import {huggingFaceNodeState} from "@/components/huggingFace/huggingFaceNodeStat
 import {huggingFaceComponent} from "@/components/huggingFace/huggingFaceComponent.jsx";
 import {codeComponent} from "@/components/code/codeComponent.jsx";
 import {codeNodeState} from "@/components/code/codeNodeState.jsx";
+import {
+    evaluationAlgorithmsComponent
+} from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsComponent.jsx";
+import {
+    evaluationAlgorithmsNodeState
+} from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsNodeState.jsx";
 
 /**
  * jadeFlow的专用画布.
@@ -90,6 +96,8 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("huggingFaceComponent", huggingFaceComponent);
         self.registerPlugin("codeComponent", codeComponent);
         self.registerPlugin("codeNodeState", codeNodeState);
+        self.registerPlugin("evaluationAlgorithmsComponent", evaluationAlgorithmsComponent);
+        self.registerPlugin("evaluationAlgorithmsNodeState", evaluationAlgorithmsNodeState);
         return initialize.apply(self);
     };
 

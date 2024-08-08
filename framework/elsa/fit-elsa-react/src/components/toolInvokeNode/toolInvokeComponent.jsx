@@ -1,4 +1,5 @@
 import ToolInvokeFormWrapper from "@/components/toolInvokeNode/ToolInvokeFormWrapper.jsx";
+import {updateInput} from "@/components/util/JadeConfigUtils.js";
 
 /**
  * 工具调用节点组件
@@ -33,30 +34,11 @@ export const toolInvokeComponent = (jadeConfig) => {
      * @override
      */
     self.reducers = (config, action) => {
-        const _updateInput = (data, id, changes) => data.map(d => {
-            const newD = {...d};
-            if (d.id === id) {
-                changes.forEach(change => {
-                    newD[change.key] = change.value;
-                    // 当对象由展开变为引用时，需要把对象的value置空
-                    if (change.value === "Reference") {
-                        newD.value = [];
-                    }
-                });
-                return newD;
-            }
-            // 当处理的数据是对象，并且对象的from是Expand，则递归处理当前数据的属性
-            if (newD.from === "Expand") {
-                newD.value = _updateInput(newD.value, id, changes);
-            }
-
-            return newD;
-        });
 
         let newConfig = {...config};
         switch (action.type) {
             case "update":
-                newConfig.inputParams = _updateInput(config.inputParams, action.id, action.changes);
+                newConfig.inputParams = updateInput(config.inputParams, action.id, action.changes);
                 return newConfig;
             default: {
                 throw Error('Unknown action: ' + action.type);
