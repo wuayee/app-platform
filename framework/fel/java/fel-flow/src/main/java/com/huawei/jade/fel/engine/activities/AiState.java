@@ -126,7 +126,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, O, RF, F> block(BlockToken<O> block) {
         Validation.notNull(block, "Block operator cannot be null.");
-        return new AiState<>(this.state.block(block), this.getFlow());
+        return new AiState<>(this.state.block(block), this.flow());
     }
 
     /**
@@ -139,7 +139,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, I, RF, F> doOnError(Operators.ErrorHandler<I> handler) {
         Validation.notNull(handler, "Error handler cannot be null.");
-        return new AiState<>(this.state.error(handler), this.getFlow());
+        return new AiState<>(this.state.error(handler), this.flow());
     }
 
     /**
@@ -197,9 +197,13 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             Operators.ErrorHandler<Object> errHandler) {
         Consumer<Throwable> errorCbWrapper = exception -> errHandler.handle(new Exception(exception), null, null);
         return this.close(FlowCallBack.<O>builder()
-                .doOnSuccess(data -> callback.process(new ToCallback<>(Collections.singletonList(
-                        new FlowContext<>(null, null, data, new HashSet<>(), null)))))
-                .doOnError(errorCbWrapper).build());
+                .doOnSuccess(data -> callback.process(new ToCallback<>(Collections.singletonList(new FlowContext<>(null,
+                        null,
+                        data,
+                        new HashSet<>(),
+                        null)))))
+                .doOnError(errorCbWrapper)
+                .build());
     }
 
     /**
@@ -210,25 +214,25 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiProcessFlow<D, O> close(FlowCallBack<O> callback) {
         Operators.Just<Callback<FlowContext<O>>> successCb = input -> {
-            callback.getSuccessCb().accept(input.get().getData());
+            callback.successCb().accept(input.get().getData());
             // 对话结束回调由直接起会话的流程触发
-            String flowId = this.getFlow().getId();
+            String flowId = this.flow().getId();
             getConverseListener(input.get(), flowId).ifPresent(listener -> listener.onSuccess(flowId,
                     input.get().getData()));
         };
 
         Operators.ErrorHandler<Object> errCb = (exception, retryable, flowContexts) -> {
-            callback.getErrorCb().accept(exception);
+            callback.errorCb().accept(exception);
             // 触发对话异常处理，及父流程异常处理
             handleConverseAndParentError(exception, retryable, flowContexts);
         };
         this.state.close(successCb, errCb);
-        return ObjectUtils.cast(this.getFlow());
+        return ObjectUtils.cast(this.flow());
     }
 
     private void handleConverseAndParentError(Exception exception, Retryable<Object> retryable,
             List<FlowContext<Object>> flowContexts) {
-        String flowId = this.getFlow().getId();
+        String flowId = this.flow().getId();
         flowContexts.stream()
                 .map(this::getAndClearListenerMap)
                 .filter(Optional::isPresent)
@@ -261,8 +265,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     private Optional<Map<String, AtomicReference<ConverseListener<O>>>> getAndClearListenerMap(FlowContext<?> ctx) {
         AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
                 ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
-        return Optional.ofNullable(listenerRefMap)
-                .map(mapRef -> mapRef.getAndSet(null));
+        return Optional.ofNullable(listenerRefMap).map(mapRef -> mapRef.getAndSet(null));
     }
 
     private Optional<ConverseListener<O>> getConverseListener(FlowContext<?> ctx, String flowId) {

@@ -7,11 +7,13 @@ package com.huawei.fitframework.util;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
+import com.huawei.fitframework.jvm.classfile.ClassFile;
 import com.huawei.fitframework.util.support.Unzip;
 import com.huawei.fitframework.util.support.Zip;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,6 +21,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -243,6 +246,16 @@ public final class FileUtils {
     }
 
     /**
+     * 判断指定的文件是否为 {@code CLASS} 文件。
+     *
+     * @param file 表示待判断的文件的 {@link File}。
+     * @return 表示判断结果的 {@code boolean}。
+     */
+    public static boolean isClass(File file) {
+        return file.getName().endsWith(ClassFile.FILE_EXTENSION);
+    }
+
+    /**
      * 列出指定文件夹的所有子文件。
      *
      * @param file 表示指定文件夹的 {@link File}。
@@ -356,6 +369,32 @@ public final class FileUtils {
         } catch (MalformedURLException e) {
             // never occurs
             throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * 从文件中读取文本信息。
+     *
+     * @param file 表示包含输入文件的 {@link File}。
+     * @return 表示从文件中读取到的文本信息的 {@link String}。
+     * @throws IOException 当读取过程发生输入输出异常时。
+     */
+    public static String content(File file) throws IOException {
+        return content(file, null);
+    }
+
+    /**
+     * 从文件中读取文本信息。
+     *
+     * @param file 表示包含输入文件的 {@link File}。
+     * @param charset 表示文本的字符集的 {@link Charset}。
+     * @return 表示从文件中读取到的文本信息的 {@link String}。
+     * @throws IOException 当读取过程发生输入输出异常时。
+     */
+    public static String content(File file, Charset charset) throws IOException {
+        notNull(file, "The file to read cannot be null.");
+        try (InputStream in = Files.newInputStream(Paths.get(file.getCanonicalPath()))) {
+            return IoUtils.content(in, charset);
         }
     }
 }

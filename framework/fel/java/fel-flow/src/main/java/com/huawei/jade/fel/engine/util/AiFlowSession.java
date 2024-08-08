@@ -6,7 +6,7 @@ package com.huawei.jade.fel.engine.util;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.pattern.Pattern;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * {@link FlowSession} 线程变量。
  *
+ * @author 刘信宏
  * @author 易文渊
  * @since 2024-06-18
  */
@@ -32,7 +33,6 @@ public class AiFlowSession {
     }
 
     /**
-     *
      * 获取线程变量 {@link FlowSession}，如果变量为空，则返回一个新构造的对象。
      *
      * @return {@link FlowSession} 对象。

@@ -1,0 +1,6 @@
+fit:
+  beans:
+    packages:
+    - 'com.huawei.jade.fel.tool.support'
+tool:
+  max-num: 64

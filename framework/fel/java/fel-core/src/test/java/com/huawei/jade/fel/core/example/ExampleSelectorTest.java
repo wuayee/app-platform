@@ -7,9 +7,9 @@ package com.huawei.jade.fel.core.example;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.huawei.jade.fel.core.examples.Example;
-import com.huawei.jade.fel.core.examples.ExampleSelector;
-import com.huawei.jade.fel.core.examples.support.DefaultExample;
+import com.huawei.jade.fel.core.fewshot.Example;
+import com.huawei.jade.fel.core.fewshot.ExampleSelector;
+import com.huawei.jade.fel.core.fewshot.support.DefaultExample;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

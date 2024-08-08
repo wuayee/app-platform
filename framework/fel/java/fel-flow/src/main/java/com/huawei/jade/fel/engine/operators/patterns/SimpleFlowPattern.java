@@ -9,7 +9,7 @@ import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.pattern.Pattern;
 import com.huawei.jade.fel.engine.util.AiFlowSession;
 
 import java.util.concurrent.ExecutorService;
@@ -27,8 +27,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
     private static final Integer MAXIMUM_POOL_SIZE = 50;
-    private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, MAXIMUM_POOL_SIZE,
-            60L, TimeUnit.SECONDS, new SynchronousQueue<>());
+    private static final ExecutorService THREAD_POOL =
+            new ThreadPoolExecutor(0, MAXIMUM_POOL_SIZE, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());
 
     private EmitterListener<O, FlowSession> handler;
     private final Operators.ProcessMap<I, O> processor;

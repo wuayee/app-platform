@@ -6,11 +6,11 @@ package com.huawei.jade.fel.engine.operators.patterns;
 
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.fel.core.Pattern;
-import com.huawei.jade.fel.core.examples.ExampleSelector;
-import com.huawei.jade.fel.core.formatters.Formatter;
+import com.huawei.jade.fel.core.document.Content;
+import com.huawei.jade.fel.core.fewshot.ExampleSelector;
+import com.huawei.jade.fel.core.format.FormatProvider;
 import com.huawei.jade.fel.core.memory.Memory;
-import com.huawei.jade.fel.core.template.MessageContent;
+import com.huawei.jade.fel.core.pattern.Pattern;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
@@ -50,14 +50,14 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
      *
      * @param key 表示同步委托单元结果所在的键的 {@link String}。
      * @param pattern 表示同步委托单元的 {@link P}，它是 {@link Pattern}{@code <}{@link I}{@code ,
-     * }{@link MessageContent}{@code >} 的拓展。
+     * }{@link Content}{@code >} 的拓展。
      * @param <I> 表示委托单元的入参类型。
      * @param <P> 表示委托单元的类型。
      * @return 表示一个平行分支的 {@link SyncTipper}{@code <}{@link I}{@code >}。
      * @throws IllegalArgumentException 当 {@code key} 为 {@code null} 、空字符串或只有空白字符的字符串时，或
      * {@code pattern} 为 {@code null} 时。
      */
-    static <I, P extends Pattern<I, MessageContent>> SyncTipper<I> value(String key, P pattern) {
+    static <I, P extends Pattern<I, Content>> SyncTipper<I> value(String key, P pattern) {
         Validation.notBlank(key, "Key cannot be blank.");
         Validation.notNull(pattern, "Pattern cannot be null.");
         return arg -> Tip.from(key, pattern.invoke(arg));
@@ -67,13 +67,13 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
      * 子流程分支。
      *
      * @param key 表示子流程输出结果所在的键的 {@link String}。
-     * @param flow 表示子流程的 {@link AiProcessFlow}{@code <}{@link I}{@code , }{@link MessageContent}{@code >}。
+     * @param flow 表示子流程的 {@link AiProcessFlow}{@code <}{@link I}{@code , }{@link Content}{@code >}。
      * @param <I> 表示委托的入参类型。
      * @return 表示一个同步委托单元的 {@link Pattern}{@code <}{@link I}{@code , }{@link Tip}{@code >}。
      * @throws IllegalArgumentException 当 {@code key} 为 {@code null} 、空字符串或只有空白字符的字符串时，或 {@code flow}
      * 为 {@code null} 时。
      */
-    static <I> Pattern<I, Tip> value(String key, AiProcessFlow<I, MessageContent> flow) {
+    static <I> Pattern<I, Tip> value(String key, AiProcessFlow<I, Content> flow) {
         Validation.notBlank(key, "Key cannot be blank.");
         Validation.notNull(flow, "Flow cannot be null.");
         return new FlowSupportable<>(AiFlows.<I>create()
@@ -146,12 +146,12 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
      * 自定义键的格式化提示词键值对分支。
      *
      * @param key 表示格式化提示词的键的 {@link String}。
-     * @param formatter 表示格式化提示词的 {@link Formatter}。
+     * @param formatter 表示格式化提示词的 {@link FormatProvider}。
      * @return 表示一个平行分支的 {@link SyncTipper}{@code <}{@link I}{@code >}。
      * @throws IllegalArgumentException 当 {@code key} 为 {@code null} 、空字符串或只有空白字符的字符串时，或 {@code formatter}
      * 为 {@code null} 时。
      */
-    static <I> SyncTipper<I> format(String key, Formatter formatter) {
+    static <I> SyncTipper<I> format(String key, FormatProvider formatter) {
         Validation.notBlank(key, "Formatter key cannot be blank.");
         Validation.notNull(formatter, "Formatter cannot be null.");
         return arg -> Tip.from(key, formatter.instruction());
@@ -160,11 +160,11 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
     /**
      * 默认键的格式化提示词键值对分支。
      *
-     * @param formatter 表示格式化提示词的 {@link Formatter}。
+     * @param formatter 表示格式化提示词的 {@link FormatProvider}。
      * @return 表示一个平行分支的 {@link SyncTipper}{@code <}{@link I}{@code >}。
      * @throws IllegalArgumentException 当 {@code formatter} 为 {@code null} 时。
      */
-    static <I> SyncTipper<I> format(Formatter formatter) {
+    static <I> SyncTipper<I> format(FormatProvider formatter) {
         return SyncTipper.format(DEFAULT_FORMAT_KEY, formatter);
     }
 
@@ -188,7 +188,7 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
         Validation.notBlank(historyKey, "History key cannot be blank.");
         return input -> {
             String memoryStr = AiFlowSession.get()
-                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY_OBJ))
+                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY))
                     .map(Memory::text)
                     .orElse(StringUtils.EMPTY);
             return Tip.from(historyKey, memoryStr);

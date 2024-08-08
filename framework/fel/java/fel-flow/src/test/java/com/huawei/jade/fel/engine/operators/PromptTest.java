@@ -7,14 +7,14 @@ package com.huawei.jade.fel.engine.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.resource.web.Media;
-import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.ChatMessages;
-import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.character.HumanMessage;
-import com.huawei.jade.fel.core.memory.CacheMemory;
+import com.huawei.jade.fel.core.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.Prompt;
+import com.huawei.jade.fel.core.chat.support.AiMessage;
+import com.huawei.jade.fel.core.chat.support.ChatMessages;
+import com.huawei.jade.fel.core.chat.support.HumanMessage;
+import com.huawei.jade.fel.core.document.Content;
 import com.huawei.jade.fel.core.memory.Memory;
-import com.huawei.jade.fel.core.template.MessageContent;
+import com.huawei.jade.fel.core.memory.support.CacheMemory;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
@@ -38,6 +38,7 @@ import java.util.List;
 @DisplayName("测试提示词")
 public class PromptTest {
     @Test
+    @DisplayName("测试具名占位符")
     void shouldOkWhenPromptWithNamedPlaceholder() {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -51,6 +52,7 @@ public class PromptTest {
     }
 
     @Test
+    @DisplayName("测试数字占位符")
     void shouldOkWhenPromptWithNumberPlaceholder() {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -64,6 +66,7 @@ public class PromptTest {
     }
 
     @Test
+    @DisplayName("测试历史记录占位符")
     void shouldOkWhenPromptWithHistoryPlaceholder() {
         StringBuilder sb = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -83,6 +86,7 @@ public class PromptTest {
     }
 
     @Test
+    @DisplayName("测试多媒体内容")
     void shouldOkWhenPromptWithMedia() throws MalformedURLException {
         ChatMessages chatMessages = new ChatMessages();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -91,9 +95,9 @@ public class PromptTest {
                 .close();
 
         Conversation<Tip, Prompt> conversation = flow.converse();
-        MessageContent contents =
-            MessageContent.from("will", new Media(new URL("http://localhost/1.png")), new Media("image/png", "url1"));
-        conversation.offer(Tip.from("someone", contents)).await();
+        Content content =
+                Content.from("will", new Media(new URL("http://localhost/1.png")), new Media("image/png", "url1"));
+        conversation.offer(Tip.from("someone", content)).await();
 
         assertThat(chatMessages.messages()).hasSize(1);
         assertThat(chatMessages.messages().get(0).text()).isEqualTo("answer: will");

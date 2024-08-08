@@ -38,8 +38,8 @@ public class Predictable<T> implements ConverseListener<T> {
         Validation.notNull(flow, "Flow can not be null.");
         Validation.notNull(converseCallBack, "Callback can not be null.");
         this.converseCallBack = FlowCallBack.<T>builder()
-                .doOnSuccess(converseCallBack.getSuccessCb().andThen(latch::setData))
-                .doOnError(converseCallBack.getErrorCb().andThen(latch::setThrowable))
+                .doOnSuccess(converseCallBack.successCb().andThen(latch::data))
+                .doOnError(converseCallBack.errorCb().andThen(latch::throwable))
                 .doOnFinally(latch::countDown)
                 .build();
         this.flowErrorCb = (exception, retryable, contexts) -> {
@@ -56,18 +56,17 @@ public class Predictable<T> implements ConverseListener<T> {
         if (!Objects.equals(flowId, this.flowId)) {
             return;
         }
-        this.converseCallBack.getSuccessCb().accept(data);
+        this.converseCallBack.successCb().accept(data);
     }
 
     @Override
-    public void onFlowError(Exception exception, Retryable<Object> retryable,
-            List<FlowContext<Object>> contexts) {
+    public void onFlowError(Exception exception, Retryable<Object> retryable, List<FlowContext<Object>> contexts) {
         this.flowErrorCb.handle(exception, retryable, contexts);
     }
 
     @Override
     public void onConverseError(Exception exception) {
-        this.converseCallBack.getErrorCb().accept(exception);
+        this.converseCallBack.errorCb().accept(exception);
     }
 
     @Override
@@ -75,6 +74,6 @@ public class Predictable<T> implements ConverseListener<T> {
         if (this.latch == null) {
             return true;
         }
-        return this.latch.getCountDownLatch().getCount() == 0;
+        return this.latch.countDownLatch().getCount() == 0;
     }
 }

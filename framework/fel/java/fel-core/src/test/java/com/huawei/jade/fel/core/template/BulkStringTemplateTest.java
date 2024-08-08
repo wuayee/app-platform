@@ -67,9 +67,9 @@ public class BulkStringTemplateTest {
         values.add(MapBuilder.<String, String>get().put("adjective", "sad").put("content", "rabbits").build());
         values.add(MapBuilder.<String, String>get().put("adjective", "lovely").put("content", "cats").build());
         String output = new DefaultBulkStringTemplate(template, "\n\n").render(values);
-        assertThat(output).isEqualTo("Tell me a funny story about chickens.\n\n"
-                + "Tell me a sad story about rabbits.\n\n"
-                + "Tell me a lovely story about cats.");
+        assertThat(output).isEqualTo(
+                "Tell me a funny story about chickens.\n\n" + "Tell me a sad story about rabbits.\n\n"
+                        + "Tell me a lovely story about cats.");
     }
 
     @Test

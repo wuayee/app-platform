@@ -4,7 +4,8 @@
 
 package com.huawei.jade.fel.core.template;
 
-import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.ChatMessage;
+import com.huawei.jade.fel.core.document.Content;
 
 import java.util.Map;
 
@@ -14,4 +15,4 @@ import java.util.Map;
  * @author 易文渊
  * @since 2024-04-25
  */
-public interface MessageTemplate extends GenericTemplate<Map<String, MessageContent>, ChatMessage> {}
+public interface MessageTemplate extends GenericTemplate<Map<String, Content>, ChatMessage> {}

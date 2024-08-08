@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.engine.operators.patterns;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.pattern.Pattern;
 
 import java.util.function.Function;
 

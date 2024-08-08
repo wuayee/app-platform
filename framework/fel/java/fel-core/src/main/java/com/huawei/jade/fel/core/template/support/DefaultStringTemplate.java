@@ -79,8 +79,8 @@ public class DefaultStringTemplate implements StringTemplate {
     public String render(Map<String, String> values) {
         Map<String, String> builtinValues =
                 this.builtin.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()));
-        return parameterizedString.format(
-                MapUtils.merge(values, builtinValues, ConflictResolutionPolicy.OVERRIDE), false);
+        return parameterizedString.format(MapUtils.merge(values, builtinValues, ConflictResolutionPolicy.OVERRIDE),
+                false);
     }
 
     @Override

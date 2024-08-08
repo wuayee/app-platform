@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.core.util;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.jade.fel.core.template.MessageContent;
+import com.huawei.jade.fel.core.document.Content;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 2024-04-25
  */
 public class Tip {
-    private final Map<String, MessageContent> values = new HashMap<>();
+    private final Map<String, Content> values = new HashMap<>();
     private int index = 0;
 
     /**
@@ -37,10 +37,10 @@ public class Tip {
      * 从键值对创建 {@link Tip} 的实例。
      *
      * @param key 表示占位符的 {@link String}。
-     * @param value 表示替换值的 {@link MessageContent}。
+     * @param value 表示替换值的 {@link Content}。
      * @return 返回创建完成的 {@link Tip}。
      */
-    public static Tip from(String key, MessageContent value) {
+    public static Tip from(String key, Content value) {
         return new Tip().add(key, value);
     }
 
@@ -72,21 +72,34 @@ public class Tip {
      * @return 表示当前的 {@link Tip}。
      */
     public Tip add(String key, String value) {
-        return this.add(key, MessageContent.from(value));
+        return this.add(key, Content.from(value));
     }
 
     /**
      * 添加消息内容。
      *
      * @param key 表示占位符的 {@link String}。
-     * @param value 表示替换值的 {@link MessageContent}。
+     * @param value 表示替换值的 {@link Content}。
      * @return 表示当前的 {@link Tip}。
      */
-    public Tip add(String key, MessageContent value) {
+    public Tip add(String key, Content value) {
         Validation.notBlank(key, "The key cannot be blank");
         Validation.notNull(this.values, () -> new IllegalStateException("The tip has been freeze."));
         this.values.put(key, value);
         this.index++;
+        return this;
+    }
+
+    /**
+     * 批量添加 {@link Map}{@code <}{@link String}{@code ,} {@link Content}{@code >} 中的数据。
+     *
+     * @param args 表示参数集合的 {@link Map}{@code <}{@link String}{@code ,} {@link Content}{@code >}。
+     * @return 表示当前的 {@link Tip}。
+     * @throws IllegalStateException 当 {@code args} 为 {@code null}时。
+     */
+    public Tip addAll(Map<String, Content> args) {
+        Validation.notNull(args, () -> new IllegalStateException("The input map cannot be null."));
+        args.forEach(this::add);
         return this;
     }
 
@@ -97,28 +110,15 @@ public class Tip {
      * @return 表示当前的 {@link Tip}。
      */
     public Tip merge(Tip other) {
-        return this.merge(other.values);
+        return this.addAll(other.values);
     }
 
     /**
-     * 合并另一个 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
+     * 获取参数数据。
      *
-     * @param args 表示另一个参数集合的 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
-     * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当 {@code args} 为 {@code null}时。
+     * @return 返回表示参数数据的 {@link Map}{@code <}{@link String}{@code ,} {@link Content}{@code >}。
      */
-    public Tip merge(Map<String, MessageContent> args) {
-        Validation.notNull(args, () -> new IllegalStateException("The input map cannot be null."));
-        args.forEach(this::add);
-        return this;
-    }
-
-    /**
-     * 冻结并获取参数数据，之后禁止任何对于{@link Tip}操作。
-     *
-     * @return 返回表示参数数据的 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
-     */
-    public Map<String, MessageContent> freeze() {
+    public Map<String, Content> freeze() {
         return Collections.unmodifiableMap(this.values);
     }
 }

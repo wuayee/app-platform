@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.jade.fel.core.chat.support;
+
+import com.huawei.jade.fel.core.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.Prompt;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 表示 {@link Prompt} 的默认实现。
+ *
+ * @author 刘信宏
+ * @author 易文渊
+ * @since 2024-05-06
+ */
+public class ChatMessages implements Prompt {
+    private final List<ChatMessage> messages = new ArrayList<>();
+
+    /**
+     * 使用聊天消息创建 {@link ChatMessages} 的实例。
+     *
+     * @param message 表示聊天消息的 {@link ChatMessage}{@code []}。
+     * @return 表示创建成功的 {@link ChatMessages}。
+     */
+    public static ChatMessages from(ChatMessage... message) {
+        return ChatMessages.from(Arrays.asList(message));
+    }
+
+    /**
+     * 使用聊天消息数组创建 {@link ChatMessages} 的实例。
+     *
+     * @param messages 表示聊天消息的 {@link List}{@code <? extends }{@link ChatMessage}{@code >}。
+     * @return 表示创建成功的 {@link ChatMessages}。
+     */
+    public static ChatMessages from(List<? extends ChatMessage> messages) {
+        ChatMessages chatMessages = new ChatMessages();
+        chatMessages.messages().addAll(messages);
+        return chatMessages;
+    }
+
+    /**
+     * 添加聊天消息。
+     *
+     * @param message 表示聊天消息的 {@link ChatMessage}。
+     */
+    public void add(ChatMessage message) {
+        this.messages.add(message);
+    }
+
+    /**
+     * 批量添加聊天消息。
+     *
+     * @param messages 表示聊天消息数组的 {@link List}{@code <}{@link ChatMessage}{@code >}。
+     */
+    public void addAll(List<? extends ChatMessage> messages) {
+        this.messages.addAll(messages);
+    }
+
+    @Override
+    public List<ChatMessage> messages() {
+        return this.messages;
+    }
+}

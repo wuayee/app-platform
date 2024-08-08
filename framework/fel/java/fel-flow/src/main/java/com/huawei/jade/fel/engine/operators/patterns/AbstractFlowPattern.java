@@ -9,7 +9,7 @@ import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.pattern.Pattern;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.util.AiFlowSession;
 

@@ -16,6 +16,10 @@
         <!-- FIT -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-reactor</artifactId>
         </dependency>
         <dependency>
@@ -28,10 +32,6 @@
             <groupId>com.huawei.fit.jade.fel</groupId>
             <artifactId>fel-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>fel-service</artifactId>
-        </dependency>
 
         <!-- WaterFlow -->
         <dependency>
@@ -43,10 +43,12 @@
             <artifactId>waterflow-bridge-fit-reactor</artifactId>
         </dependency>
 
-        <!-- Lombok -->
+        <!-- Test Plugins -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-message-serializer-json-jackson</artifactId>
+            <version>${fit.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Test -->
@@ -60,41 +62,5 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-message-serializer-json-jackson</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.huawei.fitframework</groupId>
-                <artifactId>fit-dependency-maven-plugin</artifactId>
-                <version>${fit.version}</version>
-                <executions>
-                    <execution>
-                        <id>dependency</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>dependency</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.version}</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Created-By>FIT lab (Huawei)</Created-By>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

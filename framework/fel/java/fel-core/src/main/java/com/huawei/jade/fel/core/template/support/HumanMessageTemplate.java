@@ -5,8 +5,8 @@
 package com.huawei.jade.fel.core.template.support;
 
 import com.huawei.fitframework.resource.web.Media;
-import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.character.HumanMessage;
+import com.huawei.jade.fel.core.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.support.HumanMessage;
 import com.huawei.jade.fel.core.template.StringTemplate;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class HumanMessageTemplate extends AbstractMessageTemplate {
      * @see <a href="https://mustache.github.io/">mustache</a>。
      */
     public HumanMessageTemplate(String template) {
-        this(new DefaultStringTemplate(template));
+        this(StringTemplate.create(template));
     }
 
     /**

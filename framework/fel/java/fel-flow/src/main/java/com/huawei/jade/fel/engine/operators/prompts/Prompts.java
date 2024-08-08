@@ -4,14 +4,19 @@
 
 package com.huawei.jade.fel.engine.operators.prompts;
 
-import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.ChatMessages;
+import com.huawei.jade.fel.core.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.support.ChatMessages;
 import com.huawei.jade.fel.core.memory.Memory;
-import com.huawei.jade.fel.core.template.StringTemplate;
-import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
+import com.huawei.jade.fel.core.template.support.AiMessageTemplate;
+import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
+import com.huawei.jade.fel.core.template.support.SystemMessageTemplate;
+import com.huawei.jade.fel.core.template.support.ToolMessageTemplate;
+import com.huawei.jade.fel.core.tool.ToolCall;
+import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.util.AiFlowSession;
 import com.huawei.jade.fel.engine.util.StateKey;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,47 +28,44 @@ import java.util.List;
  */
 public class Prompts {
     /**
-     * 构造人类提示词模板。
-     *
-     * @param template 表示使用 mustache 模板语法的 {@link String}。
-     * @return 表示人类提示词模板的 {@link HumanTemplate}。
-     * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
-     */
-    public static HumanTemplate human(String template) {
-        return human(new DefaultStringTemplate(template));
-    }
-
-    /**
-     * 构造人类提示词模板。
-     *
-     * @param template 表示字符串模板的 {@link StringTemplate}。
-     * @return 表示人类提示词模板的 {@link HumanTemplate}。
-     * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
-     */
-    public static HumanTemplate human(StringTemplate template) {
-        return new HumanTemplate(template);
-    }
-
-    /**
      * 构造系统提示词模板。
      *
      * @param template 表示使用 mustache 模板语法的 {@link String}。
-     * @return 表示系统提示词模板的 {@link SystemTemplate}。
-     * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
+     * @return 表示人类提示词模板的 {@link PromptTemplate}{@code <}{@link Tip}{@code >}。
      */
-    public static SystemTemplate sys(String template) {
-        return sys(new DefaultStringTemplate(template));
+    public static PromptTemplate<Tip> sys(String template) {
+        return new DefaultPromptTemplate(new SystemMessageTemplate(template));
     }
 
     /**
-     * 构造系统提示词模板。
+     * 构造人类提示词模板。
      *
-     * @param template 表示字符串模板的 {@link StringTemplate}。
-     * @return 表示系统提示词模板的 {@link SystemTemplate}。
+     * @param template 表示使用 mustache 模板语法的 {@link String}。
+     * @return 表示人类提示词模板的 {@link PromptTemplate}{@code <}{@link Tip}{@code >}。
+     */
+    public static PromptTemplate<Tip> human(String template) {
+        return new DefaultPromptTemplate(new HumanMessageTemplate(template));
+    }
+
+    /**
+     * 构造人工智能提示词模板。
+     *
+     * @param template 表示使用 mustache 模板语法的 {@link String}。
+     * @return 表示人工智能模板的 {@link PromptTemplate}{@code <}{@link Tip}{@code >}。
+     */
+    public static PromptTemplate<Tip> ai(String template, ToolCall... toolCalls) {
+        return new DefaultPromptTemplate(new AiMessageTemplate(template, Arrays.asList(toolCalls)));
+    }
+
+    /**
+     * 构造工具调用提示词模板。
+     *
+     * @param template 表示使用 mustache 模板语法的 {@link String}。
+     * @return 表示人类提示词模板的 {@link PromptTemplate}{@code <}{@link Tip}{@code >}。
      * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
      */
-    public static SystemTemplate sys(StringTemplate template) {
-        return new SystemTemplate(template);
+    public static PromptTemplate<Tip> tool(String template, String id) {
+        return new DefaultPromptTemplate(new ToolMessageTemplate(template, id));
     }
 
     /**
@@ -75,7 +77,7 @@ public class Prompts {
     public static <I> PromptTemplate<I> history() {
         return input -> {
             List<ChatMessage> messages = AiFlowSession.get()
-                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY_OBJ))
+                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY))
                     .map(Memory::messages)
                     .orElseGet(Collections::emptyList);
             return ChatMessages.from(messages);

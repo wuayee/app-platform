@@ -7,8 +7,6 @@ package com.huawei.jade.fel.engine.activities;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.flows.Action;
 
-import lombok.Getter;
-
 import java.util.function.Consumer;
 
 /**
@@ -18,7 +16,6 @@ import java.util.function.Consumer;
  * @author 刘信宏
  * @since 2024-05-28
  */
-@Getter
 public class FlowCallBack<O> {
     private final Consumer<O> successCb;
     private final Consumer<Throwable> errorCb;
@@ -54,12 +51,19 @@ public class FlowCallBack<O> {
         return FlowCallBack.<T>builder().build();
     }
 
+    public Consumer<O> successCb() {
+        return this.successCb;
+    }
+
+    public Consumer<Throwable> errorCb() {
+        return this.errorCb;
+    }
+
     /**
      * {@link FlowCallBack} 的构造器。
      *
      * @param <O> 表示流程输出数据类型。
      */
-    @Getter
     public static class Builder<O> {
         private Consumer<O> successCb = EmptyCallBack.doNothingOnSuccess();
         private Consumer<Throwable> errorCb = EmptyCallBack.doNothingOnError();

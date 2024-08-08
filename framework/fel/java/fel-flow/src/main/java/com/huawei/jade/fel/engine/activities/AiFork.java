@@ -51,7 +51,7 @@ public class AiFork<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> extend
      */
     public AiFork<O, D, I, RF, F> fork(AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
-        this.fork.fork(input -> processor.process(new AiState<>(input, this.getFlow())).state);
+        this.fork.fork(input -> processor.process(new AiState<>(input, this.flow())).state);
         return this;
     }
 
@@ -77,6 +77,6 @@ public class AiFork<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> extend
      */
     public <R> AiState<R, D, O, RF, F> join(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor cannot be null.");
-        return new AiState<>(this.fork.join(init, processor), this.getFlow());
+        return new AiState<>(this.fork.join(init, processor), this.flow());
     }
 }

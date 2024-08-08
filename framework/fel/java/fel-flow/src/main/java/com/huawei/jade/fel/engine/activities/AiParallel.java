@@ -47,7 +47,7 @@ public class AiParallel<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <O> AiFork<O, D, I, RF, F> fork(AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
         Fork<O, D, I, RF> fork =
-                parallel.fork(input -> processor.process(new AiState<>(input, AiParallel.this.getFlow())).state);
-        return new AiFork<>(fork, this.getFlow());
+                parallel.fork(input -> processor.process(new AiState<>(input, AiParallel.this.flow())).state);
+        return new AiFork<>(fork, this.flow());
     }
 }

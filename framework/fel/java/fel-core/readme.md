@@ -1,15 +1,17 @@
 # Prompt
+
 Prompt最初是 NLP 研究者为下游任务设计出来的一种任务专属的输入形式或模板，
 在 ChatGPT 引发大语言模型新时代之后，Prompt 即成为与大模型交互输入的代称。
 即我们一般将给大模型的输入称为 Prompt，将大模型返回的输出称为 Completion。
 
 ## 创建单条消息模板
+
 FEL基于Mustache语法，允许开发者将运行时变量绑定到提示模板中。
 
 + 键值对是常用的构造模板输入的方式：
 
 ```java
-import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.ChatMessage;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.template.MessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
@@ -26,7 +28,7 @@ public class DemoApplication {
 + 使用Tip.fromArray可以省略key，相应的需要在模板中用数组下标代替健值。
 
 ```java
-import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.ChatMessage;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.template.MessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
@@ -45,7 +47,7 @@ public class DemoApplication {
 请注意，输入键值对必须包含所有在模板中使用的占位符，以下代码将无法工作:
 
 ```java
-import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.core.chat.ChatMessage;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.template.MessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;

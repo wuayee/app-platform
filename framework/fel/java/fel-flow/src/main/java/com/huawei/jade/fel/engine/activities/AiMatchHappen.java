@@ -46,9 +46,8 @@ public class AiMatchHappen<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>>
     public AiMatchHappen<O, D, I, RF, F> match(Operators.Whether<I> whether,
             AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
-        return new AiMatchHappen<>(
-                this.matchHappen.match(whether, node -> processor.process(new AiState<>(node, this.flow)).state),
-                this.flow);
+        return new AiMatchHappen<>(this.matchHappen.match(whether,
+                node -> processor.process(new AiState<>(node, this.flow)).state), this.flow);
     }
 
     /**
@@ -79,8 +78,8 @@ public class AiMatchHappen<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>>
      */
     public AiState<O, D, O, RF, F> others(AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
-        return new AiState<>(this.matchHappen.others(node ->
-                processor.process(new AiState<>(node, this.flow)).state), this.flow);
+        return new AiState<>(this.matchHappen.others(node -> processor.process(new AiState<>(node, this.flow)).state),
+                this.flow);
     }
 
     /**

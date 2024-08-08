@@ -8,8 +8,6 @@ import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 
-import lombok.Getter;
-
 /**
  * AI 相关的节点的基类。
  *
@@ -19,7 +17,6 @@ import lombok.Getter;
  * @author 刘信宏
  * @since 2024-04-28
  */
-@Getter
 public class AiActivity<D, RF extends Flow<D>, F extends AiFlow<D, RF>> {
     private final F flow;
 
@@ -31,5 +28,9 @@ public class AiActivity<D, RF extends Flow<D>, F extends AiFlow<D, RF>> {
      */
     protected AiActivity(F flow) {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
+    }
+
+    public F flow() {
+        return this.flow;
     }
 }

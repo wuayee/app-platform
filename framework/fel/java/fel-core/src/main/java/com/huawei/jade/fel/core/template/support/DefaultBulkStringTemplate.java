@@ -32,7 +32,7 @@ public class DefaultBulkStringTemplate implements BulkStringTemplate {
      * @see <a href="https://mustache.github.io/">mustache</a>。
      */
     public DefaultBulkStringTemplate(String template, String delimiter) {
-        this(new DefaultStringTemplate(template), delimiter);
+        this(StringTemplate.create(template), delimiter);
     }
 
     /**

@@ -67,7 +67,7 @@ public class AiDataStart<O, D, I> {
      * 发射数据。
      */
     public void offer() {
-        this.state.getFlow().offer(this.emitter);
+        this.state.flow().offer(this.emitter);
         this.emitter.start(null);
     }
 

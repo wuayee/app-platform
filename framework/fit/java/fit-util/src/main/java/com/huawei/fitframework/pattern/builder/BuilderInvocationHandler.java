@@ -4,6 +4,9 @@
 
 package com.huawei.fitframework.pattern.builder;
 
+import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.util.StringUtils;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -56,9 +59,19 @@ public class BuilderInvocationHandler implements InvocationHandler {
     }
 
     private Object build() {
+        this.validateFields();
         ClassLoader loader = this.objectClass.getClassLoader();
         Class<?>[] interfaceClasses = new Class<?>[] {this.objectClass, ObjectProxy.class};
         ObjectInvocationHandler handler = new ObjectInvocationHandler(this.objectClass, this.fields);
         return Proxy.newProxyInstance(loader, interfaceClasses, handler);
+    }
+
+    private void validateFields() {
+        for (Method method : objectClass.getMethods()) {
+            Nonnull annotation = method.getAnnotation(Nonnull.class);
+            if (annotation != null && this.fields.get(method.getName()) == null) {
+                throw new IllegalStateException(StringUtils.format("The {0} cannot be null.", method.getName()));
+            }
+        }
     }
 }

@@ -639,4 +639,19 @@ public final class CollectionUtils {
         Iterator<E> iterator = values.iterator();
         return iterator.hasNext() ? iterator.next() : null;
     }
+
+    /**
+     * 将指定的列表转换为其父类类型的列表。
+     *
+     * @param origin 表示待转换的子类型列表的 {@link List}{@code <}{@link T}{@code >}。
+     * @param <E> 表示列表中元素的父类类型的 {@link E}。
+     * @param <T> 表示列表中元素的子类类型的 {@link T}。
+     * @return 表示转换后的父类类型列表的 {@link List}{@code <}{@link E}{@code >}。
+     */
+    public static <E, T extends E> List<E> asParent(List<T> origin) {
+        if (origin == null) {
+            return null;
+        }
+        return origin.stream().map(ObjectUtils::<T>cast).collect(Collectors.toList());
+    }
 }

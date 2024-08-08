@@ -6,7 +6,7 @@ package com.huawei.jade.fel.engine.operators.patterns;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
-import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.pattern.Pattern;
 
 /**
  * 流程委托单元。

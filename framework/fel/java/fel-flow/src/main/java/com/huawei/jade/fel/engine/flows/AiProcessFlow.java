@@ -22,8 +22,8 @@ import com.huawei.fitframework.util.ObjectUtils;
  * @author 刘信宏
  * @since 2024-04-28
  */
-public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>> implements EmitterListener<D, FlowSession>,
-        Emitter<R, FlowSession> {
+public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>>
+        implements EmitterListener<D, FlowSession>, Emitter<R, FlowSession> {
     public AiProcessFlow(ProcessFlow<D> flow) {
         super(flow);
     }

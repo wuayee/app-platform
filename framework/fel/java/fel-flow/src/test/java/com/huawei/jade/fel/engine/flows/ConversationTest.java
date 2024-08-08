@@ -29,12 +29,9 @@ public class ConversationTest {
     @DisplayName("对话异常处理")
     class ConversationException {
         String errorMsg = "test exception.";
-        AiProcessFlow<String, String> exceptionFlow = AiFlows.<String>create()
-                .map(input -> input)
-                .just(input -> {
-                    throw new IllegalStateException(errorMsg);
-                })
-                .close();
+        AiProcessFlow<String, String> exceptionFlow = AiFlows.<String>create().map(input -> input).just(input -> {
+            throw new IllegalStateException(errorMsg);
+        }).close();
 
         @Test
         @DisplayName("流程节点异常处理")
@@ -44,8 +41,8 @@ public class ConversationTest {
                     .doOnError(throwable -> answer.append(throwable.getMessage()))
                     .doOnFinally(() -> answer.append(" finally"))
                     .offer("test data");
-            IllegalStateException exception = assertThrows(IllegalStateException.class,
-                    () -> latch.await(500, TimeUnit.MILLISECONDS));
+            IllegalStateException exception =
+                    assertThrows(IllegalStateException.class, () -> latch.await(500, TimeUnit.MILLISECONDS));
             assertEquals(errorMsg, exception.getMessage());
             assertEquals(errorMsg + " finally", answer.toString());
         }
@@ -53,16 +50,14 @@ public class ConversationTest {
         @Test
         @DisplayName("对话未完成异常处理")
         void shouldFailWhenOfferRepeated() {
-            AiProcessFlow<String, String> flow = AiFlows.<String>create()
-                    .just(input -> SleepUtil.sleep(50))
-                    .close();
+            AiProcessFlow<String, String> flow = AiFlows.<String>create().just(input -> SleepUtil.sleep(50)).close();
 
             Conversation<String, String> converse = flow.converse();
             // 第一次对话
             converse.offer("test data");
             // 第二次对话
-            IllegalStateException exception = assertThrows(IllegalStateException.class,
-                    () -> converse.offer("test data1"));
+            IllegalStateException exception =
+                    assertThrows(IllegalStateException.class, () -> converse.offer("test data1"));
 
             assertEquals("conversation is running.", exception.getMessage());
         }
@@ -78,8 +73,7 @@ public class ConversationTest {
         void shouldOkWhenASyncFlowWithCustomCallback() {
             StringBuilder callbackAnswer = new StringBuilder();
             Conversation<Integer, String> converse = flow.converse();
-            String flowAnswer = converse
-                    .doOnSuccess(data -> callbackAnswer.append("answer ").append(data))
+            String flowAnswer = converse.doOnSuccess(data -> callbackAnswer.append("answer ").append(data))
                     .doOnFinally(() -> callbackAnswer.append(" finally"))
                     .offer(5)
                     .await(500, TimeUnit.MILLISECONDS);

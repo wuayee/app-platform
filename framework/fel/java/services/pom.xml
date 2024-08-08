@@ -14,6 +14,24 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>fel-service</module>
+        <module>tool-service</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-build-maven-plugin</artifactId>
+                <version>${fit.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-service</id>
+                        <goals>
+                            <goal>build-service</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

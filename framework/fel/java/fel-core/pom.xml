@@ -20,20 +20,22 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-reactor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
 
-        <!-- FEL -->
-        <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>fel-service</artifactId>
-        </dependency>
-
-        <!-- Test -->
+        <!-- Test Plugins -->
         <dependency>
             <groupId>com.huawei.fit.plugin</groupId>
             <artifactId>fit-message-serializer-json-jackson</artifactId>
+            <version>${fit.version}</version>
+            <scope>test</scope>
         </dependency>
+
+        <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -48,29 +50,16 @@
         <plugins>
             <plugin>
                 <groupId>com.huawei.fitframework</groupId>
-                <artifactId>fit-dependency-maven-plugin</artifactId>
+                <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
                     <execution>
-                        <id>dependency</id>
-                        <phase>compile</phase>
+                        <id>build-service</id>
                         <goals>
-                            <goal>dependency</goal>
+                            <goal>build-service</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.version}</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Created-By>FIT lab (Huawei)</Created-By>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>

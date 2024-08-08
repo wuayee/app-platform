@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.engine.operators.prompts;
 
-import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.chat.Prompt;
+import com.huawei.jade.fel.core.pattern.Pattern;
 
 /**
  * 提示词模板接口。

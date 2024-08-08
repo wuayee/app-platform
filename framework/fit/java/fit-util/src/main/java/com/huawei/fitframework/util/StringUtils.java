@@ -60,6 +60,19 @@ public final class StringUtils {
     }
 
     /**
+     * 当 {@code value} 为 {@code null} 或者是空白字符串时，使用 {@code defaultValue}，否则继续使用 {@code value}。
+     *
+     * @param value 表示指定字符串的 {@link String}。
+     * @param factory 表示当指定字符串为 {@code null} 时指定 {@link Supplier}{@code <}{@link String}{@code >}。
+     * @return 若 {@code value} 为 {@code null}，则为 {@link Supplier#get()}；否则为 {@code value}。
+     * @throws IllegalArgumentException 当 {@code factory} 为 {@code null} 时。
+     */
+    public static String getIfBlank(String value, Supplier<String> factory) {
+        Validation.notNull(factory, "The factory to create default value cannot be null.");
+        return isBlank(value) ? factory.get() : value;
+    }
+
+    /**
      * 使用 {@link String#compareTo(String) 默认的比较方式} 比较两个字符串。
      *
      * @param str1 表示待比较的第一个字符串的 {@link String}。
@@ -215,7 +228,6 @@ public final class StringUtils {
      * 使用指定的格式化字符串对参数进行格式化，并返回格式化后的字符串。
      * <p><b>注意：{@code format} 中如果含有如下特殊字符（{@code '\u007b'}，{@code '\u007d'}，{@code '/'}），需要在该字符前增加转义字符
      * {@code '/'} 进行转义。</b></p>
-     *
      * @param format 表示格式化字符串的 {@link String}。
      * @param args 表示用以格式化字符串的参数的 {@link Object}{@code []}。如果参数中存在 {@code null}，其对应的格式化后会变成空字符串。
      * @return 表示格式化得到的字符串的 {@link String}。
