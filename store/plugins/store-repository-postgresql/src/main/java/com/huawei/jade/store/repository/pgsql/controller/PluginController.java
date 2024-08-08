@@ -134,7 +134,7 @@ public class PluginController {
      */
     @WithSpan("operation.plugin.delete")
     @DeleteMapping("/{uniqueName}")
-    public Result<String> deletePlugin(@PathVariable("uniqueName") String uniqueName) {
+    public Result<String> deletePlugin(@PathVariable("uniqueName") @SpanAttribute("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
         return Result.ok(this.pluginService.deletePlugin(uniqueName), 1);
     }
