@@ -1,9 +1,8 @@
 import React from "react";
-import {Collapse, Popover, Row} from "antd";
-import {QuestionCircleOutlined} from "@ant-design/icons";
+import {Button, Collapse, Popover, Row} from "antd";
+import {MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 import {KnowledgeConfig} from "@/components/retrieval/KnowledgeConfig.jsx";
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
-import {v4 as uuidv4} from "uuid";
 import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
@@ -26,57 +25,6 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
     // 保存下拉框选项
     const dispatch = useDispatch();
     const shape = useShapeContext();
-    const baseUrl = shape.graph.configs && shape.graph.configs.find(config => config.node === "knowledgeState").urls.knowledgeUrl;
-
-    /**
-     * 构造当前组件的url
-     *
-     * @param page 页码
-     * @return {string}
-     */
-    const buildUrl = (page) => {
-        return baseUrl + '?pageNum=' + page + '&pageSize=10';
-    }
-
-    /**
-     * 获取button的状态
-     *
-     * @return {boolean} 是否禁用
-     */
-    const getButtonDisable = () => {
-        return knowledge.length <= 1;
-    };
-
-    /**
-     * 添加一个知识库
-     *
-     * @param e 事件
-     */
-    const addItem = (e) => {
-        dispatch({type: "addKnowledge", id: uuidv4()});
-        e.stopPropagation();
-    };
-
-    /**
-     * 知识库选择发生变化
-     *
-     * @param id 对应的id
-     * @param key 字段名
-     * @param value 字段值
-     * @param options 所有选项数据
-     */
-    const handleKnowledgeChange = (id, key, value, options) => {
-        dispatch({type: "editKnowledge", id: id, key: key, value: options.find(option => option.id === value)});
-    };
-
-    /**
-     * 清除知识库选项
-     *
-     * @param id 对应的id
-     */
-    const handleKnowledgeClear = (id) => {
-        dispatch({type: "clearKnowledge", id: id});
-    };
 
     /**
      * 删除知识库
@@ -87,38 +35,38 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
         dispatch({type: "deleteKnowledge", id: itemId});
     };
 
-    /**
-     * 获取需要的数据
-     *
-     * @param response 接口返回信息
-     * @return {*}
-     */
-    const dealResponse = (response) => {
-        return response.data.items;
+    const renderDeleteIcon = (item) => {
+        return (<>
+            <Button disabled={disabled}
+                    type="text"
+                    className="icon-button"
+                    style={{"height": "100%", "marginLeft": "auto", "padding": "0 4px"}}
+                    onClick={() => handleDelete(item.id)}>
+                <MinusCircleOutlined/>
+            </Button>
+        </>);
     };
 
-    /**
-     * 获取工具组件的options
-     *
-     * @param options 选项
-     * @return {*}
-     */
-    const getOptions = (options) => options.map(option => ({
-        value: option.id,
-        label: option.name,
-    }));
+    const onSelect = (data) => {
+        dispatch({type: "updateKnowledge", value: data});
+    };
 
-    /**
-     * 获取当前选中框中选中的值
-     *
-     * @param item 当前的选中框对象
-     * @return {*|string}
-     */
-    const getValue = item => {
-        if (item.value && item.value.length !== 0) {
-            return item.value.find(value => value.name === 'name').value;
-        } else {
-            return '';
+    const getSelectedKnowledgeBases = () => {
+        return knowledge.map(obj => {
+            const innerValue = obj.value;
+            return innerValue.reduce((acc, curr) => {
+                acc[curr.name] = curr.value;
+                return acc;
+            }, {});
+        });
+    };
+
+    const knowledgeBaseSelectEvent = {
+        type: "SELECT_KNOWLEDGE_BASE",
+        value: {
+            shapeId: shape.id,
+            selectedKnowledgeBases: getSelectedKnowledgeBases(),
+            onSelect: onSelect
         }
     };
 
@@ -126,6 +74,12 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
         <p>选择需要匹配的知识范围，</p>
         <p>仅从所选知识中调出信息</p>
     </div>;
+
+    const triggerSelect = (e) => {
+        e.preventDefault();
+        shape.page.triggerEvent(knowledgeBaseSelectEvent);
+        e.stopPropagation(); // 阻止事件冒泡
+    };
 
     return (<Collapse bordered={false} className="jade-custom-collapse"
                       style={{marginTop: "10px", marginBottom: 8, borderRadius: "8px", width: "100%"}}
@@ -137,49 +91,31 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
                    <Popover content={tips}>
                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                    </Popover>
-                   {/*<Button type="text" className="icon-button" onClick={(event) => addItem(event)}*/}
-                   {/*        style={{height: "22px", marginLeft: "auto"}}>*/}
-                   {/*    <PlusOutlined/>*/}
-                   {/*</Button>*/}
+                   <Button disabled={disabled}
+                           type="text" className="icon-button jade-panel-header-icon-position"
+                           onClick={(event) => triggerSelect(event)}>
+                       <PlusOutlined/>
+                   </Button>
                </div>}
                className="jade-panel"
                key="Knowledge"
         >
             <div className={"jade-custom-panel-content"}>
-                {knowledge.map((item) => (<>
-                    <Row key={`knowledgeRow-${item.id}`} gutter={16}>
-                        {/*<Col span={22}>*/}
-                        {/*    <Form.Item*/}
-                        {/*            key={`knowledge-${item.id}`}*/}
-                        {/*            style={{marginBottom: '8px'}}*/}
-                        {/*            id={`knowledge-${item.id}`}*/}
-                        {/*    >*/}
-                        {/*        <JadeScrollSelect*/}
-                        {/*                allowClear*/}
-                        {/*                placeholder="选择知识库"*/}
-                        {/*                id={`valueSource-select-${item.id}`}*/}
-                        {/*                onClear={() => handleKnowledgeClear(item.id)}*/}
-                        {/*                onChange={(value, options) => handleKnowledgeChange(item.id, 'value', value, options)}*/}
-                        {/*                buildUrl={buildUrl}*/}
-                        {/*                disabled={false}*/}
-                        {/*                getOptions={getOptions}*/}
-                        {/*                dealResponse={dealResponse}*/}
-                        {/*                value={getValue(item)}*/}
-                        {/*        />*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
-                        {/*<Col span={2} style={{paddingLeft: "2px"}}>*/}
-                        {/*    <Form.Item key={`button-${item.id}`} style={{marginBottom: '8px'}}>*/}
-                        {/*        <Button disabled={getButtonDisable()}*/}
-                        {/*                type="text" className="icon-button"*/}
-                        {/*                style={{alignItems: "center", marginLeft: "auto"}}*/}
-                        {/*                onClick={() => handleDelete(item.id)}>*/}
-                        {/*            <MinusCircleOutlined/>*/}
-                        {/*        </Button>*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
-                    </Row>
-                </>))}
+                <div className={"jade-custom-multi-item-container"}>
+                    {knowledge
+                        // 历史数据/模板中知识库自带一个空数组的object结构体，这里不需要渲染这个所以加上此条件
+                        .filter(item => item.value && item.value.length > 0)
+                        .map((item) => (<>
+                        <Row key={`knowledgeRow-${item.id}`}>
+                            <div className={"jade-custom-multi-select-with-slider-div item-hover"}>
+                                <span className={"jade-custom-multi-select-item"}>
+                                    {item.value?.find(subItem => subItem.name === "name")?.value ?? ""}
+                                </span>
+                                {renderDeleteIcon(item)}
+                            </div>
+                        </Row>
+                    </>))}
+                </div>
                 <KnowledgeConfig maximum={maximum} disabled={disabled}/>
             </div>
         </Panel>
