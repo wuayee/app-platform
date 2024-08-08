@@ -2,7 +2,7 @@ import {SECTION_TYPE} from "@/common/Consts.js";
 import {
     evaluationAlgorithmsNodeDrawer
 } from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsNodeDrawer.jsx";
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {evaluationNode} from "@/components/evaluation/evaluationNode.jsx";
 
 /**
  * 评估算法节点shape
@@ -10,7 +10,7 @@ import {jadeNode} from "@/components/jadeNode.jsx";
  * @override
  */
 export const evaluationAlgorithmsNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : evaluationAlgorithmsNodeDrawer);
+    const self = evaluationNode(id, x, y, width, height, parent, drawer ? drawer : evaluationAlgorithmsNodeDrawer);
     self.type = "evaluationAlgorithmsNodeState";
     self.componentName = "evaluationAlgorithmsComponent";
     self.text = "评估算法"

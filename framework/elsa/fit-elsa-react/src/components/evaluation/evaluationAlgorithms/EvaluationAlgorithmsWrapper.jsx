@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {EvaluationAlgorithmsSelect} from "@/components/evaluation/evaluationAlgorithms/EvaluationAlgorithmsSelect.jsx";
 import {PassingScore} from "@/components/evaluation/evaluationAlgorithms/PassingScore.jsx";
 import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
@@ -49,10 +49,26 @@ export default function EvaluationAlgorithmsWrapper({data, disabled}) {
         }
     }, []); // useEffect 依赖数组为空，表示只在组件挂载时执行一次
 
+    /**
+     * 获取输出描述信息
+     *
+     * @param outputData 输出数据
+     * @return {JSX.Element}
+     */
+    const getDescription = (outputData) => {
+        return <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
+            <p>ActualInput: 实际输入</p>
+            <p>ExpectOutput:预期输出</p>
+            <p>ActualOutput:实际输出</p>
+            <p>Score:算法评分</p>
+            <p>IsPass:是否通过</p>
+        </div>;
+    };
+
     return (<>
         <EvaluationInput inputData={data.inputParams} disabled={disabled}/>
         <EvaluationAlgorithmsSelect disabled={disabled} algorithms={algorithms} selectedAlgorithm={selectedAlgorithm}/>
         <PassingScore disabled={disabled} score={score}/>
-        <InvokeOutput outputData={data.outputParams}/>
+        <InvokeOutput outputData={data.outputParams} getDescription={getDescription}/>
     </>);
 }

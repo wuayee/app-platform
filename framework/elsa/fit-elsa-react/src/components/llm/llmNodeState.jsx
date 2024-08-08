@@ -12,7 +12,6 @@ export const llmNodeState = (id, x, y, width, height, parent, drawer) => {
     const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : llmNodeDrawer);
     self.type = "llmNodeState";
     self.text = "大模型";
-    self.pointerEvents = "auto";
     self.componentName = "llmComponent";
     self.flowMeta.jober.fitables.push("com.huawei.fit.jober.aipp.fitable.LLMComponent");
     self.flowMeta.jober.isAsync = "true";
