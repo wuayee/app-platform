@@ -4,14 +4,14 @@ import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagation
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import "./style.css";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
-import {UNARY_OPERATOR} from "@/common/Consts.js";
+import {BINARY_OPERATOR, UNARY_OPERATOR} from "@/common/Consts.js";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import React from "react";
 import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
 
-_IfForm.propTypes = {
+IfForm.propTypes = {
     branch: PropTypes.object,
     name: PropTypes.string,
     index: PropTypes.number,
@@ -29,20 +29,32 @@ _IfForm.propTypes = {
  *
  * @returns {JSX.Element} 判断条件表单的DOM。
  */
-function _IfForm({
-                     branch,
-                     name,
-                     index,
-                     totalItemNum,
-                     disabled,
-                     deleteBranch,
-                     changeConditionRelation,
-                     addCondition,
-                     deleteCondition,
-                     changeConditionConfig
-                 }) {
+export default function IfForm({
+                                   branch,
+                                   name,
+                                   index,
+                                   totalItemNum,
+                                   disabled,
+                                   deleteBranch,
+                                   changeConditionRelation,
+                                   addCondition,
+                                   deleteCondition,
+                                   changeConditionConfig
+                               }) {
     const form = useFormContext();
     const unaryOperators = Object.values(UNARY_OPERATOR);
+
+    const conditionWrapper = (condition) => {
+        condition.getLeft = () => {
+            return condition.value.find(item => item.name === "left");
+        }
+
+        condition.getRight = () => {
+            return condition.value.find(item => item.name === "right");
+        }
+
+        return condition;
+    };
 
     const handleDeleteBranch = () => {
         deleteBranch(branch.id);
@@ -56,9 +68,11 @@ function _IfForm({
         changeConditionRelation(branch.id, updatedConditionRelation);
     };
 
-    const handleConditionChange = (conditionId, value) => {
-        form.setFieldsValue({[`condition-${conditionId}`]: value});
-        changeConditionConfig(branch.id, conditionId, [{key: "condition", value: value}]);
+    const handleConditionChange = (condition, newConditionValue, newLeftType) => {
+        const conditionId = condition.id;
+        form.setFieldsValue({[`condition-${conditionId}`]: newConditionValue});
+        changeConditionConfig(branch.id, conditionId, [{key: "condition", value: newConditionValue}]);
+        setDefaultValueOfRightInput(condition, newLeftType, newConditionValue);
     };
 
     const handleReferenceValueChange = (conditionId, itemId, v, t) => {
@@ -97,14 +111,16 @@ function _IfForm({
         switch (referenceType.toLowerCase()) {
             case 'string':
                 return [
-                    {value: 'equal', label: 'equal'},
-                    {value: 'not equal', label: 'not equal'},
-                    // {value: 'longer than', label: 'longer than'},
-                    // {value: 'longer than or equal', label: 'longer than or equal'},
-                    // {value: 'shorter than', label: 'shorter than'},
-                    // {value: 'shorter than or equal', label: 'shorter than or equal'},
-                    // {value: 'contain', label: 'contain'},
-                    // {value: 'not contain', label: 'not contain'},
+                    {value: BINARY_OPERATOR.EQUAL, label: 'equal'},
+                    {value: BINARY_OPERATOR.NOT_EQUAL, label: 'not equal'},
+                    {value: BINARY_OPERATOR.CONTAINS, label: 'contains'},
+                    {value: BINARY_OPERATOR.DOES_NOT_CONTAIN, label: 'does not contain'},
+                    // {value: BINARY_OPERATOR.LONGER_THAN, label: 'longer than'},
+                    // {value: BINARY_OPERATOR.LONGER_THAN_OR_EQUAL, label: 'longer than or equal'},
+                    // {value: BINARY_OPERATOR.SHORTER_THAN, label: 'shorter than'},
+                    // {value: BINARY_OPERATOR.SHORTER_THAN_OR_EQUAL, label: 'shorter than or equal'},
+                    // {value: BINARY_OPERATOR.STARTS_WITH, label: 'starts with'},
+                    // {value: BINARY_OPERATOR.ENDS_WITH, label: 'ends with'},
                     {value: UNARY_OPERATOR.IS_EMPTY_STRING, label: 'is empty'},
                     {value: UNARY_OPERATOR.IS_NOT_EMPTY_STRING, label: 'is not empty'},
                     {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
@@ -112,8 +128,8 @@ function _IfForm({
                 ];
             case 'boolean':
                 return [
-                    {value: 'equal', label: 'equal'},
-                    {value: 'not equal', label: 'not equal'},
+                    {value: BINARY_OPERATOR.EQUAL, label: 'equal'},
+                    {value: BINARY_OPERATOR.NOT_EQUAL, label: 'not equal'},
                     {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
                     {value: UNARY_OPERATOR.IS_NOT_NULL, label: 'is not null'},
                     {value: UNARY_OPERATOR.IS_TRUE, label: 'is true'},
@@ -122,14 +138,14 @@ function _IfForm({
             case 'integer':
             case 'number':
                 return [
-                    {value: 'equal', label: 'equal'},
-                    {value: 'not equal', label: 'not equal'},
+                    {value: BINARY_OPERATOR.EQUAL, label: 'equal'},
+                    {value: BINARY_OPERATOR.NOT_EQUAL, label: 'not equal'},
                     {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
                     {value: UNARY_OPERATOR.IS_NOT_NULL, label: 'is not null'},
-                    {value: 'greater than', label: 'greater than'},
-                    {value: 'greater than or equal', label: 'greater than or equal'},
-                    {value: 'less than', label: 'less than'},
-                    {value: 'less than or equal', label: 'less than or equal'},
+                    {value: BINARY_OPERATOR.GREATER_THAN, label: 'greater than'},
+                    {value: BINARY_OPERATOR.GREATER_THAN_OR_EQUAL, label: 'greater than or equal'},
+                    {value: BINARY_OPERATOR.LESS_THAN, label: 'less than'},
+                    {value: BINARY_OPERATOR.LESS_THAN_OR_EQUAL, label: 'less than or equal'},
                 ];
             case 'array<string>':
             case 'array<integer>':
@@ -190,16 +206,16 @@ function _IfForm({
     const renderLeftDiagram = () => {
         return <div className={"condition-left-diagram"}>
             <JadeStopPropagationSelect
-                    id={`condition-left-select-${branch.id}`}
-                    className="jade-select operation"
-                    placement="bottomLeft"
-                    popupClassName={"condition-left-drop"}
-                    onChange={(value) => handleConditionRelationChange(value)}
-                    options={[
-                        {value: 'and', label: 'And'},
-                        {value: 'or', label: 'Or'},
-                    ]}
-                    value={branch.conditionRelation}
+                id={`condition-left-select-${branch.id}`}
+                className="jade-select operation"
+                placement="bottomLeft"
+                popupClassName={"condition-left-drop"}
+                onChange={(value) => handleConditionRelationChange(value)}
+                options={[
+                    {value: 'and', label: 'And'},
+                    {value: 'or', label: 'Or'},
+                ]}
+                value={branch.conditionRelation}
             />
         </div>
     };
@@ -228,12 +244,12 @@ function _IfForm({
             case 'Reference':
                 return <>
                     <JadeReferenceTreeSelect
-                            className="value-custom jade-select"
-                            disabled={disabled || unaryOperators.includes(condition)}
-                            rules={selectedRightSideValueRules(condition)}
-                            reference={item}
-                            onReferencedValueChange={(v, t) => handleReferenceValueChange(conditionId, item.id, v, t)}
-                            onReferencedKeyChange={(e) => handleReferenceKeyChange(conditionId, item.id, e)}
+                        className="value-custom jade-select"
+                        disabled={disabled || unaryOperators.includes(condition)}
+                        rules={selectedRightSideValueRules(condition)}
+                        reference={item}
+                        onReferencedValueChange={(v, t) => handleReferenceValueChange(conditionId, item.id, v, t)}
+                        onReferencedKeyChange={(e) => handleReferenceKeyChange(conditionId, item.id, e)}
                     />
                 </>
             case 'Input':
@@ -241,29 +257,29 @@ function _IfForm({
                     case 'String':
                     case 'Array<String>':
                         return <Form.Item
-                                id={`value-${item.id}`}
-                                name={`value-${item.id}`}
-                                rules={selectedRightSideValueRules(condition)}
-                                initialValue={item.value}
+                            id={`value-${item.id}`}
+                            name={`value-${item.id}`}
+                            rules={selectedRightSideValueRules(condition)}
+                            initialValue={item.value}
                         >
                             <JadeInput
-                                    className="value-custom jade-input"
-                                    disabled={disabled || unaryOperators.includes(condition)}
-                                    value={item.value}
-                                    onChange={(e) => handleItemChange(conditionId, item.id, [{
-                                        key: "value",
-                                        value: e.target.value
-                                    }])}
+                                className="value-custom jade-input"
+                                disabled={disabled || unaryOperators.includes(condition)}
+                                value={item.value}
+                                onChange={(e) => handleItemChange(conditionId, item.id, [{
+                                    key: "value",
+                                    value: e.target.value
+                                }])}
                             />
                         </Form.Item>;
                     case 'Boolean':
                     case 'Array<Boolean>':
                         return <Form.Item
-                                id={`value-${item.id}`}
-                                name={`value-${item.id}`}
-                                initialValue={item.value}
-                                rules={selectedRightSideValueRules(condition)}
-                                style={{marginLeft: "8px"}}
+                            id={`value-${item.id}`}
+                            name={`value-${item.id}`}
+                            initialValue={item.value}
+                            rules={selectedRightSideValueRules(condition)}
+                            style={{marginLeft: "8px"}}
                         >
                             <Switch disabled={disabled || unaryOperators.includes(condition)}
                                     onChange={(e) => handleItemChange(conditionId, item.id, [{key: "value", value: e}])}
@@ -274,40 +290,40 @@ function _IfForm({
                     case 'Array<Number>':
                     case 'Array<Integer>':
                         return <Form.Item
-                                id={`value-${item.id}`}
-                                name={`value-${item.id}`}
-                                rules={selectedRightSideValueRules(condition)}
-                                initialValue={item.value}
+                            id={`value-${item.id}`}
+                            name={`value-${item.id}`}
+                            rules={selectedRightSideValueRules(condition)}
+                            initialValue={item.value}
                         >
                             <InputNumber
-                                    className="value-custom jade-input"
-                                    disabled={disabled || unaryOperators.includes(condition)}
-                                    step={1}
-                                    onChange={(e) => handleItemChange(conditionId, item.id, [{key: "value", value: e}])}
-                                    stringMode
+                                className="value-custom jade-input"
+                                disabled={disabled || unaryOperators.includes(condition)}
+                                step={1}
+                                onChange={(e) => handleItemChange(conditionId, item.id, [{key: "value", value: e}])}
+                                stringMode
                             />
                         </Form.Item>;
                     default:
                         return <Form.Item
-                                id={`value-${item.id}`}
-                                name={`value-${item.id}`}
-                                rules={selectedRightSideValueRules(condition, [{
-                                    required: true,
-                                    message: "字段值不能为空"
-                                }, {
-                                    pattern: /^[^\s]*$/,
-                                    message: "禁止输入空格"
-                                },])}
-                                initialValue={item.value}
+                            id={`value-${item.id}`}
+                            name={`value-${item.id}`}
+                            rules={selectedRightSideValueRules(condition, [{
+                                required: true,
+                                message: "字段值不能为空"
+                            }, {
+                                pattern: /^[^\s]*$/,
+                                message: "禁止输入空格"
+                            },])}
+                            initialValue={item.value}
                         >
                             <JadeInput
-                                    className="value-custom jade-input"
-                                    disabled={disabled || unaryOperators.includes(condition)}
-                                    value={item.value}
-                                    onChange={(e) => handleItemChange(conditionId, item.id, [{
-                                        key: "value",
-                                        value: e.target.value
-                                    }])}
+                                className="value-custom jade-input"
+                                disabled={disabled || unaryOperators.includes(condition)}
+                                value={item.value}
+                                onChange={(e) => handleItemChange(conditionId, item.id, [{
+                                    key: "value",
+                                    value: e.target.value
+                                }])}
                             />
                         </Form.Item>;
                 }
@@ -316,85 +332,114 @@ function _IfForm({
         }
     };
 
+    const setDefaultValueOfRightInput = (condition, newLeftType, newConditionValue) => {
+        const newRightType = inferRightType(newLeftType, newConditionValue);
+        if (newRightType === condition.getRight().type) {
+            return;
+        }
+        const rightValue = newRightType === "Boolean" ? false : "";
+        const right = condition.getRight();
+        if (right.from === "Input") {
+            const rightItemId = right.id;
+            form.setFieldsValue({[`value-${rightItemId}`]: rightValue})
+            handleItemChange(condition.id, rightItemId, [
+                {key: "value", value: rightValue},
+                {key: "type", value: newRightType}
+            ]);
+        }
+    };
+
     const onLeftReferenceTreeSelectReferencedValueChange = (condition, v, t) => {
-        const left = condition.value.find(item => item.name === "left");
+        const left = condition.getLeft();
         if (left.type === t && left.referenceKey === v) {
             // 若与原来一样，不必刷新
             return;
         }
-        handleReferenceValueChange(condition.id, condition.value.find(item => item.name === "left").id, v, t);
-        handleConditionChange(condition.id, null);
-        const rightValue = t === "Boolean" ? false : "";
-        if (condition.value.find(item => item.name === "right").from === "Input") {
-            form.setFieldsValue({[`value-${condition.value.find(item => item.name === "right").id}`]: rightValue})
-            handleItemChange(condition.id, condition.value.find(item => item.name === "right").id, [{
-                key: "value",
-                value: rightValue
-            }]);
+        handleReferenceValueChange(condition.id, left.id, v, t);
+        handleConditionChange(condition, null, t)
+    };
+
+    const inferRightType = (leftType, condition) => {
+        if (leftType === "String" && [BINARY_OPERATOR.LONGER_THAN, BINARY_OPERATOR.LONGER_THAN_OR_EQUAL, BINARY_OPERATOR.SHORTER_THAN, BINARY_OPERATOR.SHORTER_THAN_OR_EQUAL].includes(condition)) {
+            return "Integer";
         }
+        return leftType;
     };
 
     const onRightFromSelectChange = (condition, value) => {
-        const rightValue = condition.value.find(item => item.name === "left").type === "Boolean" ? false : "";
-        form.setFieldsValue({[`value-${condition.value.find(item => item.name === "right").id}`]: rightValue})
-        handleItemChange(condition.id, condition.value.find(item => item.name === "right").id,
-                [
-                    {key: "from", value: value},
-                    {key: "type", value: condition.value.find(item => item.name === "left").type},
-                    {key: "value", value: rightValue},
-                    {key: "referenceNode", value: ""}, {key: "referenceId", value: ""}, {key: "referenceKey", value: ""}
-                ]);
+        const left = condition.getLeft();
+        const rightValue = left.type === "Boolean" ? false : "";
+        const rightId = condition.getRight().id;
+        form.setFieldsValue({[`value-${rightId}`]: rightValue})
+        handleItemChange(condition.id, rightId,
+            [
+                {key: "from", value: value},
+                {
+                    key: "type",
+                    value: inferRightType(left.type, condition.condition)
+                },
+                {key: "value", value: rightValue},
+                {key: "referenceNode", value: ""}, {key: "referenceId", value: ""}, {key: "referenceKey", value: ""}
+            ]);
     };
 
     const renderCondition = (condition, index) => {
         return <Row gutter={16} key={"row-" + index} style={{marginBottom: "6px", marginRight: 0}}>
             <Col span={6}>
                 <JadeReferenceTreeSelect
-                        disabled={disabled}
-                        className="jade-select"
-                        rules={[{required: true, message: "字段值不能为空"}]}
-                        reference={condition.value.find(item => item.name === "left")}
-                        onReferencedValueChange={(v, t) => {
-                            onLeftReferenceTreeSelectReferencedValueChange(condition, v, t);
-                        }}
-                        onReferencedKeyChange={(e) => handleReferenceKeyChange(condition.id, condition.value.find(item => item.name === "left").id, e)}
+                    disabled={disabled}
+                    className="jade-select"
+                    rules={[{required: true, message: "字段值不能为空"}]}
+                    reference={condition.getLeft()}
+                    onReferencedValueChange={(v, t) => {
+                        onLeftReferenceTreeSelectReferencedValueChange(condition, v, t);
+                    }}
+                    onReferencedKeyChange={(e) => {
+                        const left = condition.getLeft();
+                        handleReferenceKeyChange(condition.id, left.id, e);
+                        if (e.type !== left.type) {
+                            handleConditionChange(condition, null, e.type)
+                        }
+                    }}
                 />
             </Col>
             <Col span={6}>
                 <Form.Item
-                        name={`condition-${condition.id}`}
-                        rules={[{required: true, message: "字段值不能为空"}]}
-                        initialValue={condition.condition}
+                    name={`condition-${condition.id}`}
+                    rules={[{required: true, message: "字段值不能为空"}]}
+                    initialValue={condition.condition}
                 >
                     <JadeStopPropagationSelect
-                            disabled={disabled}
-                            className="jade-select"
-                            style={{width: "100%"}}
-                            placeholder="请选择条件"
-                            options={getConditionOptionsByReferenceType(condition.value.find(item => item.name === "left").type)}
-                            value={condition.condition}
-                            onChange={(e) => handleConditionChange(condition.id, e)}
+                        disabled={disabled}
+                        className="jade-select"
+                        style={{width: "100%"}}
+                        dropdownStyle={{width: '150px'}} // 设置下拉框宽度
+                        placeholder="请选择条件"
+                        options={getConditionOptionsByReferenceType(condition.getLeft().type)}
+                        value={condition.condition}
+                        onChange={(e) => handleConditionChange(condition, e, condition.getLeft().type)}
                     />
                 </Form.Item>
             </Col>
             <Col span={4} style={{paddingRight: 0}}>
                 <Form.Item>
                     <JadeStopPropagationSelect
-                            id={`from-select-${condition.id}`}
-                            disabled={disabled || unaryOperators.includes(condition.condition)}
-                            className="value-source-custom jade-select"
-                            style={{width: "100%"}}
-                            onChange={(value) => onRightFromSelectChange(condition, value)}
-                            options={[
-                                {value: 'Reference', label: '引用'},
-                                {value: 'Input', label: '输入'},
-                            ]}
-                            value={condition.value.find(item => item.name === "right").from}
+                        id={`from-select-${condition.id}`}
+                        disabled={disabled || unaryOperators.includes(condition.condition)}
+                        className="value-source-custom jade-select"
+                        style={{width: "100%"}}
+                        onChange={(value) => onRightFromSelectChange(condition, value)}
+                        options={[
+                            {value: 'Reference', label: '引用'},
+                            {value: 'Input', label: '输入'},
+                        ]}
+                        value={condition.getRight().from}
                     />
                 </Form.Item>
             </Col>
             <Col span={7} style={{paddingLeft: 0}}>
-                {renderRightSideValueComponent(condition.id, condition.value.find(item => item.name === "right"), condition.value.find(item => item.name === "left").type, condition.condition)} {/* 渲染对应的组件 */}
+                {renderRightSideValueComponent(condition.id, condition.getRight(),
+                    inferRightType(condition.getLeft().type, condition.condition), condition.condition)} {/* 渲染对应的组件 */}
             </Col>
             <Col span={1} style={{paddingLeft: 0}}>
                 {renderDeleteConditionIcon(index, condition.id)}
@@ -411,7 +456,7 @@ function _IfForm({
         return <div style={{display: 'flex'}}>
             {branch.conditions.length > 1 && renderLeftDiagram()}
             <div
-                    className={"jade-form condition-right-component"}
+                className={"jade-form condition-right-component"}
             >
                 <Row gutter={16}>
                     <Col span={6}>
@@ -430,7 +475,7 @@ function _IfForm({
                         </Form.Item>
                     </Col>
                 </Row>
-                {branch.conditions.map((condition, index) => renderCondition(condition, index))}
+                {branch.conditions.map((condition, index) => renderCondition(conditionWrapper(condition), index))}
                 <Row gutter={16} style={{marginBottom: "6px", marginRight: 0}}>
                     <Button type="link" className="icon-button" onClick={() => addCondition(branch.id)}
                             disabled={disabled}
@@ -446,15 +491,15 @@ function _IfForm({
     return (<>
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["ifPanel"]}>
             {<Panel
-                    key={"ifPanel"}
-                    header={
-                        <div className="panel-header">
-                            <span className="jade-panel-header-font">{name}</span>
-                            {renderPriority()}
-                            {renderDeleteIcon()}
-                        </div>
-                    }
-                    className="jade-panel"
+                key={"ifPanel"}
+                header={
+                    <div className="panel-header">
+                        <span className="jade-panel-header-font">{name}</span>
+                        {renderPriority()}
+                        {renderDeleteIcon()}
+                    </div>
+                }
+                className="jade-panel"
             >
                 <div className={"jade-custom-panel-content"}>
                     {renderForm()}
@@ -463,13 +508,3 @@ function _IfForm({
         </Collapse>
     </>);
 }
-
-const areEqual = (prevProps, nextProps) => {
-    return prevProps.branch === nextProps.branch
-            && prevProps.name === nextProps.name
-            && prevProps.index === nextProps.index
-            && prevProps.totalItemNum === nextProps.totalItemNum
-            && prevProps.disabled === nextProps.disabled;
-};
-
-export const IfForm = React.memo(_IfForm, areEqual);

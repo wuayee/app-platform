@@ -22,6 +22,23 @@ export const UNARY_OPERATOR = {
     IS_NOT_NULL: "is not null",
 };
 
+export const BINARY_OPERATOR = {
+    LONGER_THAN: "longer than",
+    LONGER_THAN_OR_EQUAL: "longer than or equal",
+    SHORTER_THAN: "shorter than",
+    SHORTER_THAN_OR_EQUAL: "shorter than or equal",
+    STARTS_WITH: "starts with",
+    ENDS_WITH: "ends with",
+    EQUAL: "equal",
+    NOT_EQUAL: "not equal",
+    CONTAINS: "contains",
+    DOES_NOT_CONTAIN: "does not contain",
+    GREATER_THAN: "greater than",
+    GREATER_THAN_OR_EQUAL: "greater than or equal",
+    LESS_THAN: "less than",
+    LESS_THAN_OR_EQUAL: "less than or equal",
+};
+
 export const VIRTUAL_CONTEXT_NODE = {
     id: "_systemEnv",
     name: "系统上下文"
