@@ -1,20 +1,23 @@
 import {Collapse, Popover} from 'antd';
-import JadeInputTree from "./JadeInputTree.jsx";
 import {QuestionCircleOutlined} from "@ant-design/icons";
-import React from "react";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
+
+JadeInputTreeCollapse.propTypes = {
+    data: PropTypes.array.isRequired,
+    children: PropTypes.array.isRequired
+};
 
 /**
  * 带input的树形组件.主要用于api调用节点.
  *
  * @param data 数据.
- * @param updateItem 修改方法.
- * @param disabled 禁用.
+ * @param children 子组件列表.
  * @return {JSX.Element}
  * @constructor
  */
-export default function JadeCollapseInputTree({data, updateItem, disabled}) {
+export default function JadeInputTreeCollapse({data, children}) {
     const getContent = () => {
         const contentItems = data
             .filter(item => item.description)  // 过滤出有描述的项目
@@ -54,9 +57,9 @@ export default function JadeCollapseInputTree({data, updateItem, disabled}) {
                 className="jade-panel"
             >
                 <div className={"jade-custom-panel-content"}>
-                    <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
+                    {children}
                 </div>
             </Panel>
         </Collapse>
     </>);
-};
+}

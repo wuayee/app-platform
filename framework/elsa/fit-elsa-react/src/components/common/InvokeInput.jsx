@@ -1,8 +1,9 @@
-import JadeCollapseInputTree from "@/components/common/JadeCollapseInputTree.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
 import React from "react";
 import PropTypes from "prop-types";
+import JadeInputTree from "@/components/common/JadeInputTree.jsx";
+import JadeInputTreeCollapse from "@/components/common/JadeInputTreeCollapse.jsx";
 
 _InvokeInput.propTypes = {
     inputData: PropTypes.array,
@@ -27,7 +28,11 @@ function _InvokeInput({inputData, disabled}) {
         dispatch({type: "update", id, changes});
     };
 
-    return (<JadeCollapseInputTree data={inputData} updateItem={updateItem} disabled={disabled}/>);
+    return (<>
+        <JadeInputTreeCollapse data={inputData} disabled={disabled}>
+            <JadeInputTree disabled={disabled} data={inputData} updateItem={updateItem}/>
+        </JadeInputTreeCollapse>
+    </>);
 }
 
 const areEqual = (prevProps, nextProps) => {
