@@ -468,3 +468,12 @@ fit.public.genericables.com.huawei.fit.bigdata.cache.get.info:
     default: 'local-worker'
   tags:
     - 'nonTraceable'
+fit.public.genericables.com.huawei.fit.get.all.plugins.ready:
+  name: 'com.huawei.fit.get.all.plugins.ready'
+  fitables:
+    local-worker:
+  route:
+    default: 'local-worker'
+  tags:
+    - 'localOnly'
+    - 'nonTraceable'

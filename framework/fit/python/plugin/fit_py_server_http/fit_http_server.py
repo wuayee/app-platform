@@ -20,7 +20,7 @@ from fitframework import const
 from fitframework.api.decorators import fit, fitable
 from fitframework.api.exception import FIT_OK
 from fitframework.api.logging import sys_plugin_logger
-from fitframework.core.exception.fit_exception import InternalErrorCode
+from fitframework.core.exception.fit_exception import InternalErrorCode, FitException
 from fitframework.core.network.fit_response import FitResponse
 from fitframework.core.network.metadata.request_metadata import RequestMetadata, GenericVersion
 from fitframework.core.network.metadata.response_metadata import ResponseMetadata
@@ -80,6 +80,11 @@ def decrypt(cipher: str) -> str:
     pass
 
 
+@fit("com.huawei.fit.get.all.plugins.ready")
+def get_all_plugins_ready() -> str:
+    pass
+
+
 @fitable(generic_id="com.huawei.fit.get.running.async.task.count", fitable_id='local-worker')
 def get_running_task_count() -> int:
     with _task_dict_lock:
@@ -116,6 +121,34 @@ def async_serve_response(metadata: RequestMetadata, data: bytes, task_id: str):
         sys_plugin_logger.warning(f"async serve response error value: {except_value}")
         sys_plugin_logger.warning(
             f"async serve response error trace back:\n{''.join(traceback.format_tb(except_traceback))}")
+
+
+class HealthCheckHandler(tornado.web.RequestHandler):
+    def initialize(self, executor: ThreadPoolExecutor):
+        self.executor: ThreadPoolExecutor = executor
+
+    async def get(self):
+        self.set_status(HTTPStatus.OK)
+        self.write("OK")
+
+
+class PluginsReadyCheckHandler(tornado.web.RequestHandler):
+    def initialize(self, executor: ThreadPoolExecutor):
+        self.executor: ThreadPoolExecutor = executor
+
+    @tornado.concurrent.run_on_executor
+    def process_plugins_ready_task(self):
+        try:
+            return get_all_plugins_ready(), HTTPStatus.OK, {}
+        except FitException:
+            return "NOT OK", HTTPStatus.OK, {}
+
+    async def get(self):
+        body, status, headers = await self.process_plugins_ready_task()
+        self.set_status(status)
+        for key in headers:
+            self.set_header(key, headers[key])
+        self.write(body)
 
 
 class PollingTaskHandler(tornado.web.RequestHandler):
@@ -245,7 +278,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 _executor = ThreadPoolExecutor(get_server_thread_count())
 _app = tornado.web.Application(
-    [(get_context_path() + r"/fit/async/awaitResponse", PollingTaskHandler, dict(executor=_executor)),
+    [(get_context_path() + r"/fit/health", HealthCheckHandler, dict(executor=_executor)),
+     (get_context_path() + r"/fit/pluginsReady", PluginsReadyCheckHandler, dict(executor=_executor)),
+     (get_context_path() + r"/fit/async/awaitResponse", PollingTaskHandler, dict(executor=_executor)),
      (get_context_path() + r"/fit/([^/]+)/([^/]+)", FitHandler, dict(executor=_executor)),
      (get_context_path() + r"/fit/websocket/([^/]+)/([^/]+)", WebSocketHandler, dict(executor=_executor))])
 
