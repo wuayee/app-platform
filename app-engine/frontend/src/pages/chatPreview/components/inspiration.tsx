@@ -187,9 +187,9 @@ const Inspiration = (props) => {
   // 分类点击回调
   function nodeClick(id, name, parentId) {
     if (FINANCE_APP_ID === appId) {
-      storage.set('dimension', { id, value: pduMap[name] || name});
+      storage.set('dimension', { id, name, value: pduMap[name]});
     }
-    dispatch(setDimension({ id, value: pduMap[name] || name}));
+    dispatch(setDimension({ id, name, value: pduMap[name]}));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: '全部', id: parentId }];
