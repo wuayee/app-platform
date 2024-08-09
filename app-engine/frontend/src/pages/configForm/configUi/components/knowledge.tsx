@@ -3,15 +3,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import AddKnowledge from  './add-knowledge';
+import AddKnowledge from './add-knowledge';
 
 const Knowledge = (props) => {
   const { knowledge, updateData } = props;
-  const [ knows, setKnows] = useState([]);
+  const [knows, setKnows] = useState([]);
   const { tenantId } = useParams();
   const list = useRef('');
   const modalRef = useRef();
-  
+
   const handleChange = (value) => {
     list.current = value;
     setKnows(value)
@@ -20,7 +20,7 @@ const Knowledge = (props) => {
   // 删除
   const deleteItem = (item) => {
     list.current = list.current.filter(Litem => Litem.tableId !== item.tableId);
-    setKnows([ ...list.current ]);
+    setKnows([...list.current]);
     updateData(list.current, 'knowledge');
   }
 
@@ -37,7 +37,7 @@ const Knowledge = (props) => {
         <div className='control'>
           <div className='control-header'>
             <div className='control-title'>
-              <Button onClick={ () => modalRef.current.showModal() }>添加</Button>
+              <Button onClick={() => modalRef.current.showModal(knows)}>添加</Button>
             </div>
           </div>
           <div className='control-inner'>
@@ -47,9 +47,9 @@ const Knowledge = (props) => {
                   <div className='item' key={index} >
                     <span className='text'>{item.name}</span>
                     <span>
-                      <CloseOutlined 
-                        style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }} 
-                        onClick={() => { deleteItem(item) }} 
+                      <CloseOutlined
+                        style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }}
+                        onClick={() => { deleteItem(item) }}
                       />
                     </span>
                   </div>
@@ -59,11 +59,10 @@ const Knowledge = (props) => {
           </div>
         </div>
       </div>
-      <AddKnowledge 
-        modalRef={modalRef} 
-        tenantId={tenantId} 
+      <AddKnowledge
+        modalRef={modalRef}
+        tenantId={tenantId}
         handleDataChange={handleChange}
-        checkData={knows}
       />
     </>
   )
