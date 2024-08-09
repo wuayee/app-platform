@@ -1,9 +1,0 @@
-fit:
-  beans:
-    packages:
-    - 'com.huawei.fit.http.openapi3.swagger'
-server:
-  http:
-    resources:
-      file-locations:
-      - 'static'

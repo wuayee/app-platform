@@ -18,6 +18,8 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.validation.data.Person;
 import com.huawei.fitframework.validation.data.PersonValidate;
+import com.huawei.fitframework.validation.data.Product;
+import com.huawei.fitframework.validation.data.ProductValidate;
 import com.huawei.fitframework.validation.data.StudentValidate;
 import com.huawei.fitframework.validation.exception.ConstraintViolationException;
 
@@ -79,6 +81,64 @@ public class ValidationHandlerTest {
             assertThat(expectedException.getMessage()).isEqualTo(
                     "validate1.mouth: 嘴巴数量范围只能在0和1！, validate1.eyes: 眼睛数量范围只能在0和2！, "
                             + "validate1.name: 姓名不能为空！, validate1.sex: 性别不能为空！");
+        }
+
+        /**
+         * 调用 {@link ProductValidate#validate1(Product)} 作为需要校验的方法。
+         */
+        @Test
+        @DisplayName("校验数据类，该数据类的 Constraint 字段会被校验，其余字段不会被校验")
+        void givenFieldsWithConstraintAnnotationThenValidateHappened2() {
+            // when
+            Method validateMethod =
+                    ReflectionUtils.getDeclaredMethod(ProductValidate.class, "validate1", Product.class);
+            Method handleValidatedMethod = ReflectionUtils.getDeclaredMethod(ValidationHandler.class,
+                    "handle",
+                    JoinPoint.class,
+                    Validated.class);
+            Product product = new Product("computer", -1.0, 100, " ");
+            handleValidatedMethod.setAccessible(true);
+            JoinPoint joinPoint = mock(JoinPoint.class);
+            when(joinPoint.getMethod()).thenReturn(validateMethod);
+            when(joinPoint.getArgs()).thenReturn(new Object[] {product});
+            InvocationTargetException invocationTargetException =
+                    catchThrowableOfType(() -> handleValidatedMethod.invoke(handler, joinPoint, validated),
+                            InvocationTargetException.class);
+
+            // then
+            ConstraintViolationException expectedException =
+                    ObjectUtils.cast(invocationTargetException.getTargetException());
+            assertThat(expectedException.getMessage()).isEqualTo(
+                    "validate1.price: 产品价格必须为正, validate1.category: 产品类别不能为空");
+        }
+
+        /**
+         * 调用 {@link ProductValidate#validate1(Product)} 作为需要校验的方法。
+         */
+        @Test
+        @DisplayName("校验数据类，该数据类的 Constraint 字段会被校验，其余字段不会被校验")
+        void givenFieldsWithConstraintAnnotationThenValidateHappened3() {
+            // when
+            Method validateMethod =
+                    ReflectionUtils.getDeclaredMethod(ProductValidate.class, "validate1", Product.class);
+            Method handleValidatedMethod = ReflectionUtils.getDeclaredMethod(ValidationHandler.class,
+                    "handle",
+                    JoinPoint.class,
+                    Validated.class);
+            Product product = new Product(null, 12999.0, null, "electronic devices");
+            handleValidatedMethod.setAccessible(true);
+            JoinPoint joinPoint = mock(JoinPoint.class);
+            when(joinPoint.getMethod()).thenReturn(validateMethod);
+            when(joinPoint.getArgs()).thenReturn(new Object[] {product});
+            InvocationTargetException invocationTargetException =
+                    catchThrowableOfType(() -> handleValidatedMethod.invoke(handler, joinPoint, validated),
+                            InvocationTargetException.class);
+
+            // then
+            ConstraintViolationException expectedException =
+                    ObjectUtils.cast(invocationTargetException.getTargetException());
+            assertThat(expectedException.getMessage()).isEqualTo("validate1.name: 产品名不能为空, validate1.quantity: "
+                    + "产品数量必须为正");
         }
 
         /**

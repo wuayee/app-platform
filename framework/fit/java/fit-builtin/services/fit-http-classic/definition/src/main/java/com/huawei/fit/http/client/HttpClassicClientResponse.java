@@ -7,6 +7,7 @@ package com.huawei.fit.http.client;
 import com.huawei.fit.http.HttpClassicResponse;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
+import com.huawei.fit.http.entity.TextEventStreamEntity;
 
 import java.util.Optional;
 
@@ -31,6 +32,13 @@ public interface HttpClassicClientResponse<T> extends HttpClassicResponse {
      * @return 表示 Http 响应中的文本类型的实体对象的 {@link Optional}{@code <}{@link TextEntity}{@code >}。
      */
     Optional<TextEntity> textEntity();
+
+    /**
+     * 获取 Http 响应中的文本事件流的实体对象。
+     *
+     * @return 表示 Http 响应中的文本事件流的实体对象的 {@link Optional}{@code <}{@link TextEventStreamEntity}{@code >}。
+     */
+    Optional<TextEventStreamEntity> textEventStreamEntity();
 
     /**
      * 获取 Http 消息的消息体的结构化数据的二进制内容。
