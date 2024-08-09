@@ -4,8 +4,11 @@
 
 package com.huawei.jade.fel.model.openai.client;
 
+import com.huawei.fit.http.client.HttpClassicClientFactory;
+import com.huawei.fit.http.client.okhttp.OkHttpClientBuilderFactory;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
@@ -24,7 +27,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * OpenAI 客户端，对 {@link OpenAiApi} 接口进行了一层封装，便于以对象形式进行接口调用。
@@ -42,6 +49,14 @@ public class OpenAiClient {
 
     private static final Logger LOGGER = Logger.get(OpenAiClient.class);
 
+    private static final List<String> HTTPS_CONFIG_KEYS = Arrays.asList(
+            "client.http.secure.ignore-trust",
+            "client.http.secure.ignore-hostname",
+            "client.http.secure.trust-store-file",
+            "client.http.secure.trust-store-password",
+            "client.http.secure.key-store-file",
+            "client.http.secure.key-store-password");
+
     private final OpenAiApi api;
 
     private String openAiBaseUrl;
@@ -50,13 +65,27 @@ public class OpenAiClient {
      * OpenAiClient 构造方法。
      *
      * @param baseUrl 大模型服务端地址。
+     * @param config 配置信息。
      */
-    public OpenAiClient(@Value("${openai-url}") String baseUrl) {
-        this.openAiBaseUrl = Validation.notBlank(baseUrl, "The OpenAI base URL is empty.");
-        OkHttpClient client = new OkHttpClient.Builder()
+    public OpenAiClient(@Value("${openai-url}") String baseUrl, Config config) {
+        HttpClassicClientFactory.Config httpClientConfig;
+        if (config != null) {
+            Map<String, Object> custom = HTTPS_CONFIG_KEYS.stream()
+                    .filter(key -> config.keys().contains(key))
+                    .collect(Collectors.toMap(key -> key, key -> config.get(key, Object.class)));
+            httpClientConfig =
+                    HttpClassicClientFactory.Config.builder().custom(custom).build();
+        } else {
+            httpClientConfig = HttpClassicClientFactory.Config.builder().build();
+        }
+
+        OkHttpClient.Builder okHttpClientBuilder =
+                OkHttpClientBuilderFactory.getOkHttpClientBuilder(httpClientConfig);
+        OkHttpClient client = okHttpClientBuilder
                 .connectTimeout(OpenAiClient.HTTP_CLIENT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(OpenAiClient.HTTP_CLIENT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
+        this.openAiBaseUrl = Validation.notBlank(baseUrl, "The OpenAI base URL is empty.");
         Retrofit retrofit = new Retrofit.Builder().client(client)
                 .baseUrl(this.openAiBaseUrl)
                 .addConverterFactory(JacksonConverterFactory.create(OpenAiMessageUtils.OBJECT_MAPPER))
