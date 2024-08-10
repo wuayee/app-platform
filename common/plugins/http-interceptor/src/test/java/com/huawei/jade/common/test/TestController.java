@@ -8,6 +8,7 @@ import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.flowable.Choir;
+import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
 
@@ -86,12 +87,22 @@ public class TestController {
     }
 
     /**
+     * {@link com.huawei.jade.common.filter.support.LoginFilterTest#shouldOkWhenGetUserContext()}。
+     *
+     * @return 表示测试结果的 {@link String}
+     */
+    @GetMapping("/support/testLoginFilter")
+    public String test8() {
+        return UserContextHolder.get().getName();
+    }
+
+    /**
      * {@link com.huawei.jade.common.filter.support.DefaultHttpResponseWrapperTest#shouldOkWhenNoInterceptStream}。
      *
      * @return 表示测试结果的 {@link Choir}{@code <}{@link Integer}{@code >}。
      */
     @GetMapping("/support/stream")
-    public Choir<Integer> test8() {
+    public Choir<Integer> test9() {
         return Choir.just(1, 2, 3);
     }
 }
