@@ -6,6 +6,7 @@ package com.huawei.jade.fel.model.openai.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.fitframework.conf.support.ReadonlyMapConfig;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.character.HumanMessage;
@@ -26,7 +27,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +46,7 @@ public class OpenAiModelServiceTest {
     @BeforeEach
     public void setUp() throws IOException {
         this.server = new MockWebServer();
-        this.client = new OpenAiClient("http://localhost:" + this.server.getPort());
+        this.client = new OpenAiClient("http://localhost:" + this.server.getPort(), null);
     }
 
     @AfterEach
@@ -84,6 +87,15 @@ public class OpenAiModelServiceTest {
         Choir<FlatChatMessage> choir = service.generate(this.getRequest());
         List<FlatChatMessage> response = choir.blockAll();
         assertThat(response).extracting(FlatChatMessage::getText).isEqualTo(contents);
+    }
+
+    @Test
+    public void testClientWithConfig() {
+        Map<String, Object> configMap = new HashMap<>();
+        this.client = new OpenAiClient("http://localhost:" + this.server.getPort(), new ReadonlyMapConfig(configMap));
+        testOpenAiChatModelService();
+        testOpenAiEmbedModelService();
+        testOpenAiChatModelStreamService();
     }
 
     private ChatCompletion getRequest() {

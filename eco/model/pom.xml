@@ -16,6 +16,9 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
+        <!-- FIT version -->
+        <fit.version>3.5.0-SNAPSHOT</fit.version>
+
         <!-- Third party dependencies -->
         <jackson-databind.version>2.16.2</jackson-databind.version>
         <lombok.version>1.18.26</lombok.version>
@@ -32,6 +35,17 @@
     </properties>
 
     <dependencies>
+        <!-- Fit -->
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-http-client-okhttp</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
         <!-- FEL -->
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
