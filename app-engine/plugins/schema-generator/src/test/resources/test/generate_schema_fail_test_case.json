@@ -1,0 +1,23 @@
+[
+  {
+    "json": "{"
+  },
+  {
+    "json": "}"
+  },
+  {
+    "json": "INVALID JSON"
+  },
+  {
+    "json": "{INVALID json}"
+  },
+  {
+    "json": "{\"name\":\"Jerry\",}"
+  },
+  {
+    "json": "{\"age\": 100.2.3.4}"
+  },
+  {
+    "json": "{\"friend\":[\"Sky\", \"Fang\"]}"
+  }
+]

@@ -318,6 +318,11 @@
                 <artifactId>app-engine-schema-validator</artifactId>
                 <version>${app-engine.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.huawei.jade.service</groupId>
+                <artifactId>app-engine-schema-generator</artifactId>
+                <version>${app-engine.version}</version>
+            </dependency>
 
             <!-- Common -->
             <dependency>

@@ -10,27 +10,20 @@ import com.huawei.jade.common.code.RetCode;
 import com.huawei.jade.common.model.ModelInfo;
 
 /**
- * Schema 校验模块返回码枚举, 返回码最大值为 256。
+ * 数据约束生成模块返回码枚举, 返回码最大值为 256。
  *
  * @author 兰宇晨
- * @since 2024-07-29
+ * @since 2024-08-07
  */
-public enum SchemaValidatorRetCode implements RetCode, ModelInfo {
+public enum SchemaGeneratorRetCode implements RetCode, ModelInfo {
     /**
-     * 评估数据 Schema 无效，占位符代表评估数据 schema。
+     * 上传的 json 无效。
      */
-    VALIDATE_SCHEMA_INVALID_ERROR(1, "The schema '{0}' is invalid"),
-
-    /**
-     * 校验评估数据无效，占位符代表评估数据和 Schema。
-     */
-    VALIDATE_CONTENT_INVALID_ERROR(2, "The content '{0}' cannot match schema '{1}', error: {2}");
-
+    JSON_INVALID_ERROR(1, "The json '{0}' is invalid to generate schema, error: {1}.");
     private final int code;
-
     private final String msg;
 
-    SchemaValidatorRetCode(int code, String msg) {
+    SchemaGeneratorRetCode(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -57,7 +50,7 @@ public enum SchemaValidatorRetCode implements RetCode, ModelInfo {
 
     @Override
     public int getSubModelId() {
-        return 0x02;
+        return 0x03;
     }
 }
 
