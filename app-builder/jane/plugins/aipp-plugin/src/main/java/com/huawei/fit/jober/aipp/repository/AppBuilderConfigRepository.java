@@ -6,6 +6,8 @@ package com.huawei.fit.jober.aipp.repository;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 
+import java.util.List;
+
 /**
  * AppBuilder配置持久化层
  *
@@ -46,7 +48,7 @@ public interface AppBuilderConfigRepository {
     /**
      * 通过配置id删除配置信息
      *
-     * @param id 被删除的配置信息的id
+     * @param ids 被删除的配置信息的id集合
      */
-    void delete(String id);
+    void delete(List<String> ids);
 }

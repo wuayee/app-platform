@@ -23,12 +23,21 @@
         </foreach>
     </delete>
 
-    <delete id="deleteByUserAipp">
+    <delete id="deleteByAippId">
         delete
         from aipp_instance_file
         where aipp_id = #{aippId}
           and create_by = #{createUserAccount}
     </delete>
+
+    <update id="deleteByAippIds" parameterType="java.util.List">
+        UPDATE aipp_instance_file
+        set is_deleted = 1
+        where aipp_id in
+        <foreach collection="aippIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
     <insert id="insertFileRecord" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippUploadedFileInfoDto">
         insert into aipp_instance_file

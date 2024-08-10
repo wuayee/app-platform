@@ -94,7 +94,7 @@ public interface AppBuilderAppMapper {
     /**
      * 根据 app 唯一标识删除 app 对象数据。
      *
-     * @param appId 表示 app 唯一标识的 {@link String}。
+     * @param appIds 表示 app 唯一标识的 {@link List}{@code <}{@link String}{@code >}。
      */
-    void delete(String appId);
+    void delete(List<String> appIds);
 }

@@ -10,6 +10,8 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderFlowGraphSerializer;
 import com.huawei.fitframework.annotation.Component;
 
+import java.util.List;
+
 /**
  * 应用流程图仓库功能实现类
  *
@@ -42,7 +44,7 @@ public class AppBuilderFlowGraphRepositoryImpl implements AppBuilderFlowGraphRep
     }
 
     @Override
-    public void delete(String id) {
-        this.appBuilderFlowGraphMapper.delete(id);
+    public void delete(List<String> ids) {
+        this.appBuilderFlowGraphMapper.delete(ids);
     }
 }

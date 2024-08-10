@@ -12,6 +12,10 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderConfigSerializer;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 应用属性仓库实现类
@@ -57,10 +61,16 @@ public class AppBuilderConfigRepositoryImpl implements AppBuilderConfigRepositor
     }
 
     @Override
-    public void delete(String id) {
-        AppBuilderConfigPo appBuilderConfigPO = this.appBuilderConfigMapper.selectWithId(id);
-        this.appBuilderConfigMapper.delete(id);
-        this.appBuilderConfigPropertyRepository.deleteByConfigId(id);
-        this.appBuilderFormRepository.delete(appBuilderConfigPO.getFormId());
+    public void delete(List<String> ids) {
+        List<AppBuilderConfigPo> configPos = this.appBuilderConfigMapper.selectWithIds(ids);
+        List<String> configIds = configPos.stream().map(AppBuilderConfigPo::getId).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(configIds)) {
+            this.appBuilderConfigMapper.delete(configIds);
+            this.appBuilderConfigPropertyRepository.deleteByConfigIds(configIds);
+        }
+        List<String> formIds = configPos.stream().map(AppBuilderConfigPo::getFormId).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(formIds)) {
+            this.appBuilderFormRepository.delete(formIds);
+        }
     }
 }

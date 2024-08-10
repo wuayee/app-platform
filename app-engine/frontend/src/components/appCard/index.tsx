@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
-import { StarFilled, UserOutlined, StarOutlined } from '@ant-design/icons';
 import { Icons } from '../icons';
 import { cancelUserCollection, collectionApp } from '@/shared/http/appDev';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
@@ -29,7 +28,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   const operatorItems: MenuProps['items'] = [
     {
       key: 'delete',
-      label: <div style={{ width: 200 }}>删除</div>,
+      label: <div>删除</div>,
     },
   ];
   const clickItem = (info: any) => {
@@ -98,7 +97,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
             <div className='headerTitle'>{cardInfo?.name}</div>
           </Tooltip>
           <div className='title_info'>
-            <img width={18} height={18}  src='/src/assets/images/ai/user.jpg' alt='' />
+            <img width={18} height={18} src='/src/assets/images/ai/user.jpg' alt='' />
             <div className='createBy'>{cardInfo.createBy || cardInfo.creator}</div>
           </div>
         </div>

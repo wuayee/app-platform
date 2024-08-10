@@ -9,6 +9,8 @@ import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
@@ -50,6 +52,9 @@ public class AippFlowRuntimeInfoServiceImpl implements AippFlowRuntimeInfoServic
     public Optional<RuntimeData> getRuntimeData(String aippId, String version, String instanceId,
             OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, version, context);
+        if (meta == null) {
+            throw new AippException(AippErrCode.APP_NOT_FOUND_WHEN_DEBUG);
+        }
         String versionId = meta.getVersionId();
         Instance instDetail = MetaInstanceUtils.getInstanceDetail(
                 versionId, instanceId, context, this.metaInstanceService);

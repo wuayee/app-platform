@@ -17,6 +17,7 @@ import com.huawei.fit.jober.aipp.entity.ChatInfo;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
+import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.jober.aipp.service.AppChatService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
@@ -50,9 +51,11 @@ public class AppChatServiceImpl implements AppChatService {
     private final AippChatMapper aippChatMapper;
     private final AippRunTimeService aippRunTimeService;
     private final AppBuilderAppService appService;
+    private final AppBuilderAppRepository appRepository;
 
     @Override
     public Choir<Object> chat(CreateAppChatRequest body, OperationContext context, boolean isDebug) {
+        this.validateApp(body.getAppId());
         this.validateChatBody(body);
         this.convertContext(body);
         if (body.getChatId() != null) {
@@ -72,6 +75,13 @@ public class AppChatServiceImpl implements AppChatService {
         Choir<Object> choir = ObjectUtils.cast(tuple.get(1).orElse(null));
         this.saveChatInfos(body, context, instId, hasAtOtherApp, chatAppId);
         return choir;
+    }
+
+    private void validateApp(String appId) {
+        AppBuilderApp appBuilderApp = this.appRepository.selectWithId(appId);
+        if (appBuilderApp == null || StringUtils.isEmpty(appBuilderApp.getId())) {
+            throw new AippException(AippErrCode.APP_NOT_FOUND_WHEN_CHAT);
+        }
     }
 
     private void saveChatInfos(CreateAppChatRequest body, OperationContext context, String instId,

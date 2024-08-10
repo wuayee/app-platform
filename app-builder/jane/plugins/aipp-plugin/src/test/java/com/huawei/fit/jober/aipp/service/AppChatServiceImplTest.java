@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
+import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.impl.AppChatServiceImpl;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.model.Tuple;
@@ -44,11 +45,16 @@ public class AppChatServiceImplTest {
     private AippRunTimeService aippRunTimeService;
     @Mock
     private AppBuilderAppService appService;
+    @Mock
+    private AppBuilderAppRepository appRepository;
 
     @BeforeEach
     void before() {
-        this.appChatService =
-                new AppChatServiceImpl(this.appFactory, this.aippChatMapper, this.aippRunTimeService, this.appService);
+        this.appChatService = new AppChatServiceImpl(this.appFactory,
+                this.aippChatMapper,
+                this.aippRunTimeService,
+                this.appService,
+                this.appRepository);
     }
 
     @Test
@@ -74,7 +80,9 @@ public class AppChatServiceImplTest {
                 Mockito.any(),
                 Mockito.eq(false))).thenReturn(Tuple.duet("hello_inst", t2));
         Mockito.when(this.appFactory.create(Mockito.any()))
-                .thenReturn(AppBuilderApp.builder().version("10.0.0").state("ACTIVE").build());
+                .thenReturn(AppBuilderApp.builder().id("id1").version("10.0.0").state("ACTIVE").build());
+        Mockito.when(this.appRepository.selectWithId(Mockito.any()))
+                .thenReturn(AppBuilderApp.builder().id("id1").version("10.0.0").state("ACTIVE").build());
 
         Choir<Object> objectChoir =
                 Assertions.assertDoesNotThrow(() -> this.appChatService.chat(hello, operationContext, false));
