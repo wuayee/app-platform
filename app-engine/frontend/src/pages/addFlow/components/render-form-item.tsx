@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Input, Form, InputNumber, Switch } from 'antd';
 
 const RenderFormItem = (props) => {
-  const {type, name, isRequired} = props;
+  const { type, name, isRequired } = props;
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -15,9 +15,9 @@ const RenderFormItem = (props) => {
 
   const customLabel = (
     <span className='debug-form-label'>
-    <span className='item-name'>{name}</span>
-    <span className='item-type'>{type}</span>
-  </span>
+      <span className='item-name'>{name}</span>
+      <span className='item-type'>{type}</span>
+    </span>
   );
 
   const validateNumber = (_, value) => {
@@ -44,12 +44,12 @@ const RenderFormItem = (props) => {
       <Form.Item
         name={name}
         label={customLabel}
-        rules={ [
+        rules={[
           { required: isRequired !== false, message: '请输入字符串' },
         ]}
         className='debug-form-item'
       >
-        <Input placeholder={`请输入${name}`} />
+        <Input.TextArea placeholder={`请输入${name}`} rows={3} />
       </Form.Item>
     }
     {type === 'Integer' &&
@@ -66,7 +66,7 @@ const RenderFormItem = (props) => {
         <InputNumber
           min={0}
           step={1}
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           placeholder={`请输入${name}`}
           onBlur={(e) => handleBlur(e.target.value, true)}
         />
@@ -87,7 +87,7 @@ const RenderFormItem = (props) => {
           min={0}
           step={1}
           formatter={(value) => value > 1e21 ? 'Infinity' : value}
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           placeholder={`请输入${name}`}
           onBlur={(e) => handleBlur(e.target.value, false)}
         />
@@ -98,7 +98,7 @@ const RenderFormItem = (props) => {
         name={name}
         label={customLabel}
         initialValue={true}
-        rules={ [
+        rules={[
           { required: isRequired !== false, message: '请输入字符串' },
         ]}
         className='debug-form-item'

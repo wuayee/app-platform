@@ -17,7 +17,7 @@ const Recommends = (props) => {
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
- 
+
   // 设置推荐列表
   function setRecommend() {
     setRecommendList([]);
@@ -76,21 +76,21 @@ const Recommends = (props) => {
 
   // 实时刷新推荐列表
   useEffect(() => {
-    if(chatList?.length>0){
+    if (chatList?.length > 0) {
       let chatItem = chatList[chatList.length - 1];
-      if (chatItem && chatItem.finished && !chatItem.messageType) {
+      if (chatItem && chatItem.finished && !chatItem.messageType && chatItem.msgType === 'msg') {
         getRecommendList();
       }
     }
   }, [chatList]);
-  
+
   return <>{(
     <div className='recommends-inner'>
       {
         (recommendList?.length > 0) && (
           <div className='recommends-top'>
             <span className='title'>猜你想问</span>
-            <RebotIcon onClick={refreshClick}/>
+            <RebotIcon onClick={refreshClick} />
             <span className='refresh' onClick={refreshClick}>换一批</span>
           </div>
         )
@@ -100,9 +100,9 @@ const Recommends = (props) => {
           {
             recommendList?.map((item, index) => {
               return (
-                <div 
-                  className='recommends-item' 
-                  onClick={() => recommendClick(item)} 
+                <div
+                  className='recommends-item'
+                  onClick={() => recommendClick(item)}
                   key={index}
                 >
                   {item}
@@ -111,19 +111,19 @@ const Recommends = (props) => {
             })
           }
         </div>
-        <Tooltip 
-          title={ inspirationOpen ? '收起创意灵感' : '打开创意灵感' } 
-          overlayInnerStyle={{color: '#212121' }}
-          open={ visible }
+        <Tooltip
+          title={inspirationOpen ? '收起创意灵感' : '打开创意灵感'}
+          overlayInnerStyle={{ color: '#212121' }}
+          open={visible}
           zIndex='100'
           color='white'
         >
-          <div className='list-right' 
-            onClick={ iconClick } 
-            onMouseEnter={() => setVisible(true)} 
+          <div className='list-right'
+            onClick={iconClick}
+            onMouseEnter={() => setVisible(true)}
             onMouseLeave={() => setVisible(false)}
           >
-            { inspirationOpen ? <PanleCloseIcon /> : <PanleIcon /> }
+            {inspirationOpen ? <PanleCloseIcon /> : <PanleIcon />}
           </div>
         </Tooltip>
       </div>
