@@ -25,6 +25,8 @@ import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.authentication.context.UserContext;
+import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.carver.telemetry.aop.observers.ParamSpanAttributeInjector;
 import com.huawei.jade.carver.telemetry.aop.observers.ThreadLocalSpanEventInjector;
 import com.huawei.jade.carver.telemetry.aop.parsers.ComplexSpanAttributeParser;
@@ -67,27 +69,39 @@ import java.util.Collections;
 })
 public class WithSpanAspectTest {
     private static final String EXCEPTION_MESSAGE = " exception message.";
+
     private static final String SPAN_ATTRIBUTE_KEY = "player";
+
     private static final String PARENT_SPAN_NAME = "operation.handle.nested";
 
     @Mock
     private OpenTelemetry mockOpenTelemetry;
+
     @Mock
     private Tracer mockTrace;
+
     @Mock
     private SpanBuilder mockSpanBuilder;
+
     @Mock
     private Span mockSpan;
+
     @Fit
     private WithSpanDemo withSpanDemo;
+
     @Fit
     private WithSpanParserDemo withSpanParserDemo;
+
     private MockedStatic<CarverGlobalOpenTelemetry> telemetryScopedMock;
+
+    private MockedStatic<UserContextHolder> userContextHolderMock;
 
     @BeforeEach
     void setup() {
         this.telemetryScopedMock = mockStatic(CarverGlobalOpenTelemetry.class);
         this.telemetryScopedMock.when(CarverGlobalOpenTelemetry::get).thenReturn(this.mockOpenTelemetry);
+        this.userContextHolderMock = mockStatic(UserContextHolder.class);
+        this.userContextHolderMock.when(UserContextHolder::get).thenReturn(new UserContext("Admin", "127.0.0.1", "en"));
         when(this.mockOpenTelemetry.getTracer(any())).thenReturn(this.mockTrace);
         when(this.mockTrace.spanBuilder(any())).thenReturn(this.mockSpanBuilder);
         when(this.mockSpanBuilder.startSpan()).thenReturn(this.mockSpan);
@@ -96,6 +110,7 @@ public class WithSpanAspectTest {
     @AfterEach
     void tearDown() {
         this.telemetryScopedMock.close();
+        this.userContextHolderMock.close();
         clearInvocations(this.mockOpenTelemetry, this.mockTrace, this.mockSpanBuilder, this.mockSpan);
     }
 
@@ -157,9 +172,9 @@ public class WithSpanAspectTest {
     @DisplayName("触发解析器解析键值对，成功设置 Span 属性。")
     void shouldOkWhenMatchKVExpression() {
         Object kvObj = MapBuilder.<String, Object>get()
-                .put("k1", MapBuilder.<String, Object>get().put("k2", "v").build())
-                .put("k11", MapBuilder.<String, Object>get().put("k22", "v").build())
-                .build();
+            .put("k1", MapBuilder.<String, Object>get().put("k2", "v").build())
+            .put("k11", MapBuilder.<String, Object>get().put("k22", "v").build())
+            .build();
         this.withSpanParserDemo.handleKVParser(kvObj);
         verify(this.mockSpan).setAttribute(eq("player"), eq("v"));
         verify(this.mockSpan).setAttribute(eq("player2"), eq("v"));
