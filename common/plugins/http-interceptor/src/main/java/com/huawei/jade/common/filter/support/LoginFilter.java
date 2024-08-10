@@ -12,12 +12,10 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Order;
 import com.huawei.fitframework.annotation.Scope;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.authentication.AuthenticationService;
 import com.huawei.jade.authentication.context.HttpRequestUtils;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
-import com.huawei.jade.common.filter.config.DefaultHttpResponseWrapperConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +35,12 @@ public class LoginFilter implements HttpServerFilter {
     /**
      * 根据配置创建过滤器的实例。
      *
-     * @param config 表示过滤器配置的 {@link DefaultHttpResponseWrapperConfig}。
      * @param authenticationService 表示用户认证服务的 {@link AuthenticationService}。
      */
-    public LoginFilter(DefaultHttpResponseWrapperConfig config, AuthenticationService authenticationService) {
-        this.matchPatterns = ObjectUtils.nullIf(config.getSupport(), Collections.emptyList());
-        this.mismatchPatterns = ObjectUtils.nullIf(config.getNonsupport(), Collections.emptyList());
+    public LoginFilter(AuthenticationService authenticationService) {
+        // 待优化为配置化
+        this.matchPatterns = Collections.singletonList("/**");
+        this.mismatchPatterns = Collections.emptyList();
         this.authenticationService = Validation.notNull(authenticationService, "The auth service cannot be null.");
     }
 
