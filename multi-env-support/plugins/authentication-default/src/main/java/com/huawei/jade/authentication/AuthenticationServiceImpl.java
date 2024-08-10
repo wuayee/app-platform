@@ -4,8 +4,12 @@
 
 package com.huawei.jade.authentication;
 
+import com.huawei.fit.http.Cookie;
+import com.huawei.fit.http.header.CookieCollection;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fitframework.annotation.Component;
+
+import java.util.Optional;
 
 /**
  * 表示用户认证服务接口实现。
@@ -17,6 +21,10 @@ import com.huawei.fitframework.annotation.Component;
 public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String getUserName(HttpClassicServerRequest request) {
-        return "Jade";
+        CookieCollection cookies = request.cookies();
+        Optional<Cookie> tokenOptional = cookies.get("X-Uni-Crsf-Token");
+        Optional<Cookie> tokenIdOptional = cookies.get("X-Uni-Crsf-Token-Id");
+
+        return !tokenOptional.isPresent() || !tokenIdOptional.isPresent() ? "admin" : "Jade";
     }
 }
