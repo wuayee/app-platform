@@ -7,7 +7,7 @@ import ChartCondition from '../../chart-message/chart-condition'
 import ChartMessage from '../../chart-message/chart-message';
 
 const ConditionForm = (props) => {
-  const { data } = props;
+  const { data, chatRunning } = props;
   const [filters, setFilters] = useState();
   const [chartConfig, setChartConfig] = useState();
   const { tenantId, conditionConfirm } = useContext(ChatContext);
@@ -45,10 +45,10 @@ const ConditionForm = (props) => {
     })
   }
   return <>
-    { !data && <div className="title">溯源表单</div>}
-    { filters && <ChartCondition data={filters} confirm={formConfirm} />}
-    { chartConfig && <ChartMessage chartConfig={chartConfig} />}
-  </>
+      { !data && <div className="title">溯源表单</div> }
+      { filters &&  <ChartCondition data={filters} confirm={formConfirm} />}
+      { chartConfig && <ChartMessage chartConfig={ chartConfig } /> }
+    </>
 };
 
 

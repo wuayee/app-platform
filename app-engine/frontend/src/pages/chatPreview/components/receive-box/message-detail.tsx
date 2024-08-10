@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React  from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -14,30 +14,30 @@ const MessageBox = (props) => {
     if (className) {
       return (
         <SyntaxHighlighter
-          language={match?.[1]}
-          showLineNumbers={false}
-          style={oneDark}
-          PreTag='div'
-          className='syntax-hight-wrapper'
-          {...props}
-        >
-          {children}
+            language={match?.[1]}
+            showLineNumbers={ false }
+            style={ oneDark }
+            PreTag='div'
+            className='syntax-hight-wrapper'
+            {...props}
+          >
+            {children}
         </SyntaxHighlighter>)
     }
-    return (<code>{children}</code>)
-  }
-  return (
+    return (<code>{children}</code>) 
+  } 
+  return(
     <>{(
       <div className='receive-info'>
-        {
-          chartConfig ?
-            (<ChartMessage chartConfig={chartConfig} />) :
-            (
-              markdownSyntax ? (<Markdown
-                components={{ code: CodeBlock, p: 'div' }}>
-                { content}
-              </Markdown>) : <div className='receive-info-html' dangerouslySetInnerHTML={{ __html: trans(content) }}></div>
-            )
+        { 
+          chartConfig ? 
+          ( <ChartMessage chartConfig={ chartConfig } /> ) : 
+          (
+            markdownSyntax ? (<Markdown
+              components={{ code: CodeBlock, p: 'div'}}>
+              { content }
+            </Markdown>) : <div dangerouslySetInnerHTML={{ __html: trans(content)}}></div>
+          ) 
         }
         {
           finished &&

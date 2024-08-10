@@ -1,5 +1,5 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
 import InterviewQuestions from '../runtimeForm/InterviewQuestions.jsx';
 import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport.jsx';
 import FileContent from '../runtimeForm/FileContent';
@@ -7,45 +7,41 @@ import QuestionClar from "../runtimeForm/QuestionClar";
 import ConditionForm from '../runtimeForm/conditionForm/conditionForm';
 import { setFormReceived } from "@/store/chatStore/chatStore";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import { ChatContext } from '@/pages/aippIndex/context';
 
 // runtime表单渲染
 const RuntimeForm = (props) => {
   const { formName, formMap } = props.formConfig;
-  const { chatStreaming } = useContext(ChatContext);
   const dispatch = useAppDispatch();
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const questions = []
-  const saveCallBack = (response) => {
+  const saveCallBack = () => {
     dispatch(setFormReceived(true));
-    chatStreaming(response);
   }
   function setFormDom(type) {
     switch (type) {
       case 'file':
-        return <FileContent data={formMap.value} />
+        return <FileContent data={formMap.value}/>
         break;
       case 'interview':
-        return <InterviewQuestions questions={questions} />
+        return <InterviewQuestions questions={questions}/>
         break;
       case 'manageCubeCreateReport':
-        return <ManageCubeCreateReport
-          data={props.formConfig}
-          mode={props.formConfig.type}
-          confirmCallBack={props.confirmCallBack}
-          tenantId={tenantId}
-          saveCallBack={saveCallBack}
-        />
+        return  <ManageCubeCreateReport 
+                  data={props.formConfig} 
+                  mode={props.formConfig.type}
+                  tenantId={tenantId} 
+                  saveCallBack={saveCallBack}
+                />
         break;
       case 'questionClar':
-        return <QuestionClar data={props.formConfig} mode={props.formConfig.type} />
+        return <QuestionClar data={props.formConfig} mode={props.formConfig.type}/>
         break;
       case 'conditionForm':
-        return <ConditionForm
-          data={props.formConfig}
-          chatRunning={chatRunning}
-        />
+        return  <ConditionForm 
+                  data={props.formConfig}
+                  chatRunning={chatRunning}
+                />
         break;
       default:
         return <div>未找到对应的表单类型</div>
@@ -53,7 +49,7 @@ const RuntimeForm = (props) => {
   }
   return <>{(
     <div className='receive-form-item'>
-      { setFormDom(formName)}
+      { setFormDom(formName) }
     </div>
   )}</>
 }

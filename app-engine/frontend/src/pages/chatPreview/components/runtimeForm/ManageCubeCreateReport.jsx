@@ -1,50 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { Input, Button } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import ReportChart from './ReportChart.jsx';
-import { saveContent } from '@shared/http/sse';
-import chartImg from '@/assets/images/chart.png';
-import tableImg from '@/assets/images/table.png';
-import { Message } from '@shared/utils/message';
+import React, { useEffect, useState, useContext } from 'react';
+import {Input, Button} from "antd";
+import {EditOutlined} from '@ant-design/icons';
+import ReportChart from "./ReportChart.jsx";
+import {saveContent} from "@shared/http/appBuilder";
+import chartImg from "@/assets/images/chart.png";
+import tableImg from "@/assets/images/table.png";
+import {Message} from "@shared/utils/message";
 import './styles/manage-cube-create-report.scoped.scss';
 
-const ManageCubeCreateReport = (props) => {
-  const id = 'reportResult';
-  const { data, mode, saveCallBack, tenantId, confirmCallBack } = props;
-  const [chartData, setChartData] = useState(null);
-  const [editable, setEditable] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [disabled, setDisabled] = useState(true);
 
+
+const ManageCubeCreateReport = (props) => {
+  const id = "reportResult";
+  const {data, mode, saveCallBack, tenantId} = props;
+  const [chartData, setChartData] = useState(null);
+  const [title, setTitle] = useState("经营分析报告");
+  const [editable, setEditable] = useState(false);
+  const [editTime, setEditTime] = useState(0);
+  const [canSave, setCanSave] = useState(false);
+  
   const handleEdit = () => {
     setEditable(true);
-    setDisabled(false);
+    setEditTime(1);
   }
-  // 分析报告点击确定回调
-  const handleSave = async () => {
+
+  const handleSave = () => {
     setEditable(false);
     const params = {
       formAppearance: JSON.stringify(data.formAppearance),
-      formData: JSON.stringify({ [id]: chartData }),
+      formData: JSON.stringify({[id]: chartData}),
       businessData: {
         parentInstanceId: data.parentInstanceId,
         [id]: chartData
       }
-    };
-    try {
-      setLoading(true);
-      const res = await saveContent(tenantId, data.instanceId, params);
-      if (res.status !== 200) {
-        Message({ type: 'warning', content: res.msg || '保存失败' });
-        return;
-      };
-      confirmCallBack ? confirmCallBack() : saveCallBack(res);
-    } finally {
-      setLoading(false);
-      setDisabled(true);
     }
-  };
-  // 修改标题回调
+    saveContent(tenantId, data.instanceId, params).then((res) => {
+      if (res.code !== 0) {
+        Message({ type: 'warning', content: res.msg || '保存失败' });
+      } else {
+        saveCallBack();
+      }
+    })
+  }
+
   const handleQueryChange = (e, indexChange) => {
     const newChartData = chartData.map((item, index) => {
       if (index === indexChange) {
@@ -60,7 +58,7 @@ const ManageCubeCreateReport = (props) => {
     });
     setChartData(newChartData);
   }
-  // 修改内容回调
+
   const handleSummaryChange = (e, indexChange, queryIndex) => {
     const newChartData = chartData.map((item, index) => {
       if (index === queryIndex) {
@@ -81,47 +79,54 @@ const ManageCubeCreateReport = (props) => {
     });
     setChartData(newChartData);
   }
-  // 初始化数据
+
   useEffect(() => {
     if (!data?.formData) return;
     if (data.formData[id]) {
-      typeof (data.formData[id]) === 'string' ? setChartData(JSON.parse(data?.formData[id])) : setChartData(data?.formData[id]);
+       typeof (data.formData[id]) === 'string' ? setChartData(JSON.parse(data?.formData[id])) : setChartData(data?.formData[id]);
     }
+    
   }, [data?.formData])
 
+  useEffect(() => {
+    if (editTime) {
+      setCanSave(true);
+    }
+  }, [editTime])
+
   return (<>
-    <div className='form-wrap '>
-      <div>
-        <div className='report-title'>
-          <div style={{ fontSize: '28px', fontWeight: '600' }}>经营分析报告</div>
-          {mode !== 'history' && <EditOutlined onClick={handleEdit} style={{ fontSize: '20px', position: 'absolute', right: '20px' }} />}
-        </div>
-        {!chartData &&
-          <>
-            <img src={chartImg} alt='图表示例图片' style={{ width: '100%' }} />
-            <img src={tableImg} alt='表格示例图片' style={{ width: '100%' }} />
-          </>
-        }
-        {chartData && chartData.map((item, index) => (
-          <React.Fragment key={index}>
-            <Input
-              className='report-query'
-              defaultValue={item.question.query}
-              disabled={!editable}
-              onBlur={(e) => handleQueryChange(e, index)}>
-            </Input>
-            <ReportChart
-              chartConfig={item.answer}
-              disabled={!editable}
-              handleSummaryChange={handleSummaryChange}
-              queryIndex={index} />
-          </React.Fragment>
-        ))}
-        <div className='report-btn'>
-          {mode !== 'history' && <Button type='primary' onClick={handleSave} disabled={disabled} loading={loading}>保存</Button>}
+      <div className='form-wrap '>
+        <div>
+          <div className="report-title">
+            <div style={{fontSize: "28px", fontWeight: "600"}}>{title}</div>
+            { mode !== "history" && <EditOutlined onClick={handleEdit} style={{fontSize: '20px', position: 'absolute', right: '20px'}}/> }
+          </div>
+            {!chartData &&
+              <>
+                <img src={chartImg} alt="图表示例图片" style={{width: "100%"}}/>
+                <img src={tableImg} alt="表格示例图片" style={{width: "100%"}}/>
+              </>
+            }
+            {chartData && chartData.map((item, index) => (
+              <React.Fragment key={index}>
+                <Input 
+                  className="report-query" 
+                  defaultValue={item.question.query} 
+                  disabled={!editable} 
+                  onBlur={(e) => handleQueryChange(e, index)}>
+                </Input>
+                <ReportChart 
+                  chartConfig={item.answer} 
+                  disabled={!editable} 
+                  handleSummaryChange={handleSummaryChange} 
+                  queryIndex={index}/>
+              </React.Fragment>
+            ))}
+            <div className="report-btn">
+              { mode !== "history" && <Button onClick={handleSave} disabled={!canSave} className="save-button">保存</Button> } 
+            </div>
         </div>
       </div>
-    </div>
   </>);
 }
 
