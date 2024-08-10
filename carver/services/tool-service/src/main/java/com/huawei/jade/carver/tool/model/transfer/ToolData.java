@@ -156,7 +156,7 @@ public class ToolData {
      * @return 表示工具创建者的 {@link String}。
      */
     public String getCreator() {
-        return creator;
+        return this.creator;
     }
 
     /**
@@ -174,7 +174,7 @@ public class ToolData {
      * @return 表示工具修改者的 {@link String}。
      */
     public String getModifier() {
-        return modifier;
+        return this.modifier;
     }
 
     /**
@@ -378,7 +378,6 @@ public class ToolData {
         toolData.setModifier(info.modifier());
         toolData.setName(info.name());
         toolData.setUniqueName(info.uniqueName());
-        toolData.setDescription(info.description());
         toolData.setTags(info.tags());
         toolData.setSchema(info.schema());
         toolData.setRunnables(info.runnables());
@@ -401,7 +400,6 @@ public class ToolData {
                 .modifier(toolData.getModifier())
                 .name(toolData.getName())
                 .uniqueName(toolData.getUniqueName())
-                .description(toolData.getDescription())
                 .tags(toolData.getTags())
                 .schema(toolData.getSchema())
                 .runnables(toolData.getRunnables())

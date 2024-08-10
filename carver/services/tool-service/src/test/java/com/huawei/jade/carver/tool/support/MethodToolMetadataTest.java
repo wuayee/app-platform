@@ -79,7 +79,6 @@ public class MethodToolMetadataTest {
                 .name("test_schema_default_implementation_name")
                 .uniqueName("schema-uuid")
                 .tags(Collections.singleton("FIT"))
-                .description("This is a demo FIT function.")
                 .schema(this.buildSchema())
                 .runnables(MapBuilder.<String, Object>get()
                         .put("FIT", MapBuilder.<String, Object>get().put("genericableId", "t1").build())

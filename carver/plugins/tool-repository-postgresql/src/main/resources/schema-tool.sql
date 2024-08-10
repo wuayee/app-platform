@@ -9,7 +9,6 @@ create table if not exists store_tool
     "creator"        varchar(30) default 'system'          not null,
     "modifier"       varchar(30) default 'system'          not null,
     "name"           varchar(256)                          not null,
-    "description"    text        default 'no desc'         not null,
     "schema"         json        default '{}'::json        not null,
     "runnables"      json        default '{}'::json        not null,
     "source"         varchar(16) default 'Builtin'         not null,
@@ -25,7 +24,6 @@ comment on column store_tool.updated_time is '工具的更新时间';
 comment on column store_tool.creator is '工具的创建者';
 comment on column store_tool.modifier is '工具的修改者';
 comment on column store_tool.name is '工具的名字';
-comment on column store_tool.description is '工具的描述';
 comment on column store_tool.schema is '工具的格式';
 comment on column store_tool.runnables is '工具的运行描述';
 comment on column store_tool.source is '工具的来源';

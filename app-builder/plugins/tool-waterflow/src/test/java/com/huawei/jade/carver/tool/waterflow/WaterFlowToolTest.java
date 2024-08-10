@@ -87,7 +87,6 @@ public class WaterFlowToolTest {
                 .name("test_schema_default_implementation_name")
                 .uniqueName("customize-water-flow-uuid")
                 .tags(Collections.singleton("Customize-Workflow"))
-                .description("This is a demo schema tool.")
                 .schema(this.buildSchema())
                 .runnables(this.buildRunnables())
                 .build();

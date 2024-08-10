@@ -18,7 +18,7 @@ import KnowledgeBaseDetailCreateTable from '../pages/knowledge-base/knowledge-de
 import KnowledgeBaseDetailImportData from '../pages/knowledge-base/knowledge-detail/import-data';
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
-import PlugeDetail from '../pages/plugin/detail/detail';
+import PlugeDetail from '../pages/plugin/detail/plugin-list';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;

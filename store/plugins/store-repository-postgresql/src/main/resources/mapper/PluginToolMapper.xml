@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.store.repository.pgsql.mapper.PluginToolMapper">
+    <resultMap id="PluginTool" type="com.huawei.jade.store.repository.pgsql.entity.PluginToolDo">
+        <result column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="download_count" property="downloadCount"/>
+        <result column="tool_name" property="name"/>
+        <result column="plugin_id" property="pluginId"/>
+        <result column="tool_unique_name" property="toolUniqueName"/>
+    </resultMap>
+    <insert id="addPluginTool" parameterType="com.huawei.jade.store.repository.pgsql.entity.PluginToolDo">
+        insert into store_plugin_tool
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="creator != null">"creator",</if>
+            <if test="modifier != null">"modifier",</if>
+            <if test="likeCount != null">"like_count",</if>
+            <if test="downloadCount != null">"download_count",</if>
+            <if test="name != null">"tool_name",</if>
+            <if test="pluginId != null">"plugin_id",</if>
+            "tool_unique_name",
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="creator != null">#{creator},</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="downloadCount != null">#{downloadCount},</if>
+            <if test="name != null">#{name},</if>
+            <if test="pluginId != null">#{pluginId},</if>
+            #{toolUniqueName},
+        </trim>
+        on conflict ("plugin_id", "tool_unique_name") do nothing
+    </insert>
+    <insert id="addPluginTools" parameterType="java.util.List">
+        <foreach item='pluginToolDo' collection="list" separator=";">
+        insert into store_plugin_tool
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pluginToolDo.creator != null">"creator",</if>
+            <if test="pluginToolDo.modifier != null">"modifier",</if>
+            <if test="pluginToolDo.likeCount != null">"like_count",</if>
+            <if test="pluginToolDo.downloadCount != null">"download_count",</if>
+            <if test="pluginToolDo.name != null">"tool_name",</if>
+            <if test="pluginToolDo.pluginId != null">"plugin_id",</if>
+            "tool_unique_name",
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pluginToolDo.creator != null">#{pluginToolDo.creator},</if>
+            <if test="pluginToolDo.modifier != null">#{pluginToolDo.modifier},</if>
+            <if test="pluginToolDo.likeCount != null">#{pluginToolDo.likeCount},</if>
+            <if test="pluginToolDo.downloadCount != null">#{pluginToolDo.downloadCount},</if>
+            <if test="pluginToolDo.name != null">#{pluginToolDo.name},</if>
+            <if test="pluginToolDo.pluginId != null">#{pluginToolDo.pluginId},</if>
+            #{pluginToolDo.toolUniqueName},
+        </trim>
+        on conflict ("plugin_id", "tool_unique_name") do nothing
+        </foreach>
+    </insert>
+    <sql id="getCount">
+        select count(i."like_count")
+        from "store_plugin_tool" i
+                 left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                            from "store_tag" t
+                            group by t."tool_unique_name") tg on i."tool_unique_name" = tg."tool_unique_name"
+    </sql>
+    <sql id="getOrSearchConditions">
+        <if test="mode == 'AND' and includeTags != null and includeTags.size() > 0">
+            and tg.tags is not null
+            and (
+            <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+        </if>
+        <if test="mode == 'OR' and includeTags != null and includeTags.size() > 0">
+            and tg.tags is not null
+            and (
+            <foreach collection="includeTags" item="tag" open="" close="" separator=" or ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+        </if>
+        <if test="excludeTags != null and excludeTags.size() > 0">
+            and ( tg.tags is null
+            or not (
+            <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+            )
+        </if>
+    </sql>
+    <sql id="sortAndLimit">
+        order by i."updated_time" desc
+        <if test="offset != null and offset >= 0">
+            offset #{offset}
+        </if>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </sql>
+    <select id="getPluginToolByUniqueName" resultMap="PluginTool">
+        select "like_count", "download_count", "tool_name", "plugin_id", "tool_unique_name"
+        from "store_plugin_tool"
+        where "tool_unique_name" = #{toolUniqueName}
+    </select>
+    <select id="getPluginTools" parameterType="com.huawei.jade.store.entity.query.PluginToolQuery" resultMap="PluginTool">
+        select i."like_count", i."download_count", i."tool_name", i."plugin_id", i."tool_unique_name"
+        from "store_plugin_tool" i
+        left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                    from "store_tag" t
+                    group by t."tool_unique_name") tg on tg."tool_unique_name" = i."tool_unique_name"
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."tool_name" ilike '%' || #{toolName} || '%'
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+    <select id="getPluginToolsCount" parameterType="com.huawei.jade.store.entity.query.PluginToolQuery">
+        <include refid="getCount"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."tool_name" ilike '%' || #{toolName} || '%'
+            </if>
+        </where>
+    </select>
+    <select id="getPluginToolsByPluginId" resultMap="PluginTool">
+        select i."like_count", i."download_count", i."tool_name", i."plugin_id", i."tool_unique_name"
+        from "store_plugin_tool" i
+        where i."plugin_id" = #{pluginId}
+    </select>
+    <delete id="deletePluginTool" parameterType="String">
+        delete
+        from "store_plugin_tool"
+        where "tool_unique_name" = #{toolUniqueName};
+    </delete>
+</mapper>

@@ -9,7 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.entity.transfer.PluginToolData;
 
 import java.io.File;
 import java.util.Arrays;
@@ -41,13 +41,14 @@ public class FileParser {
      * @param toolNames 给定的工具名列表的 {@link Set}{@code <}{@link String}{@code >}。
      * @return 匹配成功的工具数据。
      */
-    public static PluginData getPluginData(Map<String, Object> toolFile, String toolNames) {
+    public static PluginToolData getPluginData(Map<String, Object> toolFile, String toolNames) {
         notNull(toolFile, "Tool metadata cannot be null.");
         notNull(toolNames, "The input tool names cannot be null.");
 
         Set<String> toolNamesSet = Arrays.stream(toolNames.trim().split(COMMA)).collect(Collectors.toSet());
+
         Map<String, Object> schemaNode = notNull(ObjectUtils.cast(toolFile.get(SCHEMA)), "Tool schema cannot be null.");
-        PluginData pluginData = new PluginData();
+        PluginToolData pluginData = new PluginToolData();
         pluginData.setSchema(schemaNode);
         String methodName = validateSchemaStringField(schemaNode, NAME);
         if (!toolNamesSet.contains(methodName)) {
@@ -55,7 +56,6 @@ public class FileParser {
         }
         pluginData.setName(methodName);
         pluginData.setDescription(validateSchemaStringField(schemaNode, DESCRIPTION));
-
         Map<String, Object> runnables =
                 notNull(ObjectUtils.cast(toolFile.get(RUNNABLES)), "Tool runnables cannot be null.");
         pluginData.setRunnables(runnables);

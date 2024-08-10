@@ -43,7 +43,6 @@ public class DefaultValueFilterToolInfoTest {
         return Tool.Info.custom()
                 .name("test_schema_default_implementation_name")
                 .uniqueName("decorator-customize-tool-uuid")
-                .description("This is a demo schema tool.")
                 .schema(schema)
                 .build();
     }
