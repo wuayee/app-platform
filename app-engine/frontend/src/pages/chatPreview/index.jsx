@@ -78,6 +78,8 @@ const ChatPreview = (props) => {
   useEffect(() => {
     currentInfo.current = appInfo;
     return () => {
+      dispatch(setChatRunning(false));
+      dispatch(setChatList([]));
       closeConnected();
     };
   }, []);

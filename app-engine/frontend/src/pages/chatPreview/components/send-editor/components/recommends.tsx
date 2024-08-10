@@ -84,6 +84,12 @@ const Recommends = (props) => {
     }
   }, [chatList]);
 
+  useEffect(() => {
+    return () => {
+      setRecommendList([]);
+    }
+  }, []);
+
   return <>{(
     <div className='recommends-inner'>
       {

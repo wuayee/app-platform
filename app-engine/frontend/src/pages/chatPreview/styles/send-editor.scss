@@ -6,7 +6,6 @@
     margin: 0 auto;
     padding: 0 48px;
     border-radius: 8px;
-    position: relative;
     .editor-icon {
       cursor: pointer;
       margin-right: 12px;
@@ -18,7 +17,7 @@
     }
     .editor-stop {
       position: absolute;
-      top: -54px;
+      top: 0;
       left: calc(50% - 62px);
       z-index: 999;
       cursor: pointer;
@@ -438,8 +437,8 @@
     }
     .recommends-item {
       margin: 10px 0;
-      background: rgba(255,255,255,0.41);
-      border: 1px solid rgba(38,115,229,1);
+      background: rgba(255, 255, 255, 0.41);
+      border: 1px solid rgba(38, 115, 229, 1);
       border-radius: 100px;
       box-sizing: border-box;
       padding: 10px 20px;
@@ -525,7 +524,7 @@
       font-weight: 600;
     }
     .item-name {
-      padding: 0 8px ;
+      padding: 0 8px;
       cursor: pointer;
       max-width: 120px;
       overflow: hidden;
@@ -533,7 +532,7 @@
       white-space: nowrap;
     }
     .item-clear {
-      padding: 0 8px ;
+      padding: 0 8px;
       cursor: pointer;
       border: 1px solid #0478fc;
       border-radius: 18px;
@@ -549,7 +548,9 @@
       height: 24px;
       margin-left: 16px;
       &:hover {
-        path{ stroke:#2673e5}
+        path {
+          stroke: #2673e5
+        }
       }
     }
     .item-close {
@@ -567,11 +568,11 @@
     animation: active-audio-btn-circle-blink 1s infinite alternate forwards;
   }
   @keyframes active-audio-btn-circle-blink {
-    0% { 
-        fill: #2673E5;    
+    0% {
+      fill: #2673E5;
     }
     100% {
-        fill: #F2F6FC;
+      fill: #F2F6FC;
     }
   }
 
@@ -579,11 +580,11 @@
     animation: active-audio-btn-path-blink 1s infinite alternate forwards;
   }
   @keyframes active-audio-btn-path-blink {
-    0% { 
-        fill: #fff;    
+    0% {
+      fill: #fff;
     }
     100% {
-        fill: #333;
+      fill: #333;
     }
   }
 }
