@@ -4,81 +4,61 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.jade.store.repository.pgsql.entity.PluginDo.toPluginData;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.ListResult;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
-import com.huawei.jade.store.repository.pgsql.entity.TagDo;
 import com.huawei.jade.store.repository.pgsql.repository.PluginRepository;
-import com.huawei.jade.store.repository.pgsql.repository.TagRepository;
 import com.huawei.jade.store.service.PluginService;
+import com.huawei.jade.store.service.PluginToolService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * 插件的 Http 请求的服务层实现。
  *
  * @author 鲁为 l00839724
- * @since 2024-06-15
+ * @since 2024-07-25
  */
 @Component
 public class DefaultPluginService implements PluginService {
-    private static final Logger logger = Logger.get(DefaultPluginService.class);
-    private final ToolService toolService;
     private final PluginRepository pluginRepository;
-    private final TagRepository tagRepository;
+    private final PluginToolService pluginToolService;
+    private final ObjectSerializer serializer;
 
     /**
-     * 通过工具服务接口来初始化 {@link DefaultPluginService} 的实例。
+     * 通过插件仓库、插件工具服务和序列化器来初始化 {@link DefaultPluginService} 的实例。
      *
-     * @param toolService 表示持久层实例的 {@link ToolService}。
      * @param pluginRepository 表示插件的仓库的 {@link PluginRepository}。
-     * @param tagRepository 表示标签仓库的 {@link TagRepository}。
+     * @param pluginToolService 表示插件工具的服务的 {@link PluginToolService}。
+     * @param serializer 表示序列化器的 {@link ObjectSerializer}。
      */
-    public DefaultPluginService(ToolService toolService, PluginRepository pluginRepository,
-            TagRepository tagRepository) {
-        this.toolService = toolService;
+    public DefaultPluginService(PluginRepository pluginRepository, PluginToolService pluginToolService,
+            ObjectSerializer serializer) {
         this.pluginRepository = pluginRepository;
-        this.tagRepository = tagRepository;
+        this.pluginToolService = pluginToolService;
+        this.serializer = serializer;
     }
 
     @Override
     @Fitable(id = "store-repository-pgsql")
     public String addPlugin(PluginData pluginData) {
-        notNull(pluginData, "The plugin data cannot be null.");
-        String uniqueName = UUID.randomUUID().toString();
-        pluginData.setUniqueName(uniqueName);
-        try {
-            this.toolService.addTool(pluginData);
-            logger.info("Succeeded to add tool. [toolUniqueName={}]", pluginData.getUniqueName());
-        } catch (FitException e) {
-            logger.error("Failed to add tool.");
-            throw e;
+        String pluginId = this.pluginRepository.addPlugin(pluginData);
+        List<PluginToolData> pluginToolDataList = pluginData.getPluginToolDataList();
+        for (PluginToolData pluginToolData : pluginToolDataList) {
+            pluginToolData.setPluginId(pluginId);
         }
-        try {
-            this.pluginRepository.addPlugin(pluginData);
-            logger.info("Succeeded to add plugin and tags. [toolUniqueName={}]", pluginData.getUniqueName());
-        } catch (FitException e) {
-            logger.error("Failed to add plugin and tags.");
-            // 回滚之前的数据库插入操作。
-            String version = pluginData.getVersion();
-            this.toolService.deleteToolByVersion(uniqueName, version == null ? "1.0.0" : version);
-            throw e;
-        }
-        return uniqueName;
+        this.pluginToolService.addPluginTools(pluginToolDataList);
+        return pluginId;
     }
 
     @Override
@@ -86,14 +66,6 @@ public class DefaultPluginService implements PluginService {
     public ListResult<PluginData> getPlugins(PluginQuery pluginQuery) {
         if (pluginQuery == null) {
             return ListResult.empty();
-        }
-        if (pluginQuery.getCollector() != null && !StringUtils.isBlank(pluginQuery.getCollector())) {
-            List<PluginDo> list = this.pluginRepository.getMyCollection(pluginQuery);
-            List<PluginData> data = getPluginDataList(list);
-            pluginQuery.setLimit(null);
-            pluginQuery.setOffset(null);
-            int count = this.pluginRepository.getMyCollection(pluginQuery).size();
-            return ListResult.create(data, count);
         }
         if ((pluginQuery.getOffset() != null && pluginQuery.getOffset() < 0) || (pluginQuery.getLimit() != null
                 && pluginQuery.getLimit() < 0)) {
@@ -103,64 +75,33 @@ public class DefaultPluginService implements PluginService {
         pluginQuery.setIncludeTags(includeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         Set<String> excludeTags = pluginQuery.getExcludeTags();
         pluginQuery.setExcludeTags(excludeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
-        List<PluginDo> dos = this.pluginRepository.getPlugins(pluginQuery);
-        List<PluginData> data = this.getPluginDataList(dos);
+        List<PluginDo> pluginDos = this.pluginRepository.getPlugins(pluginQuery);
+        List<PluginData> pluginDataList = pluginDos.stream().map(pluginDo -> toPluginData(pluginDo, serializer))
+                .collect(Collectors.toList());
 
         pluginQuery.setLimit(null);
         pluginQuery.setOffset(null);
         int count = this.pluginRepository.getPluginsCount(pluginQuery);
-        return ListResult.create(data, count);
+        return ListResult.create(pluginDataList, count);
     }
 
     @Override
     @Fitable(id = "store-repository-pgsql")
-    public PluginData getPlugin(String toolUniqueName) {
-        PluginDo pluginDo = this.pluginRepository.getPluginByUniqueName(toolUniqueName);
-        ToolData toolData = this.toolService.getTool(toolUniqueName);
-        PluginData pluginData = new PluginData(toolData,
-                pluginDo.getIsPublished(), pluginDo.getOwner(), pluginDo.getLikeCount(), pluginDo.getDownloadCount());
-        pluginData.setTags(this.tagRepository.getTags(pluginDo.getToolUniqueName())
-                .stream()
-                .map(TagDo::getName)
-                .collect(Collectors.toSet()));
+    public PluginData getPlugin(String pluginId) {
+        PluginData pluginData = toPluginData(this.pluginRepository.getPluginByPluginId(pluginId), serializer);
+        List<PluginToolData> pluginToolDataList = this.pluginToolService.getPluginTools(pluginId);
+        pluginData.setPluginToolDataList(pluginToolDataList);
         return pluginData;
     }
 
     @Override
     @Fitable(id = "store-repository-pgsql")
-    public String deletePlugin(String toolUniqueName) {
-        PluginData oldPluginData = this.getPlugin(toolUniqueName);
-        try {
-            this.pluginRepository.deletePlugin(toolUniqueName);
-            logger.info("Succeeded to delete plugin and tags. [toolUniqueName={}]", toolUniqueName);
-        } catch (FitException e) {
-            logger.error("Failed to delete plugin and tags.");
-            throw e;
+    public String deletePlugin(String pluginId) {
+        List<PluginToolData> pluginToolDataList = this.pluginToolService.getPluginTools(pluginId);
+        for (PluginToolData pluginToolData : pluginToolDataList) {
+            this.pluginToolService.deletePluginTool(pluginToolData.getUniqueName());
         }
-        try {
-            this.toolService.deleteTool(toolUniqueName);
-            logger.info("Succeeded to delete existing tool. [toolUniqueName={}]", toolUniqueName);
-        } catch (FitException e) {
-            logger.error("Failed to delete existing tool.");
-            // 回滚之前的数据库插入操作。
-            this.pluginRepository.addPlugin(oldPluginData);
-            throw e;
-        }
-        return toolUniqueName;
-    }
-
-    private List<PluginData> getPluginDataList(List<PluginDo> list) {
-        List<PluginData> data = new ArrayList<>();
-        for (PluginDo pluginDo : list) {
-            PluginData pluginData = new PluginData(this.toolService.getTool(pluginDo.getToolUniqueName()),
-                    pluginDo.getIsPublished(), pluginDo.getOwner(),
-                    pluginDo.getLikeCount(), pluginDo.getDownloadCount());
-            pluginData.setTags(this.tagRepository.getTags(pluginDo.getToolUniqueName())
-                    .stream()
-                    .map(TagDo::getName)
-                    .collect(Collectors.toSet()));
-            data.add(pluginData);
-        }
-        return data;
+        this.pluginRepository.deletePlugin(pluginId);
+        return pluginId;
     }
 }

@@ -9,6 +9,8 @@ import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
+import java.util.List;
+
 /**
  * 提供工具的通用服务。
  *
@@ -26,6 +28,14 @@ public interface ToolService {
     String addTool(ToolData tool);
 
     /**
+     * 注册工具列表。
+     *
+     * @param toolDataList 表示待注册的工具信息的 {@link List}{@code <}{@link ToolData}{@code >}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.addTools")
+    void addTools(List<ToolData> toolDataList);
+
+    /**
      * 删除工具。
      *
      * @param toolUniqueName 表示待删除工具唯一标识的 {@link String}。
@@ -33,6 +43,14 @@ public interface ToolService {
      */
     @Genericable(id = "com.huawei.jade.carver.tool.deleteTool")
     String deleteTool(String toolUniqueName);
+
+    /**
+     * 删除工具列表。
+     *
+     * @param uniqueNames 表示待删除工具唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.deleteTools")
+    void deleteTools(List<String> uniqueNames);
 
     /**
      * 删除工具的某一个版本。

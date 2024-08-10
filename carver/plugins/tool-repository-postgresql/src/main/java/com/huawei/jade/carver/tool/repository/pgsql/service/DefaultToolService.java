@@ -4,6 +4,7 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.service;
 
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
 
 import com.huawei.fitframework.annotation.Component;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DefaultToolService implements ToolService {
+    private static final String TOOL_DESCRIPTION = "description";
+
     private final ToolRepository toolRepo;
 
     /**
@@ -63,6 +66,21 @@ public class DefaultToolService implements ToolService {
         return toolData.getUniqueName();
     }
 
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    @Transactional
+    public void addTools(List<ToolData> toolDataList) {
+        for (ToolData toolData : toolDataList) {
+            toolData.setName(Objects.toString(toolData.getSchema().get("name")));
+            if (toolData.getSchema().containsKey("description")) {
+                toolData.setDescription(Objects.toString(toolData.getSchema().get("description")));
+            }
+        }
+        List<Tool.Info> infos = toolDataList.stream().map(toolData -> ToolData.convertToInfo(toolData)).collect(
+                Collectors.toList());
+        this.toolRepo.addTools(infos);
+    }
+
     /**
      * 服务层删除工具。
      *
@@ -75,6 +93,13 @@ public class DefaultToolService implements ToolService {
     public String deleteTool(String toolUniqueName) {
         this.toolRepo.deleteTool(toolUniqueName);
         return toolUniqueName;
+    }
+
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    @Transactional
+    public void deleteTools(List<String> uniqueNames) {
+        this.toolRepo.deleteTools(uniqueNames);
     }
 
     @Override
@@ -100,6 +125,8 @@ public class DefaultToolService implements ToolService {
             return null;
         }
         ToolData toolData = ToolData.from(info.get());
+        String description = cast(toolData.getSchema().get(this.TOOL_DESCRIPTION));
+        toolData.setDescription(description);
         Set<String> tagNames = this.toolRepo.getTags(toolUniqueName);
         toolData.setTags(tagNames);
         return toolData;
@@ -132,6 +159,8 @@ public class DefaultToolService implements ToolService {
         if (CollectionUtils.isNotEmpty(infos)) {
             for (Tool.Info info : infos) {
                 ToolData toolData = ToolData.from(info);
+                String description = cast(toolData.getSchema().get(this.TOOL_DESCRIPTION));
+                toolData.setDescription(description);
                 Set<String> tags = this.toolRepo.getTags(toolData.getUniqueName());
                 toolData.setTags(tags);
                 toolDataList.add(toolData);
@@ -171,6 +200,8 @@ public class DefaultToolService implements ToolService {
         if (CollectionUtils.isNotEmpty(infos)) {
             for (Tool.Info info : infos) {
                 ToolData toolData = ToolData.from(info);
+                String description = cast(toolData.getSchema().get(this.TOOL_DESCRIPTION));
+                toolData.setDescription(description);
                 Set<String> tags = this.toolRepo.getTags(toolData.getUniqueName());
                 toolData.setTags(tags);
                 toolDataList.add(toolData);
@@ -198,6 +229,8 @@ public class DefaultToolService implements ToolService {
             return null;
         }
         ToolData toolData = ToolData.from(info.get());
+        String description = cast(toolData.getSchema().get(this.TOOL_DESCRIPTION));
+        toolData.setDescription(description);
         Set<String> tagNames = this.toolRepo.getTags(toolUniqueName);
         toolData.setTags(tagNames);
         return toolData;
@@ -219,6 +252,8 @@ public class DefaultToolService implements ToolService {
             Set<String> tags = this.toolRepo.getTags(infos.get(0).uniqueName());
             for (Tool.Info info : infos) {
                 ToolData toolData = ToolData.from(info);
+                String description = cast(toolData.getSchema().get(this.TOOL_DESCRIPTION));
+                toolData.setDescription(description);
                 toolData.setTags(tags);
                 toolDataList.add(toolData);
             }

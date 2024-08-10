@@ -14,30 +14,23 @@ import java.util.List;
  * 插件的仓库。
  *
  * @author 鲁为 l00839724
- * @since 2024-07-18
+ * @since 2024-07-25
  */
 public interface PluginRepository {
     /**
      * 添加插件。
      *
      * @param pluginData 表示待添加的插件的 {@link PluginData}。
+     * @return 表示插件的唯一标识的 {@link String}。
      */
-    void addPlugin(PluginData pluginData);
+    String addPlugin(PluginData pluginData);
 
     /**
      * 删除插件。
      *
-     * @param toolUniqueName 表示待删除的插件的唯一标识的 {@link String}。
+     * @param pluginId 表示待删除的插件的唯一标识的 {@link String}。
      */
-    void deletePlugin(String toolUniqueName);
-
-    /**
-     * 根据动态查询条件分页查询用户收藏的插件列表。
-     *
-     * @param pluginQuery 表示查询参数的 {@link PluginQuery}。
-     * @return 插件信息列表的 {@link List}{@code <}{@link PluginDo}{@code >}。
-     */
-    List<PluginDo> getMyCollection(PluginQuery pluginQuery);
+    void deletePlugin(String pluginId);
 
     /**
      * 根据动态查询条件分页查询插件。
@@ -51,15 +44,15 @@ public interface PluginRepository {
      * 根据动态查询条件分页查询插件的总数。
      *
      * @param pluginQuery 表示查询参数的实体类的 {@link PluginQuery}。
-     * @return 插件总数的 {@code int}。
+     * @return 插件工具总数的 {@code int}。
      */
     int getPluginsCount(PluginQuery pluginQuery);
 
     /**
-     * 基于工具的唯一标识查询某个插件。
+     * 基于插件的唯一标识查询某个插件。
      *
-     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
+     * @param pluginId 表示插件的唯一标识的 {@link String}。
      * @return 表示插件信息的 {@link PluginDo}。
      */
-    PluginDo getPluginByUniqueName(String toolUniqueName);
+    PluginDo getPluginByPluginId(String pluginId);
 }

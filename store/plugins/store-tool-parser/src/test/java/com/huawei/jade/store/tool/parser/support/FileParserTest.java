@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.entity.transfer.PluginToolData;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -71,20 +71,20 @@ public class FileParserTest {
     @DisplayName("给定有效工具名，数据匹配成功")
     void givenValidToolNamesThenGetToolDataSuccessfully() {
         String validToolNames = "add list,add itself";
-        List<PluginData> list = new ArrayList<>();
+        List<PluginToolData> list = new ArrayList<>();
         for (Object toolInfo : this.toolList) {
             Map<String, Object> toolMap = ObjectUtils.cast(toolInfo);
-            PluginData pluginData = FileParser.getPluginData(toolMap, validToolNames);
-            if (pluginData.getName() != null) {
-                list.add(pluginData);
+            PluginToolData pluginToolData = FileParser.getPluginData(toolMap, validToolNames);
+            if (pluginToolData.getName() != null) {
+                list.add(pluginToolData);
             }
         }
         assertThat(list.size()).isEqualTo(2);
-        PluginData pluginData = list.get(0);
-        assertThat(pluginData.getName()).isEqualTo("add list");
-        assertThat(pluginData.getDescription()).isEqualTo("This method adds two list");
-        pluginData = list.get(1);
-        assertThat(pluginData.getName()).isEqualTo("add itself");
-        assertThat(pluginData.getDescription()).isEqualTo("This method adds two integers");
+        PluginToolData pluginToolData = list.get(0);
+        assertThat(pluginToolData.getName()).isEqualTo("add list");
+        assertThat(pluginToolData.getDescription()).isEqualTo("This method adds two list");
+        pluginToolData = list.get(1);
+        assertThat(pluginToolData.getName()).isEqualTo("add itself");
+        assertThat(pluginToolData.getDescription()).isEqualTo("This method adds two integers");
     }
 }
