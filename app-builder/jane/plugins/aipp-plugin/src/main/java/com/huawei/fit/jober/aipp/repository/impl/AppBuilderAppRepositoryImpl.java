@@ -67,7 +67,7 @@ public class AppBuilderAppRepositoryImpl implements AppBuilderAppRepository {
     }
 
     @Override
-    public void delete(String appId) {
-        this.appBuilderAppMapper.delete(appId);
+    public void delete(List<String> appIds) {
+        this.appBuilderAppMapper.delete(appIds);
     }
 }

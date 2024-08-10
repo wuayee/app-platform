@@ -71,7 +71,7 @@ public class AppBuilderConfigPropertyRepositoryImpl implements AppBuilderConfigP
     }
 
     @Override
-    public void deleteByConfigId(String id) {
-        this.appBuilderConfigPropertyMapper.deleteByConfigId(id);
+    public void deleteByConfigIds(List<String> configIds) {
+        this.appBuilderConfigPropertyMapper.deleteByConfigIds(configIds);
     }
 }

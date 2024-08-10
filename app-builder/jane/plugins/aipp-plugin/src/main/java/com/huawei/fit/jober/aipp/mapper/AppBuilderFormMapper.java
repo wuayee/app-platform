@@ -49,7 +49,7 @@ public interface AppBuilderFormMapper {
     /**
      * 通过表单id删除表单信息
      *
-     * @param id 被删除的表单id
+     * @param ids 被删除的表单id
      */
-    void delete(String id);
+    void delete(List<String> ids);
 }

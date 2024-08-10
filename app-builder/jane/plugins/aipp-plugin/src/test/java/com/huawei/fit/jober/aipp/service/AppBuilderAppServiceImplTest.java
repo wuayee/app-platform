@@ -4,8 +4,21 @@
 
 package com.huawei.fit.jober.aipp.service;
 
+import static com.huawei.fit.jober.aipp.constants.AippConst.ATTR_APP_ID_KEY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
+import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.instance.Instance;
+import com.huawei.fit.jober.FlowsService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
@@ -15,14 +28,31 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppCreateDto;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
+import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
+import com.huawei.fit.jober.aipp.mapper.AippUploadedFileMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderConfigMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderConfigPropertyMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderFlowGraphMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderFormMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderFormPropertyMapper;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
+import com.huawei.fit.jober.aipp.repository.impl.AppBuilderAppRepositoryImpl;
+import com.huawei.fit.jober.aipp.repository.impl.AppBuilderConfigPropertyRepositoryImpl;
+import com.huawei.fit.jober.aipp.repository.impl.AppBuilderConfigRepositoryImpl;
+import com.huawei.fit.jober.aipp.repository.impl.AppBuilderFlowGraphRepositoryImpl;
+import com.huawei.fit.jober.aipp.repository.impl.AppBuilderFormPropertyRepositoryImpl;
+import com.huawei.fit.jober.aipp.repository.impl.AppBuilderFormRepositoryImpl;
 import com.huawei.fit.jober.aipp.service.impl.AppBuilderAppServiceImpl;
+import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.jade.app.engine.base.service.UsrAppCollectionService;
+import com.huawei.jade.store.service.AppService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -39,6 +69,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +120,12 @@ public class AppBuilderAppServiceImplTest {
                 64,
                 metaService,
                 usrAppCollectionService,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
                 null);
     }
 
@@ -319,6 +357,7 @@ public class AppBuilderAppServiceImplTest {
             attributes.put(AippConst.ATTR_APP_IS_UPDATE, true);
             Mockito.when(appRepository.selectWithId("hello"))
                     .thenReturn(AppBuilderApp.builder()
+                            .id("hello")
                             .attributes(attributes)
                             .flowGraph(AppBuilderFlowGraph.builder().appearance("{}").build())
                             .config(AppBuilderConfig.builder()
@@ -344,5 +383,122 @@ public class AppBuilderAppServiceImplTest {
                 + "\"parent\":\"root:13\",\"disabled\":true,\"children\":[{\"title\":\"中国区\",\"id\":\"131\","
                 + "\"parent\":\"13:131\",\"disabled\":true,\"children\":[{\"title\":\"数字化工具\","
                 + "\"id\":\"1311\",\"parent\":\"131:1311\",\"children\":[]}]}]}]}]}],\"inspirations\":[]}");
+    }
+
+    /**
+     * 为 {@link AppBuilderAppServiceImpl#delete(String, OperationContext)} 提供测试
+     */
+    @Nested
+    @DisplayName("测试删除是否成功")
+    class TestDelete extends DatabaseBaseTest {
+        private final AppBuilderAppMapper appBuilderAppMapper =
+                sqlSessionManager.openSession(true).getMapper(AppBuilderAppMapper.class);
+        private final AppBuilderConfigMapper appBuilderConfigMapper =
+                sqlSessionManager.openSession(true).getMapper(AppBuilderConfigMapper.class);
+        private final AppBuilderConfigPropertyMapper appBuilderConfigPropertyMapper =
+                sqlSessionManager.openSession(true).getMapper(AppBuilderConfigPropertyMapper.class);
+        private final AppBuilderFlowGraphMapper appBuilderFlowGraphMapper =
+                sqlSessionManager.openSession(true).getMapper(AppBuilderFlowGraphMapper.class);
+        private final AppBuilderFormMapper appBuilderFormMapper =
+                sqlSessionManager.openSession(true).getMapper(AppBuilderFormMapper.class);
+        private final AppBuilderFormPropertyMapper appBuilderFormPropertyMapper =
+                sqlSessionManager.openSession(true).getMapper(AppBuilderFormPropertyMapper.class);
+        private final AppBuilderFormPropertyRepository formPropertyRepository =
+                new AppBuilderFormPropertyRepositoryImpl(this.appBuilderFormPropertyMapper);
+        private final AppBuilderFormRepository formRepository =
+                new AppBuilderFormRepositoryImpl(this.appBuilderFormMapper, this.formPropertyRepository);
+        private final AppBuilderConfigPropertyRepository configPropertyRepository =
+                new AppBuilderConfigPropertyRepositoryImpl(this.appBuilderConfigPropertyMapper);
+        private final AppBuilderConfigRepository configRepository =
+                new AppBuilderConfigRepositoryImpl(this.appBuilderConfigMapper,
+                        this.configPropertyRepository,
+                        this.formRepository);
+        private final AppBuilderAppRepository appRepository = new AppBuilderAppRepositoryImpl(this.appBuilderAppMapper);
+        private final AppBuilderFlowGraphRepository flowGraphRepository =
+                new AppBuilderFlowGraphRepositoryImpl(this.appBuilderFlowGraphMapper);
+        private AippFlowService aippFlowService;
+        private final MetaService metaService = Mockito.mock(MetaService.class);
+        private final UsrAppCollectionService usrAppCollectionService = Mockito.mock(UsrAppCollectionService.class);
+        private final MetaInstanceService metaInstanceService = Mockito.mock(MetaInstanceService.class);
+        private final AippUploadedFileMapper aippUploadedFileMapper = Mockito.mock(AippUploadedFileMapper.class);
+        private final AippLogMapper aippLogMapper = Mockito.mock(AippLogMapper.class);
+        private final FlowsService flowsService = Mockito.mock(FlowsService.class);
+        private final AppService appService = Mockito.mock(AppService.class);
+        private final AippChatService aippChatService = Mockito.mock(AippChatService.class);
+        private final AppBuilderAppFactory factory = new AppBuilderAppFactory(this.flowGraphRepository,
+                this.configRepository,
+                this.formRepository,
+                this.configPropertyRepository,
+                this.formPropertyRepository,
+                this.appRepository);
+        private final AppBuilderAppService appBuilderAppService = new AppBuilderAppServiceImpl(this.factory,
+                this.aippFlowService,
+                this.appRepository,
+                64,
+                this.metaService,
+                this.usrAppCollectionService,
+                null,
+                this.metaInstanceService,
+                this.aippUploadedFileMapper,
+                this.aippLogMapper,
+                this.flowsService,
+                this.appService,
+                this.aippChatService);
+
+        @Test
+        @DisplayName("测试删除 app 所有信息")
+        void testDeleteAppBasicData() {
+            Meta meta = this.buildMeta();
+            RangedResultSet<Meta> metas = RangedResultSet.create(Collections.singletonList(meta), 0, 1, 1);
+            Mockito.when(this.metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any(), any()))
+                    .thenReturn(metas);
+            RangedResultSet<Instance> instances = this.buildInstances();
+            Mockito.when(this.metaInstanceService.list(eq("vid1"), any(), anyLong(), anyInt(), any()))
+                    .thenReturn(instances);
+            AppBuilderAppPo appPo = this.appBuilderAppMapper.selectWithId("df87073b9bc85a48a9b01eccc9afccc4");
+            String configId = appPo.getConfigId();
+            AppBuilderConfig config = this.configRepository.selectWithId(configId);
+            List<AppBuilderConfigProperty> configProperties =
+                    this.configPropertyRepository.selectWithConfigId(configId);
+            String formId = config.getFormId();
+            assertEquals(appPo.getId(), "df87073b9bc85a48a9b01eccc9afccc4");
+            AppBuilderForm appBuilderForm = this.formRepository.selectWithId(formId);
+            assertEquals(configProperties.size(), 8);
+            assertEquals(appBuilderForm.getId(), "b8986770a6ffef44bbf2a9f26d6fc1bc");
+            List<AppBuilderFormProperty> appBuilderFormProperties =
+                    this.formPropertyRepository.selectWithFormId(formId);
+            assertEquals(appBuilderFormProperties.size(), 8);
+
+            this.appBuilderAppService.delete("df87073b9bc85a48a9b01eccc9afccc4", new OperationContext());
+
+            AppBuilderAppPo newAppPo = this.appBuilderAppMapper.selectWithId("df87073b9bc85a48a9b01eccc9afccc4");
+            assertNull(newAppPo);
+            AppBuilderForm newAppBuilderForm = this.formRepository.selectWithId(formId);
+            assertNull(newAppBuilderForm);
+            List<AppBuilderConfigProperty> newConfigProperties =
+                    this.configPropertyRepository.selectWithConfigId(configId);
+            assertEquals(newConfigProperties.size(), 0);
+            List<AppBuilderFormProperty> newFormProperties = this.formPropertyRepository.selectWithFormId(formId);
+            assertEquals(newFormProperties.size(), 0);
+        }
+
+        private RangedResultSet<Instance> buildInstances() {
+            Instance instance1 = new Instance();
+            instance1.setId("instanceId1");
+            Instance instance2 = new Instance();
+            instance2.setId("instanceId2");
+            return RangedResultSet.create(Arrays.asList(instance1, instance2), 0, 2, 2);
+        }
+
+        private Meta buildMeta() {
+            Meta meta = new Meta();
+            meta.setId("mid1");
+            meta.setVersionId("vid1");
+            meta.setVersion("v1");
+            Map<String, Object> attr = new HashMap<>();
+            attr.put(ATTR_APP_ID_KEY, "df87073b9bc85a48a9b01eccc9afccc4");
+            meta.setAttributes(attr);
+            return meta;
+        }
     }
 }

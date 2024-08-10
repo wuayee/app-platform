@@ -18,7 +18,7 @@
         select
         <include refid="Base_Column_List"/>
         from app_builder_form_property
-        where form_id = #{formId}
+        where form_id = #{formId} and is_deleted = 0
     </select>
 
     <select id="selectWithId" resultMap="BaseResultMap"
@@ -26,7 +26,7 @@
         select
         <include refid="Base_Column_List"/>
         from app_builder_form_property
-        where id = #{id}
+        where id = #{id} and is_deleted = 0
     </select>
 
     <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo">
@@ -73,8 +73,12 @@
         </foreach>
     </delete>
 
-    <delete id="deleteByFormId">
-        delete from app_builder_form_property
-        where form_id = #{formId}
-    </delete>
+    <update id="deleteByFormIds" parameterType="java.util.List">
+        UPDATE app_builder_form_property
+        set is_deleted = 1
+        where form_id in
+        <foreach collection="formIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

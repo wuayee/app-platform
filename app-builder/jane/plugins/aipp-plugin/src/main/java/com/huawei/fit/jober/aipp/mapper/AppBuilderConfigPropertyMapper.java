@@ -63,7 +63,7 @@ public interface AppBuilderConfigPropertyMapper {
     /**
      * 通过配置id删除配置属性
      *
-     * @param id 被删除的配置属性的配置id
+     * @param configIds 被删除的配置属性的配置id
      */
-    void deleteByConfigId(String id);
+    void deleteByConfigIds(List<String> configIds);
 }

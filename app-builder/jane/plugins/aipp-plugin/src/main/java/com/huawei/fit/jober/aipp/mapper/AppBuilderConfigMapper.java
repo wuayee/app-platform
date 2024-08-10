@@ -6,6 +6,8 @@ package com.huawei.fit.jober.aipp.mapper;
 
 import com.huawei.fit.jober.aipp.po.AppBuilderConfigPo;
 
+import java.util.List;
+
 /**
  * AppBuilder配置映射器
  *
@@ -20,6 +22,14 @@ public interface AppBuilderConfigMapper {
      * @return AppBuilder配置信息
      */
     AppBuilderConfigPo selectWithId(String id);
+
+    /**
+     * 通过id查询AppBuilder配置
+     *
+     * @param ids 配置id集合
+     * @return AppBuilder配置信息
+     */
+    List<AppBuilderConfigPo> selectWithIds(List<String> ids);
 
     /**
      * 插入一个配置信息
@@ -46,7 +56,7 @@ public interface AppBuilderConfigMapper {
     /**
      * 删除配置信息
      *
-     * @param id 被删除的配置id
+     * @param ids 被删除的配置id集合
      */
-    void delete(String id);
+    void delete(List<String> ids);
 }

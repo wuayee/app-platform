@@ -6,6 +6,8 @@ package com.huawei.fit.jober.aipp.mapper;
 
 import com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo;
 
+import java.util.List;
+
 /**
  * AppBuilder流程图映射器
  *
@@ -38,7 +40,7 @@ public interface AppBuilderFlowGraphMapper {
     /**
      * 根据流程图id删除流程图
      *
-     * @param id 被删除的流程图id
+     * @param ids 被删除的流程图id
      */
-    void delete(String id);
+    void delete(List<String> ids);
 }

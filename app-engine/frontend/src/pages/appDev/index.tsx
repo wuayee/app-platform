@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Input, Tabs } from 'antd';
+import { Button, Input, Tabs, Modal, notification } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { Icons } from '@/components/icons';
 import AppCard from '@/components/appCard';
@@ -10,20 +10,25 @@ import { deleteAppApi, getUserCollectionNoDesc, queryAppDevApi } from '@/shared/
 import { debounce } from '@/shared/utils/common';
 import { useAppDispatch } from '@/store/hook';
 import { setCollectionValue } from '@/store/collection/collection';
+import { Message } from '@/shared/utils/message';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import './index.scoped.scss';
+import { read } from 'fs';
 
 const AppDev: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const tenantId = TENANT_ID;
+  const currentId = useRef('');
   const navigate = useHistory().push;
-
+  const [api, contextHolder] = notification.useNotification();
   // 数据初始化
   const [appData, setAppData] = useState([]);
   async function queryApps() {
     const params = {
       offset: (page - 1) * pageSize,
       limit: pageSize,
-      name:search || undefined
+      name: search || undefined
     };
     const res: any = await queryAppDevApi(tenantId, params);
     if (res.code === 0) {
@@ -40,13 +45,11 @@ const AppDev: React.FC = () => {
       setTotal(range.total);
     }
   }
-
   // tab栏
   const [activkey, setActiveKey] = useState('1');
   function tabChange(key: string) {
     setActiveKey(key);
   }
-
   // 分页
   const pageNo = useRef(1);
   const [total, setTotal] = useState(1);
@@ -54,14 +57,13 @@ const AppDev: React.FC = () => {
   const [pageSize, setPageSize] = useState(8);
   const [search, setSearch] = useState('');
   const paginationChange = (curPage: number, curPageSize: number) => {
-    if(page !== curPage) {
+    if (page !== curPage) {
       setPage(curPage);
     }
-    if(pageSize !== curPageSize) {
+    if (pageSize !== curPageSize) {
       setPageSize(curPageSize);
     }
   }
-
   // 创建
   let modalRef: any = useRef();
   const [modalInfo, setModalInfo] = useState({});
@@ -82,16 +84,14 @@ const AppDev: React.FC = () => {
   function addAippCallBack(appId: string) {
     navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
-
   // 搜索
   function onSearchValueChange(newSearchVal: string) {
-    if(newSearchVal !== search) {
+    if (newSearchVal !== search) {
       setPage(1);
       setSearch(newSearchVal);
     }
   }
   const handleSearch = debounce(onSearchValueChange, 500);
-
   // 点击卡片
   function clickCard(item: any, e: any) {
     navigate(`/app-develop/${tenantId}/appDetail/${item.id}`);
@@ -100,40 +100,44 @@ const AppDev: React.FC = () => {
   // 点击更多操作选项
   function clickMore(type: string, appId: string) {
     if (type === 'delete') {
-      deleteApp(appId);
+      currentId.current = appId;
+      setOpen(true);
     }
   }
   // 删除
-  async function deleteApp(appId: string) {
-    const res: any = await deleteAppApi(tenantId, appId);
-    if (res.code === 0) {
-      if (appData.length === 1) {
-        setPage(1);
-        return;
+  async function deleteApp() {
+    setLoading(true);
+    try {
+      const res: any = await deleteAppApi(tenantId, currentId.current);
+      if (res.code === 0) {
+        queryApps();
+        setOpen(false);
+        Message({ type: 'success', content: '已删除所选应用' });
+        if (appData.length === 1) {
+          setPage(1);
+          return;
+        }
+      } else {
+        Message({ type: 'error', content: res.msg || '删除失败' });
       }
-      queryApps();
+    } finally {
+      setLoading(false);
     }
   }
-
   const dispatch = useAppDispatch();
   // 获取当前登录用户名
   const getLoaclUser = () => {
     return localStorage.getItem('currentUserIdComplete') ?? '';
   }
-
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
     const res = await getUserCollectionNoDesc(getLoaclUser());
-    const collectMap = (res?.data ?? []).reduce((prev: any, next: any)=> {
-        prev[next.appId] = true;
+    const collectMap = (res?.data ?? []).reduce((prev: any, next: any) => {
+      prev[next.appId] = true;
       return prev
     }, {})
     dispatch(setCollectionValue(collectMap));
   }
-
-  // useEffect(()=> {
-  //   getUserCollectionList();
-  // }, []);
   useEffect(() => {
     queryApps();
   }, [page, pageSize, search]);
@@ -176,11 +180,11 @@ const AppDev: React.FC = () => {
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        { appData.length > 0 ? 
+        {appData.length > 0 ?
           <div className='card_list'>
             {appData.map((item: any) => (
               <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
-                <AppCard cardInfo={item} clickMore={clickMore} showOptions={false}/>
+                <AppCard cardInfo={item} clickMore={clickMore} showOptions />
               </div>
             ))}
           </div> :
@@ -188,12 +192,12 @@ const AppDev: React.FC = () => {
             <Empty />
           </div>
         }
-        
+
         <div className='page_box'>
           <Pagination
             current={page}
             onChange={paginationChange}
-            pageSizeOptions={[8,16,32,60]}
+            pageSizeOptions={[8, 16, 32, 60]}
             total={total}
             pageSize={pageSize}
           />
@@ -206,6 +210,20 @@ const AppDev: React.FC = () => {
         appInfo={modalInfo}
         addAippCallBack={addAippCallBack}
       />
+      {/* 删除弹窗 */}
+      <Modal
+        title='确定删除该应用'
+        width='380px'
+        open={open}
+        centered
+        onOk={() => deleteApp()}
+        onCancel={() => setOpen(false)}
+        okButtonProps={{ loading }}
+        okText='确认'
+        cancelText='取消'
+      >
+        <p>删除后无法恢复，请重新创建应用</p>
+      </Modal>
     </div>
   );
 };

@@ -68,8 +68,8 @@ public class AppBuilderFormRepositoryImpl implements AppBuilderFormRepository {
     }
 
     @Override
-    public void delete(String id) {
-        this.appBuilderFormMapper.delete(id);
-        this.formPropertyRepository.deleteByFormId(id);
+    public void delete(List<String> ids) {
+        this.appBuilderFormMapper.delete(ids);
+        this.formPropertyRepository.deleteByFormId(ids);
     }
 }

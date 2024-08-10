@@ -68,9 +68,9 @@ public interface AppBuilderAppRepository {
     void updateOne(AppBuilderApp appBuilderApp);
 
     /**
-     * 数据删除
+     * 批量删除数据
      *
-     * @param appId 表示需要删除的 app 对象唯一标识的 {@link String}。
+     * @param appIds 表示需要删除的 app 对象唯一标识的 {@link List}{@code <}{@link String}{@code >}。
      */
-    void delete(String appId);
+    void delete(List<String> appIds);
 }
