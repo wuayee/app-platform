@@ -1,3 +1,7 @@
+INSERT INTO t_app_engine_eval_dataset("name", "description", "schema", "app_id")
+VALUES ('ds1', 'test dataset', '{}', '1'),
+       ('ds2', 'test dataset', '{}', '1');
+
 DELETE
 FROM t_app_engine_eval_data;
 

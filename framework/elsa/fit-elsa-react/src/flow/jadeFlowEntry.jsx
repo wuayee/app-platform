@@ -191,7 +191,7 @@ const jadeFlowAgent = (graph) => {
     self.getNodeConfigs = () => {
         return graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).map(s => {
             return {
-                [s.id]: s.getLatestJadeConfig()
+                [s.id]: s.drawer.getLatestJadeConfig()
             };
         });
     };

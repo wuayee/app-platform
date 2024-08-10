@@ -11,7 +11,6 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
     const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : manualCheckNodeDrawer);
     self.type = "manualCheckNodeState";
     self.text = "人工检查";
-    self.pointerEvents = "auto";
     self.componentName = "manualCheckComponent";
     self.flowMeta.triggerMode = "manual";
     delete self.flowMeta.jober;
@@ -28,8 +27,8 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
     /**
      * @override
      */
-    self.serializerJadeConfig = () => {
-        self.flowMeta.task = self.getLatestJadeConfig();
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.task = jadeConfig;
     };
 
     return self;

@@ -12,8 +12,6 @@ import {endNodeDrawer} from "@/components/end/endNodeDrawer.jsx";
 export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
     const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : endNodeDrawer);
     self.type = "endNodeEnd";
-    self.backColor = 'white';
-    self.pointerEvents = "auto";
     self.text = "结束";
     self.componentName = "endComponent";
     self.flowMeta = {
@@ -66,8 +64,8 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      *
      * @override
      */
-    self.serializerJadeConfig = () => {
-        self.flowMeta.callback.converter.entity = self.getLatestJadeConfig();
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.callback.converter.entity = jadeConfig;
     };
 
     /**

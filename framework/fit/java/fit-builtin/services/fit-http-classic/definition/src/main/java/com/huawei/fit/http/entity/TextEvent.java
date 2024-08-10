@@ -17,6 +17,36 @@ import java.time.Duration;
  */
 public interface TextEvent {
     /**
+     * 文本事件唯一标识前缀。
+     */
+    String EVENT_ID = "id";
+
+    /**
+     * 文本事件名称前缀。
+     */
+    String EVENT_NAME = "event";
+
+    /**
+     * 文本事件重试时间前缀。
+     */
+    String EVENT_RETRY = "retry";
+
+    /**
+     * 文本事件数据前缀。
+     */
+    String EVENT_DATA = "data";
+
+    /**
+     * 文本事件换行符。
+     */
+    String LF = "\n";
+
+    /**
+     * 文本事件行内分隔符。
+     */
+    String COLON = ":";
+
+    /**
      * 获取文本事件的唯一标识。
      *
      * @return 表示文本事件的唯一标识的 {@link String}。

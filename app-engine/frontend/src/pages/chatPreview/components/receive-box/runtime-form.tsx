@@ -43,8 +43,6 @@ const RuntimeForm = (props) => {
                   chatRunning={chatRunning}
                 />
         break;
-      case 'questionClar':
-        return <QuestionClar data={props.formConfig} mode={props.formConfig.type}/>
       default:
         return <div>未找到对应的表单类型</div>
     }

@@ -8,6 +8,7 @@ import {isPointInRect, line, LINEMODE} from '@fit-elsa/elsa-core';
 let jadeEvent = (id, x, y, width, height, parent, drawer) => {
     let self = line(id, x, y, width, height, parent, drawer);
     self.type = "jadeEvent";
+    self.serializedFields.batchAdd("runnable");
     self.borderWidth = 1;
     self.beginArrow = false;
     self.endArrow = true;
@@ -15,6 +16,7 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
     self.borderColor = "#B1B1B7";
     self.mouseInBorderColor = "#B1B1B7";
     self.allowSwitchLineMode = false;
+    self.runnable = true;
 
     /**
      * 保证曲线的位置在shape的下方

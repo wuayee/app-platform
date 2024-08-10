@@ -236,7 +236,8 @@ export const graphData = {
                     "sourcePlatform": "official",
                     "componentName": "startComponent",
                     "index": 100,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 },
                 {
                     "type": "retrievalNodeState",
@@ -340,7 +341,8 @@ export const graphData = {
                     "sourcePlatform": "official",
                     "componentName": "retrievalComponent",
                     "index": 101,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 },
                 {
                     "type": "llmNodeState",
@@ -496,7 +498,8 @@ export const graphData = {
                     "sourcePlatform": "official",
                     "componentName": "llmComponent",
                     "index": 102,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 },
                 {
                     "type": "endNodeEnd",
@@ -567,7 +570,8 @@ export const graphData = {
                     "sourcePlatform": "official",
                     "componentName": "endComponent",
                     "index": 104,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 },
                 {
                     "type": "jadeEvent",
@@ -650,7 +654,8 @@ export const graphData = {
                     "borderColor": "#B1B1B7",
                     "mouseInBorderColor": "#B1B1B7",
                     "index": -95,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 },
                 {
                     "type": "jadeEvent",
@@ -733,7 +738,8 @@ export const graphData = {
                     "borderColor": "#B1B1B7",
                     "mouseInBorderColor": "#B1B1B7",
                     "index": -94,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 },
                 {
                     "type": "jadeEvent",
@@ -816,7 +822,8 @@ export const graphData = {
                     "borderColor": "#B1B1B7",
                     "mouseInBorderColor": "#B1B1B7",
                     "index": -94,
-                    "dirty": true
+                    "dirty": true,
+                    "runnable": true
                 }
             ],
             "index": 0

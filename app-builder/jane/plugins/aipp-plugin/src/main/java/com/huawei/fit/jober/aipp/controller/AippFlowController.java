@@ -30,6 +30,9 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.validation.Validated;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 
 /**
@@ -94,6 +97,7 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return aipp id信息
      */
+    @WithSpan(value = "operation.flow.create")
     @PostMapping(description = "创建aipp")
     public Rsp<AippCreateDto> createAipp(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestBody @Validated AippDto aippDto) {
@@ -109,9 +113,11 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return aipp id信息
      */
+    @WithSpan(value = "operation.flow.delete")
     @DeleteMapping(path = "/{aipp_id}", description = "删除aipp")
     public Rsp<Integer> deleteAipp(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId, @RequestParam("version") String baselineVersion) {
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
+            @RequestParam("version") @SpanAttribute("version") String baselineVersion) {
         aippFlowService.deleteAipp(aippId, baselineVersion, this.contextOf(httpRequest, tenantId));
         return Rsp.ok(1);
     }
@@ -125,10 +131,11 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return aipp id信息
      */
+    @WithSpan(value = "operation.flow.update")
     @PutMapping(path = "/{aipp_id}", description = "更新aipp")
     public Rsp<AippCreateDto> updateAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @RequestBody AippDto aippDto) {
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId, @RequestBody AippDto aippDto) {
         aippDto.setId(aippId);
         return Rsp.ok(this.aippFlowService.update(aippDto, this.contextOf(httpRequest, tenantId)));
     }
@@ -143,10 +150,13 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return 发布aipp概况
      */
+    @WithSpan(value = "operation.flow.publish")
     @PostMapping(path = "/{aipp_id}", description = "发布aipp")
     public Rsp<AippCreateDto> publishAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @RequestParam(value = "version") String version, @RequestBody @Validated AippDto aippDto) {
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
+            @RequestParam(value = "version") @SpanAttribute("version") String version,
+            @RequestBody @Validated AippDto aippDto) {
         aippDto.setId(aippId);
         aippDto.setVersion(version);
         return this.aippFlowService.publish(aippDto, this.contextOf(httpRequest, tenantId));
@@ -162,10 +172,12 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return 创建预览aipp的id和version
      */
+    @WithSpan(value = "operation.flow.preview")
     @PostMapping(path = "/{aipp_id}/preview", description = "预览aipp")
     public Rsp<AippCreateDto> previewAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @RequestParam("version") String baselineVersion, @RequestBody AippDto aippDto) {
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
+            @RequestParam("version") @SpanAttribute("version") String baselineVersion, @RequestBody AippDto aippDto) {
         aippDto.setId(aippId);
         return Rsp.ok(this.aippFlowService.previewAipp(baselineVersion,
                 aippDto,
@@ -181,9 +193,11 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return Void
      */
+    @WithSpan(value = "operation.flow.quitPreview")
     @DeleteMapping(path = "/{aipp_id}/preview", description = "退出预览")
     public Rsp<Void> cleanPreviewAipp(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String previewAippId, @RequestParam("preview_version") String previewVersion) {
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String previewAippId,
+            @RequestParam("preview_version") @SpanAttribute("version") String previewVersion) {
         this.aippFlowService.cleanPreviewAipp(previewAippId, previewVersion, contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
@@ -198,10 +212,12 @@ public class AippFlowController extends AbstractController {
      * @param httpRequest 操作上下文
      * @return Void
      */
+    @WithSpan(value = "operation.flow.upgrade")
     @PostMapping(path = "/{aipp_id}/upgrade", description = "升级aipp")
     public Rsp<AippCreateDto> upgradeAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @RequestParam("version") String baselineVersion, @RequestBody AippDto aippDto) {
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttribute("aipp_id") String aippId,
+            @RequestParam("version") @SpanAttribute("version") String baselineVersion, @RequestBody AippDto aippDto) {
         aippDto.setId(aippId);
         return Rsp.ok(this.aippFlowService.upgrade(baselineVersion, aippDto, contextOf(httpRequest, tenantId)));
     }

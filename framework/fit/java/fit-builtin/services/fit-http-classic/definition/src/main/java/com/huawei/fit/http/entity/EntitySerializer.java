@@ -10,6 +10,7 @@ import com.huawei.fit.http.entity.serializer.JsonEntitySerializer;
 import com.huawei.fit.http.entity.serializer.MultiPartEntitySerializer;
 import com.huawei.fit.http.entity.serializer.ReadableBinaryEntitySerializer;
 import com.huawei.fit.http.entity.serializer.TextEntitySerializer;
+import com.huawei.fit.http.entity.serializer.TextEventStreamSerializer;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 
@@ -148,6 +149,18 @@ public interface EntitySerializer<E extends Entity> {
      */
     static EntitySerializer<TextEntity> textSerializer() {
         return TextEntitySerializer.INSTANCE;
+    }
+
+    /**
+     * 获取消息体格式为 {@code 'text/event-stream'} 的序列化器。
+     *
+     * @param serializer 表示 JSON 序列化器的 {@link ObjectSerializer}。
+     * @param type 表示消息体中数据类型的 {@link Type}。
+     * @return 表示消息体格式为 {@code 'text/event-stream'} 的序列化器的 {@link EntitySerializer}{@code <}{@link
+     * TextEventStreamEntity}{@code >}。
+     */
+    static EntitySerializer<TextEventStreamEntity> textEventStreamSerializer(ObjectSerializer serializer, Type type) {
+        return new TextEventStreamSerializer(type, serializer);
     }
 
     /**

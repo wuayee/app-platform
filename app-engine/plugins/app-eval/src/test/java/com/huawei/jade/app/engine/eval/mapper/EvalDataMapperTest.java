@@ -16,6 +16,7 @@ import com.huawei.fitframework.test.domain.db.DatabaseModel;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
+import com.huawei.jade.app.engine.eval.entity.EvalVersionEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDataPo;
 
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,7 @@ public class EvalDataMapperTest {
     private EvalDataMapper evalDataMapper;
 
     @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
     @DisplayName("插入数据后，回填主键成功")
     void shouldOkWhenInsert() {
         EvalDataPo evalDataPo = new EvalDataPo();
@@ -144,5 +146,38 @@ public class EvalDataMapperTest {
         assertThat(effectRows).isEqualTo(1);
         this.evalDataMapper.insertAll(Collections.singletonList(evalDataPo));
         assertThat(evalDataPo.getId()).isEqualTo(3L);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("硬删除指定数据集全部数据成功")
+    void shouldOkWhenHardDelete() {
+        int effectRows = this.evalDataMapper.deleteAll(Collections.singletonList(1L));
+        assertThat(effectRows).isEqualTo(2);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("硬删除指定数据集没有数据时，删除行数为 0")
+    void shouldOkWhenHardDeleteWithNoRecord() {
+        int effectRows = this.evalDataMapper.deleteAll(Collections.singletonList(2L));
+        assertThat(effectRows).isEqualTo(0);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("查询数据集全部版本")
+    void shouldOKWhenGetVersions() {
+        List<EvalVersionEntity> response = this.evalDataMapper.getAllVersion(1L);
+        assertThat(response.size()).isEqualTo(2);
+        Long lastVersion = null;
+        for (EvalVersionEntity entity : response) {
+            if (lastVersion != null) {
+                assertThat(lastVersion).isGreaterThan(entity.getVersion());
+            }
+            lastVersion = entity.getVersion();
+            assertThat(entity.getVersion()).isNotEqualTo(null).isGreaterThan(0);
+            assertThat(entity.getCreatedTime()).isNotNull();
+        }
     }
 }

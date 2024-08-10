@@ -6,14 +6,6 @@ import {endNodeEnd} from "@/components/end/endNodeEnd.jsx";
 import {endComponent} from "@/components/end/endComponent.jsx";
 import {retrievalNodeState} from "@/components/retrieval/retrievalNodeState.jsx";
 import {retrievalComponent} from "@/components/retrieval/retrievalComponent.jsx";
-import {listener1Node} from "@/components/listenerDemo/listener1Node.jsx";
-import {listener1Component} from "@/components/listenerDemo/listener1Component.jsx";
-import {listener2Node} from "@/components/listenerDemo/listener2Node.jsx";
-import {listener2Component} from "@/components/listenerDemo/listener2Component.jsx";
-import {listener3Node} from "@/components/listenerDemo/listener3Node.jsx";
-import {listener3Component} from "@/components/listenerDemo/listener3Component.jsx";
-import {jadeInputTreeNode} from "@/components/listenerDemo/jadeInputTreeNode.jsx";
-import {jadeInputTreeComponent} from "@/components/listenerDemo/jadeInputTreeComponent.jsx";
 import {testNode} from "@/components/replaceDemo/testNode.jsx";
 import {testComponent} from "@/components/replaceDemo/testComponent.jsx";
 import {replaceComponent} from "@/components/replaceDemo/replaceComponent.jsx";
@@ -33,6 +25,14 @@ import {huggingFaceNodeState} from "@/components/huggingFace/huggingFaceNodeStat
 import {huggingFaceComponent} from "@/components/huggingFace/huggingFaceComponent.jsx";
 import {codeComponent} from "@/components/code/codeComponent.jsx";
 import {codeNodeState} from "@/components/code/codeNodeState.jsx";
+import {
+    evaluationAlgorithmsComponent
+} from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsComponent.jsx";
+import {
+    evaluationAlgorithmsNodeState
+} from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsNodeState.jsx";
+import {evaluationStartComponent} from "@/components/evaluation/evaluationStart/evaluationStartComponent.jsx";
+import {evaluationStartNodeStart} from "@/components/evaluation/evaluationStart/evaluationStartNodeStart.jsx";
 
 /**
  * jadeFlow的专用画布.
@@ -79,14 +79,6 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("endComponent", endComponent);
         self.registerPlugin("retrievalNodeState", retrievalNodeState);
         self.registerPlugin("retrievalComponent", retrievalComponent);
-        self.registerPlugin("listener1Node", listener1Node);
-        self.registerPlugin("listener1Component", listener1Component);
-        self.registerPlugin("listener2Node", listener2Node);
-        self.registerPlugin("listener2Component", listener2Component);
-        self.registerPlugin("listener3Node", listener3Node);
-        self.registerPlugin("listener3Component", listener3Component);
-        self.registerPlugin("jadeInputTreeNode", jadeInputTreeNode);
-        self.registerPlugin("jadeInputTreeComponent", jadeInputTreeComponent);
         self.registerPlugin("testNode", testNode);
         self.registerPlugin("testComponent", testComponent);
         self.registerPlugin("replaceComponent", replaceComponent);
@@ -106,6 +98,10 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("huggingFaceComponent", huggingFaceComponent);
         self.registerPlugin("codeComponent", codeComponent);
         self.registerPlugin("codeNodeState", codeNodeState);
+        self.registerPlugin("evaluationStartComponent", evaluationStartComponent);
+        self.registerPlugin("evaluationStartNodeStart", evaluationStartNodeStart);
+        self.registerPlugin("evaluationAlgorithmsComponent", evaluationAlgorithmsComponent);
+        self.registerPlugin("evaluationAlgorithmsNodeState", evaluationAlgorithmsNodeState);
         return initialize.apply(self);
     };
 

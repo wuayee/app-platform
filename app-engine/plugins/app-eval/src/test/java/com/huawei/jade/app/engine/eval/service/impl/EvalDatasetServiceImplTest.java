@@ -71,6 +71,14 @@ public class EvalDatasetServiceImplTest {
     }
 
     @Test
+    @DisplayName("删除评估数据集成功")
+    void shouldOkWhenDelete() {
+        doNothing().when(this.evalDataService).hardDelete(anyList());
+        this.evalDatasetService.delete(Arrays.asList(1L, 2L));
+        verify(this.evalDatasetMapper, times(1)).delete(any());
+    }
+
+    @Test
     @DisplayName("查询全量评估数据集元数据成功")
     void shouldOkWhenListEvalDataset() {
         Long id = 1L;

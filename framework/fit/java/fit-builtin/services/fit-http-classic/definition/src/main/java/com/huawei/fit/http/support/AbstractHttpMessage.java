@@ -170,6 +170,12 @@ public abstract class AbstractHttpMessage implements HttpMessage {
                     .jsonEntity(type)
                     .orElseThrow(() -> new IllegalStateException("No json serializer."));
         }
+        if (mimeType == MimeType.TEXT_EVENT_STREAM && type != null) {
+            return this.httpResource()
+                    .serializers()
+                    .textEventStreamEntity(type)
+                    .orElseThrow(() -> new IllegalStateException("No json serializer."));
+        }
         EntitySerializer<?> entitySerializer = this.customEntitySerializers.get(mimeType);
         if (entitySerializer == null) {
             entitySerializer = this.httpResource().serializers().entities().get(mimeType);

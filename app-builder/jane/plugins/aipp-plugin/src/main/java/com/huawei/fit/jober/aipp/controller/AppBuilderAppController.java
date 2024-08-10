@@ -33,6 +33,9 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.validation.Validated;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 
 /**
@@ -157,9 +160,11 @@ public class AppBuilderAppController extends AbstractController {
      * @param dto 创建参数。
      * @return 结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.template")
     @PostMapping(value = "/{app_id}", description = "根据模板创建aipp")
     public Rsp<AppBuilderAppDto> create(HttpClassicServerRequest request, @PathVariable("app_id") String appId,
-            @PathVariable("tenant_id") String tenantId, @RequestBody @Validated AppBuilderAppCreateDto dto) {
+            @PathVariable("tenant_id") String tenantId,
+            @RequestBody @Validated @SpanAttribute("name:$.name") AppBuilderAppCreateDto dto) {
         return Rsp.ok(this.appService.create(appId, dto, this.contextOf(request, tenantId), false));
     }
 
@@ -172,10 +177,11 @@ public class AppBuilderAppController extends AbstractController {
      * @param configDto 待更新的config的DTO。
      * @return 更新结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.config")
     @PutMapping(value = "/{app_id}/config", description = "通过config更新aipp")
     public Rsp<AppBuilderAppDto> updateByConfig(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
-            @RequestBody @Validated AppBuilderConfigDto configDto) {
+            @RequestBody @Validated @SpanAttribute("name:$.name") AppBuilderConfigDto configDto) {
         return this.appService.updateConfig(appId, configDto, this.contextOf(httpRequest, tenantId));
     }
 
@@ -188,10 +194,11 @@ public class AppBuilderAppController extends AbstractController {
      * @param flowGraphDto graph的DTO。
      * @return 结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.graph")
     @PutMapping(value = "/{app_id}/graph", description = "根据graph更新aipp")
     public Rsp<AppBuilderAppDto> updateByGraph(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
-            @RequestBody @Validated AppBuilderFlowGraphDto flowGraphDto) {
+            @RequestBody @Validated @SpanAttribute("name:$.name") AppBuilderFlowGraphDto flowGraphDto) {
         return this.appService.updateFlowGraph(appId, flowGraphDto, this.contextOf(httpRequest, tenantId));
     }
 
@@ -204,10 +211,11 @@ public class AppBuilderAppController extends AbstractController {
      * @param appDto 基本信息。
      * @return 结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.update")
     @PutMapping(value = "/{app_id}", description = "更新 app")
     public Rsp<AppBuilderAppDto> update(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
-            @RequestBody @Validated AppBuilderAppDto appDto) {
+            @RequestBody @Validated @SpanAttribute("name:$.name") AppBuilderAppDto appDto) {
         return this.appService.updateApp(appId, appDto, this.contextOf(httpRequest, tenantId));
     }
 
@@ -219,9 +227,10 @@ public class AppBuilderAppController extends AbstractController {
      * @param appDto app的信息。
      * @return 暂时使用 aipp 运行态返回值。
      */
+    @WithSpan(value = "operation.appBuilderApp.publish")
     @PostMapping(path = "/{app_id}/publish", description = "发布 app ")
     public Rsp<AippCreateDto> publish(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @RequestBody @Validated AppBuilderAppDto appDto) {
+            @RequestBody @Validated @SpanAttribute("name:$.name, version:$.version") AppBuilderAppDto appDto) {
         return this.appService.publish(appDto, this.contextOf(httpRequest, tenantId));
     }
 
@@ -233,9 +242,10 @@ public class AppBuilderAppController extends AbstractController {
      * @param appDto app的信息。
      * @return 结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.debug")
     @PostMapping(path = "/{app_id}/debug", description = "调试 app ")
     public Rsp<AippCreateDto> debug(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @RequestBody @Validated AppBuilderAppDto appDto) {
+            @RequestBody @Validated @SpanAttribute("name:$.name") AppBuilderAppDto appDto) {
         return Rsp.ok(ConvertUtils.toAippCreateDto(this.appGenericable.debug(appDto,
                 this.contextOf(httpRequest, tenantId))));
     }
@@ -263,6 +273,7 @@ public class AppBuilderAppController extends AbstractController {
      * @param appDto app的DTO。
      * @return 结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.idea")
     @PostMapping(path = "/{app_id}/inspiration/department", description = "获取灵感大全的部门信息")
     public Rsp<AippCreateDto> inspirations(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestBody @Validated AppBuilderAppDto appDto) {
@@ -277,9 +288,10 @@ public class AppBuilderAppController extends AbstractController {
      * @param appId 待删除的appId。
      * @return 空结果。
      */
+    @WithSpan(value = "operation.appBuilderApp.delete")
     @DeleteMapping(path = "/{app_id}", description = "删除 app")
     public Rsp<Void> delete(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("app_id") String appId) {
+            @PathVariable("app_id") @SpanAttribute("app_id") String appId) {
         this.appService.delete(appId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }

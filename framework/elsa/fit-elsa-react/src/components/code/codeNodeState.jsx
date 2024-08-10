@@ -13,12 +13,9 @@ export const codeNodeState = (id, x, y, width, height, parent, drawer) => {
     const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : codeNodeDrawer);
     self.type = "codeNodeState";
     self.width = 360;
-    self.backColor = 'white';
-    self.pointerEvents = "auto";
     self.componentName = "codeComponent";
     self.text = "code"
     self.width = 368;
-    self.flowMeta.triggerMode = 'auto';
     self.flowMeta.jober.type = 'STORE_JOBER';
     const toolEntity = {
         uniqueName: "",
@@ -36,8 +33,8 @@ export const codeNodeState = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     const serializerJadeConfig = self.serializerJadeConfig;
-    self.serializerJadeConfig = () => {
-        serializerJadeConfig.apply(self);
+    self.serializerJadeConfig = (jadeConfig) => {
+        serializerJadeConfig.apply(self, [jadeConfig]);
         const newConfig = {...template};
         newConfig.outputParams = self.flowMeta.jober.converter.entity.outputParams;
         newConfig.inputParams = self.flowMeta.jober.converter.entity.inputParams;

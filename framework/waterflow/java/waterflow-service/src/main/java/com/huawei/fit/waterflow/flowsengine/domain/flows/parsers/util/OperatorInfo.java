@@ -18,30 +18,38 @@ import lombok.Getter;
 /**
  * 运算符相关信息
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-05-15
  */
 @Getter
 @AllArgsConstructor
 public enum OperatorInfo {
-    NOT_EQUAL(OperatorInfo.BINARY_TYPE, " != ", false),
-    EQUAL(OperatorInfo.BINARY_TYPE, " == ", false),
-    IS_TRUE(OperatorInfo.UNARY_TYPE, "", false),
-    IS_FALSE(OperatorInfo.UNARY_TYPE, " == false", false),
-    IS_EMPTY(OperatorInfo.UNARY_TYPE, ".is_empty()", false),
-    IS_NOT_EMPTY(OperatorInfo.UNARY_TYPE, ".is_empty()", true),
-    GREATER_THAN(OperatorInfo.BINARY_TYPE, " > ", false),
-    GREATER_THAN_OR_EQUAL(OperatorInfo.BINARY_TYPE, " >= ", false),
-    LESS_THAN(OperatorInfo.BINARY_TYPE, " < ", false),
-    LESS_THAN_OR_EQUAL(OperatorInfo.BINARY_TYPE, " <= ", false),
-    AND(OperatorInfo.BINARY_TYPE, " && ", false),
-    OR(OperatorInfo.BINARY_TYPE, " || ", false),
-    TRUE(OperatorInfo.NULLARY_TYPE, "true", false),
-    FALSE(OperatorInfo.NULLARY_TYPE, "false", false),
-    IS_NULL(OperatorInfo.UNARY_TYPE, " == null", false),
-    IS_NOT_NULL(OperatorInfo.UNARY_TYPE, " != null", false),
-    IS_EMPTY_STRING(OperatorInfo.UNARY_TYPE, ".trim().is_empty()", false),
-    IS_NOT_EMPTY_STRING(OperatorInfo.UNARY_TYPE, ".trim().is_empty()", true),
+    NOT_EQUAL(OperatorInfo.BINARY_TYPE, " != ", false, false),
+    EQUAL(OperatorInfo.BINARY_TYPE, " == ", false, false),
+    IS_TRUE(OperatorInfo.UNARY_TYPE, "", false, false),
+    IS_FALSE(OperatorInfo.UNARY_TYPE, " == false", false, false),
+    IS_EMPTY(OperatorInfo.UNARY_TYPE, ".is_empty()", false, false),
+    IS_NOT_EMPTY(OperatorInfo.UNARY_TYPE, ".is_empty()", true, false),
+    GREATER_THAN(OperatorInfo.BINARY_TYPE, " > ", false, false),
+    GREATER_THAN_OR_EQUAL(OperatorInfo.BINARY_TYPE, " >= ", false, false),
+    LESS_THAN(OperatorInfo.BINARY_TYPE, " < ", false, false),
+    LESS_THAN_OR_EQUAL(OperatorInfo.BINARY_TYPE, " <= ", false, false),
+    AND(OperatorInfo.BINARY_TYPE, " && ", false, false),
+    OR(OperatorInfo.BINARY_TYPE, " || ", false, false),
+    TRUE(OperatorInfo.NULLARY_TYPE, "true", false, false),
+    FALSE(OperatorInfo.NULLARY_TYPE, "false", false, false),
+    IS_NULL(OperatorInfo.UNARY_TYPE, " == null", false, false),
+    IS_NOT_NULL(OperatorInfo.UNARY_TYPE, " != null", false, false),
+    IS_EMPTY_STRING(OperatorInfo.UNARY_TYPE, ".trim().is_empty()", false, false),
+    IS_NOT_EMPTY_STRING(OperatorInfo.UNARY_TYPE, ".trim().is_empty()", true, false),
+    LONGER_THAN(OperatorInfo.BINARY_TYPE, ".len() > ", false, false),
+    LONGER_THAN_OR_EQUAL(OperatorInfo.BINARY_TYPE, ".len() >= ", false, false),
+    SHORTER_THAN(OperatorInfo.BINARY_TYPE, ".len() < ", false, false),
+    SHORTER_THAN_OR_EQUAL(OperatorInfo.BINARY_TYPE, ".len() <= ", false, false),
+    CONTAINS(OperatorInfo.BINARY_TYPE, ".contains", false, true),
+    DOES_NOT_CONTAIN(OperatorInfo.BINARY_TYPE, ".contains", true, true),
+    STARTS_WITH(OperatorInfo.BINARY_TYPE, ".starts_with", false, true),
+    ENDS_WITH(OperatorInfo.BINARY_TYPE, ".ends_with", false, true),
     ;
 
     /**
@@ -83,6 +91,8 @@ public enum OperatorInfo {
 
     private final boolean isInvert;
 
+    private final boolean isParenthesized;
+
     /**
      * 根据code获得对应运算符枚举类的 {@link OperatorInfo}。
      *
@@ -116,8 +126,12 @@ public enum OperatorInfo {
     public String buildConditionExpression(JSONObject condition) {
         JSONArray values = condition.getJSONArray(VALUE_KEY);
         String leftExpression = generateLeftExpression(values, this);
-        String rightExpression = generateRightExpression(values, this);
+        String rightExpression = this.getParenthesized(generateRightExpression(values, this));
         return "(" + this.getInvert() + leftExpression + this.getOperator() + rightExpression + ")";
+    }
+
+    private String getParenthesized(String rightExpression) {
+        return isParenthesized ? "(" + rightExpression + ")" : rightExpression;
     }
 
     private static String generateLeftExpression(JSONArray values, OperatorInfo operator) {

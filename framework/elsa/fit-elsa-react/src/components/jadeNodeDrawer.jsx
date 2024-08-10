@@ -56,11 +56,21 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
             return;
         }
         self.root = ReactDOM.createRoot(self.reactContainer);
-        self.root.render(<Root/>);
+        self.root.render(<JadeWrapper/>);
     };
 
-    const Root = () => {
+    /**
+     * 获取组件最新配置数据.
+     *
+     * @return {*} 配置数据.
+     */
+    self.getLatestJadeConfig = () => {
+        return self.rootRef && self.rootRef.current && self.rootRef.current.getData();
+    };
+
+    const JadeWrapper = () => {
         self.panelRef = useRef();
+        self.rootRef = useRef();
         const [runStatus, setRunStatus] = useState(shape.runStatus);
         const [disabled, setDisabled] = useState(false);
 
@@ -83,7 +93,7 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
             {runStatus !== NODE_STATUS.DEFAULT &&
                     <RunningStatusPanel shape={shape} ref={self.panelRef} onReportShow={onReportShow}/>}
             <div style={{position: "relative", background: "white", padding: 16, borderRadius: shape.borderRadius}}>
-                <DefaultRoot shape={shape} component={shape.getComponent()} disabled={disabled} />
+                <DefaultRoot ref={self.rootRef} shape={shape} component={shape.getComponent()} disabled={disabled} />
             </div>
         </>);
     };
@@ -118,9 +128,10 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
 
     /**
      * 不绘制focusFrame.
+     *
+     * @overview
      */
-    self.drawFocusFrame = () => {
-    };
+    self.drawFocusFrame = () => {};
 
     /**
      * @override
@@ -151,7 +162,7 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
      */
     let prevHeight = 0;
     self.observe = () => {
-        new ResizeObserver((entries) => {
+        new ResizeObserver(() => {
             if (prevHeight === self.parent.offsetHeight) {
                 return;
             }

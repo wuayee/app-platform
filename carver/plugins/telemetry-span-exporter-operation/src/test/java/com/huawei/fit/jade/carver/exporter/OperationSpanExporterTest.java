@@ -24,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -39,6 +40,10 @@ public class OperationSpanExporterTest {
     private static final String STUB_ATTRIBUTE_VALUE = "stubAttributeValue";
     private static final String EXCEPTION_EVENT_NAME = "exception";
     private static final String EXCEPTION_EVENT_MSG_KEY = "exception.message";
+    private static final String SYSTEM_ATTRIBUTE_EVENT_NAME = "system_attribute";
+    private static final String SYS_OP_RESULT_KEY = "sys_operation_result_key";
+    private static final String SYS_OP_SUCCEED = "SUCCESS";
+    private static final String SYS_OP_FAILED = "FAILED";
 
     @Fit
     private OperationSpanExporter spanExporter;
@@ -49,7 +54,10 @@ public class OperationSpanExporterTest {
 
     private void mockSucceedSpanData() {
         Mockito.when(this.spanData.getName()).thenReturn(STUB_SPAN_NAME);
-        Mockito.when(this.spanData.getEvents()).thenReturn(Collections.emptyList());
+        Mockito.when(this.spanData.getEvents())
+                .thenReturn(Collections.singletonList(EventData.create(0,
+                        SYSTEM_ATTRIBUTE_EVENT_NAME,
+                        Attributes.of(AttributeKey.stringKey(EXCEPTION_EVENT_MSG_KEY), STUB_ATTRIBUTE_VALUE))));
         Mockito.when(this.spanData.getAttributes())
                 .thenReturn(Attributes.of(AttributeKey.stringKey(STUB_ATTRIBUTE_KEY), STUB_ATTRIBUTE_VALUE));
     }
@@ -57,8 +65,12 @@ public class OperationSpanExporterTest {
     private void mockFailedSpanData() {
         Mockito.when(this.spanData.getName()).thenReturn(STUB_SPAN_NAME);
         Mockito.when(this.spanData.getEvents())
-                .thenReturn(Collections.singletonList(EventData.create(0, EXCEPTION_EVENT_NAME,
-                        Attributes.of(AttributeKey.stringKey(EXCEPTION_EVENT_MSG_KEY), STUB_ATTRIBUTE_VALUE))));
+                .thenReturn(Arrays.asList(EventData.create(0,
+                                EXCEPTION_EVENT_NAME,
+                                Attributes.of(AttributeKey.stringKey(EXCEPTION_EVENT_MSG_KEY), STUB_ATTRIBUTE_VALUE)),
+                        EventData.create(0,
+                                SYSTEM_ATTRIBUTE_EVENT_NAME,
+                                Attributes.of(AttributeKey.stringKey(EXCEPTION_EVENT_MSG_KEY), STUB_ATTRIBUTE_VALUE))));
     }
 
     @Test
@@ -68,8 +80,10 @@ public class OperationSpanExporterTest {
 
         this.spanExporter.export(Collections.singletonList(this.spanData));
         verify(this.logExporter).succeed(eq(STUB_SPAN_NAME), argThat(map -> {
-            assertThat(map.size()).isEqualTo(1);
-            assertThat(map).containsKey(STUB_ATTRIBUTE_KEY);
+            assertThat(map.getUserAttribute().size()).isEqualTo(1);
+            assertThat(map.getUserAttribute()).containsKey(STUB_ATTRIBUTE_KEY);
+            assertThat(map.getSystemAttribute()).containsKey(SYS_OP_RESULT_KEY);
+            assertThat(map.getSystemAttribute().get(SYS_OP_RESULT_KEY)).isEqualTo(SYS_OP_SUCCEED);
             return true;
         }));
     }
@@ -81,8 +95,10 @@ public class OperationSpanExporterTest {
 
         this.spanExporter.export(Collections.singletonList(this.spanData));
         verify(this.logExporter).failed(eq(STUB_SPAN_NAME), argThat(map -> {
-            assertThat(map.size()).isEqualTo(1);
-            assertThat(map).containsKey(OperationLogExporter.EXCEPTION_DETAIL_KEY);
+            assertThat(map.getUserAttribute().size()).isEqualTo(1);
+            assertThat(map.getUserAttribute()).containsKey(OperationLogExporter.EXCEPTION_DETAIL_KEY);
+            assertThat(map.getSystemAttribute()).containsKey(SYS_OP_RESULT_KEY);
+            assertThat(map.getSystemAttribute().get(SYS_OP_RESULT_KEY)).isEqualTo(SYS_OP_FAILED);
             return true;
         }));
     }

@@ -1,6 +1,6 @@
 import {Tree} from "antd";
 import {useShapeContext} from "../DefaultRoot.jsx";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import "./jadeObservableTree.css";
 import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 
@@ -50,7 +50,7 @@ export const JadeObservableTree = ({data}) => {
     }
 
     const shape = useShapeContext();
-    const [treeData, ] = useState(data.map(d => buildNode(d, null, 0, shape)));
+    const treeData = data.map(d => buildNode(d, null, 0, shape));
 
     useEffect(() => {
         // unmount时取消监听.
@@ -89,8 +89,8 @@ export const JadeObservableTree = ({data}) => {
         </>);
     };
 
-    const renderTreeNodes = (data) =>
-        data.map((item) => {
+    const renderTreeNodes = (treeData) =>
+        treeData.map((item) => {
             const isRootNode = item.level === 0;
             const className = isRootNode && (!item.children || item.children.length === 0) ? "jade-hide-tree-left-line" : '';
 

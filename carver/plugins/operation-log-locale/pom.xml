@@ -50,6 +50,10 @@
                 <groupId>com.huawei.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
+                <configuration>
+                    <category>system</category>
+                    <level>5</level>
+                </configuration>
                 <executions>
                     <execution>
                         <id>build-plugin</id>

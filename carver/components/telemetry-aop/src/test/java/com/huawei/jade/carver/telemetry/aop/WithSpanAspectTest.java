@@ -25,6 +25,8 @@ import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.carver.telemetry.aop.observers.ParamSpanAttributeInjector;
+import com.huawei.jade.carver.telemetry.aop.observers.ThreadLocalSpanEventInjector;
 import com.huawei.jade.carver.telemetry.aop.parsers.ComplexSpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.parsers.DefaultSpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanService;
@@ -60,7 +62,8 @@ import java.util.Collections;
 @FitTestWithJunit(includeClasses = {
         WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class,
         SpanAttributeParserRepository.class, DefaultSpanAttributeParser.class, ComplexSpanAttributeParser.class,
-        WithSpanParserDemo.class
+        WithSpanParserDemo.class, SpanEndObserverRepository.class, ParamSpanAttributeInjector.class,
+        ThreadLocalSpanEventInjector.class
 })
 public class WithSpanAspectTest {
     private static final String EXCEPTION_MESSAGE = " exception message.";

@@ -21,7 +21,7 @@ import { storage } from '@/shared/storage';
 import { pduMap } from '../common/config';
 import { HOME_APP_ID, FINANCE_APP_ID, TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
 import '../styles/inspiration.scss';
-import { DEMISSIONAPPID } from '@/shared/utils/configvar';
+import { isBusinessMagicCube } from '@shared/utils/common';
 
 const Inspiration = (props) => {
   const { inspirationClick, setEditorSelect } = props;
@@ -112,12 +112,20 @@ const Inspiration = (props) => {
   // 设置默认选中
   const setDefaultSelect = (setArr) => {
     let defaultDimension = storage.get('dimension');
-    let obj = getDeepNode(setArr, (node) => {
-      return !node.children.length;
-    });
+    // 如果是小魔方，默认选中本地存储的产品线
+    let obj;
+    if (isBusinessMagicCube(appId)) {
+      obj = getDeepNode(setArr, (node) => {
+        return defaultDimension.id === node.id;
+      });
+    } else {
+      obj = getDeepNode(setArr, (node) => {
+        return !node.children.length;
+      });
+    }
     let parentId = obj.parent.split(':')[1];
     nodeClick(obj.id, obj.title, parentId);
-  }
+  };
   // 根据节点获取灵感大全数据
   async function getPromptList(nodeId) {
     const res = await queryInspiration(tenantIdVal.current, appIdVal.current, nodeId);
@@ -179,9 +187,9 @@ const Inspiration = (props) => {
   // 分类点击回调
   function nodeClick(id, name, parentId) {
     if (FINANCE_APP_ID === appId) {
-      storage.set('dimension', { id, value: pduMap[name] || name});
+      storage.set('dimension', { id, name, value: pduMap[name]});
     }
-    dispatch(setDimension({ id, value: pduMap[name] || name}));
+    dispatch(setDimension({ id, name, value: pduMap[name]}));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: '全部', id: parentId }];

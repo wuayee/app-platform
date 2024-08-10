@@ -18,6 +18,9 @@ import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fitframework.annotation.Component;
 
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 
 /**
@@ -49,7 +52,7 @@ public class AippLogController extends AbstractController {
      * @param tenantId tenantId
      * @param appId appId
      * @param type type
-     * @return Rsp<List<AippInstLogDataDto>> 应用历史记录
+     * @return Rsp<List < AippInstLogDataDto>> 应用历史记录
      */
     @GetMapping(path = "/app/{app_id}/recent", description = "指定appId查询实例历史记录（查询最新5个实例）")
     public Rsp<List<AippInstLogDataDto>> queryRecentInstanceLog(HttpClassicServerRequest httpRequest,
@@ -67,9 +70,10 @@ public class AippLogController extends AbstractController {
      * @param type type
      * @return Rsp<Void>
      */
+    @WithSpan(value = "operation.aippLog.eraseHistory")
     @DeleteMapping(path = "/app/{app_id}", description = "清除appId查询实例的全部历史记录")
     public Rsp<Void> deleteInstanceLog(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("app_id") String appId, @RequestParam("type") String type) {
+            @PathVariable("app_id") @SpanAttribute("app_id") String appId, @RequestParam("type") String type) {
         this.aippLogService.deleteAippInstLog(appId, type, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
@@ -79,7 +83,7 @@ public class AippLogController extends AbstractController {
      *
      * @param instanceId instanceId
      * @param sinceTime sinceTime
-     * @return Rsp<List<AippInstLog>>
+     * @return Rsp<List < AippInstLog>>
      */
     @GetMapping(path = "/instance/{instance_id}", description = "指定instanceId条件查询实例记录")
     public Rsp<List<AippInstLog>> queryInstanceSince(@PathVariable("instance_id") String instanceId,
@@ -94,7 +98,7 @@ public class AippLogController extends AbstractController {
      * @param tenantId 租户id
      * @param appId 应用id
      * @param type 应用类型
-     * @return Rsp<List<AippInstLogDataDto>> 应用历史记录
+     * @return Rsp<List < AippInstLogDataDto>> 应用历史记录
      */
     @GetMapping(path = "/app/{app_id}/chat/recent", description = "指定appId查询实例历史记录（查询最新1个会话）")
     public Rsp<List<AippInstLogDataDto>> queryRecentChatLog(HttpClassicServerRequest httpRequest,
@@ -110,7 +114,7 @@ public class AippLogController extends AbstractController {
      * @param tenantId 租户id
      * @param chatId 会话id
      * @param appId 应用Id
-     * @return Rsp<List<AippInstLogDataDto>> 会话历史记录
+     * @return Rsp<List < AippInstLogDataDto>> 会话历史记录
      */
     @GetMapping(path = "/app/{app_id}/chat/{chat_id}", description = "指定chatId查询实例历史记录（查询最近5个实例）")
     public Rsp<List<AippInstLogDataDto>> queryChatRecentChatLog(HttpClassicServerRequest httpRequest,

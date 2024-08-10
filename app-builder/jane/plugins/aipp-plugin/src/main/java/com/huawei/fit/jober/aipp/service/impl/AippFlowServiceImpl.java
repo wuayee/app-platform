@@ -1032,6 +1032,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                 .put("name", aippDto.getName())
                 .put("description", aippDto.getDescription())
                 .put("parameters", this.buildParameters(aippDto, context, flowInfo, appCategory))
+                .put("order", Arrays.asList("tenantId", "aippId", "version", "inputParams"))
                 .put("return", MapBuilder.get().put("type", "string").build())
                 .put("manualIntervention", Objects.equals(appCategory, AppCategory.WATER_FLOW))
                 .build();
@@ -1042,7 +1043,6 @@ public class AippFlowServiceImpl implements AippFlowService {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("type", "object");
         parameterMap.put("properties", this.buildPropertiesMap(aippDto, context, appCategory, flowInfo));
-        parameterMap.put("order", Arrays.asList("tenantId", "aippId", "version", "inputParams"));
         parameterMap.put("required", Arrays.asList("tenantId", "aippId", "version", "inputParams"));
         return parameterMap;
     }

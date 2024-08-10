@@ -14,7 +14,7 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
-import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteParam;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.dto.EvalDataUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
@@ -65,11 +65,11 @@ public class EvalDataController {
     /**
      * 批量删除评估数据。
      *
-     * @param deleteDto 表示评估数据删除传输对象的 {@link EvalDataDeleteDto}。
+     * @param deleteParam 表示评估数据删除传输对象的 {@link EvalDataDeleteParam}。
      */
     @DeleteMapping(description = "批量删除评估数据")
-    public void deleteEvalData(@RequestBody @Validated EvalDataDeleteDto deleteDto) {
-        this.evalDataService.delete(deleteDto.getDataIds());
+    public void deleteEvalData(@RequestBean @Validated EvalDataDeleteParam deleteParam) {
+        this.evalDataService.delete(deleteParam.getDataIds());
     }
 
     /**

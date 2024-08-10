@@ -12,7 +12,15 @@ import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
-    self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "outlineWidth", "outlineColor", "sourcePlatform");
+    self.serializedFields.batchAdd(
+        "toolConfigs",
+        "componentName",
+        "flowMeta",
+        "outlineWidth",
+        "outlineColor",
+        "sourcePlatform",
+        "runnable"
+    );
     self.eventType = "jadeEvent";
     self.hideText = true;
     self.autoHeight = true;
@@ -44,6 +52,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
     self.sourcePlatform = SOURCE_PLATFORM.OFFICIAL;
     self.observed = [];
+    self.runnable = true;
+
+    overrideMethods(self);
 
     /**
      * 获取节点默认的测试报告章节
@@ -97,37 +108,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 设置方向为W和N的connector不支持拖出连接线
-     *
-     * @override
-     */
-    const initConnectors = self.initConnectors;
-    self.initConnectors = () => {
-        initConnectors.apply(self);
-        self.connectors.remove(c => c.direction.key === DIRECTION.S.key || c.direction.key === DIRECTION.N.key
-            || c.direction.key === "ROTATE");
-        self.connectors.forEach(connector => {
-            connector.radius = CONNECTOR.RADIUS;
-            connector.isSolid = true;
-            if (connector.direction.key === DIRECTION.W.key) {
-                connector.allowFromLink = false;
-            }
-            if (connector.direction.key === DIRECTION.E.key) {
-                connector.allowToLink = false;
-            }
-            const moving = connector.moving;
-            connector.moving = (deltaX, deltaY, x, y) => {
-                // 找到从当前锚点拖出去的线
-                const lines = self.page.shapes.filter(s => s.isTypeof("jadeEvent")).filter(s => s.fromShape === self.id);
-                if (lines && lines.length > 0) {
-                    return;
-                }
-                moving.apply(connector, [deltaX, deltaY, x, y]);
-            }
-        })
-    };
-
-    /**
      * 获取节点之前可达的节点信息
      *
      * @returns {*[]} 包含前方节点的名称和info信息的数组
@@ -161,10 +141,10 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
             // 将当前形状的名称和获取到的info添加到formerNodes中
             formerNodesInfo.push({
-                id: currentShape.id,
+                id: currentShapeId,
                 node: currentShape,
                 name: currentShape.text,
-                observableList: currentShape.page.getObservableList(currentShape.id)
+                observableList: currentShape.page.getObservableList(currentShapeId)
             });
 
             // 找到当前形状连接的所有线
@@ -248,26 +228,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * @override
-     */
-    const remove = self.remove;
-    self.remove = (source) => {
-        // 如果有连线，需要同时删除连线.
-        const events = self.page.shapes
-            .filter(s => s.isTypeof("jadeEvent"))
-            .filter(s => s.fromShape === self.id || s.toShape === self.id);
-        const lineRemoved = events.flatMap(e => e.remove());
-
-        // 删除图形本身.
-        const removed = remove.apply(self, [source]);
-
-        // 清理observables.
-        self.cleanObservables();
-
-        return [...removed, ...lineRemoved];
-    };
-
-    /**
      * 复制节点.
      */
     self.duplicate = () => {
@@ -276,21 +236,13 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 更新jadeConfig.
+     * 序列化jade配置.
      *
-     * @override
+     * @param jadeConfig 配置.
      */
-    const serialize = self.serialize;
-    self.serialize = () => {
-        if (self.getLatestJadeConfig) {
-            self.serializerJadeConfig();
-        }
-        return serialize.apply(self);
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.jober.converter.entity = jadeConfig;
     };
-
-    self.serializerJadeConfig = () => {
-        self.flowMeta.jober.converter.entity = self.getLatestJadeConfig();
-    }
 
     // 可实现动态替换其中react组件的能力.
     self.addDetection(["componentName"], (property, value, preValue) => {
@@ -301,10 +253,8 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.invalidateAlone();
     });
 
-    /**
+    /*
      * 更新粘贴出来的图形的id
-     *
-     * @param entity entity
      */
     const updateCopiedNodeIds = entity => {
         if (typeof entity === 'object' && entity !== null) {
@@ -353,12 +303,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         observerProxy.status = preNodeIdSet.has(nodeId) ? "enable" : "disable";
         self.observed.push(observerProxy);
         self.page.observeTo(nodeId, observableId, observerProxy);
-
-        // 监听时，主动推送一次数据.todo@zhangyue 暂不确定是否对其他功能有影响，先暂时留着，确认没问题之后再删除
-        // const observable = self.page.getObservable(nodeId, observableId);
-        // if (observable.value || observable.type) {
-        //     observerProxy.observe({value: observable.value, type: observable.type});
-        // }
 
         // 返回取消监听的方法.
         return () => {
@@ -439,50 +383,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 当节点被取消选中时，校验表单中的数据.
-     */
-    const unSelect = self.unSelect;
-    self.unSelect = () => {
-        unSelect.apply(self);
-        self.validateForm && self.validateForm();
-    };
-
-    /**
-     * 需要加上report的范围.
-     *
-     * @override
-     */
-    const getShapeFrame = self.getShapeFrame;
-    self.getShapeFrame = (withMargin) => {
-        const frame = getShapeFrame.apply(self, [withMargin]);
-        const reportFrame = self.drawer.getReportFrame();
-        if (!reportFrame) {
-            return frame;
-        }
-        frame.x2 = reportFrame.x + reportFrame.width;
-        frame.y2 = Math.max(frame.y2, reportFrame.y + reportFrame.height);
-        return frame;
-    };
-
-    /**
-     * 需要加上report的范围.
-     *
-     * @override
-     */
-    const getBound = self.getBound;
-    self.getBound = () => {
-        const bound = getBound.apply(self);
-        const reportFrame = self.drawer.getReportFrame();
-        if (!reportFrame) {
-            return bound;
-        }
-        bound.width = reportFrame.x + reportFrame.width - bound.x;
-        bound.height = Math.max(reportFrame.y + reportFrame.height, self.x + self.height)
-            - Math.min(self.y, reportFrame.y);
-        return bound;
-    };
-
-    /**
      * 设置节点状态.
      *
      * @param status 状态.
@@ -498,26 +398,147 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * @override
+     * 判断当前节点是否可运行.
      */
-    const load = self.load;
-    self.load = (ignoreFilter) => {
-        load.apply(self, [ignoreFilter]);
-        /**
-         * jadeNode高度变化不触发dirties.
-         *
-         * @override
-         */
-        const propertyChanged = self.propertyChanged;
-        self.propertyChanged = (property, value, preValue) => {
-            if (property === "height") {
-                return;
-            }
-            propertyChanged.apply(self, [property, value, preValue]);
-        };
+    self.isRunnable = () => {
+        // 兼容老数据.老数据的runnable为null或undefined.
+        return self.runnable === null || self.runnable === undefined || self.runnable === true;
     };
 
     return self;
+};
+
+/**
+ * 重写方法放在这里.
+ *
+ * @param node 节点.
+ */
+const overrideMethods = (node) => {
+    /**
+     * 设置方向为W和N的connector不支持拖出连接线
+     *
+     * @override
+     */
+    const initConnectors = node.initConnectors;
+    node.initConnectors = () => {
+        initConnectors.apply(node);
+        node.connectors.remove(c => c.direction.key === DIRECTION.S.key || c.direction.key === DIRECTION.N.key
+            || c.direction.key === "ROTATE");
+        node.connectors.forEach(connector => {
+            connector.radius = CONNECTOR.RADIUS;
+            connector.isSolid = true;
+            if (connector.direction.key === DIRECTION.W.key) {
+                connector.allowFromLink = false;
+            }
+            if (connector.direction.key === DIRECTION.E.key) {
+                connector.allowToLink = false;
+            }
+            const moving = connector.moving;
+            connector.moving = (deltaX, deltaY, x, y) => {
+                // 找到从当前锚点拖出去的线
+                const lines = node.page.shapes.filter(s => s.isTypeof("jadeEvent")).filter(s => s.fromShape === node.id);
+                if (lines && lines.length > 0) {
+                    return;
+                }
+                moving.apply(connector, [deltaX, deltaY, x, y]);
+            }
+        })
+    };
+
+    /**
+     * @override
+     */
+    const load = node.load;
+    node.load = (ignoreFilter) => {
+        load.apply(node, [ignoreFilter]);
+        /**
+         * jadeNode高度变化不触发dirties.
+         *
+         */
+        const propertyChanged = node.propertyChanged;
+        node.propertyChanged = (property, value, preValue) => {
+            if (property === "height") {
+                return;
+            }
+            propertyChanged.apply(node, [property, value, preValue]);
+        };
+    };
+
+    /**
+     * 需要加上report的范围.
+     *
+     * @override
+     */
+    const getBound = node.getBound;
+    node.getBound = () => {
+        const bound = getBound.apply(node);
+        const reportFrame = node.drawer.getReportFrame();
+        if (!reportFrame) {
+            return bound;
+        }
+        bound.width = reportFrame.x + reportFrame.width - bound.x;
+        bound.height = Math.max(reportFrame.y + reportFrame.height, node.x + node.height)
+            - Math.min(node.y, reportFrame.y);
+        return bound;
+    };
+
+    /**
+     * 需要加上report的范围.
+     *
+     * @override
+     */
+    const getShapeFrame = node.getShapeFrame;
+    node.getShapeFrame = (withMargin) => {
+        const frame = getShapeFrame.apply(node, [withMargin]);
+        const reportFrame = node.drawer.getReportFrame();
+        if (!reportFrame) {
+            return frame;
+        }
+        frame.x2 = reportFrame.x + reportFrame.width;
+        frame.y2 = Math.max(frame.y2, reportFrame.y + reportFrame.height);
+        return frame;
+    };
+
+    /**
+     * 当节点被取消选中时，校验表单中的数据.
+     */
+    const unSelect = node.unSelect;
+    node.unSelect = () => {
+        unSelect.apply(node);
+        node.validateForm && node.validateForm();
+    };
+
+    /**
+     * 更新jadeConfig.
+     *
+     * @override
+     */
+    const serialize = node.serialize;
+    node.serialize = () => {
+        const jadeConfig = node.drawer.getLatestJadeConfig();
+        jadeConfig && node.serializerJadeConfig(jadeConfig);
+        return serialize.apply(node);
+    };
+
+    /**
+     * @override
+     */
+    const remove = node.remove;
+    node.remove = (source) => {
+        // 如果有连线，需要同时删除连线.
+        const events = node.page.shapes
+            .filter(s => s.isTypeof("jadeEvent"))
+            .filter(s => s.fromShape === node.id || s.toShape === node.id);
+        const lineRemoved = events.flatMap(e => e.remove());
+
+        // 删除图形本身.
+        const removed = remove.apply(node, [source]);
+
+        // 清理observables.
+        node.cleanObservables();
+
+        return [...removed, ...lineRemoved];
+    };
 };
 
 /**
