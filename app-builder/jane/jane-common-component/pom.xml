@@ -65,6 +65,10 @@
             <groupId>com.huawei.fit.jober</groupId>
             <artifactId>jober-genericable</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>authentication-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
