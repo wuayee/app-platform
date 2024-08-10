@@ -64,6 +64,10 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>authentication-service</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
