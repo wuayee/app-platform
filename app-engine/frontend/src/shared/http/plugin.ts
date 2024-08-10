@@ -8,8 +8,8 @@ export function getPlugins(data: {
   pageSize: number;
   includeTags: string;
   name: string;
-}, excludeTags:string = '') {
-  const url = `${PLUGIN_URL}/store/plugins/search?${excludeTags}`;
+}, excludeTags: string = '') {
+  const url = `${PLUGIN_URL}/store/plugins/tools/search?${excludeTags}`;
   return get(url, { ...data });
 }
 
@@ -60,7 +60,7 @@ export function getPluginPackageInfo(file) {
 // 确认上传插件
 export function uploadPlugin(param, toolsName) {
   const url = `${PLUGIN_URL}/plugins/save/tools?toolNames=${toolsName}`;
-  return post(url, param,  {
+  return post(url, param, {
     headers: {
       'Content-Type': 'application/form-data'
     },
