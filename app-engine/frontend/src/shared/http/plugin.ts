@@ -1,4 +1,4 @@
-import { get, post,del } from './http';
+import { get, post, del } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
@@ -8,8 +8,8 @@ export function getPlugins(data: {
   pageSize: number;
   includeTags: string;
   name: string;
-}, excludeTags:string = '') {
-  const url = `${PLUGIN_URL}/store/plugins/search?${excludeTags}`;
+}, excludeTags: string = '') {
+  const url = `${PLUGIN_URL}/store/plugins/tools/search?${excludeTags}`;
   return get(url, { ...data });
 }
 // 删除插件
