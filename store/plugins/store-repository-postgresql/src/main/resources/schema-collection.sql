@@ -11,7 +11,7 @@ create table if not exists store_collection
     "collector"        varchar(32) default 'system'          not null,
     "tool_unique_name" char(36)                              not null
     );
-create index if not exists fast_query_plugin on store_collection ("collector");
+create index if not exists fast_query_plugin_collection on store_collection ("collector");
 comment on column store_collection.id is '收藏的自增主键';
 comment on column store_collection.created_time is '收藏的创建时间';
 comment on column store_collection.updated_time is '收藏的更新时间';

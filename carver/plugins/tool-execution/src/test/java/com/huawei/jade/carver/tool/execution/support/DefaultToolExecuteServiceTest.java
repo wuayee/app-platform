@@ -84,9 +84,9 @@ public class DefaultToolExecuteServiceTest {
                                                                 .put("description", "This is the first parameter.")
                                                                 .build())
                                                 .build())
-                                .put("order", Collections.singletonList("p1"))
                                 .put("required", Collections.singletonList("p1"))
                                 .build())
+                .put("order", Collections.singletonList("p1"))
                 .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
                 .build();
     }

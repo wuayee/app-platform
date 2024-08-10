@@ -67,6 +67,15 @@ public class DefaultToolRepository implements ToolRepository {
         this.toolMapper.addTool(toolDo);
     }
 
+    @Override
+    @Transactional
+    public void addTools(List<Tool.Info> infos) {
+        List<ToolDo> toolDoList = infos.stream()
+                .map(info -> ToolDo.info2Do(info, this.serializer))
+                .collect(Collectors.toList());
+        this.toolMapper.addTools(toolDoList);
+    }
+
     /**
      * 仓储层删除工具。
      *
@@ -76,6 +85,12 @@ public class DefaultToolRepository implements ToolRepository {
     @Transactional
     public void deleteTool(String uniqueName) {
         this.toolMapper.deleteTool(uniqueName);
+    }
+
+    @Override
+    @Transactional
+    public void deleteTools(List<String> uniqueNames) {
+        this.toolMapper.deleteTools(uniqueNames);
     }
 
     @Override

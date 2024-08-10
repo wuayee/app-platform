@@ -136,11 +136,6 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
     }
 
     @Override
-    public String description() {
-        return this.toolInfo.description();
-    }
-
-    @Override
     public String source() {
         return this.toolInfo.source();
     }

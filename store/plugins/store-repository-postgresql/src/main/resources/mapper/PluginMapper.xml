@@ -7,36 +7,36 @@
         <result column="updated_time" property="updatedTime"/>
         <result column="creator" property="creator"/>
         <result column="modifier" property="modifier"/>
-        <result column="is_published" property="isPublished"/>
-        <result column="owner" property="owner"/>
-        <result column="like_count" property="likeCount"/>
-        <result column="download_count" property="downloadCount"/>
-        <result column="tool_name" property="toolName"/>
-        <result column="tool_unique_name" property="toolUniqueName"/>
+        <result column="plugin_id" property="pluginId"/>
+        <result column="plugin_name" property="pluginName"/>
+        <result column="extension" property="extension"/>
     </resultMap>
     <insert id="addPlugin" parameterType="com.huawei.jade.store.repository.pgsql.entity.PluginDo">
         insert into store_plugin
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="creator != null">"creator",</if> <if test="modifier != null">"modifier",</if>
-            <if test="isPublished != null">"is_published",</if>
-            <if test="owner != null">"owner",</if> <if test="likeCount != null">"like_count",</if>
-            <if test="downloadCount != null">"download_count",</if> "tool_name", "tool_unique_name",
+            <if test="creator != null">"creator",</if>
+            <if test="modifier != null">"modifier",</if>
+            <if test="pluginId != null">"plugin_id",</if>
+            <if test="pluginName != null">"plugin_name",</if>
+            <if test="extension != null">"extension",</if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="creator != null">#{creator},</if> <if test="modifier != null">#{modifier},</if>
-            <if test="isPublished != null">#{isPublished},</if>
-            <if test="owner != null">#{owner},</if> <if test="likeCount != null">#{likeCount},</if>
-            <if test="downloadCount != null">#{downloadCount},</if> #{toolName}, #{toolUniqueName},
+            <if test="creator != null">#{creator},</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="pluginId != null">#{pluginId},</if>
+            <if test="pluginName != null">#{pluginName},</if>
+            <if test="extension != null">cast(#{extension} as json),</if>
         </trim>
-        on conflict ("tool_unique_name") do nothing
+        on conflict ("plugin_id") do nothing
     </insert>
     <sql id="getCount">
-        select count(i."is_published")
+        select count(distinct i."plugin_id")
         from "store_plugin" i
-                 left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
-                            from "store_tag" t
-                            group by t."tool_unique_name") tg on i."tool_unique_name" = tg."tool_unique_name"
+        left join "store_plugin_tool" pt on i."plugin_id" = pt."plugin_id"
+        left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                    from "store_tag" t
+                    group by t."tool_unique_name") tg on tg."tool_unique_name" = pt."tool_unique_name"
     </sql>
     <sql id="getOrSearchConditions">
         <if test="mode == 'AND' and includeTags != null and includeTags.size() > 0">
@@ -47,7 +47,15 @@
             </foreach>
             )
         </if>
-        <if test="mode == 'OR' and excludeTags != null and excludeTags.size() > 0">
+        <if test="mode == 'OR' and includeTags != null and includeTags.size() > 0">
+            and tg.tags is not null
+            and (
+            <foreach collection="includeTags" item="tag" open="" close="" separator=" or ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+        </if>
+        <if test="excludeTags != null and excludeTags.size() > 0">
             and ( tg.tags is null
             or not (
             <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">
@@ -66,27 +74,23 @@
             limit #{limit}
         </if>
     </sql>
-    <select id="getPluginByUniqueName" resultMap="Plugin">
-        select "is_published", "owner", "like_count", "download_count", "tool_unique_name"
+    <select id="getPluginByPluginId" resultMap="Plugin">
+        select "creator", "modifier", "plugin_id", "plugin_name", "extension"
         from "store_plugin"
-        where "tool_unique_name" = #{uniqueName}
+        where "plugin_id" = #{pluginId}
     </select>
     <select id="getPlugins" parameterType="com.huawei.jade.store.entity.query.PluginQuery" resultMap="Plugin">
-        select i."is_published", i."owner", i."like_count", i."download_count", i."tool_unique_name"
+        select distinct i."updated_time", i."creator", i."modifier", i."plugin_id", i."plugin_name", i."extension"::text
         from "store_plugin" i
+        left join "store_plugin_tool" pt on i."plugin_id" = pt."plugin_id"
         left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
                     from "store_tag" t
-                    group by t."tool_unique_name") tg on tg."tool_unique_name" = i."tool_unique_name"
+                    group by t."tool_unique_name") tg on tg."tool_unique_name" = pt."tool_unique_name"
         <where>
-            <if test="isPublished != null and isPublished != ''">
-                i."is_published" = #{isPublished}
-            </if>
-            <if test="owner != null and owner != ''">
-                i."owner" = #{owner}
-            </if>
             <include refid="getOrSearchConditions"/>
             <if test="toolName != null and toolName != ''">
-                and i."tool_name" ilike '%' || #{toolName} || '%'
+                and (i."plugin_name" ilike '%' || #{toolName} || '%'
+                or pt."tool_name" ilike '%' || #{toolName} || '%')
             </if>
         </where>
         <include refid="sortAndLimit"/>
@@ -94,28 +98,16 @@
     <select id="getPluginsCount" parameterType="com.huawei.jade.store.entity.query.PluginQuery">
         <include refid="getCount"/>
         <where>
-            <if test="isPublished != null and isPublished != ''">
-                i."is_published" = #{isPublished}
-            </if>
-            <if test="owner != null and owner != ''">
-                i."owner" = #{owner}
-            </if>
             <include refid="getOrSearchConditions"/>
             <if test="toolName != null and toolName != ''">
-                and i."tool_name" ilike '%' || #{toolName} || '%'
+                and (i."plugin_name" ilike '%' || #{toolName} || '%'
+                or pt."tool_name" ilike '%' || #{toolName} || '%')
             </if>
         </where>
-    </select>
-    <select id="getMyCollection" parameterType="com.huawei.jade.store.entity.query.PluginQuery" resultMap="Plugin">
-        select i."is_published", i."owner", i."like_count", i."download_count", i."tool_unique_name"
-        from "store_plugin" i
-        left join "store_collection" t on i."tool_unique_name" = t."tool_unique_name"
-        where t."collector" = #{collector}
-        <include refid="sortAndLimit"/>
     </select>
     <delete id="deletePlugin" parameterType="String">
         delete
         from "store_plugin"
-        where "tool_unique_name" = #{uniqueName};
+        where "plugin_id" = #{pluginId};
     </delete>
 </mapper>

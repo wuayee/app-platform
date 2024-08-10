@@ -98,13 +98,6 @@ public interface Tool {
         String uniqueName();
 
         /**
-         * 获取工具的描述。
-         *
-         * @return 表示工具的描述的 {@link String}。
-         */
-        String description();
-
-        /**
          * 获取工具的来源。
          *
          * @return 表示工具的来源的 {@link String}。
@@ -188,14 +181,6 @@ public interface Tool {
              * @return 表示当前构建器的 {@link Builder}。
              */
             Builder uniqueName(String uniqueName);
-
-            /**
-             * 向当前构建器中设置工具的描述。
-             *
-             * @param description 表示待设置的工具描述的 {@link String}。
-             * @return 表示当前构建器的 {@link Builder}。
-             */
-            Builder description(String description);
 
             /**
              * 向当前构建器中设置工具的标签集合。

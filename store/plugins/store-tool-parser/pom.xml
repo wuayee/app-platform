@@ -48,6 +48,10 @@
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-test-framework</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

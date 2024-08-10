@@ -1,4 +1,4 @@
-import { get, post } from './http';
+import { get, post, del } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
@@ -11,6 +11,11 @@ export function getPlugins(data: {
 }, excludeTags: string = '') {
   const url = `${PLUGIN_URL}/store/plugins/tools/search?${excludeTags}`;
   return get(url, { ...data });
+}
+// 删除插件
+export function deletePluginAPI(plugin_id: string) {
+  const url = `${PLUGIN_URL}/plugins/delete/${plugin_id}`;
+  return del(url);
 }
 
 export function getPluginDetail(pluginId) {
@@ -59,7 +64,7 @@ export function getPluginPackageInfo(file) {
 
 // 确认上传插件
 export function uploadPlugin(param, toolsName) {
-  const url = `${PLUGIN_URL}/plugins/save/tools?toolNames=${toolsName}`;
+  const url = `${PLUGIN_URL}/plugins/save?toolNames=${toolsName}`;
   return post(url, param, {
     headers: {
       'Content-Type': 'application/form-data'

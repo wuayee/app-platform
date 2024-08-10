@@ -5,7 +5,7 @@ import { useHistory } from 'react-router';
 import { Icons } from '../icons';
 import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
-import './style.scoped.scss';
+import './style.scss';
 
 const WorkflowCard = ({ pluginData }: any) => {
   const navigate = useHistory().push;

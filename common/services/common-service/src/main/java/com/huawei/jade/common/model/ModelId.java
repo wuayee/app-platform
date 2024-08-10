@@ -21,7 +21,12 @@ public enum ModelId {
     /**
      * 应用评估模块 ID
      */
-    APP_EVAL_MODEL_ID(8);
+    APP_EVAL_MODEL_ID(8),
+
+    /**
+     * 插件模块 ID
+     */
+    STORE_MODEL_ID(9);
 
 
     private ModelId(int modelId) {
