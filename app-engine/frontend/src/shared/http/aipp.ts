@@ -23,14 +23,14 @@ export function uploadFile(data, headers) {
 }
 
 // 根据返回的地址获取语音转换的文字信息
-export function voiceToText(tenantId, voicePath, fileName) {
+export function voiceToText (tenantId,voicePath,fileName) {
   let url = process.env.NODE_ENV === 'development' ? 'http://80.11.128.86:30020/api/jober/v1/api' :
-    process.env.NODE_ENV === 'production' ? window.location.origin + AIPP_URL : AIPP_URL
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`, { voicePath: `${url}/${tenantId}/file?filePath=${voicePath}`, fileName });
+  process.env.NODE_ENV === 'production' ? window.location.origin + AIPP_URL :AIPP_URL
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`,{voicePath:`${url}/${tenantId}/file?filePath=${voicePath}`,fileName});
 }
 // 文字转语音
 export function textToVoice(text, tone) {
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`, { text, tone });
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`,{text,tone});
 }
 
 
@@ -127,7 +127,7 @@ export function queryInspirationSelect(tenantId, fitableid, params) {
   return post(`${AIPP_URL}/${tenantId}/genericables/fitables/${fitableid}`, params);
 }
 // 文件上传
-export function uploadChatFile(tenantId, appId = '', data, headers) {
+export function uploadChatFile(tenantId, appId='', data, headers) {
   return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { ...headers, 'Content-Type': 'multipart/form-data' });
 }
 

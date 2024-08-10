@@ -1,20 +1,15 @@
 
-import React, { useState, useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Drawer, Form, Alert, Spin } from 'antd';
+import { Drawer, Form } from 'antd';
 import { StartIcon, CloseIcon, RunIcon } from '@assets/icon';
 import { Message } from '@shared/utils/message';
 import { FlowContext } from '../../aippIndex/context';
-import { reTestInstance } from '@shared/http/aipp';
-import { messageProcess } from '../../chatPreview/utils/chat-process';
-import { workflowDebug, getTestVersion } from '@shared/http/sse';
-import { useAppSelector } from '@/store/hook';
-import { EventSourceParserStream } from '@shared/event-source/stream';
+import { startInstance, reTestInstance } from '@shared/http/aipp';
 import RenderFormItem from './render-form-item';
-import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
 
 const Index = (props) => {
-  const {
+  const { 
     debugTypes,
     setTestTime,
     setTestStatus,
@@ -23,18 +18,12 @@ const Index = (props) => {
     elsaRunningCtl,
     setShowFlowChangeWarning
   } = props;
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [formConfig, setFormConfig] = useState({});
-  const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
+  const { appInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const [form] = Form.useForm();
   const timerRef = useRef(null);
-  const runningInstanceId = useRef('');
   // 关闭测试抽屉
   const handleCloseDebug = () => {
-    setLoading(false);
     setShowDebug(false);
   }
   const handleRunTest = () => {
@@ -43,101 +32,40 @@ const Index = (props) => {
     setTestStatus(null);
     setTestTime(0);
     form.validateFields().then((values) => {
-      runningStart(values);
-    }).catch((errorInfo) => {
-      Message({ type: 'warning', content: '请输入必填项' });
-    });
+      handleRun(values);
+      handleCloseDebug();
+    })
+      .catch((errorInfo) => {
+        Message({type: 'warning', content: '请输入必填项'});
+      });
   }
-  // 请求参数拼接
-  const runningStart = (values) => {
-    let chatParams: any = {
-      'app_id': appId,
-      'question': values.Question,
-      'context': {
-        'use_memory': false,
-        dimension: dimension.name
+  // 点击运行
+  const handleRun = async (values) => {
+    let graphChangeData = window.agent.serialize();
+    appInfo.flowGraph.appearance = graphChangeData;
+    const params = {
+      appDto: appInfo,
+      context: {
+        initContext: values
       }
     };
-    if (chatId) {
-      chatParams['chat_id'] = chatId;
-    };
-    handleRun(chatParams);
-  };
-  // 点击运行
-  const handleRun = async (params) => {
-    setLoading(true);
-    const res = await workflowDebug(tenantId, params);
-    if (res.status !== 200) {
-      Message({ type: 'error', content: '启动调试失败' });
-      setLoading(false);
-      return;
-    }
-    const reader = res?.body?.pipeThrough(new TextDecoderStream())
-      .pipeThrough(new EventSourceParserStream()).getReader();
-    testStreaming(reader);
-  }
-  // 流式输出sse数据
-  const testStreaming = async (reader) => {
-    let getReady = false;
-    while (true) {
-      const sseResData = await reader?.read();
-      const { done, value } = sseResData;
-      if (!done) {
-        try {
-          let msgStr = value.data;
-          const receiveData = JSON.parse(msgStr);
-          if (receiveData.status === 'READY' && !getReady) {
-            getReady = true;
-            runningInstanceId.current = receiveData.instance_id;
-            const versionRes = await getTestVersion(tenantId, appId);
-            const { aipp_id, version } = versionRes.data;
-            if (aipp_id && version) {
-              startDebugMission(aipp_id, version, receiveData.instance_id);
-            } else {
-              setLoading(false);
-              elsaRunningCtl.current && elsaRunningCtl.current.reset();
-              Message({ type: 'error', content: '启动运行失败' });
-              break;
-            }
-          } else {
-            sseTestProcess(receiveData);
-          }
-        } catch (e) {
-          console.info(e);
-        }
-      } else {
-        break;
-      };
-    };
-  }
-  // 接收表单消息
-  const sseTestProcess = (messageData) => {
-    try {
-      // 普通日志
-      messageData.answer?.forEach(log => {
-        if (log.type === 'FORM') {
-          let obj = messageProcess(runningInstanceId.current, log.content);
-          setFormConfig(obj.formConfig);
-          setOpen(true);
-        }
-      });
-    } catch (err) {
-      console.info(err);
-    }
-  }
-  // 开始调试
-  const startDebugMission = (aippId, version, instanceId) => {
-    handleCloseDebug();
     elsaRunningCtl.current = window.agent.run();
-    setTestStatus('Running');
-    startTestInstance(aippId, version, instanceId);
+    const res = await startInstance(tenantId, appId, params);
+    if (res.code === 0) {
+      const {aippCreate, instanceId} = res.data;
+      setTestStatus('Running');
+      // 调用轮询
+      startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
+    } else {
+      elsaRunningCtl.current && elsaRunningCtl.current.reset();
+    }
   }
   // 测试轮询
   const startTestInstance = (aippId, version, instanceId) => {
     timerRef.current = setInterval(async () => {
       const res = await reTestInstance(tenantId, aippId, instanceId, version);
       if (res.code !== 0) {
-        onStop(res.msg || '测试失败');
+        onStop( res.msg || '测试失败');
       }
       const runtimeData = res.data;
       if (runtimeData) {
@@ -154,7 +82,7 @@ const Index = (props) => {
         const time = (runtimeData.executeTime / 1000).toFixed(3);
         setTestTime(time);
       }
-    }, 3000);
+    }, 1000);
   }
   // 判断是否流程结束
   const isEnd = (nodeInfos) => {
@@ -164,6 +92,7 @@ const Index = (props) => {
   const isError = (nodeInfos) => {
     return nodeInfos.some((value) => value.status === 'ERROR');
   }
+  
   // 终止轮询
   const onStop = (content) => {
     clearInterval(timerRef.current);
@@ -173,21 +102,18 @@ const Index = (props) => {
   return <>{(
     <div>
       <Drawer title={<h5>测试运行</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
-        footer={
-          <Spin spinning={loading}>
+          footer={
             <div style={{ textAlign: 'right' }}>
               <span onClick={handleRunTest} className='run-btn'>
-                <RunIcon className='run-icon' />运行
+                <RunIcon className='run-icon'/>运行
               </span>
             </div>
-          </Spin>
-        }
-        closeIcon={
-          <CloseIcon />
-        }
+          }
+          closeIcon={
+            <CloseIcon />
+          }
       >
         <div className='debug'>
-          <Alert message='工具流暂不支持调试历史记录' type='info' />
           <div className='debug-header'>
             <StartIcon className='header-icon' />
             <span className='header-title'>开始节点</span>
@@ -199,20 +125,10 @@ const Index = (props) => {
           >
             {debugTypes.map((debugType, index) => {
               return (
-                <RenderFormItem
-                  type={debugType.type}
-                  name={debugType.name}
-                  key={index}
-                  isRequired={debugType.isRequired} />
+                <RenderFormItem type={debugType.type} name={debugType.name} key={index} isRequired={debugType.isRequired}/>
               )
             })}
           </Form>
-        </div>
-      </Drawer>
-      {/* 表单抽屉 */}
-      <Drawer title={<h5>人工干预表单</h5>} open={open} onClose={() => setOpen(false)} width={800}>
-        <div>
-          <RuntimeForm formConfig={formConfig} confirmCallBack={() => setOpen(false)} />
         </div>
       </Drawer>
     </div>
