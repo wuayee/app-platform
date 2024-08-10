@@ -25,6 +25,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<Cookie> tokenOptional = cookies.get("X-Uni-Crsf-Token");
         Optional<Cookie> tokenIdOptional = cookies.get("X-Uni-Crsf-Token-Id");
 
-        return !tokenOptional.isPresent() || !tokenIdOptional.isPresent() ? "admin" : "Jade";
+        return !tokenOptional.isPresent() || !tokenIdOptional.isPresent() ? "Jade" : "admin";
     }
 }
