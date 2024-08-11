@@ -6,6 +6,7 @@ package com.huawei.fit.serialization.json.jackson;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.fit.serialization.test.person.PersonAlias;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
 
@@ -187,5 +188,39 @@ public class JacksonObjectSerializerTest {
         String serialize = JacksonObjectSerializerTest.this.jsonSerializer.serialize(expected);
         Object actual = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(serialize, String.class);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("当存在别名时，反序列化成功")
+    void givenAliasJsonThenDeserializeOk() {
+        String json = "{\"first_name\":\"foo\"}";
+        PersonAlias personAlias = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(json, PersonAlias.class);
+        assertThat(personAlias.firstName()).isEqualTo("foo");
+    }
+
+    @Test
+    @DisplayName("当存在别名时，序列化成功")
+    void givenAliasObjectThenSerializeOk() {
+        String expect = "{\"lastName\":null,\"first_name\":\"foo\"}";
+        PersonAlias personAlias = new PersonAlias();
+        personAlias.firstName("foo");
+        assertThat(JacksonObjectSerializerTest.this.jsonSerializer.serialize(personAlias)).isEqualTo(expect);
+    }
+
+    @Test
+    @DisplayName("当使用原生注解，存在别名时，反序列化成功")
+    void givenJsonPropertyThenDeserializeOriginOk() {
+        String json = "{\"lastName\":\"bar\"}";
+        PersonAlias personAlias = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(json, PersonAlias.class);
+        assertThat(personAlias.lastName()).isEqualTo("bar");
+    }
+
+    @Test
+    @DisplayName("当使用原生注解，存在别名时，反序列化成功")
+    void givenJsonPropertyThenSerializeOriginOk() {
+        String expect = "{\"lastName\":\"bar\",\"first_name\":null}";
+        PersonAlias personAlias = new PersonAlias();
+        personAlias.lastName("bar");
+        assertThat(JacksonObjectSerializerTest.this.jsonSerializer.serialize(personAlias)).isEqualTo(expect);
     }
 }
