@@ -48,13 +48,16 @@ public class ThisParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             if (this.isBinding()) {
-                return this.isClassMatch(this.content, bean, ThisParser.this.parameters);
+                return this.isClassMatch(this.content, beanClass, ThisParser.this.parameters);
             }
-            Class<?> contentClass = ExpressionUtils.getContentClass(this.content().toString(),
-                    ThisParser.this.classLoader);
-            return contentClass.isAssignableFrom(bean);
+            Class<?> contentClass =
+                    ExpressionUtils.getContentClass(this.content().toString(), ThisParser.this.classLoader);
+            if (contentClass == null) {
+                return false;
+            }
+            return contentClass.isAssignableFrom(beanClass);
         }
 
         @Override

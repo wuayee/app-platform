@@ -10,6 +10,7 @@ import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fitframework.aop.interceptor.aspect.parser.PointcutParameter;
 import com.huawei.fitframework.aop.interceptor.aspect.parser.model.PointcutSupportedType;
+import com.huawei.fitframework.aop.interceptor.aspect.util.ExpressionUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -65,7 +66,7 @@ public class ArgsParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             return true;
         }
 
@@ -162,7 +163,7 @@ public class ArgsParser extends BaseParser {
                 predicate = Class::isAssignableFrom;
             } else {
                 // 根据 args(..) 字符串内容获取类型
-                paramClass = Arrays.stream(parts).map(item -> getClassIgnoreException(item,
+                paramClass = Arrays.stream(parts).map(item -> ExpressionUtils.getContentClass(item,
                         ArgsParser.this.classLoader)).toArray(Class[]::new);
                 predicate = Class::equals;
             }
@@ -176,7 +177,7 @@ public class ArgsParser extends BaseParser {
             }
             String[] parts = StringUtils.split(this.content, ARG_NAMES_SEPARATOR);
             return Arrays.stream(parts)
-                    .map(item -> getClassIgnoreException(item, ArgsParser.this.classLoader))
+                    .map(item -> ExpressionUtils.getContentClass(item, ArgsParser.this.classLoader))
                     .noneMatch(Objects::nonNull);
         }
 

@@ -70,9 +70,9 @@ public class AtWithinParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             // 判断当前类和递归父类有没有表达式中的注解
-            Class<?> current = bean;
+            Class<?> current = beanClass;
             while (current != Object.class) {
                 AnnotationMetadata annotationMetadata = AspectParameterInjectionHelper.getAnnotationMetadata(current);
                 if (annotationMetadata.isAnnotationPresent(ObjectUtils.cast(this.clazz))) {

@@ -33,10 +33,10 @@ public class WithinParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             String content = this.content().toString();
             final String replaceRegex = ExpressionUtils.expressionReplaceRegex(content);
-            return bean.getName().matches(replaceRegex);
+            return beanClass.getName().matches(replaceRegex);
         }
 
         @Override

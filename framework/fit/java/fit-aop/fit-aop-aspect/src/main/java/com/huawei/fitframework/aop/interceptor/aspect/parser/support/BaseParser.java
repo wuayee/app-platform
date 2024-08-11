@@ -4,11 +4,9 @@
 
 package com.huawei.fitframework.aop.interceptor.aspect.parser.support;
 
-import static com.huawei.fitframework.aop.interceptor.aspect.util.ExpressionUtils.getContentClass;
-
 import com.huawei.fitframework.aop.interceptor.aspect.parser.ExpressionParser;
 import com.huawei.fitframework.aop.interceptor.aspect.parser.model.PointcutSupportedType;
-import com.huawei.fitframework.inspection.Nullable;
+import com.huawei.fitframework.aop.interceptor.aspect.util.ExpressionUtils;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -77,7 +75,7 @@ public abstract class BaseParser implements ExpressionParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             return false;
         }
 
@@ -88,7 +86,7 @@ public abstract class BaseParser implements ExpressionParser {
 
         @Override
         public boolean isBinding() {
-            return getClassIgnoreException(this.content, this.classLoader) == null;
+            return ExpressionUtils.getContentClass(this.content, this.classLoader) == null;
         }
 
         @Override
@@ -100,23 +98,5 @@ public abstract class BaseParser implements ExpressionParser {
         public Object content() {
             return this.content;
         }
-    }
-
-    /**
-     * 忽略异常，将字符串转换为 class 类。
-     *
-     * @param content 待转换为类的 {@link String}。
-     * @param classLoader 类加载器。
-     * @return 如果可以可以转换 class，返回 {@link Class}，否则，返回 {@code null}。
-     */
-    @Nullable
-    public static Class<?> getClassIgnoreException(String content, ClassLoader classLoader) {
-        Class<?> contentClass = null;
-        try {
-            contentClass = getContentClass(content, classLoader);
-        } catch (IllegalArgumentException e) {
-            // do nothing
-        }
-        return contentClass;
     }
 }
