@@ -91,17 +91,6 @@ export const conditionMap = {
     },
   ],
   主产品: [
-    // {
-    //   label: '重量级团队LV0',
-    //   prop: 'lv0_prod_rd_team_cn_name',
-    //   filterType: 'checkbox',
-    //   options: [
-    //     {
-    //       label:'IRB',
-    //       value:'IRB',
-    //     }
-    //   ],
-    // },
     {
       label: '重量级团队LV1',
       prop: 'lv1_prod_rd_team_cn_name',
@@ -130,13 +119,6 @@ export const conditionMap = {
       belongs: '主产品',
       options: [],
     },
-    // {
-    //   label: '产品自定义LV2',
-    //   prop: 'lv2_prod_list_cn_name_p',
-    //   filterType: 'checkbox',
-    //   belongs: '主产品',
-    //   options: [],
-    // },
     {
       label: '产品自定义LV3',
       prop: 'lv3_prod_list_cn_name_p',
@@ -151,30 +133,8 @@ export const conditionMap = {
       belongs: '主产品',
       options: [],
     },
-    // {
-    //   label: '产品名称',
-    //   prop: 'prod_cn_name',
-    //   filterType: 'checkbox',
-    //   belongs: '主产品',
-    //   options: [],
-    // },
   ],
   辅产品: [
-    // {
-    //   label: '辅产品BG',
-    //   prop: 'minor_lv0_prod_list_cn_name',
-    //   filterType: 'checkbox',
-    //   options:[
-    //     {
-    //       label:'运营商网络',
-    //       value:'运营商网络',
-    //     },
-    //     {
-    //       label:'政企',
-    //       value:'政企',
-    //     }
-    //   ]
-    // },
     {
       label: '辅产品LV1',
       prop: 'minor_lv1_prod_list_cn_name',
@@ -189,27 +149,6 @@ export const conditionMap = {
       belongs: '辅产品',
       options: [],
     },
-    // {
-    //   label: '辅产品LV3',
-    //   prop: 'minor_lv3_prod_list_code',
-    //   filterType: 'checkbox',
-    //   belongs: '辅产品',
-    //   options:[]
-    // },
-    // {
-    //   label: '辅产品LV4',
-    //   prop: 'minor_lv4_prod_list_code',
-    //   filterType: 'checkbox',
-    //   belongs: '辅产品',
-    //   options:[]
-    // },
-    // {
-    //   label: '辅产品OFFERING',
-    //   prop: 'minor_offering_cn_name',
-    //   filterType: 'checkbox',
-    //   belongs: '辅产品',
-    //   options:[]
-    // },
   ],
   区域: [
     {
@@ -1294,10 +1233,6 @@ export const casecadeMap = {
     },
   ],
   主产品: [
-    // {
-    //   label: '重量级团队LV0中文名称',
-    //   prop: 'lv0_prod_rd_team_cn_name',
-    // },
     {
       label: '重量级团队LV1中文名称',
       prop: 'lv1_prod_rd_team_cn_name',
@@ -1314,10 +1249,6 @@ export const casecadeMap = {
       label: '重量级团队LV4中文名称',
       prop: 'lv4_prod_rd_team_cn_name',
     },
-    // {
-    //   label: '产品LV2自定义名称',
-    //   prop: 'lv2_prod_list_cn_name_p',
-    // },
     {
       label: '产品LV3自定义名称',
       prop: 'lv3_prod_list_cn_name_p',
@@ -1326,16 +1257,9 @@ export const casecadeMap = {
       label: '产品LV4自定义名称',
       prop: 'lv4_prod_list_cn_name_p',
     },
-    // {
-    //   label: '产品名称',
-    //   prop: 'prod_cn_name',
-    // }
   ],
   辅产品: [
-    // {
-    //   label: '辅产品BG中文名称',
-    //   prop: 'minor_lv0_prod_list_cn_name',
-    // },
+    
     {
       label: '辅产品LV1中文名称',
       prop: 'minor_lv1_prod_list_cn_name',
@@ -1344,18 +1268,6 @@ export const casecadeMap = {
       label: '辅产品LV2中文名称',
       prop: 'minor_lv2_prod_list_cn_name',
     },
-    // {
-    //   label: '辅产品LV3中文名称',
-    //   prop: 'minor_lv3_prod_list_code',
-    // },
-    // {
-    //   label: '辅产品LV4中文名称',
-    //   prop: 'minor_lv4_prod_list_code',
-    // },
-    // {
-    //   label: '辅产品OFFERING中文名称',
-    //   prop: 'minor_offering_cn_name',
-    // },
   ],
   区域: [
     {
