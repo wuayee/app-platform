@@ -314,22 +314,30 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      * 断开连接.
      */
     self.offConnect = () => {
-        const preNodeInfos = self.getPreNodeInfos();
-        const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        self.observed.filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => o.disable());
-        const nextNodes = getNextNodes();
-        nextNodes.length > 0 && nextNodes.forEach(n => n.offConnect());
+        const preNodeIdSet = new Set(self.getPreNodeInfos().map(n => n.id));
+        visitNext(self, preNodeIdSet, (n, preNodeIds) => {
+            n.observed.filter(o => !preNodeIds.has(o.nodeId)).forEach(o => o.disable());
+        });
+        self.page.onShapeOffConnect && self.page.onShapeOffConnect();
     };
 
     /**
      * 连接.
      */
     self.onConnect = () => {
-        const preNodeInfos = self.getPreNodeInfos();
-        const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        self.observed.filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => o.enable());
-        const nextNodes = getNextNodes();
-        nextNodes.length > 0 && nextNodes.forEach(n => n.onConnect());
+        const preNodeIdSet = new Set(self.getPreNodeInfos().map(n => n.id));
+        visitNext(self, preNodeIdSet, (n, preNodeIds) => {
+            n.observed.filter(o => preNodeIds.has(o.nodeId)).forEach(o => o.enable());
+        });
+        self.page.onShapeConnect && self.page.onShapeConnect();
+    };
+
+    // 访问后续节点.
+    const visitNext = (node, preNodeIds, action) => {
+        action(node, preNodeIds);
+        preNodeIds.add(node.id);
+        node.getNextNodes().forEach(n => visitNext(n, preNodeIds, action));
+        preNodeIds.delete(node.id);
     };
 
     /**
@@ -343,10 +351,10 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.observed.forEach(o => self.page.stopObserving(o.nodeId, o.observableId, o));
     };
 
-    /*
+    /**
      * 获取下一批节点.
      */
-    const getNextNodes = () => {
+    self.getNextNodes = () => {
         const lines = self.page.shapes.filter(s => s.type === "jadeEvent").filter(l => l.fromShape === self.id);
         if (!lines || lines.length === 0) {
             return [];
