@@ -76,3 +76,17 @@ export function saveContent(tenantId: string, instanceId: string, params: any) {
 export function getTestVersion(tenantId: string, appId: string) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}/aipp?isDebug=true`);
 }
+export function saveChart(tenantId: string, instanceId: string, params: any) {
+  let url = `${AIPP_URL}/${tenantId}/instances/${instanceId}`
+  return new Promise((resolve, reject) => {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params)
+    }).then((res) => {
+      resolve(res);
+    })
+  });
+}

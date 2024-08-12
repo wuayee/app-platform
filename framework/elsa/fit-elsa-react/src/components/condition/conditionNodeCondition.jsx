@@ -28,6 +28,18 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
     };
 
     /**
+     * 通过分支id获取线.
+     *
+     * @param branchId 分支id.
+     * @return {*} 线.
+     */
+    self.getEventByBranchId = (branchId) => {
+        return self.page.shapes.filter(s => s.isTypeof("jadeEvent"))
+            .filter(e => e.fromShape === self.id)
+            .find(e => e.definedFromConnector.split("|")[1] === branchId);
+    };
+
+    /**
      * 获取用户自定义组件.
      *
      * @return {*}

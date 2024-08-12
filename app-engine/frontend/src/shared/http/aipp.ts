@@ -24,16 +24,9 @@ export function uploadFile(data, headers) {
 
 // 根据返回的地址获取语音转换的文字信息
 export function voiceToText(tenantId, voicePath, fileName) {
-  let url =
-    process.env.NODE_ENV === 'development'
-      ? 'http://80.11.128.86:30020/api/jober/v1/api'
-      : process.env.NODE_ENV === 'production'
-      ? window.location.origin + AIPP_URL
-      : AIPP_URL;
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`, {
-    voicePath: `${url}/${tenantId}/file?filePath=${voicePath}`,
-    fileName,
-  });
+  let url = process.env.NODE_ENV === 'development' ? 'http://80.11.128.86:30020/api/jober/v1/api' :
+    process.env.NODE_ENV === 'production' ? window.location.origin + AIPP_URL : AIPP_URL
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`, { voicePath: `${url}/${tenantId}/file?filePath=${voicePath}`, fileName });
 }
 // 文字转语音
 export function textToVoice(text, tone) {
@@ -188,13 +181,6 @@ export function resumeInstance(tenantId, instanceId, params) {
 export function reSendChat(tenant_id, current_instance_id, data) {
   return post(`${AIPP_URL}/${tenant_id}/chat/instances/${current_instance_id}`, data);
 }
-// 获取溯源字段下拉接口
-export function getOptionNodes(data) {
-  return post(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, data);
-}
-// 获取溯源字段下拉接口
-export function getFinanceOptions(params) {
-  return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/fieldValues`, params);
 
 // 获取澄清字段下拉
 export function getClarifyOptions(data) {
@@ -203,4 +189,13 @@ export function getClarifyOptions(data) {
 // 澄清-辅产品
 export function getFuClarifyOptions(params) {
   return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, params);
+}
+
+// 获取溯源字段下拉接口
+export function getOptionNodes(data) {
+  return post(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, data);
+}
+// 获取溯源字段下拉接口
+export function getFinanceOptions(params) {
+  return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/fieldValues`, params);
 }

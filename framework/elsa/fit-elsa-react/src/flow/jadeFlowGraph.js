@@ -25,6 +25,7 @@ import {huggingFaceNodeState} from "@/components/huggingFace/huggingFaceNodeStat
 import {huggingFaceComponent} from "@/components/huggingFace/huggingFaceComponent.jsx";
 import {codeComponent} from "@/components/code/codeComponent.jsx";
 import {codeNodeState} from "@/components/code/codeNodeState.jsx";
+import {jadeEvaluationPage} from "@/flow/jadeEvaluationPage.js";
 import {
     evaluationAlgorithmsComponent
 } from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsComponent.jsx";
@@ -73,6 +74,7 @@ export const jadeFlowGraph = (div, title) => {
     const initialize = self.initialize;
     self.initialize = async () => {
         self.registerPlugin("jadeFlowPage", jadeFlowPage);
+        self.registerPlugin("jadeEvaluationPage", jadeEvaluationPage);
         self.registerPlugin("jadeEvent", jadeEvent);
         self.registerPlugin("taskNode", taskNode);
         self.registerPlugin("endNodeEnd", endNodeEnd);
@@ -153,6 +155,17 @@ export const jadeFlowGraph = (div, title) => {
             chain = chain.parent;
         }
         return null;
+    };
+
+    /**
+     * 评估.
+     *
+     * @return {Promise<void>} Promise.
+     */
+    self.evaluate = async () => {
+        const pageData = self.getPageData(0);
+        await self.edit(0, self.div, pageData.id);
+        self.activePage.normalize();
     };
 
     return self;

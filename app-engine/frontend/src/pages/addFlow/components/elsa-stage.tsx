@@ -110,7 +110,7 @@ const Stage = (props) => {
           uri = `${location.origin}/#/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`;
         }
       } else {
-        uri = `${location.origin}/#/plugin/detail/${item.uniqueName}`;
+        uri = `${location.origin}/#/plugin/detail-flow/${item.uniqueName}`;
       }
       return {
         uniqueName: item.uniqueName,

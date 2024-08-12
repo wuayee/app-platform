@@ -403,13 +403,14 @@ const ChatPreview = (props) => {
     queryInstance(params, 'clar', instanceId);
   }
   // 溯源表单重新对话
-  function conditionConfirm(logId, instanceId) {
+  function conditionConfirm(response) {
     const reciveInitObj = deepClone(initChat);
     let arr = [...listRef.current, reciveInitObj];
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
     scrollToBottom();
+    chatStreaming(response); 
   }
   function scrollToBottom() {
     setTimeout(() => {

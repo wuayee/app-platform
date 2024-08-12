@@ -19,6 +19,7 @@ import KnowledgeBaseDetailImportData from '../pages/knowledge-base/knowledge-det
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
 import PlugeDetail from '../pages/plugin/detail/plugin-list';
+import PlugeFlowDetail from '../pages/plugin/detail/plugin-flow-detail';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -161,6 +162,13 @@ export const routeList: MenuItem[] = [
         icon: Icons.app({}),
         label: '插件详情',
         component: PlugeDetail,
+        hidden: true,
+      },
+      {
+        key: '/plugin/detail-flow/:pluginId',
+        icon: Icons.app({}),
+        label: '编排插件详情',
+        component: PlugeFlowDetail,
         hidden: true,
       },
     ],

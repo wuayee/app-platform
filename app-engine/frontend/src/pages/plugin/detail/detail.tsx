@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Divider, Flex, Table, Tag } from 'antd';
 import { PluginIcons } from '@/components/icons/plugin';
 import { Icons } from '@/components/icons';
-import { getPluginDetail } from '@/shared/http/plugin';
 import { IconMap, outputColumns, paramsColumns } from '../helper';
 import '../style.scoped.scss';
 

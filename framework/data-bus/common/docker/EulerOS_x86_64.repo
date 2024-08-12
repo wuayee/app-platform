@@ -1,0 +1,6 @@
+[base]
+name=EulerOS-2.0SP11 base
+baseurl=http://his-mirrors.huawei.com/install/euleros/2.11/os/x86_64/
+enabled=1
+gpgcheck=0
+gpgkey=http://his-mirrors.huawei.com/install/euleros/2.11/os/x86_64/RPM-GPG-KEY-EulerOS

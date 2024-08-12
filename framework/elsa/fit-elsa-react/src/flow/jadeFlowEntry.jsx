@@ -305,19 +305,43 @@ export const JadeFlow = (() => {
      */
     self.edit = async (div, tenant, flowConfigData, configs, importStatements = []) => {
         const graphDom = getGraphDom(div);
-        const g = jadeFlowGraph(graphDom, "jadeFlow");
-        g.configs = configs;
+        const g = await createGraph(graphDom, tenant, flowConfigData, configs, importStatements);
+        const pageData = g.getPageData(0);
+        await g.edit(0, graphDom, pageData.id);
+        await g.activePage.awaitShapesRendered();
+        return jadeFlowAgent(g);
+    };
+
+    /**
+     * 评估流程.
+     *
+     * @param div 待渲染的dom元素.
+     * @param tenant 租户.
+     * @param flowConfigData 流程元数据.
+     * @param configs 传入的其他参数列表.
+     * @param importStatements 传入的需要加载的语句.
+     * @return {Promise<{}>} JadeFlowAgent代理.
+     */
+    self.evaluate = async (div, tenant, flowConfigData, configs, importStatements = []) => {
+        const graphDom = getGraphDom(div);
+        const g = await createGraph(graphDom, tenant, flowConfigData, configs, importStatements);
+        g.pageType = "jadeEvaluationPage";
+        await g.evaluate();
+        await g.activePage.awaitShapesRendered();
+        return jadeFlowAgent(g);
+    };
+
+    const createGraph = async (div, tenant, flowConfigData, configs, importStatements) => {
+        const g = jadeFlowGraph(div, "jadeFlow");
         g.collaboration.mute = true;
+        g.configs = configs;
         for (let i = 0; i < importStatements.length; i++) {
             await g.dynamicImportStatement(importStatements[i]);
         }
         await g.initialize();
         g.deSerialize(flowConfigData);
         g.tenant = tenant;
-        const pageData = g.getPageData(0);
-        await g.edit(0, graphDom, pageData.id);
-        await g.activePage.awaitShapesRendered();
-        return jadeFlowAgent(g);
+        return g;
     };
 
     /**

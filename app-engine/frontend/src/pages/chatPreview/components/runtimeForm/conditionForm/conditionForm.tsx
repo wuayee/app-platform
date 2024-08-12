@@ -1,16 +1,20 @@
 
 import React, { useEffect, useState, useContext } from 'react';
-import { reSendChat } from "@shared/http/aipp";
-import { Message } from "@shared/utils/message";
+import { Spin } from "antd";
+import { saveChart } from "@shared/http/sse";
+import { Message } from '@shared/utils/message';
 import { ChatContext } from '@/pages/aippIndex/context';
 import ChartCondition from '../../chart-message/chart-condition'
 import ChartMessage from '../../chart-message/chart-message';
+import { useAppSelector } from '@/store/hook';
 
 const ConditionForm = (props) => {
   const { data } = props;
   const [filters, setFilters] = useState();
   const [chartConfig, setChartConfig] = useState();
+  const [loading, setLoading] = useState(false);
   const { tenantId, conditionConfirm } = useContext(ChatContext);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   useEffect(() => {
     if (!data?.formData) return;
     if (data.formData) {
@@ -25,29 +29,33 @@ const ConditionForm = (props) => {
   }, [data?.formData]);
 
   // 表单确定
-  const formConfirm = (filter) => {
+  const formConfirm = async (filter) => {
     if (chatRunning) {
       Message({ type: 'warning', content: '对话进行中，请稍后再试' });
       return
     }
-    let params = {
-      dimension: data.formData.dimension,
-      rewriteQuery: data.formData.rewriteQuery,
-      restartMode: 'increment',
-      sourceTrace: JSON.stringify(filter)
-    };
-    reSendChat(tenantId, data.formData.instanceId, params).then((res) => {
-      if (res.code !== 0) {
+    try {
+      setLoading(true);
+      let params = {
+        dimension: data.formData.dimension,
+        rewriteQuery: data.formData.rewriteQuery,
+        restartMode: 'increment',
+        sourceTrace: JSON.stringify(filter)
+      };
+      const res = await saveChart(tenantId, data.formData.instanceId, params);
+      if (res.status !== 200) {
         Message({ type: 'warning', content: res.msg || '保存失败' });
-      } else {
-        conditionConfirm(data.logId, res.data.current_instance_id);
+        return;
       }
-    })
+      conditionConfirm(res);
+    } finally {
+      setLoading(false);
+    }
   }
   return <>
-    { !data && <div className="title">溯源表单</div>}
-    { filters && <ChartCondition data={filters} confirm={formConfirm} />}
-    { chartConfig && <ChartMessage chartConfig={chartConfig} />}
+      { !data && <div className="title">溯源表单</div>}
+      { filters && ( <Spin spinning={loading}>  <ChartCondition data={filters} confirm={formConfirm} /> </Spin>)}
+      { chartConfig && <ChartMessage chartConfig={chartConfig} />}
   </>
 };
 
