@@ -16,7 +16,6 @@ import {
   getReportInstance,
   getChatRecentLog,
 } from '@shared/http/aipp';
-import { sseChat, saveContent } from '@shared/http/sse';
 import {
   historyChatProcess,
   inspirationProcess,
@@ -37,7 +36,6 @@ import {
   setFormReceived,
 } from '@/store/chatStore/chatStore';
 import { storage } from '@shared/storage';
-import { EventSourceParserStream } from '@shared/event-source/stream';
 import { isBusinessMagicCube } from '@shared/utils/common';
 
 const ChatPreview = (props) => {
@@ -83,6 +81,7 @@ const ChatPreview = (props) => {
       closeConnected();
     };
   }, []);
+
   useEffect(() => {
     testRef.current = formReceived;
   }, [formReceived]);
@@ -118,7 +117,6 @@ const ChatPreview = (props) => {
         listRef.current = deepClone(chatArr);
         await dispatch(setChatList(chatArr));
         feedRef.current.initFeedbackStatus('all');
-        scrollToBottom();
       }
     } finally {
       setLoading(false);
@@ -130,7 +128,7 @@ const ChatPreview = (props) => {
       dispatch(setChatList([]));
       appInfo.name && !appInfo.notShowHistory && initChatHistory();
     }
-  }, [appInfo.id]);
+  }, [appInfo.id, chatId]);
   // 发送消息
   const onSend = (value, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
@@ -196,46 +194,56 @@ const ChatPreview = (props) => {
     queryInstance(chatParams);
   };
   // 开始对话
-  const queryInstance = async (params, type = undefined, instanceId = '') => {
+  const queryInstance = (params, type = undefined, instanceId = '') => {
     runningInstanceId.current = null;
-    let response;
+    controller.current = new AbortController();
+    let url = '';
+    // 继续对话
     if (type === 'clar') {
-      response = await saveContent(tenantId, instanceId, params);
+      url = `/api/jober/v1/api/${tenantId}/app/instances/${instanceId}`;
     } else {
-      response = await sseChat(tenantId, params, chatType);
+      url = `/api/jober/v1/api/${tenantId}/${chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`;
     }
-    if (response.status !== 200) {
-      onStop('启动会话失败');
-      return;
-    };
-    chatStreaming(response);
-  }
-  // sse流式输出
-  const chatStreaming = async (response) => {
-    const reader = response?.body?.pipeThrough(new TextDecoderStream())
-      .pipeThrough(new EventSourceParserStream()).getReader();
-    while (true) {
-      const sseResData = await reader?.read();
-      const { done, value } = sseResData;
-      if (!done) {
-        try {
-          let msgStr = value.data;
-          const receiveData = JSON.parse(msgStr);
-          if (receiveData.code) {
-            closeConnected();
-            onStop(val.msg || '会话失败');
-            break;
-          } else {
-            sseReceiveProcess(receiveData);
+    fetch(url, {
+      method: type === 'clar' ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+      signal: controller.current.signal,
+    }).then(async (res) => {
+      if (res.status !== 200) {
+        onStop('启动会话失败');
+        return;
+      }
+      const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
+      while (true) {
+        const sseResData = await reader?.read();
+        if (sseResData) {
+          const { done, value } = sseResData;
+          try {
+            let msgStr = value;
+            if (value.startsWith('data:')) {
+              msgStr = value.slice(5);
+            }
+            const val = JSON.parse(msgStr);
+            if (val.code) {
+              closeConnected();
+              onStop(val.msg || '启动会话失败');
+              break;
+            } else {
+              sseReceiveProcess(val);
+            }
+          } catch (e) {
+            console.info(e);
           }
-        } catch (e) {
-          console.info(e);
+          if (done) {
+            break;
+          }
         }
-      } else {
-        break;
-      };
-    };
-  }
+      }
+    });
+  };
   // sse接收消息回调
   const sseReceiveProcess = (messageData) => {
     try {
@@ -260,6 +268,7 @@ const ChatPreview = (props) => {
         if (log.type === 'FORM') {
           let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
           chatForm(obj);
+          saveLocalChatId(messageData);
         }
         if (messageType.includes(log.type)) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
@@ -345,7 +354,6 @@ const ChatPreview = (props) => {
     initObj.finished = status === 'ARCHIVED';
     idx = listRef.current.length - 1;
     if (testRef.current) {
-      initObj.msgType = 'form';
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
@@ -404,6 +412,10 @@ const ChatPreview = (props) => {
   function questionClarConfirm(params, instanceId) {
     queryInstance(params, 'clar', instanceId);
   }
+  // 澄清表单重新对话
+  function questionClarConfirm(params, instanceId) {
+    queryInstance(params, 'clar', instanceId);
+  }
   // 溯源表单重新对话
   function conditionConfirm(logId, instanceId) {
     const reciveInitObj = deepClone(initChat);
@@ -421,7 +433,9 @@ const ChatPreview = (props) => {
   // 关闭链接
   const closeConnected = () => {
     dispatch(setChatRunning(false));
-  }
+    controller.current?.abort();
+    controller.current = null;
+  };
   return (
     <div
       className={`
@@ -442,7 +456,6 @@ const ChatPreview = (props) => {
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               conditionConfirm={conditionConfirm}
-              chatStreaming={chatStreaming}
               questionClarConfirm={questionClarConfirm}
               showCheck={showCheck} />
             {showCheck ?

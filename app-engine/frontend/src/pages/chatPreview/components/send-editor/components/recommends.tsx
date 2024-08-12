@@ -78,7 +78,7 @@ const Recommends = (props) => {
   useEffect(() => {
     if (chatList?.length > 0) {
       let chatItem = chatList[chatList.length - 1];
-      if (chatItem && chatItem.finished && !chatItem.messageType && chatItem.msgType === 'msg') {
+      if (chatItem && chatItem.finished && !chatItem.messageType) {
         getRecommendList();
       }
     }

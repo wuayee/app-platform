@@ -43,7 +43,7 @@ baseAxios.interceptors.response.use(
 export const get = (url, params = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
     baseAxios
-      .get(url, { params, headers: _object })
+      .get(url, { params, ..._object })
       .then((response) => {
         resolve(response);
       })
@@ -63,7 +63,7 @@ export const get = (url, params = {}, _object = {}) => {
 
 export const post = (url, data, _object = {}) => {
   return new Promise((resolve, reject) => {
-    baseAxios.post(url, data, { headers: _object }).then(
+    baseAxios.post(url, data, _object).then(
       (response) => {
         //关闭进度条
         resolve(response);
@@ -84,7 +84,7 @@ export const post = (url, data, _object = {}) => {
  */
 export const patch = (url, data = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
-    baseAxios.patch(url, data, { headers: _object }).then(
+    baseAxios.patch(url, data, _object).then(
       (response) => {
         resolve(response);
       },
@@ -105,7 +105,7 @@ export const patch = (url, data = {}, _object = {}) => {
 
 export const put = (url, data = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
-    baseAxios.put(url, data, { headers: _object }).then(
+    baseAxios.put(url, data, _object).then(
       (response) => {
         resolve(response);
       },
@@ -126,7 +126,7 @@ export const put = (url, data = {}, _object = {}) => {
 
 export const del = (url, data = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
-    baseAxios.delete(url, { data, headers: _object }).then(
+    baseAxios.delete(url, { data, ..._object }).then(
       (response) => {
         resolve(response);
       },
