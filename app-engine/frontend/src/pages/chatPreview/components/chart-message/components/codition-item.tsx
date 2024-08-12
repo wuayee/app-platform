@@ -9,8 +9,7 @@ import CompareFilter from './codition-compare-form';
 import CheckFilter from './condition-checkbox-form';
 import OpratorFilter from './condition-operator';
 import { belongsMap, casecadeMap, conditionMap } from '../common/condition';
-import { getOptionNodes } from '@shared/http/aipp';
-import { uniqBy } from 'lodash';
+import { getOptionsLabel } from '../utils/chart-condition';
 import '../styles/condition-item.scss';
 
 const ConditionItems = (props: any) => {
@@ -72,55 +71,15 @@ const ConditionItems = (props: any) => {
   const onOpenChange = async (open: boolean) => {
     let dataForm = JSON.stringify(formData());
     setGetFormData(dataForm);
-    const aimItem = allFields.find((item) => item.label === filterItem.label);
-    const aimCas =
-      aimItem?.belongs &&
-      JSON.parse(
-        JSON.stringify(casecadeMap[aimItem?.belongs]?.find((val: any) => val.prop === aimItem.prop))
-      );
-    let currentItem = JSON.parse(JSON.stringify(aimItem));
-    currentItem.category = category;
-    currentItem.operator = 'in';
-    currentItem.value = filterCurrent.value;
-    currentItem.belongs = aimItem?.belongs;
-    currentItem.belongsTo = aimItem?.belongs;
-    currentItem.options = aimItem?.options;
-    currentItem.fullLabel = aimCas?.label;
-    currentItem.prop = aimItem?.prop;
-    if (currentItem?.belongs) {
-      const curIndex = casecadeMap[currentItem.belongs]?.findIndex((cas: any) => {
-        return cas.prop === currentItem.prop;
-      });
-      const parentsField = casecadeMap[currentItem.belongs]?.slice(0, curIndex);
-      const arrOptions: any = [];
-      const formDataVal = JSON.parse(dataForm);
-      parentsField?.forEach((item: any) => {
-        const val = formDataVal[currentItem.category][item.prop];
-        if (val) {
-          arrOptions.push({
-            label: item.label,
-            isIn: Object.keys(val)[0] === 'in',
-            names: Object.values(val).flat(1),
-          });
-        }
-      });
-      let type = currentItem?.belongsTo === '财务指标' ? belongsMap['DSPL'] : currentItem.belongsTo;
-      const data = {
-        queryLabel: currentItem.fullLabel,
-        type: type,
-        conditions: arrOptions,
-      };
-      const res = await getOptionNodes(data);
-      if (res.code == 0) {
-        currentItem.options = res?.data?.map((val: any) => {
-          return {
-            label: val?.name,
-            value: val?.name,
-          };
-        });
-        currentItem.options = uniqBy(currentItem.options, 'label');
-      }
-    }
+    const currentItem = await getOptionsLabel(
+      filterItem.label,
+      allFields,
+      casecadeMap,
+      category,
+      dataForm,
+      belongsMap,
+      filterCurrent.value
+    );
     if (currentItem?.filterType === 'backEnd') {
       currentItem.options = filterCurrent.value.map((val: any) => {
         return {

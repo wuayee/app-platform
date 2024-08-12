@@ -1,4 +1,6 @@
 import { casecadeMap, conditionMap, compareMap } from '../common/condition';
+import { uniqBy } from 'lodash';
+import { getOptionNodes } from '@shared/http/aipp';
 
 let jsonArray = [];
 let hierarchy = [];
@@ -158,8 +160,8 @@ function merge(a, b) {
 
   return result;
 };
- // 数字转换为日期字符串
- export const numToDate = (num) => {
+// 数字转换为日期字符串
+export const numToDate = (num) => {
   if (num) {
     try {
       let dateArr = num.toString().split('');
@@ -186,4 +188,65 @@ export const formatterLabel = (data) => {
   }
   const option = data.options.find((item) => data.value === item.value);
   return option.label;
-}
+};
+// 获取下拉
+export const getOptionsLabel = async (
+  val: string,
+  allFields: any[],
+  casecadeMap: any,
+  category: any,
+  formData: string,
+  belongsMap: any,
+  value: never[]
+) => {
+  const aimItem = allFields.find((item) => item.label === val);
+  const aimCas =
+    aimItem?.belongs &&
+    JSON.parse(
+      JSON.stringify(casecadeMap[aimItem?.belongs].find((val: any) => val.prop === aimItem.prop))
+    );
+  let currentItem = JSON.parse(JSON.stringify(aimItem));
+  currentItem.category = category;
+  currentItem.operator = 'in';
+  currentItem.value = value;
+  currentItem.belongs = aimItem?.belongs;
+  currentItem.belongsTo = aimItem?.belongs;
+  currentItem.options = aimItem?.options;
+  currentItem.fullLabel = aimCas?.label;
+  currentItem.prop = aimItem?.prop;
+  if (currentItem?.belongs) {
+    const curIndex = casecadeMap[currentItem.belongs]?.findIndex((cas: any) => {
+      return cas.prop === currentItem.prop;
+    });
+    const parentsField = casecadeMap[currentItem.belongs]?.slice(0, curIndex);
+    const arrOptions: any = [];
+    const formDataVal = JSON.parse(formData);
+    parentsField?.forEach((item: any) => {
+      const val = formDataVal[currentItem.category][item.prop];
+      if (val) {
+        arrOptions.push({
+          label: item.label,
+          isIn: Object.keys(val)[0] === 'in',
+          names: Object.values(val).flat(1),
+        });
+      }
+    });
+    let type = currentItem?.belongsTo === '财务指标' ? belongsMap['DSPL'] : currentItem.belongsTo;
+    const data = {
+      queryLabel: currentItem.fullLabel,
+      type: type,
+      conditions: arrOptions,
+    };
+    const res = await getOptionNodes(data);
+    if (res.code == 0) {
+      currentItem.options = res?.data?.map((val: any) => {
+        return {
+          label: val?.name,
+          value: val?.name,
+        };
+      });
+      currentItem.options = uniqBy(currentItem.options, 'label');
+    }
+  }
+  return currentItem;
+};
