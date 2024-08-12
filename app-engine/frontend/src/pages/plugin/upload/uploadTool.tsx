@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CloseOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Drawer, Select, Table, Tag, Spin } from 'antd';
+import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Drawer, Select, Table, Tag, Spin, Empty, Tooltip } from 'antd';
 import { GetProp } from 'antd/lib';
 import { v4 as uuidv4 } from 'uuid';
 import DraggerUpload from '@/components/draggerUpload';
@@ -39,6 +39,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const [loading, setLoading] = useState(false);
   const pluginList = useRef([]);
   const fileData = useRef([]);
+  const tipsStr = '每个zip包最多取20个插件，插件名称长度不能超过64位，描述长度不能超过256位'
   const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
     pluginList.current.forEach(pItem => {
       pItem.checkedNum = 0;
@@ -117,6 +118,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     })
     let fileConfirmList = fileData.current.filter(item => uidArr.includes(item.uid));
     customRequest(fileConfirmList, nameArr);
+    setOpen(false);
   }
   // 上传文件
   const customRequest = (fileArr, nameArr) => {
@@ -211,13 +213,22 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
       <Spin tip='上传插件中' size='small' spinning={loading}>
         <div>
           上传至：
-        <Select
+          <Select
             disabled={true}
             defaultValue='user'
             className='select-space'
             onChange={onChangeSpace}
             options={uploadSpaceOptions}
           />
+          <Tooltip
+            color='#ffffff'
+            placement='right'
+            overlayInnerStyle={{ color: '#212121', padding: '12px', lineHeight: '24px' }}
+            title={tipsStr}
+            trigger='click'
+          >
+            <QuestionCircleOutlined style={{ fontSize: '18px', marginLeft: '12px' }} />
+          </Tooltip>
           <DraggerUpload
             accept='.zip'
             multiple
@@ -235,12 +246,13 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                       <span>{item.name}</span>
                     </div>
                     <div className='head-right'>
-                      {item.checkedNum > 0 && <img src='./src/assets/images/ai/complate.png' />}
-                      <span className='text'>{item.checkedNum > 0 ? '解析成功' : '解析失败'}</span>
+                      {item.list.length > 0 && <img src='./src/assets/images/ai/complate.png' />}
+                      <span className='text'>{item.list.length > 0 ? '解析成功' : '解析失败'}</span>
                       <span>{item.list.length}/{item.checkedNum}</span>
                     </div>
                   </div>
                   <div className='collapse-plugin-content'>
+                    {item.list.length === 0 && <Empty description="暂无数据" />}
                     {item.list?.map((lItem, index) => (
                       <div className='param-card' key={index}>
                         <div style={{ float: 'right' }}>
@@ -265,9 +277,9 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                           <Table
                             dataSource={lItem?.parameterEntities}
                             columns={columns}
-                            virtual
                             rowKey='name'
                             pagination={false}
+                            scroll={{ y: 200 }}
                           />
                         </div>
                       </div>
@@ -279,7 +291,6 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
           </Checkbox.Group>
         </div>
       </Spin>
-
     </Drawer>
   );
 };

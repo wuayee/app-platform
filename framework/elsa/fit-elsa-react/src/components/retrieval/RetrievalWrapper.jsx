@@ -18,7 +18,7 @@ RetrievalWrapper.propTypes = {
  */
 export default function RetrievalWrapper({data, disabled}) {
     const queryData = data && data.inputParams.find(item => item.name === "query");
-    const knowledge = data && data.inputParams.find(item => item.name === "knowledge").value;
+    const knowledge = data && (data.inputParams.find(item => item.name === "knowledge")?.value ?? []);
     const maximum = data && data.inputParams.find(item => item.name === "maximum").value;
     const outputParams = data && data.outputParams;
 

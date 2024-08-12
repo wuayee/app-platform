@@ -49,7 +49,7 @@ public interface AppBuilderFormRepository {
     /**
      * 根据id删除表单
      *
-     * @param id 表单id
+     * @param ids 表单id集合
      */
-    void delete(String id);
+    void delete(List<String> ids);
 }

@@ -11,12 +11,9 @@ import {retrievalNodeDrawer} from "@/components/retrieval/retrievalNodeDrawer.js
 export const retrievalNodeState = (id, x, y, width, height, parent, drawer) => {
     const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : retrievalNodeDrawer);
     self.type = "retrievalNodeState";
-    self.backColor = 'white';
-    self.pointerEvents = "auto";
     self.text = "普通检索";
     self.componentName = "retrievalComponent";
     self.flowMeta.jober.fitables.push("com.huawei.fit.jober.aipp.fitable.NaiveRAGComponent");
-    self.flowMeta.triggerMode = 'auto';
 
     /**
      * 获取知识检索节点测试报告章节

@@ -1,0 +1,3 @@
+scc:
+  conf-file: "plugin/fit_py_scc/resources/scc.conf" # scc.conf 相对于程序运行目录的路径
+  sc-secrypto-file: "" # sc-secrypto 文件的绝对路径

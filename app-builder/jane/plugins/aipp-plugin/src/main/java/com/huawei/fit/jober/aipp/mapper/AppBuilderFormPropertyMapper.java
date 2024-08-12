@@ -63,7 +63,7 @@ public interface AppBuilderFormPropertyMapper {
     /**
      * 通过表单id删除表单属性
      *
-     * @param formId 被删除的表单属性的表单id
+     * @param formIds 被删除的表单属性的表单id集合
      */
-    void deleteByFormId(String formId);
+    void deleteByFormIds(List<String> formIds);
 }

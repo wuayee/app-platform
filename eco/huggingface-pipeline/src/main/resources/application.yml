@@ -2,4 +2,4 @@ fit:
   beans:
     packages: 'com.huawei.jade.fel.pipeline.huggingface'
 
-gateway-url: 'http://model-io-gateway:8009'
+openai-url: 'http://tzaip-beta.paas.huawei.com/model-gateway/'

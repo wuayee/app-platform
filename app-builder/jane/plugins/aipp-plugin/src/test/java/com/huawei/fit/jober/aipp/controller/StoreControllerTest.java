@@ -6,6 +6,7 @@ package com.huawei.fit.jober.aipp.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.jane.common.response.Rsp;
@@ -19,10 +20,14 @@ import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.fitframework.util.TypeUtils;
+import com.huawei.jade.authentication.context.UserContext;
+import com.huawei.jade.authentication.context.UserContextHolder;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -48,11 +53,21 @@ public class StoreControllerTest {
 
     private HttpClassicClientResponse<?> response;
 
+    private MockedStatic<UserContextHolder> opContextHolderMock;
+
+    @BeforeEach
+    void setUp() {
+        opContextHolderMock = mockStatic(UserContextHolder.class);
+        this.opContextHolderMock.when(UserContextHolder::get)
+                .thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
+    }
+
     @AfterEach
     void teardown() throws IOException {
         if (this.response != null) {
             this.response.close();
         }
+        this.opContextHolderMock.close();
     }
 
     @Test

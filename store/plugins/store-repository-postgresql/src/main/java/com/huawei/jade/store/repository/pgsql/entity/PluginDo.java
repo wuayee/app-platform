@@ -4,6 +4,9 @@
 
 package com.huawei.jade.store.repository.pgsql.entity;
 
+import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
+
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.store.entity.transfer.PluginData;
 
 import lombok.AllArgsConstructor;
@@ -11,59 +14,65 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 存入数据库的模型的实体类。
+ * 存入插件数据库的实体类。
  *
  * @author 鲁为 l00839724
- * @since 2024-06-15
+ * @since 2024-07-25
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PluginDo extends CommonDo {
     /**
-     * 表示插件的发布状态。
-     */
-    private Boolean isPublished;
-
-    /**
-     * 表示插件的拥有者。
-     */
-    private String owner;
-
-    /**
-     * 表示插件的点赞数量。
-     */
-    private Integer likeCount;
-
-    /**
-     * 表示插件的下载量。
-     */
-    private Integer downloadCount;
-
-    /**
-     * 表示插件的名称。
-     */
-    private String toolName;
-
-    /**
      * 表示插件的唯一标识。
      */
-    private String toolUniqueName;
+    private String pluginId;
+
+    /**
+     * 表示插件的名字。
+     */
+    private String pluginName;
+
+    /**
+     * 表示插件的扩展。
+     */
+    private String extension;
 
     /**
      * 用传输层的插件数据 {@link PluginData} 构造 {@link PluginDo}。
      *
      * @param pluginData 表示传输层的插件数据的 {@link PluginData}。
+     * @param serializer 表示序列化器的 {@link ObjectSerializer}。
      * @return 表示数据库层的插件数据的 {@link PluginDo}。
      */
-    public static PluginDo from(PluginData pluginData) {
+    public static PluginDo fromPluginData(PluginData pluginData, ObjectSerializer serializer) {
         PluginDo pluginDo = new PluginDo();
-        pluginDo.setIsPublished(pluginData.isPublished());
-        pluginDo.setOwner(pluginData.getOwner());
-        pluginDo.setLikeCount(pluginData.getLikeCount());
-        pluginDo.setDownloadCount(pluginData.getDownloadCount());
-        pluginDo.setToolName(pluginData.getName());
-        pluginDo.setToolUniqueName(pluginData.getUniqueName());
+        if (pluginData == null) {
+            return pluginDo;
+        }
+        pluginDo.setPluginId(pluginData.getPluginId());
+        pluginDo.setPluginName(pluginData.getPluginName());
+        pluginDo.setExtension(serializer.serialize(pluginData.getExtension()));
         return pluginDo;
+    }
+
+    /**
+     * 用数据库持久层 {@link PluginDo} 构造传输层的插件数据 {@link PluginData}。
+     *
+     * @param pluginDo 表示持久层的插件数据的 {@link PluginDo}。
+     * @param serializer 表示序列化器的 {@link ObjectSerializer}。
+     * @return 表示传输层的插件数据的 {@link PluginData}。
+     */
+    public static PluginData toPluginData(PluginDo pluginDo, ObjectSerializer serializer) {
+        PluginData pluginData = new PluginData();
+        if (pluginDo == null) {
+            return pluginData;
+        }
+        pluginData.setCreator(pluginDo.getCreator());
+        pluginData.setModifier(pluginDo.getModifier());
+        pluginData.setPluginId(pluginDo.getPluginId());
+        pluginData.setPluginName(pluginDo.getPluginName());
+        pluginData.setExtension(json2obj(pluginDo.getExtension(), serializer));
+        return pluginData;
     }
 }

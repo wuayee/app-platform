@@ -53,6 +53,7 @@ import com.huawei.fit.jober.aipp.enums.FormEdgeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstSortKeyEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.enums.RestartModeEnum;
+import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
@@ -146,6 +147,7 @@ public class AippRunTimeServiceImpl
     private final AppChatSseService appChatSSEService;
     private final AippLogService logService;
     private final HttpClassicClientFactory httpClientFactory;
+    private final AppBuilderAppFactory appFactory;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
             @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
@@ -155,7 +157,8 @@ public class AippRunTimeServiceImpl
             @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl,
             @Fit AippStreamService aippStreamService, @Value("${app-engine.endpoint}") String appEngineUrl,
             @Fit AopAippLogService aopAippLogService, @Fit AppChatSseService appChatSSEService,
-            @Fit AippLogService logService, @Fit HttpClassicClientFactory httpClientFactory) {
+            @Fit AippLogService logService, @Fit HttpClassicClientFactory httpClientFactory,
+            @Fit AppBuilderAppFactory appFactory) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -174,6 +177,7 @@ public class AippRunTimeServiceImpl
         this.httpClientFactory = httpClientFactory;
         this.appChatSSEService = appChatSSEService;
         this.logService = logService;
+        this.appFactory = appFactory;
     }
 
     private static void setExtraBusinessData(OperationContext context, Map<String, Object> businessData, Meta meta,
@@ -1150,6 +1154,7 @@ public class AippRunTimeServiceImpl
         AippCreate aippCreate;
         final String genericableId = "com.huawei.fit.jober.aipp.service.app.debug";
         final String fitableId = "default";
+        this.validateApp(appDto.getId());
         try {
             aippCreate =
                     this.client.getRouter(genericableId).route(new FitableIdFilter(fitableId)).invoke(appDto, context);
@@ -1160,5 +1165,9 @@ public class AippRunTimeServiceImpl
         }
         String instanceId = createAippInstance(aippCreate.getAippId(), aippCreate.getVersion(), initContext, context);
         return AppBuilderAppStartDto.builder().instanceId(instanceId).aippCreate(aippCreate).build();
+    }
+
+    private void validateApp(String appId) {
+        this.appFactory.create(appId);
     }
 }

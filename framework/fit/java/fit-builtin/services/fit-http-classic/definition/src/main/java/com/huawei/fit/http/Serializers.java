@@ -9,6 +9,7 @@ import static com.huawei.fit.http.protocol.MimeType.TEXT_PLAIN;
 import com.huawei.fit.http.entity.EntitySerializer;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
+import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fit.http.support.DefaultSerializers;
 import com.huawei.fitframework.serialization.ObjectSerializer;
@@ -50,6 +51,15 @@ public interface Serializers {
      * <}{@link ObjectEntity}{@code T}{@code >>>}。
      */
     <T> Optional<EntitySerializer<ObjectEntity<T>>> jsonEntity(Type type);
+
+    /**
+     * 获取指定类型的文本事件流形式的消息体序列化器。
+     *
+     * @param type 表示指定类型的 {@link Type}。
+     * @return 表示指定类型的文本事件流形式的消息体序列化器的 {@link Optional}{@code <}{@link EntitySerializer}{@code
+     * <}{@link TextEventStreamEntity}{@code >>}。
+     */
+    Optional<EntitySerializer<TextEventStreamEntity>> textEventStreamEntity(Type type);
 
     /**
      * 获取消息体的序列化器集合。

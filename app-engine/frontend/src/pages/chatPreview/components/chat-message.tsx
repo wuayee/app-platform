@@ -16,14 +16,16 @@ const ChatMessaga = (props) => {
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
-  const [ list, setList ] = useState([]);
-  const { 
-    showCheck, 
+  const [list, setList] = useState([]);
+  const {
+    showCheck,
     setCheckedList,
-    setEditorShow, 
-    feedRef, 
-    chatRunningStop, 
-    conditionConfirm 
+    setEditorShow,
+    feedRef,
+    chatRunningStop,
+    conditionConfirm,
+    chatStreaming,
+    questionClarConfirm
   } = props;
   const initFeedbackStatus = async (id) => {
     let arr = JSON.parse(JSON.stringify(chatList))
@@ -32,9 +34,9 @@ const ChatMessaga = (props) => {
       if (item.type === 'recieve' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
         await queryFeedback(item.instanceId).then((res) => {
           if (!res) {
-            item.feedbackStatus = -1 ;
+            item.feedbackStatus = -1;
           } else {
-            item.feedbackStatus = res.usrFeedback ;
+            item.feedbackStatus = res.usrFeedback;
           }
         });
       }
@@ -61,7 +63,7 @@ const ChatMessaga = (props) => {
     setCheckStatus();
     setEditorShow(true);
   }
-  
+
   // 选中回调
   function checkCallBack() {
     let checkList = list?.filter(item => item.checked);
@@ -70,25 +72,36 @@ const ChatMessaga = (props) => {
 
   // 澄清表单拒绝澄清回调
   async function handleRejectClar() {
-    const params = {content: '不好意思，请明确条件后重新提问'};
+    const params = { content: '不好意思，请明确条件后重新提问' };
     chatRunningStop(params);
   }
   return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id='chat-list-dom'>
-      { !list?.length && <ChatDetail /> }
+      { !list?.length && <ChatDetail />}
       <ChatContext.Provider
-        value={{ checkCallBack, setShareClass, showCheck, handleRejectClar, useMemory, dataDimension, conditionConfirm, tenantId}}>
+        value={{
+          checkCallBack,
+          setShareClass,
+          showCheck,
+          handleRejectClar,
+          useMemory,
+          dataDimension,
+          conditionConfirm,
+          chatStreaming,
+          questionClarConfirm,
+          tenantId
+        }}>
         <div className='message-box'>
           {
             list?.map((item, index) => {
               return (
                 item.type === 'send' ?
-                <SendBox chatItem={item} key={index} /> :
-                <ReciveBox 
-                  chatItem={item} 
-                  key={index} 
-                  refreshFeedbackStatus={initFeedbackStatus}
-                />
+                  <SendBox chatItem={item} key={index} /> :
+                  <ReciveBox
+                    chatItem={item}
+                    key={index}
+                    refreshFeedbackStatus={initFeedbackStatus}
+                  />
               )
             })
           }

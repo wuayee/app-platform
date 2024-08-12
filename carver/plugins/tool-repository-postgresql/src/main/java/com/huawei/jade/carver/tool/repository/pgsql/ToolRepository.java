@@ -26,11 +26,25 @@ public interface ToolRepository {
     void addTool(Tool.Info info);
 
     /**
+     * 添加工具列表。
+     *
+     * @param infos 表示待增加的工具列表的 {@link Tool.Info}。
+     */
+    void addTools(List<Tool.Info> infos);
+
+    /**
      * 删除工具。
      *
      * @param uniqueName 表示待删除工具唯一标识的 {@link String}。
      */
     void deleteTool(String uniqueName);
+
+    /**
+     * 删除工具列表。
+     *
+     * @param uniqueNames 表示待删除工具唯一标识的 {@link List}{@code <}{@link String}{@code >}。
+     */
+    void deleteTools(List<String> uniqueNames);
 
     /**
      * 删除工具的某一个版本。

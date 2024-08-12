@@ -13,23 +13,22 @@ import java.util.List;
  * 表示用于 MyBatis 持久层引用的 Plugin 接口。
  *
  * @author 鲁为 l00839724
- * @since 2024-06-15
+ * @since 2024-07-25
  */
 public interface PluginMapper {
     /**
-     * 注册插件。
+     * 添加插件。
      *
-     * @param pluginDo 表示待增加的插件信息的 {@link PluginDo}。
+     * @param pluginDo 表示待添加的插件的 {@link PluginDo}。
      */
     void addPlugin(PluginDo pluginDo);
 
     /**
-     * 基于工具的唯一标识查询某个插件。
+     * 删除插件。
      *
-     * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @return 表示插件信息的 {@link PluginDo}。
+     * @param pluginId 表示待删除的插件的唯一标识的 {@link String}。
      */
-    PluginDo getPluginByUniqueName(String uniqueName);
+    void deletePlugin(String pluginId);
 
     /**
      * 根据动态查询条件分页查询插件。
@@ -43,22 +42,15 @@ public interface PluginMapper {
      * 根据动态查询条件分页查询插件的总数。
      *
      * @param pluginQuery 表示查询参数的实体类的 {@link PluginQuery}。
-     * @return 插件总数的 {@code int}。
+     * @return 插件工具总数的 {@code int}。
      */
     int getPluginsCount(PluginQuery pluginQuery);
 
     /**
-     * 根据动态查询条件分页查询用户收藏的插件列表。
+     * 基于插件的唯一标识查询某个插件。
      *
-     * @param pluginQuery 表示查询参数的 {@link PluginQuery}。
-     * @return 插件信息列表的 {@link List}{@code <}{@link PluginDo}{@code >}。
+     * @param pluginId 表示插件的唯一标识的 {@link String}。
+     * @return 表示插件信息的 {@link PluginDo}。
      */
-    List<PluginDo> getMyCollection(PluginQuery pluginQuery);
-
-    /**
-     * 删除插件。
-     *
-     * @param uniqueName 表示工具名的 {@link String}。
-     */
-    void deletePlugin(String uniqueName);
+    PluginDo getPluginByPluginId(String pluginId);
 }

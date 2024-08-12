@@ -173,12 +173,16 @@ public class AippChatServiceImpl implements AippChatService {
 
     private AppBuilderAppPo convertAippToApp(String aippId, String appVersion, OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, appVersion, context);
+        if (meta == null) {
+            throw new AippException(AippErrCode.APP_NOT_FOUND);
+        }
         String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         return this.appBuilderAppMapper.selectWithId(appId);
     }
 
     private QueryChatRequest buildQueryChatRequest(QueryChatRequest body, OperationContext context) {
         QueryChatRequest request = QueryChatRequest.builder().build();
+        this.validate(body);
         if (body.getAippId() != null && body.getAippVersion() != null) {
             AppBuilderAppPo appBuilderAppPO = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
             request.setAppId(appBuilderAppPO.getId());
@@ -190,6 +194,22 @@ public class AippChatServiceImpl implements AippChatService {
             request.setAppVersion(body.getAppVersion());
         }
         return request;
+    }
+
+    /**
+     * 判断入参是否合理：当前应用删除时，会有 aippId、aippVersion、appId、appVersion 都为空的场景
+     *
+     * @param body 表示待校验的入参
+     */
+    private void validate(QueryChatRequest body) {
+        String aippId = body.getAippId();
+        String aippVersion = body.getAippVersion();
+        String appId = body.getAppId();
+        String appVersion = body.getAppVersion();
+        if (StringUtils.isEmpty(aippId) && StringUtils.isEmpty(aippVersion) && StringUtils.isEmpty(appId)
+                && StringUtils.isEmpty(appVersion)) {
+            throw new AippException(AippErrCode.APP_NOT_FOUND);
+        }
     }
 
     @Override

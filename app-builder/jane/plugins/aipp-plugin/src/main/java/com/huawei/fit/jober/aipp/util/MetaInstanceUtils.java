@@ -11,6 +11,7 @@ import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.instance.MetaInstanceFilter;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
@@ -19,7 +20,9 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * MetaInstance 操作工具类
@@ -39,7 +42,7 @@ public class MetaInstanceUtils {
      * @param context 操作上下文{@link OperationContext}
      */
     public static void persistInstance(MetaInstanceService service, InstanceDeclarationInfo info,
-                                       Map<String, Object> businessData, OperationContext context) {
+            Map<String, Object> businessData, OperationContext context) {
         String versionId = notBlank(ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY)),
                 "Get blank meta version id");
         String instId = notBlank(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY)),
@@ -57,7 +60,7 @@ public class MetaInstanceUtils {
      * @return instance信息
      */
     public static Instance getInstanceDetail(String versionId, String instanceId, OperationContext context,
-                                             MetaInstanceService metaInstanceService) {
+            MetaInstanceService metaInstanceService) {
         RangedResultSet<Instance> instances = getInstances(versionId, instanceId, context, metaInstanceService);
         if (instances.getRange().getTotal() == 0) {
             log.error("versionId {} inst{} not found.", versionId, instanceId);
@@ -80,5 +83,23 @@ public class MetaInstanceUtils {
         MetaInstanceFilter filter = new MetaInstanceFilter();
         filter.setIds(Collections.singletonList(instanceId));
         return metaInstanceService.list(versionId, filter, 0, 1, context);
+    }
+
+    /**
+     * 获取MetaList
+     *
+     * @param versionId 表示实例所属meta唯一标识
+     * @param metaInstanceService 处理Meta请求的service
+     * @param context 上下文
+     * @return 结果
+     * @throws AippException 抛出aipp的异常
+     */
+    public static List<Instance> getInstances(String versionId, MetaInstanceService metaInstanceService,
+            OperationContext context) throws AippException {
+        final int limitPerQuery = 10;
+        MetaInstanceFilter filter = new MetaInstanceFilter();
+        return MetaUtils.getAllFromRangedResult(limitPerQuery,
+                        (offset) -> metaInstanceService.list(versionId, filter, offset, limitPerQuery, context))
+                .collect(Collectors.toList());
     }
 }

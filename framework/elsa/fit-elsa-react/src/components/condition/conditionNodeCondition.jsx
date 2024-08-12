@@ -1,6 +1,6 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
 import {DIRECTION} from "@fit-elsa/elsa-core";
-import {SECTION_TYPE} from "@/common/Consts.js";
+import {SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {conditionNodeDrawer} from "@/components/condition/conditionNodeDrawer.jsx";
 
 /**
@@ -13,7 +13,6 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
     self.type = "conditionNodeCondition";
     self.text = "条件";
     self.width = 600;
-    self.pointerEvents = "auto";
     self.componentName = "conditionComponent";
     delete self.flowMeta.jober;
 
@@ -42,6 +41,18 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
      */
     self.serializerJadeConfig = (jadeConfig) => {
         self.flowMeta.conditionParams = jadeConfig;
+    };
+
+    /**
+     * 获取前置节点时去除系统上下文节点。
+     *
+     * @override
+     */
+    const getPreNodeInfos = self.getPreNodeInfos;
+    self.getPreNodeInfos = () => {
+        const preNodeInfos = getPreNodeInfos.apply(self);
+        // 使用 filter 方法移除 id 等于 VIRTUAL_CONTEXT_NODE.id 的元素
+        return preNodeInfos.filter(node => node.id !== VIRTUAL_CONTEXT_NODE.id);
     };
 
     /**

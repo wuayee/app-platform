@@ -12,6 +12,7 @@ import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.log.Logger;
@@ -52,7 +53,7 @@ public class DefaultOperationLogExporter implements OperationLogExporter {
     private LazyLoader<HttpClassicClient> httpClient;
 
     public DefaultOperationLogExporter(HttpClassicClientFactory httpClientFactory,
-            @Value("${collector.url}") String collectorUrl, OperationLogLocaleService operationLogLocaleService,
+            @Value("${collector.url}") String collectorUrl, @Fit OperationLogLocaleService operationLogLocaleService,
             Config config) {
         this.httpClientFactory = httpClientFactory;
         this.collectorUri = collectorUrl;
@@ -64,7 +65,7 @@ public class DefaultOperationLogExporter implements OperationLogExporter {
     @Override
     public void succeed(String operation, CompositParam params) {
         OperationLogFields fields = this.operationLogLocaleService.getLocaleMessage(operation, params);
-        log.debug("Operation spanned. [operation = {}]", operation);
+        log.info("Operation spanned. [operation = {}]", operation);
         this.export(fields);
     }
 
@@ -72,8 +73,8 @@ public class DefaultOperationLogExporter implements OperationLogExporter {
     public void failed(String operation, CompositParam params) {
         String errorMessage =
                 params.getUserAttribute().getOrDefault(OperationLogExporter.EXCEPTION_DETAIL_KEY, StringUtils.EMPTY);
-        log.debug("Span {} error message: {}", operation, errorMessage);
         OperationLogFields fields = this.operationLogLocaleService.getLocaleMessage(operation, params);
+        log.info("Span {} error message: {}", operation, errorMessage);
         this.export(fields);
     }
 

@@ -1,50 +1,55 @@
-import React from 'react';
-import { Dropdown, Flex, MenuProps, Tag } from 'antd';
+import React, { useState } from 'react';
+import { Dropdown, Flex, MenuProps, Tag, Button, Popconfirm, message, Drawer } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
 import { IconMap, PluginCardTypeE } from '@/pages/plugin/helper';
-import './style.scoped.scss';
+import { deletePluginAPI } from '../../shared/http/plugin';
+import Detail from '../../pages/plugin/detail/detail';
+import './style.scss';
 
-const PluginCard = ({ pluginData, cardType }: any) => {
+const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isShow, setIsShow] = useState(false);
   const navigate = useHistory().push;
-  const operatItems: MenuProps['items'] = [
-    {
-      label: <div>发布</div>,
-      key: 'piblish',
-    },
-    {
-      label: <div>编排</div>,
-      key: 'choreography',
-    },
-    {
-      label: <div>删除</div>,
-      key: 'delete',
-    },
-  ];
+  // 插件点击详情
+  const pluginCardClick = () => {
+    pluginData?.pluginToolDataList === null
+      ? navigate(`/plugin/detail/${pluginId}`)
+      : setIsShow(true);
+  };
+  const onClose = () => {
+    setIsShow(false);
+  };
+
   return (
-    <div className='plugin-card'
-      onClick={() => { navigate(`/plugin/detail/${pluginData?.uniqueName}`) }}>
+    <div className='page-plugin-card' onClick={pluginCardClick}>
       <div className='plugin-card-header'>
-        <img src='./src/assets/images/knowledge/knowledge-base.png' />
+        <img src='/src/assets/images/knowledge/knowledge-base.png' />
         <div>
-          <div className='plugin-title'>
-            <div className='plugin-head'>
-              <span className='text plugin-text' title={pluginData?.name}>{pluginData?.name}</span>
+          <div style={{ display: 'flex' }}>
+            <div style={{ fontSize: 20, marginBottom: 8 }}>
+              {pluginData?.pluginToolDataList === null ? pluginData.pluginName : pluginData?.name}
             </div>
           </div>
           <div className='plugin-card-user'>
             <Icons.user />
-            <span style={{ marginRight: 8 }}>{pluginData?.creator}</span>
-            {pluginData?.tags?.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
+            <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
+            {pluginData?.tags?.map((tag: string, index: number) => (
+              <Tag style={{ margin: 0 }} key={index}>
+                {tag}
+              </Tag>
+            ))}
           </div>
         </div>
       </div>
       <div className='card-content'>
-        {pluginData?.description}
+        {pluginData?.pluginToolDataList === null
+          ? pluginData.extension.description
+          : pluginData?.description}
       </div>
       {/* 卡片底部 */}
-      <div className='card-footer'>
+      <div className='card-footer' style={{ position: 'relative' }}>
         <div hidden>
           <Flex gap={14}>
             <span hidden={cardType === PluginCardTypeE.MARKET}>
@@ -61,19 +66,62 @@ const PluginCard = ({ pluginData, cardType }: any) => {
           </Flex>
         </div>
         <div hidden={cardType !== PluginCardTypeE.MARKET}>
-          <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4} >
+          <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
             {IconMap[pluginData?.source?.toUpperCase()]?.icon}
-            <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.source?.toUpperCase()]?.name}</span>
+            <span style={{ fontSize: 12, fontWeight: 700 }}>
+              {IconMap[pluginData?.source?.toUpperCase()]?.name}
+            </span>
           </Flex>
         </div>
-        <div hidden onClick={(e) => { e.stopPropagation(); }}>
-          <Dropdown menu={{ items: operatItems }} trigger={['click']}>
+        <div
+          hidden={pluginData?.pluginToolDataList !== null}
+          onClick={(e) => {
+            e.stopPropagation();
+            !isOpen ? setIsOpen(true) : setIsOpen(false);
+          }}
+          style={{ width: 60 }}
+        >
+          <Flex justify='flex-end'>
             <EllipsisOutlined className='footer-more' />
-          </Dropdown>
+          </Flex>
         </div>
+        {isOpen && (
+          <div style={{ position: 'absolute', right: '-20px', top: '-20px' }}>
+            <Button
+              style={{ width: 62 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+                deletePluginAPI(pluginId)
+                  .then((res) => {
+                    if (res.code === 0) {
+                      getPluginList();
+                      message.success('删除成功！');
+                    }
+                  })
+                  .catch(() => {
+                    message.error('删除失败！');
+                  });
+              }}
+            >
+              删除
+            </Button>
+          </div>
+        )}
       </div>
-    </div >
-  )
-}
+      <Drawer
+        width={800}
+        open={isShow}
+        onClose={() => {
+          setTimeout(() => {
+            setIsShow(false);
+          }, 500);
+        }}
+      >
+        <Detail pluginData={pluginData} />
+      </Drawer>
+    </div>
+  );
+};
 
 export default PluginCard;

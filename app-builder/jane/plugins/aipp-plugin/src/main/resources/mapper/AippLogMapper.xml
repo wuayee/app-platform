@@ -200,4 +200,13 @@
         from aipp_instance_log
         where instance_id= #{instanceId}
     </select>
+
+    <update id="deleteByInstanceIds" parameterType="java.util.List">
+        UPDATE aipp_instance_log
+        set is_deleted = 1
+        where
+        <foreach collection="instanceIds" item="id" separator=" OR ">
+            path LIKE '/' || #{id} || '%'
+        </foreach>
+    </update>
 </mapper>

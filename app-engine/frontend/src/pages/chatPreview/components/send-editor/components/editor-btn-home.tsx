@@ -1,14 +1,15 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import {Modal, Switch} from 'antd';
+import { Modal, Switch } from 'antd';
 import { Message } from '@shared/utils/message';
 import { CloseOutlined } from '@ant-design/icons';
-import { 
-  LinkIcon, 
-  AtIcon, 
-  HistoryIcon, 
+import {
+  LinkIcon,
+  AtIcon,
+  HistoryIcon,
   ArrowDownIcon,
-  ClearChatIcon } from '@/assets/icon';
+  ClearChatIcon
+} from '@/assets/icon';
 import { clearInstance } from '@shared/http/aipp';
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
@@ -43,12 +44,12 @@ const EditorBtnHome = (props) => {
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const dimension = useAppSelector((state) => state.commonStore.dimension);
-  const [ isModalOpen, setIsModalOpen ] = useState(false);
-  const [ showAt, setShowAt ] = useState(false);
-  const [ appName, setAppName ] = useState('');
-  const [ appIcon, setAppIcon ] = useState(knowledgeBase);
-  const [ openHistorySignal, setOpenHistorySignal ]=useState(null);
-  const [ searchKey, setSearchKey ] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAt, setShowAt] = useState(false);
+  const [appName, setAppName] = useState('');
+  const [appIcon, setAppIcon] = useState(knowledgeBase);
+  const [openHistorySignal, setOpenHistorySignal] = useState(null);
+  const [searchKey, setSearchKey] = useState(null);
   let openUploadRef = useRef(null);
   useEffect(() => {
     document.body.addEventListener('click', () => {
@@ -159,6 +160,10 @@ const EditorBtnHome = (props) => {
 
   //点击“新聊天”按钮回调
   const onClickNewChat = () => {
+    if (chatRunning) {
+      Message({ type: 'warning', content: '对话进行中，请稍后再试' })
+      return;
+    }
     dispatch(setChatRunning(false));
     updateChatId(null, appId, dimension);
     dispatch(setChatId(null));
@@ -194,54 +199,54 @@ const EditorBtnHome = (props) => {
       <div className='inner-left'>
         <div className='inner-item'>
           {appIcon ? <img src={appIcon} alt='' /> : <img src={knowledgeBase} alt='' />}
-          <div className={['switch-app', atAppId ? 'switch-active' : null ].join(' ')} onClick={onClickShowMore}>
-            { atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span> }
+          <div className={['switch-app', atAppId ? 'switch-active' : null].join(' ')} onClick={onClickShowMore}>
+            {atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span>}
             <span className='item-name' title={appName}>{appName}</span>
-            { !appInfo.hideHistory && <img src='/src/assets/images/ai/list.png' className='app-menu' /> }
-            { atAppId && <span style={{ marginLeft: '6px' }}>对话</span> }
+            {!appInfo.hideHistory && <img src='/src/assets/images/ai/list.png' className='app-menu' />}
+            {atAppId && <span style={{ marginLeft: '6px' }}>对话</span>}
           </div>
-           <LinkIcon onClick={uploadClick} />
-           { (!atAppId && appId === HOME_APP_ID) && <AtIcon onClick={atClick} /> }
+          <LinkIcon onClick={uploadClick} />
+          {(!atAppId && appId === HOME_APP_ID) && <AtIcon onClick={atClick} />}
         </div>
       </div>
       <div className='inner-right'>
-        { 
+        {
           atAppId ?
-          (
-            <div className='inner-item'>
-              <CloseOutlined className='item-close' onClick={cancelAt}/>
-            </div>
-          ) : 
-          (
-            <div className='inner-item'>
-              <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
-              { !appInfo.hideHistory && <HistoryIcon  onClick={historyChatClick}/> }
-              {showMulti && <div className='multi-conversation-title'>
-                <span>多轮对话</span>
-                <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange}/>
-              </div>}
-              <span className='item-clear' onClick={onClickNewChat}>+ 新聊天</span>
-            </div>
-          )
+            (
+              <div className='inner-item'>
+                <CloseOutlined className='item-close' onClick={cancelAt} />
+              </div>
+            ) :
+            (
+              <div className='inner-item'>
+                <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
+                { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
+                {showMulti && <div className='multi-conversation-title'>
+                  <span>多轮对话</span>
+                  <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange} />
+                </div>}
+                <span className='item-clear' onClick={onClickNewChat}>+ 新聊天</span>
+              </div>
+            )
         }
       </div>
       { showAt && <ReferencingApp atItemClick={atItemClick}
-                                  atClick={showMoreClick}
-                                  searchKey={searchKey}
-                                  setSearchKey={setSearchKey}/> }
-      <Modal 
-        title='确认清空当前聊天' 
-        open={isModalOpen} 
-        onOk={(e)=>handleOk(e.timeStamp)} 
-        onCancel={() => setIsModalOpen(false)} 
+        atClick={showMoreClick}
+        searchKey={searchKey}
+        setSearchKey={setSearchKey} />}
+      <Modal
+        title='确认清空当前聊天'
+        open={isModalOpen}
+        onOk={(e) => handleOk(e.timeStamp)}
+        onCancel={() => setIsModalOpen(false)}
         centered>
         <span>清空后当前窗口聊天内容将不会被系统保存。</span>
       </Modal>
-      <StarApps 
+      <StarApps
         handleAt={atItemClick}
       />
-    <UploadFile  openUploadRef={openUploadRef} fileSend={fileSend}/>
-    <HistoryChatDrawer openHistorySignal={openHistorySignal}/>
+      <UploadFile openUploadRef={openUploadRef} fileSend={fileSend} />
+      <HistoryChatDrawer openHistorySignal={openHistorySignal} />
     </div>
   );
 }

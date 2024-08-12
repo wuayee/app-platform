@@ -17,7 +17,7 @@
         select
         <include refid="Base_Column_List"/>
         from app_builder_config_property
-        where config_id = #{configId}
+        where config_id = #{configId} and is_deleted = 0
     </select>
 
     <select id="selectWithId" resultMap="BaseResultMap"
@@ -25,7 +25,7 @@
         select
         <include refid="Base_Column_List"/>
         from app_builder_config_property
-        where id = #{id}
+        where id = #{id} and is_deleted = 0
     </select>
 
     <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderConfigPropertyPo">
@@ -69,8 +69,12 @@
         </foreach>
     </delete>
 
-    <delete id="deleteByConfigId" parameterType="java.util.List">
-        delete from app_builder_config_property
-        where config_id = #{id}
-    </delete>
+    <update id="deleteByConfigIds" parameterType="java.util.List">
+        UPDATE app_builder_config_property
+        set is_deleted = 1
+        where config_id in
+        <foreach collection="configIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

@@ -1,44 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Tabs } from 'antd';
+import React, { useState } from 'react';
+import { Drawer, Button } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import MarketItems from './market';
-import MyPlugins from './myplugin';
+import DeployMent from './deployment';
 
 const Plugin = () => {
-  const [activeKey, setActiveKey] = useState('market');
-  const tabItems = [
-    {
-      key: 'market',
-      label: '市场',
-      children: <MarketItems />,
-    },
-    {
-      key: 'user',
-      label: '我的',
-      children: <MyPlugins />
-    },
-  ];
-  const tabClick = (key) => {
-    setActiveKey(key);
-  }
-  useEffect(() => {
-    let isAdd = sessionStorage.getItem('pluginType');
-    if (isAdd) {
-      setActiveKey('user');
-    }
-  }, [])
+  const [open, setOpen] = useState(false);
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
     <div className='aui-fullpage' style={{ display: 'flex', flexDirection: 'column' }}>
-      <div className='aui-header-1'>
-        <div className='aui-title-1'>插件</div>
+      <div className='aui-header-1 '>
+        <div className='aui-title-1'>插件管理</div>
+        {/* <Button size='small' onClick={() => setOpen(true)}>部署</Button> */}
       </div>
-      <Tabs
-        type='card'
-        activeKey={activeKey}
-        items={tabItems}
-        onTabClick={tabClick}
-        tabBarStyle={{ margin: 0 }}
-        style={{ flexGrow: 1 }}
-      />
+      <div>
+        <MarketItems />
+      </div>
+      <Drawer
+        title='部署插件'
+        width={900}
+        onClose={onClose}
+        closeIcon={false}
+        open={open}
+        extra={
+          <CloseOutlined onClick={() => setOpen(false)} />
+        }
+        footer={[
+          <Button key="back" onClick={() => setOpen(false)}>
+            关闭
+          </Button>
+        ]}
+      >
+        <DeployMent />
+      </Drawer>
     </div>
   )
 }

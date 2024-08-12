@@ -26,6 +26,14 @@
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>jane-common-component</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>authentication-service</artifactId>
+        </dependency>
 
         <!-- DB -->
         <dependency>
@@ -88,11 +96,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jane</groupId>
-            <artifactId>jane-common-component</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

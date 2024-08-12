@@ -54,8 +54,8 @@ public class AtTargetParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
-            AnnotationMetadata annotationMetadata = AspectParameterInjectionHelper.getAnnotationMetadata(bean);
+        public boolean couldMatch(Class<?> beanClass) {
+            AnnotationMetadata annotationMetadata = AspectParameterInjectionHelper.getAnnotationMetadata(beanClass);
             if (this.isBinding()) {
                 Optional<PointcutParameter> parameter = Arrays.stream(AtTargetParser.this.parameters)
                         .filter(param -> param.getName().equals(this.content()))

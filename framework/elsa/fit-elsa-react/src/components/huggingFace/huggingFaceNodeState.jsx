@@ -18,8 +18,8 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
      * @override
      */
     const serializerJadeConfig = self.serializerJadeConfig;
-    self.serializerJadeConfig = () => {
-        serializerJadeConfig.apply(self);
+    self.serializerJadeConfig = (jadeConfig) => {
+        serializerJadeConfig.apply(self, [jadeConfig]);
         self.flowMeta.jober.entity.params = self.flowMeta.jober.converter.entity.inputParams.map(property => {
             return {name: property.name}
         });

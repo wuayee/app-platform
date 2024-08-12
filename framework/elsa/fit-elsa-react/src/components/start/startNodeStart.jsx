@@ -13,7 +13,6 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
     const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : startNodeDrawer);
     self.type = "startNodeStart";
     self.text = "开始";
-    self.pointerEvents = "auto";
     self.componentName = "startComponent";
     self.deletable = false;
     self.isUnique = true;

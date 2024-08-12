@@ -55,7 +55,7 @@ public class AtAnnotationParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             return true;
         }
 

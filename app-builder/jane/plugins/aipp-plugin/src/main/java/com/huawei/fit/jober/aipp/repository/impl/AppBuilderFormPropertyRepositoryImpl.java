@@ -71,7 +71,7 @@ public class AppBuilderFormPropertyRepositoryImpl implements AppBuilderFormPrope
     }
 
     @Override
-    public void deleteByFormId(String formId) {
-        this.appBuilderFormPropertyMapper.deleteByFormId(formId);
+    public void deleteByFormId(List<String> formIds) {
+        this.appBuilderFormPropertyMapper.deleteByFormIds(formIds);
     }
 }

@@ -5,6 +5,7 @@
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.dynamicform.common.PageResponse;
@@ -12,7 +13,6 @@ import com.huawei.fit.dynamicform.condition.FormQueryCondition;
 import com.huawei.fit.dynamicform.condition.PaginationCondition;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.DynamicFormEntity;
-import com.huawei.fit.http.protocol.Address;
 import com.huawei.fit.http.protocol.support.DefaultMessageHeaders;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.response.Rsp;
@@ -23,12 +23,16 @@ import com.huawei.fit.jober.form.dto.FormDetailDto;
 import com.huawei.fit.jober.form.dto.FormDto;
 import com.huawei.fit.jober.form.exception.FormErrCode;
 import com.huawei.fit.jober.form.service.impl.DynamicFormServiceImpl;
+import com.huawei.jade.authentication.context.UserContext;
+import com.huawei.jade.authentication.context.UserContextHolder;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -55,13 +59,20 @@ public class FormControllerTest {
     private Authenticator authenticatorMock;
     @Mock
     private User userMock;
-    @Mock
-    private Address addressMock;
+    private MockedStatic<UserContextHolder> operationContextHolderMock;
+    private final UserContext operationContext = new UserContext("Jane", "127.0.0.1", "en");
 
     @BeforeEach
     void setUp() {
+        this.operationContextHolderMock = mockStatic(UserContextHolder.class);
+        this.operationContextHolderMock.when(UserContextHolder::get).thenReturn(this.operationContext);
         formController = new FormController(authenticatorMock, serviceMock);
         formDetailEntity = new DynamicFormDetailEntity(formEntity, elsaData);
+    }
+
+    @AfterEach
+    void tearDown() {
+        this.operationContextHolderMock.close();
     }
 
     @Test
@@ -84,7 +95,6 @@ public class FormControllerTest {
         DynamicFormDetailEntity expectResult = new DynamicFormDetailEntity(formEntity, elsaData);
         when(serviceMock.queryFormDetailByPrimaryKey(eq(formId), eq(formVersion), any())).thenReturn(expectResult);
         when(httpRequestMock.headers()).thenReturn(new DefaultMessageHeaders());
-        when(httpRequestMock.remoteAddress()).thenReturn(addressMock);
         when(authenticatorMock.authenticate(any())).thenReturn(userMock);
 
         Assertions.assertEquals(formController.queryForm(httpRequestMock, tenantId, formId, formVersion),
@@ -95,7 +105,6 @@ public class FormControllerTest {
     void shouldSuccessWhenCallSaveSingleFormSuccess() {
         when(serviceMock.saveForm(eq(formDetailEntity), any())).thenReturn(true);
         when(httpRequestMock.headers()).thenReturn(new DefaultMessageHeaders());
-        when(httpRequestMock.remoteAddress()).thenReturn(addressMock);
         when(authenticatorMock.authenticate(any())).thenReturn(userMock);
 
         Assertions.assertEquals(formController.saveForm(httpRequestMock,
@@ -109,7 +118,6 @@ public class FormControllerTest {
         DynamicFormDetailEntity detailEntity = new DynamicFormDetailEntity(formEntity, elsaData);
         when(serviceMock.saveForm(eq(detailEntity), any())).thenReturn(false);
         when(httpRequestMock.headers()).thenReturn(new DefaultMessageHeaders());
-        when(httpRequestMock.remoteAddress()).thenReturn(addressMock);
         when(authenticatorMock.authenticate(any())).thenReturn(userMock);
 
         Assertions.assertEquals(formController.saveForm(httpRequestMock,
@@ -123,7 +131,6 @@ public class FormControllerTest {
         when(serviceMock.deleteForm(argThat(formDto -> formDto.getId().equals(formId) && formDto.getVersion()
                 .equals(formVersion)), any())).thenReturn(true);
         when(httpRequestMock.headers()).thenReturn(new DefaultMessageHeaders());
-        when(httpRequestMock.remoteAddress()).thenReturn(addressMock);
         when(authenticatorMock.authenticate(any())).thenReturn(userMock);
 
         Assertions.assertEquals(formController.deleteForm(httpRequestMock, tenantId, formId, formVersion), Rsp.ok());
@@ -134,7 +141,6 @@ public class FormControllerTest {
         when(serviceMock.deleteForm(argThat(formDto -> formDto.getId().equals(formId) && formDto.getVersion()
                 .equals(formVersion)), any())).thenReturn(false);
         when(httpRequestMock.headers()).thenReturn(new DefaultMessageHeaders());
-        when(httpRequestMock.remoteAddress()).thenReturn(addressMock);
         when(authenticatorMock.authenticate(any())).thenReturn(userMock);
 
         Assertions.assertEquals(formController.deleteForm(httpRequestMock, tenantId, formId, formVersion),

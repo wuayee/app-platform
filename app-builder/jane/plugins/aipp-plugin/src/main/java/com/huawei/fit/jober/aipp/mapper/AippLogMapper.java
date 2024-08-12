@@ -151,4 +151,11 @@ public interface AippLogMapper {
      * @return 表示 aipp 实例历史记录的 {@link List}{@code <}{@link AippInstLog}{@code >}。
      */
     List<AippInstLog> getLogsByInstanceId(String instanceId);
+
+    /**
+     * 删除指定实例的历史记录。
+     *
+     * @param instanceIds 表示指定实例 id 集合。
+     */
+    void deleteByInstanceIds(List<String> instanceIds);
 }

@@ -133,7 +133,7 @@ export function queryInspirationSelect(tenantId, fitableid, params) {
   return post(`${AIPP_URL}/${tenantId}/genericables/fitables/${fitableid}`, params);
 }
 // 文件上传
-export function uploadChatFile(tenantId, appId='', data, headers) {
+export function uploadChatFile(tenantId, appId = '', data, headers) {
   return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { ...headers, 'Content-Type': 'multipart/form-data' });
 }
 
@@ -195,4 +195,12 @@ export function getOptionNodes(data) {
 // 获取溯源字段下拉接口
 export function getFinanceOptions(params) {
   return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/fieldValues`, params);
+
+// 获取澄清字段下拉
+export function getClarifyOptions(data) {
+  return post(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes-name`,data);
+}
+// 澄清-辅产品
+export function getFuClarifyOptions(params) {
+  return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, params);
 }

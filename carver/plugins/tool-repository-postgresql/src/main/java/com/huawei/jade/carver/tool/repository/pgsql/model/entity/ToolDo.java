@@ -50,11 +50,6 @@ public class ToolDo {
     private String name;
 
     /**
-     * 表示工具的描述。
-     */
-    private String description;
-
-    /**
      * 表示工具的结构。
      */
     private String schema;
@@ -106,7 +101,6 @@ public class ToolDo {
         toolDo.setSource(info.source());
         toolDo.setIcon(info.icon());
         toolDo.setUniqueName(info.uniqueName());
-        toolDo.setDescription(info.description());
         toolDo.setVersion(info.version());
         toolDo.setIsLatest(info.isLatest());
         return toolDo;
@@ -129,7 +123,6 @@ public class ToolDo {
                 .source(toolDo.getSource())
                 .icon(toolDo.getIcon())
                 .uniqueName(toolDo.getUniqueName())
-                .description(toolDo.getDescription())
                 .version(toolDo.getVersion())
                 .isLatest(toolDo.getIsLatest())
                 .build();

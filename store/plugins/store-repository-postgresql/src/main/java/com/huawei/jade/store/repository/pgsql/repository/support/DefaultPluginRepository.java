@@ -5,13 +5,13 @@
 package com.huawei.jade.store.repository.pgsql.repository.support;
 
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
 import com.huawei.jade.store.repository.pgsql.mapper.PluginMapper;
 import com.huawei.jade.store.repository.pgsql.repository.PluginRepository;
-import com.huawei.jade.store.repository.pgsql.repository.TagRepository;
 
 import java.util.List;
 
@@ -19,42 +19,36 @@ import java.util.List;
  * 插件的仓库。
  *
  * @author 鲁为 l00839724
- * @since 2024-07-18
+ * @since 2024-07-25
  */
 @Component
 public class DefaultPluginRepository implements PluginRepository {
+    private static final Logger logger = Logger.get(DefaultPluginRepository.class);
+
     private final PluginMapper pluginMapper;
-    private final TagRepository tagRepository;
+
+    private final ObjectSerializer serializer;
 
     /**
-     * 通过 Mapper 来初始化 {@link DefaultPluginRepository} 的实例。
+     * 通过仓库持久层和序列化器来初始化 {@link DefaultPluginRepository} 的实例。
      *
-     * @param pluginMapper 表示持久层实例的 {@link PluginMapper}。
-     * @param tagRepository 表示持久层实例的 {@link TagRepository}。
+     * @param pluginMapper 表示仓库持久层的 {@link PluginMapper}。
+     * @param serializer 表示序列化器的 {@link ObjectSerializer}。
      */
-    public DefaultPluginRepository(PluginMapper pluginMapper, TagRepository tagRepository) {
+    public DefaultPluginRepository(PluginMapper pluginMapper, ObjectSerializer serializer) {
         this.pluginMapper = pluginMapper;
-        this.tagRepository = tagRepository;
+        this.serializer = serializer;
     }
 
     @Override
-    @Transactional
-    public void addPlugin(PluginData pluginData) {
-        PluginDo pluginDo = PluginDo.from(pluginData);
-        this.pluginMapper.addPlugin(pluginDo);
-        this.tagRepository.addTags(pluginData.getTags(), pluginData.getUniqueName());
+    public String addPlugin(PluginData pluginData) {
+        this.pluginMapper.addPlugin(PluginDo.fromPluginData(pluginData, serializer));
+        return pluginData.getPluginId();
     }
 
     @Override
-    @Transactional
-    public void deletePlugin(String toolUniqueName) {
-        this.pluginMapper.deletePlugin(toolUniqueName);
-        this.tagRepository.deleteTagByUniqueName(toolUniqueName);
-    }
-
-    @Override
-    public List<PluginDo> getMyCollection(PluginQuery pluginQuery) {
-        return this.pluginMapper.getMyCollection(pluginQuery);
+    public void deletePlugin(String pluginId) {
+        this.pluginMapper.deletePlugin(pluginId);
     }
 
     @Override
@@ -68,7 +62,7 @@ public class DefaultPluginRepository implements PluginRepository {
     }
 
     @Override
-    public PluginDo getPluginByUniqueName(String toolUniqueName) {
-        return this.pluginMapper.getPluginByUniqueName(toolUniqueName);
+    public PluginDo getPluginByPluginId(String pluginId) {
+        return this.pluginMapper.getPluginByPluginId(pluginId);
     }
 }

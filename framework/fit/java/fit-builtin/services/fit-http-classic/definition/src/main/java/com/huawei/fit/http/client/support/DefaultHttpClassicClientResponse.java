@@ -14,6 +14,7 @@ import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.EntityReadException;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
+import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.header.ContentType;
 import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.util.BodyUtils;
@@ -81,6 +82,11 @@ public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResp
 
     @Override
     public Optional<TextEntity> textEntity() {
+        return ObjectUtils.cast(this.entity());
+    }
+
+    @Override
+    public Optional<TextEventStreamEntity> textEventStreamEntity() {
         return ObjectUtils.cast(this.entity());
     }
 

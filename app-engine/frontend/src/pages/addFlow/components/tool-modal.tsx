@@ -18,7 +18,7 @@ const { Search } = Input;
 const { Option } = Select;
 
 const ToolDrawer = (props) => {
-  const { showModal, setShowModal, checkData, confirmCallBack, type, modalType } = props;
+  const { showModal, setShowModal, checkData, confirmCallBack, type, modalType, toolsConfirm } = props;
   const [activeKey, setActiveKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
@@ -156,6 +156,11 @@ const ToolDrawer = (props) => {
   };
   // 确定提交
   const confirm = () => {
+    if (toolsConfirm) {
+      toolsConfirm(checkedList.current);
+      setShowModal(false);
+      return;
+    }
     if (type !== 'addSkill') {
       toolAdd();
     } else {
@@ -166,7 +171,7 @@ const ToolDrawer = (props) => {
   };
   // 设置默认选中
   const setDefaultCheck = (data) => {
-    const nameList = checkedList.current.map((item) => item.uniqueName);
+    let nameList = checkedList.current.map((item) => item.uniqueName);
     data.forEach((item) => {
       item.checked = nameList.includes(item.uniqueName);
     });

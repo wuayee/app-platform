@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -104,16 +105,18 @@ public class ExpressionUtils {
     }
 
     /**
-     * 根据字符串获取相应的 class 类。
+     * 根据字符串获取相应的类型。
      * <p>支持 8 种基本类型，void，java.lang包下类型，多维数组，自定义类型</p>
      * <p>例：int, void, String, int[], com.huawei.aop.AopInterceptor</p>
      *
-     * @param content 待解析的字符串，自定义类需写全路径的 {@link String}。
-     * @param classLoader 类加载器。
-     * @return 相应的 {@link Class} 类。
+     * @param content 表示待解析的字符串，自定义类需写全路径的 {@link String}。
+     * @param classLoader 表示类加载器的 {@link ClassLoader}。
+     * @return 表示相应的类型的 {@link Class}{@code <?>}。
      */
-    @Nonnull
     public static Class<?> getContentClass(String content, ClassLoader classLoader) {
+        if (Objects.equals(content, LEFT_BRACKET) || Objects.equals(content, RIGHT_BRACKET)) {
+            return null;
+        }
         if (BASE_TYPE.containsKey(content)) {
             return BASE_TYPE.get(content);
         }
@@ -129,7 +132,7 @@ public class ExpressionUtils {
         try {
             return currentClassLoader.loadClass(fullName);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(StringUtils.format("Class not exist. [class={0}]", content));
+            return null;
         }
     }
 

@@ -14,8 +14,9 @@ import {
   updateFlowInfo,
   stopInstance,
   getReportInstance,
-  getChatRecentLog
+  getChatRecentLog,
 } from '@shared/http/aipp';
+import { sseChat, saveContent } from '@shared/http/sse';
 import {
   historyChatProcess,
   inspirationProcess,
@@ -36,6 +37,7 @@ import {
   setFormReceived,
 } from '@/store/chatStore/chatStore';
 import { storage } from '@shared/storage';
+import { EventSourceParserStream } from '@shared/event-source/stream';
 import { isBusinessMagicCube } from '@shared/utils/common';
 
 const ChatPreview = (props) => {
@@ -77,25 +79,24 @@ const ChatPreview = (props) => {
     currentInfo.current = appInfo;
     return () => {
       closeConnected();
-    }
+    };
   }, []);
-
   useEffect(() => {
     testRef.current = formReceived;
-  }, [formReceived])
+  }, [formReceived]);
 
   // 切换App时，chatId为应用上次会话id
   useEffect(() => {
     if (!appId) {
       return;
-    };
+    }
     // 如果不是小魔方
     if (!isBusinessMagicCube(appId)) {
       dispatch(setChatId(storage.getChatId(appId)));
     } else {
       const dimensionId = storage.get('dimension')?.id;
       dispatch(setChatId(storage.getDimensionChatId(dimensionId)));
-    };
+    }
   }, [appId, dimension]);
 
   // 灵感大全设置下拉列表
@@ -115,6 +116,7 @@ const ChatPreview = (props) => {
         listRef.current = deepClone(chatArr);
         await dispatch(setChatList(chatArr));
         feedRef.current.initFeedbackStatus('all');
+        scrollToBottom();
       }
     } finally {
       setLoading(false);
@@ -124,9 +126,9 @@ const ChatPreview = (props) => {
     if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
       dispatch(setChatRunning(false));
       dispatch(setChatList([]));
-      (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+      appInfo.name && !appInfo.notShowHistory && initChatHistory();
     }
-  }, [appInfo.id, chatId]);
+  }, [appInfo.id]);
   // 发送消息
   const onSend = (value, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
@@ -176,7 +178,7 @@ const ChatPreview = (props) => {
       'question': type ? '请解析以下文件' : value,
       'context': {
         'use_memory': useMemory,
-        dimension: dimension.name
+        dimension: dimension.value,
       }
     };
     if (chatId) {
@@ -192,48 +194,45 @@ const ChatPreview = (props) => {
     queryInstance(chatParams);
   };
   // 开始对话
-  const queryInstance = (params) => {
+  const queryInstance = async (params, type = undefined, instanceId = '') => {
     runningInstanceId.current = null;
-    controller.current = new AbortController();
-    fetch(`/api/jober/v1/api/${tenantId}/${chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-      signal: controller.current.signal
-    }).then(async (res) => {
-      if (res.status !== 200) {
-        onStop('启动会话失败');
-        return;
-      }
-      const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
-      while (true) {
-        const sseResData = await reader?.read();
-        if (sseResData) {
-          const { done, value } = sseResData;
-          try {
-            let msgStr = value;
-            if (value.startsWith('data:')) {
-              msgStr = value.slice(5);
-            }
-            const val = JSON.parse(msgStr);
-            if (val.code) {
-              closeConnected();
-              onStop(val.msg || '启动会话失败');
-              break;
-            } else {
-              sseReceiveProcess(val);
-            }
-          } catch (e) {
-            console.info(e);
-          }
-          if (done) {
+    let response;
+    if (type === 'clar') {
+      response = await saveContent(tenantId, instanceId, params);
+    } else {
+      response = await sseChat(tenantId, params, chatType);
+    }
+    if (response.status !== 200) {
+      onStop('启动会话失败');
+      return;
+    };
+    chatStreaming(response);
+  }
+  // sse流式输出
+  const chatStreaming = async (response) => {
+    const reader = response?.body?.pipeThrough(new TextDecoderStream())
+      .pipeThrough(new EventSourceParserStream()).getReader();
+    while (true) {
+      const sseResData = await reader?.read();
+      const { done, value } = sseResData;
+      if (!done) {
+        try {
+          let msgStr = value.data;
+          const receiveData = JSON.parse(msgStr);
+          if (receiveData.code) {
+            closeConnected();
+            onStop(val.msg || '会话失败');
             break;
+          } else {
+            sseReceiveProcess(receiveData);
           }
+        } catch (e) {
+          console.info(e);
         }
-      }
-    })
+      } else {
+        break;
+      };
+    };
   }
   // sse接收消息回调
   const sseReceiveProcess = (messageData) => {
@@ -255,11 +254,10 @@ const ChatPreview = (props) => {
         return;
       }
       // 普通日志
-      messageData.answer?.forEach(log => {
+      messageData.answer?.forEach((log) => {
         if (log.type === 'FORM') {
           let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
           chatForm(obj);
-          saveLocalChatId(messageData);
         }
         if (messageType.includes(log.type)) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
@@ -269,7 +267,7 @@ const ChatPreview = (props) => {
             chatStrInit(msg, recieveChatItem, messageData.status);
           }
         }
-      })
+      });
       if (chatStatus.includes(messageData.status)) {
         saveLocalChatId(messageData);
         dispatch(setChatRunning(false));
@@ -278,7 +276,7 @@ const ChatPreview = (props) => {
       onStop('数据解析异常');
       dispatch(setChatRunning(false));
     }
-  }
+  };
   // sse回调保存chatId
   const saveLocalChatId = (data) => {
     let { chat_id, at_chat_id } = data;
@@ -289,14 +287,14 @@ const ChatPreview = (props) => {
     if (at_chat_id) {
       dispatch(setAtChatId(at_chat_id));
     }
-  }
+  };
   // 聊天表单
   const chatForm = (chatObj) => {
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, chatObj);
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
-  }
+  };
   // 用户自勾选
   function selfSelect(instanceId, initContext) {
     reportInstance.current = instanceId;
@@ -314,9 +312,9 @@ const ChatPreview = (props) => {
       initContext: {
         Question: listRef.current[listRef.current.length - 2].content,
         ...reportIContext.current.initContext,
-        memories: JSON.stringify(memoriesList)
-      }
-    }
+        memories: JSON.stringify(memoriesList),
+      },
+    };
     try {
       const startes = await getReportInstance(tenantId, reportInstance.current, params);
       if (startes.code === 0 && startes.data) {
@@ -342,9 +340,10 @@ const ChatPreview = (props) => {
       }
     }
     initObj.loading = false;
-    initObj.finished = (status === 'ARCHIVED');
-    idx = listRef.current.length - 1
+    initObj.finished = status === 'ARCHIVED';
+    idx = listRef.current.length - 1;
     if (testRef.current) {
+      initObj.msgType = 'form';
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
@@ -355,9 +354,7 @@ const ChatPreview = (props) => {
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
     let msgId = log.msgId;
-    let currentChatItem = listRef.current.filter(
-      (item) => item.logId === msgId
-    )[0];
+    let currentChatItem = listRef.current.filter((item) => item.logId === msgId)[0];
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
       let item = listRef.current[index];
@@ -401,6 +398,10 @@ const ChatPreview = (props) => {
       Message({ type: 'error', content: '终止对话失败' });
     }
   }
+  // 澄清表单重新对话
+  function questionClarConfirm(params, instanceId) {
+    queryInstance(params, 'clar', instanceId);
+  }
   // 溯源表单重新对话
   function conditionConfirm(logId, instanceId) {
     const reciveInitObj = deepClone(initChat);
@@ -418,11 +419,10 @@ const ChatPreview = (props) => {
   // 关闭链接
   const closeConnected = () => {
     dispatch(setChatRunning(false));
-    controller.current?.abort();
-    controller.current = null;
   }
   return (
-    <div className={`
+    <div
+      className={`
         chat-preview 
         ${showElsa ? 'chat-preview-elsa' : ''} 
         ${detailPage ? 'chat-preview-inner' : ''} 
@@ -440,6 +440,8 @@ const ChatPreview = (props) => {
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               conditionConfirm={conditionConfirm}
+              chatStreaming={chatStreaming}
+              questionClarConfirm={questionClarConfirm}
               showCheck={showCheck} />
             {showCheck ?
               <CheckGroup
@@ -453,7 +455,8 @@ const ChatPreview = (props) => {
                 onStop={chatRunningStop}
                 filterRef={editorRef}
                 chatType={chatType}
-                inspirationOpen={inspirationOpen} />
+                inspirationOpen={inspirationOpen}
+              />
             }
           </div>
           <div className={`chat-inner-right ${inspirationOpen ? 'chat-right-close' : ''}`}>
@@ -462,7 +465,7 @@ const ChatPreview = (props) => {
         </div>
       </Spin>
     </div>
-  )
+  );
 };
 
 export default ChatPreview;

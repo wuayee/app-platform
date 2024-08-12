@@ -24,8 +24,11 @@ export const IconMap = {
 };
 
 export const sourceTabs = [
-  { key: 'ALL', label: '全部' },
-  { key: 'BUILTIN', label: 'Builtin' },
+  { key: 'APP', label: '全部' },
+  { key: 'WATERFLOW', label: '流程' },
+  { key: 'CODENODESTATE', label: 'code' },
+  { key: 'API', label: 'API' },
+  // { key: 'BUILTIN', label: 'Builtin' },
   { key: 'HUGGINGFACE', label: 'Huggingface' },
   { key: 'LANGCHAIN', label: 'Langchain' },
   { key: 'LLAMAINDEX', label: 'Llamaindex' },

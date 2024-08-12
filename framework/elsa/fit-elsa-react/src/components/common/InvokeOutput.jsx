@@ -8,37 +8,44 @@ import ArrayUtil from "@/components/util/ArrayUtil.js";
 const {Panel} = Collapse;
 
 _InvokeOutput.propTypes = {
-    outputData: PropTypes.array
+    outputData: PropTypes.array,
+    getDescription: PropTypes.func
+};
+
+/**
+ * 获取输出数据中的描述信息
+ *
+ * @param outputData 输出数据
+ * @return {JSX.Element|null} 描述信息div
+ */
+const getContent = (outputData) => {
+    const contentItems = outputData
+        .filter(item => item.description)  // 过滤出有描述的项目
+        .map((item) => (
+            <p key={item.id}>{item.name}: {item.description}</p>
+        ));
+
+    if (contentItems.length === 0) {
+        return null;  // 如果没有内容，返回null
+    }
+
+    return (<>
+        <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
+            <p>参数介绍：</p>
+            {contentItems}
+        </div>
+    </>);
 };
 
 /**
  * fit接口出参展示
  *
  * @param outputData 输出数据
+ * @param getDescription 获取输出描述的方法
  * @returns {JSX.Element}
  */
-function _InvokeOutput({outputData}) {
-
-    const getContent = () => {
-        const contentItems = outputData
-                .filter(item => item.description)  // 过滤出有描述的项目
-                .map((item) => (
-                        <p key={item.id}>{item.name}: {item.description}</p>
-                ));
-
-        if (contentItems.length === 0) {
-            return null;  // 如果没有内容，返回null
-        }
-
-        return (<>
-            <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-                <p>参数介绍：</p>
-                {contentItems}
-            </div>
-        </>);
-    };
-
-    const content = getContent();
+function _InvokeOutput({outputData, getDescription = getContent}) {
+    const content = getDescription(outputData);
 
     return (<>
         <Collapse bordered={false} className="jade-custom-collapse"

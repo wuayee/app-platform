@@ -42,6 +42,9 @@ class DefaultAnnotationMetadata implements AnnotationMetadata {
 
     @Override
     public <T extends Annotation> T getAnnotation(Class<T> type) {
+        if (type == null) {
+            return null;
+        }
         List<Annotation> matchedAnnotations =
                 this.annotations.stream().filter(type::isInstance).collect(Collectors.toList());
         if (matchedAnnotations.size() == 1) {

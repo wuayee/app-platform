@@ -5,18 +5,22 @@
 package com.huawei.fit.jober.aipp.service.impl;
 
 import static com.huawei.fit.jober.aipp.common.exception.AippErrCode.TASK_NOT_FOUND;
+import static com.huawei.fit.jober.aipp.constants.AippConst.ATTR_UNIQUE_NAME;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.Undefinable;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.common.response.Rsp;
+import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
+import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jane.meta.property.MetaPropertyDeclarationInfo;
 import com.huawei.fit.jane.task.util.Entities;
+import com.huawei.fit.jober.FlowsService;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
@@ -46,11 +50,15 @@ import com.huawei.fit.jober.aipp.enums.AppState;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
+import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
+import com.huawei.fit.jober.aipp.mapper.AippUploadedFileMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
+import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.aipp.util.VersionUtils;
 import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
@@ -61,12 +69,14 @@ import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.model.Tuple;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.base.service.UsrAppCollectionService;
+import com.huawei.jade.store.service.AppService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -84,6 +94,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -117,12 +128,21 @@ public class AppBuilderAppServiceImpl
     private final MetaService metaService;
     private final UsrAppCollectionService usrAppCollectionService;
     private final AppUpdateValidator appUpdateValidator;
+    private final MetaInstanceService metaInstanceService;
+    private final AippUploadedFileMapper aippUploadedFileMapper;
     private final String appNameFormat = "^[^-_][\\u4E00-\\u9FA5A-Za-z0-9-_]*$";
+    private final AippLogMapper aippLogMapper;
+    private final FlowsService flowsService;
+    private final AppService appService;
+    private final AippChatService aippChatService;
 
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
             AppBuilderAppRepository appRepository,
             @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService,
-            UsrAppCollectionService usrAppCollectionService, AppUpdateValidator appUpdateValidator) {
+            UsrAppCollectionService usrAppCollectionService, AppUpdateValidator appUpdateValidator,
+            MetaInstanceService metaInstanceService, AippUploadedFileMapper aippUploadedFileMapper,
+            AippLogMapper aippLogMapper, FlowsService flowsService, AppService appService,
+            AippChatService aippChatService) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.aippFlowService = aippFlowService;
@@ -130,6 +150,12 @@ public class AppBuilderAppServiceImpl
         this.metaService = metaService;
         this.usrAppCollectionService = usrAppCollectionService;
         this.appUpdateValidator = appUpdateValidator;
+        this.metaInstanceService = metaInstanceService;
+        this.aippUploadedFileMapper = aippUploadedFileMapper;
+        this.aippLogMapper = aippLogMapper;
+        this.flowsService = flowsService;
+        this.appService = appService;
+        this.aippChatService = aippChatService;
     }
 
     @Override
@@ -144,6 +170,7 @@ public class AppBuilderAppServiceImpl
     @Transactional
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // 要加个save appDto到数据的逻辑
+        this.validateApp(appDto.getId());
         AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
         this.validateVersion(aippDto, contextOf);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
@@ -234,6 +261,7 @@ public class AppBuilderAppServiceImpl
 
     @Override
     public AppBuilderAppDto queryLatestOrchestration(String appId, OperationContext context) {
+        this.validateApp(appId);
         String aippId = this.getAippIdByAppId(appId, context);
         MetaFilter filter = new MetaFilter();
         filter.setMetaIds(Collections.singletonList(aippId));
@@ -251,6 +279,15 @@ public class AppBuilderAppServiceImpl
             return this.create(copiedAppId, this.buildAppBuilderAppCreateDto(copiedApp), context, true);
         }
         return this.query(copiedAppId);
+    }
+
+    /**
+     * 校验应用是否存在
+     *
+     * @param appId 待校验的应用 id
+     */
+    private void validateApp(String appId) {
+        this.appFactory.create(appId);
     }
 
     @Override
@@ -509,9 +546,11 @@ public class AppBuilderAppServiceImpl
         if (appDto == null) {
             throw new AippException(AippErrCode.INVALID_OPERATION);
         }
+
+        // 这一行都是有校验的作用，不能挪到下面
+        AppBuilderApp update = this.appFactory.create(appId);
         this.validateUpdateApp(appId, appDto.getName(), context);
         this.appUpdateValidator.validate(appId);
-        AppBuilderApp update = this.appFactory.create(appId);
         update.setUpdateBy(context.getOperator());
         update.setUpdateAt(LocalDateTime.now());
         update.setName(appDto.getName());
@@ -674,33 +713,125 @@ public class AppBuilderAppServiceImpl
     }
 
     @Override
-    @Transactional
     @Fitable(id = "default")
     public void delete(String appId, OperationContext context) {
-        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
-        // step1 删除app相关
-        if (StringUtils.isEmpty(appBuilderApp.getId())) {
+        this.validateApp(appId);
+        MetaFilter filter = new MetaFilter();
+        String metaId = this.getAippIdByAppId(appId, context);
+        filter.setMetaIds(Collections.singletonList(metaId));
+        List<Meta> metas = MetaUtils.getListMetaHandle(this.metaService, filter, context);
+        if (CollectionUtils.isEmpty(metas)) {
             return;
         }
-        this.appFactory.delete(appBuilderApp);
+        List<String> metaVersionIds = metas.stream().map(Meta::getVersionId).distinct().collect(Collectors.toList());
+        List<String> metaIds = metas.stream().map(Meta::getId).distinct().collect(Collectors.toList());
+        List<Tuple> versionIdInstances = this.getVersionIdInstanceIds(metaVersionIds, context);
+        Set<String> instanceIds = this.getInstanceIds(versionIdInstances);
+        List<String> appIds = this.getFullAppIds(metas);
+        this.deleteApps(appIds);
+        this.deleteMetaInstances(versionIdInstances, context);
+        this.deleteMetas(metaVersionIds, context);
+        this.deleteFiles(metaIds);
+        this.deleteLogs(instanceIds);
+        this.deleteFlows(metas, context);
+        this.deleteStore(metas);
+        this.deleteChats(appIds, context);
+        this.deleteUsrAppCollection(appId);
+    }
 
-        // step2 删除task相关 此处应该是会删除相关的task和tasktemplate 但不会删除taskinstance
-        List<Meta> metaList = MetaUtils.getAllMetasByAppId(metaService, appId, AippTypeEnum.PREVIEW.type(), context);
-        metaList.addAll(MetaUtils.getAllMetasByAppId(metaService, appId, AippTypeEnum.NORMAL.type(), context));
-        List<String> ids = metaList.stream().map(Meta::getVersionId).distinct().collect(Collectors.toList());
-        MetaUtils.deleteMetasByVersionIds(metaService, ids, context);
-        // step3 删除日志
-        // step4 删除流程定义相关
-        // step5 删除store相关
-        // step6 删除应用收藏记录相关
-        usrAppCollectionService.deleteByAppId(appId);
+    private void deleteChats(List<String> appIds, OperationContext context) {
+        appIds.forEach(appId -> this.aippChatService.deleteChat(null, appId, context));
+    }
+
+    private void deleteUsrAppCollection(String appId) {
+        this.usrAppCollectionService.deleteByAppId(appId);
+    }
+
+    private void deleteStore(List<Meta> metas) {
+        List<String> uniqueNames = metas.stream()
+                .filter(meta -> meta != null && meta.getAttributes().containsKey(ATTR_UNIQUE_NAME))
+                .map(meta -> ObjectUtils.<String>cast(meta.getAttributes().get(ATTR_UNIQUE_NAME)))
+                .distinct()
+                .collect(Collectors.toList());
+        uniqueNames.forEach(this.appService::deleteApp);
+    }
+
+    private void deleteFlows(List<Meta> metas, OperationContext context) {
+        metas.forEach(meta -> this.flowsService.deleteFlowsWithoutElsa(meta.getId(), meta.getVersion(), context));
+    }
+
+    private void deleteLogs(Set<String> instanceIds) {
+        if (instanceIds.isEmpty()) {
+            return;
+        }
+        this.aippLogMapper.deleteByInstanceIds(new ArrayList<>(instanceIds));
+    }
+
+    private Set<String> getInstanceIds(List<Tuple> versionIdInstances) {
+        Set<String> instanceIds = new HashSet<>();
+        for (Tuple versionIdInstance : versionIdInstances) {
+            List<Instance> instances = ObjectUtils.cast(versionIdInstance.get(1)
+                    .orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
+            if (CollectionUtils.isEmpty(instances)) {
+                continue;
+            }
+            instanceIds.addAll(instances.stream().map(Instance::getId).distinct().collect(Collectors.toList()));
+        }
+        return instanceIds;
+    }
+
+    private List<Tuple> getVersionIdInstanceIds(List<String> metaVersionIds, OperationContext context) {
+        return metaVersionIds.stream()
+                .map(versionId -> Tuple.duet(versionId,
+                        MetaInstanceUtils.getInstances(versionId, this.metaInstanceService, context)))
+                .collect(Collectors.toList());
+    }
+
+    private void deleteFiles(List<String> metaIds) {
+        if (CollectionUtils.isEmpty(metaIds)) {
+            return;
+        }
+        this.aippUploadedFileMapper.deleteByAippIds(metaIds);
+    }
+
+    private void deleteApps(List<String> appIds) {
+        this.appFactory.delete(appIds);
+    }
+
+    private List<String> getFullAppIds(List<Meta> metas) {
+        return metas.stream()
+                .filter(meta -> meta != null && meta.getAttributes().containsKey(AippConst.ATTR_APP_ID_KEY))
+                .map(meta -> ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY)))
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private void deleteMetaInstances(List<Tuple> versionIdInstances, OperationContext context) {
+        versionIdInstances.forEach(versionIdInstance -> this.deleteMetaInstance(context, versionIdInstance));
+    }
+
+    private void deleteMetaInstance(OperationContext context, Tuple versionIdInstance) {
+        String versionId = ObjectUtils.cast(versionIdInstance.get(0)
+                .orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
+        List<Instance> instances = ObjectUtils.cast(versionIdInstance.get(1)
+                .orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
+        if (CollectionUtils.isEmpty(instances)) {
+            return;
+        }
+        instances.forEach(instance -> this.metaInstanceService.deleteMetaInstance(versionId,
+                instance.getId(),
+                context));
+    }
+
+    private void deleteMetas(List<String> metaVersionIds, OperationContext context) {
+        metaVersionIds.forEach(versionId -> this.metaService.delete(versionId, context));
     }
 
     @Override
     public PublishedAppResDto published(String uniqueName, OperationContext context) {
         MetaFilter filter = new MetaFilter();
         Map<String, List<String>> attributes = new HashMap<>();
-        attributes.put(AippConst.ATTR_UNIQUE_NAME, Collections.singletonList(uniqueName));
+        attributes.put(ATTR_UNIQUE_NAME, Collections.singletonList(uniqueName));
         filter.setAttributes(attributes);
         RangedResultSet<Meta> metas = this.metaService.list(filter, true, 0, 1, context);
         if (metas.getResults().isEmpty()) {
@@ -724,6 +855,7 @@ public class AppBuilderAppServiceImpl
     @Override
     public List<PublishedAppResDto> recentPublished(AppQueryCondition cond, long offset, int limit, String appId,
             OperationContext context) {
+        this.validateApp(appId);
         String aippId = this.getAippIdByAppId(appId, context);
         List<Meta> allPublishedMeta = MetaUtils.getAllPublishedMeta(this.metaService, aippId, context)
                 .stream()

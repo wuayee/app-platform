@@ -4,6 +4,9 @@
 
 package com.huawei.fit.jober.aipp.factory;
 
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
@@ -12,8 +15,11 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * AppBuilderApp 的工厂类
@@ -63,7 +69,9 @@ public class AppBuilderAppFactory {
      */
     public AppBuilderApp create(String appId) {
         AppBuilderApp appBuilderApp = this.appRepository.selectWithId(appId);
-        Validation.notNull(appBuilderApp, "App builder app can not be null.");
+        if (appBuilderApp == null || StringUtils.isEmpty(appBuilderApp.getId())) {
+            throw new AippException(AippErrCode.APP_NOT_FOUND);
+        }
         appBuilderApp.setFlowGraphRepository(this.flowGraphRepository);
         appBuilderApp.setConfigRepository(this.configRepository);
         appBuilderApp.setFormRepository(this.formRepository);
@@ -93,14 +101,29 @@ public class AppBuilderAppFactory {
     /**
      * 删除app
      *
-     * @param appBuilderApp app
+     * @param appIds app标识列表
      */
-    public void delete(AppBuilderApp appBuilderApp) {
-        if (StringUtils.isEmpty(appBuilderApp.getId())) {
+    public void delete(List<String> appIds) {
+        if (CollectionUtils.isEmpty(appIds)) {
             return;
         }
-        this.appRepository.delete(appBuilderApp.getId());
-        this.configRepository.delete(appBuilderApp.getConfigId());
-        this.flowGraphRepository.delete(appBuilderApp.getFlowGraphId());
+        AppQueryCondition condition = new AppQueryCondition();
+        condition.setIds(appIds);
+        List<AppBuilderApp> apps = this.appRepository.selectWithCondition(condition);
+        List<String> configIds = this.getConfigIds(apps);
+        if (CollectionUtils.isNotEmpty(configIds)) {
+            this.configRepository.delete(configIds);
+        }
+        List<String> flowGraphIds = this.getFlowGraphIds(apps);
+        this.flowGraphRepository.delete(flowGraphIds);
+        this.appRepository.delete(appIds);
+    }
+
+    private List<String> getConfigIds(List<AppBuilderApp> apps) {
+        return apps.stream().map(AppBuilderApp::getConfigId).collect(Collectors.toList());
+    }
+
+    private List<String> getFlowGraphIds(List<AppBuilderApp> apps) {
+        return apps.stream().map(AppBuilderApp::getFlowGraphId).collect(Collectors.toList());
     }
 }

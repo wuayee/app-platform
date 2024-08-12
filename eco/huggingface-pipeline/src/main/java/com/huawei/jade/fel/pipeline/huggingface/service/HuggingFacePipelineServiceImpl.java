@@ -58,7 +58,7 @@ public class HuggingFacePipelineServiceImpl implements HuggingFacePipelineServic
      *
      * @param gatewayUrl 管道服务端（网关）地址（默认从配置文件中读取）。
      */
-    public HuggingFacePipelineServiceImpl(@Value("${gateway-url}") String gatewayUrl) {
+    public HuggingFacePipelineServiceImpl(@Value("${openai-url}") String gatewayUrl) {
         this.gatewayUrl = gatewayUrl;
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(HTTP_CLIENT_TIMEOUT, TimeUnit.SECONDS)

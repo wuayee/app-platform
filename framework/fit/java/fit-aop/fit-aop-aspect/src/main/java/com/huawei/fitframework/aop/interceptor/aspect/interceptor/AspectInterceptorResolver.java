@@ -4,7 +4,6 @@
 
 package com.huawei.fitframework.aop.interceptor.aspect.interceptor;
 
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Scope;
 import com.huawei.fitframework.aop.annotation.Aspect;
 import com.huawei.fitframework.aop.interceptor.MethodInterceptor;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
  * @author 郭龙飞 gwx900499
  * @since 2023-03-08
  */
-@Component
 public class AspectInterceptorResolver extends AbstractMethodInterceptorResolver {
     private final List<MethodInterceptorFactory> methodInterceptorFactories;
 

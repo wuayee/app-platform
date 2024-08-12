@@ -6,7 +6,6 @@ package com.huawei.jade.store.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.carver.ListResult;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 
@@ -20,7 +19,7 @@ public interface PluginService {
     /**
      * 注册插件。
      *
-     * @param pluginData 表示带插入的插件数据的 {@link PluginData}。
+     * @param pluginData 表示待插入的插件数据的 {@link PluginData}。
      * @return 插件的唯一标识的 {@link String}。
      */
     @Genericable(id = "com.huawei.jade.store.plugin.addPlugin")
@@ -38,18 +37,18 @@ public interface PluginService {
     /**
      * 基于插件的唯一标识查询某个插件。
      *
-     * @param toolUniqueName 表示插件的唯一标识的 {@link String}。
-     * @return 表示插件详细信息的 {@link ToolData}。
+     * @param pluginId 表示插件的唯一标识的 {@link String}。
+     * @return 表示插件详细信息的 {@link PluginData}。
      */
     @Genericable(id = "com.huawei.jade.store.plugin.getPlugin.byUniqueName")
-    PluginData getPlugin(String toolUniqueName);
+    PluginData getPlugin(String pluginId);
 
     /**
      * 删除插件。
      *
-     * @param toolUniqueName 表示待删除插件唯一标识的 {@link String}。
-     * @return 表示删除插件的唯一标识名或失败提示的 {@link String}。
+     * @param pluginId 表示待删除插件唯一标识的 {@link String}。
+     * @return 表示删除插件的唯一标识或失败提示的 {@link String}。
      */
     @Genericable(id = "com.huawei.jade.store.plugin.deletePlugin")
-    String deletePlugin(String toolUniqueName);
+    String deletePlugin(String pluginId);
 }

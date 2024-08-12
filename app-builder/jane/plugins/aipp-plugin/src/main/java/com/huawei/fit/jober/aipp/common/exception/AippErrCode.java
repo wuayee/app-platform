@@ -270,6 +270,26 @@ public enum AippErrCode implements ErrorCode {
     APP_CHAT_WAIT_RESPONSE_ERROR(90002922, "会话响应出错。"),
 
     /**
+     * 删除失败
+     */
+    DELETE_ERROR(90002923, "删除失败，请重试"),
+
+    /**
+     * 应用找不到失败
+     */
+    APP_NOT_FOUND(90002924, "应用不存在，或者已经被删除"),
+
+    /**
+     * 对话时，应用找不到失败
+     */
+    APP_NOT_FOUND_WHEN_CHAT(90002925, "对话失败：应用不存在，或者已经被删除"),
+
+    /**
+     * 调试时，应用找不到失败
+     */
+    APP_NOT_FOUND_WHEN_DEBUG(90002926, "调试失败：应用不存在，或者已经被删除"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

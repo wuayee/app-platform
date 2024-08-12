@@ -466,6 +466,7 @@ const Inspiration = (props) => {
             nodeList={nodeList}
             updateTreeData={updateTreeData}
             setDisabled={setDisabled}
+            category={category}
           />
         </Modal>
       </div>

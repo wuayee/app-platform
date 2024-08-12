@@ -6,6 +6,8 @@ package com.huawei.fit.jober.aipp.repository;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderFlowGraph;
 
+import java.util.List;
+
 /**
  * AppBuilder流程图持久化层
  *
@@ -38,7 +40,7 @@ public interface AppBuilderFlowGraphRepository {
     /**
      * 根据流程图id删除流程图
      *
-     * @param id 被删除的流程图id
+     * @param ids 被删除的流程图id集合
      */
-    void delete(String id);
+    void delete(List<String> ids);
 }

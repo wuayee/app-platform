@@ -24,6 +24,7 @@
         <jade.common.version>1.0.0-SNAPSHOT</jade.common.version>
         <model.version>1.0.0-SNAPSHOT</model.version>
         <aipp-genericable.version>1.0.0-SNAPSHOT</aipp-genericable.version>
+        <authentication.version>1.0.0-SNAPSHOT</authentication.version>
 
         <dynamic-form.version>0.0.1-SNAPSHOT</dynamic-form.version>
         <elsa.version>1.0.4</elsa.version>
@@ -329,6 +330,11 @@
                 <groupId>com.huawei.fit.jade.service</groupId>
                 <artifactId>jade-common-service</artifactId>
                 <version>${jade.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.jade.service</groupId>
+                <artifactId>authentication-service</artifactId>
+                <version>${authentication.version}</version>
             </dependency>
 
             <!-- Third-party -->

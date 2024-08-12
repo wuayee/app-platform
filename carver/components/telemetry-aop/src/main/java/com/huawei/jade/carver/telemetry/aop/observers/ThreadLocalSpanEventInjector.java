@@ -7,6 +7,8 @@ package com.huawei.jade.carver.telemetry.aop.observers;
 import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYSTEM_ATTRIBUTE_EVENT_NAME;
 
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.jade.authentication.context.UserContext;
+import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.carver.operation.enums.OperationLogConstant;
 import com.huawei.jade.carver.telemetry.aop.SpanEndObserver;
 
@@ -37,11 +39,12 @@ public class ThreadLocalSpanEventInjector implements SpanEndObserver {
         if (span == null) {
             return;
         }
+        UserContext userContext = UserContextHolder.get();
         // 从threadLocal中获取
         span.addEvent(SYSTEM_ATTRIBUTE_EVENT_NAME, Attributes.of(
-                AttributeKey.stringKey(OperationLogConstant.SYS_OP_LANGUAGE_KEY), "en",
-                AttributeKey.stringKey(OperationLogConstant.SYS_OP_OPERATOR_KEY), "Admin",
-                AttributeKey.stringKey(OperationLogConstant.SYS_OP_IPADDR_KEY), "127.0.0.1"
+                AttributeKey.stringKey(OperationLogConstant.SYS_OP_LANGUAGE_KEY), userContext.getLanguage(),
+                AttributeKey.stringKey(OperationLogConstant.SYS_OP_OPERATOR_KEY), userContext.getName(),
+                AttributeKey.stringKey(OperationLogConstant.SYS_OP_IPADDR_KEY), userContext.getIp()
         ));
     }
 }

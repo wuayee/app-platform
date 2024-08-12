@@ -46,4 +46,11 @@ public interface AippUploadedFileMapper {
      * @param fileInfo 文件信息
      */
     void insertFileRecord(AippUploadedFileInfoDto fileInfo);
+
+    /**
+     * 删除文件记录
+     *
+     * @param aippIds aipp唯一标识
+     */
+    void deleteByAippIds(List<String> aippIds);
 }
