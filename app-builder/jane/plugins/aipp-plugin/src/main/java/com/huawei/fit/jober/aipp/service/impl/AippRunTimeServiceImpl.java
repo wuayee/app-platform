@@ -71,6 +71,7 @@ import com.huawei.fit.jober.aipp.util.HttpUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
+import com.huawei.fit.jober.aipp.vo.MetaVo;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowInstanceResult;
@@ -265,12 +266,23 @@ public class AippRunTimeServiceImpl
     @Override
     public Tuple createInstanceByApp(String appId, String question, Map<String, Object> businessData,
             OperationContext context, boolean isDebug) {
+        Meta meta = this.getMetaByAppId(appId, isDebug, context);
+        return this.createInstanceHandle(question, businessData, meta, context);
+    }
+
+    @Override
+    public MetaVo queryLatestMetaVoByAppId(String appId, boolean isDebug, OperationContext context) {
+        Meta meta = this.getMetaByAppId(appId, isDebug, context);
+        return MetaVo.builder().id(meta.getId()).version(meta.getVersion()).build();
+    }
+
+    private Meta getMetaByAppId(String appId, boolean isDebug, OperationContext context) {
         List<Meta> meta = MetaUtils.getAllMetasByAppId(metaService, appId, context);
         if (isDebug) {
             if (CollectionUtils.isEmpty(meta)) {
                 throw new AippException(AippErrCode.APP_CHAT_DEBUG_META_NOT_FOUND);
             }
-            return createInstanceHandle(question, businessData, meta.get(0), context);
+            return meta.get(0);
         }
         if (CollectionUtils.isEmpty(meta)) {
             throw new AippException(AippErrCode.APP_CHAT_PUBLISHED_META_NOT_FOUND);
@@ -280,7 +292,7 @@ public class AippRunTimeServiceImpl
         if (CollectionUtils.isEmpty(allPublishedMeta)) {
             throw new AippException(AippErrCode.APP_CHAT_PUBLISHED_META_NOT_FOUND);
         }
-        return createInstanceHandle(question, businessData, allPublishedMeta.get(0), context);
+        return allPublishedMeta.get(0);
     }
 
     @Override
