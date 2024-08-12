@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 表示 {@link Components} 的构建器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-28
  */
 public class ComponentsBuilder extends AbstractBuilder implements EntityBuilder<Components> {

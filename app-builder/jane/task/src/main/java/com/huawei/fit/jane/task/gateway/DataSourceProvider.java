@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 /**
  * data source提供方
  *
- * @author l00815032
+ * @author 梁济时
  * @since 2023/11/28
  */
 public interface DataSourceProvider {

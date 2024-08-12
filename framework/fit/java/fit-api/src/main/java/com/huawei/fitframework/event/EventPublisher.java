@@ -7,7 +7,7 @@ package com.huawei.fitframework.event;
 /**
  * 为事件提供发布程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-22
  */
 public interface EventPublisher {

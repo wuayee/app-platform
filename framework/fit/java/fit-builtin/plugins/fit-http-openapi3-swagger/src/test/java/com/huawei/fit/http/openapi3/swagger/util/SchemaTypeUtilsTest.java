@@ -23,8 +23,8 @@ import java.util.Set;
 /**
  * 表示 {@link SchemaTypeUtils} 的单元测试。
  *
- * @author 季聿阶 j00559309
- * @author 王成 w00863339
+ * @author 季聿阶
+ * @author 王成
  * @since 2023-08-26
  */
 @DisplayName("测试 SchemaTypeUtils")

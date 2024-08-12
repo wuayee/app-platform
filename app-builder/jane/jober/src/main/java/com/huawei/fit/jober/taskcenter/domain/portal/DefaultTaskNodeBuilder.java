@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * task节点构造器
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 class DefaultTaskNodeBuilder implements TaskNode.Builder {

@@ -12,7 +12,7 @@ import com.huawei.fitframework.inspection.Nonnull;
  * 表示仅请求数据，但不消费数据的 {@link Subscriber 订阅者}。
  *
  * @param <T> 表示订阅者订阅的数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-09
  */
 public class EmptySubscriber<T> extends AbstractSubscriber<T> {

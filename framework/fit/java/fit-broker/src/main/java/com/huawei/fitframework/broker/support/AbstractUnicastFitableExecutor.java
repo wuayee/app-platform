@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 表示 {@link FitableExecutor} 的抽象单播调用父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-28
  */
 public abstract class AbstractUnicastFitableExecutor implements FitableExecutor {

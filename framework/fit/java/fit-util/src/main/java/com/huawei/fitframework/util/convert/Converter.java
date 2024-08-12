@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * 为转换提供方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-28
  */
 @FunctionalInterface

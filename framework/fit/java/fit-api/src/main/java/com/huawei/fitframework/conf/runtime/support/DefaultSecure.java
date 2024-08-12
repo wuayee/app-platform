@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * 表示 {@link Secure} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-14
  */
 public class DefaultSecure implements Secure {

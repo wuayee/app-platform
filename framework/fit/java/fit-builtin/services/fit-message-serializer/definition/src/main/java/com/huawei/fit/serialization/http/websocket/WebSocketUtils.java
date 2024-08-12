@@ -14,7 +14,7 @@ import com.huawei.fitframework.serialization.tlv.TagValuesChecker;
  * 表示 WebSocket 通信过程中通过 TLV 来传输流式调用信息的工具类。
  * <p>流式调用消息中各字段的标识与 http 调用中请求头位于不同通道，与其不会产生标识的冲突。</p>
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-15
  */
 public class WebSocketUtils extends TagValuesChecker {

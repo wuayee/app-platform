@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 为任务提供过滤器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-29
  */
 public class TaskFilter {

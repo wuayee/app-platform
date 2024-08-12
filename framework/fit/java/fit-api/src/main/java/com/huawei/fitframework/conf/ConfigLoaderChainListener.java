@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 为 {@link ConfigLoaderChain} 提供监听程序，以观察状态变化。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-16
  */
 public interface ConfigLoaderChainListener {

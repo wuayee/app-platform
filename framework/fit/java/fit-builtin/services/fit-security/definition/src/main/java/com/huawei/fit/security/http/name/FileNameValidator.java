@@ -9,7 +9,7 @@ import com.huawei.fit.security.http.FitSecurityException;
 /**
  * 表示文件名校验器。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-18
  */
 public interface FileNameValidator {

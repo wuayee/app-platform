@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为插件提供键的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-05
  */
 public interface PluginKey {

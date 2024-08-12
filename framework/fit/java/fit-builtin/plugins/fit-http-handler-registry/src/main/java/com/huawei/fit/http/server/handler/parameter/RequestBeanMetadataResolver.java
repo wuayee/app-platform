@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 表示解析带有 {@link RequestBean} 注解的参数的 {@link PropertyValueMetadataResolver}。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-15
  */
 public class RequestBeanMetadataResolver extends AbstractPropertyValueMetadataResolver {

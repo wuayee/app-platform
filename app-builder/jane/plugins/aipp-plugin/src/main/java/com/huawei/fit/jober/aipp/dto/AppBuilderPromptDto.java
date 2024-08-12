@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 构建器中的提示数据
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-04-25
  */
 @Builder

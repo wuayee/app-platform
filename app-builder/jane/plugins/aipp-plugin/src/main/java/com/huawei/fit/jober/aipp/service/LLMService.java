@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 大模型多模态交互接口
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-05-10
  */
 public interface LLMService {

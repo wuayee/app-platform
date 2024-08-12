@@ -11,7 +11,7 @@ import java.io.IOException;
  * 表示插件下载器。
  * <p>该插件为标准的 Jar 包。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-17
  */
 public interface MavenArtifactDownloader {

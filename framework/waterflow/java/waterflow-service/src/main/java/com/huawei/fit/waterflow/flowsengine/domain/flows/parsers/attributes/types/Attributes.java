@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 图形接口.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-05
  */
 public interface Attributes {

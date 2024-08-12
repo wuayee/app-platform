@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  * </p>
  *
  * @param <T> 表示订阅的数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 public interface Subscriber<T> {

@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * JDBC分布式锁
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/11/30
  */
 public final class DistributedLock implements Lock {

@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 表示任务数据源。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-22
  */
 public class TaskSourceInfo {

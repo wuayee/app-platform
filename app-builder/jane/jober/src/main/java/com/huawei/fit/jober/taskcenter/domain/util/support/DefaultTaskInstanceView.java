@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link TaskInstanceView} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-27
  */
 public class DefaultTaskInstanceView implements TaskInstanceView {

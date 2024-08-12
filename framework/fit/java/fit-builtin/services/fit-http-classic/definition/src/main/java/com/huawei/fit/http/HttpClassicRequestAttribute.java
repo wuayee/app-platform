@@ -9,7 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notBlank;
 /**
  * 表示 Http 请求携带的特殊属性的名字。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-30
  */
 public enum HttpClassicRequestAttribute {

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * 应用构建器表单属性实体类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-16
  */
 @Data

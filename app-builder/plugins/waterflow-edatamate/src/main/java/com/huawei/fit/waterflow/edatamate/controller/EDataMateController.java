@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 /**
  * a3000 http接口
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-12-28
  */
 @Component

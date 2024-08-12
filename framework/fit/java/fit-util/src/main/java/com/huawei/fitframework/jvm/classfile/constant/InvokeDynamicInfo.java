@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 表示动态计算的调用站点（{@link java.lang.invoke.CallSite} 的实例）。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class InvokeDynamicInfo extends Constant {

@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * 提供操作服务
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2024/5/10
  */
 public interface OperatorService {

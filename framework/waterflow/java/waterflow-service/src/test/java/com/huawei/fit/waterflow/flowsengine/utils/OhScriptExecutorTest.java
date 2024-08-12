@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * OhScript执行测试类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/21
  */
 class OhScriptExecutorTest {

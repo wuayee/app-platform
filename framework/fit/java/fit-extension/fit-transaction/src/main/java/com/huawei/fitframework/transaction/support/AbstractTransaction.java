@@ -19,7 +19,7 @@ import java.sql.SQLException;
 /**
  * 为 {@link Transaction} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-24
  */
 abstract class AbstractTransaction implements Transaction {

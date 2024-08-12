@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.domain.TaskProperty;
 /**
  * 为任务属性被删除的事件提供数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-30
  */
 public class TaskPropertyDeletingEvent extends TaskPropertyEvent {

@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * 为 {@link Jar} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-12
  */
 final class DataBlockJar implements Jar {
@@ -86,7 +86,7 @@ final class DataBlockJar implements Jar {
     /**
      * 为 {@link Jar.Entry} 提供基于数据块的实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-12
      */
     private final class Entry implements Jar.Entry {

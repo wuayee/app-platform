@@ -12,7 +12,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
 /**
  * 条件节点解析类
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/8/15
  */
 public class ConditionNodeParser implements NodeParser {

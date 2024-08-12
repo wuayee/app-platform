@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 /**
  * 为 {@link DependencyResolvingResult} 提供表示成功的结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-27
  */
 public final class DependencyResolvingSuccessResult implements DependencyResolvingResult {

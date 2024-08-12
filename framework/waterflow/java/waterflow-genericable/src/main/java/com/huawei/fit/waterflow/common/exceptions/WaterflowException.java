@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 /**
  * 插件 Jobber 的异常基类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 1.0
  */
 public class WaterflowException extends FitException {

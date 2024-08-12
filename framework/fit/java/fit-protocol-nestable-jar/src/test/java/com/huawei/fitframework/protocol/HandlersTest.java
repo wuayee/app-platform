@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link Handlers} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-10
  */
 @DisplayName("测试 Handlers 类")

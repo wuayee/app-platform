@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link LoadBalancer} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-28
  */
 public class DefaultLoadBalancer implements LoadBalancer {

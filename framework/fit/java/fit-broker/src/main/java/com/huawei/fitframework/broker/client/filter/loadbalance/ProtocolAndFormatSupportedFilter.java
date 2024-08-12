@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * 通信协议及序列化方式支持的负载均衡策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-06
  */
 public class ProtocolAndFormatSupportedFilter extends AbstractFilter {

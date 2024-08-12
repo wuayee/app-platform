@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 /**
  * 表示调度的任务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-16
  */
 public interface Task extends Callable<Object> {

@@ -48,7 +48,7 @@ import java.util.Objects;
 /**
  * {@link PostgresqlTenantRepo}对应测试类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-12
  */
 @ExtendWith(MockitoExtension.class)

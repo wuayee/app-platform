@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 为批量属性提供声明。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-08
  */
 @Data

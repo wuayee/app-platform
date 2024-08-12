@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示 {@link SingleGenericable} 的实现 2。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-01
  */
 @FitableSuite

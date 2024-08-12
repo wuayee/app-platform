@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 共享内存抽象
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024/3/25
  */
 public interface SharedMemory {

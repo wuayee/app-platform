@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 构建器构建出的对象的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-23
  */
 @DisplayName("测试构建器构建出的对象")

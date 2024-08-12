@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * 表示 Http 请求属性的集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-01
  */
 public interface AttributeCollection {

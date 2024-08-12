@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * 工具的 Http 请求的服务层实现。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/5/10
  */
 @Component

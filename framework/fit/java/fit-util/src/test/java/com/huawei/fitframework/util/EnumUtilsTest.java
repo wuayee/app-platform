@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 /**
  * 为 {@link EnumUtils} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class EnumUtilsTest {
@@ -84,7 +84,7 @@ public class EnumUtilsTest {
     /**
      * 为测试 {@link EnumUtils} 提供用以验证的枚举定义。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 1.0
      */
     enum DemoEnum {

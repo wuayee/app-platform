@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 表示 {@link ObjectSerializer} 接口的实现
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-21
  */
 public class ObjectSerializerImplement implements ObjectSerializer {

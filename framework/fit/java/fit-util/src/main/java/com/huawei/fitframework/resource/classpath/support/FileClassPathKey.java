@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * {@link DefaultClassPath} 提供 {@code file} {@link URI#getScheme() scheme} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public final class FileClassPathKey implements ClassPathKey {

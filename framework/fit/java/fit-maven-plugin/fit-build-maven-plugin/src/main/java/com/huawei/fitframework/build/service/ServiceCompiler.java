@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 /**
  * 为服务提供编译程序。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-17
  */
 final class ServiceCompiler extends AbstractCompiler {

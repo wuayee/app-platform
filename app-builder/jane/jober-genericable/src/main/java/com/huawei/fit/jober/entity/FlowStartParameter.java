@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 流程启动参数信息
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/12/11
  */
 public class FlowStartParameter {

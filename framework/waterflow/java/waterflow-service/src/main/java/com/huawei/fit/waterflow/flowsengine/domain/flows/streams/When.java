@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @param <I> 来源数据类型
  * @param <O> 转换后数据
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class When<I, O> extends IdGenerator implements Subscription<I, O> {

@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 /**
  * 为 {@link ResourceBundle.Control} 提供用以 {@link ResourceBundleStringResource} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-22
  */
 final class MessageBundleControl extends ResourceBundle.Control {

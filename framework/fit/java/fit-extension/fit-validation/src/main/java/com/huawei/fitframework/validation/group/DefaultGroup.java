@@ -7,7 +7,7 @@ package com.huawei.fitframework.validation.group;
 /**
  * 默认分组。group 为空时，使用默认分组。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-23
  */
 public interface DefaultGroup {}

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link AppBuilderPromptService}提供实现
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-04-26
  */
 @Component

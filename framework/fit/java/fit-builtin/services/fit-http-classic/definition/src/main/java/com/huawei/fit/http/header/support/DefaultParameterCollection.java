@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link ParameterCollection} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-04
  */
 public class DefaultParameterCollection implements ParameterCollection {

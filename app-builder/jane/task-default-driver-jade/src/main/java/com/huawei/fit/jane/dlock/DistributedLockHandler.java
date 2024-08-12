@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 表示分布式锁的处理接口
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023-11-30
  */
 public interface DistributedLockHandler {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.transaction;
 /**
  * 为 {@link TransactionMetadata} 提供构建程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-22
  */
 public interface TransactionMetadataBuilder {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 表示任务节点。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-14
  */
 public interface TaskNode {
@@ -44,7 +44,7 @@ public interface TaskNode {
     /**
      * 为任务节点提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-14
      */
     interface Builder {

@@ -13,7 +13,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * HttpJoberRule
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/10/18
  */
 public class HttpJoberRule implements JoberRule {

@@ -18,7 +18,7 @@ import lombok.Getter;
 /**
  * 第三方平台任务实例信息实体
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/16
  */
 @Getter

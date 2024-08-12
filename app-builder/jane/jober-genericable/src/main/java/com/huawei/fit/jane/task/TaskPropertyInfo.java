@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 表示任务定义中的属性信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-07
  */
 public class TaskPropertyInfo {

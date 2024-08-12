@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 为任务类型提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-12
  */
 public interface TaskTypeService {

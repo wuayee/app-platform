@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 为注解提供树形结构定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-07
  */
 public interface AnnotationTree extends AnnotationTreeNodeContainer, ConverterCache {

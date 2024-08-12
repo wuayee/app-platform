@@ -30,8 +30,8 @@ import java.util.function.Supplier;
 /**
  * 为字符串提供工具方法。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 1.0
  */
 public final class StringUtils {

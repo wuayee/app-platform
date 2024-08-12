@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * Aipp列表一览返回结构
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-03-01
  */
 @EqualsAndHashCode(callSuper = true)

@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 /**
  * 表示延迟加载的数据源。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-02
  */
 final class LazyLoadedDataSource implements DataSource {

@@ -34,7 +34,7 @@ import java.util.Optional;
 /**
  * app工具实现类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-20
  */
 @Component

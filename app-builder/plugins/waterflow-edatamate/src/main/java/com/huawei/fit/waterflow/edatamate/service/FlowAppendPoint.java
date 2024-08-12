@@ -12,7 +12,7 @@ import lombok.Getter;
 /**
  * 流程中节点接收外部数据的连接点
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/2/19
  */
 @Getter

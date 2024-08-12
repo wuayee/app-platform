@@ -15,7 +15,7 @@ import java.lang.management.MemoryUsage;
 /**
  * 定时任务监测内存使用率
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-02-28
  */
 @Component

@@ -11,7 +11,7 @@ import com.huawei.fitframework.ioc.BeanFactoryOrderComparator;
 /**
  * 表示全部的服务实现都已经注册完毕的事件。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-12
  */
 @FunctionalInterface

@@ -20,7 +20,7 @@ import java.util.Collections;
 /**
  * 排序条件解析器测试类
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-08
  */
 @DisplayName("排序条件解析测试集合")

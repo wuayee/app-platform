@@ -24,7 +24,7 @@ import java.util.Arrays;
 /**
  * 表示 {@link ZippedFileValidator} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 @DisplayName("测试压缩文件校验功能")

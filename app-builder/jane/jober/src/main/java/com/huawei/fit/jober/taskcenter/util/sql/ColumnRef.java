@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.support.DefaultColumnRef;
 /**
  * 表示数据列的引用。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public interface ColumnRef extends SqlElement {

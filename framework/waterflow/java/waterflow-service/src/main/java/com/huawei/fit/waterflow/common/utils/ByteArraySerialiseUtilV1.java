@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 提供Map中的byte数组序列化和反序列化能力
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/2/2
  */
 public class ByteArraySerialiseUtilV1 {
@@ -146,7 +146,7 @@ public class ByteArraySerialiseUtilV1 {
     /**
      * 自定义Map反序列化。注意：这里只能拦截到顶层的反序列化，即：JSONObject.parseObject(str, Map/JSONObject.class, parserConfig)
      *
-     * @author s00558940
+     * @author 宋永坦
      * @since 2024/2/26
      */
     private static class CustomMapDeserializer implements ObjectDeserializer {

@@ -11,8 +11,8 @@ import com.huawei.fitframework.util.ObjectUtils;
  * 为区间提供定义。
  *
  * @param <T> 表示区间内元素的类型的 {@link T}。
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public interface Interval<T extends Comparable<T>> {

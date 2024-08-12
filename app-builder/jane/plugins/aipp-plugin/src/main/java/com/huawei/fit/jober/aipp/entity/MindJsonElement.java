@@ -10,7 +10,7 @@ import lombok.Getter;
 /**
  * 用于构建MindJsonElement对象的类
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2024-05-10
  */
 

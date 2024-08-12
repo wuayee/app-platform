@@ -17,7 +17,7 @@ import java.util.Locale;
 /**
  * Http 操作工具类
  *
- * @author l00801120
+ * @author 廖航
  * @since 2024-01-15
  */
 public class HttpUtils {

@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * elsa Shapes Meta type
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-25
  */
 @Getter

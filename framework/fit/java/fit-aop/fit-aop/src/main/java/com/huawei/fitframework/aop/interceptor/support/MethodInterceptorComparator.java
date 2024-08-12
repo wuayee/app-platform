@@ -15,7 +15,7 @@ import java.util.ServiceLoader;
 /**
  * {@link MethodInterceptor} 的排序。
  *
- * @author 詹高扬 z50029227
+ * @author 詹高扬
  * @since 2022-07-27
  */
 public class MethodInterceptorComparator implements Comparator<MethodInterceptor> {

@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 /**
  * 表示可修改的 {@link GenericableMethod}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-29
  */
 public class ConfigurableGenericableMethod implements GenericableMethod {

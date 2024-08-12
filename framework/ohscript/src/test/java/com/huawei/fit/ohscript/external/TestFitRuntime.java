@@ -15,7 +15,7 @@ import com.huawei.fitframework.util.ThreadUtils;
 /**
  * 用于测试的统一 FIT 运行时。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-23
  */
 public class TestFitRuntime {

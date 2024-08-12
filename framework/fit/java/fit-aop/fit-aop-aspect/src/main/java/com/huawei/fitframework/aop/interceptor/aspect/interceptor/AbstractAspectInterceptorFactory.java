@@ -27,8 +27,8 @@ import java.util.List;
 /**
  * 将带有 Aspect 特定注解的方法包装成 {@link AdviceMethodInterceptor}。
  *
- * @author 季聿阶 j00559309
- * @author 郭龙飞 gwx900499
+ * @author 季聿阶
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public abstract class AbstractAspectInterceptorFactory extends AbstractAnnotatedInterceptorFactory

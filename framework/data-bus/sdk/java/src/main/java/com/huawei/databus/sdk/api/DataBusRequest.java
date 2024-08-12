@@ -7,7 +7,7 @@ package com.huawei.databus.sdk.api;
 /**
  * DataBus 请求共有接口。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-05-27
  */
 public interface DataBusRequest {

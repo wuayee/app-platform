@@ -31,7 +31,7 @@ import javax.sql.DataSource;
 /**
  * 提供集成测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-27
  */
 @DisplayName("集成测试（基于H2数据库）")

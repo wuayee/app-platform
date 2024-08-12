@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * 调用store服务的jober
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/5/7
  */
 public class FlowStoreJober extends FlowJober {
@@ -64,7 +64,7 @@ public class FlowStoreJober extends FlowJober {
     /**
      * 工具服务的元数据信息
      *
-     * @author s00558940
+     * @author 宋永坦
      * @since 2024/5/8
      */
     @Builder

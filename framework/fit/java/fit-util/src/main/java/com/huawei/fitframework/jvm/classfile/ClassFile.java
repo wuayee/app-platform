@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * 为类文件提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class ClassFile {

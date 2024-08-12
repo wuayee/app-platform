@@ -7,7 +7,7 @@ package com.huawei.fit.http.server;
 /**
  * 表示注册 Http 请求处理器时发生的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-20
  */
 public class RegisterHttpHandlerException extends HttpServerException {

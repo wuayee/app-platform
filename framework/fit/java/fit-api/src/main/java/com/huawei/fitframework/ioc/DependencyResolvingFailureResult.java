@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 为 {@link DependencyResolvingResult} 提供解析失败的结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-27
  */
 public final class DependencyResolvingFailureResult implements DependencyResolvingResult {

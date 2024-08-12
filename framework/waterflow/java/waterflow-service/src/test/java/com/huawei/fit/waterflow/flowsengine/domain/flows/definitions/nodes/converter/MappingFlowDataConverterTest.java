@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 测试FlowData的输入输出转换
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/23
  */
 class MappingFlowDataConverterTest {

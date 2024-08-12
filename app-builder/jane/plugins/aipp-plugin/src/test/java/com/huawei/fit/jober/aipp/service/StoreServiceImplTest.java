@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * 市场相关接口测试。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-08-02
  */
 @DisplayName("测试 StoreServiceImpl")

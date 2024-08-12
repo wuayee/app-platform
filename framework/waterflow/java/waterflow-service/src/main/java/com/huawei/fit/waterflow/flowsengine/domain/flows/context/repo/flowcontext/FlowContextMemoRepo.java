@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * 持久化{@link FlowContext}对象到内存中核心类
  * 与{@link FlowContextPersistRepo}组成{@link FlowContextRepo}的不同实现
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {

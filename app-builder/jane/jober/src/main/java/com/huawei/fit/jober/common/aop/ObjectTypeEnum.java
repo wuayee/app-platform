@@ -10,7 +10,7 @@ import lombok.Getter;
 /**
  * 实体类型
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-16 18:54
  */
 @Getter

@@ -52,7 +52,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link TaskRelation.Repo} 提供基于 {@code Postgresql} 数据库的实现。
  *
- * @author lWX1291633
+ * @author 罗书强
  * @since 2024-01-02
  */
 @Component

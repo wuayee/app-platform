@@ -15,7 +15,7 @@ import java.io.InputStream;
 /**
  * 表示只读的二进制的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public interface ReadableBinaryEntity extends Entity {

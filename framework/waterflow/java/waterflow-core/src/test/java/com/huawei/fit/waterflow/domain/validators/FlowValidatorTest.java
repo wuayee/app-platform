@@ -50,7 +50,7 @@ import java.util.Map;
 /**
  * 流程定义校验器测试类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 class FlowValidatorTest extends FlowsDataBaseTest {

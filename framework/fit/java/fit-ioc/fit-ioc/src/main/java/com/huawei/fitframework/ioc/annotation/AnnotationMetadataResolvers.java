@@ -9,7 +9,7 @@ import com.huawei.fitframework.ioc.annotation.support.DefaultAnnotationMetadataR
 /**
  * 为 {@link AnnotationMetadataResolver} 提供工具方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-25
  */
 public final class AnnotationMetadataResolvers {

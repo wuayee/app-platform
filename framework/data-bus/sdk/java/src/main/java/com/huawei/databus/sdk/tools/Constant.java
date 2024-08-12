@@ -7,7 +7,7 @@ package com.huawei.databus.sdk.tools;
 /**
  * DataBus 相关常量类。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public class Constant {

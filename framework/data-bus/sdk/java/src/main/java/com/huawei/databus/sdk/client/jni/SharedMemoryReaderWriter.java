@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * 共享内存 JNI 接口定义
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2024-03-19
  */
 public class SharedMemoryReaderWriter {

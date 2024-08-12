@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 表示指定方法的匹配器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-15
  */
 public class SpecifiedMethodMatcher implements MethodMatcher {

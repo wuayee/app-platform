@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 动态条件查询插件的类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-15
  */
 public class AppQuery extends ToolQuery {

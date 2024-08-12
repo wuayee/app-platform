@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * 任务属性触发器相关Controller类。
  *
- * @author w30020313
+ * @author 王伟
  * @since 2023-08-08
  */
 @Component

@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 为 {@link AnnotationProperty} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-04
  */
 public class DefaultAnnotationProperty implements AnnotationProperty {

@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * 为直接调用启动场景提供公共包的类加载程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-08
  */
 final class DirectSharedClassLoader extends URLClassLoader {

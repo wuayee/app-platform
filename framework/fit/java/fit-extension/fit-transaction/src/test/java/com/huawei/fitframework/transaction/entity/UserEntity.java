@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 /**
  * 为集成测试提供 {@code user} 表的 ORM 定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-27
  */
 public final class UserEntity extends AbstractEntity {

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * 表示从 {@code transaction} 组件适配 {@code Mybatis} 所需的事务类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-06-27
  */
 class ManagedTransaction implements Transaction {

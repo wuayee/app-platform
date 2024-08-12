@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * 流程JSONObject操作封装类
  * 封装所有JSONObject操作，不对外暴露
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/8/26
  */
 public class FlowGraphData {

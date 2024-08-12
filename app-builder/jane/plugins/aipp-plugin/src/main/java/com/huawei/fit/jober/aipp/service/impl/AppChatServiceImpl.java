@@ -40,7 +40,7 @@ import java.util.Map;
 /**
  * 历史会话服务实现类
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-23
  */
 @Component

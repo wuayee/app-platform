@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 为 {@link Authorization} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-27
  */
 class DefaultAuthorization extends AbstractDomainObject implements Authorization {
@@ -106,7 +106,7 @@ class DefaultAuthorization extends AbstractDomainObject implements Authorization
     /**
      * 为 {@link Authorization.Builder} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     static class Builder extends AbstractDomainObjectBuilder<Authorization,
@@ -153,7 +153,7 @@ class DefaultAuthorization extends AbstractDomainObject implements Authorization
     /**
      * 为 {@link Authorization.Declaration} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     static class Declaration implements Authorization.Declaration {
@@ -223,7 +223,7 @@ class DefaultAuthorization extends AbstractDomainObject implements Authorization
         /**
          * 为 {@link Authorization.Declaration.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-11-27
          */
         static class Builder implements Authorization.Declaration.Builder {
@@ -276,7 +276,7 @@ class DefaultAuthorization extends AbstractDomainObject implements Authorization
     /**
      * 为 {@link Authorization.Filter} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     static class Filter implements Authorization.Filter {
@@ -310,7 +310,7 @@ class DefaultAuthorization extends AbstractDomainObject implements Authorization
         /**
          * 为 {@link Authorization.Filter.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-11-27
          */
         static class Builder implements Authorization.Filter.Builder {

@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * 方法拦截器的通用抽象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-28
  */
 public abstract class AbstractMethodInterceptor implements MethodInterceptor {

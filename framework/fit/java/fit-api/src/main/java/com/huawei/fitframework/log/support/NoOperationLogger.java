@@ -9,7 +9,7 @@ import com.huawei.fitframework.log.Logger;
 /**
  * 表示 {@link Logger} 的忽略日志实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-15
  */
 public class NoOperationLogger implements Logger {

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * conditionParams 提取器.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-06
  */
 public class ConditionParamsExtractor implements ValueExtractor {

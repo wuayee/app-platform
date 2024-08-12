@@ -21,7 +21,7 @@ import java.util.Map;
  *     <li>client.http.secure.key-store-password。表示客户端证书密码，适用于 SSL 连接请求。</li>
  * </ul></p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-04
  */
 public interface HttpClassicClientFactory {

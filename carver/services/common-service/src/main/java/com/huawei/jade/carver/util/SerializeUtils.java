@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 表示序列化的工具类。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024-06-14
  */
 public class SerializeUtils {

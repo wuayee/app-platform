@@ -9,7 +9,7 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 /**
  * 为系统提供认证器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-15
  */
 public interface Authenticator {

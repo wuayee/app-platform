@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 为 {@link BeanInjector} 提供组合。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class BeanInjectorComposite implements BeanInjector {

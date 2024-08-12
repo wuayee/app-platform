@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link PluginCollection} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-05
  */
 final class DefaultPluginCollection implements PluginCollection {

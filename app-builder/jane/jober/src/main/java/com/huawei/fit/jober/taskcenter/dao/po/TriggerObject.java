@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 任务属性触发ORM数据对象。
  *
- * @author w30020313
+ * @author 王伟
  * @since 2023-08-10
  */
 @Data

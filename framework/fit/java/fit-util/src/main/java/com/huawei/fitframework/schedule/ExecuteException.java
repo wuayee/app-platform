@@ -7,7 +7,7 @@ package com.huawei.fitframework.schedule;
 /**
  * 表示执行过程中发生的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-26
  */
 public class ExecuteException extends RuntimeException {

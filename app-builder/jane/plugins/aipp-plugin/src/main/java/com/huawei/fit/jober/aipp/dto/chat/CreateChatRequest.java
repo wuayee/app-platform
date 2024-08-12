@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 创建会话请求体
  *
- * @author z00597222
+ * @author 翟卉馨
  * @since 2024-05-29
  */
 @Builder

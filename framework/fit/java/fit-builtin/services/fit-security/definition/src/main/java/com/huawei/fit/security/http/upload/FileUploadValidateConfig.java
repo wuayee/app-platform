@@ -9,7 +9,7 @@ import com.huawei.fit.security.http.name.FileNameValidateConfig;
 /**
  * 表示文件上传校验的配置。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-10
  */
 public interface FileUploadValidateConfig {

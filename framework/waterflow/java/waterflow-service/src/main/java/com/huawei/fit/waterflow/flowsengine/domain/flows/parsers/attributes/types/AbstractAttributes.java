@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 图形抽象类.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-05
  */
 public class AbstractAttributes implements Attributes {

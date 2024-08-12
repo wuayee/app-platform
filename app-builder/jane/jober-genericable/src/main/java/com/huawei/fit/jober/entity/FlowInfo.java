@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * 流程信息
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/13
  */
 public class FlowInfo {

@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 /**
  * 表示类文件中的常量池。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class ConstantPool implements Iterable<Constant> {

@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * 表示服务方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-29
  */
 public interface GenericableMethod {

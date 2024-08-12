@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * 流程节点触发类型
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 @Getter

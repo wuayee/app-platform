@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 /**
  * 表示任务的类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-12
  */
 public interface TaskType extends DomainObject {
@@ -108,7 +108,7 @@ public interface TaskType extends DomainObject {
     /**
      * 为任务类型提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-12
      */
     interface Builder extends DomainObject.Builder<TaskType, Builder> {
@@ -157,7 +157,7 @@ public interface TaskType extends DomainObject {
     /**
      * 为 {@link TaskType} 提供声明。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-13
      */
     interface Declaration {
@@ -185,7 +185,7 @@ public interface TaskType extends DomainObject {
         /**
          * 为任务类型的声明提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-09-13
          */
         interface Builder {
@@ -234,7 +234,7 @@ public interface TaskType extends DomainObject {
     /**
      * 为 {@link TaskType} 提供存储能力。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-13
      */
     interface Repo {

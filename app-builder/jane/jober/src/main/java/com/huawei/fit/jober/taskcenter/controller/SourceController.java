@@ -31,7 +31,7 @@ import java.util.Map;
  * 为任务数据源提供 REST 风格 API。
  * TODO 待删除，使用 TaskSourceController 替代。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  * @deprecated 废下个版本删除
  */

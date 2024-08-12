@@ -11,7 +11,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 /**
  * 表示 Http 服务端的带响应的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-08
  */
 public class HttpServerResponseException extends HttpServerException {

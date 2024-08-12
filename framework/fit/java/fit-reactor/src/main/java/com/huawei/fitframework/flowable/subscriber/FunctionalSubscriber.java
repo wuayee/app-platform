@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * 表示使用 Lambda 表达式进行订阅的 {@link Subscriber 订阅者}。
  *
  * @param <T> 表示订阅者订阅的数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 public class FunctionalSubscriber<T> extends AbstractSubscriber<T> {

@@ -22,7 +22,7 @@ import java.util.Collections;
 /**
  * {@link MetaPropertyConverterImpl}的对应测试。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-01-02
  */
 @ExtendWith(MockitoExtension.class)

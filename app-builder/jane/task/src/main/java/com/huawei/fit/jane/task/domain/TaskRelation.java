@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 为任务关联提供数据模型
  *
- * @author lWX1291633
+ * @author 罗书强
  * @since 2023-12-28
  */
 public interface TaskRelation {
@@ -162,7 +162,7 @@ public interface TaskRelation {
     /**
      * 为任务关联提供声明。
      *
-     * @author lWX1291633
+     * @author 罗书强
      * @since 2023-12-29
      */
     interface Declaration {
@@ -225,7 +225,7 @@ public interface TaskRelation {
         /**
          * 为任务关联的声明提供构建器。
          *
-         * @author lWX1291633
+         * @author 罗书强
          * @since 2023-12-29
          */
         interface Builder {
@@ -357,7 +357,7 @@ public interface TaskRelation {
     /**
      * 提供任务关联过滤
      *
-     * @author lWX1291633
+     * @author 罗书强
      * @since 2024-01-03
      */
     interface Filter {
@@ -385,7 +385,7 @@ public interface TaskRelation {
         /**
          * 为任务关联的过滤条件系统构建器。
          *
-         * @author 罗书强 lwx1291633
+         * @author 罗书强
          * @since 2023-11-27
          */
         interface Builder {

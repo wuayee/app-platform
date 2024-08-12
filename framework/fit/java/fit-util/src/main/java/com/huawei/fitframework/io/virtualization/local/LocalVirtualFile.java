@@ -21,7 +21,7 @@ import java.net.URL;
 /**
  * 为 {@link VirtualFile} 提供基于本地文件系统的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-06
  */
 public class LocalVirtualFile implements VirtualFile {

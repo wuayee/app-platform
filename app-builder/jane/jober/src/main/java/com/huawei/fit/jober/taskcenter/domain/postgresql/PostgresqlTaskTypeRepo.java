@@ -57,7 +57,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link TaskType.Repo} 提供基于 Postgresql 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-13
  */
 @Component

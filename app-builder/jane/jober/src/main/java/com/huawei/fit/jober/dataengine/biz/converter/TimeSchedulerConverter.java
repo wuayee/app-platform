@@ -10,7 +10,7 @@ import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 /**
  * 定时任务Converter
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/27
  */
 public interface TimeSchedulerConverter {

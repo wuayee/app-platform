@@ -11,7 +11,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 /**
  * 为 {@link Filter} 提供恒为真的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-15
  */
 public class AlwaysTrueFilter implements Filter {

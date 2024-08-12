@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * 为方法提供JVM指令及辅助信息的属性。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-10
  */
 public final class CodeAttribute extends AbstractAttribute {
@@ -104,7 +104,7 @@ public final class CodeAttribute extends AbstractAttribute {
     /**
      * 为代码提供异常表格定义。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-06-10
      */
     public static final class ExceptionTable {
@@ -204,7 +204,7 @@ public final class CodeAttribute extends AbstractAttribute {
     /**
      * 为异常表格提供列表。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-06-10
      */
     public static final class ExceptionTableList implements Iterable<ExceptionTable> {
@@ -257,7 +257,7 @@ public final class CodeAttribute extends AbstractAttribute {
     /**
      * 获取代码的内容。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-06-10
      */
     public static final class Content implements Iterable<U1> {

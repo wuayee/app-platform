@@ -19,7 +19,7 @@ import java.util.Arrays;
 /**
  * 表示判断在由最小值和最大值限定的有效值域内的过滤器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class BetweenFilter implements Filter {

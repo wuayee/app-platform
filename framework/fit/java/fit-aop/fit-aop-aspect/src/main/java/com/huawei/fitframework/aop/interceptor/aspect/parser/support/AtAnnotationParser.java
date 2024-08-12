@@ -27,7 +27,7 @@ import java.util.Optional;
  *    </li>
  * </ul>
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-14
  */
 public class AtAnnotationParser extends BaseParser {

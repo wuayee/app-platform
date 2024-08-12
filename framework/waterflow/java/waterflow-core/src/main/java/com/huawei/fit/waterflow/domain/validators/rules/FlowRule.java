@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 /**
  * 流程定义校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public interface FlowRule extends Rules {

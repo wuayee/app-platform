@@ -16,7 +16,7 @@ import java.lang.annotation.Annotation;
 /**
  * 表示解析带有 {@link RequestHeader} 注解的参数的 {@link PropertyValueMapperResolver}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-30
  */
 public class RequestHeaderMapperResolver extends AbstractRequestParamMapperResolver {

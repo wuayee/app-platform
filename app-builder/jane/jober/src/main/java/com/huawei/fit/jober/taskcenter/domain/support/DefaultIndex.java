@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 为 {@link Index} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-04
  */
 public class DefaultIndex extends AbstractDomainObject implements Index {
@@ -55,7 +55,7 @@ public class DefaultIndex extends AbstractDomainObject implements Index {
     /**
      * 为 {@link Index.Builder} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-04
      */
     public static class Builder extends AbstractDomainObjectBuilder<Index, Index.Builder> implements Index.Builder {
@@ -93,7 +93,7 @@ public class DefaultIndex extends AbstractDomainObject implements Index {
     /**
      * 为 {@link Index.Declaration} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-04
      */
     public static class Declaration implements Index.Declaration {
@@ -119,7 +119,7 @@ public class DefaultIndex extends AbstractDomainObject implements Index {
         /**
          * 为 {@link Index.Declaration.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2024-01-04
          */
         public static class Builder implements Index.Declaration.Builder {

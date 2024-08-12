@@ -9,7 +9,7 @@ import com.huawei.fitframework.exception.ErrorCode;
 /**
  * 服务器内部异常，用于服务器内部报错。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-07-06
  */
 @ErrorCode(500)

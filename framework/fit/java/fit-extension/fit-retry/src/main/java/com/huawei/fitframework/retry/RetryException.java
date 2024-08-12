@@ -7,7 +7,7 @@ package com.huawei.fitframework.retry;
 /**
  * 表示重试的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-17
  */
 public class RetryException extends RuntimeException {

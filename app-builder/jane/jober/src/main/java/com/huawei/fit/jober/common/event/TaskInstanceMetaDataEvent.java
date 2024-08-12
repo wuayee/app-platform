@@ -11,7 +11,7 @@ import com.huawei.fitframework.event.Event;
 /**
  * 第三方数据TaskInstanceMetaDataEvent
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/21
  */
 public class TaskInstanceMetaDataEvent implements Event {

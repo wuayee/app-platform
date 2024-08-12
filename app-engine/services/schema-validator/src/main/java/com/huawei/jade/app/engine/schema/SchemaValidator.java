@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 根据 Schema 校验数据接口。
  *
- * @author 兰宇晨 l00816134
+ * @author 兰宇晨
  * @since 2024-07-29
  */
 public interface SchemaValidator {

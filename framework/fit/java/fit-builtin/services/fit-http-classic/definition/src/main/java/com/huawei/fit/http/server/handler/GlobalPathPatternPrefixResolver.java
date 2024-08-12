@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * 表示全局路径样式的前缀解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-11
  */
 @FunctionalInterface

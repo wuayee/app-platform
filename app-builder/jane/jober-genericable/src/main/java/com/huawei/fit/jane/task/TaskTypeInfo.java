@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * 表示任务定义中的类型信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-07
  */
 public class TaskTypeInfo {

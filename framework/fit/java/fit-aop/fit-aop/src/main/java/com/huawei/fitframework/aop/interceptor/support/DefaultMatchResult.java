@@ -9,7 +9,7 @@ import com.huawei.fitframework.aop.interceptor.MethodMatcher;
 /**
  * 表示默认的匹配结果。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-28
  */
 public class DefaultMatchResult implements MethodMatcher.MatchResult {

@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 /**
  * Mockito 的 BeanMock 工具类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-31
  */
 public class MockitoMockBean implements MockBean {

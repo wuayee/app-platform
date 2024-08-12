@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 为Bean提供注册入口。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public interface BeanRegistry {

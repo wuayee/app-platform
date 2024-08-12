@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 表示一个动态计算的常量值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class DynamicInfo extends Constant {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.broker.support.DefaultFormat;
 /**
  * 服务提供的序列化方式。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-22
  */
 public interface Format {

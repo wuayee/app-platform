@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * {@link ParamUtils}对应测试类。
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-01 10:21
  */
 @ExtendWith(MockitoExtension.class)

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 /**
  * 指示为指定的 Bean 接收配置数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-06
  */
 @Documented

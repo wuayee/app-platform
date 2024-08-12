@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * 流程定义数据库持久化类
  * 持久化流程定义
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @Getter

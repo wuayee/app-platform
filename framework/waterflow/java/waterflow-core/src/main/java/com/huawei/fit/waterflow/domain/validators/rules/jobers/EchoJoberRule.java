@@ -13,7 +13,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 节点自动任务校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class EchoJoberRule implements JoberRule {

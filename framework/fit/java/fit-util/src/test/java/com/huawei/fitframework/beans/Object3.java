@@ -7,7 +7,7 @@ package com.huawei.fitframework.beans;
 /**
  * 表示测试对象 3。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-27
  */
 public class Object3 {

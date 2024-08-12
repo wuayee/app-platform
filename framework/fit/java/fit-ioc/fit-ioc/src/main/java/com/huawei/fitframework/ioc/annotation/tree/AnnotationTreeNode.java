@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 为注解树提供节点定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-07
  */
 public interface AnnotationTreeNode extends AnnotationTreeNodeContainer {

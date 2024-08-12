@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * 表示 {@link NamedEntity} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public class DefaultNamedEntity extends AbstractEntity implements NamedEntity {

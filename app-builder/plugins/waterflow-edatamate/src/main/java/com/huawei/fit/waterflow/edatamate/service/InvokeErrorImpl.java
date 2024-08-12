@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 抛类型不支持异常的实现
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/2/1
  */
 @Component

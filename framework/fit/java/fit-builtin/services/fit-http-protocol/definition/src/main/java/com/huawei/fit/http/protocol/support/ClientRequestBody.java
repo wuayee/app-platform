@@ -16,7 +16,7 @@ import java.io.OutputStream;
 /**
  * 表示 {@link WritableMessageBody} 在 {@link ClientRequest} 中的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-19
  */
 public class ClientRequestBody extends OutputStream implements WritableMessageBody {

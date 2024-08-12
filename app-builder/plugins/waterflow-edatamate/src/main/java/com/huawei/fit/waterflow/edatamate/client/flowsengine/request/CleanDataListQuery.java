@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 分页查询清洗列表request body
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/2/23
  */
 @Component

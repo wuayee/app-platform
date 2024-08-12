@@ -9,7 +9,7 @@ import com.huawei.fitframework.serialization.RequestMetadata;
 /**
  * 用于转发并处理请求
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2020-04-27
  */
 public interface Dispatcher {

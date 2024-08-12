@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 /**
  * Junit5 的自定义扩展类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 易文渊
  * @since 2023-02-01
  */

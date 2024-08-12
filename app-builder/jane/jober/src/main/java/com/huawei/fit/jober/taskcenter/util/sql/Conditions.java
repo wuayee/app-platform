@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Condition} 接口提供补充能力。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-25
  */
 class Conditions {

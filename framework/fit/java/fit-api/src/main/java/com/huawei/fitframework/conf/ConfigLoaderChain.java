@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 为 {@link ConfigChain} 提供组合模式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-16
  */
 public interface ConfigLoaderChain extends ConfigLoader {

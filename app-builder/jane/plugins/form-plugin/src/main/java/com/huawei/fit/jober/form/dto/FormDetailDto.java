@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 表单信息Dto, 字段与{@link DynamicFormDetailEntity}相同, @JSONProperty注解暂无法跨包使用
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2023-12-21
  */
 @Data

@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 为Maven归档件提供坐标。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-11-20
  */
 public interface MavenCoordinate {
@@ -43,7 +43,7 @@ public interface MavenCoordinate {
     /**
      * 为 {@link MavenCoordinate} 提供构建器。
      *
-     * @author 梁济时 00298979
+     * @author 梁济时
      * @since 2020-11-20
      */
     interface Builder {

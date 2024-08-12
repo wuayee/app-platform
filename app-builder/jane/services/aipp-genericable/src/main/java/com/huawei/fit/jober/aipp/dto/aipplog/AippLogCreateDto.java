@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * 创建aipp实例历史记录参数
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 @Builder

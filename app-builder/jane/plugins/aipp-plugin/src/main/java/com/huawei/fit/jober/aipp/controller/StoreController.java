@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Store 相关接口
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-13
  */
 @Component

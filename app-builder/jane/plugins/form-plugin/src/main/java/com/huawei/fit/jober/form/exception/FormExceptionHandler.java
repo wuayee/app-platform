@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * 动态表单通用异常处理。 fit框架优先执行 Scope.PLUGIN，其次Scope.GLOBAL
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-02-06
  */
 @Component

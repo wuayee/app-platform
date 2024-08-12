@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 表示 {@link ParameterizedTypeResolvingResult} 的失败的解析结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 public class ParameterizedTypeResolvingFailureResult implements ParameterizedTypeResolvingResult {

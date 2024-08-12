@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 /**
  * 为任务树提供校验。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-17
  */
 public interface TreeValidator {

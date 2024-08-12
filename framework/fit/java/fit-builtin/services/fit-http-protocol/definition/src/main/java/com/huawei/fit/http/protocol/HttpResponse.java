@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.support.DefaultHttpResponse;
 /**
  * 表示 Http 的响应。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-28
  */
 public interface HttpResponse {

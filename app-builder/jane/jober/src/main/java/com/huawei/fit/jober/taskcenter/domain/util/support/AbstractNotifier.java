@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * 为通知程序提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public abstract class AbstractNotifier {

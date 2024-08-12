@@ -10,7 +10,7 @@ import lombok.Setter;
 /**
  * ID生成器抽象类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public abstract class IdGenerator implements Identity {

@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * 用于对外发送 Http 请求的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-19
  */
 @Disabled

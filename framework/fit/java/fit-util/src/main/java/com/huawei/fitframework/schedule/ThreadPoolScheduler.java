@@ -12,7 +12,7 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 表示线程池化的调度器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-15
  */
 public interface ThreadPoolScheduler extends ThreadPool {

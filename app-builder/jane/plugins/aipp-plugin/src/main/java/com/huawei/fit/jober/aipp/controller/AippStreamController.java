@@ -21,7 +21,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * aipp-websocket流式接口.
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024-005-14
  */
 @WebSocketEndpoint(path = "/v1/api/aipp/wsStream")

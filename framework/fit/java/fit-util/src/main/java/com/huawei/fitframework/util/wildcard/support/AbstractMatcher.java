@@ -16,7 +16,7 @@ import com.huawei.fitframework.util.wildcard.SymbolType;
  * 为匹配程序提供基类。
  *
  * @param <T> 表示所匹配的内容中元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-28
  */
 public abstract class AbstractMatcher<T> implements Matcher<T> {

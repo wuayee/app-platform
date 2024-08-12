@@ -14,7 +14,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * store jober的规则
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/5/8
  */
 public class StoreJoberRule implements JoberRule {

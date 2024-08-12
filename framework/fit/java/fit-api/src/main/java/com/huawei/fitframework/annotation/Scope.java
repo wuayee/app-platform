@@ -7,7 +7,7 @@ package com.huawei.fitframework.annotation;
 /**
  * 表示组件生效范围的枚举类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-07-17
  */
 public enum Scope {

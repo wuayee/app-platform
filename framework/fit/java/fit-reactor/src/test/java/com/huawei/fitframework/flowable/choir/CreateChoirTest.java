@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 /**
  * 表示 {@link Choir#create(Consumer)} 的单元测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-15
  */
 @DisplayName("测试通过 create 方法创建的 Choir")

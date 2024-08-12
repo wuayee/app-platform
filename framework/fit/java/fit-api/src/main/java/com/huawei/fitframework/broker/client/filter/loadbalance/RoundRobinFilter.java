@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * </ul>
  * </p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-06-11
  */
 public class RoundRobinFilter extends ChampionFilter {

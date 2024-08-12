@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.domain.utils;
 /**
  * ID生成器接口
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 @FunctionalInterface

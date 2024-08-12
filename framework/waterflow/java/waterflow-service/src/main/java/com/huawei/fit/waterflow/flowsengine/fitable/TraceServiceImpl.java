@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * 流程实例回调关于流程信息推送的实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-05-24
  */
 @Component

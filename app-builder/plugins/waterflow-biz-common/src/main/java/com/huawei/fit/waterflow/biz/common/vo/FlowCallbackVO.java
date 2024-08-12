@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * 流程定义节点回调函数类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-28
  */
 @Getter

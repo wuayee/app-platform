@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示格式样例的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-26
  */
 public abstract class AbstractSchema implements Schema {

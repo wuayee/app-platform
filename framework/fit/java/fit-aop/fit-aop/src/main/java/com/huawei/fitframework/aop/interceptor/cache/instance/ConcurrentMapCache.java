@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * 表示 {@link com.huawei.fitframework.cache.Cache} 的 {@link ConcurrentHashMap} 的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public class ConcurrentMapCache extends AbstractCache {

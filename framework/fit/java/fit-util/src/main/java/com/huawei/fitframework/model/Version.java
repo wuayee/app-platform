@@ -11,8 +11,8 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为应用程序提供版本信息的定义。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2021-10-11
  */
 public interface Version extends Comparable<Version> {

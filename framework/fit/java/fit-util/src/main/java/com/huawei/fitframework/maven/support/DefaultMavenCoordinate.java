@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 为 {@link MavenCoordinate} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-18
  */
 public final class DefaultMavenCoordinate implements MavenCoordinate {

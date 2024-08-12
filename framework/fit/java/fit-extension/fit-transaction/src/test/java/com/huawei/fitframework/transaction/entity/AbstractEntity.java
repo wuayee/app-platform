@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 /**
  * 为数据实体提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-27
  */
 public class AbstractEntity {
@@ -139,7 +139,7 @@ public class AbstractEntity {
     /**
      * 为数据提供基于数据库连接的更新程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-27
      */
     @FunctionalInterface
@@ -157,7 +157,7 @@ public class AbstractEntity {
      * 为数据提供基于数据库连接的检索程序。
      *
      * @param <T> 表示待检索的数据的类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-27
      */
     @FunctionalInterface
@@ -176,7 +176,7 @@ public class AbstractEntity {
      * 为从结果集中读取数据提供读取程序。
      *
      * @param <T> 表示数据的类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-27
      */
     @FunctionalInterface

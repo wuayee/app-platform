@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  * 表示拥有 {@code 0 - 1} 个数据的数据流的发布者。
  *
  * @param <T> 表示数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-11
  */
 public interface Solo<T> extends Publisher<T> {

@@ -62,7 +62,7 @@ import java.util.stream.Stream;
 /**
  * 表示处理 FIT WebSocket 通信请求的控制器。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-06
  */
 @WebSocketEndpoint(path = "/fit/{genericableId}/{fitableId}")

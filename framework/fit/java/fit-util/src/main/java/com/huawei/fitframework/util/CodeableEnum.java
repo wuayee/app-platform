@@ -18,7 +18,7 @@ import java.util.Objects;
  * <p>在定义过程中应保证唯一标识和编号均在枚举中唯一。</p>
  *
  * @param <T> 表示枚举的实际类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public interface CodeableEnum<T extends Enum<T> & CodeableEnum<T>> {

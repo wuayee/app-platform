@@ -10,7 +10,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示 FIT 调用的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-18
  */
 public class FitExecutionException extends ScriptExecutionException {

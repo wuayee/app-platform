@@ -14,8 +14,8 @@ import java.lang.reflect.Method;
 /**
  * 将带有 {@link After} 注解的方法包装成 {@link AdviceMethodInterceptor}。
  *
- * @author 季聿阶 j00559309
- * @author 郭龙飞 gwx900499
+ * @author 季聿阶
+ * @author 郭龙飞
  * @since 2022-05-14
  */
 public class AspectAfterInterceptorFactory extends AbstractAspectInterceptorFactory {

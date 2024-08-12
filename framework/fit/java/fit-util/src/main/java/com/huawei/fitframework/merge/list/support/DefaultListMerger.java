@@ -21,7 +21,7 @@ import java.util.List;
  * 处理 {@link List} 的合并器。
  *
  * @param <E> 表示 {@link List} 中元素类型的 {@link E}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-10
  */
 public class DefaultListMerger<E> extends AbstractMerger<List<E>> implements ListMerger<E> {

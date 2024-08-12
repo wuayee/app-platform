@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * {@link InstanceValidatorImpl}对应测试类。
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-02 14:26
  */
 class InstanceValidatorImplTest {

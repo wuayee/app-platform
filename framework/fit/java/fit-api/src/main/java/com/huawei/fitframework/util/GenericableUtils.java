@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * 泛服务的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-17
  */
 public class GenericableUtils {

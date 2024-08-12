@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 任务处理接口
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/9/15
  */
 public interface Operator {

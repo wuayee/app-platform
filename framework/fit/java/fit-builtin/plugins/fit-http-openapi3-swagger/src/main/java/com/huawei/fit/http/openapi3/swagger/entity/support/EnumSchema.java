@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link Schema} 的枚举实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-25
  */
 public class EnumSchema extends AbstractSchema {

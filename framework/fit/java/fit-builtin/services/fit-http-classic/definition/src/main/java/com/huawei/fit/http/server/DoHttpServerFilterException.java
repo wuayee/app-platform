@@ -10,7 +10,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
  * 表示执行 {@link HttpServerFilter#doFilter(HttpClassicServerRequest, HttpClassicServerResponse,
  * HttpServerFilterChain)} 过程中发生的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-18
  */
 public class DoHttpServerFilterException extends HttpServerResponseException {

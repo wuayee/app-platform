@@ -22,7 +22,7 @@ import java.util.function.BinaryOperator;
 /**
  * 服务调用器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-06-11
  */
 public interface Invoker {

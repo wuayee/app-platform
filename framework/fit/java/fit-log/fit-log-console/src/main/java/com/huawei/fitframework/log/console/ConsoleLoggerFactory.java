@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 表示 {@link LoggerFactory} 的控制台实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-13
  */
 public class ConsoleLoggerFactory implements LoggerFactory {

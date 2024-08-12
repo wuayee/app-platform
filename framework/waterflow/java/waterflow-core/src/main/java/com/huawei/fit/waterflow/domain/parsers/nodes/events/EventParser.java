@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 /**
  * 流程中event解析类
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public class EventParser {

@@ -11,7 +11,7 @@ import com.huawei.fit.jane.Undefinable;
 /**
  * MetaTemplate属性声明信息结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-04
  */
 public class MetaTemplatePropertyDeclarationInfo {

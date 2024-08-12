@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * 为工具插件提供编译程序。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-13
  */
 public class ToolPluginCompiler extends AbstractCompiler {

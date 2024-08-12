@@ -9,7 +9,7 @@ import com.huawei.fitframework.ioc.BeanMetadata;
 /**
  * 为Bean提供生命周期定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public interface BeanLifecycle extends BeanCreator, BeanDecorator, BeanInjector, BeanInitializer, BeanDestroyer {

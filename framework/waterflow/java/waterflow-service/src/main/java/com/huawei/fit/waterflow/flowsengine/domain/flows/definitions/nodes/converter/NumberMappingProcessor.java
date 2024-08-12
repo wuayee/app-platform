@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 数字类型的数据生成，对应Double类型
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/19
  */
 public class NumberMappingProcessor extends AbstractMappingProcessor {

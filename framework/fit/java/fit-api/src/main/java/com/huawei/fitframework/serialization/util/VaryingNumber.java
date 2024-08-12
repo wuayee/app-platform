@@ -20,7 +20,7 @@ import java.util.Arrays;
  * <p>1 个字节最多表示的数字范围是 {@code 0 - 127}，即最大 {@code 0x7F}。</p>
  * <p>2 个字节最多表示的数字范围是 {@code 128 - 16383}，即最大 {@code 0x3FFF}。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-12
  */
 public class VaryingNumber extends Number implements Comparable<VaryingNumber> {

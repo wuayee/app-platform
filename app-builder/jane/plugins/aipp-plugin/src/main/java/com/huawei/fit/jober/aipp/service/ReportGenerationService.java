@@ -9,7 +9,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 生成报告接口类。
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2024-06-15
  */
 public interface ReportGenerationService {

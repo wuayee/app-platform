@@ -19,7 +19,7 @@ import java.util.List;
  * @param <K> 表示冲突键的类型的 {@link K}。
  * @param <V> 表示待处理冲突的值的类型的 {@link V}。
  * @param <C> 表示冲突上下文类型的 {@link C}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 @FunctionalInterface

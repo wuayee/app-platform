@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 模型的服务接口类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-07
  */
 public interface HuggingFaceModelService {

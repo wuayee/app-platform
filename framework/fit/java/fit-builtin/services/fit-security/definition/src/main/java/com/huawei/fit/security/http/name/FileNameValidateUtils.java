@@ -12,7 +12,7 @@ import com.huawei.fit.security.http.name.support.DefaultFileNameValidator;
 /**
  * 为文件名校验提供工具方法。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-18
  */
 public final class FileNameValidateUtils {

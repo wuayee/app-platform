@@ -52,7 +52,7 @@ import java.util.Locale;
 /**
  * 大模型服务实现类
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-05-10
  */
 @Component

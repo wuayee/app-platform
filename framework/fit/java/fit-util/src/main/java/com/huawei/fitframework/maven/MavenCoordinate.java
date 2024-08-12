@@ -13,7 +13,7 @@ import java.io.InputStream;
 /**
  * 表示 Maven 坐标。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-18
  */
 public interface MavenCoordinate {

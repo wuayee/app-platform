@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 当依赖的定义不正确时抛出的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-29
  */
 public class DependencyDefinitionException extends DependencyException {

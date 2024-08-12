@@ -12,7 +12,7 @@ import java.util.Set;
  * 表示 URI 中的各个组件的类型。
  * <p>该类型参考了 RFC 3986。/p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc3986">RFC 3986</a>
  * @since 2022-12-23
  */

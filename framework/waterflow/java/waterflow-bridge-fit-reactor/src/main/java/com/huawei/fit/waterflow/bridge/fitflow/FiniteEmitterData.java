@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.bridge.fitflow;
 /**
  * 有限流的data需要实现该接口，并提供以下方法
  *
- * @author x00576283
+ * @author 夏斐
  * @since 1.0
  */
 public interface FiniteEmitterData {

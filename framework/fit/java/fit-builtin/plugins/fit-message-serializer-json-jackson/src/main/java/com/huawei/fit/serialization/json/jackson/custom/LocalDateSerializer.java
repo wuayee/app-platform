@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 表示 {@link LocalDate} 类型的自定义序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-21
  */
 public class LocalDateSerializer extends JsonSerializer<LocalDate> {

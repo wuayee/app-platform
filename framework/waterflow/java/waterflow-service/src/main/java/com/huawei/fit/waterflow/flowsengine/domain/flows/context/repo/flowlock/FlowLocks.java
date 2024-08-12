@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 流程实例的锁接口
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/11/07
  */
 public interface FlowLocks {

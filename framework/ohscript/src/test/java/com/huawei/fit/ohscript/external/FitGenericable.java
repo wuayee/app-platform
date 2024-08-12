@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 用于测试的 FIT 泛服务接口。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-23
  */
 public interface FitGenericable {

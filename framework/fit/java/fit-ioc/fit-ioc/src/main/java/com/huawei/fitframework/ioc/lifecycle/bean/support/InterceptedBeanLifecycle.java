@@ -12,7 +12,7 @@ import com.huawei.fitframework.ioc.lifecycle.bean.BeanLifecycleInterceptor;
 /**
  * 为 {@link BeanLifecycle} 提供基于拦截程序的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class InterceptedBeanLifecycle implements BeanLifecycle {

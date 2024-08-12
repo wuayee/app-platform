@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows;
 /**
  * InterStreamHandler
  *
- * @author z00544938
+ * @author 张群辉
  * @since 2024/01/22
  */
 public interface InterStreamHandler<D> {

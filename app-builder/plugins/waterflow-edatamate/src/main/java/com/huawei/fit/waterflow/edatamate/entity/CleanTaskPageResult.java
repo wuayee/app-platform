@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 清洗任务结果
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/2/2
  */
 @Setter

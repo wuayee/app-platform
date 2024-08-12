@@ -7,7 +7,7 @@ package com.huawei.fitframework.io.virtualization;
 /**
  * 为虚拟文件系统提供元素。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-01
  */
 public interface VirtualFileSystemElement {

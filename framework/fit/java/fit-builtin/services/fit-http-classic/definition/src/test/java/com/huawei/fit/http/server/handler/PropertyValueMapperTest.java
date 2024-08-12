@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link PropertyValueMapper } 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-20
  */
 @DisplayName("测试 PropertyValueMapper 类")

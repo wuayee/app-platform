@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 /**
  * 表示上传文件的控制器。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-07-11
  */
 @Component

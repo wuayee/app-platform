@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation;
 /**
  * 任务中心校验器统一接口。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-15
  */
 public interface Validator {

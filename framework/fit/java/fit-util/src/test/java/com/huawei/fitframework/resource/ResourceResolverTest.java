@@ -38,7 +38,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * 表示 {@link ResourceResolver} 的单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-21
  */
 @DisplayName("测试 ResourceResolver 类")

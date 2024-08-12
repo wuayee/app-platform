@@ -10,7 +10,7 @@ import java.util.List;
  * 表示分页结果集。
  *
  * @param <T> 表示分页结果集中包含数据记录的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-12
  */
 public interface PagedResultSet<T> {

@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 /**
  * 表示异步执行的方法拦截器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-11
  */
 public class AsyncInterceptor extends AbstractMethodInterceptor {

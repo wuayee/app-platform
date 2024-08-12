@@ -22,7 +22,7 @@ import java.util.Locale;
 /**
  * 为 FIT 应用提供启动程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-10
  */
 public class DiscreteFitLauncher {

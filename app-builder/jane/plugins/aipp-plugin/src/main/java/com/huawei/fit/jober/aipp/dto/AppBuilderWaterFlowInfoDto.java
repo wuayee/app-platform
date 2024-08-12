@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * AppBuilder waterFlow列表返回数据结构
  *
- * @author 陈潇文 c00816135
+ * @author 陈潇文
  * @since 2024-05-15
  */
 @Data

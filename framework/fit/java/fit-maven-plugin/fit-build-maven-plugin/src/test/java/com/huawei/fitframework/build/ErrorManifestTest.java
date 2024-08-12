@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 表示 {@link ErrorManifest} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-18
  */
 @DisplayName("测试 ErrorMetadata 类")

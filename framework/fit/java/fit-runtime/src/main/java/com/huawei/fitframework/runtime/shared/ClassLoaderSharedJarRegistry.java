@@ -18,7 +18,7 @@ import java.net.URLClassLoader;
 /**
  * 为 {@link SharedJarRegistry} 提供基于 {@link ClassLoader} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-27
  */
 public class ClassLoaderSharedJarRegistry implements SharedJarRegistry {

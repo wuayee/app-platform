@@ -9,7 +9,7 @@ import com.huawei.fitframework.broker.UniqueFitableId;
 /**
  * 本地进程的所有服务信息的缓存。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-11-22
  */
 public interface LocalFitableCache {

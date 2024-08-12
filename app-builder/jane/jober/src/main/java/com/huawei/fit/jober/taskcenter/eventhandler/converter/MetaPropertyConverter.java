@@ -10,7 +10,7 @@ import com.huawei.fit.jane.task.domain.TaskProperty;
 /**
  * Meta属性的转换类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-26
  */
 public interface MetaPropertyConverter {

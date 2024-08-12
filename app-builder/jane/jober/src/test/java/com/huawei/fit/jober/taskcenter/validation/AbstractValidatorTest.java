@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link AbstractValidator}对应测试类。
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-01 12:34
  */
 class AbstractValidatorTest {

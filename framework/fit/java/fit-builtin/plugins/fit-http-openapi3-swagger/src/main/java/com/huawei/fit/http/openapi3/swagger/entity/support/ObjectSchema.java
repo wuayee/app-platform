@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link Schema} 的对象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-25
  */
 public class ObjectSchema extends AbstractSchema {

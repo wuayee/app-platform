@@ -13,7 +13,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示数据来源器的相关信息。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-02-17
  */
 public class SourceFetcherInfo {

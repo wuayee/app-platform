@@ -11,7 +11,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 /**
  * 任务实例更新事件。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-23
  */
 public class TaskInstanceModifyingEvent extends TaskInstanceDeclaringEvent {

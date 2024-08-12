@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 表示本地执行器的解析器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-09-03
  */
 @FunctionalInterface
@@ -63,7 +63,7 @@ public interface LocalExecutorResolver {
     /**
      * 为 {@link LocalExecutorResolver} 提供工厂。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-09-24
      */
     @FunctionalInterface

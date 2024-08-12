@@ -19,7 +19,7 @@ import java.sql.Savepoint;
  * <p>嵌套事务必须在一个拥有后端事务的父事务中使用。</p>
  * <p>嵌套事务通过数据库连接的 {@code savepoint} 能力来实现。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-25
  */
 public final class NestedTransaction extends AbstractTransaction {

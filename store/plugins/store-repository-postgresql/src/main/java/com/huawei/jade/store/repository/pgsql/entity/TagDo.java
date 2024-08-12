@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 /**
  * 存入数据库的标签的实体类。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/5/10
  */
 @Data

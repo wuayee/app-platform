@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
  * token都关联了一个正则表达式，用来匹配input string
  * 匹配成功的token type会结合匹配的字符串形成一个Token对象
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public enum Terminal implements NodeType, Serializable {
     END("\\$"),

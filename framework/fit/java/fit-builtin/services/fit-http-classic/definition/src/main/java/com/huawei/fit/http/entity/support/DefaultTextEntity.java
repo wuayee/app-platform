@@ -16,7 +16,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * {@link Entity} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class DefaultTextEntity extends AbstractEntity implements TextEntity {

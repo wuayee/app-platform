@@ -16,7 +16,7 @@ import java.io.InputStream;
 /**
  * {@link ReadableMessageBody} 的抽象类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-03
  */
 public abstract class AbstractReadableMessageBody extends InputStream implements ReadableMessageBody {

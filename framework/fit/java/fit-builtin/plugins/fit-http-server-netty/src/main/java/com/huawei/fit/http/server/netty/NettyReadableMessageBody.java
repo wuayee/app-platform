@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 表示 Netty 服务器的请求消息体。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-30
  */
 public abstract class NettyReadableMessageBody extends AbstractReadableMessageBody

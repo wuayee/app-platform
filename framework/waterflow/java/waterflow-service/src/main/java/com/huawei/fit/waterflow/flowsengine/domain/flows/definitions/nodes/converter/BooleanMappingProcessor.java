@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * boolean类型的数据生成
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/18
  */
 public class BooleanMappingProcessor extends AbstractMappingProcessor {

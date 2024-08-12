@@ -12,7 +12,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 /**
  * 表示 FIT 调用的执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-18
  */
 @FunctionalInterface

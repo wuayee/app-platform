@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * 随机的负载均衡策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-06-11
  */
 public class RandomFilter extends ChampionFilter {

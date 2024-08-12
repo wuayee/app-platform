@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 表示捕获异常的重试条件。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-02-25
  */
 public class ExceptionCondition implements Condition {

@@ -13,7 +13,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * 应用组件属性仓库实现类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 @Component

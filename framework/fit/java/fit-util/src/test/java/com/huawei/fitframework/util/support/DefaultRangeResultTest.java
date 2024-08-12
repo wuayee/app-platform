@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link DefaultRangeResult} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class DefaultRangeResultTest {

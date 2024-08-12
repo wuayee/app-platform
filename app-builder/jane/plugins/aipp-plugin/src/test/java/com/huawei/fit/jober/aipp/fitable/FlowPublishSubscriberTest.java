@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * publishSubscriber测试用例.
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024-07-29
  */
 @ExtendWith(MockitoExtension.class)

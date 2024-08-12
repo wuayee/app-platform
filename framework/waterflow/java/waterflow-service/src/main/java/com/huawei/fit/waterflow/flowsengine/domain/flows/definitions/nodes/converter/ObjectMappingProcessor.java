@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 对象类型的数据生成，对应Map<String, Object>类型
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/19
  */
 public class ObjectMappingProcessor extends AbstractMappingProcessor {

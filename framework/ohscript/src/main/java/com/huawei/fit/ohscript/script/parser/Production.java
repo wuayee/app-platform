@@ -18,8 +18,8 @@ import java.util.function.Consumer;
  * 表示一个产生式规则，即一个非终结符可以被替换为的一系列符号
  * right side of a grammar: left non-terminal-> right production
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public class Production implements Iterable<Symbol> {
     /**

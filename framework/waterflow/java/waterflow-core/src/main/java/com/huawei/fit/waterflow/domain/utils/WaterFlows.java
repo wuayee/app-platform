@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 如果已经存在则直接返回，否则需要将FlowDefinition转换WaterFlow，并保存下来
  * 后续需要提供删除功能：流程定义删除时，对应的Lock和WaterFlow都要删除
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public final class WaterFlows {

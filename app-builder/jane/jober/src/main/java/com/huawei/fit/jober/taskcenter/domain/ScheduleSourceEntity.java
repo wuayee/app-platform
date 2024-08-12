@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 表示通过定时任务同步数据的数据源。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 @Data

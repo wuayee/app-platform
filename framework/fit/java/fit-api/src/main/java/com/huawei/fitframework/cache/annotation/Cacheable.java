@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  *     <li>如果有缓存，则直接使用缓存作为结果返回。</li>
  * </ul></p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 @Documented

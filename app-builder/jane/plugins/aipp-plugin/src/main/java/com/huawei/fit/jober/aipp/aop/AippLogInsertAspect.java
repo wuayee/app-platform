@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * 日志插入注解.
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024-05-15
  */
 @Aspect

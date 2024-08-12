@@ -23,8 +23,8 @@ import java.util.Objects;
 /**
  * 为 {@link BrokerClient} 提供默认实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-08-19
  */
 public class DefaultBrokerClient implements BrokerClient {

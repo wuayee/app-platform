@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * execute 表达式正则匹配。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-10
  */
 public class ExecuteExpression {

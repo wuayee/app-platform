@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * {@link BeanFactory} 的 {@link Order} 排序器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-06-26
  */
 public class BeanFactoryOrderComparator implements Comparator<BeanFactory> {

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 用以判定指定列是否在有效值域内的条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-21
  */
 public class InCondition extends AbstractBinaryCondition {

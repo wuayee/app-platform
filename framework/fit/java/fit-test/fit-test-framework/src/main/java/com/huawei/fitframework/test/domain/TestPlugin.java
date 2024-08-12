@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * 测试框架使用的插件类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-17
  */
 public class TestPlugin extends AbstractRootPlugin implements Plugin {

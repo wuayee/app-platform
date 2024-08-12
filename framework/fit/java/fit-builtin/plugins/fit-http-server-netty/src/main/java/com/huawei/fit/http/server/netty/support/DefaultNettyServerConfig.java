@@ -11,7 +11,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * {@link NettyHttpServerConfig} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-11
  */
 @Component

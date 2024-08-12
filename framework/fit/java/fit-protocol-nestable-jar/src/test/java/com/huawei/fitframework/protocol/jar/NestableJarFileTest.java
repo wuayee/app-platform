@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link NestableJarFile} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-01-17
  */
 @DisplayName("测试 NestableJarFile 工具类")

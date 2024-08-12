@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 灵感大全获取历史记录表单中的QA对
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-04-25
  */
 @Component

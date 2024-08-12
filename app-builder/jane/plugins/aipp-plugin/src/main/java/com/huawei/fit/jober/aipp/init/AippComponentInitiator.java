@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * aipp流程和表单组件初始化
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-06
  */
 @Component

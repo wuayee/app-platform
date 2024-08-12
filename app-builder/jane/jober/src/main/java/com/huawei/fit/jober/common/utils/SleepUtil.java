@@ -9,7 +9,7 @@ import com.huawei.fitframework.log.Logger;
 /**
  * SleepUtil 用于睡眠或延迟操作的工具类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/7/18
  */
 public class SleepUtil {

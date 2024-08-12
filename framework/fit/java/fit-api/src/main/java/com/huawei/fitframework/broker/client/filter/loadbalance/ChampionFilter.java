@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 只选择一个调用地址的负载均衡策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-06-17
  */
 public abstract class ChampionFilter extends AbstractFilter {

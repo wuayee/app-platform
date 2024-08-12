@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link FileSizeUploadValidator} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-16
  */
 @DisplayName("测试文件大小校验器")

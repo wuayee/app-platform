@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 表示可读可写的 Http 消息头集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-07
  */
 public interface ConfigurableMessageHeaders extends MessageHeaders {

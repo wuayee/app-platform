@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 为布尔值提供数据转换器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-23
  */
 public class BooleanConverter extends AbstractScalarDataConverter {

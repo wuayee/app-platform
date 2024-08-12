@@ -13,7 +13,7 @@ import com.huawei.fitframework.plugin.Plugin;
 /**
  * 为实例事件提供通知程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-05
  */
 public interface InstanceEventNotifier extends Runnable {

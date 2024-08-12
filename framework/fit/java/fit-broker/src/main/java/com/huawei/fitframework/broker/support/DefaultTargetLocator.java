@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 /**
  * {@link TargetLocator} 的默认实现。
  *
- * @author 梁济时 l00815032
- * @author 张越 z00559346
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 张越
+ * @author 季聿阶
  * @since 2020-09-02
  */
 public class DefaultTargetLocator implements TargetLocator {

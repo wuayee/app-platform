@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Config} 提供组合模式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-18
  */
 public class DefaultConfigChain extends AbstractConfig implements ConfigChain {

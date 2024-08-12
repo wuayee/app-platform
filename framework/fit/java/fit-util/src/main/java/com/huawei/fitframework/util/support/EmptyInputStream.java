@@ -12,7 +12,7 @@ import java.io.InputStream;
 /**
  * 为 {@link InputStream} 提供空的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-28
  */
 public final class EmptyInputStream extends InputStream {

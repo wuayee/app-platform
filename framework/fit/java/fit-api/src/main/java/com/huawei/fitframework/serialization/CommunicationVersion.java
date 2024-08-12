@@ -16,7 +16,7 @@ import java.util.Queue;
 /**
  * 表示 FIT 通讯协议的版本。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-18
  */
 public interface CommunicationVersion {

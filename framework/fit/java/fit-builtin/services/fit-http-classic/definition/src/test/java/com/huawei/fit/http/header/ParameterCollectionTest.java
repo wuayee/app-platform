@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * 表示 {@link ParameterCollection} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-15
  */
 @DisplayName("测试 ParameterCollection 类")

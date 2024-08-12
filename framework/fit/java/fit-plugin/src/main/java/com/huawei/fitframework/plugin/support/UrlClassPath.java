@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link URL} 的类路径。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-01
  */
 public class UrlClassPath {

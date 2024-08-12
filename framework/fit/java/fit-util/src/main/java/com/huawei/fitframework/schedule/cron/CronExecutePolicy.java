@@ -21,7 +21,7 @@ import java.util.TimeZone;
 /**
  * 表示 Cron 表达式的执行策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://en.wikipedia.org/wiki/Cron">CRON</a>
  * @since 2022-11-15
  */

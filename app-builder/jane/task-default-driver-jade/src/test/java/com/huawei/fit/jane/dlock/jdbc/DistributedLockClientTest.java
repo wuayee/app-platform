@@ -38,7 +38,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 分布式锁核心测试类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/01
  */
 @DisplayName("分布式锁中核心测试集合")

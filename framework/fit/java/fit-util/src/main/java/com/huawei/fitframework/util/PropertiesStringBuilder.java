@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  *     <li>去掉生成时间的注释，避免不同时刻生成的内容存在差异。</li>
  * </ol>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-11-05
  */
 public class PropertiesStringBuilder {

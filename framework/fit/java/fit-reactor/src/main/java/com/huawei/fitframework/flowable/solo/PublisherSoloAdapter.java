@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 表示 {@link Solo} 的指定 {@link Publisher} 的适配。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-09
  */
 public class PublisherSoloAdapter<T> extends AbstractSolo<T> {
@@ -42,7 +42,7 @@ public class PublisherSoloAdapter<T> extends AbstractSolo<T> {
      * <p>能够限制向 {@link Subscriber} 发送元素的数量，并在恰当的时机发送正常终结信号。</p>
      *
      * @param <T> 表示响应式流中元素类型的 {@link T}。
-     * @author 何天放 h00679269
+     * @author 何天放
      * @since 2024-05-06
      */
     private static class PublisherAdapterSubscription<T> extends AbstractSubscription implements WorkerObserver<T> {

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * 表示 OpenAPI 规范中 {@link com.huawei.fit.http.openapi3.swagger.entity.Schema} 类型的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-26
  */
 public class SchemaTypeUtils {

@@ -10,7 +10,7 @@ import com.huawei.fit.jober.entity.OperationContext;
 /**
  * 找不到资源异常类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-08
  */
 public class NotFoundException extends JobberException {

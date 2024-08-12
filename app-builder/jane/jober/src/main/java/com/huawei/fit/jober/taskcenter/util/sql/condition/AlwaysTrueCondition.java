@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示恒为真的查询条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class AlwaysTrueCondition implements Condition {

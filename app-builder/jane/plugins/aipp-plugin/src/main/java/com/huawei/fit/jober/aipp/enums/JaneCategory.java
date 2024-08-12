@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.enums;
 /**
  * 玉简类别枚举类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-24
  */
 public enum JaneCategory {

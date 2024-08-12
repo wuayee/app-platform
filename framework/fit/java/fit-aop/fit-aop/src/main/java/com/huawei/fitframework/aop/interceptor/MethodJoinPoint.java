@@ -10,7 +10,7 @@ import com.huawei.fitframework.inspection.Nullable;
 /**
  * 表示运行时的方法连接点。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-05
  */
 public interface MethodJoinPoint {

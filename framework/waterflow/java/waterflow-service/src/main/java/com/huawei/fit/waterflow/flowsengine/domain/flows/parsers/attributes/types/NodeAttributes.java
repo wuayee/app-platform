@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * 编排 node.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-05
  */
 public class NodeAttributes extends AbstractAttributes {

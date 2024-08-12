@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 聊天记录上传结构体
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024/3/21
  */
 @Data

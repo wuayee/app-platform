@@ -12,7 +12,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 节点通用型回调函数校验规则
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/11
  */
 public class GeneralCallbackRule implements CallbackRule {

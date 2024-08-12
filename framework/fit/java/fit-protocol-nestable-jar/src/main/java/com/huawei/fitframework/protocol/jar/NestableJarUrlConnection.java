@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * 为 {@link JarURLConnection} 提供基于 {@link NestableJarFile} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-25
  */
 public class NestableJarUrlConnection extends JarURLConnection {

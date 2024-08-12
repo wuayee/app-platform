@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 表示每小时中的分钟的字段。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-02
  */
 public class MinuteOfHourCronField extends AbstractCronField {

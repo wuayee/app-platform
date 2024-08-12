@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 /**
  * {@link JoinPoint} 和 {@link JoinPoint.StaticPart} 的 Aspect 实现。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-23
  */
 public class DefaultJoinPoint implements JoinPoint, JoinPoint.StaticPart {

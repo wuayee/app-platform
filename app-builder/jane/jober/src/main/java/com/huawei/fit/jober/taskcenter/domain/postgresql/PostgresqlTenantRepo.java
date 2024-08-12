@@ -56,7 +56,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Tenant.Repo} 提供基于 Postgresql 的实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-11
  */
 @Component

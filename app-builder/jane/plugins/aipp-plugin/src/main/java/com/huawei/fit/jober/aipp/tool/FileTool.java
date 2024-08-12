@@ -9,7 +9,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 文件工具类。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-05-30
  */
 public interface FileTool {

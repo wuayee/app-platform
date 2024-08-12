@@ -21,7 +21,7 @@ import java.util.List;
  * 表示 {@link Publisher} 的将数据按指定大小进行分组的实现。
  *
  * @param <T> 表示发布者中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-14
  */
 public class BufferPublisherDecorator<T> implements Publisher<List<T>> {

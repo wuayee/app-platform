@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * 表示 {@link NettyHttpClassicServer} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-23
  */
 @DisplayName("测试 NettyHttpClassicServer 类")

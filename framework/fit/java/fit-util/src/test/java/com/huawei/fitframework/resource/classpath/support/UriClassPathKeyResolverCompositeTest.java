@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 /**
  * {@link UriClassPathKeyResolverComposite} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-28
  */
 @DisplayName("测试 UriClassPathKeyResolverComposite 类以及相关类")

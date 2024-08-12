@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * {@link NaiveRAGComponent}的测试集
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024-04-26
  */
 @ExtendWith(MockitoExtension.class)

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 表达式解析器。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-10
  */
 public interface PointcutParser {

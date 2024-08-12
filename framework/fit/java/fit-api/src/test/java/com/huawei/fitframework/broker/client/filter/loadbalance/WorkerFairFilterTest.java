@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * {@link WorkerFairFilter} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-03-21
  */
 @DisplayName("验证服务实现所在的所有进程都调用1次的负载均衡的过滤器")

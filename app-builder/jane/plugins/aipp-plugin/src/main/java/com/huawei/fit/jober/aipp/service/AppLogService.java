@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 开始节点历史记录选择Genericable
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-04-20
  */
 public interface AppLogService {
@@ -25,7 +25,7 @@ public interface AppLogService {
      * @param aippType 应用类型
      * @param context 操作上下文
      * @return 返回自定义日志列表
-     * @author 孙怡菲 s00664640
+     * @author 孙怡菲
      * @since 2024-04-20
      */
     @Genericable(id = "68dc66a6185cf64c801e55c97fc500e4")

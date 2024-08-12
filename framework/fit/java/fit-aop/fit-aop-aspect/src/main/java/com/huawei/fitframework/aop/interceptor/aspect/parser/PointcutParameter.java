@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop.interceptor.aspect.parser;
 /**
  * 参数类型信息。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public interface PointcutParameter {

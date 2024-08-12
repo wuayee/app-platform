@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 表示 {@link Publisher} 的计算数据数量并将数量转换为一个响应式流的实现。
  *
  * @param <T> 表示发布者中数据类型的 {@link T}。
- * @author 黄夏露 h00804153
+ * @author 黄夏露
  * @since 2024-03-04
  */
 public class CountPublisherDecorator<T> implements Publisher<Long> {

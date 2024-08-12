@@ -11,7 +11,7 @@ import com.huawei.fitframework.aop.interceptor.async.AsyncMethodMatcherFactory;
 /**
  * 表示 {@link AsyncMethodMatcherFactory} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-13
  */
 public class DefaultAsyncMethodMatcherFactory implements AsyncMethodMatcherFactory {

@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 为 {@link PluginKey} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-05
  */
 public class DefaultPluginKey implements PluginKey {

@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 /**
  * 从json文件中获取流程定义的基础类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/22
  */
 public abstract class FlowsDataBaseTest {

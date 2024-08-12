@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 为虚拟文件系统提供虚拟目录。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-30
  */
 public interface VirtualDirectory extends VirtualFileSystemElement {

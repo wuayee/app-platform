@@ -13,7 +13,7 @@ import com.huawei.fitframework.plugin.Plugin;
 /**
  * 为任务实例的变更提供事件触发器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-10
  */
 public interface TaskInstanceEventNotifier extends Runnable {

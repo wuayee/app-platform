@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示任务定义中定义的属性。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-12
  */
 public interface TaskProperty extends DomainObject {
@@ -91,7 +91,7 @@ public interface TaskProperty extends DomainObject {
     /**
      * 为任务属性提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-12
      */
     interface Builder extends DomainObject.Builder<TaskProperty, Builder> {
@@ -181,7 +181,7 @@ public interface TaskProperty extends DomainObject {
     /**
      * 为任务属性提供定义。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-10-23
      */
     interface Declaration {
@@ -253,7 +253,7 @@ public interface TaskProperty extends DomainObject {
         /**
          * 为属性的声明提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-10-23
          */
         interface Builder {
@@ -350,7 +350,7 @@ public interface TaskProperty extends DomainObject {
     /**
      * 为任务属性提供存储能力。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-10-25
      */
     interface Repo {

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 支持genericable调用的任务解析器
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/22
  */
 public class GenericableJoberParser implements JoberParser {

@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 为{@link TaskRelation}提供默认实现。
  *
- * @author lWX1291633
+ * @author 罗书强
  * @since 2023-12-29
  */
 public class DefaultTaskRelation implements TaskRelation {
@@ -122,7 +122,7 @@ public class DefaultTaskRelation implements TaskRelation {
     /**
      * 为{@link TaskRelation.Builder}提供默认实现。
      *
-     * @author lWX1291633
+     * @author 罗书强
      * @since 2023-12-29
      */
     static class Builder implements TaskRelation.Builder {
@@ -200,7 +200,7 @@ public class DefaultTaskRelation implements TaskRelation {
     /**
      * 为{@link TaskRelation.Declaration}提供默认实现。
      *
-     * @author lWX1291633
+     * @author 罗书强
      * @since 2023-12-29
      */
     static class Declaration implements TaskRelation.Declaration {
@@ -277,7 +277,7 @@ public class DefaultTaskRelation implements TaskRelation {
         /**
          * 为{@link TaskRelation.Declaration.Builder}提供默认实现。
          *
-         * @author lWX1291633
+         * @author 罗书强
          * @since 2023-12-29
          */
         static class Builder implements TaskRelation.Declaration.Builder {
@@ -367,7 +367,7 @@ public class DefaultTaskRelation implements TaskRelation {
     /**
      * 为 {@link TaskRelation.Filter} 提供默认实现。
      *
-     * @author lWX1291633
+     * @author 罗书强
      * @since 2024-01-03
      */
     static class Filter implements TaskRelation.Filter {
@@ -401,7 +401,7 @@ public class DefaultTaskRelation implements TaskRelation {
         /**
          * 为 {@link TaskRelation.Filter.Builder} 提供默认实现。
          *
-         * @author 罗书强 lwx1291633
+         * @author 罗书强
          * @since 2024-01-03
          */
         static class Builder implements TaskRelation.Filter.Builder {

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示meta结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-08
  */
 public class Meta {

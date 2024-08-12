@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 /**
  * 会话记录实体
  *
- * @author l00597222
+ * @author 吴穹
  * @since 2024-05-029
  */
 @Builder

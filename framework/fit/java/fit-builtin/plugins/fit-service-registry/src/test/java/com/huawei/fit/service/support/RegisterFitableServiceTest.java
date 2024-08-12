@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * {@link RegisterFitableService} 接口的测试类
  *
- * @author 李鑫 l00498867
- * @author 季聿阶 j00559309
+ * @author 李鑫
+ * @author 季聿阶
  * @since 2021-11-30
  */
 public class RegisterFitableServiceTest {

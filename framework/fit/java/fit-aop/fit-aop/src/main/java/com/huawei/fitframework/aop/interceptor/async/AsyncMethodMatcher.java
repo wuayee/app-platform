@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * 表示 {@link Asynchronous} 注解定义异步执行方法的方法匹配器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-13
  */
 public class AsyncMethodMatcher implements MethodMatcher {

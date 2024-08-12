@@ -18,7 +18,7 @@ import java.net.URL;
 /**
  * 表示资源的 http 请求解析器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-18
  */
 public class ResourceHttpResolver extends AbstractFileHttpResolver<Resource> {

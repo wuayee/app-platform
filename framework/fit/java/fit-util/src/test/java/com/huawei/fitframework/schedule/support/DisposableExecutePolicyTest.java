@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * 表示 {@link DisposableExecutePolicy} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2022-12-28
  */
 @DisplayName("测试 DisposableExecutePolicy 类")

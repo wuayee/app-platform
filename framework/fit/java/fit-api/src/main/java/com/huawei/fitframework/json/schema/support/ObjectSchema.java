@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link JsonSchema} 的对象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public class ObjectSchema extends AbstractJsonSchema {

@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * provides methods to create type expressions.
  *
- * @author 张群辉 z00544938
+ * @author 张群辉
  * @since 2023/12/15
  */
 public class TypeExprFactory {

@@ -15,7 +15,7 @@ import com.huawei.jade.carver.tool.ToolFactory;
 /**
  * 表示创建 {@link HttpTool} 的工厂。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-06-15
  */
 public class HttpToolFactory implements ToolFactory {

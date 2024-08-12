@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * DataService使用的TaskEntity结构体
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-12
  */
 public class TaskEntity {

@@ -20,7 +20,7 @@ import java.util.WeakHashMap;
 /**
  * 为 {@link JarCache} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-21
  */
 public final class DefaultJarCache implements JarCache {

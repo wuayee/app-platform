@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * 为插件提供集合。
  * <p>插件集合中的每一个插件的 URL 名字都需要满足以下格式：{@link #JAR_NAME_PATTERN}。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-05
  */
 public interface PluginCollection extends Iterable<Plugin> {

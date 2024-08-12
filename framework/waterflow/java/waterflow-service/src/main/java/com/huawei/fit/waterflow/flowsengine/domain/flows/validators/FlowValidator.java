@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 流程定义校验类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/29
  */
 @Component

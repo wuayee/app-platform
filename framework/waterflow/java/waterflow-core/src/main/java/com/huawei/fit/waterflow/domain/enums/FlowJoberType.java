@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * 流程定义自动任务类型
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 @Getter

@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * Aipp升级参数
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-26
  */
 @EqualsAndHashCode(callSuper = true)

@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link DefaultTaskTypeValidator}对应测试类。
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-01 17:08
  */
 class DefaultTaskTypeValidatorTest {

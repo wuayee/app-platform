@@ -24,7 +24,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * {@link AppChatSseService} 的默认实现
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-07-28
  */
 @Component

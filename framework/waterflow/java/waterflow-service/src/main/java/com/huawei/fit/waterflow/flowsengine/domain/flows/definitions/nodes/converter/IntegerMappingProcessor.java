@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 整数类型的数据生成
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/19
  */
 public class IntegerMappingProcessor extends AbstractMappingProcessor {

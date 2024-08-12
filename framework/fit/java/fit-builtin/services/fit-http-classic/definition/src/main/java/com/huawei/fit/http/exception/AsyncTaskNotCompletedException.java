@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.RetryableException;
 /**
  * 表示当异步任务未执行完成时引发的异常。
  *
- * @author 王成 j00863339
+ * @author 王成
  * @since 2023-11-16
  */
 @ErrorCode(AsyncTaskNotCompletedException.CODE)

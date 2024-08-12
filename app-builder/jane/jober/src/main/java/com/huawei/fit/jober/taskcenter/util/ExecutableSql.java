@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 表示可执行的 SQL。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-10
  */
 public interface ExecutableSql {

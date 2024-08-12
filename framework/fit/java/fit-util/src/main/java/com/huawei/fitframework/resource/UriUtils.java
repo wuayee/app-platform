@@ -16,7 +16,7 @@ import java.nio.charset.Charset;
  * 编解码 URI 的工具类。
  * <p>该工具类参考了 RFC 3986。/p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc3986">RFC 3986</a>
  * @since 2022-12-22
  */

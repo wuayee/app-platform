@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 表示 {@link Solo} 的单数据实现。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-11
  */
 public class AnySolo<T> extends AbstractSolo<T> {

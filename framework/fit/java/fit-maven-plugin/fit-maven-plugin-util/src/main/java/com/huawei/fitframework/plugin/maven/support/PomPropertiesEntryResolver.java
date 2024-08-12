@@ -18,7 +18,7 @@ import java.util.jar.JarEntry;
 /**
  * 对 pom.properties 文件进行解析的解析器。
  *
- * @author 梁济时 l00298979
+ * @author 梁济时
  * @since 2020-11-26
  */
 public class PomPropertiesEntryResolver implements JarEntryResolver<MavenCoordinate> {

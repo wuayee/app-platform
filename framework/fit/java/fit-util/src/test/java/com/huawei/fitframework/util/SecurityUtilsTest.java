@@ -20,7 +20,7 @@ import java.nio.file.Files;
 /**
  * 表示 {@link SecurityUtils} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-26
  */
 @DisplayName("测试 SecurityUtils")

@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 对应映射对象的处理
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/18
  */
 public interface MappingProcessor {

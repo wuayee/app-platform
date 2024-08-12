@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示线程池。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-26
  */
 public interface ThreadPool {

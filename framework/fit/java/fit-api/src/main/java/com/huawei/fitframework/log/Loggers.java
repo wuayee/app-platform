@@ -19,7 +19,7 @@ import java.util.ServiceLoader;
 /**
  * 表示日志系统的帮助类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-14
  */
 public class Loggers {

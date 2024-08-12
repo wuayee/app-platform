@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 /**
  * 系统工具类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/08
  */
 public class HostUtil {

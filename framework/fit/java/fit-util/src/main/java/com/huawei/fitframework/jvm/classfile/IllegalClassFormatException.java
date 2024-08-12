@@ -7,7 +7,7 @@ package com.huawei.fitframework.jvm.classfile;
 /**
  * 当类文件格式不正确时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public class IllegalClassFormatException extends RuntimeException {

@@ -38,8 +38,8 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link ExceptionHandlerRegistry} 的默认实现。
  *
- * @author 季聿阶 j00559309
- * @author 邬涨财 w00575064
+ * @author 季聿阶
+ * @author 邬涨财
  * @since 2022-08-25
  */
 @Component

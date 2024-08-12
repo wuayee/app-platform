@@ -10,7 +10,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * DataBus 服务读取内存元数据。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-05-25
  */
 public class GetMetaDataRequest implements DataBusRequest {

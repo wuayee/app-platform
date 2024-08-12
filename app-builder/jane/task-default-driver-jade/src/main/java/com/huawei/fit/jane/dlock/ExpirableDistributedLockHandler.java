@@ -7,7 +7,7 @@ package com.huawei.fit.jane.dlock;
 /**
  * 表示支持生命周期管理的分布式锁处理接口
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023-11-30
  */
 public interface ExpirableDistributedLockHandler extends DistributedLockHandler {

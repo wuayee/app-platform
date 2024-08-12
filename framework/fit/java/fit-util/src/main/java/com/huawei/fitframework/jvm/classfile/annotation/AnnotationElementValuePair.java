@@ -17,7 +17,7 @@ import java.io.InputStream;
 /**
  * 为注解中的元素提供键值对定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-29
  */
 public final class AnnotationElementValuePair {

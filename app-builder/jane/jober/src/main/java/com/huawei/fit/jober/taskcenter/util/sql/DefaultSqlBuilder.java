@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 为 {@link SqlBuilder} 提供默认实现
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 class DefaultSqlBuilder implements SqlBuilder {

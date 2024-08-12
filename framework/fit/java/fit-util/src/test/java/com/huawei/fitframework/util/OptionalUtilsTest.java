@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * {@link OptionalUtils} 的测试类.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2021-02-02
  */
 public class OptionalUtilsTest {

@@ -16,7 +16,7 @@ import java.util.Objects;
  * 表示全局唯一的服务实现的唯一标识。
  * <p>该接口的实现可以用于 {@link java.util.Map} 的键或者 {@link java.util.Set} 中。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-17
  */
 public final class UniqueFitableId implements Comparable<UniqueFitableId> {

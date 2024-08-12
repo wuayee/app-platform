@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Store 节点配置对象
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-13
  */
 @Data

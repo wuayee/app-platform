@@ -16,8 +16,8 @@ import java.util.function.Consumer;
  * 为 {@link Consumer} 提供组合模式实现。
  *
  * @param <T> 表示消费对象的类型的 {@link T}。
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-10-15
  */
 public interface ConsumerComposite<T> extends Consumer<T> {

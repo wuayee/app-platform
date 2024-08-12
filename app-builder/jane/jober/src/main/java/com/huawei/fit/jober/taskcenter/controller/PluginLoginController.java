@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 提供一个无鉴权的 cookie 存储和获取 API。
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2024-02-17
  */
 @Component

@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity;
 /**
  * jober的失败信息
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/29
  */
 public class JoberErrorInfo {

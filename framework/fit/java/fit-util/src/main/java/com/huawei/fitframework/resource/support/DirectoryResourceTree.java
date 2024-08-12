@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * 为资源树提供基于目录的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-10
  */
 final class DirectoryResourceTree extends AbstractResourceTree {

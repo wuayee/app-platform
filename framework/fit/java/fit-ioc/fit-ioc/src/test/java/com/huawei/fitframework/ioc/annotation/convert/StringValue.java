@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 表示直接使用的注解，将转发到原始注解 {@link IntValue}，在转发过程将对值进行类型转换。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-28
  */
 @Target(ElementType.TYPE)

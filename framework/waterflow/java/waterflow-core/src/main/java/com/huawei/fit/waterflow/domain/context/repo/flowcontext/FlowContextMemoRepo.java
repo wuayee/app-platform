@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 /**
  * 持久化{@link FlowContext}对象到内存中核心类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {

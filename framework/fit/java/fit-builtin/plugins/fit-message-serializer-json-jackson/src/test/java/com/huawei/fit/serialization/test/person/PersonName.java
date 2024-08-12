@@ -11,7 +11,7 @@ import lombok.Data;
 /**
  * 为单元测试提供人名的信息定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-23
  */
 @Data

@@ -9,7 +9,7 @@ import com.huawei.fitframework.schedule.cron.support.DefaultCronExpressionParser
 /**
  * 用于将 CRON 表达式解析为结构化数据的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-02
  */
 public interface CronExpressionParser {

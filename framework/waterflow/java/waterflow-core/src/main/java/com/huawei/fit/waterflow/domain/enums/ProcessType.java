@@ -8,7 +8,7 @@ package com.huawei.fit.waterflow.domain.enums;
  * 节点事件处理类型
  * 分为前置处理和后置处理，PRE_PROCESS类型为发送人工任务通知，PROCESS类型为节点本身的任务处理
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public enum ProcessType {

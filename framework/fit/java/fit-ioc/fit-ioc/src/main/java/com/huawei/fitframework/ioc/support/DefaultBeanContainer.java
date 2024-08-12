@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link BeanContainer} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public final class DefaultBeanContainer extends AbstractDisposable implements BeanContainer, BeanRegistry {

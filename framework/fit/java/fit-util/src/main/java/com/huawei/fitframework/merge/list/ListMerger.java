@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * {@link List} 对象的合并器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-10
  */
 public interface ListMerger<E> extends Merger<List<E>> {}

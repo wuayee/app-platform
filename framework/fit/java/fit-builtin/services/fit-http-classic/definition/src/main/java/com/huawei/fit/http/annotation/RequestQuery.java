@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 /**
  * 表示 REST 接口的请求映射中的查询参数。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-20
  */
 @Documented

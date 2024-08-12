@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 /**
  * {@link Tree} 的单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-11
  */
 @DisplayName("测试 Tree 工具类")

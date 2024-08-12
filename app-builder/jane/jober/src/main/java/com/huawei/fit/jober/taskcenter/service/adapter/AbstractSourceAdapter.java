@@ -10,7 +10,7 @@ import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 /**
  * 为 {@link SourceAdapter} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-21
  */
 public abstract class AbstractSourceAdapter implements SourceAdapter {

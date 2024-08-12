@@ -27,7 +27,7 @@ import java.io.RandomAccessFile;
  * 表示 {@link UploadPathValidator} 的测试。
  * <p>受限于无法在测试中控制剩余空间，因此不对于基于剩余空间大小校验的功能进行测试。</p>
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 @DisplayName("测试文件路径校验器")

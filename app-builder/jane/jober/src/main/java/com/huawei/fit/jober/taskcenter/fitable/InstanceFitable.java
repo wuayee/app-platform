@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 /**
  * 提供实例相关Fitable实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-28
  */
 @Alias("Jane-Instance")

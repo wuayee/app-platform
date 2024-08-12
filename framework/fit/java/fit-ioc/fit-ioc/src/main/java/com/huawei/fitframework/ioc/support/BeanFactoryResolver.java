@@ -56,7 +56,7 @@ import java.util.stream.Stream;
 /**
  * 为Bean的工厂提供扫描程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-12
  */
 public abstract class BeanFactoryResolver {

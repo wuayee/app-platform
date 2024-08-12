@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * 表示组合的 {@link PropertyValueMetadataResolver}。
  * <p>在组合的参数元数据解析器中，只要有任意一个参数元数据解析器解析成功，即返回结果。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-12
  */
 public class PropertyValueMetadataResolverComposite implements PropertyValueMetadataResolver {

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 表示日志级别的动态设置器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-22
  */
 @DocumentIgnored

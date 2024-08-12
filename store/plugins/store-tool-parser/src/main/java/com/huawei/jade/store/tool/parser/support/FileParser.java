@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 根据文件路径解析文件。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-18
  */
 public class FileParser {

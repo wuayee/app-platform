@@ -12,7 +12,7 @@ import com.huawei.fitframework.annotation.Scope;
 /**
  * 表示处理 {@link ExceptionHandler} 的处理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-25
  */
 public interface HttpExceptionHandler {

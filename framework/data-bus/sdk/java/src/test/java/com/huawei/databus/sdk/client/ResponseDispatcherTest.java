@@ -30,7 +30,7 @@ import java.util.concurrent.BlockingQueue;
 /**
  * 表示 {@link ResponseDispatcher} 的单元测试。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-07-02
  */
 @DisplayName("测试 ResponseDispatcher 类")

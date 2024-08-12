@@ -11,7 +11,7 @@ import com.huawei.fitframework.log.LoggerFactory;
 /**
  * 表示 {@link LoggerFactory} 的忽略日志的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-15
  */
 public class NoOperationLoggerFactory implements LoggerFactory {

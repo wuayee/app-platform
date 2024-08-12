@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link TaskType} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-09
  */
 public class DefaultTaskType extends AbstractDomainObject implements TaskType {

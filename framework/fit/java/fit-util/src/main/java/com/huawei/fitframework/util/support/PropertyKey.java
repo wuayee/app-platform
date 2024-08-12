@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * {@code .properties} 文件中的键的部分用 {@code .} 号分隔后的子键。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-01-17
  */
 public class PropertyKey {

@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 为属性提供类目的匹配器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-18
  */
 public class PropertyCategory {

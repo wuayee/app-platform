@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.domain.util.support.DefaultAsynchronousRu
 /**
  * 为任务实例的相关通知提供异步执行器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-18
  */
 public interface AsynchronousRunner {

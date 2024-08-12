@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * 表示 {@link GenericableExecutor} 的可降级的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public class DegradableGenericableExecutor extends AbstractUnicastGenericableExecutor {

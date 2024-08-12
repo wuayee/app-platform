@@ -15,7 +15,7 @@ import com.huawei.fitframework.ioc.support.EmptyDependencyChain;
  *     <li>当解析C的依赖时，依赖链为B、A，即迭代访问链中数据时，首先可获取B，再获取A</li>
  * </ul>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-07
  */
 public interface DependencyChain extends Iterable<BeanMetadata> {

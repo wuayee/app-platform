@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 /**
  * 生成报告接口实现类。
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2024-06-15
  */
 @Component

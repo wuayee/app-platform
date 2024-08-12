@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 表示 Json 格式的规范。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public interface JsonSchema {

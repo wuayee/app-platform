@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * {@link NodeValidatorImpl}对应测试类。
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-02 15:39
  */
 class NodeValidatorImplTest {

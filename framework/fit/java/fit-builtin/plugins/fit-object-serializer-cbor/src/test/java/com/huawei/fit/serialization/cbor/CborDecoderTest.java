@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 表示 {@link CborDecoder} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-28
  */
 @DisplayName("测试 CborDecoder")

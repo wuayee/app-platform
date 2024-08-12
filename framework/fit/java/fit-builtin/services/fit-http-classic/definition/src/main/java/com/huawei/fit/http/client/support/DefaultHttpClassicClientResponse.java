@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * 表示 {@link HttpClassicClientResponse} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-25
  */
 public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResponse

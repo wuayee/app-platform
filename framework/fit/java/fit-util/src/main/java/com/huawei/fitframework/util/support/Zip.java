@@ -27,8 +27,8 @@ import java.util.zip.ZipOutputStream;
 /**
  * 为压缩成 {@code .zip} 格式的文件提供工具。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-10-05
  */
 public class Zip extends AbstractZip<Zip> {

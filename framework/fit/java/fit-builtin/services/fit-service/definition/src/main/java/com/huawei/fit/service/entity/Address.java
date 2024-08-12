@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 表示地址信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-06
  */
 public class Address {

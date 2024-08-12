@@ -7,7 +7,7 @@ package com.huawei.fit.jane.dlock.jdbc.utils;
 /**
  * 分布式锁状态
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/3/7
  */
 public enum DistributedLockStatus {

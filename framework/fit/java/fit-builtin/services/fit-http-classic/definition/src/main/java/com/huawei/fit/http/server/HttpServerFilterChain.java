@@ -7,7 +7,7 @@ package com.huawei.fit.http.server;
 /**
  * 表示 Http 请求过滤器的调用链。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-06
  */
 public interface HttpServerFilterChain {

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * 为 {@link ResourceResolver} 提供在类加载程序中解析资源的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-25
  */
 public final class ClassLoaderResourceResolver implements ResourceResolver {

@@ -89,8 +89,8 @@ import java.util.stream.Collectors;
  * </ul>
  * </p>
  *
- * @author 夏斐 x00576283
- * @author 季聿阶 j00559309
+ * @author 夏斐
+ * @author 季聿阶
  * @since 2020-08-19
  */
 @Component

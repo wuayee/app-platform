@@ -33,7 +33,7 @@ import java.util.Optional;
 /**
  * {@link ServerRequest} 的 Netty 实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-08
  */
 public class NettyHttpServerRequest implements ServerRequest, OnHttpContentReceived {

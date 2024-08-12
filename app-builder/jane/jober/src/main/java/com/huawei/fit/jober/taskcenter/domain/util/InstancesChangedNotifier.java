@@ -13,7 +13,7 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 /**
  * 为任务实例属性变化提供通知程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public interface InstancesChangedNotifier extends Runnable {

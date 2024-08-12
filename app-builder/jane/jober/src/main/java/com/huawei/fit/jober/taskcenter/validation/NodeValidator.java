@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 为任务节点提供校验器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-17
  */
 public interface NodeValidator {

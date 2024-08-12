@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * {@link LocalFitableCache} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-11-22
  */
 @Component

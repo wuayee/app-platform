@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 /**
  * {@link IteratorComposite} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-01-28
  */
 @DisplayName("测试 IteratorComposite 工具类")

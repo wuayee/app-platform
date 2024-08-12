@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link HttpHandler} 的注册器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-10
  */
 @Component

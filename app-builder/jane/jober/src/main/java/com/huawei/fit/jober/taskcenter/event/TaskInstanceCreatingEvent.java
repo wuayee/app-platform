@@ -10,7 +10,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 /**
  * 任务实例创建事件。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-23
  */
 public class TaskInstanceCreatingEvent extends TaskInstanceDeclaringEvent {

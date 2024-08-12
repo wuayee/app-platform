@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 转换工具类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-20
  */
 public class ConvertUtils {

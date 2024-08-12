@@ -14,8 +14,8 @@ import java.util.Set;
 /**
  * 为服务实现的本地执行器提供仓库。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-09-24
  */
 public interface LocalExecutorRepository {
@@ -61,8 +61,8 @@ public interface LocalExecutorRepository {
     /**
      * 为本地执行器仓库提供注册入口。
      *
-     * @author 梁济时 l00815032
-     * @author 季聿阶 j00559309
+     * @author 梁济时
+     * @author 季聿阶
      * @since 2020-09-24
      */
     @FunctionalInterface

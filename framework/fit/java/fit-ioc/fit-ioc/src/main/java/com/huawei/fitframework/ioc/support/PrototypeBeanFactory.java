@@ -13,7 +13,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 /**
  * 为 {@link BeanFactory} 提供基于生命周期的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-24
  */
 public class PrototypeBeanFactory extends AbstractBeanFactory implements BeanFactory, BeanDestroyer {

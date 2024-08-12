@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * 为 {@link AppBuilderAppTool} 及其实现 {@link AppBuilderAppToolImpl} 提供单元测试
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-08-06
  */
 @ExtendWith(MockitoExtension.class)

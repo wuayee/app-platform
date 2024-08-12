@@ -14,7 +14,7 @@ import com.huawei.fit.security.http.zipped.ConfigurableZippedFileValidateConfig;
  * 表示 {@link ConfigurableZippedFileValidateConfig} 的默认实现。
  * <p>配置项不能够设置为空，如果设置为空则自动设定为默认初始值。</p>
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-18
  */
 public final class DefaultConfigurableZippedFileValidateConfig implements ConfigurableZippedFileValidateConfig {

@@ -13,7 +13,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * Options请求通过，允许跨域的临时规避Controller
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-30
  */
 @Component

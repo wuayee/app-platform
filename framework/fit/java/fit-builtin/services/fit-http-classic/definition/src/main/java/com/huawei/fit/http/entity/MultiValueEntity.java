@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示多值格式的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public interface MultiValueEntity extends Entity {

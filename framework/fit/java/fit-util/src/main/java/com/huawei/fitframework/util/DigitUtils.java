@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * 表示数字的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-03
  */
 public class DigitUtils {

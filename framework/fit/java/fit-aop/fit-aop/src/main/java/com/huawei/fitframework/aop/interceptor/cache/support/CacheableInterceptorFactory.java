@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link Cacheable} 注解的方法拦截器工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public class CacheableInterceptorFactory extends AbstractCacheInterceptorFactory<Cacheable> {

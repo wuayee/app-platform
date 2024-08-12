@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.domain.portal;
 /**
  * 表示任务节点的类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-14
  */
 public enum TaskNodeType {

@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link ConversionService} 的抽象实现类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-25
  */
 public abstract class AbstractConversionService implements ConversionService {

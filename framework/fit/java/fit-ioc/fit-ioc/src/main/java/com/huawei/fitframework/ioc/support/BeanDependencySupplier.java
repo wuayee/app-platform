@@ -13,7 +13,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link ValueSupplier} 提供基于 {@link BeanDependency} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-27
  */
 class BeanDependencySupplier implements ValueSupplier {

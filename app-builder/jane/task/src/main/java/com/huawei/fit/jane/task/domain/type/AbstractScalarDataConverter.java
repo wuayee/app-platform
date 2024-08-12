@@ -14,7 +14,7 @@ import com.huawei.fitframework.util.support.DefaultParsingResult;
 /**
  * 为单值类型的数据转换器提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-23
  */
 public abstract class AbstractScalarDataConverter implements DataConverter {

@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.enums;
 /**
  * 表示重新对话的模式。
  *
- * @author 黄夏露 h00804153
+ * @author 黄夏露
  * @since 2024-07-12
  */
 public enum RestartModeEnum {

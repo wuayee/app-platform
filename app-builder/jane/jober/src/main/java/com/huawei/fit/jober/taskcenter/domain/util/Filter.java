@@ -13,7 +13,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 /**
  * 为查询任务实例提供过滤器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public interface Filter {

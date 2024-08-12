@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * 任务实例的类目发生变化。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public class InstanceCategoryChanged extends InstanceMessage {

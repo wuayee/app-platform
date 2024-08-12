@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.UndefinableValue;
 /**
  * 为属性的类目配置提供声明。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-22
  */
 public class PropertyCategoryDeclaration {

@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 表示 {@link HttpClassicClientFactory} 的 OkHttp 实现。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-04-08
  */
 @Order(Order.HIGH)

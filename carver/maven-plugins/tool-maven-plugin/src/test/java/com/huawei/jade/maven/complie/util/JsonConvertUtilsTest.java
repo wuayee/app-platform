@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * 表示 {@link JsonConvertUtils} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-08-05
  */
 @DisplayName("测试 JsonConvertUtils 类")

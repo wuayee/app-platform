@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 /**
  * Aipp版本信息
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-26
  */
 @Builder

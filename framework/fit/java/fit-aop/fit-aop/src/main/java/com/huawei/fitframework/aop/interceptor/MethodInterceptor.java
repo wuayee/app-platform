@@ -10,7 +10,7 @@ import com.huawei.fitframework.inspection.Nullable;
 /**
  * 方法拦截器，用于处理 AOP 的最基本接口。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-28
  */
 public interface MethodInterceptor {

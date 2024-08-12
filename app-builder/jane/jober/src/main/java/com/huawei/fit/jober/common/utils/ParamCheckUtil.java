@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * ParamCheckUtil
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-07-27
  */
 public class ParamCheckUtil {

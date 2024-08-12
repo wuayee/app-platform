@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 最小Size过滤器校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/09/25
  */
 public class ThresholdFilterRule implements FilterRule {

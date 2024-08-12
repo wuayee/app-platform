@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 表示错误信息的清单。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-18
  */
 public class ErrorManifest extends AbstractManifest {

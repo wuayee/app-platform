@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * 应用创建服务接口
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 public interface AppBuilderAppService {

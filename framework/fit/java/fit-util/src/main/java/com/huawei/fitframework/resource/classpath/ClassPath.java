@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 表示类路径。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public interface ClassPath extends Closeable {

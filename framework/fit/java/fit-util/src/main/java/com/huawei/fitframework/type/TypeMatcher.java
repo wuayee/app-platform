@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 /**
  * 为 {@link Type} 提供匹配判定程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 public interface TypeMatcher {
@@ -30,7 +30,7 @@ public interface TypeMatcher {
     /**
      * 为类型匹配判定提供上下文信息。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-29
      */
     interface Context {
@@ -55,7 +55,7 @@ public interface TypeMatcher {
         /**
          * 为类型匹配上下文信息提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2020-10-29
          */
         interface Builder {
@@ -100,7 +100,7 @@ public interface TypeMatcher {
     /**
      * 为实例化 {@link TypeMatcher} 提供工厂。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-29
      */
     interface Factory {

@@ -24,7 +24,7 @@ import java.util.Stack;
 /**
  * 为大模型提供一些附加功能
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-01-26
  */
 public class LLMUtils {

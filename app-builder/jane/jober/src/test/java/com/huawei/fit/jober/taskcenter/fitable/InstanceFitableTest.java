@@ -45,7 +45,7 @@ import java.util.HashMap;
 /**
  * {@link InstanceFitable}对应测试类。
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-02 10:59
  */
 @ExtendWith(MockitoExtension.class)

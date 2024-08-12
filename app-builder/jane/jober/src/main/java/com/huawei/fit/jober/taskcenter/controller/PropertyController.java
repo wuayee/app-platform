@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * 任务属性Controller
  *
- * @author 董建华 d30022216
+ * @author 董建华
  * @since 2023-08-09
  */
 @Component

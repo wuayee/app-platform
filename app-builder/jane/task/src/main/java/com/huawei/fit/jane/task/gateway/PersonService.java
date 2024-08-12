@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 调用IData接口代理类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-03
  */
 public interface PersonService {

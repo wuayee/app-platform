@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * 映射处理的抽象类
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/18
  */
 public abstract class AbstractMappingProcessor implements MappingProcessor {
@@ -108,7 +108,7 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
     /**
      * value结果
      *
-     * @author x00576283
+     * @author 夏斐
      * @since 1.0
      */
     @Getter

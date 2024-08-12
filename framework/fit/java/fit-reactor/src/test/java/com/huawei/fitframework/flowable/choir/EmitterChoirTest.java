@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 表示 {@link Choir#fromEmitter(Emitter)} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-14
  */
 @DisplayName("测试 EmitterChoir")

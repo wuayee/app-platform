@@ -9,7 +9,7 @@ import com.huawei.fitframework.ioc.BeanMetadata;
 /**
  * 为 Bean 的生命周期提供拦截程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-26
  */
 public interface BeanLifecycleInterceptor extends BeanLifecycleDependency {

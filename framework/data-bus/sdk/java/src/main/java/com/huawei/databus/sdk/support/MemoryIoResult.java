@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 为内存申请提供结果。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public interface MemoryIoResult extends DataBusIoResult {
@@ -79,7 +79,7 @@ public interface MemoryIoResult extends DataBusIoResult {
     /**
      * 为 {@link MemoryIoResult} 提供表示申请内存成功的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class SuccessResult implements MemoryIoResult {
@@ -139,7 +139,7 @@ public interface MemoryIoResult extends DataBusIoResult {
     /**
      * 为 {@link MemoryIoResult} 提供表示内存 IO 失败的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class FailureResult implements MemoryIoResult {

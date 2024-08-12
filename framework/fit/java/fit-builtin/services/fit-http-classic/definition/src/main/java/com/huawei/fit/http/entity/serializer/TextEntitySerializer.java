@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 /**
  * 表示消息体格式为 {@code 'text/plain'} 的序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-11
  */
 public class TextEntitySerializer implements EntitySerializer<TextEntity> {

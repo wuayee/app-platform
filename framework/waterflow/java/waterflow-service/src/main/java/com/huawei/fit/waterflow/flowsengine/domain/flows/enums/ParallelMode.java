@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * 并行节点的操作类型
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @Getter

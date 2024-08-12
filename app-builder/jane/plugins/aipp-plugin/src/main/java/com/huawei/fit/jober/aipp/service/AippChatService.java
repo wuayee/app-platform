@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 历史会话服务接口.
  *
- * @author z00597222 翟卉馨
+ * @author 翟卉馨
  * @since 2024-05-29
  */
 public interface AippChatService {

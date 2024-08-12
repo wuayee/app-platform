@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
 /**
  * {@link ValidationHandler} 的单元测试。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-05-23
  */
 public class ValidationHandlerTest {

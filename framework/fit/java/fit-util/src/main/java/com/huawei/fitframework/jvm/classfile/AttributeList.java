@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 为 {@link AttributeInfo} 提供列表。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-09
  */
 public final class AttributeList implements Iterable<AttributeInfo> {

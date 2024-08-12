@@ -10,7 +10,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 /**
  * 为二元条件提供基类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 public abstract class AbstractBinaryCondition implements Condition {

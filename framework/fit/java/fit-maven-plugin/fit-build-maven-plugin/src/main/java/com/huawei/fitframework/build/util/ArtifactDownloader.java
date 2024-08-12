@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * The DefaultArtifactDownloader
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-02
  */
 public final class ArtifactDownloader {
@@ -72,7 +72,7 @@ public final class ArtifactDownloader {
     /**
      * 为 {@link ArtifactDownloader.Builder} 提供默认实现。
      *
-     * @author 陈镕希 00572808
+     * @author 陈镕希
      * @since 2020-12-26
      */
     public static final class Builder {

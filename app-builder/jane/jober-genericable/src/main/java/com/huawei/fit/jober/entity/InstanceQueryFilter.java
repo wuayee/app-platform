@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 查询实例所用Filter。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-09-25
  */
 public class InstanceQueryFilter {

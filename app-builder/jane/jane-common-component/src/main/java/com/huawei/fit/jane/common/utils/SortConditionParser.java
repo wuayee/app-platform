@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 排序条件解析器
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-08
  */
 @Builder
@@ -50,7 +50,7 @@ public class SortConditionParser {
     /**
      * 自定义SortConditionParser的builder，不允许同时指定encodeSorts和sorters
      *
-     * @author l00611472
+     * @author 刘信宏
      * @since 2023-12-08
      */
     public static class SortConditionParserBuilder {
@@ -100,7 +100,7 @@ public class SortConditionParser {
     /**
      * 排序条件
      *
-     * @author l00611472
+     * @author 刘信宏
      * @since 2023-12-08
      */
     @Setter

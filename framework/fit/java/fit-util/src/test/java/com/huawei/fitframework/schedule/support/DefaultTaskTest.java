@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 /**
  * 表示 {@link DefaultTask} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-01-31
  */
 @DisplayName("测试 DefaultTask 类")

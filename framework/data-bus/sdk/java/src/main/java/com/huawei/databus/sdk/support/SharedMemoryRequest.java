@@ -10,7 +10,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * DataBus 服务申请共享内存请求
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public class SharedMemoryRequest implements DataBusRequest {

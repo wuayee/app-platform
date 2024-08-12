@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * 为 {@link Plugin} 提供解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-06
  */
 @FunctionalInterface

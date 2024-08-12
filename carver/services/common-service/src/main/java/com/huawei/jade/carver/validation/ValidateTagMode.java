@@ -7,7 +7,7 @@ package com.huawei.jade.carver.validation;
 /**
  * 校验工具标签拼接方式的工具类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-07-19
  */
 public class ValidateTagMode {

@@ -7,7 +7,7 @@ package com.huawei.jade.maven.complie.entity;
 /**
  * 表示参数的定义。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-06
  */
 public class ParameterEntity {

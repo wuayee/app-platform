@@ -17,7 +17,7 @@ import java.util.Map;
  * @param <K> 表示冲突键的类型的 {@link K}。
  * @param <SK> 表示冲突值的映射中的键的类型的 {@link SK}。
  * @param <SV> 表示冲突值的映射中的值的类型的 {@link SV}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 public class MapConflictResolver<K, SK, SV> implements ConflictResolver<K, Map<SK, SV>, MapConflict<K, Map<SK, SV>>> {

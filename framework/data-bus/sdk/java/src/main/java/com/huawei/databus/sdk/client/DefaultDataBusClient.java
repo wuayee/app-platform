@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * DataBus 客户端默认实现。
  * 使用单例模式。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public class DefaultDataBusClient implements DataBusClient {

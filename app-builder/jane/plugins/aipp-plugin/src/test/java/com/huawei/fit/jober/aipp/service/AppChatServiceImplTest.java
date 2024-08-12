@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * 为 {@link AppChatService} 提供测试
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-08-01
  */
 @ExtendWith(MockitoExtension.class)

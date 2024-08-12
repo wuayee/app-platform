@@ -16,7 +16,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link AuthorizationValidator} 提供实现
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-10
  */
 @Component

@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * 扫盘状态
  *
- * @author 00558940
+ * @author 宋永坦
  * @since 2024/02/18
  */
 @Getter

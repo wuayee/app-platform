@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * runtimeInfo 相关数据库操作对象
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-07-29
  */
 public interface AppBuilderRuntimeInfoRepository {

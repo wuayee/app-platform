@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * 用于生成序号
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-18
  */
 public class SequenceUtils {

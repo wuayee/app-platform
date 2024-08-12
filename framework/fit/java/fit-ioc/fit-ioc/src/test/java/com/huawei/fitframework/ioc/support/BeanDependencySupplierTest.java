@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link BeanDependencySupplier} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-03-02
  */
 @DisplayName("测试 BeanDependencySupplier 类")

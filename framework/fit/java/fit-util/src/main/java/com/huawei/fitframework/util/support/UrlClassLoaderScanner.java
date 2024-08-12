@@ -36,8 +36,8 @@ import java.util.stream.Stream;
 /**
  * 为 {@link ClassScanner} 基于 {@link URLClassLoader} 的类型扫描工具。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-08-28
  */
 public class UrlClassLoaderScanner implements ClassScanner {
@@ -139,8 +139,8 @@ public class UrlClassLoaderScanner implements ClassScanner {
     /**
      * 针对 {@link File} 的 {@link URL} 的扫描类。
      *
-     * @author 张越 z00559346
-     * @author 季聿阶 j00559309
+     * @author 张越
+     * @author 季聿阶
      * @since 2021-02-23
      */
     private static class FileUrlScanner extends UrlScanner {
@@ -175,8 +175,8 @@ public class UrlClassLoaderScanner implements ClassScanner {
     /**
      * 针对 {@code JAR} 类型的 {@link URL} 的扫描类。
      *
-     * @author 张越 z00559346
-     * @author 季聿阶 j00559309
+     * @author 张越
+     * @author 季聿阶
      * @since 2021-02-23
      */
     private static class JarUrlScanner extends UrlScanner {

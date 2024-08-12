@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 为元数据提供扩展字段(Tag-Length-Value)。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-05-14
  */
 public interface TagLengthValues {

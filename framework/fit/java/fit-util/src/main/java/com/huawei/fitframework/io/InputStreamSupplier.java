@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * 为 {@link InputStream} 提供供应程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-12
  */
 @FunctionalInterface

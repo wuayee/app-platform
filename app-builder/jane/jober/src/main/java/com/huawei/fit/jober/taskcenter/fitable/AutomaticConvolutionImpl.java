@@ -30,7 +30,7 @@ import java.util.Optional;
 /**
  * 自动卷积实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-30
  */
 @Alias("自动卷积")

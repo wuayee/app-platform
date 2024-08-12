@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 三方推送数据源适配器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-15
  */
 @Component

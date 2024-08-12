@@ -7,7 +7,7 @@ package com.huawei.fitframework.broker;
 /**
  * 表示 {@link Fitable} 的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-24
  */
 public interface FitableFactory {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.model.tree.Tree;
 /**
  * 为 {@link DefaultTree} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-10
  */
 public final class DefaultTrees {

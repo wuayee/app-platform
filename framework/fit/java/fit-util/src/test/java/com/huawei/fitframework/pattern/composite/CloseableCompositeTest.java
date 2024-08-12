@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * {@link CloseableComposite} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-01-28
  */
 @DisplayName("测试 CloseableComposite 工具类")

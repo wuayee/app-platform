@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 /**
  * 封装客户端的请求参数。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-04-09
  */
 public class RequestParam {

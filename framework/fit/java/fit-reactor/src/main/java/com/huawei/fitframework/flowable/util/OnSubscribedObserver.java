@@ -7,7 +7,7 @@ package com.huawei.fitframework.flowable.util;
 /**
  * 表示订阅关系发生的观察者。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-22
  */
 public interface OnSubscribedObserver {

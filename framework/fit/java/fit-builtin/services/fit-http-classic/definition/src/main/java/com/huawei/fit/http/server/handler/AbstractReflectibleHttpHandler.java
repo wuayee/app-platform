@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 对 Http 请求根据指定规则进行参数映射的 {@link HttpHandler}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-28
  */
 public abstract class AbstractReflectibleHttpHandler extends AbstractHttpHandler implements ReflectibleMappingHandler {

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 创建应用工具DTO
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-21
  */
 @Builder

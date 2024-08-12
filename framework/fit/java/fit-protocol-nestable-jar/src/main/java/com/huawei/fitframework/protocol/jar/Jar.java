@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * 表示一个 JAR 包。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-13
  */
 public interface Jar {
@@ -91,7 +91,7 @@ public interface Jar {
     /**
      * 为 {@link Jar} 提供其所包含的条目。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-13
      */
     interface Entry {
@@ -200,7 +200,7 @@ public interface Jar {
     /**
      * 为 {@link Entry} 提供集合。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-10
      */
     interface EntryCollection extends Iterable<Entry> {

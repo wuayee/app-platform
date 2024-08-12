@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * 表示一个方法类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class MethodTypeInfo extends Constant {

@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * 测试上下文的配置类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 易文渊
  * @since 2023-01-20
  */

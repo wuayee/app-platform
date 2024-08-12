@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * 表示 {@link StandardConversionService} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-25
  */
 @DisplayName("测试类型转换方法")

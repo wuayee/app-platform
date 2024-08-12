@@ -12,7 +12,7 @@ import java.net.URL;
 /**
  * 表示 JAR 的位置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-07
  */
 public interface JarEntryLocation {
@@ -53,7 +53,7 @@ public interface JarEntryLocation {
     /**
      * 为 {@link JarEntryLocation} 提供构建程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-07
      */
     interface Builder {

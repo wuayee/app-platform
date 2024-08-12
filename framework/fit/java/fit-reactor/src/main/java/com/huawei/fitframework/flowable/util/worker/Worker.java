@@ -11,7 +11,7 @@ import com.huawei.fitframework.flowable.Subscriber;
  * 表示辅助消费响应式流中元素的工具。
  *
  * @param <T> 表示响应式流中元素类型的 {@link T}。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 public interface Worker<T> extends Subscriber<T> {

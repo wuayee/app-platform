@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * {@link WorkerFilter} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-03-18
  */
 @DisplayName("验证指定进程唯一标识的负载均衡的过滤器")

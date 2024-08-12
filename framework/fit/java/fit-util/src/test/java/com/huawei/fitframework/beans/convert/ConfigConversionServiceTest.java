@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * 表示 {@link ConfigConversionService} 的单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-28
  */
 @DisplayName("测试类型转换方法")

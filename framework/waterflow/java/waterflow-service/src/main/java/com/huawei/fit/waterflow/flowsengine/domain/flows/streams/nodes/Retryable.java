@@ -22,7 +22,7 @@ import java.util.Optional;
  * 流程错误重试机制
  * 有业务更新发生错误后的context，并决定是否重试
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/09/07
  */
 public class Retryable<I> {

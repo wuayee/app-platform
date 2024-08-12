@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
 /**
  * 重试机制的处理器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-02-21
  */
 @Aspect

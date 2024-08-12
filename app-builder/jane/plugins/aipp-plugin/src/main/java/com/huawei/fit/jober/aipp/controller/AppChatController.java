@@ -24,7 +24,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * app对话管理接口
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-23
  */
 @Component

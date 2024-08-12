@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 为任务树的节点提供管理。s
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  */
 public interface NodeService {

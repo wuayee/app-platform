@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 流程数据VO类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-26
  */
 public class FlowDataVO {

@@ -12,7 +12,7 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 /**
  * 表示数据来源获取器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 public interface SourceFetcher {

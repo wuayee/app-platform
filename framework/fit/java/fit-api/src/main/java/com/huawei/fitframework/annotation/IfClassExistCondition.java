@@ -11,7 +11,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 /**
  * 为 {@link IfClassExist} 提供判定条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-05-18
  */
 public class IfClassExistCondition implements Condition {

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 为被限定的结果集提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-07-24
  */
 public interface RangedResultSet<T> {

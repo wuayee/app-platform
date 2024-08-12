@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 表示本地执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-26
  */
 public interface LocalExecutor {

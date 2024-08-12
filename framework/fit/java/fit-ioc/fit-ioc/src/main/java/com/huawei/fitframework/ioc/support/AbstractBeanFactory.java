@@ -18,7 +18,7 @@ import com.huawei.fitframework.util.support.AbstractDisposable;
 /**
  * 为 {@link BeanFactory} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-04
  */
 abstract class AbstractBeanFactory extends AbstractDisposable implements BeanFactory {

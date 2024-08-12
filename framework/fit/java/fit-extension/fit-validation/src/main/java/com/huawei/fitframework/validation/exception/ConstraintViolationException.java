@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * 表示校验失败的异常。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-05-18
  */
 public class ConstraintViolationException extends RuntimeException {

@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 /**
  * 表示 {@link DataBusUtils} 的单元测试。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-22
  */
 @DisplayName("测试 DataBusUtils 类")

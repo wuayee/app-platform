@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示请求上下文。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-19
  */
 public interface RequestContext {

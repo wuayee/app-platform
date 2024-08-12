@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 /**
  * 指示 Bean 仅当指定类型存在时生效。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-05-18
  */
 @Conditional(IfClassExistCondition.class)

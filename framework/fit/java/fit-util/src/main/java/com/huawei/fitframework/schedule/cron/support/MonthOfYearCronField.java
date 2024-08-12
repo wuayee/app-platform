@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * 表示每年中的月数的字段。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-02
  */
 public class MonthOfYearCronField extends AbstractCronField {

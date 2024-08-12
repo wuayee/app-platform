@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.util;
 /**
  * 表示分页结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-12
  */
 public interface PaginationResult extends Pagination {

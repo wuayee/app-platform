@@ -31,7 +31,7 @@ import java.util.Locale;
 /**
  * 为 {@link JarEntryLocation} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-01-29
  */
 @DisplayName("测试 DefaultJarEntryLocation 类")

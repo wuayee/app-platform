@@ -14,7 +14,7 @@ import com.huawei.fitframework.serialization.Version;
 /**
  * 表示可配置的处理流式调用请求时的上下文。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-30
  */
 public interface ConfigurableWebSocketServerContext extends WebSocketServerContext {

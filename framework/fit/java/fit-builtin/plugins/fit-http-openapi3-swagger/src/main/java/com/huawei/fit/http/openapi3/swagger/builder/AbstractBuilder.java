@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * 表示通用构建器的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-23
  */
 public abstract class AbstractBuilder {

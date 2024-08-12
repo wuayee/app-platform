@@ -9,7 +9,7 @@ import com.huawei.fitframework.conf.Config;
 /**
  * 统一日志接口的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-13
  */
 public interface LoggerFactory {

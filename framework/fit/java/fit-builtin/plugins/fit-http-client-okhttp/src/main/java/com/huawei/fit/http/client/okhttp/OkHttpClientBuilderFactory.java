@@ -28,7 +28,7 @@ import javax.net.ssl.X509TrustManager;
 /**
  * 创建 OkHttpClient.Builder 实例工厂。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-04-15
  */
 public class OkHttpClientBuilderFactory {

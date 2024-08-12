@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * 将类型解析成适配 json schema 的数据结构。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-12
  */
 public class JacksonTypeParser {

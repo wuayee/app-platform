@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 猜你想问的查询接口service
  *
- * @author y00858250
+ * @author 杨海波
  * @since 2024-05-24
  */
 public interface AppBuilderRecommendService {

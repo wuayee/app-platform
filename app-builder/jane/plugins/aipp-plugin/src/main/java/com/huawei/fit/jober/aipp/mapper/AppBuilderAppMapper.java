@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * App 相关的数据库操作
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-16
  */
 public interface AppBuilderAppMapper {

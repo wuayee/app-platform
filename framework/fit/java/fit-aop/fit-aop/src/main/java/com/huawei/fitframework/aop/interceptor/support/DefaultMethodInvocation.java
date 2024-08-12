@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 /**
  * {@link MethodInvocation} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-17
  */
 public class DefaultMethodInvocation implements MethodInvocation {

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link MethodTypeInfo} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-10
  */
 @DisplayName("测试 MethodTypeInfo 类")

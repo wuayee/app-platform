@@ -10,7 +10,7 @@ import com.huawei.fitframework.event.Event;
 /**
  * 为任务属性相关的事件提供数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-09
  */
 public class TaskPropertyEvent implements Event {

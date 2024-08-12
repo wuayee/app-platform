@@ -17,7 +17,7 @@ import java.lang.reflect.Modifier;
 /**
  * 为 {@link BeanInjector} 提供基于字段注入的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class FieldBeanInjector implements BeanInjector {

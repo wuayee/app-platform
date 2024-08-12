@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 灵感大全Genericable
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-04-25
  */
 public interface AppInspirationService {
@@ -25,7 +25,7 @@ public interface AppInspirationService {
      * @param appType 应用类型
      * @param context 操作上下文
      * @return 返回定制化日志列表
-     * @author 孙怡菲 s00664640
+     * @author 孙怡菲
      * @since 2024-04-25
      */
     @Genericable(id = "d01041a73e00ac46bedde08d02c6818e")

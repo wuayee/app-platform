@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 为 {@link Fitable} 提供降级的默认定义。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see Fitable
  * @since 2022-06-09
  */

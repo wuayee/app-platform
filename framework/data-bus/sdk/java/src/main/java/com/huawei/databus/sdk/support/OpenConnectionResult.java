@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 为 DataBus 服务连接提供结果。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public interface OpenConnectionResult extends DataBusResult {
@@ -49,7 +49,7 @@ public interface OpenConnectionResult extends DataBusResult {
     /**
      * 为 {@link OpenConnectionResult} 提供表示连接成功的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class SuccessResult implements OpenConnectionResult {
@@ -74,7 +74,7 @@ public interface OpenConnectionResult extends DataBusResult {
     /**
      * 为 {@link OpenConnectionResult} 提供表示连接失败的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class FailureResult implements OpenConnectionResult {

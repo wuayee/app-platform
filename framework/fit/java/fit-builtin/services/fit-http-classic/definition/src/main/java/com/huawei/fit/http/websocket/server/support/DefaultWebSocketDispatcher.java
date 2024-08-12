@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 表示 {@link WebSocketDispatcher} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 public class DefaultWebSocketDispatcher implements WebSocketDispatcher {

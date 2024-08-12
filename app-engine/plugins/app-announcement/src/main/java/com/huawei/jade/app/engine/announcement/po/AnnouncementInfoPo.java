@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 /**
  * AnnouncementInfoPo类消息处理策略
  *
- * @author z00591349
+ * @author 张圆
  * @since 2024/06/18
  */
 @Builder

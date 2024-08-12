@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Aipp实例信息
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-08
  */
 @Data

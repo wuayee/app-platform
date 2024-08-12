@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link TaskTemplateProperty.Repo} 提供实现
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-05
  */
 @Component
@@ -535,7 +535,7 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
     /**
      * 表示任务模板属性的数据行
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-06
      */
     private static final class Row {

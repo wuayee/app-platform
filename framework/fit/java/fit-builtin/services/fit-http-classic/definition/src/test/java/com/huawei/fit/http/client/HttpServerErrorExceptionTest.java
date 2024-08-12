@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 为 {@link HttpServerErrorException} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-16
  */
 @DisplayName("测试 HttpServerErrorException 类")

@@ -15,8 +15,8 @@ import java.util.Optional;
 /**
  * 为 {@link TypeMatcher.Context} 提供单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-10-29
  */
 public class TypeMatcherContextTest {

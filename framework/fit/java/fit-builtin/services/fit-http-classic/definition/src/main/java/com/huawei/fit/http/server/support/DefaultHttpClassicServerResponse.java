@@ -47,8 +47,8 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 表示 {@link HttpClassicServerResponse} 的默认实现。
  *
- * @author 季聿阶 j00559309
- * @author 易文渊 y00612997
+ * @author 季聿阶
+ * @author 易文渊
  * @since 2022-11-25
  */
 public class DefaultHttpClassicServerResponse extends AbstractHttpClassicResponse implements HttpClassicServerResponse {

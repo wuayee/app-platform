@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The PageResponse
  *
- * @author v00838678
+ * @author Varlamova Natalia
  * @since 2023-10-26
  */
 @Data

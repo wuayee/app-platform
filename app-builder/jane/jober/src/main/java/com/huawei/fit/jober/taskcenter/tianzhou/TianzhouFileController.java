@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 为文件提供 REST 风格 API。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-12
  */
 @Component

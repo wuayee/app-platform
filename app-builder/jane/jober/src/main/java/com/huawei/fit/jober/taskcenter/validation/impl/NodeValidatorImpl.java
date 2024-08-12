@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * 为 {@link NodeValidator} 提供实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-17
  */
 @Component

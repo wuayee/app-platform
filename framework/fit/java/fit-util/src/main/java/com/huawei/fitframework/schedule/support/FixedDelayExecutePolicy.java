@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 表示固定延迟时间的执行策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-15
  */
 public class FixedDelayExecutePolicy extends AbstractExecutePolicy {

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示 WebSocket 中二进制消息的映射器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-11
  */
 public class WebSocketBinaryMessageMapper implements PropertyValueMapper {

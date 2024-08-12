@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * 流程实例状态枚举
  *
- * @author l00853680
+ * @author 刘海洋
  * @since 1.0
  */
 public enum FlowTraceStatus {

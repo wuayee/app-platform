@@ -19,7 +19,7 @@ import java.net.URL;
 /**
  * 为 {@link ResourceTree} 提供基于 JAR 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-10
  */
 final class JarResourceTree extends AbstractResourceTree {

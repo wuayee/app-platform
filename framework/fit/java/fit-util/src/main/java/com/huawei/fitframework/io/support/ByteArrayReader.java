@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * 为 {@link ByteReader} 提供基于字节数组的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-03-02
  */
 public final class ByteArrayReader implements ByteReader {

@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 为可命名的对象提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-11
  */
 public class AbstractNameable implements Nameable {

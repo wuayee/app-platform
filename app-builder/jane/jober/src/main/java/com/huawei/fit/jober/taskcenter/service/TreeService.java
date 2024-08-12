@@ -13,7 +13,7 @@ import com.huawei.fitframework.model.RangedResultSet;
 /**
  * 为任务树提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  */
 public interface TreeService {

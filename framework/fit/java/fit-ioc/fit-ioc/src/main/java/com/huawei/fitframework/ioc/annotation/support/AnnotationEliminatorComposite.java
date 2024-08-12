@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 为 {@link AnnotationEliminator} 提供组合模式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-19
  */
 public class AnnotationEliminatorComposite implements AnnotationEliminator {

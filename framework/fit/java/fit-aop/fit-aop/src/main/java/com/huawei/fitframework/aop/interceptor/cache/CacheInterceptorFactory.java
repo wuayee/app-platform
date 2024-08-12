@@ -9,7 +9,7 @@ import com.huawei.fitframework.aop.interceptor.MethodInterceptorFactory;
 /**
  * 表示缓存方法拦截器的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-14
  */
 public interface CacheInterceptorFactory extends MethodInterceptorFactory {}

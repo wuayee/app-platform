@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 为注解元素的键值对提供列表。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-29
  */
 public final class AnnotationElementValuePairList implements Iterable<AnnotationElementValuePair> {

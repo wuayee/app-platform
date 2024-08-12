@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * {@link MetaConverter}对应测试类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-25
  */
 @ExtendWith(MockitoExtension.class)

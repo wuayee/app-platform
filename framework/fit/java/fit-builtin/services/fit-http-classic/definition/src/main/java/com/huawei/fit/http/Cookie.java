@@ -9,7 +9,7 @@ import com.huawei.fitframework.pattern.builder.BuilderFactory;
 /**
  * 表示 Http 中的 Cookie。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-06
  */
 public interface Cookie {

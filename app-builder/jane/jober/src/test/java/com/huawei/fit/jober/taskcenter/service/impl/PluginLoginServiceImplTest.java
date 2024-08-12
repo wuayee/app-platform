@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * {@link PluginLoginServiceImpl} 对应测试类。
  *
- * @author ywx1299574
+ * @author 姚江
  * @since 2024-02-18
  */
 @ExtendWith(MockitoExtension.class)

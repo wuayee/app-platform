@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示可重复注解的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-31
  */
 @Target(ElementType.TYPE)

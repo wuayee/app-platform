@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 当获取指定Bean时因条件不清导致筛选到多个Bean时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class AmbiguousBeanException extends IocException {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 表示配置的通用获取值的方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-26
  */
 @FunctionalInterface

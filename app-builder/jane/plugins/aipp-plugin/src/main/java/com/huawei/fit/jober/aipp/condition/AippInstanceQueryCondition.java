@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 /**
  * Aipp实例排序条件
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-08
  */
 @Builder

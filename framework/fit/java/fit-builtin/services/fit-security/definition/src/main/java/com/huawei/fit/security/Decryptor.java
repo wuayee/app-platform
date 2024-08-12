@@ -7,7 +7,7 @@ package com.huawei.fit.security;
 /**
  * 表示解密服务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-31
  */
 public interface Decryptor {

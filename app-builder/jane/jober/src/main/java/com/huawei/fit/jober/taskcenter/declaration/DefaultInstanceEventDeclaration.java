@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 默认实例事件声明
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 class DefaultInstanceEventDeclaration implements InstanceEventDeclaration {

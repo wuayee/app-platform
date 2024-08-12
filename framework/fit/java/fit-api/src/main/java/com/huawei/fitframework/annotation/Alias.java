@@ -17,8 +17,8 @@ import java.lang.annotation.Target;
  * 表示别名信息。
  * <p>为 {@link Fitable} 作用于类型上的实现提供别名定义，或是其他场景也可以复用此注解。</p>
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @see Stereotype
  * @see Fitable
  * @since 2020-12-14

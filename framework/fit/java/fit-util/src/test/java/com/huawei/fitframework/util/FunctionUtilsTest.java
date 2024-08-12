@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 /**
  * {@link FunctionUtils} 的单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-10-05
  */
 public class FunctionUtilsTest {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示日志打印的颜色。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-14
  */
 public enum ConsoleColor {

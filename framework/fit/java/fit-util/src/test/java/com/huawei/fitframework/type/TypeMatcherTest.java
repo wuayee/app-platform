@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 /**
  * 为 {@link TypeMatcher} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 public class TypeMatcherTest {

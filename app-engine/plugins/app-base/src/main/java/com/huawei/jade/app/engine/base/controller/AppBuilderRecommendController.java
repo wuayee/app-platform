@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 猜你想问获取接口
  *
- * @author y00858250
+ * @author 杨海波
  * @since 2024-05-24
  */
 @Component

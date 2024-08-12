@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 /**
  * 表示方法拦截器的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-13
  */
 public interface MethodInterceptorFactory {

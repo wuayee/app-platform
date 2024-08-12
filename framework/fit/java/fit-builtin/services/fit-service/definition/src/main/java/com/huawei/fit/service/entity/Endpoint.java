@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * 表示端点信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-06
  */
 public class Endpoint {

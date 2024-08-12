@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * {@link MetaInstanceService}的实现类。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-12-12
  */
 @Alias("Jane-MetaInstance")

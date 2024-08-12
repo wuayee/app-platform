@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.util.ExecutableSql;
 /**
  * 为任务实例提供视图。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-27
  */
 public interface TaskInstanceView {

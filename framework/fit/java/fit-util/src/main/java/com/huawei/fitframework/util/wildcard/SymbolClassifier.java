@@ -7,7 +7,7 @@ package com.huawei.fitframework.util.wildcard;
 /**
  * 为通配符提供分类程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 @FunctionalInterface

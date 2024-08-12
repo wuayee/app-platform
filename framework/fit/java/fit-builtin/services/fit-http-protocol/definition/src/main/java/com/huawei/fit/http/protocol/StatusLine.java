@@ -7,7 +7,7 @@ package com.huawei.fit.http.protocol;
 /**
  * 表示 Http 响应的状态行。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc2616#section-6.1">RFC 2616</a>
  * @since 2022-07-07
  */

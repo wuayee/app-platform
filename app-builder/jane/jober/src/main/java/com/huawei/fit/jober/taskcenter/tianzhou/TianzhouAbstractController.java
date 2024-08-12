@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.tianzhou;
 /**
  * 为 Controller 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-08
  */
 public abstract class TianzhouAbstractController {

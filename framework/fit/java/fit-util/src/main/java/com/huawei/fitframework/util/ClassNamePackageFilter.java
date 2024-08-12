@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 /**
  * 为类型名称提供依据包名的过滤器。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-08-31
  */
 public class ClassNamePackageFilter implements Predicate<String> {

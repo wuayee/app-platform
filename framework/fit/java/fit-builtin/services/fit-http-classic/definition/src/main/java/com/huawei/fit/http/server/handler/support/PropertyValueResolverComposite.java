@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * 表示组合的 {@link PropertyValueMapperResolver}。
  * <p>在组合的 Http 值映射解析器中，只要有任意一个参数映射解析器解析成功，即返回结果。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-30
  */
 public class PropertyValueResolverComposite implements PropertyValueMapperResolver {

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * {@link FastJsonValueSetterTest} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-21
  */
 public class FastJsonValueSetterTest {

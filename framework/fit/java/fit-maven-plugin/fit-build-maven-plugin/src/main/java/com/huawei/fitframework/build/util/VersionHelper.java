@@ -18,7 +18,7 @@ import java.net.URL;
 /**
  * 为版本提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-03
  */
 public final class VersionHelper {

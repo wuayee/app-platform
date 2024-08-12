@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 /**
  * 为 {@link StringUtils} 提供单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 1.0
  */
 public class StringUtilsTest {

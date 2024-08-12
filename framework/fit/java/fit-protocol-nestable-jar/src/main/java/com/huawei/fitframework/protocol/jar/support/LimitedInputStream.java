@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * 为 {@link InputStream} 提供支持设置长度的装饰程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-21
  */
 final class LimitedInputStream extends InputStream {

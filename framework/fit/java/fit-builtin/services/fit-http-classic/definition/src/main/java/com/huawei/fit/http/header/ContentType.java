@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * 表示消息头中关于内容类型的信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc2616#section-14.17">RFC 2616</a>
  * @since 2022-09-04
  */

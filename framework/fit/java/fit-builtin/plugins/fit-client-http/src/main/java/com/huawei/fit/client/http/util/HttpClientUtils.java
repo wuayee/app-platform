@@ -36,7 +36,7 @@ import java.lang.reflect.Type;
 /**
  * FIT 调用关于 Http 客户端相关的工具类。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-17
  */
 public class HttpClientUtils {

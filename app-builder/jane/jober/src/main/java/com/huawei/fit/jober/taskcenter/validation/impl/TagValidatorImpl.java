@@ -15,7 +15,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link TagValidator} 提供实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-16
  */
 @Component

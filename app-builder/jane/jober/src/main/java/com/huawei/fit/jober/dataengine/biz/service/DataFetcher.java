@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * DataFetcher 从其他平台获取数据类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/7/18
  */
 public class DataFetcher {

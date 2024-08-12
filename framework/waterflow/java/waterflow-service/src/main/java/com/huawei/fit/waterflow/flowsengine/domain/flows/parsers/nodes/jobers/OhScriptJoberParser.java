@@ -12,7 +12,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
 /**
  * OhScriptJoberParser
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/10/31
  */
 public class OhScriptJoberParser implements JoberParser {

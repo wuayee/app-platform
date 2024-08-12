@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 为 {@link DeleteSql} 提供基于 Postgresql 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-28
  */
 class PostgresDeleteSql implements DeleteSql {

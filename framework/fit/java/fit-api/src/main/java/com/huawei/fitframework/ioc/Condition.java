@@ -9,7 +9,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 /**
  * 为 Bean 提供生效条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-14
  */
 public interface Condition {

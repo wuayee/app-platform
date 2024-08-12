@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 /**
  * 为注解树中的节点提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 class DefaultAnnotationTreeNode extends AbstractAnnotationTreeNodeContainer implements AnnotationTreeNode {

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 为类型匹配程序提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 public abstract class AbstractTypeMatcher<C extends Type, E extends Type> implements TypeMatcher {

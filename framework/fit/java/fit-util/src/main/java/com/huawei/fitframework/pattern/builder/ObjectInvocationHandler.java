@@ -13,8 +13,8 @@ import java.util.Objects;
 /**
  * 对象的动态代理。
  *
- * @author l00815032 梁济时
- * @author j00559309 季聿阶
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-06-22
  */
 public class ObjectInvocationHandler implements InvocationHandler {

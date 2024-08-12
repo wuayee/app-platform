@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 为 {@link Config} 提供基于映射存储配置值的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-14
  */
 public class ReadonlyMapConfig extends AbstractConfig {

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * 表示修饰符。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-13
  */
 public enum Modifier {

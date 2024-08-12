@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.domain.parsers.FlowGraphData;
 /**
  * http调用类型任务解析器
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 1.0
  */
 public class HttpJoberParser implements JoberParser {

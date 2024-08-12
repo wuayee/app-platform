@@ -10,7 +10,7 @@ import com.huawei.jade.carver.operation.support.OperationLogFields;
 /**
  * 操作日志国际化接口。
  *
- * @author f00881613
+ * @author 方誉州
  * @since 2024-08-01
  */
 public interface OperationLogLocaleService {

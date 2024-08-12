@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * 为事务提供切面能力。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-30
  */
 @Aspect

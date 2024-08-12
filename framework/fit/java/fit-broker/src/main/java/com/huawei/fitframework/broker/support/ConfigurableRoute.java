@@ -9,7 +9,7 @@ import com.huawei.fitframework.broker.Route;
 /**
  * 表示可修改的 {@link Route}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-30
  */
 public class ConfigurableRoute implements Route {

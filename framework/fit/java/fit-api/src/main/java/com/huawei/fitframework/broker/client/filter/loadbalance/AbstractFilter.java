@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * {@link Invoker.Filter} 的抽象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-03-22
  */
 public abstract class AbstractFilter implements Invoker.Filter {

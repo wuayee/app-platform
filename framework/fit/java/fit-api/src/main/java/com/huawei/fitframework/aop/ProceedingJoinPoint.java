@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop;
 /**
  * 暴露连接点 proceed(..) 方法，以支持 around 的环绕通知的接口。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public interface ProceedingJoinPoint extends JoinPoint {

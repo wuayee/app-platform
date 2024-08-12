@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 /**
  * 为对象类型转换提供服务。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-28
  */
 public interface ConversionService {

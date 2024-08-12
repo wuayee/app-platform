@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop.interceptor;
 /**
  * 表示 AOP 的基本异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-10
  */
 public class AspectException extends RuntimeException {

@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Jar.EntryCollection} 提供空的装饰程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-21
  */
 class EmptyJarEntryCollectionDecorator implements Jar.EntryCollection {

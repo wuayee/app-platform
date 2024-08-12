@@ -13,7 +13,7 @@ import java.lang.reflect.Modifier;
 /**
  * 表示所有可访问方法的匹配器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-28
  */
 public class AccessibleMethodMatcher implements MethodMatcher {

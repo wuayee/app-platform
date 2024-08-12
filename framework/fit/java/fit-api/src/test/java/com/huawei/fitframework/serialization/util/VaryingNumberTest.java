@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * {@link VaryingNumber} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-21
  */
 @DisplayName("测试 VaryingNumber 接口")

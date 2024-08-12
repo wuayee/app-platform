@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 /**
  * 为对象类型为 {@link Class} 且期望类型也为 {@link ParameterizedType} 的情况提供匹配判定程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 @MatchTypes(current = Class.class, expected = ParameterizedType.class,
@@ -37,7 +37,7 @@ public class ClassParameterizedTypeMatcher extends AbstractTypeMatcher<Class<?>,
     /**
      * 为创建 {@link ClassParameterizedTypeMatcher} 实例提供工厂。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-29
      */
     public static class Factory implements TypeMatcher.Factory {

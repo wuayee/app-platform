@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 为 {@link InstanceValidator} 提供实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-15
  */
 @Component

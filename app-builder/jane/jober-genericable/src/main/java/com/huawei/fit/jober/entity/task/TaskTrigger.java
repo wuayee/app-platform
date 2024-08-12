@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * 表示任务触发器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-29
  */
 public class TaskTrigger {

@@ -11,7 +11,7 @@ import lombok.Data;
 /**
  * 为任务树提供声明。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  */
 @Data

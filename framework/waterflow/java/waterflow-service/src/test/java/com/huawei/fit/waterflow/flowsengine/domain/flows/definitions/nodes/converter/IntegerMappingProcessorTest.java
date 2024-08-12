@@ -17,7 +17,7 @@ import java.util.HashMap;
 /**
  * 整数类型的转换测试
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/20
  */
 public class IntegerMappingProcessorTest {

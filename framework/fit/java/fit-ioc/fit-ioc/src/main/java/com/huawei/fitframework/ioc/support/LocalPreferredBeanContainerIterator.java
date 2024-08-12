@@ -18,7 +18,7 @@ import java.util.Queue;
 /**
  * 表示本地优先的 Bean 容器的迭代器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-07-01
  */
 class LocalPreferredBeanContainerIterator implements Iterator<BeanContainer> {

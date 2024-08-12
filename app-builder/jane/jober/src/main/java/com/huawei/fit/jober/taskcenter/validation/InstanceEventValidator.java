@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation;
 /**
  * 为实例事件提供校验器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public interface InstanceEventValidator {

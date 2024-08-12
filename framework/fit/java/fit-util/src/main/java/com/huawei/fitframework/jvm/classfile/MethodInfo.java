@@ -13,7 +13,7 @@ import java.io.InputStream;
 /**
  * 为方法提供信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-09
  */
 public final class MethodInfo {

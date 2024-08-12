@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.StringUtils;
  * 为 {@link ParsingResult} 提供默认实现。
  *
  * @param <T> 表示结果的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class DefaultParsingResult<T> implements ParsingResult<T> {

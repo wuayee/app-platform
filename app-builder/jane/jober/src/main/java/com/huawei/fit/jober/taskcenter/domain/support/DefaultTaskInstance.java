@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 /**
  * 为 {@link TaskInstance} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-12
  */
 public class DefaultTaskInstance implements TaskInstance {
@@ -163,7 +163,7 @@ public class DefaultTaskInstance implements TaskInstance {
     /**
      * 为 {@link TaskInstance.Builder} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     public static class Builder implements TaskInstance.Builder {
@@ -233,7 +233,7 @@ public class DefaultTaskInstance implements TaskInstance {
     /**
      * 为 {@link TaskInstance.Declaration} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     public static class Declaration implements TaskInstance.Declaration {
@@ -276,7 +276,7 @@ public class DefaultTaskInstance implements TaskInstance {
         /**
          * 为 {@link TaskInstance.Declaration.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-12-12
          */
         public static class Builder implements TaskInstance.Declaration.Builder {
@@ -341,7 +341,7 @@ public class DefaultTaskInstance implements TaskInstance {
     /**
      * 为 {@link TaskInstance.Filter} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     public static class Filter implements TaskInstance.Filter {
@@ -423,7 +423,7 @@ public class DefaultTaskInstance implements TaskInstance {
         /**
          * 为 {@link TaskInstance.Filter.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-12-12
          */
         public static class Builder implements TaskInstance.Filter.Builder {

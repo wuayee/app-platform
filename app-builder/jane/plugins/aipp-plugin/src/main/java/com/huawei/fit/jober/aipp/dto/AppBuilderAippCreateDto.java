@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 启动Aipp实例信息
  *
- * @author 陈潇文 c00816135
+ * @author 陈潇文
  * @since 2024-05-24
  */
 @Builder

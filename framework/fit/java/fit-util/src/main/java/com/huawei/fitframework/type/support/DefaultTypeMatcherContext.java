@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 /**
  * 为 {@link TypeMatcher.Context} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 public class DefaultTypeMatcherContext implements TypeMatcher.Context {
@@ -47,7 +47,7 @@ public class DefaultTypeMatcherContext implements TypeMatcher.Context {
     /**
      * 为 {@link TypeMatcher.Context.Builder} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-29
      */
     public static class Builder implements TypeMatcher.Context.Builder {

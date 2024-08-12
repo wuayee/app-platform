@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 为{@link ExecutableSql} 提供默认实现
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 class DefaultExecutableSql implements ExecutableSql {

@@ -55,7 +55,7 @@ import java.util.function.Function;
 /**
  * 表示消息体格式为 {@code 'multipart/*'} 的序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc2046#section-5.1.1">RFC 2046</a>
  * @since 2022-10-12
  */
@@ -337,7 +337,7 @@ public class MultiPartEntitySerializer implements EntitySerializer<PartitionedEn
     /**
      * 表示不关闭输入流的输入流。
      *
-     * @author 邬涨财 w00575064
+     * @author 邬涨财
      * @since 2023-12-20
      */
     private static class NonClosingInputStream extends FilterInputStream {

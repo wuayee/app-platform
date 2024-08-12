@@ -9,7 +9,7 @@ import com.huawei.fit.data.repository.exception.CapacityOverflowException;
 /**
  * 缓存数据校验服务。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-24
  */
 public interface ValidationService {

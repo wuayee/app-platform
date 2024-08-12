@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * 更新任务状态，用于初始化文件数量，是否分批扫描数据
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/2/26
  */
 @Component

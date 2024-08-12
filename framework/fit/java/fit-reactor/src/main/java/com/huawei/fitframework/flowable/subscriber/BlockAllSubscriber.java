@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 表示阻塞等待所有结果的 {@link Subscriber 订阅者}。
  *
  * @param <T> 表示订阅者订阅的数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-11
  */
 public class BlockAllSubscriber<T> extends AbstractSubscriber<T> {

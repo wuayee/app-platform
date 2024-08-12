@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 文件上传管理器
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2024/5/10
  */
 public interface UploadedFileManageService {

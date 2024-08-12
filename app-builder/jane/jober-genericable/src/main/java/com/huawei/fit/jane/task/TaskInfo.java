@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  * <p>可通过 {@link TaskInfos#lookupTaskType(TaskInfo, String)} 方法查找任务定义中包含的指定唯一标识的任务类型。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-07
  */
 public class TaskInfo {

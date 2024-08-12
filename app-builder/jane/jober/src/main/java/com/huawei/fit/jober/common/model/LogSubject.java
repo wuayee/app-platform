@@ -9,7 +9,7 @@ import lombok.Data;
 /**
  * 日志信息
  *
- * @author d30022216
+ * @author 董建华
  * @since 2023-09-10
  */
 @Data

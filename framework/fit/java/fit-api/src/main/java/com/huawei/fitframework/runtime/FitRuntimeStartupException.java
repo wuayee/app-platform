@@ -7,7 +7,7 @@ package com.huawei.fitframework.runtime;
 /**
  * 当 FIT 运行时启动失败时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-27
  */
 public class FitRuntimeStartupException extends IllegalStateException {

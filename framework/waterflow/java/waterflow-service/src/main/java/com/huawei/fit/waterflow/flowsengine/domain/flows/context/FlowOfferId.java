@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * 每次offer后返回的标识
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/2/18
  */
 @Getter

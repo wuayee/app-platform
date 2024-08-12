@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 /**
  * 为归档件和归档记录的位置信息提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-20
  */
 public final class Locations {
@@ -210,7 +210,7 @@ public final class Locations {
     /**
      * 为 {@link JarLocation} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-16
      */
     private static final class Jar implements JarLocation {
@@ -313,7 +313,7 @@ public final class Locations {
         /**
          * 为 {@link JarLocation.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2022-01-16
          */
         private static final class Builder implements JarLocation.Builder {
@@ -367,7 +367,7 @@ public final class Locations {
     /**
      * 为 {@link JarEntryLocation} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-07
      */
     private static final class JarEntry implements JarEntryLocation {
@@ -450,7 +450,7 @@ public final class Locations {
         /**
          * 为 {@link JarEntryLocation.Builder} 提供默认实现。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2022-10-07
          */
         private static final class Builder implements JarEntryLocation.Builder {

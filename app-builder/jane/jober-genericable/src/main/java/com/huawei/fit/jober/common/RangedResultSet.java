@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 批量返回结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-29
  */
 public class RangedResultSet<T> {

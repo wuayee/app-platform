@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示检查指定列不等于指定值的条件。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 public class NotEqualsCondition extends AbstractBinaryCondition {

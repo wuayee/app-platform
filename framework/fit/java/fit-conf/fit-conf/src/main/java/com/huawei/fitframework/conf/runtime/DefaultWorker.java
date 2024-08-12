@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示 {@link WorkerConfig} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-07
  */
 public class DefaultWorker implements WorkerConfig {

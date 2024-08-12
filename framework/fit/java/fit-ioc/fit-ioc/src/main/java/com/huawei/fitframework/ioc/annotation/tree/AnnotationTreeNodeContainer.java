@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 为注解树节点提供容器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-07
  */
 public interface AnnotationTreeNodeContainer {

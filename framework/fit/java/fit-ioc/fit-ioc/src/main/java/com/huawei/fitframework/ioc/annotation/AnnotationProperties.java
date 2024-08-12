@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
 /**
  * 为 {@link AnnotationProperty} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-16
  */
 public final class AnnotationProperties {

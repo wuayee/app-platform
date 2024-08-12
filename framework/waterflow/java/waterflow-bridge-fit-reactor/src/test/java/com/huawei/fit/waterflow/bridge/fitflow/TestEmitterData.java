@@ -9,7 +9,7 @@ import lombok.Data;
 /**
  * 用于测试的EmitterData
  *
- * @author x00576283
+ * @author 夏斐
  * @since 1.0
  */
 @Data

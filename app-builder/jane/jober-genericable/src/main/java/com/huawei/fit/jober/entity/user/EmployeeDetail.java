@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * 用户详情结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-11-13
  */
 public class EmployeeDetail {
