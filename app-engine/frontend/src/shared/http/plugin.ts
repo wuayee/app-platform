@@ -22,6 +22,10 @@ export function getPluginDetail(pluginId) {
   const url = `${PLUGIN_URL}/store/plugins/${pluginId}`;
   return get(url);
 }
+export function getPluginFlowDetail(pluginId) {
+  const url = `${PLUGIN_URL}/store/plugins/tools/${pluginId}`;
+  return get(url);
+}
 // 插件列表
 export function getToolsList(params) {
   const url = `${PLUGIN_URL}/tools/search`;
