@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.controller;
+
+import com.huawei.fit.http.protocol.Address;
+import com.huawei.fit.http.protocol.support.DefaultMessageHeaders;
+import com.huawei.fit.http.server.HttpClassicServerRequest;
+import com.huawei.fit.http.support.DefaultCookieCollection;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippParamException;
+import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
+import com.huawei.fit.jober.aipp.service.AppChatService;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+/**
+ * 为 {@link AppChatController} 提供测试
+ *
+ * @author 姚江
+ * @since 2024-08-07
+ */
+@ExtendWith(MockitoExtension.class)
+public class AppChatControllerTest {
+    private AppChatController controller;
+
+    @Mock
+    private Authenticator authenticator;
+    @Mock
+    private AppChatService appChatService;
+    @Mock
+    private HttpClassicServerRequest request;
+
+    @BeforeEach
+    void before() {
+        this.controller = new AppChatController(authenticator, appChatService);
+    }
+
+    @Test
+    @DisplayName("测试app_chat接口")
+    void testChat() {
+        CreateAppChatRequest body = CreateAppChatRequest.builder()
+                .appId("appid")
+                .context(CreateAppChatRequest.Context.builder().build())
+                .question("q")
+                .build();
+        Mockito.when(request.headers()).thenReturn(new DefaultMessageHeaders());
+        Mockito.when(request.cookies()).thenReturn(new DefaultCookieCollection());
+        Mockito.when(request.remoteAddress()).thenReturn(Address.builder().hostAddress("127.0.0.1").port(6666).build());
+        Assertions.assertDoesNotThrow(() -> this.controller.chat(request, "123", body));
+    }
+
+    @Test
+    @DisplayName("测试app_chat接口")
+    void testChatFailedByNoQuestion() {
+        CreateAppChatRequest body = CreateAppChatRequest.builder()
+                .appId("appid")
+                .context(CreateAppChatRequest.Context.builder().build())
+                .build();
+        AippParamException exception =
+                Assertions.assertThrows(AippParamException.class, () -> this.controller.chat(request, "123", body));
+        Assertions.assertEquals(AippErrCode.APP_CHAT_QUESTION_IS_NULL.getErrorCode(), exception.getCode());
+    }
+
+    @Test
+    @DisplayName("测试app_chat接口")
+    void testChatFailedByNoBody() {
+        AippParamException exception =
+                Assertions.assertThrows(AippParamException.class, () -> this.controller.chat(request, "123", null));
+        Assertions.assertEquals(AippErrCode.APP_CHAT_REQUEST_IS_NULL.getErrorCode(), exception.getCode());
+    }
+
+    @Test
+    @DisplayName("测试app_chat_debug接口")
+    void testChatDebug() {
+        CreateAppChatRequest body = CreateAppChatRequest.builder()
+                .appId("appid")
+                .context(CreateAppChatRequest.Context.builder().build())
+                .question("q")
+                .build();
+        Mockito.when(request.headers()).thenReturn(new DefaultMessageHeaders());
+        Mockito.when(request.cookies()).thenReturn(new DefaultCookieCollection());
+        Mockito.when(request.remoteAddress()).thenReturn(Address.builder().hostAddress("127.0.0.1").port(6666).build());
+        Assertions.assertDoesNotThrow(() -> this.controller.chatDebug(request, "123", body));
+    }
+
+    @Test
+    @DisplayName("测试water_flow_chat_debug接口")
+    void testWaterFlowChatDebug() {
+        CreateAppChatRequest body = CreateAppChatRequest.builder()
+                .appId("appid")
+                .context(CreateAppChatRequest.Context.builder().build())
+                .build();
+        Mockito.when(request.headers()).thenReturn(new DefaultMessageHeaders());
+        Mockito.when(request.cookies()).thenReturn(new DefaultCookieCollection());
+        Mockito.when(request.remoteAddress()).thenReturn(Address.builder().hostAddress("127.0.0.1").port(6666).build());
+        Assertions.assertDoesNotThrow(() -> this.controller.waterFlowChatDebug(request, "123", body));
+    }
+}

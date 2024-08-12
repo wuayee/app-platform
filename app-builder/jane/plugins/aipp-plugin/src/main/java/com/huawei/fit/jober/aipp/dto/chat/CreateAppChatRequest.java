@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.dto.chat;
 
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fitframework.annotation.Property;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,5 +41,34 @@ public class CreateAppChatRequest {
 
     @Property(description = "context")
     @JsonProperty("context")
-    private Map<String, Object> context;
+    private Context context;
+
+    /**
+     * 本类表示对话的上下文
+     */
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Context {
+        @Property(description = "是否使用历史记录")
+        @JsonProperty("use_memory")
+        private Boolean useMemory;
+
+        @Property(description = "用户自定义输入")
+        @JsonProperty("user_context")
+        private Map<String, Object> userContext;
+
+        @Property(description = "at其它应用")
+        @JsonProperty(AippConst.BS_AT_APP_ID)
+        private String atAppId;
+
+        @Property(description = "at其它应用的对话")
+        @JsonProperty(AippConst.BS_AT_CHAT_ID)
+        private String atChatId;
+
+        @Property(description = "产品线的信息")
+        @JsonProperty("dimension")
+        private String dimension;
+    }
 }
