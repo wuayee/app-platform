@@ -4,136 +4,187 @@
 
 package com.huawei.jade.store.entity.transfer;
 
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 表示插件的数据内容。
  *
  * @author 鲁为 l00839724
- * @since 2024-06-15
+ * @since 2024-07-25
  */
-public class PluginData extends ToolData {
+public class PluginData {
     /**
-     * 表示是否发布到市场。
+     * 表示插件的创建者。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时可选。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
      */
-    private Boolean isPublished;
+    private String creator;
 
     /**
-     * 表示插件的拥有者。
+     * 表示插件的修改者。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时可选。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
      */
-    private String owner;
+    private String modifier;
 
     /**
-     * 表示插件点赞数量。
+     * 表示插件的唯一标识。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时不需要设置。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
      */
-    private Integer likeCount;
+    private String pluginId;
 
     /**
-     * 表示插件下载数量。
+     * 表示插件的名字。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时需传入。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
      */
-    private Integer downloadCount;
+    private String pluginName;
 
     /**
-     * 用所有属性构造 {@link PluginData}。
+     * 表示插件的扩展信息。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时需传入。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private Map<String, Object> extension;
+
+    /**
+     * 表示插件包含的插件工具数据。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时不传入。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private List<PluginToolData> pluginToolDataList;
+
+    /**
+     * 获取插件的创建者。
      *
-     * @param toolData 表示工具的数据的 {@link ToolData}。
-     * @param isPublished 表示插件是否已发布的 {@code boolean}。
-     * @param owner 表示插件的拥有者的 {@link String}。
-     * @param likeCount 表示插件的点赞数量的 {@code int}。
-     * @param downloadCount 表示插件的下载数量的 {@code int}。
+     * @return 表示插件创建者的 {@link String}。
      */
-    public PluginData(ToolData toolData, Boolean isPublished, String owner, Integer likeCount, Integer downloadCount) {
-        this.setCreator(toolData.getCreator());
-        this.setModifier(toolData.getModifier());
-        this.setName(toolData.getName());
-        this.setDescription(toolData.getDescription());
-        this.setUniqueName(toolData.getUniqueName());
-        this.setSchema(toolData.getSchema());
-        this.setRunnables(toolData.getRunnables());
-        this.setSource(toolData.getSource());
-        this.setIcon(toolData.getIcon());
-        this.setTags(toolData.getTags());
-        this.setVersion(toolData.getVersion());
-        this.isPublished = isPublished;
-        this.owner = owner;
-        this.likeCount = likeCount;
-        this.downloadCount = downloadCount;
+    public String getCreator() {
+        return this.creator;
     }
 
     /**
-     * 空参构造 {@link PluginData}。
-     */
-    public PluginData() {}
-
-    /**
-     * 获取插件发布状态。
+     * 设置插件的创建者。
      *
-     * @return 表示发布状态的 {@code boolean}。
+     * @param creator 表示插件创建者的 {@link String}。
      */
-    public Boolean isPublished() {
-        return this.isPublished;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     /**
-     * 设置插件发布状态。
+     * 获取插件的修改者。
      *
-     * @param isPublished 表示发布状态的 {code boolean}。
+     * @return 表示插件修改者的 {@link String}。
      */
-    public void setPublished(Boolean isPublished) {
-        this.isPublished = isPublished;
+    public String getModifier() {
+        return this.modifier;
     }
 
     /**
-     * 获取插件拥有者。
+     * 设置插件的修改者。
      *
-     * @return 表示拥有者的名字的 {@link String}。
+     * @param modifier 表示插件修改者的 {@link String}。
      */
-    public String getOwner() {
-        return this.owner;
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 
     /**
-     * 设置插件拥有者。
+     * 获取插件的唯一标识。
      *
-     * @param owner 表示插件拥有者的名字的 {@link String}。
+     * @return 表示插件唯一标识的 {@link String}。
      */
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public String getPluginId() {
+        return this.pluginId;
     }
 
     /**
-     * 获取插件点赞数量。
+     * 设置插件唯一标识。
      *
-     * @return 表示点赞数量的 {@link Integer}。
+     * @param pluginId 表示插件唯一标识的 {@link String}。
      */
-    public Integer getLikeCount() {
-        return this.likeCount;
+    public void setPluginId(String pluginId) {
+        this.pluginId = pluginId;
     }
 
     /**
-     * 设置点赞数量。
+     * 获取插件的名字。
      *
-     * @param likeCount 表示点赞数量的 {@link Integer}。
+     * @return 表示插件名字的 {@link String}。
      */
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
+    public String getPluginName() {
+        return this.pluginName;
     }
 
     /**
-     * 获取下载数量。
+     * 设置插件的名字。
      *
-     * @return 表示下载数量的 {@link Integer}。
+     * @param pluginName 表示插件名字的 {@link String}。
      */
-    public Integer getDownloadCount() {
-        return this.downloadCount;
+    public void setPluginName(String pluginName) {
+        this.pluginName = pluginName;
     }
 
     /**
-     * 设置下载数量。
+     * 获取插件的扩展。
      *
-     * @param downloadCount 表示下载数量的 {@link Integer}。
+     * @return 表示插件扩展的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      */
-    public void setDownloadCount(Integer downloadCount) {
-        this.downloadCount = downloadCount;
+    public Map<String, Object> getExtension() {
+        return this.extension;
+    }
+
+    /**
+     * 设置插件的扩展。
+     *
+     * @param extension 表示插件扩展的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     */
+    public void setExtension(Map<String, Object> extension) {
+        this.extension = extension;
+    }
+
+    /**
+     * 获取插件包含的插件工具的列表。
+     *
+     * @return 表示插件工具列表的 {@link List}{@code <}{@link PluginToolData}{@code >}。
+     */
+    public List<PluginToolData> getPluginToolDataList() {
+        return this.pluginToolDataList;
+    }
+
+    /**
+     * 设置插件工具列表。
+     *
+     * @param pluginToolDataList 表示插件工具列表的 {@link List}{@code <}{@link PluginToolData}{@code >}。
+     */
+    public void setPluginToolDataList(List<PluginToolData> pluginToolDataList) {
+        this.pluginToolDataList = pluginToolDataList;
     }
 }

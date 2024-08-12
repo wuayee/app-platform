@@ -103,7 +103,6 @@ public class HttpToolTest {
                 .name(cast(map.getOrDefault("name", "")))
                 .uniqueName(cast(map.getOrDefault("uniqueName", "")))
                 .tags(new HashSet<>(cast(map.getOrDefault("tags", new ArrayList<>()))))
-                .description(cast(map.getOrDefault("description", "")))
                 .schema(cast(map.getOrDefault("schema", new HashMap<>())))
                 .runnables(runnables)
                 .build();

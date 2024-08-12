@@ -17,11 +17,18 @@ import java.util.List;
  */
 public interface ToolMapper {
     /**
-     * 增加工具。
+     * 注册工具。
      *
-     * @param toolDo 表示待增加的工具信息的 {@link ToolDo}。
+     * @param toolDo 表示待注册的工具信息的 {@link ToolDo}。
      */
     void addTool(ToolDo toolDo);
+
+    /**
+     * 注册工具列表。
+     *
+     * @param toolDoList 表示待注册的工具信息的 {@link List}{@code <}{@link ToolDo}{@code >}。
+     */
+    void addTools(List<ToolDo> toolDoList);
 
     /**
      * 删除工具。
@@ -29,6 +36,13 @@ public interface ToolMapper {
      * @param uniqueName 表示工具名的 {@link String}。
      */
     void deleteTool(String uniqueName);
+
+    /**
+     * 删除工具列表。
+     *
+     * @param uniqueNames 表示待删除工具唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
+     */
+    void deleteTools(List<String> uniqueNames);
 
     /**
      * 删除工具的某一个版本。

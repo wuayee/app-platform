@@ -8,7 +8,6 @@
         <result column="creator" property="creator"/>
         <result column="modifier" property="modifier"/>
         <result column="name" property="name"/>
-        <result column="description" property="description"/>
         <result column="unique_name" property="uniqueName"/>
         <result column="schema" property="schema"/>
         <result column="runnables" property="runnables"/>
@@ -20,26 +19,71 @@
     <insert id="addTool" parameterType="com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
         insert into store_tool
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="creator != null">"creator",</if> <if test="modifier != null">"modifier",</if> "name",
-            <if test="description != null">"description",</if> "unique_name", "schema", "runnables",
-            <if test="source != null">"source",</if> <if test="icon != null">"icon",</if>
+            <if test="creator != null">"creator",</if>
+            <if test="modifier != null">"modifier",</if>
+            "name",
+            "unique_name",
+            "schema",
+            "runnables",
+            <if test="source != null">"source",</if>
+            <if test="icon != null">"icon",</if>
             <if test="version != null">"version",</if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="creator != null">#{creator},</if> <if test="modifier != null">#{modifier},</if> #{name},
-            <if test="description != null">#{description},</if> #{uniqueName}, cast(#{schema} as json),
-            cast(#{runnables} as
-            json),
-            <if test="source != null">#{source},</if> <if test="icon != null">#{icon},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="modifier != null">#{modifier},</if>
+            #{name},
+            #{uniqueName},
+            cast(#{schema} as json),
+            cast(#{runnables} as json),
+            <if test="source != null">#{source},</if>
+            <if test="icon != null">#{icon},</if>
             <if test="version != null">#{version},</if>
         </trim>
         on conflict ("unique_name", "version") do nothing
+    </insert>
+    <insert id="addTools" parameterType="java.util.List">
+        <foreach item='toolDo' collection="list" separator=";">
+        insert into store_tool
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="toolDo.creator != null">"creator",</if>
+            <if test="toolDo.modifier != null">"modifier",</if>
+            "name",
+            "unique_name",
+            "schema",
+            "runnables",
+            <if test="toolDo.source != null">"source",</if>
+            <if test="toolDo.icon != null">"icon",</if>
+            <if test="toolDo.version != null">"version",</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="toolDo.creator != null">#{toolDo.creator},</if>
+            <if test="toolDo.modifier != null">#{toolDo.modifier},</if>
+            #{toolDo.name},
+            #{toolDo.uniqueName},
+            cast(#{toolDo.schema} as json),
+            cast(#{toolDo.runnables} as json),
+            <if test="toolDo.source != null">#{toolDo.source},</if>
+            <if test="toolDo.icon != null">#{toolDo.icon},</if>
+            <if test="toolDo.version != null">#{toolDo.version},</if>
+        </trim>
+        on conflict ("unique_name", "version") do nothing
+        </foreach>
     </insert>
     <delete id="deleteTool" parameterType="String">
         delete
         from "store_tool"
         where unique_name = #{uniqueName};
+    </delete>
+    <delete id="deleteTools" parameterType="List">
+        delete
+        from "store_tool"
+        where unique_name in
+        <foreach collection="list" item="name" open="(" separator="," close=")">
+            #{uniqueName}
+        </foreach>
     </delete>
     <delete id="deleteToolByVersion">
         delete
@@ -48,7 +92,7 @@
         and version = #{version};
     </delete>
     <sql id="selectToolColumns">
-        select i."creator", i."modifier", i."name", i."description", i."unique_name", i."schema", i."runnables", i."source", i."icon", i."version"
+        select i."creator", i."modifier", i."name", i."unique_name", i."schema", i."runnables", i."source", i."icon", i."version"
         from "store_tool" i
     </sql>
     <select id="getToolByUniqueName" resultMap="Tool">

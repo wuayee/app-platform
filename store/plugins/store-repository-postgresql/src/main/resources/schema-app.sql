@@ -14,7 +14,7 @@ create table if not exists store_app
     "tool_unique_name" char(36)                              not null,
     unique("tool_unique_name")
     );
-create index if not exists fast_query_plugin on store_app ("tool_unique_name");
+create index if not exists fast_query_app on store_app ("tool_unique_name");
 comment on column store_app.id is '应用的自增主键';
 comment on column store_app.created_time is '应用的创建时间';
 comment on column store_app.updated_time is '应用的更新时间';
