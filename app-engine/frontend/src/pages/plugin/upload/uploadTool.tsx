@@ -207,7 +207,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
       }
     >
       <div className='upload-info-head'>
-        <img src='/src/assets/images/ai/info-upload.png' />
+        <img src='./src/assets/images/ai/info-upload.png' />
         <span>建议用户在本地调试插件，避免部署失败；相同工具将会覆盖。</span>
       </div>
       <Spin tip='上传插件中' size='small' spinning={loading}>

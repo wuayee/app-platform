@@ -3,7 +3,8 @@ import { httpUrlMap } from './httpConfig';
 
 const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 
-export function getPlugins(data: {
+// 获取插件工具列表，应用于流程编排页面
+export function getPluginTools(data: {
   pageNum: number;
   pageSize: number;
   includeTags: string;
@@ -12,6 +13,18 @@ export function getPlugins(data: {
   const url = `${PLUGIN_URL}/store/plugins/tools/search?${excludeTags}`;
   return get(url, { ...data });
 }
+
+// 获取插件列表，应用于插件市场
+export function getPlugins(data: {
+  pageNum: number;
+  pageSize: number;
+  includeTags: string;
+  name: string;
+}, excludeTags: string = '') {
+  const url = `${PLUGIN_URL}/store/plugins/search?${excludeTags}`;
+  return get(url, { ...data });
+}
+
 // 删除插件
 export function deletePluginAPI(plugin_id: string) {
   const url = `${PLUGIN_URL}/plugins/delete/${plugin_id}`;
