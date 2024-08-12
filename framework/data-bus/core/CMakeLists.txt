@@ -40,7 +40,7 @@ add_subdirectory(src)
 
 set(DATABUS_DOCKERFILE_PATH ${DATABUS_ROOT_DIR}/../common/docker)
 add_custom_target(databus_core_image
-        COMMAND ${DATABUS_SCRIPT_PATH}/pack_core_docker.sh $<TARGET_FILE:databus> ${DATABUS_DOCKERFILE_PATH}/core.dockerfile ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        COMMAND ${DATABUS_SCRIPT_PATH}/pack_core_docker.sh $<TARGET_FILE:databus> ${DATABUS_DOCKERFILE_PATH}/core.dockerfile ${DATABUS_SCRIPT_PATH}/core_init.sh ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 )
 add_dependencies(databus_core_image databus)
 
