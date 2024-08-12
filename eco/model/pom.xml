@@ -26,8 +26,8 @@
         <retrofit2.version>2.10.0</retrofit2.version>
 
         <!-- Test libs -->
-        <assertj.version>3.24.2</assertj.version>
-        <junit.version>5.8.2</junit.version>
+        <assertj.version>3.26.3</assertj.version>
+        <junit.version>5.10.3</junit.version>
 
         <!-- Maven plugins -->
         <maven.compiler.version>3.11.0</maven.compiler.version>
