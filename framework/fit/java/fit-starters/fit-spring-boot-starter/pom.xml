@@ -23,6 +23,9 @@
 
         <!-- FIT Version -->
         <fit.version>3.5.0-SNAPSHOT</fit.version>
+
+        <!-- Byte Buddy 版本控制 -->
+        <byte-buddy.version>1.14.12</byte-buddy.version>
     </properties>
 
     <dependencies>
