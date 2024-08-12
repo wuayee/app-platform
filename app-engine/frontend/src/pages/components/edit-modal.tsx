@@ -12,10 +12,10 @@ import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
-const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: `${window.location.origin}/api/jober/v1/api`} : httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
   const { modalRef, appInfo, updateAippCallBack, type, addAippCallBack } = props;
-  const [ form ] = Form.useForm();
+  const [form] = Form.useForm();
   const { appId } = useParams();
   const tenantId = TENANT_ID;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,7 +36,7 @@ const EditModal = (props) => {
       description: appInfo.attributes?.description,
       greeting: appInfo.attributes?.greeting,
       icon: appInfo.attributes?.icon,
-      app_type:appInfo.attributes?.app_type
+      app_type: appInfo.attributes?.app_type
     })
   }, [isModalOpen])
   const confrimClick = () => {
@@ -104,7 +104,7 @@ const EditModal = (props) => {
     validateResult && pictureUpload(file);
   }
   // 上传图片
-  async function pictureUpload( file ) {
+  async function pictureUpload(file) {
     let headers = {
       'attachment-filename': encodeURI(file.name || ''),
     };
@@ -117,7 +117,7 @@ const EditModal = (props) => {
         setFilePath(res.data.file_path);
       }
     } catch (err) {
-      Message({ type: 'error',  content: err.message || '上传图片失败'})
+      Message({ type: 'error', content: err.message || '上传图片失败' })
     }
   }
   useImperativeHandle(modalRef, () => {
@@ -128,7 +128,7 @@ const EditModal = (props) => {
   return <>
     {(
       <Modal
-        title={ type ? '添加应用' : '修改基础信息' }
+        title={type ? '添加应用' : '修改基础信息'}
         width='600px'
         keyboard={false}
         maskClosable={false}
@@ -159,7 +159,7 @@ const EditModal = (props) => {
                 message: '输入字符长度范围：1 - 64'
               }]}
             >
-              <Input showCount maxLength={64}/>
+              <Input showCount maxLength={64} />
             </Form.Item>
             <Form.Item
               label='简介'
@@ -171,7 +171,7 @@ const EditModal = (props) => {
               label='开场白'
               name='greeting'
             >
-              <TextArea rows={3} showCount maxLength={300}/>
+              <TextArea rows={3} showCount maxLength={300} />
             </Form.Item>
             <Form.Item
               label='分类'
@@ -185,9 +185,9 @@ const EditModal = (props) => {
               name='icon'
             >
               <div className='avatar'>
-                {  filePath ?
-                  (<img className='img-send-item' src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}/>)
-                  : (<Img icon={appInfo.attributes?.icon}/>)}
+                {filePath ?
+                  (<img className='img-send-item' src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`} />)
+                  : (<Img icon={appInfo.attributes?.icon} />)}
                 <Upload
                   beforeUpload={beforeUpload}
                   onChange={onChange}
@@ -207,7 +207,7 @@ const Img = (props) => {
   const { icon } = props;
   return <>{(
     <span>
-      { icon ? <img src={icon}/> : <img src={knowledgeBase}/> }
+      { icon ? <img src={icon} /> : <img src={knowledgeBase} />}
     </span>
   )}</>
 }
