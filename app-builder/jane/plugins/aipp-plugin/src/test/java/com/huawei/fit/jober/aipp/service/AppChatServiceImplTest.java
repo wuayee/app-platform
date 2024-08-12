@@ -63,13 +63,12 @@ public class AppChatServiceImplTest {
         String chatAppId = "chat";
         String atChatAppId = "atChat";
         Map<String, Object> context = new HashMap<>();
-        context.put("use_memory", true);
-        context.put("at_app_id", atChatAppId);
+        context.put("user_1", true);
+        context.put("user_2", atChatAppId);
         CreateAppChatRequest hello = CreateAppChatRequest.builder()
-                .appId(chatAppId)
-                .question("你好")
-                .chatId("hello")
-                .context(context)
+                .appId(chatAppId).question("你好").chatId("hello")
+                .context(CreateAppChatRequest.Context.builder().useMemory(true).atAppId(atChatAppId)
+                        .userContext(context).build())
                 .build();
         OperationContext operationContext = new OperationContext();
 
