@@ -58,7 +58,7 @@ export default function ConditionFormWrapper({disabled, data}) {
             </Button>
         </div>
         {branches.filter(branch => branch.type === "if").map((branch, index) => (
-                <ConnectorProvider key={"dynamic-" + index} name={"dynamic-" + index}>
+                <ConnectorProvider key={"dynamic-" + index} name={"dynamic-" + index + "|" + branch.id}>
                     <IfForm key={branch.id}
                             branch={branch}
                             index={index}
