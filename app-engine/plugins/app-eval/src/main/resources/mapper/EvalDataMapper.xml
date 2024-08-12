@@ -66,9 +66,9 @@
     </update>
 
     <delete id="deleteAll">
-        delete
-        from t_app_engine_eval_data
-        where dataset_id in
+        DELETE
+        FROM t_app_engine_eval_data
+        WHERE dataset_id IN
         <foreach collection="list" separator="," item="item" open="(" close=")">
             (#{item})
         </foreach>

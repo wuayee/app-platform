@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
@@ -63,7 +64,7 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("批量创建评估数据接口成功")
     void shouldOkWhenCreateEvalData() {
-        Mockito.doNothing().when(this.evalDataService).insertAll(anyLong(), anyList());
+        doNothing().when(this.evalDataService).insertAll(anyLong(), anyList());
 
         EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
         evalDataCreateDto.setDatasetId(1L);
@@ -102,7 +103,7 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("修改评估数据接口成功")
     public void shouldOkWhenUpdateEvalData() {
-        Mockito.doNothing().when(this.evalDataService).update(anyLong(), anyLong(), anyString());
+        doNothing().when(this.evalDataService).update(anyLong(), anyLong(), anyString());
 
         EvalDataUpdateDto evalDataUpdateDto = new EvalDataUpdateDto();
         evalDataUpdateDto.setDatasetId(1L);
@@ -118,7 +119,7 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("不合格数据创建评估数据接口失败")
     void shouldFailWhenCreateEvalDataWithInvalidDataId() {
-        Mockito.doNothing().when(this.evalDataService).insertAll(anyLong(), anyList());
+        doNothing().when(this.evalDataService).insertAll(anyLong(), anyList());
 
         EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
         evalDataCreateDto.setDatasetId(0L);
@@ -133,7 +134,7 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("不合格数据软删除评估数据接口失败")
     void shouldFailWhenDeleteEvalDataWithInvalidDataId() {
-        Mockito.doNothing().when(this.evalDataService).delete(anyList());
+        doNothing().when(this.evalDataService).delete(anyList());
 
         EvalDataDeleteParam evalDataDeleteParam = new EvalDataDeleteParam();
         evalDataDeleteParam.setDataIds(Collections.singletonList(-1L));
@@ -147,7 +148,7 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("批量软删除评估数据接口成功")
     void shouldOkWhenDeleteEvalData() {
-        Mockito.doNothing().when(this.evalDataService).delete(anyList());
+        doNothing().when(this.evalDataService).delete(anyList());
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.delete("/eval/data").param("dataIds", "1").responseType(Void.class);

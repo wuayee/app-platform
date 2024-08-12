@@ -27,7 +27,7 @@ public class MockRequestBuilder implements RequestBuilder {
     private static final String BASE_URL = "http://localhost:";
 
     private final HttpRequestMethod method;
-    private final Map<String, String> params = new HashMap<>();
+    private final MultiValueMap<String, String> params = MultiValueMap.create();
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, List<String>> headersMap = new HashMap<>();
     private String url;
@@ -52,7 +52,20 @@ public class MockRequestBuilder implements RequestBuilder {
      */
     @Override
     public MockRequestBuilder param(String name, String value) {
-        this.params.put(name, value);
+        this.params.add(name, value);
+        return this;
+    }
+
+    /**
+     * 为请求插件结构体添加键值对参数。
+     *
+     * @param name 表示请求体内请求参数的键值 {@link String}。
+     * @param values 表示待设置的请求参数列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示客户端请求参数的建造者 {@link MockRequestBuilder}。
+     */
+    @Override
+    public MockRequestBuilder param(String name, List<String> values) {
+        this.params.addAll(name, values);
         return this;
     }
 
@@ -165,8 +178,8 @@ public class MockRequestBuilder implements RequestBuilder {
         StringBuilder urlBuilder = new StringBuilder(BASE_URL + this.port + this.url);
         if (!this.params.isEmpty()) {
             urlBuilder.append("?");
-            this.params.forEach((key, value) -> {
-                urlBuilder.append(key).append("=").append(value).append("&");
+            this.params.forEach((key, values) -> {
+                values.forEach((value) -> urlBuilder.append(key).append("=").append(value).append("&"));
             });
             urlBuilder.setLength(urlBuilder.length() - 1);
         }

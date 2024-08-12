@@ -139,4 +139,15 @@ public class EvalDatasetServiceImplTest {
         this.evalDatasetService.updateEvalDataset(entity);
         verify(this.evalDatasetMapper, times(1)).updateEvaldataset(any());
     }
+
+    @Test
+    @DisplayName("修改数据集信息成功")
+    void shouldOkWhenUpdateDataset1() {
+        EvalDatasetEntity entity = new EvalDatasetEntity();
+        entity.setName("datasetName1");
+        entity.setDescription(null);
+
+        this.evalDatasetService.updateEvalDataset(entity);
+        verify(this.evalDatasetMapper, times(1)).updateEvaldataset(any());
+    }
 }
