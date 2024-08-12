@@ -4,12 +4,8 @@ export const conditionMap = {
       label: '报表项1级',
       prop: 'report_item_l1_cn_name',
       filterType: 'checkbox',
-      options: [
-        {
-          label: '净销售收入',
-          value: '净销售收入',
-        },
-      ],
+      belongs: '财务指标',
+      options: [],
       readonly: false,
     },
     {
@@ -94,7 +90,7 @@ export const conditionMap = {
       readonly: false,
     },
   ],
-  主维度: [
+  主产品: [
     // {
     //   label: '重量级团队LV0',
     //   prop: 'lv0_prod_rd_team_cn_name',
@@ -110,69 +106,60 @@ export const conditionMap = {
       label: '重量级团队LV1',
       prop: 'lv1_prod_rd_team_cn_name',
       filterType: 'checkbox',
-      hide: true,
-      options: [
-        {
-          label: '计算',
-          value: '计算',
-        },
-        {
-          label: '数据存储',
-          value: '数据存储',
-        },
-      ],
+      belongs: '主产品',
+      options: [],
     },
     {
       label: '重量级团队LV2',
       prop: 'lv2_prod_rd_team_cn_name',
       filterType: 'checkbox',
-      belongs: '主维度',
+      belongs: '主产品',
       options: [],
     },
     {
       label: '重量级团队LV3',
       prop: 'lv3_prod_rd_team_cn_name',
       filterType: 'checkbox',
-      belongs: '主维度',
+      belongs: '主产品',
       options: [],
     },
     {
       label: '重量级团队LV4',
       prop: 'lv4_prod_rd_team_cn_name',
       filterType: 'checkbox',
-      belongs: '主维度',
+      belongs: '主产品',
       options: [],
     },
     // {
     //   label: '产品自定义LV2',
     //   prop: 'lv2_prod_list_cn_name_p',
     //   filterType: 'checkbox',
-    //   belongs: '主维度',
+    //   belongs: '主产品',
     //   options: [],
     // },
     {
       label: '产品自定义LV3',
       prop: 'lv3_prod_list_cn_name_p',
       filterType: 'checkbox',
-      belongs: '主维度',
+      belongs: '主产品',
       options: [],
     },
     {
       label: '产品自定义LV4',
       prop: 'lv4_prod_list_cn_name_p',
       filterType: 'checkbox',
-      belongs: '主维度',
+      belongs: '主产品',
       options: [],
     },
     // {
     //   label: '产品名称',
     //   prop: 'prod_cn_name',
     //   filterType: 'checkbox',
-    //   belongs: '主维度',
+    //   belongs: '主产品',
     //   options: [],
     // },
   ],
-  辅维度: [
+  辅产品: [
     // {
     //   label: '辅产品BG',
     //   prop: 'minor_lv0_prod_list_cn_name',
@@ -192,44 +179,35 @@ export const conditionMap = {
       label: '辅产品LV1',
       prop: 'minor_lv1_prod_list_cn_name',
       filterType: 'checkbox',
-      belongs: '辅维度',
-      options: [
-        {
-          label: '企业服务与软件',
-          value: '企业服务与软件',
-        },
-        {
-          label: '运营商服务与软件',
-          value: '运营商服务与软件',
-        },
-      ],
+      belongs: '辅产品',
+      options: [],
     },
     {
       label: '辅产品LV2',
       prop: 'minor_lv2_prod_list_cn_name',
       filterType: 'checkbox',
-      belongs: '辅维度',
+      belongs: '辅产品',
       options: [],
     },
     // {
     //   label: '辅产品LV3',
     //   prop: 'minor_lv3_prod_list_code',
     //   filterType: 'checkbox',
-    //   belongs: '辅维度',
+    //   belongs: '辅产品',
     //   options:[]
     // },
     // {
     //   label: '辅产品LV4',
     //   prop: 'minor_lv4_prod_list_code',
     //   filterType: 'checkbox',
-    //   belongs: '辅维度',
+    //   belongs: '辅产品',
     //   options:[]
     // },
     // {
     //   label: '辅产品OFFERING',
     //   prop: 'minor_offering_cn_name',
     //   filterType: 'checkbox',
-    //   belongs: '辅维度',
+    //   belongs: '辅产品',
     //   options:[]
     // },
   ],
@@ -238,16 +216,8 @@ export const conditionMap = {
       label: '国内海外标识',
       prop: 'oversea_flag',
       filterType: 'checkbox',
-      options: [
-        {
-          label: '国内',
-          value: '国内',
-        },
-        {
-          label: '海外',
-          value: '海外',
-        },
-      ],
+      belongs: '区域',
+      options: [],
       readonly: false,
     },
     {
@@ -284,20 +254,8 @@ export const conditionMap = {
       label: 'BG名称',
       prop: 'sales_lv0_prod_list_cn_name',
       filterType: 'checkbox',
-      options: [
-        {
-          label: '产业间关联交易',
-          value: '产业间关联交易',
-        },
-        {
-          label: '运营商网络',
-          value: '运营商网络',
-        },
-        {
-          label: '政企',
-          value: '政企',
-        },
-      ],
+      belongs: 'BG',
+      options: [],
       readonly: false,
     },
   ],
@@ -1180,126 +1138,15 @@ export const conditionMap = {
       label: '大T系统部',
       prop: 'top_cust_category_cn_name',
       filterType: 'checkbox',
-      options: [
-        {
-          label: 'America Movil系统部',
-          value: 'America Movil系统部',
-        },
-        {
-          label: 'BHARTI系统部',
-          value: 'BHARTI系统部',
-        },
-        {
-          label: 'DT系统部',
-          value: 'DT系统部',
-        },
-        {
-          label: 'e&系统部',
-          value: 'e&系统部',
-        },
-        {
-          label: 'Millicom系统部',
-          value: 'Millicom系统部',
-        },
-        {
-          label: 'MTN系统部',
-          value: 'MTN系统部',
-        },
-        {
-          label: 'NJJ & Iliad系统部',
-          value: 'NJJ & Iliad系统部',
-        },
-        {
-          label: 'Ooredoo系统部',
-          value: 'Ooredoo系统部',
-        },
-        {
-          label: 'Orange系统部',
-          value: 'Orange系统部',
-        },
-        {
-          label: 'PPF系统部',
-          value: 'PPF系统部',
-        },
-        {
-          label: 'STC系统部',
-          value: 'STC系统部',
-        },
-        {
-          label: 'Telefonica系统部',
-          value: 'Telefonica系统部',
-        },
-        {
-          label: 'Telenor系统部',
-          value: 'Telenor系统部',
-        },
-        {
-          label: 'Turkcell系统部',
-          value: 'Turkcell系统部',
-        },
-        {
-          label: 'United Group系统部',
-          value: 'United Group系统部',
-        },
-        {
-          label: 'Veon系统部',
-          value: 'Veon系统部',
-        },
-        {
-          label: 'Viettel系统部',
-          value: 'Viettel系统部',
-        },
-        {
-          label: 'Vodafone系统部',
-          value: 'Vodafone系统部',
-        },
-        {
-          label: 'ZAIN系统部',
-          value: 'ZAIN系统部',
-        },
-        {
-          label: '电信系统部',
-          value: '电信系统部',
-        },
-        {
-          label: '广电系统部',
-          value: '广电系统部',
-        },
-        {
-          label: '和记系统部',
-          value: '和记系统部',
-        },
-        {
-          label: '联通系统部',
-          value: '联通系统部',
-        },
-        {
-          label: '铁塔系统部',
-          value: '铁塔系统部',
-        },
-        {
-          label: '虚拟系统部',
-          value: '虚拟系统部',
-        },
-        {
-          label: '亚太Axiata系统部',
-          value: '亚太Axiata系统部',
-        },
-        {
-          label: '亚太Singtel系统部',
-          value: '亚太Singtel系统部',
-        },
-        {
-          label: '移动系统部',
-          value: '移动系统部',
-        },
-      ],
+      belongs: 'CNBG',
+      options: [],
     },
     {
       label: 'ACCOUNT客户子网',
       prop: 'acctcust_subsidiary_cn_name',
       filterType: 'checkbox',
       isInterface: true,
+      belongs: 'CNBG',
       options: [],
     },
     {
@@ -1315,88 +1162,8 @@ export const conditionMap = {
       label: '行业（国内）',
       prop: 'domtc_entps_indu_class_cn_name',
       filterType: 'checkbox',
-      options: [
-        {
-          label: '大企业系统部',
-          value: '大企业系统部',
-        },
-        {
-          label: '电力系统部',
-          value: '电力系统部',
-        },
-        {
-          label: '电网拓展部',
-          value: '电网拓展部',
-        },
-        {
-          label: '分销',
-          value: '分销',
-        },
-        {
-          label: '国铁大客户部',
-          value: '国铁大客户部',
-        },
-        {
-          label: '国网大客户部',
-          value: '国网大客户部',
-        },
-        {
-          label: '互联网传媒系统部',
-          value: '互联网传媒系统部',
-        },
-        {
-          label: '交通系统部',
-          value: '交通系统部',
-        },
-        {
-          label: '教育医疗系统部',
-          value: '教育医疗系统部',
-        },
-        {
-          label: '金融系统部',
-          value: '金融系统部',
-        },
-        {
-          label: '商业销售部',
-          value: '商业销售部',
-        },
-        {
-          label: '数据中心能源拓展部',
-          value: '数据中心能源拓展部',
-        },
-        {
-          label: '数字政府系统部',
-          value: '数字政府系统部',
-        },
-        {
-          label: '销售业务部',
-          value: '销售业务部',
-        },
-        {
-          label: '油气矿山系统部',
-          value: '油气矿山系统部',
-        },
-        {
-          label: '源为空',
-          value: '源为空',
-        },
-        {
-          label: '智能电动拓展部',
-          value: '智能电动拓展部',
-        },
-        {
-          label: '智能光伏拓展部',
-          value: '智能光伏拓展部',
-        },
-        {
-          label: '智能制造系统部',
-          value: '智能制造系统部',
-        },
-        {
-          label: '综合系统部',
-          value: '综合系统部',
-        },
-      ],
+      belongs: 'EBG国内',
+      options: [],
     },
     {
       label: '子行业（国内）',
@@ -1411,49 +1178,8 @@ export const conditionMap = {
       label: '行业（海外）',
       prop: 'industry_class_cn_name',
       filterType: 'checkbox',
-      options: [
-        {
-          label: 'ISP与互联网系统部(L1)',
-          value: 'ISP与互联网系统部(L1)',
-        },
-        {
-          label: '电力数字化军团',
-          value: '电力数字化军团',
-        },
-        {
-          label: '公共事业系统部(L1)',
-          value: '公共事业系统部(L1)',
-        },
-        {
-          label: '交通智慧化军团(L1)',
-          value: '交通智慧化军团(L1)',
-        },
-        {
-          label: '矿山军团(L1)',
-          value: '矿山军团(L1)',
-        },
-        {
-          label: '其他(L1)',
-          value: '其他(L1)',
-        },
-        {
-          label: '数字金融军团(L1)',
-          value: '数字金融军团(L1)',
-        },
-        {
-          label: '政务一网通军团',
-          value: '政务一网通军团',
-        },
-        
-        {
-          label: '制造与大企业系统部(L1)',
-          value: '制造与大企业系统部(L1)',
-        },
-        {
-          label: '智能光伏(L1)',
-          value: '智能光伏(L1)',
-        },
-      ]
+      belongs: 'EBG海外',
+      options: [],
     },
     {
       label: '子行业（海外）',
@@ -1567,7 +1293,7 @@ export const casecadeMap = {
       prop: 'report_item_l5_cn_name',
     },
   ],
-  主维度: [
+  主产品: [
     // {
     //   label: '重量级团队LV0中文名称',
     //   prop: 'lv0_prod_rd_team_cn_name',
@@ -1605,7 +1331,7 @@ export const casecadeMap = {
     //   prop: 'prod_cn_name',
     // }
   ],
-  辅维度: [
+  辅产品: [
     // {
     //   label: '辅产品BG中文名称',
     //   prop: 'minor_lv0_prod_list_cn_name',
@@ -1651,6 +1377,12 @@ export const casecadeMap = {
     {
       label: '国家中文名称',
       prop: 'country_cn_name',
+    },
+  ],
+  BG: [
+    {
+      label: '行销产品维BG中文名称',
+      prop: 'sales_lv0_prod_list_cn_name',
     },
   ],
   CNBG: [
@@ -1702,7 +1434,18 @@ export const compareMap = {
 export const operatorMap = {
   in: '包含',
   nin: '不包含',
-}
+};
 export function conditionList() {
   return Object.values(conditionMap).flat(1);
 }
+
+// 财务指标belongs映射
+export const belongsMap = {
+  ICTPS: '财务指标（数存&数通&PS）',
+  DSPL: '财务指标（数存&数通&PS）',
+  DCPL: '财务指标（数存&数通&PS）',
+  WNPL: '财务指标 （云核&无线&计算&光)',
+  OBPL: '财务指标 （云核&无线&计算&光)',
+  CPL: '财务指标 （云核&无线&计算&光)',
+  CCNPL: '财务指标 （云核&无线&计算&光)',
+};

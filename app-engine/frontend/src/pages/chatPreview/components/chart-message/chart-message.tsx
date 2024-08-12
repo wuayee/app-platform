@@ -4,7 +4,7 @@ import { initChartData } from './utils/chart-utils';
 import ChartItem from './chart-item';
 
 const ChartMessage = (props) => {
-  const { chartAnswer, chartData, chartTitle, chartType } = props.chatConfig;
+  const { chartAnswer, chartData, chartTitle, chartType } = props.chartConfig;
   const [ chartList, setChartList ] = useState([]);
   const listRef = useRef(null);
 

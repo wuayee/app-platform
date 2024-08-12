@@ -1,7 +1,7 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+const { JANE_URL, AIPP_URL, PLUGIN_URL, CONDITION_URL } = httpUrlMap[process.env.NODE_ENV];
 const sso_url = '/v1/user/sso_login_info';
 
 // 获取当前用户信息
@@ -23,16 +23,22 @@ export function uploadFile(data, headers) {
 }
 
 // 根据返回的地址获取语音转换的文字信息
-export function voiceToText (tenantId,voicePath,fileName) {
-  let url = process.env.NODE_ENV === 'development' ? 'http://80.11.128.86:30020/api/jober/v1/api' :
-  process.env.NODE_ENV === 'production' ? window.location.origin + AIPP_URL :AIPP_URL
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`,{voicePath:`${url}/${tenantId}/file?filePath=${voicePath}`,fileName});
+export function voiceToText(tenantId, voicePath, fileName) {
+  let url =
+    process.env.NODE_ENV === 'development'
+      ? 'http://80.11.128.86:30020/api/jober/v1/api'
+      : process.env.NODE_ENV === 'production'
+      ? window.location.origin + AIPP_URL
+      : AIPP_URL;
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`, {
+    voicePath: `${url}/${tenantId}/file?filePath=${voicePath}`,
+    fileName,
+  });
 }
 // 文字转语音
 export function textToVoice(text, tone) {
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`,{text,tone});
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`, { text, tone });
 }
-
 
 // 查询应用列表
 export function getAippList(tenant_id, params, limit, offset, name) {
@@ -181,4 +187,12 @@ export function resumeInstance(tenantId, instanceId, params) {
 // 溯源表单重新生成对话
 export function reSendChat(tenant_id, current_instance_id, data) {
   return post(`${AIPP_URL}/${tenant_id}/chat/instances/${current_instance_id}`, data);
+}
+// 获取溯源字段下拉接口
+export function getOptionNodes(data) {
+  return post(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, data);
+}
+// 获取溯源字段下拉接口
+export function getFinanceOptions(params) {
+  return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/fieldValues`, params);
 }
