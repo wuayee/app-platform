@@ -11,8 +11,9 @@ set -eu
 
 databus_executable=$1
 dockerfile=$2
-output_dir=$(readlink -f $3)
-databus_version=${4:-"latest"}
+container_init_file=$3
+output_dir=$(readlink -f $4)
+databus_version=${5:-"latest"}
 
 output_build_dir="${output_dir}/databus_core"
 
@@ -25,6 +26,7 @@ if [ "${databus_executable}" != "${output_build_dir}/$(basename "${databus_execu
     cp -f "${databus_executable}" "${output_build_dir}"
 fi
 cp -f "${dockerfile}" "${output_build_dir}"
+cp -f "${container_init_file}" "${output_build_dir}"
 
 echo "[info] prepare to build databus-core image from dir: ${output_build_dir}"
 docker build -f "${dockerfile}" -t "databus-core:${databus_version}" --quiet "${output_build_dir}"

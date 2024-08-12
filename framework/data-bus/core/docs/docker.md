@@ -5,6 +5,7 @@
 ## 如何打包
 
 dockerfile位置：`jade/framework/data-bus/common/docker/core.dockerfile`
+容器初始化脚本位置：`jade/framework/data-bus/core/src/scripts/core_init.sh`
 
 环境依赖项：
 
@@ -13,10 +14,11 @@ dockerfile位置：`jade/framework/data-bus/common/docker/core.dockerfile`
 
 ### 手动打包
 
-将需要打包的databus内核主程序(文件名为`databus`)与`core.dockerfile`放置在同一目录下，运行如下命令：
+将需要打包的databus内核主程序(文件名为`databus`)、容器初始化脚本位置(文件名为`core_init.sh`)、与`core.dockerfile`放置在同一目录下，
+运行如下命令：
 ```shell
 
-docker build -f core.dockerfile -t databus-core:latest .
+docker build -f core.dockerfile core_init.sh -t databus-core:latest .
 ```
 
 命令执行完后，即可获得docker镜像`databus-core:latest`。运行命令可以查看：
