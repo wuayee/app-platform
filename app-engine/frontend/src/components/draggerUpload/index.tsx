@@ -9,10 +9,10 @@ import './index.scoped.scss';
 
 const DraggerUpload = (props) => {
   const [fileList, setFileList] = useState([]);
-  const customRequest= async (val)=>{
+  const customRequest = async (val) => {
     if (fileValidate(val.file, ['zip'], 100)) {
       val.onSuccess();
-      let fileObj:any = {};
+      let fileObj: any = {};
       let hasTool = false;
       const zip = new JSZip();
       const res = await zip.loadAsync(val?.file);
@@ -42,11 +42,12 @@ const DraggerUpload = (props) => {
   }
   // 插件上传前格式校验
   const validatePlugin = (toolJson) => {
+    const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/;
     let toolsArr = toolJson.tools || [];
     toolsArr = toolsArr.filter(item => {
-      return item.schema.name.length < 64 && item.schema.description.length < 256;
+      return item.schema.name.length < 64 && item.schema.description.length < 256 && reg.test(item.schema.name);
     }).slice(0, 20);
-    return  {
+    return {
       tools: toolsArr
     }
   }
@@ -79,7 +80,7 @@ const DraggerUpload = (props) => {
         </p>
         <p className='ant-upload-text'>将文件拖到这里，或者点击上传</p>
         <p className='ant-upload-hint'>支持 {props?.accept} 格式文件, 最大文件不能大于100M, 最多同时上传5个zip包</p>
-        <p className='ant-upload-hint'>每个zip包最多取20个插件，插件名称长度不能超过64位，描述长度不能超过256位</p>
+        <p className='ant-upload-hint'>插件名称不允许非字母数字中文</p>
       </Upload.Dragger>
       <div className='file-upload-list'>
         {fileList?.map((item) => (
@@ -90,13 +91,13 @@ const DraggerUpload = (props) => {
             </div>
             <div className='file-item-right'>
               <img src='/src/assets/images/ai/complate.png' />
-              <img src='/src/assets/images/ai/delete.png' onClick={() => onRemove(item.uid)}/>
+              <img src='/src/assets/images/ai/delete.png' onClick={() => onRemove(item.uid)} />
             </div>
           </div>
         ))}
       </div>
     </div>
-    
+
   );
 };
 

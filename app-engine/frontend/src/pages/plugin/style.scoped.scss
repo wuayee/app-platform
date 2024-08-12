@@ -1,64 +1,64 @@
-.detail-header{
+.detail-header {
   display: flex;
-  gap:16px;
+  gap: 16px;
   align-items: flex-start;
 }
 
-.detail-header-name{
+.detail-header-name {
   font-size: 20px;
   margin-bottom: 8px;
   font-weight: bold;
 }
 
-.version-div{
+.version-div {
   align-content: center;
   margin-left: 12px;
-  .version{
+  .version {
     border-radius: 10px;
     border: 0px;
   }
 }
 
-.header-tag{
+.header-tag {
   align-content: center;
-  gap:4px;
+  gap: 4px;
   margin-left: 8px;
 }
 
-.header-time{
+.header-time {
   color: #808080;
 }
 
-.user-info{
+.user-info {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
-.param-title{
+.param-title {
   font-weight: bold;
   margin-bottom: 14px;
   font-size: 16px;
 }
 
-.top-operate{
-  display:flex;
+.top-operate {
+  display: flex;
   justify-content: space-between;
 }
-.app-select{
+.app-select {
   margin-right: 40px;
 }
 
-.button-display{
+.button-display {
   display: flex;
-  gap:4px;
+  gap: 4px;
   margin-bottom: 14px;
 }
 
-.drawer-footer{
+.drawer-footer {
   display: flex;
-  gap:8px;
+  gap: 8px;
 }
-.select-space{
+.select-space {
   width: 240px;
   margin-bottom: 16px;
 }
@@ -86,6 +86,7 @@
   border: 1px solid #EBEBEB;
   width: 100%;
   border-radius: 4px;
+  margin-bottom: 12px;
   .collapse-plugin-head {
     display: flex;
     align-items: center;
@@ -140,22 +141,22 @@
     display: block;
   }
 }
-.param-card{
+.param-card {
   padding: 14px;
   margin-bottom: 14px;
   border-radius: 4px;
-  border:1px solid #e8e8e8;
-  .card-header-left{
+  border: 1px solid #e8e8e8;
+  .card-header-left {
     display: flex;
-    gap:16px;
+    gap: 16px;
     img {
       width: 50px;
       height: 50px;
     }
   }
-  .card-user{
+  .card-user {
     display: flex;
-    gap:4px;
+    gap: 4px;
     align-items: center;
     flex-wrap: wrap;
     .card-detail-btn {
@@ -164,7 +165,7 @@
       margin-left: 12px;
     }
   }
-  .card-des{
+  .card-des {
     word-wrap: break-word;
     margin-bottom: 8px;
     margin-top: 8px;
@@ -175,7 +176,7 @@
   }
 }
 
-.plugin-cards{
+.plugin-cards {
   overflow-y: auto;
   height: 100%;
   display: flex;
@@ -184,13 +185,13 @@
   align-content: flex-start;
 }
 
-.myplugin{
+.myplugin {
   height: calc(100vh - 140px);
   display: flex;
   flex-direction: column;
   border-radius: 0 8px 0 0;
 }
-.icon-display{
+.icon-display {
   display: flex;
   align-items: center;
 }
