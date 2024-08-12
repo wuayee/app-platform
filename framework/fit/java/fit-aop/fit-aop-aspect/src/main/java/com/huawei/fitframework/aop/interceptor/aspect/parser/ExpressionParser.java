@@ -56,10 +56,10 @@ public interface ExpressionParser {
         /**
          * 检测运行的类是否能匹配上。
          *
-         * @param bean 运行的类。
+         * @param beanClass 运行的类。
          * @return 返回 true 表示能匹配上，反之，匹配不上。
          */
-        boolean couldMatch(Class<?> bean);
+        boolean couldMatch(Class<?> beanClass);
 
         /**
          * 检测运行的方法是否能匹配上。

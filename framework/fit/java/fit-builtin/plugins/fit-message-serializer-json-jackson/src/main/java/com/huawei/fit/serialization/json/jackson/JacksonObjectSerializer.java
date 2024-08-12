@@ -6,6 +6,7 @@ package com.huawei.fit.serialization.json.jackson;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.fit.serialization.json.jackson.custom.FitAnnotationIntrospector;
 import com.huawei.fit.serialization.json.jackson.custom.LocalDateDeserializer;
 import com.huawei.fit.serialization.json.jackson.custom.LocalDateSerializer;
 import com.huawei.fit.serialization.json.jackson.custom.LocalDateTimeDeserializer;
@@ -22,12 +23,14 @@ import com.huawei.fitframework.util.IoUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactoryBuilder;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.IOException;
@@ -45,6 +48,7 @@ import java.util.Map;
  * 表示 Json 格式的序列化器。
  *
  * @author 季聿阶 j00559309
+ * @author 易文渊
  * @since 2022-08-03
  */
 @Component("json")
@@ -61,9 +65,16 @@ public class JacksonObjectSerializer implements ObjectSerializer {
 
     public JacksonObjectSerializer(@Value("${date-time-format}") String dateTimeFormat,
             @Value("${date-format}") String dateFormat, @Value("${time-zone}") String zoneId) {
+        VisibilityChecker<VisibilityChecker.Std> visibilityChecker = VisibilityChecker.Std.defaultInstance()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE);
         this.mapper = new ObjectMapper(new JsonFactoryBuilder().streamReadConstraints(StreamReadConstraints.builder()
                 .maxStringLength(Integer.MAX_VALUE)
-                .build()).build()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                .build()).build()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .setAnnotationIntrospector(new FitAnnotationIntrospector())
+                .setVisibility(visibilityChecker);
         SimpleModule module = new SimpleModule();
         module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(dateTimeFormat));
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(dateTimeFormat));

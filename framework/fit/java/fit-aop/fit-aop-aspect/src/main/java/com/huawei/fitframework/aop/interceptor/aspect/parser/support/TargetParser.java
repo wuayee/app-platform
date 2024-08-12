@@ -11,6 +11,7 @@ import com.huawei.fitframework.aop.interceptor.aspect.parser.model.PointcutSuppo
 import com.huawei.fitframework.aop.interceptor.aspect.util.ExpressionUtils;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * 解析切点表达式中关键字 target 的解析器。
@@ -48,13 +49,13 @@ public class TargetParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             if (this.isBinding()) {
-                return this.isClassMatch(this.content, bean, TargetParser.this.parameters);
+                return this.isClassMatch(this.content, beanClass, TargetParser.this.parameters);
             }
-            Class<?> contentClass = ExpressionUtils.getContentClass(this.content().toString(),
-                    TargetParser.this.classLoader);
-            return contentClass.equals(bean);
+            Class<?> contentClass =
+                    ExpressionUtils.getContentClass(this.content().toString(), TargetParser.this.classLoader);
+            return Objects.equals(contentClass, beanClass);
         }
 
         @Override
