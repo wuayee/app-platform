@@ -50,6 +50,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.WhileNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.BoolTypeExpr;
+import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.NullTypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.NumberTypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.StringTypeExpr;
 import com.huawei.fit.ohscript.util.Constants;
@@ -434,14 +435,9 @@ public enum Interpreter {
             if (op.nodeType() == Terminal.EXACT_TYPE_OF) {
                 return this.createValue(x.typeExpr().is(y.typeExpr()), node, current);
             }
-            if (x.value() == null || y.value() == null) {
-                return this.createValue(false, node, current);
-            }
-            if (op.nodeType() == Terminal.EQUAL_EQUAL) {
-                return this.createValue(x.value().equals(y.value()), node, current);
-            }
-            if (op.nodeType() == Terminal.BANG_EQUAL) {
-                return this.createValue(!x.value().equals(y.value()), node, current);
+            ReturnValue equalsResult = this.compareEquals(node, current, x, y, op);
+            if (equalsResult != null) {
+                return equalsResult;
             }
             if (op.nodeType() == Terminal.AND_AND) {
                 return this.createValue(this.andAndResult(x, y), node, current);
@@ -452,6 +448,61 @@ public enum Interpreter {
             if (!(x.typeExpr() instanceof NumberTypeExpr || y.typeExpr() instanceof NumberTypeExpr)) {
                 return this.createValue(false, node, current);
             }
+            ReturnValue numberResult = numberCompare(node, current, x, y, op);
+            if (numberResult != null) {
+                return numberResult;
+            }
+            return this.createValue(false, node, current);
+        }
+
+        private ReturnValue compareEquals(SyntaxNode node, ActivationContext current, ReturnValue x, ReturnValue y,
+                TerminalNode op) {
+            // 处理存在null的场景
+            if (x.value() == null || y.value() == null) {
+                return Optional.ofNullable(this.compareEqualsEqualsOnNull(node, current, x, y, op))
+                        .orElseGet(() -> Optional.ofNullable(this.compareBangEqualsOnNull(node, current, x, y, op))
+                                .orElseGet(() -> this.createValue(false, node, current)));
+            }
+            if (op.nodeType() == Terminal.EQUAL_EQUAL) {
+                return this.createValue(x.value().equals(y.value()), node, current);
+            }
+            if (op.nodeType() == Terminal.BANG_EQUAL) {
+                return this.createValue(!x.value().equals(y.value()), node, current);
+            }
+            // 不是null且不是判定 != 或 == 的操作
+            return null;
+        }
+
+        private ReturnValue compareBangEqualsOnNull(SyntaxNode node, ActivationContext current, ReturnValue x,
+                ReturnValue y, TerminalNode op) {
+            if (op.nodeType() != Terminal.BANG_EQUAL) {
+                return null;
+            }
+            if (x.value() == null && y.typeExpr() instanceof NullTypeExpr) {
+                return this.createValue(false, node, current);
+            }
+            if (y.value() == null && x.typeExpr() instanceof NullTypeExpr) {
+                return this.createValue(false, node, current);
+            }
+            return this.createValue(true, node, current);
+        }
+
+        private ReturnValue compareEqualsEqualsOnNull(SyntaxNode node, ActivationContext current, ReturnValue x,
+                ReturnValue y, TerminalNode op) {
+            if (op.nodeType() != Terminal.EQUAL_EQUAL) {
+                return null;
+            }
+            if (x.value() == null && y.typeExpr() instanceof NullTypeExpr) {
+                return this.createValue(true, node, current);
+            }
+            if (y.value() == null && x.typeExpr() instanceof NullTypeExpr) {
+                return this.createValue(true, node, current);
+            }
+            return this.createValue(false, node, current);
+        }
+
+        private ReturnValue numberCompare(SyntaxNode node, ActivationContext current, ReturnValue x, ReturnValue y,
+                TerminalNode op) {
             Number xNum = cast(x.value());
             double x1 = xNum.doubleValue();
             Number yNum = cast(y.value());
@@ -468,7 +519,7 @@ public enum Interpreter {
             if (op.nodeType() == Terminal.LESS_EQUAL) {
                 return this.createValue(x1 <= y1, node, current);
             }
-            return this.createValue(false, node, current);
+            return null;
         }
 
         private boolean orOrResult(ReturnValue x, ReturnValue y) {

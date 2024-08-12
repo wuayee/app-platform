@@ -1125,6 +1125,50 @@ class InterpreterTest {
     }
 
     @Test
+    void test_external_null_equals_null() throws OhPanic {
+        ParserBuilder newParserBuilder = new ParserBuilder(new GrammarBuilder(), new Lexer());
+        Map<String, Object> map = new HashMap<>();
+        map.put("abc", null);
+        newParserBuilder.addExternalOh("map", map);
+        assertNullEquals(newParserBuilder, true, "ext::map.get(\"abc\") == null");
+        assertNullEquals(newParserBuilder, true, "null == ext::map.get(\"abc\")");
+        assertNullEquals(newParserBuilder, false, "\"aa\" == ext::map.get(\"abc\")");
+
+        assertNullEquals(newParserBuilder, false, "ext::map.get(\"abc\") != null");
+        assertNullEquals(newParserBuilder, false, "null != ext::map.get(\"abc\")");
+        assertNullEquals(newParserBuilder, true, "\"aa\" != ext::map.get(\"abc\")");
+    }
+
+    private void assertNullEquals(ParserBuilder newParserBuilder, boolean expected, String code) throws OhPanic {
+        AST ast = newParserBuilder.parseString("", code);
+        ASTEnv env = new ASTEnv(ast);
+        assertEquals(expected, env.execute());
+    }
+
+    @Test
+    void test_get_json_property() throws OhPanic {
+        String result = "123";
+        Map<String, Object> businessData = new HashMap<>();
+        HashMap<Object, Object> key2 = new HashMap<>();
+        businessData.put("key2", key2);
+        key2.put("Key21", result);
+
+        String userDataKey = "userData";
+        String businessDataKey = "businessData";
+        Map<String, Object> userData = new HashMap<>();
+        userData.put(businessDataKey, JSONObject.toJSONString(businessData));
+
+        ParserBuilder newParserBuilder = new ParserBuilder(new GrammarBuilder(), new Lexer());
+        newParserBuilder.addExternalOh(userDataKey, userData);
+
+        String code = "let businessDataJson = ext::util.stringToJson(ext::userData.get(\"businessData\")); "
+                + "(businessDataJson.get(\"key2\").get(\"Key21\"))";
+        AST ast = newParserBuilder.parseString("", code);
+        ASTEnv env = new ASTEnv(ast);
+        assertEquals(result, env.execute());
+    }
+
+    @Test
     void test_string_methods_from_json() throws OhPanic {
         Map<String, String> map = new HashMap<>();
         map.put("testString", "testString");
