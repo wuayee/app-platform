@@ -29,6 +29,15 @@ public interface RequestBuilder {
     MockRequestBuilder param(String name, String value);
 
     /**
+     * 为请求插件结构体添加键值对参数。
+     *
+     * @param name 表示请求体内请求参数的键值 {@link String}。
+     * @param values 表示待设置的请求参数列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示客户端请求参数的建造者 {@link MockRequestBuilder}。
+     */
+    MockRequestBuilder param(String name, List<String> values);
+
+    /**
      * 设置客户端请求结果的类型。
      *
      * @param responseType 表示请求结果的返回值类型 {@link Type}。

@@ -103,7 +103,7 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
 
     private List<SourceFetcherInfo> getSourceFetcherInfos(PropertyValue propertyValue, String destinationName) {
         List<SourceFetcherInfo> sourceFetcherInfos = new ArrayList<>();
-        for (Field field : ReflectionUtils.getDeclaredFields(propertyValue.getType())) {
+        for (Field field : ReflectionUtils.getDeclaredFields(propertyValue.getType(), true)) {
             PropertyValue fieldPropertyValue = PropertyValue.createFieldValue(field);
             String fieldPath = destinationName + DESTINATION_NAME_SEPARATOR + fieldPropertyValue.getName();
             Optional<AnnotatedElement> element = fieldPropertyValue.getElement();

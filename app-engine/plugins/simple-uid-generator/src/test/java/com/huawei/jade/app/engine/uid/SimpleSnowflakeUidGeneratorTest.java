@@ -20,7 +20,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * 表示 {@link SimpleSnowflakeUidGenerator} 的测试用例。
@@ -38,6 +48,14 @@ public class SimpleSnowflakeUidGeneratorTest {
     @BeforeEach
     void setUp() {
         clearInvocations(this.workerGenerator);
+    }
+
+    @Test
+    @DisplayName("获取UID时，获取成功")
+    void shouldOkWhenGetUid() {
+        when(this.workerGenerator.getWorkerId()).thenReturn(0);
+        SimpleSnowflakeUidGenerator uidGenerator = new SimpleSnowflakeUidGenerator(this.workerGenerator);
+        assertThat(uidGenerator.getUid()).isEqualTo(0);
     }
 
     @Test
@@ -75,5 +93,39 @@ public class SimpleSnowflakeUidGeneratorTest {
         assertThat(uidGenerator.getUid()).isEqualTo(MAX_INT);
         assertThat(uidGenerator.getUid()).isEqualTo(MAX_INT + 1L);
         verify(this.workerGenerator, times(2)).getWorkerId();
+    }
+
+    @Test
+    @DisplayName("更换机器ID后，获取UID成功")
+    void shouldOkWhenConcurrentGetUid() throws Throwable {
+        int threadNum = 8;
+        long startLong = MAX_INT - 2L;
+
+        when(this.workerGenerator.getWorkerId()).thenReturn(0, 1);
+        SimpleSnowflakeUidGenerator uidGenerator = new SimpleSnowflakeUidGenerator(this.workerGenerator);
+        Field atomicLong = SimpleSnowflakeUidGenerator.class.getDeclaredField("id");
+        AtomicLong actual = ObjectUtils.cast(ReflectionUtils.getField(uidGenerator, atomicLong));
+        actual.set(startLong);
+
+        CountDownLatch latch = new CountDownLatch(threadNum);
+        List<Long> ids = Arrays.asList(new Long[threadNum]);
+        ExecutorService service =
+                new ThreadPoolExecutor(0, threadNum, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());
+        for (int i = 0; i < threadNum; i++) {
+            int index = i;
+            Runnable runnable = () -> {
+                try {
+                    ids.set(index, uidGenerator.getUid());
+                } finally {
+                    latch.countDown();
+                }
+            };
+            service.execute(runnable);
+        }
+        latch.await();
+
+        assertThat(new HashSet<>(ids)).isEqualTo(LongStream.range(startLong, startLong + threadNum)
+                .boxed()
+                .collect(Collectors.toSet()));
     }
 }
