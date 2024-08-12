@@ -2,29 +2,35 @@
 import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
+import AddKnowledge from '../../configForm/configUi/components/add-knowledge';
+import HuggingFaceModal from './hugging-face-modal';
+import ToolModal from './tool-modal';
 import { debounce } from '@shared/utils/common';
 import { updateFlowInfo } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
 import { useAppDispatch } from '../../../store/hook';
 import { setAppInfo } from '../../../store/appInfo/appInfo';
-import HuggingFaceModal from './hugging-face-modal';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 import { Button, Alert } from "antd";
 
 const Stage = (props) => {
   const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
-  const [ showModal, setShowModal ] = useState(false);
-  const [ taskName, setTaskName ] = useState('');
-  const [ selectModal, setSelectModal ] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [showTools, setShowTools] = useState(false);
+  const [taskName, setTaskName] = useState('');
+  const [selectModal, setSelectModal] = useState('');
+  const [skillList, setSkillList] = useState([]);
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo, setShowTime } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const modelCallback = useRef<any>();
+  const knowledgeCallback = useRef<any>();
+  const pluginCallback = useRef<any>();
   const currentApp = useRef<any>();
   const render = useRef(false);
-  const change = useRef(false);
+  const modalRef = useRef();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -60,14 +66,28 @@ const Stage = (props) => {
         }
         handleChange();
       });
+      // huggingface模态框
       agent.onModelSelect(({ taskName, selectedModel, onSelect }) => {
         setSelectModal(selectedModel);
         setTaskName(taskName.trim());
         modelCallback.current = onSelect;
         setShowModal(true);
-      })
-    })
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin',version:''}).then(res => {
+      });
+      // 知识库模态框
+      agent.onKnowledgeBaseSelect((args) => {
+        let { selectedKnowledgeBases, onSelect } = args;
+        knowledgeCallback.current = onSelect;
+        modalRef.current.showModal(selectedKnowledgeBases);
+      });
+      // 插件模态框
+      agent.onPluginSelect((args) => {
+        let { selectedPluginUniqueNames, onSelect } = args;
+        setSkillList(selectedPluginUniqueNames);
+        pluginCallback.current = onSelect;
+        setShowTools(true);
+      });
+    });
+    getAddFlowConfig(tenantId, { pageNum: 1, pageSize: 20, tag: 'Builtin', version: '' }).then(res => {
       if (res.code === 0) {
         setDragData(res.data);
       }
@@ -77,6 +97,31 @@ const Stage = (props) => {
   const onModelSelectCallBack = (model) => {
     modelCallback.current(model);
   }
+  // 知识库选中
+  const handleKnowledgeChange = (value) => {
+    knowledgeCallback.current(value);
+  }
+  // 插件工具流选中
+  const toolsConfirm = (checkedList) => {
+    let arr = checkedList.map(item => {
+      let uri = '';
+      if (item.type === 'workflow') {
+        if (item.appId.length) {
+          uri = `${location.origin}/#/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`;
+        }
+      } else {
+        uri = `${location.origin}/#/plugin/detail/${item.uniqueName}`;
+      }
+      return {
+        uniqueName: item.uniqueName,
+        tags: item.tags,
+        name: item.name,
+        uri,
+        version: item.version
+      };
+    });
+    pluginCallback.current(arr);
+  }
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
@@ -85,8 +130,8 @@ const Stage = (props) => {
     window.agent.validate().then(() => {
       updateAppRunningFlow();
     }).catch((err) => {
-      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-      Message({ type: 'warning', content: str});
+      let str = typeof (err) === 'string' ? err : '请输入流程必填项';
+      Message({ type: 'warning', content: str });
     });
   }
   // 编辑更新应用
@@ -99,7 +144,7 @@ const Stage = (props) => {
         setFlowInfo(currentApp.current);
       }
       setShowTime(true);
-      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' });
+      Message({ type: 'success', content: type ? '高级配置更新成功' : '工具流更新成功' });
     }
   }
   // 拖拽完成回调
@@ -134,8 +179,8 @@ const Stage = (props) => {
     <div
       className='content-right'
       onDragOver={(e) => e.preventDefault()}
-      onDrop ={handleDragEnter}>
-        <div className='elsa-canvas' id='stage'></div>
+      onDrop={handleDragEnter}>
+      <div className='elsa-canvas' id='stage'></div>
     </div>
     <HuggingFaceModal
       showModal={showModal}
@@ -144,6 +189,19 @@ const Stage = (props) => {
       taskName={taskName}
       selectModal={selectModal}
     />
+    <AddKnowledge
+      modalRef={modalRef}
+      tenantId={tenantId}
+      handleDataChange={handleKnowledgeChange}
+    />
+    <ToolModal
+      showModal={showTools}
+      setShowModal={setShowTools}
+      toolsConfirm={toolsConfirm}
+      checkData={skillList}
+      modalType='mashup'
+      type='addSkill'
+    />
     {showFlowChangeWarning && <Alert
       className='flow-change-warning-content'
       message=""
@@ -151,8 +209,8 @@ const Stage = (props) => {
       type="info"
       onClose={handleCloseFlowChangeWarningAlert}
       action={
-          <Button size="small" type="link" onClick={handleClickNoMoreTips}>
-            不再提示
+        <Button size="small" type="link" onClick={handleClickNoMoreTips}>
+          不再提示
           </Button>
       }
       closable

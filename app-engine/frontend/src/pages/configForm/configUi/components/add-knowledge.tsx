@@ -10,16 +10,17 @@ const { Search } = Input;
 const { Option } = Select;
 
 const AddKnowledge = (props) => {
-  const { modalRef, tenantId, handleDataChange, checkData } = props;
-  const [ open, setOpen] = useState(false);
-  const [ knowledgeOptions, setKnowledgeOptions ] = useState([]);
-  const [ knowledgeTable, setKnowledgeTable ] = useState([]);
-  const [ knowledgeList, setKnowledgeList ] = useState([]);
-  const [ knowledgeItem, setKnowledgeItem ] = useState(null);
-  const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
-  const [ total, setTotal ] = useState(0);
+  const { modalRef, tenantId, handleDataChange } = props;
+  const [open, setOpen] = useState(false);
+  const [knowledgeOptions, setKnowledgeOptions] = useState([]);
+  const [knowledgeTable, setKnowledgeTable] = useState([]);
+  const [knowledgeList, setKnowledgeList] = useState([]);
+  const [knowledgeItem, setKnowledgeItem] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [total, setTotal] = useState(0);
   const searchName = useRef('');
   const knowledgeCurrent = useRef([]);
+  const checkData = useRef([]);
   const navigate = useHistory().push;
   const columns = [
     {
@@ -27,9 +28,9 @@ const AddKnowledge = (props) => {
       dataIndex: 'name',
       key: 'name',
       render: (text) => <span style={{ display: 'flex', alignItems: 'center' }}>
-                          <img src='/src/assets/images/ai/iconx.png' style={{ marginRight: '6px' }} />
-                          {text}
-                        </span>,
+        <img src='/src/assets/images/ai/iconx.png' style={{ marginRight: '6px' }} />
+        {text}
+      </span>,
     },
     {
       title: '条数',
@@ -55,13 +56,14 @@ const AddKnowledge = (props) => {
   const cancel = () => {
     setOpen(false)
   }
-  const showModal = () => {
+  const showModal = (list = []) => {
+    checkData.current = list;
     setOpen(true);
     setCheck();
   }
   // 设置选中
   const setCheck = () => {
-    let arr = checkData.map(item => item.tableId);
+    let arr = checkData.current.map(item => Number(item.tableId));
     setSelectedRowKeys(arr);
     handleGetKnowledgeOptions();
   }
@@ -92,7 +94,7 @@ const AddKnowledge = (props) => {
   const initTagList = (data) => {
     let arr = [];
     data.forEach(item => {
-      let list = checkData.filter(cItem => cItem.repoId === item.id);
+      let list = checkData.current.filter(cItem => Number(cItem.repoId) === item.id);
       if (list.length) {
         let obj = {
           name: item.name,
@@ -169,7 +171,7 @@ const AddKnowledge = (props) => {
     knowledgeCurrent.current.forEach(item => {
       item.list?.forEach(lItem => {
         if (selectedRowKeys.includes(lItem.id)) {
-          let obj =  {
+          let obj = {
             'repoId': item.id,
             'tableId': lItem.id,
             'serviceType': lItem.serviceType,
@@ -197,10 +199,9 @@ const AddKnowledge = (props) => {
       'showModal': showModal
     }
   })
-
   useEffect(() => {
     knowledgeItem?.id ? getTableList(knowledgeItem) : setKnowledgeTable([]);
-  }, [knowledgeItem])
+  }, [knowledgeItem]);
 
   return <>{(
     <Drawer
@@ -219,76 +220,76 @@ const AddKnowledge = (props) => {
         </div>
       }
       extra={
-        <CloseOutlined onClick={cancel}/>
+        <CloseOutlined onClick={cancel} />
       }>
-        <div className='mashup-add-drawer'>
-          <div className='knowledge-search'>
-            <Search
-              prefix={<SearchOutlined />}
-              addonBefore={selectBefore} 
-              allowClear
-              placeholder='搜索'
-              onSearch={onSearch}
-            />
-            <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
-              <Button type='primary' icon={<DownOutlined />}>创建</Button>
-            </Dropdown>
-          </div>
-          <div className='knowledge-check-info'>
-            { knowledgeList.map(item => {
-                return (
-                  <div className='info' key={item.name}>
-                    <div className='info-left'>{item.name}</div>
-                    <div className='info-right'>
-                      { item.child?.map(tItem => {
-                        return <Tag closeIcon key={tItem.name} onClose={(e) => tagClose(e, tItem)}>{tItem.name}</Tag>
-                      })}
+      <div className='mashup-add-drawer'>
+        <div className='knowledge-search'>
+          <Search
+            prefix={<SearchOutlined />}
+            addonBefore={selectBefore}
+            allowClear
+            placeholder='搜索'
+            onSearch={onSearch}
+          />
+          <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
+            <Button type='primary' icon={<DownOutlined />}>创建</Button>
+          </Dropdown>
+        </div>
+        <div className='knowledge-check-info'>
+          {knowledgeList.map(item => {
+            return (
+              <div className='info' key={item.name}>
+                <div className='info-left'>{item.name}</div>
+                <div className='info-right'>
+                  {item.child?.map(tItem => {
+                    return <Tag closeIcon key={tItem.name} onClose={(e) => tagClose(e, tItem)}>{tItem.name}</Tag>
+                  })}
+                </div>
+              </div>
+            )
+          })
+          }
+        </div>
+        <div className='knowledge-check-list'>
+          <div className='knowledge-left'>
+            <div className='item-title'>知识库</div>
+            <div className='item-inner'>
+              {
+                knowledgeOptions?.map((item, index) => {
+                  return (
+                    <div className='item' key={index} onClick={() => leftMenuClick(item)}>
+                      <span className={knowledgeItem?.id === item.id ? 'active' : null}>{item.name}</span>
                     </div>
-                  </div>
-                )
-              }) 
-            }
+                  )
+                })
+              }
+            </div>
+            <div className='item-page'>
+              <Pagination total={total} pageSize={100} onChange={pageChange} />
+            </div>
           </div>
-          <div className='knowledge-check-list'>
-            <div className='knowledge-left'>
-              <div className='item-title'>知识库</div>
-              <div className='item-inner'>
-                {
-                  knowledgeOptions?.map((item, index) => {
-                    return (
-                      <div className='item' key={index} onClick={() => leftMenuClick(item)}>
-                        <span className={knowledgeItem?.id === item.id ? 'active' : null}>{item.name}</span>
-                      </div>
-                    )
-                  })
-                }
+          <div className='knowledge-right'>
+            <div className='knowledge-details'>
+              <div className='left'>
+                <img src='/src/assets/images/knowledge/knowledge-base.png' alt='' />
               </div>
-              <div className='item-page'>
-                <Pagination total={total} pageSize={100} onChange={pageChange}/>
-              </div>
-            </div>
-            <div className='knowledge-right'>
-              <div className='knowledge-details'>
-                <div className='left'>
-                  <img src='/src/assets/images/knowledge/knowledge-base.png' alt='' />
-                </div>
-                <div className='right'>
-                  <div className='knowledge-title'>{knowledgeItem?.name}</div>
-                  <div className='knowledge-user'>{knowledgeItem?.ownerName}
+              <div className='right'>
+                <div className='knowledge-title'>{knowledgeItem?.name}</div>
+                <div className='knowledge-user'>{knowledgeItem?.ownerName}
                     创建于：{formatDateTime(knowledgeItem?.createdAt)}
-                  </div>
-                  <div className='knowledge-desc'>{knowledgeItem?.description}</div>
                 </div>
+                <div className='knowledge-desc'>{knowledgeItem?.description}</div>
               </div>
-              <Table 
-                rowSelection={rowSelection}
-                columns={columns} 
-                dataSource={knowledgeTable} 
-                rowKey={record => record.id}
-              />
             </div>
+            <Table
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={knowledgeTable}
+              rowKey={record => record.id}
+            />
           </div>
         </div>
+      </div>
     </Drawer>
   )}</>
 };
