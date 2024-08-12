@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2022-2022. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.protocol.jar.support;
@@ -27,22 +27,26 @@ public final class JarInflaterInputStream extends InflaterInputStream {
     protected void fill() throws IOException {
         try {
             super.fill();
-        } catch (EOFException ex) {
-            if (this.extraBytesWritten) {
-                throw ex;
-            }
-            this.len = 1;
-            this.buf[0] = 0;
-            this.extraBytesWritten = true;
-            this.inf.setInput(this.buf, 0, this.len);
+        } catch (EOFException e) {
+            this.handleEofException(e);
         }
+    }
+
+    private void handleEofException(EOFException cause) throws EOFException {
+        if (this.extraBytesWritten) {
+            throw cause;
+        }
+        this.len = 1;
+        this.buf[0] = 0;
+        this.extraBytesWritten = true;
+        this.inf.setInput(this.buf, 0, this.len);
     }
 
     /**
      * 获取指定字节数的 JAR 条目数据所使用的缓存的大小。
      *
-     * @param dataSize 表示 JAR 条目中包含数据的字节数的 64 位整数。
-     * @return 表示 Inflater 所使用的缓存的大小的 32 位整数。
+     * @param dataSize 表示 JAR 条目中包含数据的字节数的 {@code long}。
+     * @return 表示 Inflater 所使用的缓存的大小的 {@code int}。
      */
     private static int sizeOfInflaterBuffer(long dataSize) {
         long size = dataSize + 2;
