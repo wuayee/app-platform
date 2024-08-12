@@ -64,13 +64,13 @@ public class ExecutionParser extends BaseParser {
         }
 
         @Override
-        public boolean couldMatch(Class<?> bean) {
+        public boolean couldMatch(Class<?> beanClass) {
             ExecuteExpression.ExecutionModel executionModel = ObjectUtils.cast(this.content());
             String classPath = executionModel.getClassPath();
             if (StringUtils.isEmpty(classPath)) {
                 return true;
             }
-            String beanPath = bean.getName();
+            String beanPath = beanClass.getName();
             final String replaceRegex = ExpressionUtils.expressionReplaceRegex(classPath);
             return beanPath.matches(replaceRegex);
         }
