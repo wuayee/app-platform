@@ -25,7 +25,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
   return (
     <div className='page-plugin-card' onClick={pluginCardClick}>
       <div className='plugin-card-header'>
-        <img src='/src/assets/images/knowledge/knowledge-base.png' />
+        <img src='./src/assets/images/knowledge/knowledge-base.png' />
         <div>
           <div style={{ display: 'flex' }}>
             <div style={{ fontSize: 20, marginBottom: 8 }}>
