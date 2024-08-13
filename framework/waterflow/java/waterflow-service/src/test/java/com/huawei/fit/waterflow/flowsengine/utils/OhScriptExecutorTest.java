@@ -37,7 +37,7 @@ class OhScriptExecutorTest {
             Map<String, Object> businessData = new HashMap<>();
             businessData.put("test", true);
             FlowData flowData = FlowData.builder().businessData(businessData).build();
-            String conditionRule = "businessData.test";
+            String conditionRule = "businessData.get(\"test\")";
             assertTrue(OhScriptExecutor.evaluateConditionRule(flowData, conditionRule));
         }
 
@@ -49,7 +49,7 @@ class OhScriptExecutorTest {
             businessData.put("test", true);
             passData.put("test1", false);
             FlowData flowData = FlowData.builder().businessData(businessData).passData(passData).build();
-            String conditionRule = "businessData.test && passData.test1";
+            String conditionRule = "businessData.get(\"test\") && passData.get(\"test1\")";
             assertFalse(OhScriptExecutor.evaluateConditionRule(flowData, conditionRule));
         }
 
@@ -61,7 +61,7 @@ class OhScriptExecutorTest {
             businessData.put("test", true);
             passData.put("test1", false);
             FlowData flowData = FlowData.builder().businessData(businessData).passData(passData).build();
-            String conditionRule = "businessData.test || passData.test1";
+            String conditionRule = "businessData.get(\"test\") || passData.get(\"test1\")";
             assertTrue(OhScriptExecutor.evaluateConditionRule(flowData, conditionRule));
         }
 
@@ -73,7 +73,8 @@ class OhScriptExecutorTest {
             businessData.put("test1", false);
             businessData.put("test2", false);
             FlowData flowData = FlowData.builder().businessData(businessData).build();
-            String conditionRule = "businessData.test && !(businessData.test1 || businessData.test2)";
+            String conditionRule =
+                    "businessData.get(\"test\") && !(businessData.get(\"test1\") || businessData.get(\"test2\"))";
             assertTrue(OhScriptExecutor.evaluateConditionRule(flowData, conditionRule));
         }
 
@@ -85,7 +86,8 @@ class OhScriptExecutorTest {
             businessData.put("test1", false);
             businessData.put("test2", true);
             FlowData flowData = FlowData.builder().businessData(businessData).build();
-            String conditionRule = "businessData.test && !(businessData.test1 || businessData.test2)";
+            String conditionRule =
+                    "businessData.get(\"test\") && !(businessData.get(\"test1\") || businessData.get(\"test2\"))";
             assertFalse(OhScriptExecutor.evaluateConditionRule(flowData, conditionRule));
         }
 
@@ -97,7 +99,8 @@ class OhScriptExecutorTest {
             businessData.put("test1", 4);
             businessData.put("test2", 7);
             FlowData flowData = FlowData.builder().businessData(businessData).build();
-            String conditionRule = "businessData.test > 5 && !(businessData.test1 < 3 || businessData.test2 > 6)";
+            String conditionRule = "businessData.get(\"test\") > 5 && !(businessData.get(\"test1\") < 3 || "
+                    + "businessData.get(\"test2\") > 6)";
             assertFalse(OhScriptExecutor.evaluateConditionRule(flowData, conditionRule));
         }
 
