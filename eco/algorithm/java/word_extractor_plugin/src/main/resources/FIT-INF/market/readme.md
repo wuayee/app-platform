@@ -31,8 +31,8 @@ inputs = [
             "params": {}
         },
         "passData": {
-            "data": "",
-            "text": "",  # 待处理数据
+            "data": "",  # 待处理数据
+            "text": "",
             "meta": {
                 "fileName": "xxx.doc",
                 "filePath": "xxx/xxx/xxx.doc",  # 文件路径
