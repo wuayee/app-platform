@@ -1,53 +1,36 @@
 
-import React, { forwardRef, useImperativeHandle, useEffect } from 'react';
-import tinymce from 'tinymce';
-import 'tinymce/models/dom/index.js';
-import 'tinymce/icons/default/index.js';
-import 'tinymce/plugins/image/index.js';
-import 'tinymce/plugins/table/index.js';
-import 'tinymce/plugins/lists/index.js';
-import 'tinymce/skins/ui/oxide/skin.min.css';
-import 'tinymce/themes/silver/theme.min.js';
+import React from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-const TextEditor = forwardRef((props, ref) => {
-
-  // 对外暴露方法
-  useImperativeHandle(ref, () => {
-    return {
-      handleChange: () => {
-        let content = tinymce.activeEditor?.getContent();
-        return content
-      }
+const TextEditor = ({ text, setText }) => {
+  const quillOption = {
+    toolbar: {
+      container: [
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ align: [] }],
+        [{ color: [] }, { background: [] }],
+        ['image']
+      ]
     }
-  });
-
-  useEffect(() => {
-    tinymce.init({
-      selector: '#publish-editor',
-      plugins: 'lists image table',
-      language: 'zh_CN',
-      language_url: `./src/assets/tinymce/lang/zh-CN.js`,
-      skin_url: `./src/assets/tinymce/skins/ui/oxide`,
-      content_css:`./src/assets/tinymce/skins/content/default/content.css`,
-      height: 260,
-      menubar: false,
-      statusbar: false,
-      toolbar: 'formatselect fontsizeselect | forecolor backcolor bold italic underline strikethrough link | alignleft aligncenter alignright | bullist numlist | table image',
-      images_upload_handler: (blobInfo, progress) => {
-        return new Promise((resolve, reject) => {
-          resolve(`data:${blobInfo.blob().type};base64,${blobInfo.base64()}`);
-        });
-      }
-    })
-    return () => {
-      tinymce.remove();
-    }
-  }, [])
+  }
+  const handleChange = (content) => {
+    setText(content);
+  };
   return <>{(
     <div style={{ height: '280px' }}>
-      <textarea id='publish-editor'></textarea>
+      <ReactQuill
+        style={{ height: '240px' }}
+        theme='snow'
+        value={text}
+        onChange={handleChange}
+        modules={quillOption}
+      />
     </div>
   )}</>
-});
+};
+
 
 export default TextEditor;
