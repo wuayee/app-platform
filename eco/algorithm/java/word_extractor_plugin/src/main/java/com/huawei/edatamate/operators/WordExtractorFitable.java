@@ -4,7 +4,6 @@
 
 package com.huawei.edatamate.operators;
 
-import com.huawei.fit.data.repository.annotation.DataInjection;
 import com.huawei.fit.data.repository.annotation.Parameter;
 import com.huawei.fit.data.repository.annotation.ReturnValue;
 import com.huawei.fit.jober.FlowableService;
@@ -80,8 +79,6 @@ public class WordExtractorFitable implements FlowableService {
      */
     @Override
     @Fitable(id = "com.huawei.eDataMate.operators.word_extractor_plugin")
-    @DataInjection(parameters = {@Parameter(index = 0, path = "[*].passData.data")},
-        returnValue = {@ReturnValue(path = "[*].passData.text")})
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
         List<Map<String, Object>> response = new ArrayList<>(flowData.size());
         for (Map<String, Object> flowDatum : flowData) {
