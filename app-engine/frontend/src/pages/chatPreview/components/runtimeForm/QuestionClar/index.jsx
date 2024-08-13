@@ -21,7 +21,7 @@ dayjs.extend(customParseFormat);
 
 const QuestionClar = (props) => {
   const id = 'questionClarResult';
-  const { dataDimension,data, mode } = props;
+  const { dataDimension, data, mode } = props;
   const [questionInfo, setQuestionInfo] = useState(null);
   const { RangePicker } = DatePicker;
   const { handleRejectClar, tenantId, questionClarConfirm } = useContext(ChatContext);
