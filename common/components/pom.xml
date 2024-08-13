@@ -5,17 +5,15 @@
 
     <parent>
         <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>jade-parent</artifactId>
+        <artifactId>jade-common-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jade-common-parent</artifactId>
+    <groupId>com.huawei.fit.jade.components</groupId>
+    <artifactId>common-component-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>components</module>
-        <module>dependency</module>
-        <module>plugins</module>
-        <module>services</module>
+        <module>mybatis-audit</module>
     </modules>
 </project>

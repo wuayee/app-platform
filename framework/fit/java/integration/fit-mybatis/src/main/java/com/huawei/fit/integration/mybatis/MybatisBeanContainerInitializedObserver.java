@@ -18,6 +18,7 @@ import com.huawei.fitframework.plugin.PluginKey;
 import com.huawei.fitframework.transaction.TransactionManager;
 
 import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -60,6 +61,10 @@ public class MybatisBeanContainerInitializedObserver implements BeanContainerIni
         configuration.setEnvironment(new Environment(PluginKey.identify(plugin.metadata()),
                 new ManagedTransactionFactory(transactionManager),
                 new LazyLoadedDataSource(container)));
+        container.factories(Interceptor.class)
+                .stream()
+                .map(BeanFactory::<Interceptor>get)
+                .forEach(configuration::addInterceptor);
         SqlSessionFactoryHelper.loadMappers(properties, plugin, configuration);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         container.registry().register(sessionFactory);
