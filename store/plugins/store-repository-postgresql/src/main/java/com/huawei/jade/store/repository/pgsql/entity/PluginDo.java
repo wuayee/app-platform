@@ -8,6 +8,7 @@ import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +40,11 @@ public class PluginDo extends CommonDo {
     private String extension;
 
     /**
+     * 表示插件的部署状态。
+     */
+    private DeployStatus deployStatus;
+
+    /**
      * 用传输层的插件数据 {@link PluginData} 构造 {@link PluginDo}。
      *
      * @param pluginData 表示传输层的插件数据的 {@link PluginData}。
@@ -53,6 +59,7 @@ public class PluginDo extends CommonDo {
         pluginDo.setPluginId(pluginData.getPluginId());
         pluginDo.setPluginName(pluginData.getPluginName());
         pluginDo.setExtension(serializer.serialize(pluginData.getExtension()));
+        pluginDo.setDeployStatus(DeployStatus.from(pluginData.getDeployStatus()));
         return pluginDo;
     }
 
@@ -73,6 +80,9 @@ public class PluginDo extends CommonDo {
         pluginData.setPluginId(pluginDo.getPluginId());
         pluginData.setPluginName(pluginDo.getPluginName());
         pluginData.setExtension(json2obj(pluginDo.getExtension(), serializer));
+        if (pluginDo.getDeployStatus() != null) {
+            pluginData.setDeployStatus(pluginDo.getDeployStatus().toString());
+        }
         return pluginData;
     }
 }

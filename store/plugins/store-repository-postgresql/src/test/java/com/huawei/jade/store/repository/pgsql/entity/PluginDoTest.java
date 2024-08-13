@@ -10,6 +10,7 @@ import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,12 @@ public class PluginDoTest {
         pluginData.setPluginName("testPlugin");
         pluginData.setExtension(MapBuilder.<String, Object>get()
                 .put("type", "java").build());
+        pluginData.setDeployStatus("deployed");
         PluginDo pluginDo = PluginDo.fromPluginData(pluginData, this.serializer);
         assertThat(pluginDo.getPluginId()).isEqualTo("testPluginId");
         assertThat(pluginDo.getPluginName()).isEqualTo("testPlugin");
         assertThat(pluginDo.getExtension()).isEqualTo("{\"type\":\"java\"}");
+        assertThat(pluginDo.getDeployStatus().toString()).isEqualTo("DEPLOYED");
     }
 
     @Test
@@ -46,10 +49,12 @@ public class PluginDoTest {
         pluginDo.setPluginId("testPluginId");
         pluginDo.setPluginName("testPlugin");
         pluginDo.setExtension("{\"type\":\"java\"}");
+        pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
         PluginData pluginData = PluginDo.toPluginData(pluginDo, this.serializer);
         assertThat(pluginData.getPluginId()).isEqualTo("testPluginId");
         assertThat(pluginData.getPluginName()).isEqualTo("testPlugin");
         assertThat(pluginData.getExtension()).isEqualTo(MapBuilder.<String, Object>get()
                 .put("type", "java").build());
+        assertThat(pluginData.getDeployStatus()).isEqualTo("DEPLOYED");
     }
 }

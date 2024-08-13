@@ -6,6 +6,7 @@ package com.huawei.jade.store.repository.pgsql.mapper;
 
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import java.util.List;
 
@@ -53,4 +54,28 @@ public interface PluginMapper {
      * @return 表示插件信息的 {@link PluginDo}。
      */
     PluginDo getPluginByPluginId(String pluginId);
+
+    /**
+     * 根据部署状态查询插件列表。
+     *
+     * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
+     * @return 插件列表的 {@link List}{@code <}{@link PluginDo}{@code >}。
+     */
+    List<PluginDo> getPluginsByDeployStatus(DeployStatus deployStatus);
+
+    /**
+     * 根据部署状态查询插件的总数。
+     *
+     * @param deployStatus 表示部署状态的 {@link DeployStatus}。
+     * @return 插件总数的 {@code int}。
+     */
+    int getPluginsCountByDeployStatus(DeployStatus deployStatus);
+
+    /**
+     * 更新插件列表的部署状态。
+     *
+     * @param pluginIdList 表示待更新部署状态的插件列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param deployStatus 表示目标部署状态的 {@link DeployStatus}。
+     */
+    void updateDeployStatus(List<String> pluginIdList, DeployStatus deployStatus);
 }
