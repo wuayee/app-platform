@@ -48,6 +48,10 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             "converter": {
                 "type": "mapping_converter"
             },
+        },
+        "joberFilter": {
+            "type": "MINIMUM_SIZE_FILTER",
+            "threshold": 1
         }
     };
     self.sourcePlatform = SOURCE_PLATFORM.OFFICIAL;
