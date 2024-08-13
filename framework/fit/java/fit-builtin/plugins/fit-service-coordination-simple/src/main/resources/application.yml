@@ -1,7 +1,0 @@
-default-expire-time: 30
-
-fit:
-  beans:
-    packages:
-    - 'com.huawei.fit.heartbeat.server'
-    - 'com.huawei.fit.service'

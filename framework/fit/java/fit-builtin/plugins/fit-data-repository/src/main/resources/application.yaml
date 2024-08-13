@@ -1,8 +1,0 @@
-timeout-seconds: 3600
-scheduler-initial-delay: 1
-scheduler-fixed-delay: 15
-
-fit:
-  beans:
-    packages:
-    - 'com.huawei.fit.data.repository'

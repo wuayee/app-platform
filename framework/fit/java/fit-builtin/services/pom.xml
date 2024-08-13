@@ -15,14 +15,10 @@
 
     <modules>
         <module>fit-client</module>
-        <module>fit-data-repository-service</module>
-        <module>fit-heartbeat</module>
         <module>fit-http-classic</module>
         <module>fit-http-protocol</module>
         <module>fit-message-serializer</module>
-        <module>fit-security</module>
         <module>fit-server</module>
-        <module>fit-service</module>
     </modules>
 
     <build>
