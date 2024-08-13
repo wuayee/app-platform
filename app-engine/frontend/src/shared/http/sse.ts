@@ -76,3 +76,25 @@ export function saveContent(tenantId: string, instanceId: string, params: any) {
 export function getTestVersion(tenantId: string, appId: string) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}/aipp?isDebug=true`);
 }
+// 请求对话接口（溯源）
+/**
+ * @param {string} tenantId - 租户ID
+ * @param {string} instanceId - 实例ID
+ * @param {any} params - 需要保存的参数
+ * @return {Promise} 返回一个Promise对象，resolve的参数为请求的响应
+ * @throws {Error} 如果请求失败，会抛出错误
+ */
+export function saveChart(tenantId: string, instanceId: string, params: any) {
+  let url = `${AIPP_URL}/${tenantId}/instances/${instanceId}`
+  return new Promise((resolve, reject) => {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params)
+    }).then((res) => {
+      resolve(res);
+    })
+  });
+}

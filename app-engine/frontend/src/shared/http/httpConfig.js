@@ -15,6 +15,7 @@ export const httpUrlMap = {
     PLUGIN_URL: '/api/jober',
     MODEL_MANAGE_URL: '/modelbase',
     FINETUNE_URL: '/modeltrain',
+    CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
   },
   production: {
     JANE_URL: 'https://jane.huawei.com/api',
@@ -30,6 +31,7 @@ export const httpUrlMap = {
     PLUGIN_URL: '/api/jober',
     MODEL_MANAGE_URL: '/modelbase',
     FINETUNE_URL: '/modeltrain',
+    CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
   },
   gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
@@ -43,6 +45,7 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
+    CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
   },
   beta: {
     JANE_URL: 'https://jane-beta.huawei.com/api',
@@ -56,6 +59,7 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
+    CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
   },
   alpha: {
     JANE_URL: 'https://jane-alpha.huawei.com/api',
@@ -69,5 +73,6 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
+    CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
   },
 };
