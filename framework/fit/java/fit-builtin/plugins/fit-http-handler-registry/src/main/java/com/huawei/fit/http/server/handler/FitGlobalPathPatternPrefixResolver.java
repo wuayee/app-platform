@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 表示从配置项 {@code 'server.http.context-path'} 中获取全局路径样式的前缀解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-03
  */
 public class FitGlobalPathPatternPrefixResolver implements GlobalPathPatternPrefixResolver {

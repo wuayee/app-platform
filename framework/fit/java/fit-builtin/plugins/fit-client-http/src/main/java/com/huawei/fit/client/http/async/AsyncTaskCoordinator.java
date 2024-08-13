@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * FIT 客户端异步任务运行协调中心，单例模式。
  *
- * @author 王成 w00863339
- * @author 季聿阶 j00559309
+ * @author 王成
+ * @author 季聿阶
  * @since 2023-11-17
  */
 class AsyncTaskCoordinator {

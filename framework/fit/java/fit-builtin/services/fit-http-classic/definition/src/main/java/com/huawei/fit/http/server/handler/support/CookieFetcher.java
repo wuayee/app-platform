@@ -14,7 +14,7 @@ import com.huawei.fit.http.server.handler.SourceFetcher;
 /**
  * 表示从 Cookie 中获取值的 {@link SourceFetcher}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 public class CookieFetcher implements SourceFetcher {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 当发生值溢出时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public class ValueOverflowException extends RuntimeException {

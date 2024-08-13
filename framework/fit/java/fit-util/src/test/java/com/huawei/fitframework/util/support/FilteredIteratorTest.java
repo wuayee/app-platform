@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 /**
  * {@link FilteredIterator} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-14
  */
 @DisplayName("测试 FilteredIterator 类")

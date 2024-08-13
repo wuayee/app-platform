@@ -7,7 +7,7 @@ package com.huawei.fitframework.transaction;
 /**
  * 表示数据访问的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-17
  */
 public class DataAccessException extends RuntimeException {

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Http 请求的分发器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-18
  */
 public interface HttpDispatcher {

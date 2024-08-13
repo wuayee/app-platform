@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 用于注入配置信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2020-07-28
  */
 @Documented

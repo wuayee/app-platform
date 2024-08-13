@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 表示 {@link FitGenericable} 的测试实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-23
  */
 @Alias("f1")

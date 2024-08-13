@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 为 {@link FitRuntime} 提供事件发布程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-31
  */
 final class FitRuntimeEventPublisher implements EventPublisher {

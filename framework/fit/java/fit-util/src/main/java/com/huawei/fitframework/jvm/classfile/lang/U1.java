@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * 为JVM提供1字节的数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class U1 implements Comparable<U1> {

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 为 {@link Alias} 提供可重复的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-30
  */
 @Documented

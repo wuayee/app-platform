@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 表示响应式流辅助消费工具 {@link Worker} 的默认实现。
  *
  * @param <T> 表示响应式流中元素类型的 {@link T}。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 class DefaultWorker<T> implements Worker<T> {

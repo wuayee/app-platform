@@ -36,7 +36,7 @@ import java.net.InetSocketAddress;
 /**
  * 表示 {@link NettyHttpServerRequest} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-24
  */
 @DisplayName("测试 NettyHttpServerRequest 类")

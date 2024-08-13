@@ -27,8 +27,8 @@ import java.lang.reflect.Type;
 /**
  * 表示 {@link MessageSerializer} 的 Jackson 的实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-11-23
  */
 @Component

@@ -45,7 +45,7 @@ import java.util.Optional;
 /**
  * 表示数据注入的切面定义。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-21
  */
 @Aspect(scope = Scope.GLOBAL)

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 /**
  * 表示指定的方法需要在一个事务中执行。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-29
  */
 @Documented

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link DefaultResolvedParameter} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-02-17
  */
 @DisplayName("验证 DefaultResolvedParameter")

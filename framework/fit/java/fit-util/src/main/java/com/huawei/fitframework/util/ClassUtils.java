@@ -12,7 +12,7 @@ import java.security.CodeSource;
 /**
  * 为类型提供工具方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-02-24
  */
 public class ClassUtils {

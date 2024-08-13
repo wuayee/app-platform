@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link DefaultNettyServerConfig} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-07
  */
 @DisplayName("测试 DefaultNettyServerConfig")

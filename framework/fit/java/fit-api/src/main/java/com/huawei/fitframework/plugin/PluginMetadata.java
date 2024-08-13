@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 为插件提供元数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-06
  */
 public interface PluginMetadata extends PluginKey {

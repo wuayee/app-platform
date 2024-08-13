@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 /**
  * 为 {@link MapUtils} 提供单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2020-09-17
  */
 @DisplayName("测试 MapUtils")

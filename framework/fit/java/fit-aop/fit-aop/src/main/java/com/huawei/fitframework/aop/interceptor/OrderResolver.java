@@ -9,7 +9,7 @@ import com.huawei.fitframework.pattern.builder.BuilderFactory;
 /**
  * {@link MethodInterceptor} 的优先级解析器。
  *
- * @author 詹高扬 z50029227
+ * @author 詹高扬
  * @since 2022-08-01
  */
 @FunctionalInterface

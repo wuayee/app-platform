@@ -19,8 +19,8 @@ import java.util.Date;
  * 表示 {@link Logger} 的控制台实现。
  * <p>该实现的日志打印级别为 {@code DEBUG}。</p>
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-11-14
  */
 public class ConsoleLogger implements Logger {

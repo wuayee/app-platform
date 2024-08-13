@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * 为构建过程提供任务定义。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-11-20
  */
 @FunctionalInterface

@@ -10,7 +10,7 @@ import com.huawei.fit.http.websocket.server.support.DefaultWebSocketDispatcher;
 /**
  * 表示 WebSocket 消息的分发器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 public interface WebSocketDispatcher {

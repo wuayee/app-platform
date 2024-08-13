@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示 {@link GenericableExecutor} 的单播调用抽象实现类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public abstract class AbstractUnicastGenericableExecutor implements GenericableExecutor {

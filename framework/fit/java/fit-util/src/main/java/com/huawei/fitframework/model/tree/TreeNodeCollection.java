@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * 为树中的节点提供集合。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-10
  */
 public interface TreeNodeCollection extends Iterable<TreeNode> {

@@ -9,7 +9,7 @@ package com.huawei.fitframework.flowable;
  * <p>{@link Subscription} 管理着 {@link Publisher} 和 {@link Subscriber} 之间的数据流，同时，提供了 {@link Subscriber} 向
  * {@link Publisher} 控制数据的相关方法。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 public interface Subscription {

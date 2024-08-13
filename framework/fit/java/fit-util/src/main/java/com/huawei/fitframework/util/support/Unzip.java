@@ -30,8 +30,8 @@ import java.util.zip.ZipFile;
 /**
  * 为解压 {@code .zip} 格式的文件提供工具。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-10-05
  */
 public class Unzip extends AbstractZip<Unzip> {
@@ -259,7 +259,7 @@ public class Unzip extends AbstractZip<Unzip> {
     /**
      * 为 {@code .zip} 压缩文件提供安全配置。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-05
      */
     public static class Security {
@@ -305,8 +305,8 @@ public class Unzip extends AbstractZip<Unzip> {
     /**
      * 为正在被解包的项提供重定向能力。
      *
-     * @author 梁济时 l00815032
-     * @author 季聿阶 j00559309
+     * @author 梁济时
+     * @author 季聿阶
      * @since 2020-10-05
      */
     public static class Redirect {
@@ -346,7 +346,7 @@ public class Unzip extends AbstractZip<Unzip> {
     /**
      * 为正在被解包的项提供冲突信息。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-06
      */
     public static class Conflict {

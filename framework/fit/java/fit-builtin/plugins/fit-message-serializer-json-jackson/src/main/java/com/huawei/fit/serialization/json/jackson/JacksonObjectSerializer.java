@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * 表示 Json 格式的序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @author 易文渊
  * @since 2022-08-03
  */

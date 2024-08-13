@@ -18,7 +18,7 @@ import java.util.Optional;
  * </ul>
  * <note>实现类所在的JAR需要与 {@code fit-ioc} 的JAR在相同的 {@link ClassLoader} 中被加载。</note>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 public interface AnnotationPropertyForwarder {

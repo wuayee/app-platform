@@ -15,8 +15,8 @@ import java.lang.reflect.Method;
 /**
  * ByteBuddy 的代理方法回调。
  *
- * @author 詹高扬 z50029227
- * @author 季聿阶 j00559309
+ * @author 詹高扬
+ * @author 季聿阶
  * @since 2022-08-02
  */
 public class ByteBuddyProxy extends AbstractAopProxy implements InvocationHandler {

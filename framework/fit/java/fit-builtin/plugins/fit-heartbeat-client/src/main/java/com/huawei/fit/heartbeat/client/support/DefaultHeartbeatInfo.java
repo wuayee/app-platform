@@ -13,7 +13,7 @@ import com.huawei.fit.heartbeat.client.HeartbeatInfo;
 /**
  * 表示 {@link HeartbeatInfo} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-16
  */
 public class DefaultHeartbeatInfo implements HeartbeatInfo {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.retry.Condition;
 /**
  * 表示限制重试次数的重试条件。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-20
  */
 public class TimesLimitedRetryCondition implements Condition {

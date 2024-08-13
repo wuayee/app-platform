@@ -16,8 +16,8 @@ import java.util.Optional;
 /**
  * 指定主机地址的负载均衡策略。
  *
- * @author 张浩亮 z00352201
- * @author 季聿阶 j00559309
+ * @author 张浩亮
+ * @author 季聿阶
  * @since 2021-09-26
  */
 public class HostFilter extends ChampionFilter {

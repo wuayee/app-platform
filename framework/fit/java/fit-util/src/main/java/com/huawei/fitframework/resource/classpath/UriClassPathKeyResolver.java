@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * 为从 {@link URI} 中解析 {@link ClassPathKey} 提供解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 @FunctionalInterface

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 为归档件提供下载程序。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-11-19
  */
 public interface ArtifactDownloader {
@@ -33,7 +33,7 @@ public interface ArtifactDownloader {
     /**
      * 为 {@link ArtifactDownloader} 提供构建器。
      *
-     * @author 梁济时 00298979
+     * @author 梁济时
      * @since 2020-11-19
      */
     interface Builder {

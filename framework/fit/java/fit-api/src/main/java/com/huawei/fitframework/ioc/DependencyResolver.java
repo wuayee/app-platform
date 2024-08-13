@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 /**
  * 为 Bean 依赖提供解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-10
  */
 public interface DependencyResolver {

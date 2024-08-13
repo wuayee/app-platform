@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * 表示 {@link DefaultHttpConfig} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-10
  */
 @DisplayName("测试 DefaultHttpConfig")

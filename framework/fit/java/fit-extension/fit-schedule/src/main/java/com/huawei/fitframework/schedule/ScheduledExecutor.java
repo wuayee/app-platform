@@ -28,7 +28,7 @@ import java.util.function.BiFunction;
 /**
  * 表示定时调度执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-18
  */
 @Component

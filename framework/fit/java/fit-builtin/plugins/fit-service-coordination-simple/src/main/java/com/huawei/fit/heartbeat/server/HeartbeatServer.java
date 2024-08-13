@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 用于提供心跳相关的服务。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2022-04-11
  */
 @Component

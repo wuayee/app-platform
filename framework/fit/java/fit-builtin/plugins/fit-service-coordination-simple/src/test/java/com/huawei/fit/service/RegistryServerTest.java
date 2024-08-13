@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * {@link RegistryServer} 的单测类。
  *
- * @author 邬涨财 w00575064
- * @author 季聿阶 j00559309
+ * @author 邬涨财
+ * @author 季聿阶
  * @since 2022-04-14
  */
 @DisplayName("测试 RegistryServer")

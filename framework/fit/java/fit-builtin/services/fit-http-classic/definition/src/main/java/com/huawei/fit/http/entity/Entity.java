@@ -16,7 +16,7 @@ import java.nio.charset.Charset;
 /**
  * 表示消息体内的数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public interface Entity extends Closeable {

@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * {@link ThreadUtils} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-02-06
  */
 public class ThreadUtilsTest {

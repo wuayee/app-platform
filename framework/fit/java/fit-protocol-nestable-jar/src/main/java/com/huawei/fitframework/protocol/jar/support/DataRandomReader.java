@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * 为数据提供随机访问能力。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-21
  */
 public interface DataRandomReader extends Closeable {

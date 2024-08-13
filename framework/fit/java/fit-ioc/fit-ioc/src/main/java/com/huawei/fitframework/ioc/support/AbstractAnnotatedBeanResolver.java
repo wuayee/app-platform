@@ -30,7 +30,7 @@ import java.util.Optional;
 /**
  * 为通过注解的 {@link BeanResolver} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-28
  */
 public abstract class AbstractAnnotatedBeanResolver implements BeanResolver {

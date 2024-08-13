@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * 为项目中存在的依赖提供定义。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-10-09
  */
 @Getter

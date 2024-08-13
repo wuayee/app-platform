@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 为与依赖相关的异常提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-29
  */
 public class DependencyException extends IocException {

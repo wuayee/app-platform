@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * 解析依赖项 {@link ResolvedDependencyPrinter} 时打印日志类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2020-12-26
  */
 public class LogResolvedDependencyPrinter implements ResolvedDependencyPrinter {

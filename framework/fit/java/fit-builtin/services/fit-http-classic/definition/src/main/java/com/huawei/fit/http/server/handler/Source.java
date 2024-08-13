@@ -7,7 +7,7 @@ package com.huawei.fit.http.server.handler;
 /**
  * 表示 Http 报文中的来源位置。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-28
  */
 public enum Source {

@@ -14,7 +14,7 @@ import java.lang.reflect.Array;
 /**
  * 为 {@link AnnotationMetadata} 提供空实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-16
  */
 public class EmptyAnnotationMetadata implements AnnotationMetadata {

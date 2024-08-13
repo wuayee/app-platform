@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示 {@link ThreadPoolExecutor} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-26
  */
 public class DefaultThreadPoolExecutor extends AbstractThreadPool implements ThreadPoolExecutor {

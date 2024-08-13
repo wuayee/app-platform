@@ -17,7 +17,7 @@ import java.util.Set;
  * 流程上下文持久化Repo核心类型
  * 包含FlowContextMemoRepo和FlowContextPersistRepo两种实现
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public interface FlowContextRepo<T> {

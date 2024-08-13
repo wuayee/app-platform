@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 {@link JsonSchema} 的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public abstract class AbstractJsonSchema implements JsonSchema {

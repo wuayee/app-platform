@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link BeanResolver} 提供组合。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-09
  */
 public class BeanResolverComposite implements BeanResolver {

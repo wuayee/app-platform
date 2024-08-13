@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc.annotation.convert;
 /**
  * 值类型转换测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-28
  */
 @StringValue("100")

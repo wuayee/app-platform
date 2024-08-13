@@ -9,7 +9,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
 /**
  * 为 {@link BeanContainerBuilder} 提供解析程序的配置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-04
  */
 public interface BeanContainerBuilderResolverConfigurator {

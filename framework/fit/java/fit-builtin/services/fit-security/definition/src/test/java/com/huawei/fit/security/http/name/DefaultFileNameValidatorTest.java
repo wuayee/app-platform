@@ -21,7 +21,7 @@ import java.util.Arrays;
 /**
  * 表示 {@link DefaultFileNameValidator} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-11
  */
 @DisplayName("测试文件名校验器的默认实现")

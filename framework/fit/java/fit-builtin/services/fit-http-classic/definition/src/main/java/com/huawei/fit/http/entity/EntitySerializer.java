@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
  * 表示消息体的序列化器。
  *
  * @param <E> 表示消息体类型的 {@link E}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-11
  */
 public interface EntitySerializer<E extends Entity> {

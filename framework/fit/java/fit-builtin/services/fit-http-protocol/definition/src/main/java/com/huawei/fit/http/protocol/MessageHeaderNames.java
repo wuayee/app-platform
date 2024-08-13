@@ -8,7 +8,7 @@ package com.huawei.fit.http.protocol;
  * Http 常用消息头名字。
  * <p><a href="https://datatracker.ietf.org/doc/html/rfc2076">RFC 2076</a> 列出了很多通用的消息头的定义来源。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class MessageHeaderNames {

@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * 表示 Http 协议的版本。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-09
  */
 public enum HttpVersion {

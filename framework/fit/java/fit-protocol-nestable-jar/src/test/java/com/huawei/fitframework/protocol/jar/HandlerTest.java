@@ -19,7 +19,7 @@ import java.net.URLConnection;
 /**
  * 为 {@link Handler} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-01-16
  */
 @DisplayName("测试 Handler 类")

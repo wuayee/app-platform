@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 /**
  * 为注解中的元素提供值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-29
  */
 public abstract class AnnotationElementValue {
@@ -233,7 +233,7 @@ public abstract class AnnotationElementValue {
     /**
      * 为注解的元素值提供读取程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     @FunctionalInterface
@@ -252,7 +252,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示字节类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class ByteValue extends AnnotationElementValue {
@@ -281,7 +281,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示字符类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class CharValue extends AnnotationElementValue {
@@ -310,7 +310,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示双精度浮点数类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class DoubleValue extends AnnotationElementValue {
@@ -339,7 +339,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示单精度浮点数类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class FloatValue extends AnnotationElementValue {
@@ -368,7 +368,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示 32 位整数类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class IntegerValue extends AnnotationElementValue {
@@ -397,7 +397,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示 64 位整数类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class LongValue extends AnnotationElementValue {
@@ -426,7 +426,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示 16 位整数类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class ShortValue extends AnnotationElementValue {
@@ -455,7 +455,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示布尔类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class BooleanValue extends AnnotationElementValue {
@@ -484,7 +484,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示字符串类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class StringValue extends AnnotationElementValue {
@@ -513,7 +513,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示枚举类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class EnumValue extends AnnotationElementValue {
@@ -553,7 +553,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示 Java 类类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class ClassValue extends AnnotationElementValue {
@@ -582,7 +582,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示注解类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class AnnotationValue extends AnnotationElementValue {
@@ -611,7 +611,7 @@ public abstract class AnnotationElementValue {
     /**
      * 表示数组类型的值。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-29
      */
     public static final class ArrayValue extends AnnotationElementValue implements Iterable<AnnotationElementValue> {

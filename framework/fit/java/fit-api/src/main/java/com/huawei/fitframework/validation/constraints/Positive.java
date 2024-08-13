@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * 表示判断元素值是否为正的注解。
  *
- * @author 吕博文 l50044051
+ * @author 吕博文
  * @since 2024-08-01
  */
 @Retention(RetentionPolicy.RUNTIME)

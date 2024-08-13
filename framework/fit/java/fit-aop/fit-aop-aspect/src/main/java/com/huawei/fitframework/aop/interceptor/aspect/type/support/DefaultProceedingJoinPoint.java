@@ -11,7 +11,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 通过 {@link MethodJoinPoint} 适配实现 {@link ProceedingJoinPoint}。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-23
  */
 public class DefaultProceedingJoinPoint extends DefaultJoinPoint implements ProceedingJoinPoint {

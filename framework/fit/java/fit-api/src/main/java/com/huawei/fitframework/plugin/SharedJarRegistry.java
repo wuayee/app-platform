@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * 为公共JAR提供注册入口。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-20
  */
 public interface SharedJarRegistry {

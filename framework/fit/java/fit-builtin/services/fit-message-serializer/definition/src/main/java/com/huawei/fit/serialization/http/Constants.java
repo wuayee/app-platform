@@ -7,7 +7,7 @@ package com.huawei.fit.serialization.http;
 /**
  * 表示 FIT Http 通信的地址信息集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-17
  */
 public class Constants {

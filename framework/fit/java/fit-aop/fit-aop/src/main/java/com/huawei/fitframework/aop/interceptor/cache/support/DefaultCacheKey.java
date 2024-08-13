@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 表示 {@link CacheKey} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public class DefaultCacheKey implements CacheKey {

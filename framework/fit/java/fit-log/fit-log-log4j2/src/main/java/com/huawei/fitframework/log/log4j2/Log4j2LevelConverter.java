@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Level;
 /**
  * 表示 {@link Level} 和 {@link Logger.Level} 的转换方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-21
  */
 public class Log4j2LevelConverter {

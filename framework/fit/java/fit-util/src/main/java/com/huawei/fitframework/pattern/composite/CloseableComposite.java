@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Closeable} 提供组合。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public class CloseableComposite implements Closeable {

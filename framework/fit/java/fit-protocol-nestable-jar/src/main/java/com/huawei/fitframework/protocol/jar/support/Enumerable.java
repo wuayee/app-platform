@@ -8,7 +8,7 @@ package com.huawei.fitframework.protocol.jar.support;
  * 表示内容可枚举的对象。
  *
  * @param <T> 表示可枚举的内容的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-20
  */
 interface Enumerable<T> {

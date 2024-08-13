@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 /**
  * 校验类型为字段的元数据类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-05-18
  */
 public class ValidationField extends AbstractValidationMetadata {

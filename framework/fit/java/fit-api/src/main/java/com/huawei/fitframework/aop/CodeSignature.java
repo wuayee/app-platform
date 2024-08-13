@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop;
 /**
  * 代码签名接口。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-12
  */
 public interface CodeSignature extends Signature {

@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 /**
  * 用于向注册中心注册泛服务实现的客户端类。
  *
- * @author 李鑫 l00498867
- * @author 季聿阶 j00559309
+ * @author 李鑫
+ * @author 季聿阶
  * @since 2021-11-25
  */
 @Component

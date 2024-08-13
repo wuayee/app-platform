@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * 表示运行时 {@code 'client.*.'} 前缀的配置项。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-03-18
  */
 public interface ClientConfig {

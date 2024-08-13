@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link GlobalPathPatternPrefixResolver} 的组合器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-03
  */
 public class GlobalPathPatternPrefixResolverComposite implements GlobalPathPatternPrefixResolver {

@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * 用于存储注册中心的地址。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-04-06
  */
 @Component

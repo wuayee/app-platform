@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示注册服务实现的服务。
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2021-11-29
  */
 @Genericable

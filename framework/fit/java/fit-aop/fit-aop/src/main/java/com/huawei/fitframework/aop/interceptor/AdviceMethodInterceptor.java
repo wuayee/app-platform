@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 /**
  * 带建议的方法拦截器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-05
  */
 public interface AdviceMethodInterceptor extends MethodInterceptor {

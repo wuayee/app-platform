@@ -16,7 +16,7 @@ import java.util.function.Function;
 /**
  * 为 {@link WeakCache} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-09
  */
 public class DefaultWeakCache<K, F, V extends F> implements WeakCache<K, F> {

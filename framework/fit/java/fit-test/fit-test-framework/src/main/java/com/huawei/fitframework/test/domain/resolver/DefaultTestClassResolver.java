@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * 默认的单测类解析器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-17
  */
 public class DefaultTestClassResolver implements TestClassResolver {

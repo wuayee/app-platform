@@ -29,7 +29,7 @@ import java.util.Arrays;
 /**
  * 流程定义节点类型
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 @Getter

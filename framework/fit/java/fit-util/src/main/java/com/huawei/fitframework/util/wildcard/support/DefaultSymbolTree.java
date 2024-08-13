@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  *
  * @param <V> 表示元数据的类型。
  * @param <S> 表示符号的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-01
  */
 public class DefaultSymbolTree<V, S> implements SymbolTree<V, S> {

@@ -17,7 +17,7 @@ import java.util.Arrays;
 /**
  * 流程定义手动任务类型
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 @Getter

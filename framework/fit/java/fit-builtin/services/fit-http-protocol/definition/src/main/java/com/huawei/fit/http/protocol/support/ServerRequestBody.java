@@ -16,7 +16,7 @@ import java.io.InputStream;
 /**
  * 表示 {@link ReadableMessageBody} 在 {@link ServerRequest} 中的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-19
  */
 public class ServerRequestBody extends InputStream implements ReadableMessageBody {

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link FailMessageContentUtils} 的基本测试用例。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-16
  */
 @DisplayName("测试 FailMessageContentUtils")

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 远端心跳服务的客户端。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-06
  */
 public interface HeartbeatService {
@@ -101,7 +101,7 @@ public interface HeartbeatService {
     /**
      * 表示地址信息。
      *
-     * @author 季聿阶 j00559309
+     * @author 季聿阶
      * @since 2023-05-06
      */
     class Address {

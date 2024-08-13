@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * 表示 {@link CompositeByteBufReadableMessageBody} 的单元测试。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-02-23
  */
 @DisplayName("测试 HttpClassicRequestAssembler 类")

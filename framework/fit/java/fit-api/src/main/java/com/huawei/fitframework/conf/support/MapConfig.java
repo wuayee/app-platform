@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * 为 {@link com.huawei.fitframework.conf.ModifiableConfig} 提供使用 {@link Map} 作为数据源的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-02
  */
 public class MapConfig extends AbstractModifiableConfig {

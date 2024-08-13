@@ -27,7 +27,7 @@ import java.util.function.BinaryOperator;
 /**
  * 表示 {@link InvocationContext} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-31
  */
 public class DefaultInvocationContext implements InvocationContext {

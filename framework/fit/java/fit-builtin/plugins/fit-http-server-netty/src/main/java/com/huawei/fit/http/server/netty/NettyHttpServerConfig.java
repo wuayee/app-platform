@@ -7,7 +7,7 @@ package com.huawei.fit.http.server.netty;
 /**
  * 表示 {@link NettyHttpClassicServer} 的启动配置。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-28
  */
 public interface NettyHttpServerConfig {

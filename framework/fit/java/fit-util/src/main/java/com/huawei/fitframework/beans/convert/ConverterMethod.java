@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 定义对象类型转换的源类型与目标类型信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-27
  */
 @Documented

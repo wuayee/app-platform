@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示配置项 {@code 'server.http'} 下的配置。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-10
  */
 @Component

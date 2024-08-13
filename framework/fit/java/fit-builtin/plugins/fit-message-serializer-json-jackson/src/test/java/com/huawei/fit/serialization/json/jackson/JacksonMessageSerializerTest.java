@@ -24,7 +24,7 @@ import java.util.Collections;
 /**
  * 为 {@link JacksonMessageSerializer} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-23
  */
 @DisplayName("测试 JacksonMessageSerializer")

@@ -25,7 +25,7 @@ import java.util.Objects;
  * 解析切点 {@link Pointcut} 的解析器。
  * <P>表达式的组合，就是对应的表达式的逻辑运算，与、或、非。</p>
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-17
  */
 public class ReferenceParser extends BaseParser {

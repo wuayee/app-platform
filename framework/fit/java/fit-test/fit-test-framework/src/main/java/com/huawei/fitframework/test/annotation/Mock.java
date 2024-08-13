@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  * <p>被模拟的字段可以完全自定义行为。</p>
  * <p>注意：该注解通过 {@link Fit} 注解来进行测试字段的注入，注入前会生成一个对应类型的 Bean。</p>
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-29
  */
 @Target({ElementType.FIELD})

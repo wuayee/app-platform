@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link AbstractDisposable} 的单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2021-04-08
  */
 @DisplayName("Dispose object")

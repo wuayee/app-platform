@@ -21,7 +21,7 @@ import java.util.Iterator;
 /**
  * {@link InterfaceList} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-01
  */
 @DisplayName("测试 InterfaceList 类以及子类")

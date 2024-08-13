@@ -7,7 +7,7 @@ package com.huawei.fitframework.plugin.maven.support;
 /**
  * 表示共享的依赖信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-21
  */
 public class SharedDependency {

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link CodeableEnum} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class CodeableEnumTest {
@@ -106,7 +106,7 @@ public class CodeableEnumTest {
 /**
  * 为 {@link CodeableEnum} 提供用以验证的枚举定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 enum DemoCodeableEnum implements CodeableEnum<DemoCodeableEnum> {

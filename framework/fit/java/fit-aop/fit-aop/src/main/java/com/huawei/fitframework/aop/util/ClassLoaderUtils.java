@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 类加载器相关的工具类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-25
  */
 public class ClassLoaderUtils {

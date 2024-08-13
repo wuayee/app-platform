@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * 为包提供扫描程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-01
  */
 public interface PackageScanner {
@@ -33,7 +33,7 @@ public interface PackageScanner {
     /**
      * 为包扫描提供回调方法。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-02-01
      */
     @FunctionalInterface

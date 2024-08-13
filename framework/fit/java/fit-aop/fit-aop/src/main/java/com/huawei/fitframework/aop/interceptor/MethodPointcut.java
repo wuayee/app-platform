@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * 表示定义的方法切点集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-05
  */
 public interface MethodPointcut {

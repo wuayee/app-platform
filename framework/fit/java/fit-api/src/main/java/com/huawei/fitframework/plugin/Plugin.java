@@ -17,7 +17,7 @@ import com.huawei.fitframework.util.Disposable;
 /**
  * 为应用程序提供插件定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-18
  */
 public interface Plugin extends Disposable {

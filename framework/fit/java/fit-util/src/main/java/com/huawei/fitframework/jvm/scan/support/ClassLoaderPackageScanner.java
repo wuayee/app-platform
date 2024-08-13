@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link PackageScanner} 提供基于类加载程序的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-23
  */
 public class ClassLoaderPackageScanner implements PackageScanner {

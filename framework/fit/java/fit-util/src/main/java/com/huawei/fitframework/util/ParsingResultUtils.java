@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.support.DefaultParsingResult;
 /**
  * 为 {@link ParsingResult} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 class ParsingResultUtils {

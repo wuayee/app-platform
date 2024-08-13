@@ -10,7 +10,7 @@ import com.huawei.fit.client.support.DefaultAddress;
  * 表示请求的目标地址。
  * <p>该类的实现已实现 {@link Object#equals(Object)} 和 {@link Object#hashCode()} 方法，可以作为 {@link java.util.Map} 的键。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-19
  */
 public interface Address {

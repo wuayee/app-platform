@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 需要构建的对象的统一接口，用于输出对象内的内容。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-23
  */
 public interface ObjectProxy {

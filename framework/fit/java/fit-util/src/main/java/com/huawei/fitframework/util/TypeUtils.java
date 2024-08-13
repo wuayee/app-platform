@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 为类型提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-05
  */
 public final class TypeUtils {

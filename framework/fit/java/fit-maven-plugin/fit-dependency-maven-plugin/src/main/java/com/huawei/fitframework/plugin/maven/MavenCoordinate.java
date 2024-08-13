@@ -18,7 +18,7 @@ import java.util.StringJoiner;
 /**
  * 为Maven工程提供坐标。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-10-09
  */
 @Getter

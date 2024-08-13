@@ -7,7 +7,7 @@ package com.huawei.fitframework.broker;
 /**
  * 表示 {@link Genericable} 的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-26
  */
 public interface GenericableFactory {

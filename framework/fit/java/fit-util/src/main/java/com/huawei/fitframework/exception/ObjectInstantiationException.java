@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 当实例化对象失败时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-07-24
  */
 public class ObjectInstantiationException extends RuntimeException {

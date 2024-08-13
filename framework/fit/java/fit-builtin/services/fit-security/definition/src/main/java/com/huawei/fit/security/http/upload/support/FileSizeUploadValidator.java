@@ -16,7 +16,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示 {@link FileUploadValidator} 的文件大小校验功能实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 public final class FileSizeUploadValidator implements FileUploadValidator {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop.interceptor.aspect.parser.model;
 /**
  * 切入点类型。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public enum PointcutSupportedType {

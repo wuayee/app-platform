@@ -7,7 +7,7 @@ package com.huawei.fitframework.value;
 /**
  * 表示值的获取工具。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-04
  */
 public interface ValueFetcher {

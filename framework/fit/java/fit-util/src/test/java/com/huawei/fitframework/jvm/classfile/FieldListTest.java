@@ -28,7 +28,7 @@ import java.util.Objects;
 /**
  * {@link FieldList} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-01-31
  */
 @DisplayName("测试 FieldList 类以及子类")

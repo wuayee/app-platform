@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 {@link HttpClassicClient} 的 OkHttp 实现。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-04-08
  */
 public class OkHttpClassicClient extends AbstractHttpClassicClient {

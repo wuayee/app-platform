@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示空的 Http 值映射器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-02
  */
 public class EmptyPropertyValueMapper implements PropertyValueMapper {

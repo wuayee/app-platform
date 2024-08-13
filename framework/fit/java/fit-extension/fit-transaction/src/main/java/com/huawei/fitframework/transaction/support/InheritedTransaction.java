@@ -17,7 +17,7 @@ import java.sql.Connection;
  * <p>直接继承的事务，是一个逻辑的概念，其所有的配置都继承自其父事务。</p>
  * <p>直接继承的事务使用父事务的连接，并且在提交和回滚时不进行任何操作。实际效果等同于在父事务中执行操作。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-26
  */
 public class InheritedTransaction extends AbstractTransaction {

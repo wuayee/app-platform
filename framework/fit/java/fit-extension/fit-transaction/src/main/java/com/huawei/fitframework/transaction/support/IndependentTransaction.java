@@ -20,7 +20,7 @@ import java.sql.SQLException;
  *
  * <p>若父事务不存在后端事务，那么将直接复用父事务的连接。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-24
  */
 public final class IndependentTransaction extends AbstractTransaction {

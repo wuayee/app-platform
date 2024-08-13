@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link SerializationService} 提供默认实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-11-12
  */
 public class DefaultSerializationService implements SerializationService {

@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * streamId第一次由from自动生成
  * streamId后续恢复执行时由用户传入
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class From<I> extends IdGenerator implements Publisher<I> {

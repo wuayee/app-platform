@@ -34,8 +34,8 @@ import java.util.stream.Stream;
 /**
  * Aspect 参数注入的帮助类。
  *
- * @author 季聿阶 j00559309
- * @author 郭龙飞 gwx900499
+ * @author 季聿阶
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public class AspectParameterInjectionHelper {

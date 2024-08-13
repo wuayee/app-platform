@@ -14,9 +14,9 @@ import java.util.Map;
 /**
  * 为 FIT 系统提供基础异常类。
  *
- * @author 张越 z00559346
- * @author 张中恩 z00560464
- * @author 季聿阶 j00559309
+ * @author 张越
+ * @author 张中恩
+ * @author 季聿阶
  * @since 2020-04-23
  */
 @ErrorCode(FitException.CODE)

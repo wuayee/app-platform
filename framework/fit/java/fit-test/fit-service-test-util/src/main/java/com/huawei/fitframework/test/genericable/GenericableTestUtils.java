@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * 用于为服务方法的标准测试提供工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-10
  */
 public class GenericableTestUtils {

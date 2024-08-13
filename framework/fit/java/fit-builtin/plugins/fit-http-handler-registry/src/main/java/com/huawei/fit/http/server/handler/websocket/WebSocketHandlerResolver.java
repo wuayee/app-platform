@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示 {@link WebSocketHandler} 的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-09
  */
 public interface WebSocketHandlerResolver {

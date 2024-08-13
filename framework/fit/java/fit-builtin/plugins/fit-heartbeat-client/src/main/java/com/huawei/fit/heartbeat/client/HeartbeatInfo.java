@@ -9,7 +9,7 @@ import com.huawei.fit.heartbeat.client.support.DefaultHeartbeatInfo;
 /**
  * 表示心跳信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-15
  */
 public interface HeartbeatInfo {

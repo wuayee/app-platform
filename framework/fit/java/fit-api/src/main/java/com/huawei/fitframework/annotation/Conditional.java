@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 /**
  * 为 Bean 的加载提供条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-14
  */
 @Documented

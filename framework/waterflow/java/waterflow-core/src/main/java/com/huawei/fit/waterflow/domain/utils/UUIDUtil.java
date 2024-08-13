@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Uuid的Utils类。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 1.0
  */
 public class UUIDUtil {

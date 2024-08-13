@@ -7,7 +7,7 @@ package com.huawei.fitframework.flowable.util.counter;
 /**
  * 表示 {@link Counter} 数值变化的观察者。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 @FunctionalInterface

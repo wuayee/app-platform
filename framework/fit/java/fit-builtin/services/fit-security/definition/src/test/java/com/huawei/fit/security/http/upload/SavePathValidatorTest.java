@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link SavePathUploadValidator} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-16
  */
 @DisplayName("测试文件保存路径校验器")

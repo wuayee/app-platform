@@ -10,7 +10,7 @@ import com.huawei.fit.http.server.HttpServerResponseException;
 /**
  * 表示无法找到合适的 {@link WebSocketHandler} 的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-26
  */
 public class WebSocketHandlerNotFoundException extends HttpServerResponseException {

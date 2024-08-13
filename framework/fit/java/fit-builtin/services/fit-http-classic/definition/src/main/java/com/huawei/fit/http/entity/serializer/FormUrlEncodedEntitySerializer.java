@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 /**
  * 表示消息体格式为 {@code 'application/x-www-form-urlencoded'} 的序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public class FormUrlEncodedEntitySerializer implements EntitySerializer<MultiValueEntity> {

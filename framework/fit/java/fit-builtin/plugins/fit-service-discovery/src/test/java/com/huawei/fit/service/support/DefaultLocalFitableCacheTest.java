@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * {@link DefaultLocalFitableCache} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-27
  */
 @DisplayName("测试 DefaultLocalFitableCache 类")

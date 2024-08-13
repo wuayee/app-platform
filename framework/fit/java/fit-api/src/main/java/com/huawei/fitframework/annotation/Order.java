@@ -14,8 +14,8 @@ import java.lang.annotation.Target;
  * 表示顺序的注解。
  * <p>该注解提供了一组通用的优先级顺序，其中优先级之间都存在一定的空间，供用户进行自定义扩展。</p>
  *
- * @author 张浩亮 z00352201
- * @author 季聿阶 j00559309
+ * @author 张浩亮
+ * @author 季聿阶
  * @since 2021-08-21
  */
 @Documented

@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * 表示 {@link KeyGenerator} 的指定参数的缓存键生成器实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public class SpecifiedParamKeyGenerator implements KeyGenerator {

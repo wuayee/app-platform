@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 的字符串实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public class StringSchema extends AbstractJsonSchema {

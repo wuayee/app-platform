@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示 FIT 的服务器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-16
  */
 public interface FitServer {

@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * {@link com.huawei.fit.http.protocol.ReadableMessageBody} 的 {@link FileChannel} 的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-30
  */
 public class FileChannelReadableMessageBody extends NettyReadableMessageBody {

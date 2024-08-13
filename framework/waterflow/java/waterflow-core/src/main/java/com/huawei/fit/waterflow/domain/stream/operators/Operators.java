@@ -19,7 +19,7 @@ import java.util.List;
  * 总共有：只处理不改变类型；处理并改变类型；m条数据处理生成n条其他数据；m条数据处理生成1条其他数据
  * 辉子 2019.10.31
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public final class Operators {

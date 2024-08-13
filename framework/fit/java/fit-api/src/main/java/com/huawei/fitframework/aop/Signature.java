@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop;
 /**
  * 表示连接点处的签名接口。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public interface Signature {

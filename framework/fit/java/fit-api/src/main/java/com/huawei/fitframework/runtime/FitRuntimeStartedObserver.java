@@ -7,7 +7,7 @@ package com.huawei.fitframework.runtime;
 /**
  * 为 {@link FitRuntime} 启动完成提供观察者。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-15
  */
 public interface FitRuntimeStartedObserver {

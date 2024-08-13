@@ -10,7 +10,7 @@ import org.apache.maven.project.MavenProject;
 /**
  * 表示 Mojo 抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-23
  */
 public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo {

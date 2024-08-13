@@ -20,7 +20,7 @@ import java.util.function.Function;
 /**
  * 表示下一个合法时间的计算器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-04
  */
 public class NextDateTimeCalculator {

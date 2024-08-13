@@ -15,7 +15,7 @@ import java.lang.reflect.Type;
 /**
  * 为 {@link DependencyRequirement} 提供基于对 Bean 的依赖的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-26
  */
 final class BeanDependencyRequirement extends DependencyRequirement {

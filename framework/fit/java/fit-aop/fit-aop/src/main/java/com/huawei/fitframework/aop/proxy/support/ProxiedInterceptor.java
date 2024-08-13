@@ -14,7 +14,7 @@ import com.huawei.fitframework.inspection.Nullable;
 /**
  * 调用被代理对象的方法拦截器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-25
  */
 public class ProxiedInterceptor extends AbstractMethodInterceptor {

@@ -20,7 +20,7 @@ import java.util.function.BiConsumer;
 /**
  * 表示 {@link Worker} 用于处理流式调用的实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-30
  */
 public class WebSocketWorkerObserver implements WorkerObserver<Object> {

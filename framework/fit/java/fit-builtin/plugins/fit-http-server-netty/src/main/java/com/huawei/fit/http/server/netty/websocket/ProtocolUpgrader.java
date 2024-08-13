@@ -28,7 +28,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 /**
  * 表示 Http 协议的升级处理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 @ChannelHandler.Sharable

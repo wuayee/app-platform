@@ -10,7 +10,7 @@ import com.huawei.fit.http.protocol.Protocol;
 /**
  * 表示通信链接的构建器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-10
  */
 public interface ConnectionBuilder {

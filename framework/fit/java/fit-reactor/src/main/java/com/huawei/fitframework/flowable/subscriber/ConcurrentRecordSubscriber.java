@@ -13,7 +13,7 @@ import java.util.List;
  * 的各个方法被调用时的信息，并且能够灵活的进行元素请求和订阅取消。
  *
  * @param <T> 表示订阅者订阅的数据类型的 {@link T}。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-21
  */
 public class ConcurrentRecordSubscriber<T> extends RecordSubscriber<T> {

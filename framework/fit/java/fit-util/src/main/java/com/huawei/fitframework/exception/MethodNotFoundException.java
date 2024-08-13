@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 当没有指定的方法时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class MethodNotFoundException extends RuntimeException {

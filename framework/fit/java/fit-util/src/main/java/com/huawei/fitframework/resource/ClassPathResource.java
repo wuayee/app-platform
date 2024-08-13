@@ -7,7 +7,7 @@ package com.huawei.fitframework.resource;
 /**
  * 表示类路径中的资源。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-17
  */
 public interface ClassPathResource extends Resource {

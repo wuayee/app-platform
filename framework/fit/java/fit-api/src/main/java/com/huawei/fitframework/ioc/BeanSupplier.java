@@ -10,7 +10,7 @@ package com.huawei.fitframework.ioc;
  * <p>将通过接口中泛型参数所提供的类型进行匹配。</p>
  *
  * @param <T> 表示Bean的类型。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-31
  */
 public interface BeanSupplier<T> {

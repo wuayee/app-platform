@@ -17,7 +17,7 @@ import java.io.InputStream;
 /**
  * 表示常量的值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-09
  */
 public final class ConstantValueAttribute extends AbstractAttribute {

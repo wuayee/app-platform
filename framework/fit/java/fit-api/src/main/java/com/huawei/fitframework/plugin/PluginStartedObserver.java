@@ -10,7 +10,7 @@ import com.huawei.fitframework.ioc.BeanFactoryOrderComparator;
 /**
  * 表示插件启动完成的观察者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-11
  */
 @FunctionalInterface

@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 用于对象在 OhScript 和 Java 中互相转换的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-23
  */
 public class ValueUtils {

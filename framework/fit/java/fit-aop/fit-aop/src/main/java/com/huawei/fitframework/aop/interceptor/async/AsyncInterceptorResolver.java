@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * 解析异步执行拦截事件提供者的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-12
  */
 public class AsyncInterceptorResolver extends AbstractMethodInterceptorResolver {

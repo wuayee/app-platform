@@ -15,7 +15,7 @@ import com.huawei.fit.http.protocol.StatusLine;
 /**
  * {@link HttpClassicResponse} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-21
  */
 public abstract class AbstractHttpClassicResponse extends AbstractHttpMessage implements HttpClassicResponse {

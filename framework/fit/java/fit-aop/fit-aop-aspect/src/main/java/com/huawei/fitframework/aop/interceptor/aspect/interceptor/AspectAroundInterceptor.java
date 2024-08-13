@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 /**
  * {@link AroundInterceptor} 的 Aspect 实现。
  *
- * @author 季聿阶 j00559309
- * @author 郭龙飞 gwx900499
+ * @author 季聿阶
+ * @author 郭龙飞
  * @since 2022-05-20
  */
 public class AspectAroundInterceptor extends AroundInterceptor {

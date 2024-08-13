@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 表示 {@link JsonSchema} 的数组实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public class ArraySchema extends AbstractJsonSchema {

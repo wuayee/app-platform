@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * 测试资源工具
  *
- * @author x00576283
+ * @author 夏斐
  * @since 1.0
  */
 public class TestResource {

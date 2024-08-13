@@ -7,7 +7,7 @@ package com.huawei.fitframework.value;
 /**
  * 表示值的设置工具。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-21
  */
 public interface ValueSetter {

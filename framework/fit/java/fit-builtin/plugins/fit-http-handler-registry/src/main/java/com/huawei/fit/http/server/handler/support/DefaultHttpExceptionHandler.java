@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 表示 {@link HttpExceptionHandler} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-25
  */
 public class DefaultHttpExceptionHandler implements HttpExceptionHandler {

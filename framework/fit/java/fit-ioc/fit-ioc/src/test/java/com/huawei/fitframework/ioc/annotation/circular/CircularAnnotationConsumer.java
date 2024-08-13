@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc.annotation.circular;
 /**
  * 为循环转发的注解提供消费方。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-31
  */
 @Circular(key1 = CircularAnnotationConsumer.VALUE)

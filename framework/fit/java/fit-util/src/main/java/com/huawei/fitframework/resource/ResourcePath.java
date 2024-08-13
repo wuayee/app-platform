@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 为资源提供路径。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public interface ResourcePath {
@@ -58,7 +58,7 @@ public interface ResourcePath {
     /**
      * 为资源路径提供节点。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-07-27
      */
     interface Node {

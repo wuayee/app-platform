@@ -9,7 +9,7 @@ import com.huawei.fitframework.aop.interceptor.aspect.parser.model.PointcutSuppo
 /**
  * 解析切点表达式中运算符 ')' 的解析器。用于 pointcut 解析时自动添加，解决多个 pointcut 运算优先级问题。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-31
  */
 public class RightBracketParser extends BaseParser {

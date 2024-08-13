@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * 默认的测试上下文的配置类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 季聿阶
  * @since 2023-01-20
  */

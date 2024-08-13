@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * 表示 {@link FileUploadValidateUtils} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-16
  */
 @DisplayName("测试文件上传校验工具")

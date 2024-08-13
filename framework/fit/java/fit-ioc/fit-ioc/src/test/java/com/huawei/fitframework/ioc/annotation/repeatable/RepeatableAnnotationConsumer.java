@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc.annotation.repeatable;
 /**
  * 为可重复注解提供消费方。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-31
  */
 @Entry

@@ -18,7 +18,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link BeanFactory} 提供用以单例Bean的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-04
  */
 public class SingletonBeanFactory extends AbstractBeanFactory implements BeanFactory {

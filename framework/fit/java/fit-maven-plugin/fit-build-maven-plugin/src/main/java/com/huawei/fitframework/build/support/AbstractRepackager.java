@@ -40,7 +40,7 @@ import java.util.Set;
 /**
  * 为重打包程序提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-28
  */
 public abstract class AbstractRepackager extends AbstractExecutor {

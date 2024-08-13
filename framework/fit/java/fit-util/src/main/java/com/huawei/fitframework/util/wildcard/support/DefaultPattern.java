@@ -17,7 +17,7 @@ import java.util.Iterator;
  * 为 {@link Pattern} 提供基类。
  *
  * @param <T> 表示模式中元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-28
  */
 public class DefaultPattern<T> extends AbstractMatcher<T> implements Pattern<T> {

@@ -23,7 +23,7 @@ import java.util.ServiceLoader;
 /**
  * 为 {@link AnnotationMetadataResolver} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 public class DefaultAnnotationMetadataResolver implements AnnotationMetadataResolver {

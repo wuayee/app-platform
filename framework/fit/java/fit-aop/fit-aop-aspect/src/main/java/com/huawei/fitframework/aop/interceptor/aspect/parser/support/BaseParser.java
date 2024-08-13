@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * 切点表达式解析器的通用抽象实现。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-06
  */
 public abstract class BaseParser implements ExpressionParser {

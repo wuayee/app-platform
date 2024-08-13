@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * 为 Bean 提供元数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public interface BeanMetadata {

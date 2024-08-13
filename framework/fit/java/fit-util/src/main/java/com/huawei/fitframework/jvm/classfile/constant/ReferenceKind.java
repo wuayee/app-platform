@@ -11,7 +11,7 @@ import java.util.EnumSet;
 /**
  * 表示引用的类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public enum ReferenceKind {

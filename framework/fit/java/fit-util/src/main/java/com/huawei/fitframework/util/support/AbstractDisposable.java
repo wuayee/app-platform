@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 为 {@link Disposable} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-02-25
  */
 public abstract class AbstractDisposable implements Disposable {

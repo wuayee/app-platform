@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * 为 {@link ModifiableConfig} 提供层次化的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-29
  */
 public class HierarchicalConfig extends AbstractModifiableConfig {

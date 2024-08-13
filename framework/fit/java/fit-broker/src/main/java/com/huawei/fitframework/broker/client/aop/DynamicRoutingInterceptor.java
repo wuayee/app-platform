@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 微服务动态路由的拦截器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-27
  */
 public class DynamicRoutingInterceptor extends AbstractMethodInterceptor {

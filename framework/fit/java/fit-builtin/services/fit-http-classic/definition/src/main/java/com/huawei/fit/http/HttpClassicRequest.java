@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.HttpRequestMethod;
 /**
  * 表示经典的 Http 请求。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-25
  */
 public interface HttpClassicRequest extends HttpMessage {

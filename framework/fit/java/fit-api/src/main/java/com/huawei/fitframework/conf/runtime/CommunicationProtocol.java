@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 表示传输协议的枚举。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-27
  */
 public enum CommunicationProtocol {

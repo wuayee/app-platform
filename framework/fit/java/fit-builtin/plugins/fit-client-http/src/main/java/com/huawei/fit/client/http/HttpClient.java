@@ -28,9 +28,9 @@ import java.util.stream.Stream;
 /**
  * 为 Broker 提供基于 HTTP 调用的客户端。
  *
- * @author 季聿阶 j00559309
- * @author 张越 z00559346
- * @author 詹高扬 z50029227
+ * @author 季聿阶
+ * @author 张越
+ * @author 詹高扬
  * @since 2020-10-05
  */
 @Component

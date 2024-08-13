@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 /**
  * 为资源树提供节点集合的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-10
  */
 final class ResourceNodeCollection implements ResourceTree.NodeCollection {

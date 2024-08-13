@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link DynamicRouter} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-26
  */
 public class DefaultDynamicRouter implements DynamicRouter {

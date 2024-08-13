@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link Jar} 提供基于内嵌目录条目的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-19
  */
 final class NestedDirectoryJar implements Jar {
@@ -79,7 +79,7 @@ final class NestedDirectoryJar implements Jar {
     /**
      * 为 {@link Jar.Entry} 提供基于内嵌目录 JAR 中条目的实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-19
      */
     private final class Entry extends EmptyJarEntryDecorator {

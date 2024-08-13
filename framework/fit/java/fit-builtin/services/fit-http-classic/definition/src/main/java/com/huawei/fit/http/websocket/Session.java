@@ -10,7 +10,7 @@ import com.huawei.fit.http.HttpMessage;
  * 表示 WebSocket 的会话。
  * <p>该会话信息应该保存在握手请求的属性中，属性名为 {@link com.huawei.fit.http.websocket.server.WebSocketSessionMapper#KEY}。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 public interface Session {

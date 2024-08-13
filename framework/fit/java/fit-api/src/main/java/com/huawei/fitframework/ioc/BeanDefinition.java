@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * 为 Bean 提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-16
  */
 public interface BeanDefinition {
@@ -123,7 +123,7 @@ public interface BeanDefinition {
     /**
      * 为 {@link BeanDefinition} 提供构建程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-05-16
      */
     interface Builder {

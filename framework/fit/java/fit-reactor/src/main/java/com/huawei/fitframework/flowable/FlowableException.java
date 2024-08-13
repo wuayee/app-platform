@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 表示响应式编程框架的基础异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-09
  */
 @ErrorCode(FlowableException.CODE)

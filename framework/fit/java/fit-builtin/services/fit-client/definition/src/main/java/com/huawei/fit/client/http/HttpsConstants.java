@@ -7,7 +7,7 @@ package com.huawei.fit.client.http;
 /**
  * 表示 https 所需要的配置项值。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-03-21
  */
 public class HttpsConstants {

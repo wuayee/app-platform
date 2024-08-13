@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 处理 {@link FitableAddressInstance} 的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-17
  */
 public class FitableInstanceUtils {

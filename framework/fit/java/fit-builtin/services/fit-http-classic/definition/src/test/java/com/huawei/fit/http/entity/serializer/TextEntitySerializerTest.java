@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 为 {@link TextEntitySerializer} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-21
  */
 @DisplayName("测试 TextEntitySerializer 类")

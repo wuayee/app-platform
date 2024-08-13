@@ -20,7 +20,7 @@ import java.util.Optional;
  * 流程定义开始节点核心类
  * 流程实例流转时需要构建该对象
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 @Getter

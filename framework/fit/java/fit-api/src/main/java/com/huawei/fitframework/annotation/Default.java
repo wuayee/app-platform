@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 指示指定的Fitable是Genericable的默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-30
  */
 @Documented

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 表示 {@link com.huawei.fitframework.cache.annotation.PutCache} 的方法拦截器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-14
  */
 public class PutCacheInterceptor extends AbstractCacheInterceptor {

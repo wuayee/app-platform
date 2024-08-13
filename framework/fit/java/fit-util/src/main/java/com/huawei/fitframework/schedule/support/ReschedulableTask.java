@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * 表示 {@link Task} 的可重复调度的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-27
  */
 public class ReschedulableTask implements Task, ScheduledFuture<Object> {

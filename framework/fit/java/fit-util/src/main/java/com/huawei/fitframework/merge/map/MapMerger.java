@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * {@link Map} 对象的合并器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-02
  */
 public interface MapMerger<K, V> extends Merger<Map<K, V>> {

@@ -15,7 +15,7 @@ import java.io.InputStream;
 /**
  * 表示客户端的 Http 响应。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-25
  */
 public interface ClientResponse extends Message<StatusLine, MessageHeaders, ReadableMessageBody> {

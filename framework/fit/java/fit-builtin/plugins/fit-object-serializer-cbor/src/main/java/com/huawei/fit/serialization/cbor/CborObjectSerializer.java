@@ -21,7 +21,7 @@ import java.util.Map;
  * 表示 {@link ObjectSerializer} 的 CBOR 的实现。
  * <p><a href="https://datatracker.ietf.org/doc/html/rfc8949">RFC 8949</a> 列出了 CBOR 的详细规范。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-25
  */
 @Component("cbor")

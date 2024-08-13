@@ -18,7 +18,7 @@ import java.lang.reflect.Proxy;
 /**
  * 表示通过 JDK 的动态代理技术实现的 {@link AopProxyFactory}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-04
  */
 @Order(PRETTY_HIGH)

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * {@link FastJsonValueHandler} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-24
  */
 @DisplayName("测试 fastjson 的值获取功能")

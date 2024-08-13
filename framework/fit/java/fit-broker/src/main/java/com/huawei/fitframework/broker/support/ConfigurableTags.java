@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * 表示可修改的 {@link Tags}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public class ConfigurableTags implements Tags {

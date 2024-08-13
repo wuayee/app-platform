@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示内置的序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-31
  */
 @Documented

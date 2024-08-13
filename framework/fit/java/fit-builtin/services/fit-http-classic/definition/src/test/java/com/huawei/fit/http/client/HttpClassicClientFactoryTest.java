@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link HttpClassicClientFactory} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-16
  */
 @DisplayName("测试 HttpClassicClientFactory 接口")

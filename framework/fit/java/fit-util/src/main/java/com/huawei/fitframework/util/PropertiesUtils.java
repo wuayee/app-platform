@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 /**
  * 提供解析 .properties 文件的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-01-15
  */
 public class PropertiesUtils {

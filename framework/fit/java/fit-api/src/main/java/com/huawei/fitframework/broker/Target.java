@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 服务地址信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-08-20
  */
 public interface Target {

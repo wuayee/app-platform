@@ -8,7 +8,7 @@ package com.huawei.fitframework.util.wildcard;
  * 为符号提供匹配程序。
  *
  * @param <T> 表示符号的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-28
  */
 @FunctionalInterface

@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 表示 {@link DefaultThreadPoolScheduler} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2022-12-28
  */
 @DisplayName("测试 DefaultThreadPoolExecutor 类")

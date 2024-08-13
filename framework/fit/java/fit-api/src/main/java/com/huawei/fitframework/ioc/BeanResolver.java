@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * 为 Bean 提供解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public interface BeanResolver {
@@ -139,7 +139,7 @@ public interface BeanResolver {
     /**
      * 为作为工厂使用的 Bean 提供定义。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-07-06
      */
     interface Factory {

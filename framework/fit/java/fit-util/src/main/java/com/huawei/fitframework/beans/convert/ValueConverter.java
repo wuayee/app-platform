@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * 为对象提供转换程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-27
  */
 public interface ValueConverter extends Converter {

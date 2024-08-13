@@ -35,7 +35,7 @@ import java.util.Collections;
 /**
  * {@link RegistryClient} 的测试类
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2021-12-14
  */
 @DisplayName("测试 RegistryClient")

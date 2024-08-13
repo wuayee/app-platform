@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 表示循环转发的注解。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-31
  */
 @Target(ElementType.TYPE)

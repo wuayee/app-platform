@@ -25,8 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 表示使用 ByteBuddy 技术实现的 {@link AopProxyFactory}。
  *
- * @author 詹高扬 z50029227
- * @author 季聿阶 j00559309
+ * @author 詹高扬
+ * @author 季聿阶
  * @since 2022-08-02
  */
 @Order(HIGH)

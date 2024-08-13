@@ -14,7 +14,7 @@ import java.util.Optional;
  * 为通配符匹配提供符号序定义。
  *
  * @param <E> 表示符号的实际类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 public interface SymbolSequence<E> extends Iterable<E> {

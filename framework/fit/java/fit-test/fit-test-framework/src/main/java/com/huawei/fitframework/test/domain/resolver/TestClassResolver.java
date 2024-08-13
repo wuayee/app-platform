@@ -9,7 +9,7 @@ import com.huawei.fitframework.test.service.FitTestService;
 /**
  * 单测类解析器接口。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-02-07
  */
 public interface TestClassResolver {

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 /**
  * 表示参数的详细约束信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-27
  */
 @Documented

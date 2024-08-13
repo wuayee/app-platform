@@ -14,7 +14,7 @@ import com.huawei.fit.waterflow.domain.validators.rules.Rules;
 /**
  * 不同流程节点类型校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public interface NodeRule extends Rules {

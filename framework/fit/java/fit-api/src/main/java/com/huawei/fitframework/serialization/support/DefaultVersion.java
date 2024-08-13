@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 为 {@link Version} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-13
  */
 public class DefaultVersion implements Version {
@@ -72,7 +72,7 @@ public class DefaultVersion implements Version {
     /**
      * 为创建 {@link DefaultVersion} 的实例提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-11-13
      */
     public static final class Builder implements Version.Builder {
@@ -139,7 +139,7 @@ public class DefaultVersion implements Version {
     /**
      * 为 {@link Version} 提供序列化程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-11-13
      */
     public static class Serializer implements ByteSerializer<Version> {

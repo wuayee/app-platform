@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * 用于调用 {@link Fitable 泛服务实现}。
  *
- * @author 张群辉 z00544938
- * @author 季聿阶 j00559309
+ * @author 张群辉
+ * @author 季聿阶
  * @see Fitable
  * @since 2020-01-18
  */

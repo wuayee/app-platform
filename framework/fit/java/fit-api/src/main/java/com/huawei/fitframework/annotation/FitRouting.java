@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 用于 Fit 动态路由的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2020-04-17
  */
 @Documented

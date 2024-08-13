@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 指定进程唯一标识的负载均衡策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-08-26
  */
 public class WorkerFilter extends ChampionFilter {

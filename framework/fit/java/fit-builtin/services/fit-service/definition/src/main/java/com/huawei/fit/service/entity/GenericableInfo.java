@@ -7,7 +7,7 @@ package com.huawei.fit.service.entity;
 /**
  * 表示服务信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-17
  */
 public class GenericableInfo {

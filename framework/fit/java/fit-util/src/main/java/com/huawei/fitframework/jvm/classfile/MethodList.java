@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * 为字段提供列表。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-09
  */
 public final class MethodList implements Iterable<MethodInfo> {

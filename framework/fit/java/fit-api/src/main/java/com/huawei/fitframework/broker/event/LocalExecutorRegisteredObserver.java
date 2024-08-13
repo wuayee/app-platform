@@ -10,7 +10,7 @@ import com.huawei.fitframework.broker.UniqueFitableId;
 /**
  * 表示本地执行器注册完毕的观察者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-25
  */
 @FunctionalInterface

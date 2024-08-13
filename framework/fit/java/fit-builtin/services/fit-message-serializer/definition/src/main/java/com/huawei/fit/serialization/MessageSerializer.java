@@ -10,8 +10,8 @@ import java.lang.reflect.Type;
 /**
  * 调用泛服务的输入输出提供序列化程序。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-11-05
  */
 public interface MessageSerializer {

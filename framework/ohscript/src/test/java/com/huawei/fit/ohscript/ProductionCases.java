@@ -7,8 +7,8 @@ package com.huawei.fit.ohscript;
 /**
  * ohScript里允许的语法测试字符串
  *
- * @author z00544938 huizi
- * @since 2023-05
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public final class ProductionCases {
     /**

@@ -31,7 +31,7 @@ import java.util.UUID;
 /**
  * OhScript执行类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/21
  */
 public final class OhScriptExecutor {

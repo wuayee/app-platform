@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 Fit 调用的原始返回值内容。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-05-14
  */
 public interface Response {

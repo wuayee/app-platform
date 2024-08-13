@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * 表示请求消息体的缓冲区。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-30
  */
 public interface NettyReadableMessageBodyBuffer {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.util.wildcard;
 /**
  * 表示路径的匹配模式。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-21
  */
 public interface PathPattern extends Pattern<String> {

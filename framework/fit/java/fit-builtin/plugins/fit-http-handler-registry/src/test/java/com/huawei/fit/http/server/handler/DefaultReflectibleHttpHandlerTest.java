@@ -56,7 +56,7 @@ import java.util.Optional;
 /**
  * 表示 {@link DefaultReflectibleHttpHandler} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-24
  */
 @DisplayName("测试 DefaultReflectibleHttpHandlers 类")

@@ -13,7 +13,7 @@ import com.huawei.fitframework.pattern.builder.BuilderFactory;
 /**
  * 表示获取异步任务结果方法的参数集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-19
  */
 public interface GetAsyncTaskResultRequest {

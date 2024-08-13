@@ -23,8 +23,8 @@ import java.io.IOException;
  * 尽量转换left recursion，以确保top down解析方式有效
  * 部分复杂的有left recursion和FIST-FIRST Conflict的grammar单独处理，比如LIST类型：STATEMENT_LIST, VAR_LIST
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public class ParserBuilder {
     private static Grammars defaultGrammars = null;

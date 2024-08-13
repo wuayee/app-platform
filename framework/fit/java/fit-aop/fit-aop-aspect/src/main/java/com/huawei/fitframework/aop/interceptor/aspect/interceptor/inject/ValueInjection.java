@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop.interceptor.aspect.interceptor.inject;
 /**
  * 返回值或异常的注入信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-19
  */
 public class ValueInjection {

@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 当无法找到指定的本地调用器时引发的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-30
  */
 @ErrorCode(ClientLocalExecutorNotFoundException.CODE)

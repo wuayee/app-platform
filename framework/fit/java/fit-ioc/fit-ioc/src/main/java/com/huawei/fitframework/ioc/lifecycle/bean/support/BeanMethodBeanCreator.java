@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 /**
  * 为 {@link BeanCreator} 提供基于 Bean 方法的实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-05-12
  */
 public class BeanMethodBeanCreator extends AbstractBeanCreator {

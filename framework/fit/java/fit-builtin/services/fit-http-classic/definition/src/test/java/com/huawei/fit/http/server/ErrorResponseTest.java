@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link ErrorResponse} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-23
  */
 @DisplayName("测试 ErrorResponse 类")

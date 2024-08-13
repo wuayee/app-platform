@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Lock;
  * 表示 {@link Choir} 的迭代器实现。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 public class IterableChoir<T> extends AbstractChoir<T> {

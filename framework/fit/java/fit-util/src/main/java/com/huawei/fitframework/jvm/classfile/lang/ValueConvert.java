@@ -7,7 +7,7 @@ package com.huawei.fitframework.jvm.classfile.lang;
 /**
  * 为值转换提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 final class ValueConvert {

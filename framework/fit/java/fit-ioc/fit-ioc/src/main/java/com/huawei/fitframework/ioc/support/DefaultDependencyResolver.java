@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link DependencyResolver} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-10
  */
 public class DefaultDependencyResolver implements DependencyResolver {

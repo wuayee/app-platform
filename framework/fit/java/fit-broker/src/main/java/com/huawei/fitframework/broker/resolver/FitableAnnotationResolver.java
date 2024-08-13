@@ -26,8 +26,8 @@ import java.util.function.Supplier;
 /**
  * 为解析 {@link Fitable} 注解所定义的服务实现提供代理解析工具。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-09-24
  */
 public class FitableAnnotationResolver implements LocalExecutorResolver {

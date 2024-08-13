@@ -12,7 +12,7 @@ import java.util.List;
  * 表示方法拦截器的解析器。
  * <p>用于从用户的定义中解析出对应的方法拦截器。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-06
  */
 public interface MethodInterceptorResolver {

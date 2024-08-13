@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * {@link MethodInterceptorComparator} 的单元测试。
  *
- * @author 詹高扬 z50029227
+ * @author 詹高扬
  * @since 2022-07-28
  */
 @DisplayName("测试 MethodInterceptorComparator")

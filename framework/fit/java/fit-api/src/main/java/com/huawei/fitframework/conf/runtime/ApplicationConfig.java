@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 表示运行时 {@code 'application.'} 前缀的配置项。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-08
  */
 public interface ApplicationConfig {

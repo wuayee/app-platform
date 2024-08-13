@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示 {@link ThreadPool} 的抽象实现类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-26
  */
 public abstract class AbstractThreadPool implements ThreadPool {

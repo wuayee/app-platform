@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link ThreadSafeCounter} 的单元测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 @DisplayName("线程安全的计数器测试")

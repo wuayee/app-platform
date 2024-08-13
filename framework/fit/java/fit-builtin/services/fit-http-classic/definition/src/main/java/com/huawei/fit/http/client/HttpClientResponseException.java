@@ -9,7 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 /**
  * 表示携带 Http 响应的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-29
  */
 public class HttpClientResponseException extends HttpClientException {

@@ -9,7 +9,7 @@ import java.util.Comparator;
 /**
  * 为 {@link PluginMetadata} 提供基于启动顺序的排序程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-29
  */
 public final class PluginMetadataComparators {

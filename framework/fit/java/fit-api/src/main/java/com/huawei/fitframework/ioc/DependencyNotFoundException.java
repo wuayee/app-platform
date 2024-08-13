@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 当Bean依赖不存在时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-09
  */
 public class DependencyNotFoundException extends DependencyException {

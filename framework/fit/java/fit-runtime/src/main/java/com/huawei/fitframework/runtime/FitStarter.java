@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * 为 FIT 应用程序提供启动程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-06
  */
 public final class FitStarter {

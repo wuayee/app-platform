@@ -26,7 +26,7 @@ import java.util.Properties;
 /**
  * {@link PropertiesUtils} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-01-17
  */
 public class PropertiesUtilsTest {

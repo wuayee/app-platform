@@ -25,7 +25,7 @@ import java.util.concurrent.Callable;
 /**
  * {@link RetryExecutor} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2022-12-30
  */
 @DisplayName("测试 RetryExecutor 工具类")

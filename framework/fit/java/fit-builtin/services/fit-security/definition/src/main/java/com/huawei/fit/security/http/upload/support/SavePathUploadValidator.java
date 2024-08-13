@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * 表示 {@link FileUploadValidator} 的跨路径安全性校验功能实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 public final class SavePathUploadValidator implements FileUploadValidator {

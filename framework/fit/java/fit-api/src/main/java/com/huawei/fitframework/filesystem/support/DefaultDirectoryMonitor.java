@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示 {@link DirectoryMonitor} 的默认实现，该实现通过定时器轮询实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-26
  */
 public class DefaultDirectoryMonitor implements DirectoryMonitor {

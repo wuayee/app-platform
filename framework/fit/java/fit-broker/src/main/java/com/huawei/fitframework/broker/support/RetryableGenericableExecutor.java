@@ -19,7 +19,7 @@ import java.util.Collections;
 /**
  * 表示 {@link GenericableExecutor} 的重试调用实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public class RetryableGenericableExecutor extends AbstractUnicastGenericableExecutor {

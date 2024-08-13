@@ -7,7 +7,7 @@ package com.huawei.fitframework.beans.convert;
 /**
  * 表示测试的类型。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-25
  */
 public class Department {

@@ -12,7 +12,7 @@ import com.huawei.fitframework.serialization.ResponseMetadata;
 /**
  * 表示 {@link Response} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-19
  */
 public class DefaultResponse implements Response {

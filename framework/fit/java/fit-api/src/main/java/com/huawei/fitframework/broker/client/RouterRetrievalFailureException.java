@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 表示当获取动态路由器失败时引发的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-06
  */
 @ErrorCode(RouterRetrievalFailureException.CODE)

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 为参数解析提供结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public interface ParameterizedString {

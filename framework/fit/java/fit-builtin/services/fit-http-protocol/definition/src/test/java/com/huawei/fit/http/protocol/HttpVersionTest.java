@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * {@link HttpVersion} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-10
  */
 @DisplayName("测试 HttpVersion")

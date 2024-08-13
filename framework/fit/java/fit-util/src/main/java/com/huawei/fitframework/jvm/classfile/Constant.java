@@ -14,7 +14,7 @@ import java.io.OutputStream;
 /**
  * 表示常量池中的常量。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public abstract class Constant {

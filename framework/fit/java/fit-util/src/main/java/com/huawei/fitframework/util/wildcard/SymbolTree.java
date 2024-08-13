@@ -14,7 +14,7 @@ import java.util.function.Function;
  * 为符号提供树形结构。
  *
  * @param <V> 表示符号的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-01
  */
 public interface SymbolTree<V, S> {
@@ -29,7 +29,7 @@ public interface SymbolTree<V, S> {
      * 为符号树提供节点。
      *
      * @param <V> 表示符号的类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-01
      */
     interface Node<V, S> {
@@ -59,7 +59,7 @@ public interface SymbolTree<V, S> {
      * 为树中的节点提供集合。
      *
      * @param <V> 表示符号的类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-01
      */
     interface NodeCollection<V, S> extends Iterable<Node<V, S>> {

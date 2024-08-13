@@ -11,7 +11,7 @@ import com.huawei.fitframework.ioc.BeanFactoryOrderComparator;
 /**
  * 为 Bean 容器启动后提供观察者。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-08
  */
 @FunctionalInterface

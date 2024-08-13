@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 注册中心的服务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-06
  */
 public interface RegistryService {

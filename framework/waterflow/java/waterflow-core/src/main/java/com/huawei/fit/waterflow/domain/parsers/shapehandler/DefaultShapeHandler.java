@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 节点默认解析
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 1.0
  */
 public class DefaultShapeHandler extends ShapeHandler {

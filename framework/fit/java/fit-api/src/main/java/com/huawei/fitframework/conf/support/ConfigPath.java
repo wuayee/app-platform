@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * 为配置提供路径的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-29
  */
 final class ConfigPath {

@@ -12,14 +12,14 @@ import java.util.Locale;
 /**
  * 为 {@link DataRandomReader} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-22
  */
 final class DataRandomReaders {
     /**
      * 表示数据块。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-02-14
      */
     static final class Default implements DataRandomReader {

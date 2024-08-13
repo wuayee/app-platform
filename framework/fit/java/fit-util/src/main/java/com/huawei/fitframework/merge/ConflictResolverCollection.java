@@ -10,7 +10,7 @@ import com.huawei.fitframework.merge.support.DefaultConflictResolverCollection;
 /**
  * 表示冲突处理器的集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-02
  */
 public interface ConflictResolverCollection {

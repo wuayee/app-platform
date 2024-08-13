@@ -9,7 +9,7 @@ import java.lang.reflect.AnnotatedElement;
 /**
  * 为注解的元数据提供解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-04
  */
 @FunctionalInterface

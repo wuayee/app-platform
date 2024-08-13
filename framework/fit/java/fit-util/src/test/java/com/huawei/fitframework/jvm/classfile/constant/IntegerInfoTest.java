@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * {@link IntegerInfo} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-09
  */
 @DisplayName("测试 IntegerInfo 类以及相关类")

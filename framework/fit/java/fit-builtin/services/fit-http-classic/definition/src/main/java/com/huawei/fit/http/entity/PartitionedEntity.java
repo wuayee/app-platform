@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 表示分块的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public interface PartitionedEntity extends Entity {

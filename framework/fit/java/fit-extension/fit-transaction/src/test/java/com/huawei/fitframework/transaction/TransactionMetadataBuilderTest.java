@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link TransactionMetadata} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-27
  */
 @DisplayName("测试 TransactionMetadata 的构建程序")

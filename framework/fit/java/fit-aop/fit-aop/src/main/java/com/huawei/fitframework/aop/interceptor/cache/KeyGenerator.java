@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 /**
  * 表示缓存键的生成器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 @FunctionalInterface

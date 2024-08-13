@@ -7,7 +7,7 @@ package com.huawei.fit.log;
 /**
  * 表示日志级别的修改器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-24
  */
 @FunctionalInterface

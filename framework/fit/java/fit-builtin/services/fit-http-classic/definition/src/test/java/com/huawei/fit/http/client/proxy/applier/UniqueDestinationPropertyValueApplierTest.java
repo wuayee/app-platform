@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link UniqueDestinationPropertyValueApplier} 提供单元测试。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-13
  */
 @DisplayName("测试 UniqueDestinationPropertyValueApplier 接口")

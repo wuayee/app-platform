@@ -14,7 +14,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 任务中心人工任务校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class TaskCenterTaskRule implements TaskRule {

@@ -31,7 +31,7 @@ import java.util.Optional;
 /**
  * 表示处理 FIT 通信方式的处理器。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-16
  */
 public class FitHttpAsyncTaskHandler extends AbstractHttpHandler {

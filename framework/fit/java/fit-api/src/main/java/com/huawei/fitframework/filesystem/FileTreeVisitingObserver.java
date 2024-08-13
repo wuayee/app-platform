@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * 表示文件目录树遍历开始的观察者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-23
  */
 @FunctionalInterface

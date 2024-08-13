@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 表示 Http 响应的状态。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-21
  */
 public enum HttpResponseStatus {

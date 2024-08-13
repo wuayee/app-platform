@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * 当 JAR 的格式不正确时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-16
  */
 public class JarFormatException extends IOException {

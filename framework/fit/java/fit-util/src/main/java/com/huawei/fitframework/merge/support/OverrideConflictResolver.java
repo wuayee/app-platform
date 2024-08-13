@@ -13,7 +13,7 @@ import com.huawei.fitframework.merge.ConflictResolver;
  *
  * @param <K> 表示冲突键的类型的 {@link K}。
  * @param <V> 表示冲突值的类型的 {@link V}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 public class OverrideConflictResolver<K, V> implements ConflictResolver<K, V, Conflict<K>> {

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * 表示客户端的 Http 请求。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-05
  */
 public interface ClientRequest extends Message<RequestLine, ConfigurableMessageHeaders, WritableMessageBody> {

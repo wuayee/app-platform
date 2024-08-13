@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * 为类型提供声明。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-08
  */
 public interface ClassDeclaration {

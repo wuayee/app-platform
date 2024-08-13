@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.support.DefaultRequestLine;
 /**
  * 表示 Http 请求的起始行。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc2616#section-5.1">RFC 2616</a>
  * @since 2022-07-07
  */

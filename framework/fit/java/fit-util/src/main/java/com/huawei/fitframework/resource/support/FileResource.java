@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * 为 {@link Resource} 提供基于文件的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-20
  */
 public class FileResource implements Resource {

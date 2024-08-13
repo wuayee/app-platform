@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.domain.enums;
 /**
  * 流程实例日志类型
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public enum FlowLogType {

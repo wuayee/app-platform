@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 /**
  * 表示某种类型作为发布者的类别。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-13
  */
 public enum PublisherCategory {

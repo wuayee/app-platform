@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 为归档件提供坐标解析程序。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-11-26
  */
 public class JarMavenCoordinateResolver {

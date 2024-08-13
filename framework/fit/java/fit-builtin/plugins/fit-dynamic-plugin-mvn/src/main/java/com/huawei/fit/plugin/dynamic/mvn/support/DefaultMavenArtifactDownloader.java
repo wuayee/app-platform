@@ -25,7 +25,7 @@ import java.nio.file.Files;
 /**
  * 表示 {@link MavenArtifactDownloader} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-17
  */
 @Component

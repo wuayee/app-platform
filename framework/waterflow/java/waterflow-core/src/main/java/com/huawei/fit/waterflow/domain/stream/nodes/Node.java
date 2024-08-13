@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  *
  * @param <T>
  * @param <R>
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {

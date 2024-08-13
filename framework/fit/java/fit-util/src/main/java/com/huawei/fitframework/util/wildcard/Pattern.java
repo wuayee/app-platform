@@ -17,7 +17,7 @@ import java.util.function.Function;
  * 为匹配提供模式定义。
  *
  * @param <S> 表示匹配元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-28
  */
 public interface Pattern<S> extends SymbolSequence<S>, Result<S> {
@@ -70,7 +70,7 @@ public interface Pattern<S> extends SymbolSequence<S>, Result<S> {
      * 为模式提供符号相关的配置。
      *
      * @param <E> 表示符号的实际类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-07-28
      */
     interface SymbolConfiguration<E> {

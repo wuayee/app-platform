@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * 表示访问标识。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-09
  */
 public enum AccessFlag {

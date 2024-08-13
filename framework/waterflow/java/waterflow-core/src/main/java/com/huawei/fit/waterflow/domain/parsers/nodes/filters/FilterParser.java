@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.domain.parsers.FlowGraphData;
 /**
  * 任务过滤器解析接口
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public interface FilterParser {

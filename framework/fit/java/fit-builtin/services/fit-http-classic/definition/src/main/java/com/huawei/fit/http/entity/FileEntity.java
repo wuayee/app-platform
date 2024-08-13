@@ -14,7 +14,7 @@ import java.io.InputStream;
 /**
  * 表示文件类型的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public interface FileEntity extends ReadableBinaryEntity {

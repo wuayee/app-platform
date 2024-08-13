@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * 未应用程序提供根插件定义。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-07
  */
 public interface RootPlugin extends Plugin {

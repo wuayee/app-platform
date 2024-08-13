@@ -36,7 +36,7 @@ import java.util.Optional;
 /**
  * 用于测试的 Bean 容器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-15
  */
 public class TestBeanContainer extends AbstractDisposable implements BeanContainer {

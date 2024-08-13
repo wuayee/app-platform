@@ -27,7 +27,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * 表示 {@link ReschedulableTask} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-01
  */
 @DisplayName("测试 ReschedulableTask 类")

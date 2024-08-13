@@ -7,7 +7,7 @@ package com.huawei.fit.data.repository.entity;
 /**
  * 表示元数据的类型。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-23
  */
 public enum MetadataType {

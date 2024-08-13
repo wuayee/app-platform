@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
  * <p>将排除 {@link java.lang.annotation.Retention}、{@link java.lang.annotation.Documented}、
  * {@link java.lang.annotation.Target}、{@link java.lang.annotation.Inherited} 注解。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 public class DefaultAnnotationEliminator implements AnnotationEliminator {

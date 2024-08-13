@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 为 {@link Jar.Entry} 提供空的装饰程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-21
  */
 class EmptyJarEntryDecorator implements Jar.Entry {

@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 为 {@link RandomAccessor} 提供基于文件的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-25
  */
 public class FileRandomAccessor implements RandomAccessor {

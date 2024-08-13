@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * {@link RegistryListener} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-24
  */
 @DisplayName("测试 RegistryListener 类")

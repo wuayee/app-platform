@@ -7,7 +7,7 @@ package com.huawei.fitframework.parameterization;
 /**
  * 表示解析到的变量信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-07-24
  */
 public interface ResolvedParameter {

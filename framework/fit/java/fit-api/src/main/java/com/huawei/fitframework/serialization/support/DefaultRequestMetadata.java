@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * 为 {@link RequestMetadata} 提供默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-27
  */
 public class DefaultRequestMetadata implements RequestMetadata {
@@ -104,7 +104,7 @@ public class DefaultRequestMetadata implements RequestMetadata {
     /**
      * 为创建 {@link DefaultRequestMetadata} 的实例提供构建器。
      *
-     * @author 季聿阶 j00559309
+     * @author 季聿阶
      * @since 2023-11-27
      */
     public static final class Builder implements RequestMetadata.Builder {
@@ -182,7 +182,7 @@ public class DefaultRequestMetadata implements RequestMetadata {
      * 为 {@link RequestMetadata} 提供序列化器。
      * <p>该序列化器为通用的通讯序列化器，但是不同的通讯通道应该优先使用通道特有属性，只有通道没有特有属性可用时，才考虑使用该序列化器。</p>
      *
-     * @author 季聿阶 j00559309
+     * @author 季聿阶
      * @since 2023-11-27
      */
     public static class Serializer implements ByteSerializer<RequestMetadata> {

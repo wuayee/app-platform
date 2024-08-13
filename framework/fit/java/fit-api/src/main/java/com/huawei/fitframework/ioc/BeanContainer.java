@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * 为 Bean 提供容器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public interface BeanContainer extends Disposable {
@@ -139,7 +139,7 @@ public interface BeanContainer extends Disposable {
     /**
      * 为 {@link BeanContainer} 提供针对 Bean 的操作接口。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-02
      */
     interface Beans {

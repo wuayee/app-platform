@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * 为插件提供编译程序。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-23
  */
 final class PluginCompiler extends AbstractCompiler {

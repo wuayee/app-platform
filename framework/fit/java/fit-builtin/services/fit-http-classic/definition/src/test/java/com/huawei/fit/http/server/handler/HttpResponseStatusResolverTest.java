@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * 表示 {@link HttpResponseStatusResolver} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-20
  */
 @DisplayName("测试 HttpResponseStatusResolver 类")

@@ -7,7 +7,7 @@ package com.huawei.fitframework.transaction;
 /**
  * 表示与事务相关的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-24
  */
 public class TransactionException extends RuntimeException {

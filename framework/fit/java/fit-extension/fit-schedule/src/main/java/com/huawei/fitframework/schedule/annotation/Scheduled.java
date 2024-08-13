@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示定时执行的任务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-18
  */
 @Documented

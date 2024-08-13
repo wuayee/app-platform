@@ -7,7 +7,7 @@ package com.huawei.fitframework.util.wildcard;
 /**
  * 表示符号的类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 public enum SymbolType {

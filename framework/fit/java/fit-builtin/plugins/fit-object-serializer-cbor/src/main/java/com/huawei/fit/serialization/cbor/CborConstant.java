@@ -7,7 +7,7 @@ package com.huawei.fit.serialization.cbor;
 /**
  * 表示 CBOR 编解码中的常量。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-29
  */
 public interface CborConstant {

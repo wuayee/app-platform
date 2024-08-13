@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 /**
  * 表示资源未找到的异常。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-08-09
  */
 public class ResourceNotFoundException extends HttpServerResponseException {

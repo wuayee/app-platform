@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * 为 {@link Resource} 提供基于 {@link URL} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-11
  */
 public class UrlResource implements Resource {

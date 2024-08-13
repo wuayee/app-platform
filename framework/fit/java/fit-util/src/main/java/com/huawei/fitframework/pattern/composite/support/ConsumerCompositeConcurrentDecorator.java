@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 /**
  * 为 {@link ConsumerComposite} 提供线程安全的装饰器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-15
  */
 public class ConsumerCompositeConcurrentDecorator<T> implements ConsumerComposite<T> {

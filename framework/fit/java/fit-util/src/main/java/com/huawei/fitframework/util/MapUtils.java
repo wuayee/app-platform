@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * 为映射提供工具方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2020-09-17
  */
 public class MapUtils {

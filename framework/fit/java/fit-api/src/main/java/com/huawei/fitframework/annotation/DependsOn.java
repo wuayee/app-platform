@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 声明 Bean 的依赖。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-29
  */
 @Documented

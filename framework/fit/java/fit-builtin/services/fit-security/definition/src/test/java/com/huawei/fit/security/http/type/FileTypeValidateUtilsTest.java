@@ -20,7 +20,7 @@ import java.io.IOException;
 /**
  * 表示 {@link FileTypeValidateUtils} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-25
  */
 @DisplayName("测试文件类型校验工具")
