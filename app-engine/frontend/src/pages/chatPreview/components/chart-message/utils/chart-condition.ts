@@ -189,6 +189,26 @@ export const formatterLabel = (data) => {
   const option = data.options.find((item) => data.value === item.value);
   return option.label;
 };
+// 根据级联获取字段已选择的选项值
+const getSelectedCascade = (casecadeMap: any, formData: string, currentItem: any) => {
+  const curIndex = casecadeMap[currentItem.belongs]?.findIndex((cas: any) => {
+    return cas.prop === currentItem.prop;
+  });
+  const parentsField = casecadeMap[currentItem.belongs]?.slice(0, curIndex);
+  const arrOptions: any = [];
+  const formDataVal = JSON.parse(formData);
+  parentsField?.forEach((item: any) => {
+    const val = formDataVal[currentItem.category][item.prop];
+    if (val) {
+      arrOptions.push({
+        label: item.label,
+        isIn: Object.keys(val)[0] === 'in',
+        names: Object.values(val).flat(1),
+      });
+    }
+  });
+  return arrOptions;
+};
 // 获取下拉
 export const getOptionsLabel = async (
   val: string,
@@ -200,11 +220,8 @@ export const getOptionsLabel = async (
   value: never[]
 ) => {
   const aimItem = allFields.find((item) => item.label === val);
-  const aimCas =
-    aimItem?.belongs &&
-    JSON.parse(
-      JSON.stringify(casecadeMap[aimItem?.belongs].find((val: any) => val.prop === aimItem.prop))
-    );
+  const aimItemProp = casecadeMap[aimItem?.belongs]?.find((val: any) => val.prop === aimItem.prop);
+  const aimCas = aimItem?.belongs && JSON.parse(JSON.stringify(aimItemProp));
   let currentItem = JSON.parse(JSON.stringify(aimItem));
   currentItem.category = category;
   currentItem.operator = 'in';
@@ -215,27 +232,11 @@ export const getOptionsLabel = async (
   currentItem.fullLabel = aimCas?.label;
   currentItem.prop = aimItem?.prop;
   if (currentItem?.belongs) {
-    const curIndex = casecadeMap[currentItem.belongs]?.findIndex((cas: any) => {
-      return cas.prop === currentItem.prop;
-    });
-    const parentsField = casecadeMap[currentItem.belongs]?.slice(0, curIndex);
-    const arrOptions: any = [];
-    const formDataVal = JSON.parse(formData);
-    parentsField?.forEach((item: any) => {
-      const val = formDataVal[currentItem.category][item.prop];
-      if (val) {
-        arrOptions.push({
-          label: item.label,
-          isIn: Object.keys(val)[0] === 'in',
-          names: Object.values(val).flat(1),
-        });
-      }
-    });
     let type = currentItem?.belongsTo === '财务指标' ? belongsMap['DSPL'] : currentItem.belongsTo;
     const data = {
       queryLabel: currentItem.fullLabel,
       type: type,
-      conditions: arrOptions,
+      conditions: getSelectedCascade(casecadeMap, formData, currentItem),
     };
     const res = await getOptionNodes(data);
     if (res.code == 0) {
