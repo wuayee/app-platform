@@ -8,12 +8,10 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.carver.tool.Tool;
-import com.huawei.jade.carver.tool.eco.AbstractTaskTool;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -27,8 +25,6 @@ import java.util.Map;
  * @since 2024-04-25
  */
 public abstract class AbstractTool implements Tool {
-    private static final Logger log = Logger.get(AbstractTaskTool.class);
-
     private final Info info;
     private final Metadata metadata;
     private final ObjectSerializer serializer;
@@ -62,7 +58,6 @@ public abstract class AbstractTool implements Tool {
                 UTF_8,
                 TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
         Object result = this.executeWithJsonObject(jsonObjectArgs);
-        log.info("Store-find-bug-8 exec tool. [result = {}]", result);
         return new String(this.serializer.serialize(result, UTF_8), UTF_8);
     }
 
@@ -77,7 +72,6 @@ public abstract class AbstractTool implements Tool {
             if (value == null) {
                 value = this.metadata().parameterDefaultValue(params.get(i));
             }
-            log.info("Store-find-bug-7 exec tool. [pos = {}, arg ={}]", i, value);
             args[i] = ObjectUtils.toCustomObject(value, types.get(i));
         }
         return this.execute(args);
