@@ -73,6 +73,7 @@
     "react-router-dom": "5.3.4",
     "redux": "^4.2.1",
     "screenfull": "5.2.0",
+    "styled-components": "^6.0.9",
     "tinymce": "^6.8.4"
   },
   "publishConfig": {
