@@ -8,7 +8,6 @@ import static com.huawei.fitframework.inspection.Validation.isInstanceOf;
 import static com.huawei.fitframework.inspection.Validation.isTrue;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.support.AbstractTool;
 
@@ -19,8 +18,6 @@ import com.huawei.jade.carver.tool.support.AbstractTool;
  * @since 2024-06-04
  */
 public abstract class AbstractTaskTool extends AbstractTool implements TaskTool {
-    private static final Logger log = Logger.get(AbstractTaskTool.class);
-
     /**
      * 通过 Json 序列化器、工具的基本信息和工具元数据来初始化 {@link AbstractTaskTool} 的新实例。
      *
@@ -37,7 +34,6 @@ public abstract class AbstractTaskTool extends AbstractTool implements TaskTool 
         notNull(args, "The call args cannot be null.");
         isTrue(args.length >= 1, "The call args must have 1 arg at least.");
         String taskId = isInstanceOf(args[0], String.class, "The first arg must be String.class.");
-        log.info("Store-find-bug-9 exec tool. [taskId = {}]", taskId);
         Object[] actual = new Object[args.length - 1];
         System.arraycopy(args, 1, actual, 0, actual.length);
         return this.executeWithTask(taskId, actual);

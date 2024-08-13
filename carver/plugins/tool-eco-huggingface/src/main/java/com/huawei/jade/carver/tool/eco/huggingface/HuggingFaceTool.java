@@ -8,7 +8,6 @@ import static com.huawei.fitframework.inspection.Validation.isInstanceOf;
 import static com.huawei.fitframework.inspection.Validation.isTrue;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.eco.AbstractTaskTool;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
@@ -25,8 +24,6 @@ import java.util.stream.Collectors;
  * @since 2024-06-04
  */
 public class HuggingFaceTool extends AbstractTaskTool {
-    private static final Logger log = Logger.get(AbstractTaskTool.class);
-
     private final HuggingFacePipelineService pipelineService;
 
     /**
@@ -48,14 +45,12 @@ public class HuggingFaceTool extends AbstractTaskTool {
         notNull(args, "The call args cannot be null.");
         isTrue(args.length >= 1, "The call args must have 1 arg.");
         String model = isInstanceOf(args[0], String.class, "The first arg must be String.class.");
-        log.info("Store-find-bug-10 exec tool. [taskId = {}, module = {}]", taskId, model);
         List<String> actualNames = this.metadata().parameterNames().stream().skip(2).collect(Collectors.toList());
         isTrue(actualNames.size() == args.length - 1, "The arg names do not match the actual args.");
         Map<String, Object> actualMapArg = new HashMap<>();
         for (int i = 0; i < actualNames.size(); i++) {
             actualMapArg.put(actualNames.get(i), args[i + 1]);
         }
-        log.info("Store-find-bug-11 exec tool. [taskId = {}, module = {}, args = {}]", taskId, model, actualMapArg);
         return this.pipelineService.call(taskId, model, actualMapArg);
     }
 }
