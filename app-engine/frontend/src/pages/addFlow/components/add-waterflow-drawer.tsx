@@ -7,8 +7,8 @@ import { CloseOutlined } from '@ant-design/icons';
 
 const AddWaterFlow = (props) => {
   const { open, setOpen } = props;
-  const [ loading, setLoading ] = useState(false);
-  const [ form ] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
   const { tenantId, appId } = useParams();
   const navigate = useHistory().push;
 
@@ -48,7 +48,7 @@ const AddWaterFlow = (props) => {
         </Button>
       ]}
       extra={
-        <CloseOutlined onClick={() => setOpen(false)}/>
+        <CloseOutlined onClick={() => setOpen(false)} />
       }>
       <div style={{ marginBottom: '30px' }}>
         <Form
@@ -56,16 +56,16 @@ const AddWaterFlow = (props) => {
           layout="vertical"
           autoComplete="off"
           className='edit-form-content'
-          >
+        >
           <Form.Item
-              label="名称"
-              name="name"
-              rules={[{ required: true, message: '请输入名称' }, {
-                type: 'string',
-                max: 64,
-                message: '输入字符长度范围：1 - 64'
-              }]}
-            >
+            label="名称"
+            name="name"
+            rules={[{ required: true, message: '请输入名称' }, {
+              type: 'string',
+              max: 64,
+              message: '输入字符长度范围：1 - 64'
+            }]}
+          >
             <Input maxLength={64} showCount />
           </Form.Item>
           <Form.Item

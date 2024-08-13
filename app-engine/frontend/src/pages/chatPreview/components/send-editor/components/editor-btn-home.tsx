@@ -219,7 +219,6 @@ const EditorBtnHome = (props) => {
             ) :
             (
               <div className='inner-item'>
-                <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
                 { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
                 {showMulti && <div className='multi-conversation-title'>
                   <span>多轮对话</span>

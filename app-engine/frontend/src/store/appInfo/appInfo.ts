@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { TENANT_ID } from '../../pages/chatPreview/components/send-editor/common/config'
 import type { RootState } from '../index';
 
@@ -16,9 +16,9 @@ const initialState: AppI = {
   appId: '',
   tenantId: TENANT_ID,
   appInfo: {},
-  atAppId: null,
-  atAppInfo: null,
-} as AppI;
+  atAppId: '',
+  atAppInfo: {},
+};
 
 export const appStore = createSlice({
   name: 'app',
