@@ -5,7 +5,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import { AudioIcon, AudioActiveIcon , SendIcon, DeleteContentIcon } from '@/assets/icon';
+import { AudioIcon, AudioActiveIcon, DeleteContentIcon } from '@/assets/icon';
 import $ from 'jquery';
 import { Message } from '@shared/utils/message';
 import { httpUrlMap } from '@shared/http/httpConfig';
@@ -229,7 +229,7 @@ const SendEditor = (props) => {
             onPaste={messagePaste}
           />
           <div className='send-icon' onClick={ sendMessage }>
-            <SendIcon />
+           { showClear ? <img src='./src/assets/images/ai/send-active.png' alt='' /> : <img src='./src/assets/images/ai/send.png' alt='' /> } 
           </div>
           <div className='audio-icon' ref={audioDomRef} tabIndex='1' onBlur={cancelRecord} onClick={onRecord}><AudioBtn ref={audioBtnRef} /></div>
           { showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div> }

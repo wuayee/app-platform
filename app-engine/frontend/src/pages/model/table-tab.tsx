@@ -118,11 +118,6 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
             display: 'flex',
           }}
         >
-          <div>
-            {value === 'healthy' && <img src='/src/assets/images/model/healthy.svg' />}
-            {value === 'unhealthy' && <img src='/src/assets/images/model/unhealthy.svg' />}
-            {value === 'undeployed' && <img src='/src/assets/images/model/undeployed.svg' />}
-          </div>
           <div
             style={{
               marginTop: -4,

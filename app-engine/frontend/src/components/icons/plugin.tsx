@@ -1,7 +1,7 @@
 import Icon from '@ant-design/icons/lib/components/Icon';
-import SystemPlugin from '../../assets/svg/plugin-system.svg';
-import Liamaindex from '../../assets/svg/plugin-liamaindex.svg';
-import Langchain from '../../assets/svg/plugin-langchain.svg';
+import SystemPlugin from '../../assets/images/ai/system.png';
+import Liamaindex from '../../assets/images/ai/liamaindex.png';
+import Langchain from '../../assets/images/ai/langchain.png';
 import * as React from 'react'
 
 type IconProps = React.HTMLAttributes<SVGElement> & any;
@@ -39,9 +39,15 @@ export const PluginIcons = {
       </g>
     </svg>
   ),
-  SytemIcon:(props)=><Icon component={() => (<SystemPlugin/>)} {...props}/>,
-  LiamaindexIcon:(props)=><Icon component={() => (<Liamaindex/>)} {...props}/>,
-  LangchainIcon:(props)=><Icon component={() => (<Langchain/>)} {...props}/>,
+  SytemIcon:() => (
+    <img src={SystemPlugin} width={20} height={20} alt='' />
+  ),
+  LiamaindexIcon:() => (
+    <img src={Liamaindex} width={20} height={20} alt='' />
+  ),
+  LangchainIcon:() => (
+    <img src={Langchain} width={20} height={20} alt='' />
+  ),
   ToolIcon: (props: IconProps) => (
     <svg width="13.999023" height="14.000000" viewBox="0 0 13.999 14" fill="none" {...props}>
 	  <desc>

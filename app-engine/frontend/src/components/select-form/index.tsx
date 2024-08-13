@@ -35,7 +35,6 @@ const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inpu
       {currentSteps === 2 &&
         ( true ? (
           <Empty
-            image='https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'
             imageStyle={{ height: 60 }}
             description={<span>恭喜您，知识库已完成创建</span>}
           >
