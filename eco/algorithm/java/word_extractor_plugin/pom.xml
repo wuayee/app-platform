@@ -13,7 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jober.version>0.2.0-SNAPSHOT</jober.version>
-        <fit.version>3.3.9-SNAPSHOT</fit.version>
+        <fit.version>3.5.0-SNAPSHOT</fit.version>
         <fastjson.version>1.2.83</fastjson.version>
         <slf4j.version>1.7.36</slf4j.version>
     </properties>
