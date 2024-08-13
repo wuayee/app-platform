@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../index';
+import { createSlice } from '@reduxjs/toolkit';
 
 // 为 slice state 定义一个类型
 interface ChatCommonI {
@@ -19,11 +18,11 @@ const initialState: ChatCommonI = {
   chatList: [],
   inspirationOpen: false,
   openStar: false,
-  chatType: null,
-  chatId: null,
-  atChatId: null,
+  chatType: '',
+  chatId: '',
+  atChatId: '',
   formReceived: false
-} as ChatCommonI;
+};
 
 export const chatCommonStore = createSlice({
   name: 'app',

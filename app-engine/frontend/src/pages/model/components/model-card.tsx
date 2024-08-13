@@ -108,15 +108,6 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
           >
             {modelItem.status}
           </div>
-          <div style={{ marginTop: -25 }}>
-            {modelItem.status === 'healthy' && <img src='/src/assets/images/model/healthy.svg' />}
-            {modelItem.status === 'unhealthy' && (
-              <img src='/src/assets/images/model/unhealthy.svg' />
-            )}
-            {modelItem.status === 'undeployed' && (
-              <img src='/src/assets/images/model/undeployed.svg' />
-            )}
-          </div>
         </div>
       </div>
       <div

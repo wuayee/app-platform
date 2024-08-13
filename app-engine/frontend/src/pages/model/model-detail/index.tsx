@@ -76,22 +76,6 @@ const ModelDetail = () => {
           </div>
           <div
             style={{
-              marginLeft: 30,
-              marginTop: 8,
-            }}
-          >
-            {modelItem.status === "healthy" && (
-              <img src="/src/assets/images/model/healthy.svg" />
-            )}
-            {modelItem.status === "unhealthy" && (
-              <img src="/src/assets/images/model/unhealthy.svg" />
-            )}
-            {modelItem.status === "undeployed" && (
-              <img src="/src/assets/images/model/undeployed.svg" />
-            )}
-          </div>
-          <div
-            style={{
               marginTop: 5,
             }}
           >

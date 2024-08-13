@@ -9,9 +9,9 @@ const TextEditor = ({ text, setText }) => {
       container: [
         [{ 'size': ['small', false, 'large', 'huge'] }],
         ['bold', 'italic', 'underline', 'strike'],
-        [{ list: 'ordered'}, { list: 'bullet'}],
-        [{ align: []}],
-        [{ color: []}, { background: []}],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ align: [] }],
+        [{ color: [] }, { background: [] }],
         ['image']
       ]
     }
@@ -21,11 +21,11 @@ const TextEditor = ({ text, setText }) => {
   };
   return <>{(
     <div style={{ height: '280px' }}>
-      <ReactQuill 
+      <ReactQuill
         style={{ height: '240px' }}
-        theme='snow' 
-        value={text} 
-        onChange={handleChange} 
+        theme='snow'
+        value={text}
+        onChange={handleChange}
         modules={quillOption}
       />
     </div>

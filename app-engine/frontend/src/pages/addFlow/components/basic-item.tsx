@@ -10,9 +10,9 @@ import {
   FitIcon,
   CodeIcon
 } from '@assets/icon';
-import { handleClickAddBasicNode, handleDragBasicNode} from '../utils'
+import { handleClickAddBasicNode, handleDragBasicNode } from '../utils'
 
-const BasicItems = (props:any) => {
+const BasicItems = (props: any) => {
   const { dragData } = props;
 
   // 根据类型设置图标
@@ -31,7 +31,7 @@ const BasicItems = (props:any) => {
   }
   return <>
     <div className='basic-drag-list'>
-      { dragData.map((item, index) => {
+      {dragData.map((item, index) => {
         return (
           <div
             className='drag-item'
@@ -41,16 +41,16 @@ const BasicItems = (props:any) => {
           >
             <div className='drag-item-title'>
               <div>
-                { getIconByType(item.type) }
-                <span className='content-node-name'>{ item.name }</span>
+                {getIconByType(item.type)}
+                <span className='content-node-name'>{item.name}</span>
               </div>
               <span className='drag-item-icon' onClick={(event) => handleClickAddBasicNode(item, event)}>
-                <img src='/src/assets/images/ai/flow.png'  />
+                <img src='./src/assets/images/ai/flow.png' />
               </span>
             </div>
           </div>
         )
-        })
+      })
       }
     </div>
   </>
