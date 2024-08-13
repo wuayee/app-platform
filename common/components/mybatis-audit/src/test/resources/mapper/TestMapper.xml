@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.common.audit.stub.TestMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_test (created_at, updated_at, created_by, updated_by)
+        VALUES (#{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy})
+    </insert>
+    <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_test (created_at, updated_at, created_by, updated_by) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.createdAt}, #{item.updatedAt}, #{item.createdBy}, #{item.updatedBy})
+        </foreach>
+    </insert>
+    <insert id="insertMultiParm">
+        INSERT INTO t_test (created_at, updated_at, created_by, updated_by)
+        VALUES (#{param.createdAt}, #{param.updatedAt}, #{param.createdBy}, #{param.updatedBy})
+    </insert>
+</mapper>
