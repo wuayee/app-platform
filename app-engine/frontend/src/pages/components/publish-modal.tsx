@@ -1,5 +1,5 @@
 
-import React, { useState, useImperativeHandle } from 'react';
+import React, { useState, useImperativeHandle, useRef } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Input, Modal, Button, Select, Form } from 'antd';
 import TextEditor from './text-editor';
@@ -7,20 +7,20 @@ import { Message } from '@shared/utils/message';
 import { httpUrlMap } from '@shared/http/httpConfig';
 import { appPublish, updateFlowInfo } from '@shared/http/aipp';
 import { versionStringCompare } from '@shared/utils/common';
+import { updateChatId } from '@/shared/utils/common';
+import { useAppDispatch } from '@/store/hook';
+import { setChatId, setChatList } from '@/store/chatStore/chatStore';
 import './styles/publish-modal.scss';
-import { updateChatId } from "../../shared/utils/common";
-const { TextArea } = Input;
-import { useAppDispatch } from "@/store/hook";
-import { setChatId, setChatList } from "@/store/chatStore/chatStore";
 
+const { TextArea } = Input;
 const PublishModal = (props) => {
   const dispatch = useAppDispatch();
   const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [text, setText] = useState('');
   const [form] = Form.useForm();
+  const editorRef = useRef();
   const navigate = useHistory().push;
 
   const tagOptions = [
@@ -35,7 +35,6 @@ const PublishModal = (props) => {
       version: appInfo.version,
       app_type: publishType !== 'app' ? 'waterflow' : appInfo.attributes?.app_type
     });
-    setText('');
     setIsModalOpen(true);
   };
   // 发布点击
@@ -57,7 +56,7 @@ const PublishModal = (props) => {
       params.version = formParams.version;
       params.attributes.app_type = formParams.app_type;
       params.publishedDescription = formParams.description;
-      params.publishedUpdateLog = text;
+      params.publishedUpdateLog = editorRef.current.handleChange();
       const res = await appPublish(tenantId, appId, params);
       if (res.code === 0) {
         Message({ type: 'success', content: `发布应用成功` });
@@ -81,7 +80,7 @@ const PublishModal = (props) => {
     }
     appInfo.version = formParams.version;
     appInfo.publishedDescription = formParams.description;
-    appInfo.publishedUpdateLog = text;
+    appInfo.publishedUpdateLog = editorRef.current.handleChange();
     try {
       const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
@@ -123,15 +122,16 @@ const PublishModal = (props) => {
       title={publishType === 'app' ? '发布应用' : '发布工具流'}
       width={700}
       maskClosable={false}
+      destroyOnClose
       centered
       open={isModalOpen}
       onOk={publishClick}
       onCancel={handleCancel}
       footer={[
-        <Button key="back" onClick={handleCancel}>
+        <Button key='back' onClick={handleCancel}>
           取消
         </Button>,
-        <Button key="submit" type="primary" loading={loading} onClick={publishClick}>
+        <Button key='submit' type='primary' loading={loading} onClick={publishClick}>
           确定
         </Button>
       ]}>
@@ -153,14 +153,14 @@ const PublishModal = (props) => {
         }
         <Form
           form={form}
-          layout="vertical"
-          autoComplete="off"
+          layout='vertical'
+          autoComplete='off'
           className='edit-form-content'
         > {
             publishType === 'app' &&
             <Form.Item
-              label="分类"
-              name="app_type"
+              label='分类'
+              name='app_type'
               rules={[{ required: true, message: '不能为空' }]}
             >
               <Select options={tagOptions} />
@@ -168,8 +168,8 @@ const PublishModal = (props) => {
           }
 
           <Form.Item
-            label="版本名称"
-            name="version"
+            label='版本名称'
+            name='version'
             rules={[
               { required: true, message: '请输入版本名称' },
               { pattern: /^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }
@@ -178,17 +178,17 @@ const PublishModal = (props) => {
             <Input showCount maxLength={8} />
           </Form.Item>
           <Form.Item
-            label="版本描述"
-            name="description"
+            label='版本描述'
+            name='description'
           >
-            <TextArea rows={4} placeholder="请输入版本描述" showCount maxLength={300} />
+            <TextArea rows={4} placeholder='请输入版本描述' showCount maxLength={300} />
           </Form.Item>
           {
             <Form.Item
-              label="版本公告"
-              name="updateLog"
+              label='版本公告'
+              name='updateLog'
             >
-              <TextEditor text={text} setText={setText} />
+              <TextEditor ref={editorRef} />
             </Form.Item>
           }
         </Form>

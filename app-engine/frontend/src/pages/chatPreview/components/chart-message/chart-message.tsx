@@ -4,11 +4,11 @@ import { initChartData } from './utils/chart-utils';
 import ChartItem from './chart-item';
 
 const ChartMessage = (props) => {
-  const { chartAnswer, chartData, chartTitle, chartType } = props.chatConfig;
-  const [ chartList, setChartList ] = useState([]);
+  const { chartAnswer, chartData, chartTitle, chartType } = props.chartConfig;
+  const [chartList, setChartList] = useState([]);
   const listRef = useRef(null);
 
-  useEffect(() => {    
+  useEffect(() => {
     handleChartData();
   }, [])
   // 图表数据格式化
@@ -24,7 +24,7 @@ const ChartMessage = (props) => {
           const chartItem = initChartData(item, chartAnswer, chartTypeItem, chartTitleItem);
           setChartList(() => {
             let current = listRef.current || [];
-            let arr = [ ...current, JSON.parse(JSON.stringify(chartItem)) ];
+            let arr = [...current, JSON.parse(JSON.stringify(chartItem))];
             listRef.current = arr;
             return arr
           })
@@ -33,7 +33,7 @@ const ChartMessage = (props) => {
         const chartItem = initChartData(chartData, chartAnswer, chartType);
         setChartList(() => {
           let current = listRef.current || [];
-          let arr = [ ...current, chartItem ];
+          let arr = [...current, chartItem];
           listRef.current = arr;
           return arr
         })
@@ -44,10 +44,10 @@ const ChartMessage = (props) => {
     <div className='receive-info'>
       {
         chartList.map((item, index) => {
-          return(
-            <ChartItem 
-              key={index} 
-              chatItem={item} 
+          return (
+            <ChartItem
+              key={index}
+              chatItem={item}
               chartAnswer={chartAnswer && chartAnswer[index]}
             />
           )

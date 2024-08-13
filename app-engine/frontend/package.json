@@ -51,7 +51,6 @@
     "@fit-elsa/elsa-core": "^0.1.22-alpha.36",
     "@fit-elsa/elsa-react": "1.0.0-alpha.90",
     "@reduxjs/toolkit": "^2.2.0",
-    "@svgr/webpack": "^6.2.1",
     "antd": "^5.14.2",
     "axios": "1.6.7",
     "dompurify": "3.0.8",
@@ -69,14 +68,13 @@
     "react-dom": "^18.1.0",
     "react-i18next": "^11.18.3",
     "react-markdown": "9.0.1",
-    "react-quill": "^2.0.0-beta.4",
     "react-redux": "^8.0.2",
     "react-router": "5.3.4",
     "react-router-dom": "5.3.4",
-    "react-syntax-highlighter": "^15.5.0",
     "redux": "^4.2.1",
-    "scoped-css-loader": "^1.0.0",
-    "screenfull": "5.2.0"
+    "screenfull": "5.2.0",
+    "styled-components": "^6.0.9",
+    "tinymce": "^6.8.4"
   },
   "publishConfig": {
     "registry": "https://npm.cloudartifact.dgg.dragon.tools.huawei.com/artifactory/npm-fit/",

@@ -83,8 +83,8 @@ const CreateWorkflow = (props) => {
                 src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}
               />
             ) : (
-              <img src='/src/assets/images/knowledge/knowledge-base.png' />
-            )}
+                <img src='./src/assets/images/knowledge/knowledge-base.png' />
+              )}
             <Upload
               beforeUpload={beforeUpload}
               onChange={onChange}

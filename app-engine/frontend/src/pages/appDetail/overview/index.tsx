@@ -5,8 +5,6 @@ import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useHistory, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
-import { AvatarIcon } from '../../../assets/icon';
-import { AppDefaultIcon } from '../../../assets/icon';
 import { useAppDispatch } from '../../../store/hook';
 import { setAppInfo } from "../../../store/appInfo/appInfo";
 
@@ -49,7 +47,7 @@ const AppOverview: React.FC = () => {
             {appIcon ?
               <img width={100} height={100} src={appIcon} />
               :
-              <AppDefaultIcon />
+              <img src='./src/assets/images/knowledge/knowledge-base.png' />
             }
 
             <Flex className='details-content' vertical gap='middle'>
@@ -73,7 +71,7 @@ const AppOverview: React.FC = () => {
               </div>
               <Flex gap={20}>
                 <Flex gap='small' align='center'>
-                  <AvatarIcon />
+                  <AppIcons.UserIcon />
                   <span>{detail?.createBy || 'Admin'}</span>
                 </Flex>
                 <Flex gap='small'>

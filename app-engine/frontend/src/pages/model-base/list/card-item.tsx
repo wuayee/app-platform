@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { deleteModel } from './delete';
-import { AvatarIcon } from '../../../assets/icon';
+import { AppIcons } from '../../../components/icons/app';
 
 const CardItem = ({ data, deleteCallback }: any) => {
   
@@ -61,7 +61,7 @@ const CardItem = ({ data, deleteCallback }: any) => {
         marginTop: 16,
       }}>
         <Flex gap='small' align='center'>
-          <AvatarIcon />
+          <AppIcons.UserIcon />
           <span
             title={data.author}
             style={{
