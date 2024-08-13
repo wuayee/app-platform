@@ -162,13 +162,24 @@ public enum OperatorInfo {
         }
     }
 
+    /**
+     * 用于给路径外部添加统一的get包裹，以便于在json中取值。
+     *
+     * @param path 需要包裹的路径的 {@link String}。
+     * @return 添加完get包裹的路径的 {@link String}。
+     */
+    private static String pathGetWrapper(String path) {
+        return "get(\"" + path + "\")";
+    }
+
     private static String buildReferenceExpression(JSONObject valueObj, String operatorType) {
         String referenceNode = valueObj.getString(VALUE_REFERENCE_NODE_KEY);
         JSONArray valueArray = valueObj.getJSONArray(VALUE_VALUE_ARRAY_KEY);
-        StringBuilder valueBuilder = new StringBuilder(BUSINESS_DATA_PREFIX + Constant.BUSINESS_DATA_INTERNAL_KEY + "."
-                + Constant.INTERNAL_OUTPUT_SCOPE_KEY + ".").append(referenceNode);
+        StringBuilder valueBuilder = new StringBuilder(
+                BUSINESS_DATA_PREFIX + pathGetWrapper(Constant.BUSINESS_DATA_INTERNAL_KEY) + "." + pathGetWrapper(
+                        Constant.INTERNAL_OUTPUT_SCOPE_KEY) + ".").append(pathGetWrapper(referenceNode));
         for (Object val : valueArray) {
-            valueBuilder.append(".").append(val.toString());
+            valueBuilder.append(".").append(pathGetWrapper(val.toString()));
         }
         if ("String".equals(valueObj.getString(INPUT_TYPE_KEY)) && OperatorInfo.BINARY_TYPE.equals(operatorType)) {
             valueBuilder.append(".trim()");

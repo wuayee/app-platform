@@ -53,21 +53,29 @@ class OperatorInfoTest {
 
     private static Stream<Arguments> provideConditionParameters() {
         return Stream.of(Arguments.of("contains", "String", "cr",
-                        "(businessData._internal.outputScope.null.Question.trim().contains(\"cr\"))"),
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".contains(\"cr\"))"),
                 Arguments.of("does not contain", "String", "cr",
-                        "(!businessData._internal.outputScope.null.Question.trim().contains(\"cr\"))"),
+                        "(!businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".contains(\"cr\"))"),
                 Arguments.of("longer than", "Integer", "4",
-                        "(businessData._internal.outputScope.null.Question.trim().len() > 4)"),
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".len() > 4)"),
                 Arguments.of("longer than or equal", "Integer", "4",
-                        "(businessData._internal.outputScope.null.Question.trim().len() >= 4)"),
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".len() >= 4)"),
                 Arguments.of("shorter than", "Integer", "4",
-                        "(businessData._internal.outputScope.null.Question.trim().len() < 4)"),
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".len() < 4)"),
                 Arguments.of("shorter than or equal", "Integer", "4",
-                        "(businessData._internal.outputScope.null.Question.trim().len() <= 4)"),
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".len() <= 4)"),
                 Arguments.of("starts with", "String", "cba",
-                        "(businessData._internal.outputScope.null.Question.trim().starts_with(\"cba\"))"),
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".starts_with(\"cba\"))"),
                 Arguments.of("ends with", "String", "cba",
-                        "(businessData._internal.outputScope.null.Question.trim().ends_with(\"cba\"))"));
+                        "(businessData.get(\"_internal\").get(\"outputScope\").get(\"null\").get(\"Question\").trim()"
+                                + ".ends_with(\"cba\"))"));
     }
 
     private JSONObject createReferenceObject(ReferenceParams params) {
