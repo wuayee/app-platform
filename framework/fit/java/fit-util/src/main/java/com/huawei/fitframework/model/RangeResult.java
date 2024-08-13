@@ -10,7 +10,7 @@ import com.huawei.fitframework.model.support.DefaultRangeResult;
 /**
  * 为范围结果提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-07-24
  */
 public interface RangeResult extends Range {

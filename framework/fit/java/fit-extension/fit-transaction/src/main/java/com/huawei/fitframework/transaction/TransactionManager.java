@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 /**
  * 为事务提供管理程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-24
  */
 public interface TransactionManager {

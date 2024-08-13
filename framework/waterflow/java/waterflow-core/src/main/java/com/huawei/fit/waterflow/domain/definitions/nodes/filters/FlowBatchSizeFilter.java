@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * 最小Size的过滤器
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class FlowBatchSizeFilter extends FlowFilter {

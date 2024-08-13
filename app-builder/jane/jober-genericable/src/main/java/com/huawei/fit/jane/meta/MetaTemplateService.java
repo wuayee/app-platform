@@ -16,7 +16,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 元数据模板服务。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-04
  */
 public interface MetaTemplateService {

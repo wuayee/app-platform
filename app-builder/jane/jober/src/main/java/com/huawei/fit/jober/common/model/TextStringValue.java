@@ -13,7 +13,7 @@ import lombok.Setter;
 /**
  * Text与StringValue的结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-26
  */
 @Getter

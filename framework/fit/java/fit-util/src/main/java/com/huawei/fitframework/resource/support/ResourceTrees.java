@@ -19,7 +19,7 @@ import java.net.URL;
 /**
  * 为 {@link ResourceTree} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-29
  */
 public final class ResourceTrees {

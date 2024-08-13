@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 /**
  * 为注解树提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 public class DefaultAnnotationTree extends AbstractAnnotationTreeNodeContainer implements AnnotationTree {

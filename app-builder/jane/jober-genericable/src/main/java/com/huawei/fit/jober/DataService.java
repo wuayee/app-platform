@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 数据服务Genericable。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-12
  */
 public interface DataService {

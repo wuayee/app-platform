@@ -47,7 +47,7 @@ import java.util.function.Function;
 /**
  * 表示解析带有 {@link RequestBean} 注解的参数的 {@link PropertyValueMetadataResolver}。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-14
  */
 public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolver {
@@ -103,7 +103,7 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
 
     private List<SourceFetcherInfo> getSourceFetcherInfos(PropertyValue propertyValue, String destinationName) {
         List<SourceFetcherInfo> sourceFetcherInfos = new ArrayList<>();
-        for (Field field : ReflectionUtils.getDeclaredFields(propertyValue.getType())) {
+        for (Field field : ReflectionUtils.getDeclaredFields(propertyValue.getType(), true)) {
             PropertyValue fieldPropertyValue = PropertyValue.createFieldValue(field);
             String fieldPath = destinationName + DESTINATION_NAME_SEPARATOR + fieldPropertyValue.getName();
             Optional<AnnotatedElement> element = fieldPropertyValue.getElement();

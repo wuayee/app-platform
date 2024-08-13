@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 当发现日期格式错误时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class DateFormatException extends IllegalArgumentException {

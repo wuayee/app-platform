@@ -9,7 +9,7 @@ import com.huawei.fitframework.aop.interceptor.MethodInvocation;
 /**
  * 表示调用被代理对象的方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-25
  */
 @FunctionalInterface

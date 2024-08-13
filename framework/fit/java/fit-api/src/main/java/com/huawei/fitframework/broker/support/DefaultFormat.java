@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 表示 {@link Format} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-22
  */
 public class DefaultFormat implements Format {

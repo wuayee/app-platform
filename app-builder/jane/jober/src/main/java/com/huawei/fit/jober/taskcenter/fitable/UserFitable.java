@@ -15,7 +15,7 @@ import com.huawei.fitframework.annotation.Fitable;
 /**
  * {@link UserService}的实现类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-11-14
  */
 @Alias("Jane-User")

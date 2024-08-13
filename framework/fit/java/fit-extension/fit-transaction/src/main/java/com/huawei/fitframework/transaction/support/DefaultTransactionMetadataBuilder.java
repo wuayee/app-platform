@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * 为 {@link TransactionMetadataBuilder} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-22
  */
 public class DefaultTransactionMetadataBuilder implements TransactionMetadataBuilder {
@@ -75,7 +75,7 @@ public class DefaultTransactionMetadataBuilder implements TransactionMetadataBui
     /**
      * 为 {@link TransactionMetadata} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-08-22
      */
     private static class Instance implements TransactionMetadata {

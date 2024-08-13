@@ -9,7 +9,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 /**
  * 表示 {@link HttpResponseStatusResolver} 的提供者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-11
  */
 @FunctionalInterface

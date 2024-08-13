@@ -11,7 +11,7 @@ import com.huawei.fitframework.ioc.lifecycle.bean.BeanCreator;
 /**
  * 为 {@link BeanCreator} 提供基于直接对象的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class DirectBeanCreator implements BeanCreator {

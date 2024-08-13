@@ -14,7 +14,7 @@ import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
 /**
  * 表示经典的服务端的 Http 请求。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-07
  */
 public interface HttpClassicServerRequest extends HttpClassicRequest {

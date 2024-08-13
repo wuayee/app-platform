@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * 表示约束校验失败的数据类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-08
  */
 public interface ConstraintViolation {

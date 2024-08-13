@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 流程服务的Genericable
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/9/12
  */
 public interface FlowableService {

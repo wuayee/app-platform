@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 用于标注需要记录操作日志的方法
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-16 15:12
  */
 @Target(METHOD)

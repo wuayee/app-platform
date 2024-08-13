@@ -12,7 +12,7 @@ import java.io.InputStream;
 /**
  * 表示服务端的 Http 请求。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-05
  */
 public interface ServerRequest extends Message<RequestLine, MessageHeaders, ReadableMessageBody> {

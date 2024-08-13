@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * {@code .properties} 文件中的键的部分。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-01-31
  */
 public class PropertyKeys {

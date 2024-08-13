@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 这个类用来请求cookie
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-7-26
  */
 @Component

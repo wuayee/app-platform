@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * 参数会被校验；若校验的是参数，则校验该参数对象所有的带有 {@link com.huawei.fitframework.validation.constraints.Constraint} 字段。
  * </p>
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-14
  */
 @Retention(RetentionPolicy.RUNTIME)

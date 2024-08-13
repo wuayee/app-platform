@@ -9,7 +9,7 @@ import com.huawei.fitframework.resource.classpath.support.FileUriClassPathKeyRes
 /**
  * 为 {@link UriClassPathKeyResolver} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 final class UriClassPathKeyResolvers {

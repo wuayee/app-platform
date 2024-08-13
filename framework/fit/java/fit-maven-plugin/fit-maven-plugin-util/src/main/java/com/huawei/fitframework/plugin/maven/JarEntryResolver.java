@@ -21,8 +21,8 @@ import java.util.jar.JarFile;
  * 解析 jar 包的解析器。
  *
  * @param <T> 表示解析结果类型的 {@link T}。
- * @author 梁济时 l00298979
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2021-06-29
  */
 public interface JarEntryResolver<T> {

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 为管理指定数据源中的任务实例提供支持。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-20
  */
 public interface SourcedTaskInstanceService {

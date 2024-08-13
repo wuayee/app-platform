@@ -336,6 +336,10 @@ export const graphData = {
                                     ]
                                 }
                             }
+                        },
+                        "joberFilter": {
+                            "type": "MINIMUM_SIZE_FILTER",
+                            "threshold": 1
                         }
                     },
                     "sourcePlatform": "official",
@@ -493,6 +497,10 @@ export const graphData = {
                                 }
                             },
                             "isAsync": "true"
+                        },
+                        "joberFilter": {
+                            "type": "MINIMUM_SIZE_FILTER",
+                            "threshold": 1
                         }
                     },
                     "sourcePlatform": "official",

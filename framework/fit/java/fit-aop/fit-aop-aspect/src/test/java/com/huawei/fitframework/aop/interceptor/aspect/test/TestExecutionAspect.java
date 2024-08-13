@@ -11,7 +11,7 @@ import com.huawei.fitframework.aop.annotation.Pointcut;
 /**
  * 用于测试 execution 表达式的测试切面定义。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-15
  */
 @Aspect

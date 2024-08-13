@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * {@link TenantMember}的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-23
  */
 public class DefaultTenantMember extends AbstractDomainObject implements TenantMember {

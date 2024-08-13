@@ -10,7 +10,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为应用程序提供日志记录程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-14
  */
 public interface Logger {

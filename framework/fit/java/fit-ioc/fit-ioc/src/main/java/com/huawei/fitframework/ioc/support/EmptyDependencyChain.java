@@ -13,7 +13,7 @@ import java.util.Iterator;
 /**
  * 为 {@link DependencyChain} 提供空实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-08
  */
 public class EmptyDependencyChain implements DependencyChain {

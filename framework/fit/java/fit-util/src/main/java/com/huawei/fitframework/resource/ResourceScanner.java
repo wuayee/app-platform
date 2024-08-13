@@ -7,7 +7,7 @@ package com.huawei.fitframework.resource;
 /**
  * 为资源提供扫描程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-22
  */
 public interface ResourceScanner {

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * {@link BeanLifecycleInterceptor} 的 AOP 实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-01
  */
 public class AopInterceptor implements BeanLifecycleInterceptor {

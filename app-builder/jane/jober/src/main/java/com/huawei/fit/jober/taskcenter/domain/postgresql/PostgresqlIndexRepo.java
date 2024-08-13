@@ -73,7 +73,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Index.Repo} 提供基于 {@code Postgresql} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-05
  */
 @Component
@@ -839,7 +839,7 @@ public class PostgresqlIndexRepo implements Index.Repo {
      * <p>如果修改前属性已被用作索引，但是修改后的数据类型将不再支持索引，则将从索引中删除该属性。
      * 如果删除属性后，索引中不再包含其他属性，则同时删除索引。</p>
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-31
      */
     @Component
@@ -887,7 +887,7 @@ public class PostgresqlIndexRepo implements Index.Repo {
      * 处理 {@link TaskPropertyModifiedEvent} 事件。
      * <p>如果所修改的属性已被用作索引，且其数据类型发生了变化，则删除原有数据类型的索引数据，并重建新的数据类型的索引数据。</p>
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-31
      */
     @Component
@@ -923,7 +923,7 @@ public class PostgresqlIndexRepo implements Index.Repo {
      * 处理 {@link TaskPropertyDeletingEvent} 事件。
      * <p>如果被删除的属性被用作索引，则将从索引中删除该属性。如果删除属性后，索引中不再包含其他属性，则同时删除索引。</p>
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-31
      */
     @Component

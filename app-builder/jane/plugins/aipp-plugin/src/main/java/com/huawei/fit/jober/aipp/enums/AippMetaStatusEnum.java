@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * aipp meta对应状态
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023/12/15
  */
 @Getter

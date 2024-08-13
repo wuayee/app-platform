@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * 为应用程序的国际化提供字符串管理能力。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-21
  */
 public interface StringResource {

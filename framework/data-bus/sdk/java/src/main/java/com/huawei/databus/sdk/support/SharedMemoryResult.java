@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 为内存申请提供结果。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public interface SharedMemoryResult extends DataBusIoResult {
@@ -52,7 +52,7 @@ public interface SharedMemoryResult extends DataBusIoResult {
     /**
      * 为 {@link SharedMemoryResult} 提供表示申请内存成功的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class SuccessResult implements SharedMemoryResult {
@@ -97,7 +97,7 @@ public interface SharedMemoryResult extends DataBusIoResult {
     /**
      * 为 {@link SharedMemoryResult} 提供表示申请内存失败的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class FailureResult implements SharedMemoryResult {

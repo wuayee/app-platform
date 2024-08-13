@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * {@link DefaultFilter} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-03-05
  */
 @DisplayName("验证使用泛服务默认实现的路由的过滤器")

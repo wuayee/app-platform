@@ -40,7 +40,7 @@ import java.util.function.Predicate;
  * 表示 {@link Choir} 的抽象实现类。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 public abstract class AbstractChoir<T> implements Choir<T> {

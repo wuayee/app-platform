@@ -50,7 +50,7 @@ import java.util.Map;
 /**
  * 测试 Http 提供。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-15
  */
 @DisplayName("测试 Http 构建规则")

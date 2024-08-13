@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 表示 {@link Subscriber} 的抽象父类。
  *
  * @param <T> 表示订阅的数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-10
  */
 public abstract class AbstractSubscriber<T> implements Subscriber<T> {

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * 为资源提供树形结构定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-29
  */
 public interface ResourceTree {
@@ -80,7 +80,7 @@ public interface ResourceTree {
     /**
      * 为资源树提供节点定义。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-29
      */
     interface Node {
@@ -110,7 +110,7 @@ public interface ResourceTree {
     /**
      * 为资源树中的节点提供集合。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-29
      */
     interface NodeCollection extends Iterable<Node> {
@@ -156,7 +156,7 @@ public interface ResourceTree {
     /**
      * 为资源树提供目录节点。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-29
      */
     interface DirectoryNode extends Node {
@@ -196,7 +196,7 @@ public interface ResourceTree {
     /**
      * 为资源树提供文件节点。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-01-29
      */
     interface FileNode extends Node, Resource {

@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * aipp通用异常处理。 fit框架优先执行 Scope.PLUGIN，其次Scope.GLOBAL
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-30
  */
 @Component

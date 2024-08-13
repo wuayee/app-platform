@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.streams;
 /**
  * ID生成器接口
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @FunctionalInterface

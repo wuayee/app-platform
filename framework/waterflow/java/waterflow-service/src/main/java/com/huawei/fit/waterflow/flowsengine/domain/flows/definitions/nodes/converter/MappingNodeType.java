@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * 对应节点配置中的类型
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/18
  */
 @Getter

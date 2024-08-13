@@ -17,7 +17,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * {@link TenantValidator}的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-08
  */
 @Component

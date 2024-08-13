@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * 为管理索引提供接口。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-08
  */
 @Component

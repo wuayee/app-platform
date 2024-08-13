@@ -42,8 +42,8 @@ import java.util.Optional;
 /**
  * 为 {@link MultiPartEntitySerializer} 提供单元测试。
  *
- * @author 杭潇 h00675922
- * @author 季聿阶 j00559309
+ * @author 杭潇
+ * @author 季聿阶
  * @since 2023-02-21
  */
 @DisplayName("测试 MultiPartEntitySerializer 类")

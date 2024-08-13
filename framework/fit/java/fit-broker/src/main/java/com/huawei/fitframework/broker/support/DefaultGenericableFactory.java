@@ -14,7 +14,7 @@ import com.huawei.fitframework.broker.UniqueGenericableId;
 /**
  * 表示 {@link GenericableFactory} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-26
  */
 public class DefaultGenericableFactory implements GenericableFactory {

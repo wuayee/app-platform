@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * ToCallback表示对 {@link FitStream.Callback} 的实现类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023-12-12
  */
 public class ToCallback<O> implements FitStream.Callback<O> {

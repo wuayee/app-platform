@@ -35,7 +35,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 {@link com.huawei.fit.http.server.HttpHandler} 相关的工具类。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-17
  */
 public class HttpServerUtils {

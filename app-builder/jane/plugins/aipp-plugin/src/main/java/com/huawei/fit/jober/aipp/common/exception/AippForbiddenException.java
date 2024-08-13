@@ -9,7 +9,7 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 /**
  * aipp禁止操作异常
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-31
  */
 public class AippForbiddenException extends AippException {

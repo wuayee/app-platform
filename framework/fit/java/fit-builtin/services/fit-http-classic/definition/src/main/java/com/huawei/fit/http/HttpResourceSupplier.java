@@ -7,7 +7,7 @@ package com.huawei.fit.http;
 /**
  * {@link HttpResource} 的提供者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-19
  */
 public interface HttpResourceSupplier {

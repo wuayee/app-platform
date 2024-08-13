@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示日志类型的枚举。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-24
  */
 public enum LoggerType {

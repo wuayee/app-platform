@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * 为 {@link BeanDefinition} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-16
  */
 public class DefaultBeanDefinition implements BeanDefinition {
@@ -135,7 +135,7 @@ public class DefaultBeanDefinition implements BeanDefinition {
     /**
      * 为 {@link BeanDefinition.Builder} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-05-16
      */
     public static class Builder implements BeanDefinition.Builder {

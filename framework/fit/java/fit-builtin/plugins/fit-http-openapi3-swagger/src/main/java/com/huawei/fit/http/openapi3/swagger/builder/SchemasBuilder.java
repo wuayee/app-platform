@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link Map}{@code <}{@link String}{@code , }{@link Schema}{@code >} 的构建器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-23
  */
 public class SchemasBuilder extends AbstractBuilder implements EntityBuilder<Map<String, Schema>> {

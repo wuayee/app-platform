@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * 注册中心地址监听模式。
  *
- * @author 张浩亮 z00352201
+ * @author 张浩亮
  * @since 2021-04-20
  */
 public enum RegistryListenerMode {

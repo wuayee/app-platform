@@ -33,7 +33,7 @@ import java.util.Collections;
 /**
  * 为 {@link MultiDestinationsPropertyValueApplier} 提供单元测试。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-13
  */
 @DisplayName("测试 MultiDestinationsPropertyValueApplier 接口")

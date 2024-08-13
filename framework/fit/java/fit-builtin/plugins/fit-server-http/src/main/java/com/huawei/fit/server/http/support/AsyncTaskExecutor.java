@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 /**
  * FIT 异步任务运行结果存储中心，单例模式。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-17
  */
 public class AsyncTaskExecutor {

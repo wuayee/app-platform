@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * 处理 HTTP 请求的控制器。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024-05-10
  */
 @Component

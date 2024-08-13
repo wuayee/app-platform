@@ -1,7 +1,7 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { JANE_URL, AIPP_URL, PLUGIN_URL, AI_URL } = httpUrlMap[process.env.NODE_ENV];
+const { JANE_URL, AIPP_URL, PLUGIN_URL, CONDITION_URL } = httpUrlMap[process.env.NODE_ENV];
 const sso_url = '/v1/user/sso_login_info';
 
 // 获取当前用户信息
@@ -32,7 +32,6 @@ export function voiceToText(tenantId, voicePath, fileName) {
 export function textToVoice(text, tone) {
   return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`, { text, tone });
 }
-
 
 // 查询应用列表
 export function getAippList(tenant_id, params, limit, offset, name) {
@@ -190,4 +189,13 @@ export function getClarifyOptions(data) {
 // 澄清-辅产品
 export function getFuClarifyOptions(params) {
   return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, params);
+}
+
+// 获取溯源字段下拉接口
+export function getOptionNodes(data) {
+  return post(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/option-nodes`, data);
+}
+// 获取溯源字段下拉接口
+export function getFinanceOptions(params) {
+  return get(`https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/finance/fieldValues`, params);
 }

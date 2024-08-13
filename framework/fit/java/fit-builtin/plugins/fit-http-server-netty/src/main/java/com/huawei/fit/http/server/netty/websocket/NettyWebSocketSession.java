@@ -19,7 +19,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 /**
  * 表示 {@link com.huawei.fit.http.websocket.Session} 的 Netty 的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 public class NettyWebSocketSession extends AbstractSession {

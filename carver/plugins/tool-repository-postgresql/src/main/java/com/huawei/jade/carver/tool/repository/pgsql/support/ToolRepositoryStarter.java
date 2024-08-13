@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * 表示观察所有插件启动的观察者的实现。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/5/16
  */
 @Component

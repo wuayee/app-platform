@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 表示条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-11
  */
 @FunctionalInterface
@@ -47,7 +47,7 @@ public interface Condition {
     /**
      * Connector
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-15
      */
     enum Connector {

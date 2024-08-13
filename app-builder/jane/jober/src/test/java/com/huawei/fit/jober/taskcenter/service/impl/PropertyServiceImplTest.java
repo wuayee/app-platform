@@ -62,7 +62,7 @@ import java.util.stream.IntStream;
 /**
  * {@link PropertyServiceImpl}对应测试类
  *
- * @author d30022216
+ * @author 董建华
  * @since 2023-08-11
  */
 @ExtendWith(MockitoExtension.class)

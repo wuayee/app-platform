@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 流程实例运行标识
  * offer数据后该流程生成的context的session id唯一
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public class FlowSession extends IdGenerator implements StateContext {

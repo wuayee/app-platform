@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 跟版本相关的工具类方法
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-06-14
  */
 public class VersionUtils {

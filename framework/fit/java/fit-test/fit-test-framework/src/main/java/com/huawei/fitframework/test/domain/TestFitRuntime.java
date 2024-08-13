@@ -19,7 +19,7 @@ import java.net.URLClassLoader;
 /**
  * 为测试框架提供运行时环境。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 易文渊
  * @since 2023-01-17
  */

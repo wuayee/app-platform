@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 为插件提供事件发布程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-29
  */
 final class PluginEventPublisher implements EventPublisher {

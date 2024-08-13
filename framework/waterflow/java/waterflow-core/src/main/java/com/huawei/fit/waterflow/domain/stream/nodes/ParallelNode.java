@@ -23,7 +23,7 @@ import java.util.List;
  * 辉子 2019-12-17
  *
  * @param <I>传入数据类型
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class ParallelNode<I> extends Node<I, I> {

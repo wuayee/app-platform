@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * elsa ppt所需的配置初始化
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024-01-12
  */
 @Component
@@ -25,7 +25,7 @@ public class ElsaPptInitiator {
     /**
      * 流程/表单组件数据
      *
-     * @author s00664640
+     * @author 孙怡菲
      * @since 2024/05/10
      */
     public static final Map<String, String> ELSA_PPT_DATA = new HashMap<>();

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 任务实例变化Genericable。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-09-08
  */
 public interface InstanceChangedService {

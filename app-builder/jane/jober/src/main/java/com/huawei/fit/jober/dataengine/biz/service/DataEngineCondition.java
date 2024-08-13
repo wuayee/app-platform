@@ -12,7 +12,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 /**
  * TimeSchedulerDataEngine生效条件
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-05-29
  */
 @Component

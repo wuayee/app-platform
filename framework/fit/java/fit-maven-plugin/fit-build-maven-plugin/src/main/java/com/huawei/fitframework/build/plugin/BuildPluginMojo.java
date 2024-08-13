@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 表示编译插件的任务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-23
  */
 @Mojo(name = "build-plugin", defaultPhase = LifecyclePhase.COMPILE,

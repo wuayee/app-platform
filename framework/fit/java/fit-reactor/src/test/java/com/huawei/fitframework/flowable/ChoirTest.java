@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * 表示 {@link Choir} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-10
  */
 @DisplayName("测试 Choir")

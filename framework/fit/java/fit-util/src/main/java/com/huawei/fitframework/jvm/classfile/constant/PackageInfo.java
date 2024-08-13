@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * 表示包信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class PackageInfo extends Constant {

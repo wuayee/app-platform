@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示服务实现的实例信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-07
  */
 public class FitableAddressInstance {

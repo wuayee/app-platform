@@ -12,7 +12,7 @@ import com.huawei.fitframework.inspection.Nonnull;
 /**
  * 表示通信协议类型。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-22
  */
 public enum Protocol {

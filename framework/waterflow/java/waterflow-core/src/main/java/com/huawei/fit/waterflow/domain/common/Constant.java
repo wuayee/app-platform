@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 常数类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 1.0
  */
 public final class Constant {

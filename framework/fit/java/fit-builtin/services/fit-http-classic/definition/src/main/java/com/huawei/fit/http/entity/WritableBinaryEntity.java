@@ -12,7 +12,7 @@ import java.io.OutputStream;
 /**
  * 表示只写的二进制的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-28
  */
 public interface WritableBinaryEntity extends Entity {

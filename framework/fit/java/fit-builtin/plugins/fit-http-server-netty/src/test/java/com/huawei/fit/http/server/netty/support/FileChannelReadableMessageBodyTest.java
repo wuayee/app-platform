@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * {@link FileChannelReadableMessageBody} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-09
  */
 @DisplayName("测试 FileChannelReadableMessageBody")

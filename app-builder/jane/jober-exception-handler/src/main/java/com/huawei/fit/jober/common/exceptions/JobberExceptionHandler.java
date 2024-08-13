@@ -31,7 +31,7 @@ import java.util.Locale;
 /**
  * 通用异常处理。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-27
  */
 @Component

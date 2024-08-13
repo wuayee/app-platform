@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 为 Bean 提供可用范围的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-30
  */
 public enum BeanApplicableScope implements Comparable<BeanApplicableScope> {

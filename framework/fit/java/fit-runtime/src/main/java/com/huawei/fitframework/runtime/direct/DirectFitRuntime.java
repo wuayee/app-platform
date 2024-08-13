@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  * 为 FIT 运行时提供直接调用启动场景的实现。
  * <p>直接调用启动指的是在 IDEA 中运行启动。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-07
  */
 public final class DirectFitRuntime extends AbstractFitRuntime {

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 根据store_id从app_builder_app获取waterFlow部分信息的格式
  *
- * @author 陈潇文 c00816135
+ * @author 陈潇文
  * @since 2024-05-15
  */
 @Data

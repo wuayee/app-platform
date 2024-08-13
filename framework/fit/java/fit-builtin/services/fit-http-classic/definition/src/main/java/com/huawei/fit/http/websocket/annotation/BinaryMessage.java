@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示 WebSocket 收到的消息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-10
  */
 @Documented

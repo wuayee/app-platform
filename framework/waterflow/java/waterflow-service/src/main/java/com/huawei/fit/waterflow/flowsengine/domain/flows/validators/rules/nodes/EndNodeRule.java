@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowN
 /**
  * 借宿节点校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class EndNodeRule implements NodeRule {

@@ -11,7 +11,7 @@ import java.time.Duration;
 /**
  * 为时间间隔提供工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-11
  */
 public class DurationUtils {

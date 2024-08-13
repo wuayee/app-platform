@@ -51,7 +51,7 @@ import java.util.function.Consumer;
 /**
  * 表示流式调用的调用器。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-08
  */
 public class WebsocketInvoker implements WebSocketClassicListener, WebSocketInvokeRequester {

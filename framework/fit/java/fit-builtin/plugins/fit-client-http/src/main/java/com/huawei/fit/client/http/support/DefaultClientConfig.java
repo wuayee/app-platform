@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示配置项 {@code 'client.http'} 下的配置。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-03-18
  */
 @Component

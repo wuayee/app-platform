@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * 自定义序列化器, 解决Jackson序列化别名问题
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-02-26
  */
 @Component("AippJacksonObjectSerializer")

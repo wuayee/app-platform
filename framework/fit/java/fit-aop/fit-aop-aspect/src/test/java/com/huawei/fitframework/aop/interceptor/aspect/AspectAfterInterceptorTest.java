@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 /**
  * {@link AspectAfterInterceptor} 单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-23
  */
 @DisplayName("测试 AspectAfterInterceptor")

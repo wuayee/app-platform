@@ -10,8 +10,8 @@ import com.huawei.fitframework.util.ObjectUtils;
 /**
  * 为泛服务及其实现提供版本信息。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-11-13
  */
 public interface Version {
@@ -47,7 +47,7 @@ public interface Version {
     /**
      * 为 {@link Version} 提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-11-13
      */
     interface Builder {

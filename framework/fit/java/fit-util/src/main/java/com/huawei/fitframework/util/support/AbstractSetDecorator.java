@@ -15,7 +15,7 @@ import java.util.Set;
  * 为 {@link Set} 提供空的装饰器。
  *
  * @param <T> 表示集合中元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-11-05
  */
 public abstract class AbstractSetDecorator<T> implements Set<T> {

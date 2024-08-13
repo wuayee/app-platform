@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * {@link MessageHeaders} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-11
  */
 @DisplayName("测试 MessageHeaderNames")

@@ -17,8 +17,8 @@ import java.nio.charset.Charset;
 /**
  * 为对 {@code .zip} 格式文件的操作提供基类。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-10-05
  */
 public abstract class AbstractZip<T extends AbstractZip<?>> {

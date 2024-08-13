@@ -82,7 +82,7 @@ import java.util.stream.Collectors;
 /**
  * 流程定义核心测试类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/22
  */
 @DisplayName("流程实例在内存中运行测试集合")

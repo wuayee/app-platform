@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 为操作记录提供 REST 风格 API。
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2024-01-03
  */
 @Component

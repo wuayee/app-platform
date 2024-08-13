@@ -31,7 +31,7 @@ import java.util.zip.ZipEntry;
 /**
  * 表示 {@link ZipOrJarTypeFileValidator} 的测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 @DisplayName("测试 Jar 文件的校验功能")

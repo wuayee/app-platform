@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 表示 {@link CronExpressionParser} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-02
  */
 public class DefaultCronExpressionParser implements CronExpressionParser {

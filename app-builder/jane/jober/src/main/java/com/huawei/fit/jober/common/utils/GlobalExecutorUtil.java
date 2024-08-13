@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 全局异常处理工具类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/12
  */
 public class GlobalExecutorUtil {

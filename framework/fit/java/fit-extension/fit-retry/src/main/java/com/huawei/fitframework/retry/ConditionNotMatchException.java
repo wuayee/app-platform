@@ -7,7 +7,7 @@ package com.huawei.fitframework.retry;
 /**
  * 表示重试条件不满足的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-17
  */
 public class ConditionNotMatchException extends RetryException {

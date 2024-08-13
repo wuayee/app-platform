@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * 表示任务实例变更消息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public class InstanceChanged extends InstanceMessage {

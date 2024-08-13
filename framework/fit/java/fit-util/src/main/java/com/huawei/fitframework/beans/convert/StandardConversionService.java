@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 表示 {@link ConversionService} 的标准实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-25
  */
 public class StandardConversionService extends AbstractConversionService {

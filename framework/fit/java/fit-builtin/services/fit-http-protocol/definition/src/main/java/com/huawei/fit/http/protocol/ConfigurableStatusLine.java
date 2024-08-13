@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.support.DefaultStatusLine;
 /**
  * 表示可修改的 Http 响应的状态行。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-27
  */
 public interface ConfigurableStatusLine extends StatusLine {

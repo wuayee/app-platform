@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 为 {@link MapBuilder} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class MapBuilderTest {

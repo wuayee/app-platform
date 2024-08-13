@@ -11,7 +11,7 @@ import com.huawei.fitframework.transaction.support.DefaultTransactionMetadataBui
 /**
  * 为事务提供元数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-22
  */
 public interface TransactionMetadata {

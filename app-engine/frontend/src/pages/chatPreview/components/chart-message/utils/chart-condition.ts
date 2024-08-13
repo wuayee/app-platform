@@ -1,4 +1,6 @@
 import { casecadeMap, conditionMap, compareMap } from '../common/condition';
+import { uniqBy } from 'lodash';
+import { getOptionNodes } from '@shared/http/aipp';
 
 let jsonArray = [];
 let hierarchy = [];
@@ -158,8 +160,8 @@ function merge(a, b) {
 
   return result;
 };
- // 数字转换为日期字符串
- export const numToDate = (num) => {
+// 数字转换为日期字符串
+export const numToDate = (num) => {
   if (num) {
     try {
       let dateArr = num.toString().split('');
@@ -186,4 +188,80 @@ export const formatterLabel = (data) => {
   }
   const option = data.options.find((item) => data.value === item.value);
   return option.label;
-}
+};
+// 根据级联获取字段已选择的选项值
+/**
+ * @param {any} casecadeMap - 列表对应中文名称以及prop映射
+ * @param {string} formData - 初始请求数据
+ * @param {any} currentItem - 请求数据后的值
+ */
+const getSelectedCascade = (casecadeMap: any, formData: string, currentItem: any) => {
+  const curIndex = casecadeMap[currentItem.belongs]?.findIndex((cas: any) => {
+    return cas.prop === currentItem.prop;
+  });
+  const parentsField = casecadeMap[currentItem.belongs]?.slice(0, curIndex);
+  const arrOptions: any = [];
+  const formDataVal = JSON.parse(formData);
+  parentsField?.forEach((item: any) => {
+    const val = formDataVal[currentItem.category][item.prop];
+    if (val) {
+      arrOptions.push({
+        label: item.label,
+        isIn: Object.keys(val)[0] === 'in',
+        names: Object.values(val).flat(1),
+      });
+    }
+  });
+  return arrOptions;
+};
+// 获取下拉
+/**
+ * @param {string} val - 下拉列表变化时获取的值
+ * @param {any} allFields - 所有下拉列表初始值
+ * @param {any} casecadeMap - 列表对应中文名称以及prop映射
+ * @param {any} category - 筛选的值参数category
+ * @param {string} formData - 初始请求数据
+ * @param {any} belongsMap - 财务指标belongs映射
+ * @param {never[]} value - 通过后端接口查询时，获取的下拉列表初始值
+ */
+export const getOptionsLabel = async (
+  val: string,
+  allFields: any[],
+  casecadeMap: any,
+  category: any,
+  formData: string,
+  belongsMap: any,
+  value: never[]
+) => {
+  const aimItem = allFields.find((item) => item.label === val);
+  const aimItemProp = casecadeMap[aimItem?.belongs]?.find((val: any) => val.prop === aimItem.prop);
+  const aimCas = aimItem?.belongs && JSON.parse(JSON.stringify(aimItemProp));
+  let currentItem = JSON.parse(JSON.stringify(aimItem));
+  currentItem.category = category;
+  currentItem.operator = 'in';
+  currentItem.value = value;
+  currentItem.belongs = aimItem?.belongs;
+  currentItem.belongsTo = aimItem?.belongs;
+  currentItem.options = aimItem?.options;
+  currentItem.fullLabel = aimCas?.label;
+  currentItem.prop = aimItem?.prop;
+  if (currentItem?.belongs) {
+    let type = currentItem?.belongsTo === '财务指标' ? belongsMap['DSPL'] : currentItem.belongsTo;
+    const data = {
+      queryLabel: currentItem.fullLabel,
+      type: type,
+      conditions: getSelectedCascade(casecadeMap, formData, currentItem),
+    };
+    const res = await getOptionNodes(data);
+    if (res.code == 0) {
+      currentItem.options = res?.data?.map((val: any) => {
+        return {
+          label: val?.name,
+          value: val?.name,
+        };
+      });
+      currentItem.options = uniqBy(currentItem.options, 'label');
+    }
+  }
+  return currentItem;
+};

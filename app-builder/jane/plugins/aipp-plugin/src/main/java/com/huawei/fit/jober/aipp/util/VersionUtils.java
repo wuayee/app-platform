@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.util;
 /**
  * 版本号的工具类
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-02
  */
 public class VersionUtils {

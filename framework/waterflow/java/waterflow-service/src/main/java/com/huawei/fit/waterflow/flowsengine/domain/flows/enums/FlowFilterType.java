@@ -22,7 +22,7 @@ import java.util.Arrays;
 /**
  * 流程定义过滤器类型
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @Getter

@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Bean 的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-02-07
  */
 public class BeanUtils {

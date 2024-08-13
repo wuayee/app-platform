@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 默认用户对象
  *
- * @author l00815032
+ * @author 梁济时
  * @since 2023-11-20
  */
 class DefaultUser implements User {

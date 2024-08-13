@@ -11,7 +11,7 @@ import com.huawei.fit.http.header.support.DefaultHeaderValue;
 /**
  * 表示消息头中值的信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-04
  */
 public interface HeaderValue {

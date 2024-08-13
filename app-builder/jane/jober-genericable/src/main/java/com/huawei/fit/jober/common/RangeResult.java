@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 批量返回相关统计信息。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-29
  */
 public class RangeResult {

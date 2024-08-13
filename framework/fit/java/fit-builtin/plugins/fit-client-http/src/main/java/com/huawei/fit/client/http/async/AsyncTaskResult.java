@@ -12,8 +12,8 @@ import com.huawei.fitframework.serialization.ResponseMetadata;
  * FIT 异步任务执行结果，封装 {@link com.huawei.fit.http.client.HttpClassicClientResponse} 和 {@link ResponseMetadata}。
  * <p>任务执行完毕后，长轮询线程会读取 HTTP 头部并进行解析，而消息体的读取会在客户端调用线程处完成。</p>
  *
- * @author 王成 w00863339
- * @author 季聿阶 j00559309
+ * @author 王成
+ * @author 季聿阶
  * @since 2023-11-17
  */
 class AsyncTaskResult {

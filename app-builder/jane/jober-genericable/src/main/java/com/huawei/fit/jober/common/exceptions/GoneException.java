@@ -10,7 +10,7 @@ import com.huawei.fit.jober.entity.OperationContext;
 /**
  * 错误资源地址异常类
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-15 14:01
  */
 public class GoneException extends JobberException {

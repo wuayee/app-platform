@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 为 {@link FitRuntime} 提供元数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-12
  */
 public interface FitRuntimeMetadata extends PluginMetadata {

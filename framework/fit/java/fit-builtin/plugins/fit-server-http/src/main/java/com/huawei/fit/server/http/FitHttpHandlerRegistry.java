@@ -22,7 +22,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * FIT 通信方式的处理器的注册器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-14
  */
 @Component

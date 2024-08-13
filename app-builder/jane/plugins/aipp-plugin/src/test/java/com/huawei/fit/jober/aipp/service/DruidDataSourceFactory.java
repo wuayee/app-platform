@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 /**
  * 为测试构造的Druid数据源及配置初始化类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023-12-08
  */
 public class DruidDataSourceFactory implements DataSourceFactory {

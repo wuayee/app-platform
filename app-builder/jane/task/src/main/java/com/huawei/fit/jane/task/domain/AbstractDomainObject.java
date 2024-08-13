@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * 为 {@link DomainObject} 的实现提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-12
  */
 public abstract class AbstractDomainObject implements DomainObject {

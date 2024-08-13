@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * 为 {@link ValueConverter} 提供内置转换程序的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-27
  */
 public final class BuiltinValueConverters {

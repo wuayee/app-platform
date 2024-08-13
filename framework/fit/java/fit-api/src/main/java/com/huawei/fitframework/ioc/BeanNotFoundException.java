@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 当所期望的Bean不存在时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class BeanNotFoundException extends IocException {

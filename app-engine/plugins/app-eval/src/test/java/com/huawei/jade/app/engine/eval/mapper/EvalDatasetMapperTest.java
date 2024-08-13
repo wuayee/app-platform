@@ -182,4 +182,20 @@ public class EvalDatasetMapperTest {
         assertThat(entity).hasFieldOrPropertyWithValue("name", name);
         assertThat(entity).hasFieldOrPropertyWithValue("description", desc);
     }
+
+    @Test
+    @Sql(scripts = "sql/test_create_dataset.sql")
+    @DisplayName("修改数据集名字成功")
+    void shouldOKWhenUpdateEvalDatasetDescAndName1() {
+        String name = "datasetName1";
+        Long id = 1L;
+        EvalDatasetPo evalDatasetPo = new EvalDatasetPo();
+        evalDatasetPo.setName(name);
+        evalDatasetPo.setId(id);
+
+        this.evalDatasetMapper.updateEvaldataset(evalDatasetPo);
+        EvalDatasetEntity entity = this.evalDatasetMapper.getEvalDatasetById(id);
+        assertThat(entity).hasFieldOrPropertyWithValue("name", name);
+        assertThat(entity).hasFieldOrPropertyWithValue("description", "desc1");
+    }
 }

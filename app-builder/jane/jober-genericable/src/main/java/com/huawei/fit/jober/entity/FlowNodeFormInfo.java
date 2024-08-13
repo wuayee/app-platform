@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity;
 /**
  * 节点上的表单信息
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/14
  */
 public class FlowNodeFormInfo {

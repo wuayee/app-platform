@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示任务树中的节点。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  */
 @Data

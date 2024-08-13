@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 为 {@link TaskInstance} 提供层次化结构。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-11
  */
 public interface HierarchicalTaskInstance extends TaskInstance {

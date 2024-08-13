@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 当序列化或反序列化过程失败时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-05
  */
 @ErrorCode(SerializationException.CODE)

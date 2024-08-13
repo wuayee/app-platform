@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * aipp instance展示类.
  *
- * @author z00559346
+ * @author 张越
  * @since 2024-05-15
  */
 @Builder

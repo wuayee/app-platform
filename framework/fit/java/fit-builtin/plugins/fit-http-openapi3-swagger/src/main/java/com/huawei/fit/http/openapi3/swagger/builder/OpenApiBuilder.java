@@ -13,7 +13,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 /**
  * 表示 {@link OpenApi} 的构建器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-23
  */
 public class OpenApiBuilder implements EntityBuilder<OpenApi> {

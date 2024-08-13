@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 用于表示方法执行前的通知。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-07
  */
 @Retention(RetentionPolicy.RUNTIME)

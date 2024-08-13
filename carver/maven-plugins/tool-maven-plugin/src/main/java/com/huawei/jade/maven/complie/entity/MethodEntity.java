@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * 表示 {@link ToolMethod} 注解下的方法实体。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-13
  */
 public class MethodEntity {

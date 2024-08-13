@@ -15,7 +15,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * 表示构建启动程序的任务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-30
  */
 @Mojo(name = "package-launcher", defaultPhase = LifecyclePhase.PACKAGE,

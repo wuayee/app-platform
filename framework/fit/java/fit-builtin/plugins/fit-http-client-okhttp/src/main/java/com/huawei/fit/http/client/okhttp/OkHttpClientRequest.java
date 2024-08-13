@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示 {@link ClientRequest} 的使用 OkHttp 实现。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-04-09
  */
 public class OkHttpClientRequest implements ClientRequest {

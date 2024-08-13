@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 /**
  * 为 {@link Tree} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-10
  */
 final class DefaultTree implements Tree {

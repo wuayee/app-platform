@@ -15,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 /**
  * 参数测试模型类。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-24
  */
 @DisplayName("参数测试模型类")

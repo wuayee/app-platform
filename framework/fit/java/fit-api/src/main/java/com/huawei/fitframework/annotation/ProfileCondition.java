@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Condition} 提供用以匹配 {@code Profile} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-15
  */
 public final class ProfileCondition implements Condition {

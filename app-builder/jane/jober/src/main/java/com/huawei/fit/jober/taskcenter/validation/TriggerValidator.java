@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 /**
  * 为任务属性触发器提供校验器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-18
  */
 public interface TriggerValidator {

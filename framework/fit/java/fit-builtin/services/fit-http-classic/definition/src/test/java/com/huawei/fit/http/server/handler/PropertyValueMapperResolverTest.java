@@ -22,7 +22,7 @@ import javax.swing.text.html.parser.Entity;
 /**
  * 表示 {@link PropertyValueMapperResolver} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-21
  */
 @DisplayName("测试 PropertyValueMapperResolver 类")

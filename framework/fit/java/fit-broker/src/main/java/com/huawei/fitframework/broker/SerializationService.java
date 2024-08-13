@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 为序列化程序提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-12
  */
 public interface SerializationService {

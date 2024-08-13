@@ -16,7 +16,7 @@ import java.util.Collection;
 /**
  * 为类目变化提供通知程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public interface CategoryChangedNotifier extends Runnable {

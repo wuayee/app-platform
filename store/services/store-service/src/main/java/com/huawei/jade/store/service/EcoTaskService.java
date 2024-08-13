@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 任务的服务接口类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-06
  */
 public interface EcoTaskService {

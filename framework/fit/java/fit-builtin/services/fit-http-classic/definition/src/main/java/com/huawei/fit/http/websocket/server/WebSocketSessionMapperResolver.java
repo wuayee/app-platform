@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示 {@link WebSocketSessionMapper} 的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-10
  */
 public class WebSocketSessionMapperResolver implements PropertyValueMapperResolver {

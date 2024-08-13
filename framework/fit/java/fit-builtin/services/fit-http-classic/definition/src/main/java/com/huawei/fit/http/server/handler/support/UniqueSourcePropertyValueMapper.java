@@ -19,7 +19,7 @@ import java.util.Map;
  * 表示单一来源的 {@link PropertyValueMapper}。
  * <p>{@link UniqueSourcePropertyValueMapper} 会将数据从指定数据源取出，然后设置到指定的位置，并做简单的数组转换。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 public class UniqueSourcePropertyValueMapper implements PropertyValueMapper {

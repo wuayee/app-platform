@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * {@link AppNameVersionUtils} 的测试类
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2021-11-30
  */
 public class AppNameVersionUtilsTest {

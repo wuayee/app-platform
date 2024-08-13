@@ -8,7 +8,7 @@ package com.huawei.fitframework.util.wildcard;
  * 为元素匹配提供结果。
  *
  * @param <T> 表示元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-28
  */
 public interface Result<T> extends Matcher<T> {

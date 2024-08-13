@@ -7,7 +7,7 @@ package com.huawei.fitframework.transaction;
 /**
  * 当不支持事务但启动了事务时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-24
  */
 public class TransactionUnsupportedException extends TransactionException {

@@ -10,7 +10,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 /**
  * 为任务属性被取消索引的事件提供数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-09
  */
 public class TaskPropertyUnindexedEvent extends TaskPropertyEvent {

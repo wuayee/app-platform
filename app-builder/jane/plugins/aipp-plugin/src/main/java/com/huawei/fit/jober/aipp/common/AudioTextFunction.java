@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * 音频提取文本接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024/1/19
  */
 @FunctionalInterface

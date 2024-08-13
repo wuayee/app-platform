@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 流程配置信息
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/10/24
  */
 @NoArgsConstructor

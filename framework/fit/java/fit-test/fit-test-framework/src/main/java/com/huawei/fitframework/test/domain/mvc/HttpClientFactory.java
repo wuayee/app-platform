@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 为模拟的 MVC 所使用的 http 客户端提供工厂。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-04-09
  */
 public class HttpClientFactory {

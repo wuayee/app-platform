@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * task表的数据访问层的Mapper接口
  *
- * @author 梁致强 l50033199
+ * @author 梁致强
  * @since 2023-08-08
  */
 public interface TaskMapper {

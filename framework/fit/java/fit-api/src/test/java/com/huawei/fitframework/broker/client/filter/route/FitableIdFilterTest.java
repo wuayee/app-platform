@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * {@link FitableIdFilter} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-03-05
  */
 @DisplayName("验证指定泛服务实现唯一标识的路由的过滤器")

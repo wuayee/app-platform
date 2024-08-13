@@ -9,7 +9,7 @@ import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 /**
  * 表示 Http 调用的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-21
  */
 public class HttpExecutionException extends ScriptExecutionException {

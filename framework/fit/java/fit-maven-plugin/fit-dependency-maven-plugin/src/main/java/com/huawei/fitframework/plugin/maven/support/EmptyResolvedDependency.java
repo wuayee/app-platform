@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * 为 {@link ResolvedDependency} 提供空实现。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-10-10
  */
 public class EmptyResolvedDependency implements ResolvedDependency {

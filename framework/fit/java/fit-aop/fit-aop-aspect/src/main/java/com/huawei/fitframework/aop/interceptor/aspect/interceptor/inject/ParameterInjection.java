@@ -10,7 +10,7 @@ import com.huawei.fitframework.aop.interceptor.MethodPointcut;
 /**
  * 方法参数的注入信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-19
  */
 public class ParameterInjection {

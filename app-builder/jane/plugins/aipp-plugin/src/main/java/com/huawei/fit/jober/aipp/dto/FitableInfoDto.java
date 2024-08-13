@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * fitable信息
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-04-24
  */
 @Builder

@@ -15,7 +15,7 @@ import java.util.List;
  * 异步化节点间操作
  * 辉子 2020-05-15
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public interface FlowContextMessenger {

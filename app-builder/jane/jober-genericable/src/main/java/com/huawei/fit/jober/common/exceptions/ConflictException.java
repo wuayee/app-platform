@@ -10,7 +10,7 @@ import com.huawei.fit.jober.entity.OperationContext;
 /**
  * 表示状态冲突异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-17
  */
 public class ConflictException extends JobberException {

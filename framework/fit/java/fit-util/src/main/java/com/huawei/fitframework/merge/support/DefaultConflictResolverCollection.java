@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * {@link ConflictResolverCollection} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-31
  */
 public class DefaultConflictResolverCollection implements ConflictResolverCollection {

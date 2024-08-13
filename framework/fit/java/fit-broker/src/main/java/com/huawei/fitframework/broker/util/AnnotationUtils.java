@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * 为 {@link Genericable} 和 {@link Fit} 注解提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-08-21
  */
 public class AnnotationUtils {

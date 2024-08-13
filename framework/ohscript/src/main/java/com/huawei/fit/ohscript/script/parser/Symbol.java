@@ -14,8 +14,8 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Nod
  * name is basically the terminal or non-terminal name, except NonTerminal.
  * IGNORE could have different name with format:  ***'
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since  2023-05-01
  */
 public class Symbol<T extends NodeType> {
     /**

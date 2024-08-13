@@ -7,7 +7,7 @@ package com.huawei.jade.app.engine.knowledge.dto.enums;
 /**
  * 索引类型
  *
- * @author l30025118
+ * @author 罗帅
  * @version eService 24.0.0
  * @since 2024/5/23
  */

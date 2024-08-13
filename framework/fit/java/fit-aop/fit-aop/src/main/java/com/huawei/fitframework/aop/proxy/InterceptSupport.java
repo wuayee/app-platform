@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 表示拦截事件支持信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-04
  */
 public interface InterceptSupport {

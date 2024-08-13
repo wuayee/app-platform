@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * runtimeInfo 领域对象
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-07-29
  */
 @EqualsAndHashCode(callSuper = true)

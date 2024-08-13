@@ -7,7 +7,7 @@ package com.huawei.fit.jane.common.response;
 /**
  * 错误码接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-2-2
  */
 public interface ErrorCode {

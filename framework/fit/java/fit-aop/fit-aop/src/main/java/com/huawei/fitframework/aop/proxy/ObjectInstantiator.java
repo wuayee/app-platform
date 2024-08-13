@@ -8,7 +8,7 @@ package com.huawei.fitframework.aop.proxy;
  * 任意对象生成器。
  *
  * @param <T> 表示待实例化对象的类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-10
  */
 public interface ObjectInstantiator<T> {

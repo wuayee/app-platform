@@ -19,7 +19,7 @@ import java.util.function.BinaryOperator;
 /**
  * 表示调用上下文。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-29
  */
 public interface InvocationContext {

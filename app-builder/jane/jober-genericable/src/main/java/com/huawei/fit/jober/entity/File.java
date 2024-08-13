@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity;
 /**
  * File
  *
- * @author lwx1301876
+ * @author 梁子涵
  * @since 2024/01/10
  */
 public class File {

@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 表达式解析器。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-14
  */
 public interface ExpressionParser {

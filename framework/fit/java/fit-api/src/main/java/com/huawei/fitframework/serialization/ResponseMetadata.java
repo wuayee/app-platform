@@ -9,7 +9,7 @@ import com.huawei.fitframework.serialization.support.DefaultResponseMetadata;
 /**
  * 为远端服务调用提供返回值元数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-27
  */
 public interface ResponseMetadata {
@@ -68,7 +68,7 @@ public interface ResponseMetadata {
     /**
      * 为 {@link ResponseMetadata} 提供构建器。
      *
-     * @author 季聿阶 j00559309
+     * @author 季聿阶
      * @since 2021-05-14
      */
     interface Builder {

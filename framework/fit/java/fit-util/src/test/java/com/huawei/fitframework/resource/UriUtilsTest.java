@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 表示 {@link UriUtils} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-23
  */
 @DisplayName("测试 UriUtils")

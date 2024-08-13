@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@link HttpClassicServerRequest} 的组装器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 @ChannelHandler.Sharable

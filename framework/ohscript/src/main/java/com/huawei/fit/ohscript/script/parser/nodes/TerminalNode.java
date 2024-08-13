@@ -29,8 +29,8 @@ import java.util.Objects;
  * 语法树中的终结节点
  * means it is a leaf node
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public class TerminalNode extends SyntaxNode implements Serializable {
     private static final long serialVersionUID = 2942191759739959915L;

@@ -11,7 +11,7 @@ import lombok.Getter;
 /**
  * 映射配置节点
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/18
  */
 @AllArgsConstructor

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 流程重试日志核心类型
  * 主要负责记录和跟踪流程实例执行过程中产生的异常重试日志
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2024/02/07
  */
 @Getter

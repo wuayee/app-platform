@@ -13,7 +13,7 @@ import com.huawei.fitframework.model.RangedResultSet;
 /**
  * 为操作记录提供管理
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-17 10:40
  */
 public interface OperationRecordService {

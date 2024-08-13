@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link OrderBy} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-21
  */
 class DefaultOrderBy implements OrderBy {

@@ -9,7 +9,7 @@ import com.huawei.fit.waterflow.common.ErrorCodes;
 /**
  * 错误请求异常类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 1.0
  */
 public class BadRequestException extends WaterflowException {

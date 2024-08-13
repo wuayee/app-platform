@@ -19,7 +19,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * app-websocket流式接口.
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-23
  */
 @WebSocketEndpoint(path = "/v1/api/ws/{tenant_id}/app/{app_id}")

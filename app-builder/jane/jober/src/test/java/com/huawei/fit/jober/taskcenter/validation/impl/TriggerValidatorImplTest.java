@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link TriggerValidatorImpl}对应测试类。
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-06 13:39
  */
 class TriggerValidatorImplTest {

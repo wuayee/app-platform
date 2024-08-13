@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * {@link ThreadFactory} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-25
  */
 public class DefaultThreadFactory implements ThreadFactory {

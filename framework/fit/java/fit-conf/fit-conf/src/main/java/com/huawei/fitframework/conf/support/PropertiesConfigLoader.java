@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * 为 {@link Properties} 格式的配置提供加载程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-19
  */
 public class PropertiesConfigLoader extends AbstractConfigLoader {

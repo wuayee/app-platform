@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 为 {@link BeanInjector} 提供基于配置的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-06
  */
 public class ConfigBeanInjector implements BeanInjector {

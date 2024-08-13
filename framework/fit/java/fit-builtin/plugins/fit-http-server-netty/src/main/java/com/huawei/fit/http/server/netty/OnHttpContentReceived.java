@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * 表示收到 Http 请求的内容的事件。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public interface OnHttpContentReceived {

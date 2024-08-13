@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 表示不可变的元组。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-14
  */
 public interface Tuple {

@@ -18,7 +18,7 @@ import com.huawei.fitframework.broker.client.Router;
  * </ol>
  * </p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-08-16
  */
 @Genericable

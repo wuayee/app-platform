@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 表示任务模板
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-04
  */
 public interface TaskTemplate extends DomainObject {
@@ -59,7 +59,7 @@ public interface TaskTemplate extends DomainObject {
     /**
      * 为任务模板提供构建器
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-04
      */
     interface Builder extends DomainObject.Builder<TaskTemplate, TaskTemplate.Builder> {
@@ -108,7 +108,7 @@ public interface TaskTemplate extends DomainObject {
     /**
      * 为任务模板提供声明
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-04
      */
     interface Declaration {
@@ -144,7 +144,7 @@ public interface TaskTemplate extends DomainObject {
         /**
          * 为任务模板声明提供构建器
          *
-         * @author yWX1299574
+         * @author 姚江
          * @since 2023-12-04
          */
         interface Builder {
@@ -201,7 +201,7 @@ public interface TaskTemplate extends DomainObject {
     /**
      * 为 {@link TaskTemplate} 提供数据库存储能力
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-04
      */
     interface Repo {

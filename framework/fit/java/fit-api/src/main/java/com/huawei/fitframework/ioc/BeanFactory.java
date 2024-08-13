@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.Disposable;
 /**
  * 为 Bean 提供工厂。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public interface BeanFactory extends Disposable {

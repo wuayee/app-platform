@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * {@link ByteBuddyAopProxyFactory} 的单元测试。
  *
- * @author 詹高扬 z50029227
+ * @author 詹高扬
  * @since 2022-08-30
  */
 @DisplayName("测试 ByteBuddyAopProxyFactory 类")

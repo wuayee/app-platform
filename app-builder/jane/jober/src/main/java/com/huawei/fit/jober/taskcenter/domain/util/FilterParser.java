@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 为 {@link Filter} 提供解析器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public interface FilterParser {
@@ -30,7 +30,7 @@ public interface FilterParser {
     /**
      * 声明一个过滤器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-12
      */
     @Target(ElementType.TYPE)

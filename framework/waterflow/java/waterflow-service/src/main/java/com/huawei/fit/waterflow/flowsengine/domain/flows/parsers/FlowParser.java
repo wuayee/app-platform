@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
  * 流程定义JSON解析器
  * 负责解析JSON类型的流程数据
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @Component

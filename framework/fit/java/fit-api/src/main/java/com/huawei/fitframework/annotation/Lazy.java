@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 指示指定的 Bean 在使用时才会被加载。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-29
  */
 @Documented

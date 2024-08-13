@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * 为 {@link InstanceEvent} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-09
  */
 public class DefaultInstanceEvent implements InstanceEvent {

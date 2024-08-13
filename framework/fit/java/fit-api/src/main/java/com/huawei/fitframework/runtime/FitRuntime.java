@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * 为FIT应用程序提供运行时环境。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-18
  */
 public interface FitRuntime extends Disposable {

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示 WebSocket 连接开启时的处理方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-09
  */
 @Documented

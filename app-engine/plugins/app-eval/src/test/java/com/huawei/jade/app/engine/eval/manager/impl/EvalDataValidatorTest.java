@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * 表示 {@link EvalDataValidatorImpl} 的测试用例。
  *
- * @author 兰宇晨 l00816134
+ * @author 兰宇晨
  * @since 2024-7-27
  */
 @FitTestWithJunit(includeClasses = EvalDataValidatorImpl.class)

@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
  * </ol>
  * </p>
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-08-18
  */
 public interface BrokerClient {

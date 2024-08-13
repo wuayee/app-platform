@@ -13,7 +13,7 @@ import com.huawei.fit.http.protocol.HttpRequestMethod;
 /**
  * 表示 Http 请求提供建造者。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-08
  */
 public interface RequestBuilder {

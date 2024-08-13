@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link List}{@code <}{@link Tag}{@code >} 的构建器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-23
  */
 public class TagsBuilder extends AbstractBuilder implements EntityBuilder<List<Tag>> {

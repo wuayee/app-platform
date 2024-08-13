@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * 为 {@link List} 提供 {@link NodeList} 的适配器。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 class ListNodeListAdapter implements NodeList {

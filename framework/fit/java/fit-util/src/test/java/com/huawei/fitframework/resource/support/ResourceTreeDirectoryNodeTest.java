@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * {@link ResourceTreeDirectoryNode} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-03-01
  */
 @DisplayName("测试 ResourceTreeDirectoryNode 类以及相关类")

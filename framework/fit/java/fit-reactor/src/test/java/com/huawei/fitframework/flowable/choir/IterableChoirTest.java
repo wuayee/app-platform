@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 表示 {@link IterableChoir} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 @DisplayName("测试 IterableChoir")

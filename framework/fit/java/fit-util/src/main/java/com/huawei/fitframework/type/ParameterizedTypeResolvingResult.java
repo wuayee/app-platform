@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 为参数化类型提供解析结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-05
  */
 public interface ParameterizedTypeResolvingResult {

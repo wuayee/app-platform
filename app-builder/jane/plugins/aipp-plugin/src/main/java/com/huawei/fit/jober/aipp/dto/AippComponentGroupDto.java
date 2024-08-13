@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * 组件分组信息
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/11
  */
 @Builder

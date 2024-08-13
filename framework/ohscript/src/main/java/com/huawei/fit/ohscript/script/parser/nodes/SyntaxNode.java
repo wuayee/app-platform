@@ -29,8 +29,8 @@ import java.util.Optional;
 /**
  * 语法树中的节点，是语法树的基本组成单位。每个节点可以包含子节点，并且可以存储与节点相关的各种信息，例如作用域、返回类型等。
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public abstract class SyntaxNode implements Interpretable, Serializable {
     private static final long serialVersionUID = 6354439108132505522L;

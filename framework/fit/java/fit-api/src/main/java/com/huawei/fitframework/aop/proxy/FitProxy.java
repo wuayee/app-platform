@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop.proxy;
 /**
  * FIT 生成的代理的统一接口，用于提供方便的方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-10
  */
 public interface FitProxy {

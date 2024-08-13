@@ -12,7 +12,7 @@ import java.io.InputStream;
 /**
  * 表示 {@link com.huawei.fit.http.protocol.ReadableMessageBody} 的从 {@link InputStream} 中读取消息体的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class InputStreamReadableMessageBody extends AbstractReadableMessageBody {

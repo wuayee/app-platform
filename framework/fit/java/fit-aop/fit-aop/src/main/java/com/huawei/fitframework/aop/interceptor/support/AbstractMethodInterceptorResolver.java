@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 表示 {@link MethodInterceptorResolver} 的抽象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-13
  */
 public abstract class AbstractMethodInterceptorResolver implements MethodInterceptorResolver {

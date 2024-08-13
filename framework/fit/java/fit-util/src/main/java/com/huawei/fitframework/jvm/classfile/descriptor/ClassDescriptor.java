@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * 为类型提供描述符。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-20
  */
 public abstract class ClassDescriptor {
@@ -52,7 +52,7 @@ public abstract class ClassDescriptor {
     /**
      * 表示基本类型。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-20
      */
     public static final class Primitive extends ClassDescriptor {
@@ -156,7 +156,7 @@ public abstract class ClassDescriptor {
     /**
      * 表示引用类型。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-20
      */
     public static final class Reference extends ClassDescriptor {
@@ -217,7 +217,7 @@ public abstract class ClassDescriptor {
     /**
      * 表示数组类型。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-20
      */
     public static final class Array extends ClassDescriptor {
@@ -267,7 +267,7 @@ public abstract class ClassDescriptor {
     /**
      * 表示 {@code void} 类型。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-20
      */
     public static final class Void extends ClassDescriptor {
@@ -298,7 +298,7 @@ public abstract class ClassDescriptor {
     /**
      * 为 {@link ClassDescriptor} 提供解析程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-20
      */
     public static final class Parser {

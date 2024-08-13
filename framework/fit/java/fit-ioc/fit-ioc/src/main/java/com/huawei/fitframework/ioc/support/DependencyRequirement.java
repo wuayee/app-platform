@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 /**
  * 表示对所需注入的依赖的需求。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-26
  */
 abstract class DependencyRequirement {

@@ -11,7 +11,7 @@ import java.util.Iterator;
  * 为 {@link Enumeration} 提供基于 {@link Iterator} 的适配程序。
  *
  * @param <E> 表示待遍历的元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-20
  */
 public class IteratorEnumerationAdapter<E, T extends E> implements Enumeration<E> {

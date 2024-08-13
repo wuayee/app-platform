@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 表示字段类型的属性值。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-14
  */
 public class FieldValue implements PropertyValue {

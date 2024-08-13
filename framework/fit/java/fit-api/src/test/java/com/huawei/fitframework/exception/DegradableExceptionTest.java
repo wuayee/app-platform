@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link DegradableException} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-24
  */
 @DisplayName("测试 DegradableException 类以及相关类")

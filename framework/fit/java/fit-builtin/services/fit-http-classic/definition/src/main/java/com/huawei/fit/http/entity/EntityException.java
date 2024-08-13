@@ -9,7 +9,7 @@ import com.huawei.fit.http.server.HttpServerException;
 /**
  * 表示消息体相关的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class EntityException extends HttpServerException {

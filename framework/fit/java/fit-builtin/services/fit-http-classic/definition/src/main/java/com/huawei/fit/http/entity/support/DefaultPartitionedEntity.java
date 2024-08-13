@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 表示 {@link PartitionedEntity} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public class DefaultPartitionedEntity extends AbstractEntity implements PartitionedEntity {

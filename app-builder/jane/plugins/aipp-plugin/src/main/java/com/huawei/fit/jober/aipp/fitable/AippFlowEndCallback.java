@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * 流程结束回调节点
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-24
  */
 @Component

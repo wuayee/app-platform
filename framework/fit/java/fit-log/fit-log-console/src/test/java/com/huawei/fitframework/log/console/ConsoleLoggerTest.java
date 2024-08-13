@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link Logger} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2022-12-29
  */
 @DisplayName("测试 Logger 工具类")

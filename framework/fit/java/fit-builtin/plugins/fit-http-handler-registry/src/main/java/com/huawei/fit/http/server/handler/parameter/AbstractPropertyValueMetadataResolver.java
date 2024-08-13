@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 表示 {@link PropertyValueMetadataResolver} 的抽象的 Http 值元数据解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-12
  */
 public abstract class AbstractPropertyValueMetadataResolver implements PropertyValueMetadataResolver {

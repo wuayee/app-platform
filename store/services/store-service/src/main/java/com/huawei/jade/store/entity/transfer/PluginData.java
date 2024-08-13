@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 表示插件的数据内容。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-07-25
  */
 public class PluginData {

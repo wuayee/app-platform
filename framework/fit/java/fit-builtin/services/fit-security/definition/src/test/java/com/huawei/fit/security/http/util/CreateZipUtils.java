@@ -15,7 +15,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * 表示创建 zip 文件的工具。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-25
  */
 public final class CreateZipUtils {

@@ -16,7 +16,7 @@ import java.util.Set;
  * 流程实例状态枚举
  * 注意：增加状态时，修改TRACE_EXCLUSIVE_STATUS_MAP状态互斥表，否则状态更新会异常
  *
- * @author l00853680
+ * @author 刘海洋
  * @since 2023/11/01
  */
 public enum FlowTraceStatus {

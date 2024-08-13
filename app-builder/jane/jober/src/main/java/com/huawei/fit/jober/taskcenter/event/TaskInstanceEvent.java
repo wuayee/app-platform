@@ -12,7 +12,7 @@ import com.huawei.fitframework.event.Event;
 /**
  * 当任务实例事件基类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-11
  */
 public class TaskInstanceEvent implements Event {

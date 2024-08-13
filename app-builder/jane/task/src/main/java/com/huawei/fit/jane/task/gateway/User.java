@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.gateway;
 /**
  * 表示用户。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-17
  */
 public interface User {
@@ -35,7 +35,7 @@ public interface User {
     /**
      * 为用户提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-17
      */
     interface Builder {

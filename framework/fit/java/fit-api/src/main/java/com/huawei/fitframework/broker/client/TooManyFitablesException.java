@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 当可调用服务实现过多时发生的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-08-24
  */
 @ErrorCode(TooManyFitablesException.CODE)

@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 为 DataBus 服务获取用户元数据提供结果。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-05-27
  */
 public interface GetMetaDataResult extends DataBusResult {
@@ -66,7 +66,7 @@ public interface GetMetaDataResult extends DataBusResult {
     /**
      * 为 {@link GetMetaDataResult} 提供表示获取元数据成功的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-05-27
      */
     final class SuccessResult implements GetMetaDataResult {
@@ -107,7 +107,7 @@ public interface GetMetaDataResult extends DataBusResult {
     /**
      * 为 {@link GetMetaDataResult} 提供表示获取元数据失败的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class FailureResult implements GetMetaDataResult {

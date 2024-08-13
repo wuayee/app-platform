@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 为 {@link RandomAccessorSubsection} 提供用以读取子片段的装饰器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-25
  */
 public class RandomAccessorSubsection implements RandomAccessor {

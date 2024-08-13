@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 表示解析完成的依赖。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-10-09
  */
 public interface ResolvedDependency {

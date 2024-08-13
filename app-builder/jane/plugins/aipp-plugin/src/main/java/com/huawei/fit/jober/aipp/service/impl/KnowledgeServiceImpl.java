@@ -19,7 +19,7 @@ import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 /**
  * 知识库服务接口实现
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024-04-23
  */
 @Component

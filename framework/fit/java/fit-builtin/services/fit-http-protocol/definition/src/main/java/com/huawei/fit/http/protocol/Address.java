@@ -11,7 +11,7 @@ import java.net.InetSocketAddress;
 /**
  * 表示 Http 通信地址。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2022-11-21
  */
 public interface Address {

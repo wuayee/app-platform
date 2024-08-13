@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
 /**
  * 根据租户成员信息提供鉴权能力的Aop。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 @Aspect

@@ -14,7 +14,7 @@ import java.util.function.Function;
  * <p>所提供的 {@link Function} 用以为指定键创建缓存对象实例，该缓存对象可通过索引被检索。</p>
  * <p><b>所被缓存的实例应包含其键的强引用，以避免在缓存对象存在期间，其键被回收。</b></p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-09
  */
 public interface WeakCache<K, V> {

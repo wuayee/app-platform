@@ -9,7 +9,7 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 /**
  * form参数异常
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-02-06
  */
 public final class FormParamException extends FormException {

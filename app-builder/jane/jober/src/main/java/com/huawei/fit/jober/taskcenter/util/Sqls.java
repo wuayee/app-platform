@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * 提供 SQL 相关的工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-17
  */
 public final class Sqls {

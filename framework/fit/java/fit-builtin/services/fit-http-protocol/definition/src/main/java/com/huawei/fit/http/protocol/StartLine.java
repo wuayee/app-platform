@@ -7,7 +7,7 @@ package com.huawei.fit.http.protocol;
 /**
  * 表示 Http 报文的起始行。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-11
  */
 public interface StartLine {

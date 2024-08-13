@@ -11,7 +11,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules.Rules;
 /**
  * 不同流程节点回调函数类型校验规则
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/11
  */
 public interface CallbackRule extends Rules {

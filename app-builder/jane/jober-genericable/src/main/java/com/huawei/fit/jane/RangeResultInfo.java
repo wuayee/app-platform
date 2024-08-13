@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 表示分页查询的范围结果信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-07
  */
 public class RangeResultInfo extends RangeInfo {

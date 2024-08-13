@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 表示解析带有 {@link RequestBody} 注解的参数的 {@link PropertyValueMetadataResolver}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-12
  */
 public class RequestBodyMetadataResolver extends AbstractPropertyValueMetadataResolver {

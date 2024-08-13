@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * InstancesCategory修改Genericable。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-30
  */
 public interface OnInstancesCategoryChanged {

@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 流程graph定义
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-10-28
  */
 @Builder

@@ -29,7 +29,7 @@ import java.net.URL;
 /**
  * 为根插件提供离散启动的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-29
  */
 public class DiscreteRootPlugin extends AbstractRootPlugin {

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * 辉子 2019-10-31
  *
  * @param <I> 来源数据类型
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class When<I> extends IdGenerator implements Subscription<I> {

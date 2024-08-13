@@ -19,7 +19,7 @@ import java.util.function.BinaryOperator;
  * 表示 {@link Publisher} 的携带数据合并的实现。
  *
  * @param <T> 表示发布者中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-11
  */
 public class ReducePublisherDecorator<T> implements Publisher<T> {

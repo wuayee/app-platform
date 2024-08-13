@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 映射抽象类功能的测试
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/20
  */
 public class AbstractMappingConverterTest {

@@ -17,7 +17,7 @@ import com.huawei.fitframework.annotation.Value;
 /**
  * {@link TriggerValidator} 的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-18
  */
 @Component

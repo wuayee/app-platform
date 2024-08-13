@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 本地时间反序列化器
  *
- * @author l00498867
+ * @author 李鑫
  * @since 2024-07-27
  */
 public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {

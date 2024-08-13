@@ -11,7 +11,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
 /**
  * 定义 {@link FitRuntime} 中所使用的所有解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-05
  */
 public interface FitRuntimeResolvers {

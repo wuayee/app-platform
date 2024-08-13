@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 带建议的方法拦截器的通用抽象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-11
  */
 public abstract class AbstractAdviceMethodInterceptor extends AbstractMethodInterceptor

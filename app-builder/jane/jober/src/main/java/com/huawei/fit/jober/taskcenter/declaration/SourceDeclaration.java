@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 表示任务数据源的声明。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 @Data

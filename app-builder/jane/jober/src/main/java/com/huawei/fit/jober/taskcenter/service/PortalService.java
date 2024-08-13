@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 为前端调用提供管理。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-17
  */
 public interface PortalService {
@@ -249,7 +249,7 @@ public interface PortalService {
     /**
      * 为任务详情提供有数据的任务树的信息。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-08-30
      */
     @Data

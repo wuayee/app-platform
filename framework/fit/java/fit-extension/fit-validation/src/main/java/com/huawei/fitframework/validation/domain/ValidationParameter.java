@@ -14,7 +14,7 @@ import java.lang.reflect.Parameter;
 /**
  * 校验类型为参数的元数据类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-05-19
  */
 public class ValidationParameter extends AbstractValidationMetadata {

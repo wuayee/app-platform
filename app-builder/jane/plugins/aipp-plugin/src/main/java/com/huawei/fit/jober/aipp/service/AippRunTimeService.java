@@ -13,6 +13,7 @@ import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
+import com.huawei.fit.jober.aipp.vo.MetaVo;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.model.Tuple;
 
@@ -22,7 +23,7 @@ import java.util.Map;
 /**
  * aipp运行时服务层接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-15
  */
 public interface AippRunTimeService {
@@ -60,6 +61,16 @@ public interface AippRunTimeService {
      */
     Tuple createInstanceByApp(String appId, String question, Map<String, Object> businessData,
             OperationContext context, boolean isDebug);
+
+    /**
+     * 查询app对应的metaVo
+     *
+     * @param appId app的id
+     * @param isDebug 是否查询debug阶段的meta
+     * @param context 操作上下文
+     * @return meta的id和version
+     */
+    MetaVo queryLatestMetaVoByAppId(String appId, boolean isDebug, OperationContext context);
 
     /**
      * 指定版本，启动一个流程

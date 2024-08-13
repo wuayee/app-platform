@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示统一资源名称。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  */
 public interface Urn {

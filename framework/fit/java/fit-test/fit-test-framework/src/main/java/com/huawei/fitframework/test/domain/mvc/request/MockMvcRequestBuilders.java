@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.HttpRequestMethod;
 /**
  * 为模拟 MVC 客户端提供请求的构建集合。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-04-09
  */
 public class MockMvcRequestBuilders {

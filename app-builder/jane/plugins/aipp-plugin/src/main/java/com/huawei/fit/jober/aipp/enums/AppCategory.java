@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 应用类型枚举类
  *
- * @author l00498867
+ * @author 李鑫
  * @since 2024/4/23
  */
 @Getter

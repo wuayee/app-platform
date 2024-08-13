@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 表示带优先级的 {@link Genericable} 仓库。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-25
  */
 public class PriorityGenericableRepository implements GenericableRepository {

@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 /**
  * 为 {@link TreeNode} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-10
  */
 final class DefaultTreeNode implements TreeNode {

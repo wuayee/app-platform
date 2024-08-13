@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 /**
  * 表示将对应的缓存删除。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 @Documented

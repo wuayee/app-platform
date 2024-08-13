@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 表示 {@link ConfigurableWebSocketServerContext} 的默认实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-30
  */
 public class DefaultWebSocketServerContext implements ConfigurableWebSocketServerContext {

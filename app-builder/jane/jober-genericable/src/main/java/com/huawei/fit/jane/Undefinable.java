@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 表示支持未定义的值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-14
  */
 public class Undefinable<T> {

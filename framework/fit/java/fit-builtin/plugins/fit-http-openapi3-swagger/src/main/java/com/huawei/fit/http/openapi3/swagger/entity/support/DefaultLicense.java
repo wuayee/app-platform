@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 表示 {@link License} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-23
  */
 public class DefaultLicense implements License {

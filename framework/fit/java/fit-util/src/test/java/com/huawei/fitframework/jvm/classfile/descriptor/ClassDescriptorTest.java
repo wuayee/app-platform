@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * {@link ClassDescriptor} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-01-31
  */
 @DisplayName("测试 ClassDescriptor 类以及子类")

@@ -9,7 +9,7 @@ import com.huawei.fitframework.pattern.builder.BuilderFactory;
 /**
  * 表示文件新增、变化、删除、访问失败等的观察者集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-27
  */
 public interface FileObservers {

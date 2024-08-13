@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 表示 {@link ExceptionInfo} 的默认实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-11
  */
 public class DefaultExceptionInfo implements ExceptionInfo {

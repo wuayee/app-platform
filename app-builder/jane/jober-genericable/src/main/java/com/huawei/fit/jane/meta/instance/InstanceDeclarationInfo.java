@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Meta实例声明信息结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-08
  */
 public class InstanceDeclarationInfo {

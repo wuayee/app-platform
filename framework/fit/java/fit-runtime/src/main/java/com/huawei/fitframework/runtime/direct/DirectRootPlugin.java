@@ -23,7 +23,7 @@ import java.net.URL;
 /**
  * 为根插件提供直接调用启动的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-07
  */
 final class DirectRootPlugin extends AbstractRootPlugin {

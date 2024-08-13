@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 /**
  * 当分布式锁失效时，向外部通知
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/3/21
  */
 public interface InvalidDistributedLockNotify {

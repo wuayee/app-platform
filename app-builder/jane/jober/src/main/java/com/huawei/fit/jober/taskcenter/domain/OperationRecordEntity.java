@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 操作记录实体类
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-17 10:11
  */
 @Data

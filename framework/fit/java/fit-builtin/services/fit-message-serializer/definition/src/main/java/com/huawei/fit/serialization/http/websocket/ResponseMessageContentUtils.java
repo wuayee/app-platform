@@ -15,7 +15,7 @@ import com.huawei.fitframework.util.StringUtils;
  * 表示 WebSocket 通信过程中构造调用结果的工具类。
  * <p>调用结果消息中各字段的标识与 http 调用中请求头以及流式调用消息位于不同通道，与前两者不会产生标识的冲突。</p>
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-17
  */
 public class ResponseMessageContentUtils extends TagValuesChecker {

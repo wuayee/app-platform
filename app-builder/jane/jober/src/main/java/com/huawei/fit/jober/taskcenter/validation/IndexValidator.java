@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation;
 /**
  * 为索引提供校验器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-05
  */
 public interface IndexValidator {

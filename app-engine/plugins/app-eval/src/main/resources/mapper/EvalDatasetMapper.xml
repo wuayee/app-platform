@@ -9,9 +9,9 @@
     </resultMap>
 
     <select id="getSchema" resultType="String">
-        select schema
-        from t_app_engine_eval_dataset
-        where id = #{datasetId}
+        SELECT schema
+        FROM t_app_engine_eval_dataset
+        WHERE id = #{datasetId}
     </select>
 
     <!-- 分页查询数据集元数据 -->
@@ -52,15 +52,15 @@
     </select>
 
     <delete id="deleteById">
-        delete
-        from t_app_engine_eval_dataset
-        where id = #{datasetId}
+        DELETE
+        FROM t_app_engine_eval_dataset
+        WHERE id = #{datasetId}
     </delete>
 
     <delete id="delete">
-        delete
-        from t_app_engine_eval_dataset
-        where id in
+        DELETE
+        FROM t_app_engine_eval_dataset
+        WHERE id IN
         <foreach collection="list" separator="," item="item" open="(" close=")">
             (#{item})
         </foreach>

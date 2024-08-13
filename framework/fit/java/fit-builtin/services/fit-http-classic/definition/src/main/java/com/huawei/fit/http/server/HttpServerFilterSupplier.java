@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 表示 {@link HttpServerFilter} 列表的提供者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-10
  */
 public interface HttpServerFilterSupplier {

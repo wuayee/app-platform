@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.convert.Converter;
 /**
  * 为属性值的转换程序提供缓存。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-28
  */
 public interface ConverterCache {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.util;
 /**
  * 定义常见的换行符。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-11-05
  */
 public enum LineSeparator {

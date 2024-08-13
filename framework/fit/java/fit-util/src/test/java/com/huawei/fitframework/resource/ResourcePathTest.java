@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link ResourcePath} 的单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 @DisplayName("测试 ResourcePath")

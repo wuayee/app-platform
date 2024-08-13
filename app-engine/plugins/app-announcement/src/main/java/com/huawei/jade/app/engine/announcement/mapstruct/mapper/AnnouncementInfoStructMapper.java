@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 公告信息相关类转换接口。
  *
- * @author z00591349
+ * @author 张圆
  * @since 2024-06-18
  */
 @Mapper(uses = LocalDateTimeMapper.class)

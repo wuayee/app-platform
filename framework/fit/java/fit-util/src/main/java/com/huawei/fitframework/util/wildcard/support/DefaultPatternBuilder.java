@@ -14,7 +14,7 @@ import com.huawei.fitframework.util.wildcard.SymbolSequence;
  * 为 {@link PatternBuilder} 提供默认实现。
  *
  * @param <T> 表示模式匹配的元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 public class DefaultPatternBuilder<T> implements PatternBuilder<T> {

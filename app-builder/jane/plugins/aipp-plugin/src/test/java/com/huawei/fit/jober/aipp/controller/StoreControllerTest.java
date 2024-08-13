@@ -36,7 +36,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 {@link StoreController} 的测试类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-08-02
  */
 @MvcTest(classes = {StoreController.class})

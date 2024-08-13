@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 为 {@link CharSequencePattern} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 public class DefaultCharSequencePattern extends DefaultPattern<Character> implements CharSequencePattern {

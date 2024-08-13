@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * 表示类路径信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public final class DefaultClassPath implements ClassPath {

@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 /**
  * {@link InterceptSupport} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-18
  */
 public class DefaultInterceptSupport implements InterceptSupport {

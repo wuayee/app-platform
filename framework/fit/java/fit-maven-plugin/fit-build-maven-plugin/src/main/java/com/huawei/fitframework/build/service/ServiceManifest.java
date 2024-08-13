@@ -17,7 +17,7 @@ import java.io.OutputStream;
 /**
  * 表示服务信息的清单。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-19
  */
 public class ServiceManifest extends AbstractManifest {

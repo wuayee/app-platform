@@ -8,7 +8,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows;
  * 除了waterflow自身的驱动，waterflow允许外部数据实现InterStream接口
  * 给waterflow响应式灌入外部数据
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/02/17
  */
 public interface InterStream<T> {

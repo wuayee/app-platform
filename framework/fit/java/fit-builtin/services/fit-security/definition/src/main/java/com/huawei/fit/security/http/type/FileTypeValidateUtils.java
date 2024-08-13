@@ -23,7 +23,7 @@ import java.util.Locale;
 /**
  * 为文件内容校验提供工具方法。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-24
  */
 public final class FileTypeValidateUtils {

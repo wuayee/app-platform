@@ -14,7 +14,7 @@ import java.util.Stack;
 /**
  * 为 {@link Iterator} 提供文件的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-01
  */
 public class FileIterator implements Iterator<File> {

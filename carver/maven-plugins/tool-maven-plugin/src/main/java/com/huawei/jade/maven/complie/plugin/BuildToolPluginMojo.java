@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 表示编译工具插件的任务。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-13
  */
 @Mojo(name = "build-tool", defaultPhase = LifecyclePhase.COMPILE,

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * store的jober解析
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/5/8
  */
 public class StoreJoberParser implements JoberParser {

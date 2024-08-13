@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 为 {@link URLStreamHandler} 提供 JAR 协议的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-25
  */
 public class Handler extends URLStreamHandler {

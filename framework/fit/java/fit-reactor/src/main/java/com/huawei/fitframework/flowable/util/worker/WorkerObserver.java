@@ -10,7 +10,7 @@ import com.huawei.fitframework.flowable.Subscription;
  * 表示 {@link Worker} 接收到待消费元素、异常终结信号或正常终结信号时的观察者。
  *
  * @param <T> 表示数据类型的 {@link T}。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 public interface WorkerObserver<T> {

@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 为 {@link DefaultTuple} 提供单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-01-31
  */
 @DisplayName("测试 DefaultTuple 工具类")

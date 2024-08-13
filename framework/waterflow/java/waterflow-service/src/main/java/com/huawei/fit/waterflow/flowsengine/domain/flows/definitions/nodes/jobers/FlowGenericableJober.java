@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 支持genericable调用的任务
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/22
  */
 public class FlowGenericableJober extends FlowJober {
@@ -75,7 +75,7 @@ public class FlowGenericableJober extends FlowJober {
     /**
      * genericable的配置信息
      *
-     * @author s00558940
+     * @author 宋永坦
      * @since 2024/4/22
      */
     @Builder

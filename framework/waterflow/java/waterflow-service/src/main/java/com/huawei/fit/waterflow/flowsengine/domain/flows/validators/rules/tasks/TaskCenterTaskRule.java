@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 任务中心人工任务校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/09/25
  */
 public class TaskCenterTaskRule implements TaskRule {

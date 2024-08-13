@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * 为类加载程序提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-01
  */
 public abstract class AbstractClassLoader extends URLClassLoader {

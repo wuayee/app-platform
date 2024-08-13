@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 应用构建器配置类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-16
  */
 @EqualsAndHashCode(callSuper = true)

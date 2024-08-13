@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 /**
  * 应用历史记录的返回 Dto 对象。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-06-07
  */
 @Builder

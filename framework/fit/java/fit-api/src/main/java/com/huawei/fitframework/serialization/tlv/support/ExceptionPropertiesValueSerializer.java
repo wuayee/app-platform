@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * 表示 {@link ValueSerializer} 的异常的属性集的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-20
  */
 public class ExceptionPropertiesValueSerializer implements ValueSerializer<Map<String, String>> {

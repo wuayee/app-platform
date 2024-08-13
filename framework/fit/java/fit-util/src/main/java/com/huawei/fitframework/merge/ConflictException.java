@@ -7,7 +7,7 @@ package com.huawei.fitframework.merge;
 /**
  * 表示冲突的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 public class ConflictException extends RuntimeException {

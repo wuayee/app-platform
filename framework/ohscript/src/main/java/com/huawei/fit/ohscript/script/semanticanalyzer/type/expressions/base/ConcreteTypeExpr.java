@@ -10,7 +10,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
  * provides base class for concrete type expressions.
  * 基本类型表达式
  *
- * @author 张群辉 z00544938
+ * @author 张群辉
  * @since 1.0
  */
 public abstract class ConcreteTypeExpr extends TypeExpr {

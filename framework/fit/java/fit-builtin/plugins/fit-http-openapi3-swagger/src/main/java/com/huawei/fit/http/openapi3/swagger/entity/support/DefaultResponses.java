@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link Responses} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-27
  */
 public class DefaultResponses implements Responses {

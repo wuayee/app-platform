@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 /**
  * 解析文件所依赖 Maven 项的接口类。
  *
- * @author l00298979
+ * @author 梁济时
  * @since 2020-10-10
  */
 public interface DependencyResolver {

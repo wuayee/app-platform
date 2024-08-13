@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * 表示访问文件失败的观察者。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-26
  */
 @FunctionalInterface

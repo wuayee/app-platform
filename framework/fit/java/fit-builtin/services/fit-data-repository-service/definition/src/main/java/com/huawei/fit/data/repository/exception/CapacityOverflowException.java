@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 表示容量溢出发生的异常。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-24
  */
 @ErrorCode(0x7FF00000)

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * The DefaultArtifactDownloader
  *
- * @author c00572808
+ * @author 陈镕希
  * @since 2020/12/26
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -63,7 +63,7 @@ public class DefaultArtifactDownloader implements ArtifactDownloader {
     /**
      * 为 {@link ArtifactDownloader.Builder} 提供默认实现。
      *
-     * @author 陈镕希 00572808
+     * @author 陈镕希
      * @since 2020-12-26
      */
     public static class Builder implements ArtifactDownloader.Builder {

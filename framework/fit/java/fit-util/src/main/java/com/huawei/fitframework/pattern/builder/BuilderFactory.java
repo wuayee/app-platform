@@ -116,8 +116,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @param <O> 表示待构建的对象的类型的 {@link O}。
  * @param <B> 表示待构建的对象的构建器类型的 {@link B}。
- * @author l00815032 梁济时
- * @author j00559309 季聿阶
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-06-22
  */
 public class BuilderFactory<O, B> {

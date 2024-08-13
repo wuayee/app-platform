@@ -17,7 +17,7 @@ import java.util.ServiceLoader;
 /**
  * 表示 AOP 代理的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-04
  */
 public interface AopProxyFactory {

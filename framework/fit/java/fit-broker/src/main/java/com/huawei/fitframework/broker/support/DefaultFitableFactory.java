@@ -17,7 +17,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 /**
  * 表示 {@link FitableFactory} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-24
  */
 public class DefaultFitableFactory implements FitableFactory {

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示 Http 调用的执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-21
  */
 @FunctionalInterface

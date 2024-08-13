@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * {@link HttpClassicClient} 的实现类
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-20
  */
 public class HttpClassicClientImplement implements HttpClassicClient {

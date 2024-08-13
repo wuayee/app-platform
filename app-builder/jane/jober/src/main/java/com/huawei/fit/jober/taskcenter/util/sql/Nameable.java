@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 表示可命名的对象。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-11
  */
 public interface Nameable {

@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  *
  * @param <K> 表示键的类型的 {@link K}。
  * @param <V> 表示值的类型的 {@link V}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-05
  */
 public class DefaultMultiValueMap<K, V> extends AbstractMap<K, List<V>> implements MultiValueMap<K, V> {

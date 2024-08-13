@@ -10,7 +10,7 @@ import com.huawei.fitframework.annotation.Property;
 /**
  * 表示教育信息。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-06-15
  */
 public class Education {

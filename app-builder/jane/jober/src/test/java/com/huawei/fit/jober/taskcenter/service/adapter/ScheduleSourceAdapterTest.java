@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * {@link ScheduleSourceAdapter}对应测试类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-15
  */
 @ExtendWith(MockitoExtension.class)

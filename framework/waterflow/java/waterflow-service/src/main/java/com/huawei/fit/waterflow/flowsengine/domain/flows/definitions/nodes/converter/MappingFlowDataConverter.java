@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 基于映射关系的数据转换
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/17
  */
 public class MappingFlowDataConverter implements FlowDataConverter {

@@ -12,7 +12,7 @@ import com.huawei.fit.waterflow.domain.parsers.FlowGraphData;
 /**
  * 通用型回调函数解析类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 1.0
  */
 public class GeneralCallbackParser implements CallbackParser {

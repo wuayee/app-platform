@@ -24,8 +24,8 @@ import java.util.List;
 /**
  * Http 协议相关的工具类。
  *
- * @author 季聿阶 j00559309
- * @author 邬涨财 w00575064
+ * @author 季聿阶
+ * @author 邬涨财
  * @since 2022-07-22
  */
 public class HttpUtils {

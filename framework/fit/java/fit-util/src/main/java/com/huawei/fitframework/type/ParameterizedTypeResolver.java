@@ -23,7 +23,7 @@ import java.util.function.Function;
 /**
  * 为参数化类型提供解析程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-04
  */
 public final class ParameterizedTypeResolver {

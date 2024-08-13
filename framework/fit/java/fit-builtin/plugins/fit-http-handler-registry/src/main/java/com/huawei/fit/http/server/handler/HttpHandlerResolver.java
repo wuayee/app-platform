@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示 Http 处理器的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-30
  */
 public interface HttpHandlerResolver {

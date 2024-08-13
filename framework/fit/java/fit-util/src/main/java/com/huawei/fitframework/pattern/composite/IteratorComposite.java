@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  * 为迭代器提供组合。
  *
  * @param <T> 表示迭代器中元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public class IteratorComposite<T> implements Iterator<T> {

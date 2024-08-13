@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * naive RAG 组件实现
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024-04-15
  */
 @Component

@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link TaskProperty} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-09
  */
 class DefaultTaskProperty extends AbstractDomainObject implements TaskProperty {

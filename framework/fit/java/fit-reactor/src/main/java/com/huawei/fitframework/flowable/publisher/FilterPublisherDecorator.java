@@ -17,7 +17,7 @@ import java.util.function.Predicate;
  * 表示 {@link Publisher} 的携带数据过滤的实现。
  *
  * @param <T> 表示发布者中待过滤数据的类型。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 public class FilterPublisherDecorator<T> implements Publisher<T> {

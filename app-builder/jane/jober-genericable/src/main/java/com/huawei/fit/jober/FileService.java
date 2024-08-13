@@ -12,7 +12,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 文件存储服务Genericable。
  *
- * @author lwx1301876
+ * @author 梁子涵
  * @since 2024-01-04
  */
 public interface FileService {

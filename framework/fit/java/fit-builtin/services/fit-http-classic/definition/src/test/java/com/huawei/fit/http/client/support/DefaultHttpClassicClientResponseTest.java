@@ -40,7 +40,7 @@ import java.util.Optional;
 /**
  * 为 {@link DefaultHttpClassicClientResponse} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-16
  */
 @DisplayName("测试 DefaultHttpClassicClientResponse 类")

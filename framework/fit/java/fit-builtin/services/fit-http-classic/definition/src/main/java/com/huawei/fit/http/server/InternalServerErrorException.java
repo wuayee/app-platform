@@ -9,7 +9,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 /**
  * 表示服务器内部的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-17
  */
 public class InternalServerErrorException extends HttpServerResponseException {

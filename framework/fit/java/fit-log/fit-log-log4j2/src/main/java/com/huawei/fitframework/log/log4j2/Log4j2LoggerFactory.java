@@ -20,7 +20,7 @@ import org.apache.logging.log4j.spi.LoggerContext;
 /**
  * 表示 {@link LoggerFactory} 的 Log4j2 的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-14
  */
 public class Log4j2LoggerFactory implements LoggerFactory {

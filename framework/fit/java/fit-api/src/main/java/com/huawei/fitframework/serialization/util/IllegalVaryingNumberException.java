@@ -7,7 +7,7 @@ package com.huawei.fitframework.serialization.util;
 /**
  * 当可变长度的数字无效时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-13
  */
 public class IllegalVaryingNumberException extends RuntimeException {

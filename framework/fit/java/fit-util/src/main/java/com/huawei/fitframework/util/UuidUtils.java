@@ -11,8 +11,8 @@ import java.util.UUID;
 /**
  * 为唯一通用识别码（Universally Unique Identifier）提供工具方法。
  *
- * @author 梁济时 j00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public final class UuidUtils {

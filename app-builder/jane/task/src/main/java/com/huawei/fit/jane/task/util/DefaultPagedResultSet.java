@@ -16,7 +16,7 @@ import java.util.Objects;
  * 为 {@link PagedResultSet} 提供默认实现。
  *
  * @param <T> 表示分页结果集中包含数据记录的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-12
  */
 class DefaultPagedResultSet<T> implements PagedResultSet<T> {

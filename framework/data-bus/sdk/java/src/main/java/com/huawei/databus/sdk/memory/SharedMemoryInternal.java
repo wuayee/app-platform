@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 共享内存抽象，在SDK内部使用
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024/3/25
  */
 public class SharedMemoryInternal implements SharedMemory {

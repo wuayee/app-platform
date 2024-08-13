@@ -15,8 +15,8 @@ import java.lang.annotation.Target;
 /**
  * 用于 FIT 泛服务的定义。
  *
- * @author 张群辉 z00544938
- * @author 季聿阶 j00559309
+ * @author 张群辉
+ * @author 季聿阶
  * @since 2020-01-18
  */
 @Documented

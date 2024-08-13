@@ -15,8 +15,8 @@ import java.io.Serializable;
  * start: the start column of the lexeme in source code
  * end: the end column of the lexeme in the source code
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public class Token implements Serializable {
     private static final long serialVersionUID = 4293840596528932667L;

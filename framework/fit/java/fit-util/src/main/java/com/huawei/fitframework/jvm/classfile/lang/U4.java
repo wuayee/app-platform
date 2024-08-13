@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 /**
  * 为 JVM 提供4字节的数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class U4 implements Comparable<U4> {

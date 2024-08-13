@@ -18,7 +18,7 @@ import java.io.InputStream;
 /**
  * 表示注解的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-29
  */
 public final class AnnotationInfo {

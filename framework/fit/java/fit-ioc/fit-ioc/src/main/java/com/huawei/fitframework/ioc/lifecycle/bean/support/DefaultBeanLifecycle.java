@@ -15,7 +15,7 @@ import com.huawei.fitframework.ioc.lifecycle.bean.BeanLifecycle;
 /**
  * 为 {@link BeanLifecycle} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class DefaultBeanLifecycle implements BeanLifecycle {

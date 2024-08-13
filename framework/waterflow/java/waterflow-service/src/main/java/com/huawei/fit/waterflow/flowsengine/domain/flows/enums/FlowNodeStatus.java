@@ -12,7 +12,7 @@ import java.util.Set;
  * 流程实例节点状态
  * 状态流转顺序：NEW -> PENDING(停留在EVENT边上) -> READY(进入到节点) -> PROCESSING(开始处理) -> ARCHIVED(处理完成)
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public enum FlowNodeStatus {

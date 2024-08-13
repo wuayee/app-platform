@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
 /**
  * LLM 组件实现
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024/4/15
  */
 @Component

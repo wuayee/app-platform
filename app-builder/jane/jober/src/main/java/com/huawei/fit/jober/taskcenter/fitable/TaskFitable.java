@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * {@link TaskService}的实现类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-29
  */
 @Alias("Jane-Task")

@@ -11,7 +11,7 @@ import com.huawei.fit.http.openapi3.swagger.entity.support.DefaultTag;
  * 表示 <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#tag-object">OpenAPI
  * 3.1.0</a> 文档中的标签信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-22
  */
 public interface Tag extends Serializable {

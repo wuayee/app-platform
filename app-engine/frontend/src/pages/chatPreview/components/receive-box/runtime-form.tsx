@@ -16,6 +16,7 @@ const RuntimeForm = (props) => {
   const dispatch = useAppDispatch();
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
   const questions = []
   const saveCallBack = (response) => {
     dispatch(setFormReceived(true));
@@ -39,7 +40,7 @@ const RuntimeForm = (props) => {
         />
         break;
       case 'questionClar':
-        return <QuestionClar data={props.formConfig} mode={props.formConfig.type} />
+        return <QuestionClar dataDimension={dataDimension} data={props.formConfig} mode={props.formConfig.type} />
         break;
       case 'conditionForm':
         return <ConditionForm

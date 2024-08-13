@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 为标签提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-14
  */
 public interface TagService {

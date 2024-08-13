@@ -14,7 +14,7 @@ import java.util.Enumeration;
 /**
  * 表示 {@link ClassLoaderPackageScanner} 的插件类加载的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-01
  */
 public class PluginClassLoaderScanner extends ClassLoaderPackageScanner {

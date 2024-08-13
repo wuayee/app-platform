@@ -18,7 +18,7 @@ import java.util.Locale;
 /**
  * 流程数据转换器的类型
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/17
  */
 @Getter

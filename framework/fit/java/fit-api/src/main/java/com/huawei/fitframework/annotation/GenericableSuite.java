@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 用于 FIT {@link Genericable 泛服务} 的集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-02-22
  */
 @Documented

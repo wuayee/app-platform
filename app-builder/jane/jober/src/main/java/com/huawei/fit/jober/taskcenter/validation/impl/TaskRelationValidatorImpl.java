@@ -18,7 +18,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 功能描述
  *
- * @author 罗书强 lwx1291633
+ * @author 罗书强
  * @since 2024-01-02
  */
 @Component

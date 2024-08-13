@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * aipp实例历史记录服务接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 public interface AippLogService {

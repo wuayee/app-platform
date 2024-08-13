@@ -8,7 +8,7 @@ package com.huawei.fitframework.merge;
  * 表示合并器。
  *
  * @param <V> 表示待合并元素类型的 {@link V}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 public interface Merger<V> {

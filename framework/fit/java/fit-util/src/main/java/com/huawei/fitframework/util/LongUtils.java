@@ -7,8 +7,8 @@ package com.huawei.fitframework.util;
 /**
  * 为 {@code long} 提供工具方法。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public final class LongUtils {

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * 任务属性触发器Service管理。
  *
- * @author w30020313
+ * @author 王伟
  * @since 2023-08-08
  */
 @Component

@@ -49,7 +49,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Authorization.Repo} 提供基于 {@code Postgresql} 数据库的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-27
  */
 @Component

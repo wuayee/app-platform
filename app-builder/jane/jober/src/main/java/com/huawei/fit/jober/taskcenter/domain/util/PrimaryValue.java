@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 表示主键的值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-28
  */
 public interface PrimaryValue {

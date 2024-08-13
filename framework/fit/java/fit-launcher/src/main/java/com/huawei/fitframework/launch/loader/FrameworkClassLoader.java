@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * 为FIT框架提供类加载程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-29
  */
 public class FrameworkClassLoader extends AbstractClassLoader {

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 /**
  * tianzhou专属返回体包装。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-24
  */
 public class View {

@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * 用于监视目录下的文件变化。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-26
  */
 public interface DirectoryMonitor {

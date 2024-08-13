@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 插件的 Http 请求的服务层实现。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-07-25
  */
 @Component

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 表示一个插入语句。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public interface InsertSql {

@@ -27,6 +27,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.vo.MetaVo;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Property;
@@ -42,7 +43,7 @@ import java.util.Map;
 /**
  * Aipp运行时管理接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-08
  */
 @Component
@@ -325,5 +326,22 @@ public class AppRunTimeController extends AbstractController {
         RuntimeData runtimeData =
                 this.aippFlowRuntimeInfoService.getRuntimeData(aippId, version, instanceId, ctx).orElse(null);
         return Rsp.ok(runtimeData);
+    }
+
+    /**
+     * 根据appid查询对应的aippid和版本号
+     *
+     * @param httpRequest 请求上下文
+     * @param tenantId 租户id
+     * @param appId app的id
+     * @param isDebug 是否查询debug阶段的aipp信息
+     * @return 返回表示meta信息的 {@link Rsp}{@code <}{@link MetaVo}{@code >}
+     */
+    @GetMapping(value = "/app/{app_id}/aipp", description = "查询app对应的aipp信息")
+    public Rsp<MetaVo> queryLatestMetaVoByAppId(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
+            @RequestParam(value = "isDebug", defaultValue = "false", required = false) Boolean isDebug) {
+        OperationContext ctx = this.contextOf(httpRequest, tenantId);
+        return Rsp.ok(this.aippRunTimeService.queryLatestMetaVoByAppId(appId, isDebug, ctx));
     }
 }

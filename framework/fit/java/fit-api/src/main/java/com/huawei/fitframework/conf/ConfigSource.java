@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 为配置提供数据来源。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-25
  */
 public interface ConfigSource {

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 为归档件提供位置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-16
  */
 public interface JarLocation {
@@ -105,7 +105,7 @@ public interface JarLocation {
     /**
      * 为 {@link JarEntryLocation} 提供构建程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-07
      */
     interface Builder {

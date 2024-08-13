@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * 表示从 {@link ResponseStatus} 注解中获取响应状态的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-11
  */
 public class FitHttpResponseStatusResolver implements HttpResponseStatusResolver {

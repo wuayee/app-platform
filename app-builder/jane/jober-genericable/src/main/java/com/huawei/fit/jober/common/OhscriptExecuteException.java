@@ -7,7 +7,7 @@ package com.huawei.fit.jober.common;
 /**
  * ohscript调用fitable接口异常
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/12/20
  */
 public class OhscriptExecuteException extends JoberGenericableException {

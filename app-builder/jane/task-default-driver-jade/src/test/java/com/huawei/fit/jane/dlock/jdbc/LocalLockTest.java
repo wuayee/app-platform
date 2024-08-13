@@ -30,7 +30,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * 分布式锁中的本地锁应用测试类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023/12/01
  */
 @DisplayName("分布式锁中的本地锁应用测试集合")

@@ -12,8 +12,8 @@ import java.lang.reflect.Type;
 /**
  * 为 Bean 的依赖提供信息。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-05-10
  */
 public interface BeanDependency {

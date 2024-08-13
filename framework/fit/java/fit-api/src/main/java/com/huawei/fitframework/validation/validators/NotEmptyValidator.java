@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 表示 {@link NotEmpty} 约束的校验器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-08
  */
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, Object> {

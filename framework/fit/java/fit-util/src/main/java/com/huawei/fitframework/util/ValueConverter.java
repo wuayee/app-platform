@@ -14,8 +14,8 @@ import java.util.function.Function;
 /**
  * 为配置值的类型转换提供工具方法。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-08-26
  */
 public class ValueConverter {

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 流程运行时数据发布者.
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024-05-23
  */
 public interface NodeRuntimeDataPublisher {

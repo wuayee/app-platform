@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 为数据获取提供结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-11
  */
 public class InstanceFetchingResult {

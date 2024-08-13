@@ -9,7 +9,7 @@ import AddWaterFlow from './add-waterflow-drawer';
 import '../styles/tool-modal.scss';
 import { Message } from '@shared/utils/message';
 import CreateWorkflow from './create-workflow';
-import { getMyPlugin, getPlugins } from '../../../shared/http/plugin';
+import { getMyPlugin, getPluginTools } from '../../../shared/http/plugin';
 import { useAppSelector } from '../../../store/hook';
 import { PluginTypeE } from './model';
 
@@ -91,7 +91,7 @@ const ToolDrawer = (props) => {
     if (listType.current === PluginTypeE.MARKET) {
       activeKey.length ? null : delete params.includeTags;
       let excludeTagsStr = modalType ? 'excludeTags=App&excludeTags=WATERFLOW' : 'excludeTags=App';
-      res = await getPlugins(params, excludeTagsStr);
+      res = await getPluginTools(params, excludeTagsStr);
     } else {
       let params = { pageNum, pageSize };
       modalType ? params.tag = 'FIT' : '';

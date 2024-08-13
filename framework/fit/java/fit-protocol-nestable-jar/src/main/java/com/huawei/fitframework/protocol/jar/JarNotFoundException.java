@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 /**
  * 当 JAR 不存在时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-17
  */
 public class JarNotFoundException extends FileNotFoundException {

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表单服务
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-19
  */
 public interface AppBuilderFormService {

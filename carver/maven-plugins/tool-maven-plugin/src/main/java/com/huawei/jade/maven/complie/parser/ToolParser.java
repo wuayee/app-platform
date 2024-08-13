@@ -11,7 +11,7 @@ import java.nio.file.Path;
 /**
  * 工具解析接口。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-28
  */
 public interface ToolParser {

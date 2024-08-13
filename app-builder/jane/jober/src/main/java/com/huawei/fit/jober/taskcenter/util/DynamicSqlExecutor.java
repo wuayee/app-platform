@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 为动态 SQL 提供执行程序。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-07-24
  */
 public interface DynamicSqlExecutor {

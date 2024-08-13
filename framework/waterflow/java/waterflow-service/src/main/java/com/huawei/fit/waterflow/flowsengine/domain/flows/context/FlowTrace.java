@@ -20,7 +20,7 @@ import java.util.Set;
  * 流程实例Trace日志核心类型
  * 主要负责记录和跟踪流程实例执行过程中产生的流程链路日志
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @Getter

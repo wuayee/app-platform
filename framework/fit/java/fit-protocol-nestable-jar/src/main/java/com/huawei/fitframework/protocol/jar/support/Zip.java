@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 /**
  * 用以解析 ZIP 格式的数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-15
  */
 final class Zip implements Enumerable<Zip.FileHeader> {
@@ -68,7 +68,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
     /**
      * 为中心目录提供包含的文件头信息的枚举程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-15
      */
     private final class FileHeaderEnumerator implements Enumerator<FileHeader> {
@@ -100,7 +100,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
     /**
      * 为 JAR 的中心目录提供结束记录。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-16
      */
     private static final class EndRecord {
@@ -246,7 +246,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
     /**
      * 表示中心目录中的文件头信息。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-19
      */
     static final class FileHeader {
@@ -440,7 +440,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
         /**
          * 为中心目录文件头提供额外数据。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2022-09-19
          */
         private static final class Extra {
@@ -469,7 +469,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
         /**
          * 为额外数据的条目提供枚举程序。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2022-09-19
          */
         private static final class ExtraEnumerator implements Enumerator<Extra> {
@@ -503,7 +503,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
         /**
          * 为中心目录的文件头提供 ZIP64 额外数据。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2022-09-19
          */
         private static final class Zip64 {
@@ -554,7 +554,7 @@ final class Zip implements Enumerable<Zip.FileHeader> {
     /**
      * 表示以 MS-DOS 格式存储的日期时间信息。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-19
      */
     private static final class MsDosDateTime {

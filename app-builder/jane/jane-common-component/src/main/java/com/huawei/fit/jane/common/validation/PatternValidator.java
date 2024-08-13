@@ -9,7 +9,7 @@ import com.huawei.fitframework.validation.ConstraintValidator;
 /**
  * The PatternValidator
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-14
  */
 public class PatternValidator implements ConstraintValidator<Pattern, String> {

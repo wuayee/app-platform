@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * 当分布式锁失效时，向外部通知
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/3/21
  */
 @Component

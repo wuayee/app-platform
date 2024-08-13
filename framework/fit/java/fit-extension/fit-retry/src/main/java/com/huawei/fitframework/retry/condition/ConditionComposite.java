@@ -10,7 +10,7 @@ import com.huawei.fitframework.retry.Condition;
 /**
  * 表示任务执行的组合条件。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-02-25
  */
 public class ConditionComposite implements Condition {

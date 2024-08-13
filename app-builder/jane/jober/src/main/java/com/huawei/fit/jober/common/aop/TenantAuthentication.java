@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 租户权限校验注解
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 @Target(METHOD)

@@ -9,7 +9,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 天舟相关接口
  *
- * @author y00693950
+ * @author 晏钰坤
  * @since 2024/5/31
  */
 public interface TzPromptWordSplicingAppTool {

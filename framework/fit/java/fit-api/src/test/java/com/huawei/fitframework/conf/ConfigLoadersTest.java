@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * {@link ConfigLoaders} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-15
  */
 @DisplayName("测试 ConfigLoaders 类")

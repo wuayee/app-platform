@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 获取类型所实现的接口的列表。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class InterfaceList implements Iterable<U2> {

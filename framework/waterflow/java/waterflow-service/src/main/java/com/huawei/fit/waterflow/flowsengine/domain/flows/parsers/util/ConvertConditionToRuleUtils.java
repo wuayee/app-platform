@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * 转换条件为规则的工具类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-05-13
  */
 public class ConvertConditionToRuleUtils {

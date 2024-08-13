@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * AppBuilderRuntimeInfoRepository 实现类.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-07-29
  */
 @Component

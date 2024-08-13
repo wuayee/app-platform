@@ -10,7 +10,7 @@ import java.sql.SQLException;
 /**
  * 为事务提供隔离级别的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-22
  */
 public enum TransactionIsolationLevel {

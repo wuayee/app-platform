@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 /**
  * 为数据统计提供 REST 风格 API。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-01-08
  */
 @Component("JaneStatisticsController")

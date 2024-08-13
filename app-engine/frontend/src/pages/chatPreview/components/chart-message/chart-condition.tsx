@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { Button, Popover } from 'antd';
 import { ChatContext } from '@/pages/aippIndex/context';
@@ -71,21 +70,17 @@ const ChartCondition = (props) => {
   }
   // 表单确定
   const handleSave = (data) => {
-    const formatData = data.operator ? { [data.operator]: data.value } : data.value
+    const formatData = data.operator ? { [data.operator]: data.value } : data.value;
     if (!data.category) {
       formData.current[data.prop] = formatData;
       formSetValue();
       return;
     }
-    formData.current[data.category][data.prop] = JSON.parse(
-      JSON.stringify(formatData)
-    );
+    formData.current[data.category][data.prop] = JSON.parse(JSON.stringify(formatData));
     formSetValue();
     // 重置其他字段
     if (data.belongs) {
-      const aimIndex = casecadeMap[data.belongs].findIndex(
-        (item) => item.prop === data.prop
-      );
+      const aimIndex = casecadeMap[data.belongs].findIndex((item) => item.prop === data.prop);
       const lowerCascade = casecadeMap[data.belongs].slice(aimIndex + 1);
       const totalFd = [...filter1, ...filter2];
       lowerCascade.forEach((fd) => {
@@ -125,9 +120,9 @@ const ChartCondition = (props) => {
   }
   const handleRemove = (item) => {
     if (item.category) {
-      delete formData.current[item.category][item.prop]
+      delete formData.current[item.category][item.prop];
     } else {
-      delete formData.current[item.prop]
+      delete formData.current[item.prop];
     }
     formSetValue();
   }
@@ -153,48 +148,64 @@ const ChartCondition = (props) => {
       formSetValue();
     }
   }, [dimension]);
-  return <>
-    <div className='condition-ctn'>
-      <div className='cdt-title'>条件和维度</div>
-      <div className='cdt-filters'>
-        { filter1.length > 0 && filter1.map(item => {
-            return <div className='cdt-tag' key={item.label}>
-              { !item.hide && 
-                <ConditionItems 
-                  filterItem={item} 
-                  formData={data.dsl} 
-                  disabled={isDisabled} 
-                  save={handleSave}
-                  remove={handleRemove}
-                />
-              }
-            </div>
-          })
-        }
-        { filter1.length > 0 && <AddCondition getFormData={getFormData} conditions={filter1} save={handleSave}/> }
-        { filter2.length > 0 &&  <div className='divider'></div> }
-        { filter2.length > 0 && filter2.map(item => {
-            return <div className='cdt-tag second-tag' key={item.label}>
-              { !item.hide && 
-                <ConditionItems 
-                  filterItem={item} 
-                  formData={data.dsl} 
-                  disabled={isDisabled} 
-                  save={handleSave}
-                  remove={handleRemove}
-                /> }
-            </div>
-        }) }
-        { filter2.length > 0 && <AddCondition getFormData={getFormData} conditions={filter2} save={handleSave}/> }
+  return (
+    <>
+      <div className='condition-ctn'>
+        <div className='cdt-title'>条件和维度</div>
+        <div className='cdt-filters'>
+          {filter1.length > 0 &&
+            filter1.map((item: any) => {
+              return (
+                <div className='cdt-tag' key={item.label}>
+                  {!item.hide && (
+                    <ConditionItems
+                      filterItem={item}
+                      formData={getFormData}
+                      disabled={isDisabled}
+                      save={handleSave}
+                      remove={handleRemove}
+                      conditions={filter1}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          {filter1.length > 0 && (
+            <AddCondition getFormData={getFormData} conditions={filter1} save={handleSave} />
+          )}
+          {filter2.length > 0 && <div className='divider'></div>}
+          {filter2.length > 0 &&
+            filter2.map((item: any) => {
+              return (
+                <div className='cdt-tag second-tag' key={item.label}>
+                  {!item.hide && (
+                    <ConditionItems
+                      filterItem={item}
+                      formData={data.dsl}
+                      disabled={isDisabled}
+                      save={handleSave}
+                      remove={handleRemove}
+                      conditions={filter2}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          {filter2.length > 0 && (
+            <AddCondition getFormData={getFormData} conditions={filter2} save={handleSave} />
+          )}
+        </div>
+        {!showCheck && (
+          <div className='cdt-toolbar'>
+            <Button onClick={handleReset}>重置</Button>
+            <Button type='primary' onClick={handleConfirm}>
+              确定
+            </Button>
+          </div>
+        )}
       </div>
-      { !showCheck && 
-        <div className='cdt-toolbar'>
-          <Button onClick={handleReset}>重置</Button>
-          <Button type='primary' onClick={handleConfirm}>确定</Button>
-        </div> 
-      }
-    </div>
-  </>
+    </>
+  );
 };
 
 export default ChartCondition;

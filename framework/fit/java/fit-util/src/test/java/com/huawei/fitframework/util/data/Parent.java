@@ -7,7 +7,7 @@ package com.huawei.fitframework.util.data;
 /**
  * 测试用测试父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-02-24
  */
 public class Parent {}

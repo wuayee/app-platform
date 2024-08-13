@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 /**
  * 为对象类型和期望类型都为 {@link ParameterizedType} 的情况提供匹配判定程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 @MatchTypes(current = ParameterizedType.class, expected = ParameterizedType.class,
@@ -80,7 +80,7 @@ public class ParameterizedTypeMatcher extends AbstractTypeMatcher<ParameterizedT
     /**
      * 为创建 {@link ParameterizedTypeMatcher} 实例提供工厂。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-29
      */
     public static class Factory implements TypeMatcher.Factory {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 当加载配置失败时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-25
  */
 public class ConfigLoadException extends RuntimeException {

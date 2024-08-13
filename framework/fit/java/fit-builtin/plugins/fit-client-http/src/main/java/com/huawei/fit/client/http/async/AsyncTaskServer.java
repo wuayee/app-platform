@@ -45,8 +45,8 @@ import java.util.concurrent.TimeUnit;
  * 通信服务器端抽象，封装了长轮询线程的实现细节。
  * <p>客户端对相同服务器端（相同的 workerId 和 workerInstanceId 的二元组）的调用都会使用同一服务器对象查询结果。</p>
  *
- * @author 王成 w00863339
- * @author 季聿阶 j00559309
+ * @author 王成
+ * @author 季聿阶
  * @since 2023-11-17
  */
 class AsyncTaskServer {

@@ -19,7 +19,7 @@ import com.huawei.fitframework.resource.UrlUtils;
 /**
  * 表示 {@link HttpClassicRequest} 的抽象实现类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-23
  */
 public abstract class AbstractHttpClassicRequest extends AbstractHttpMessage implements HttpClassicRequest {

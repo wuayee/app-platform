@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 获取简历之后的memory
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-04-21
  */
 @Component

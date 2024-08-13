@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 节点信息
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/14
  */
 public class FlowNodeInfo {

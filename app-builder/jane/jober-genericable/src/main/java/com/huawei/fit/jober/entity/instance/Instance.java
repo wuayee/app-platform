@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 表示任务实例。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-09-08
  */
 public class Instance {

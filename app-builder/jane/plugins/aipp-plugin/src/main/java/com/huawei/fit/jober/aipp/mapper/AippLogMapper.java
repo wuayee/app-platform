@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * aipp实例历史记录db接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 public interface AippLogMapper {

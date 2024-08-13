@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * 表示缓存的键。
  * <p><b>注意：所有该接口的实现，必须实现合适的 {@link #equals(Object)} 和 {@link #hashCode()} 方法。</b></p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public interface CacheKey {

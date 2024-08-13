@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 /**
  * Meta多版本 {@link MetaService} 的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-20
  */
 @Alias("Jane-MultiVersionMeta")

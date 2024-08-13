@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * 为 {@link TypeMatcher} 提供基于分发的组合模式实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 public class TypeMatcherDispatcher implements TypeMatcher {

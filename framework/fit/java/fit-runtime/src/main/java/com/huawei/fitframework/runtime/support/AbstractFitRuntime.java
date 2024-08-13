@@ -62,7 +62,7 @@ import java.util.Set;
 /**
  * 为 {@link FitRuntime} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-31
  */
 public abstract class AbstractFitRuntime extends AbstractDisposable implements FitRuntime {

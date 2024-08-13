@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 定义需要扫描的包。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-08
  */
 @Documented

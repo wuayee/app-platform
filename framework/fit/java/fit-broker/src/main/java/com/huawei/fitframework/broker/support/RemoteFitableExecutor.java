@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link FitableExecutor} 的远程调用实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-28
  */
 public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {

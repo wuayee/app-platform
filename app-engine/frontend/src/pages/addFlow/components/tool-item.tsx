@@ -6,7 +6,7 @@ import { getToolList } from "@shared/http/aipp";
 import ToolModal from './tool-modal';
 import '../styles/tool-item.scss';
 import { PluginTypeE } from './model';
-import { getMyPlugin, getPlugins } from '../../../shared/http/plugin';
+import { getMyPlugin, getPluginTools } from '../../../shared/http/plugin';
 import { useAppSelector } from '../../../store/hook';
 const { Search } = Input;
 const { Option } = Select;
@@ -44,7 +44,7 @@ const ToolItem = () => {
     setLoading(true);
     let res;
     if (listType.current === PluginTypeE.MARKET) {
-      res = await getPlugins({
+      res = await getPluginTools({
         pageNum,
         pageSize: 100,
         includeTags: toolKey,

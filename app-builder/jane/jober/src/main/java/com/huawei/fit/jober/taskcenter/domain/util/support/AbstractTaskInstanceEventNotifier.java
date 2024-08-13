@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * 为任务实例相关的事件通知器提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-19
  */
 public abstract class AbstractTaskInstanceEventNotifier implements Runnable {

@@ -66,8 +66,8 @@ import java.util.stream.Collectors;
  * therefore, AST will flat tree structure into a map to improve semantic process performance
  * meanwhile, AST also provide access to the tree structure from start()
  *
- * @author z00544938 huizi 2023-06
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-06-01
  */
 public class AST implements Serializable {
     private static final Logger LOG = Logger.get(AST.class);

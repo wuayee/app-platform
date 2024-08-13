@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity;
 /**
  * 流程实例返回结构体
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/12/11
  */
 public class FlowInstanceResult {

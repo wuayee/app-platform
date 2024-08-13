@@ -7,7 +7,7 @@ package com.huawei.fitframework.schedule;
 /**
  * 表示任务的装饰器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-16
  */
 @FunctionalInterface

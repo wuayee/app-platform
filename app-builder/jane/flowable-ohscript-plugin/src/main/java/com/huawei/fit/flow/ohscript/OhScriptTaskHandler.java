@@ -36,7 +36,7 @@ import java.util.Optional;
 /**
  * 表示 {@link FlowableService} 的 OhScript 脚本任务的处理器实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-27
  */
 @Component

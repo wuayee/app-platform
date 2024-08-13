@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 表示 CRON 表达式的字段。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-03
  */
 public interface CronField {

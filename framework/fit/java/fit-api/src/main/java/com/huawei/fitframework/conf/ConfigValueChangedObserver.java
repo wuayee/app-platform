@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 为配置的值发生变化提供观察者。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-17
  */
 public interface ConfigValueChangedObserver {

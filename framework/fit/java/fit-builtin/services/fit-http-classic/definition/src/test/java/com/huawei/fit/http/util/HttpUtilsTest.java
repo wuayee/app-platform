@@ -19,7 +19,7 @@ import java.net.URL;
 /**
  * 为 {@link HttpUtils} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-22
  */
 @DisplayName("测试 HttpUtils 工具类")

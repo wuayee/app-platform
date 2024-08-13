@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 /**
  * 表示原始注解，保存整数值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-28
  */
 @Target(ElementType.TYPE)

@@ -14,8 +14,8 @@ import java.util.NoSuchElementException;
 /**
  * 为 {@link ArrayIterator} 提供单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public class ArrayIteratorTest {

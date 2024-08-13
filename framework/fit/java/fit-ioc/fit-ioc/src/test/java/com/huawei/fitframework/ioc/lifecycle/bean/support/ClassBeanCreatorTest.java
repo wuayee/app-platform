@@ -27,7 +27,7 @@ import java.util.Optional;
 /**
  * {@link ClassBeanCreator} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-03
  */
 @DisplayName("测试 ClassBeanCreator 类")

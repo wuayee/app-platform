@@ -13,7 +13,7 @@ import lombok.Setter;
 /**
  * 流程节点事件VO类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-28
  */
 @Getter

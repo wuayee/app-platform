@@ -34,7 +34,7 @@ import java.util.Optional;
 /**
  * 为 {@link FormUrlEncodedEntitySetter} 提供单元测试。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-12
  */
 @DisplayName("测试 FormUrlEncodedEntitySetter 接口")

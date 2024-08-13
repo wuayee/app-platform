@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 为对象类型为 {@link TypeVariable} 且期望类型也为 {@link Type} 的情况提供匹配判定程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 @MatchTypes(current = TypeVariable.class, expected = Type.class, factory = TypeVariableTypeMatcher.Factory.class)
@@ -38,7 +38,7 @@ public class TypeVariableTypeMatcher extends AbstractTypeMatcher<TypeVariable<?>
     /**
      * 为创建 {@link TypeVariableTypeMatcher} 实例提供工厂。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-10-29
      */
     public static class Factory implements TypeMatcher.Factory {

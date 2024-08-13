@@ -11,7 +11,7 @@ import java.util.Arrays;
 /**
  * 为 {@link PaginationResult} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-12
  */
 class DefaultPaginationResult implements PaginationResult {

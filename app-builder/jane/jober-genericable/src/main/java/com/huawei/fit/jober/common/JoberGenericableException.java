@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * JoberGenericable指定异常基类，用于SPI实现时异常抛出与透传。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-14
  */
 @ErrorCode(500)

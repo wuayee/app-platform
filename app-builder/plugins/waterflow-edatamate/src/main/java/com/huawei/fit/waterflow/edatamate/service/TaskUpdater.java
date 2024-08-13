@@ -54,7 +54,7 @@ import java.util.function.Function;
 /**
  * 接收trans完成事件，并触发更新task是否完成
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/2/29
  */
 @Component

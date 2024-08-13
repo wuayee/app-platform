@@ -11,7 +11,7 @@ import com.huawei.fit.http.entity.support.DefaultObjectEntity;
  * 表示消息体内对象类型的数据。
  *
  * @param <T> 表示消息体内数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-01
  */
 public interface ObjectEntity<T> extends Entity {

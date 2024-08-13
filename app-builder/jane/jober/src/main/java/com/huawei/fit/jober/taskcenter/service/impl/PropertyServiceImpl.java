@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
 /**
  * 任务定义之属性服务实现类
  *
- * @author 董建华 d30022216
+ * @author 董建华
  * @since 2023-08-08
  **/
 @Component

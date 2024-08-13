@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 表示 {@link Schema} 的数组实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-25
  */
 public class ArraySchema extends AbstractSchema {

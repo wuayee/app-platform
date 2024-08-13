@@ -15,7 +15,7 @@ import com.huawei.fit.jober.taskcenter.filter.TaskFilter;
 /**
  * Meta的转换类
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-12-12
  */
 public interface MetaConverter {

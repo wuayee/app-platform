@@ -11,7 +11,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * OhScriptJoberRule
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/10/31
  */
 public class OhScriptJoberRule implements JoberRule {

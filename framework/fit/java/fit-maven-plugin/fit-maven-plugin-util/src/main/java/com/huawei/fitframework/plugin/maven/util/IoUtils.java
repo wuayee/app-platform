@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 /**
  * 为输入输出流提供工具方法。
  *
- * @author 梁济时 00298979
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 1.0
  */
 public class IoUtils {

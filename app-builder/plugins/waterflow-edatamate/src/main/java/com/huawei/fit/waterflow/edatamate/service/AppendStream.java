@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * 接收外部数据，用于和任务流程中指定的节点关联数据通道
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/2/19
  */
 public class AppendStream implements InterStream<FlowData> {

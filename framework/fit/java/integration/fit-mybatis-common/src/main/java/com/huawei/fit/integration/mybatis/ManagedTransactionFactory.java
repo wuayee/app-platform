@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 /**
  * 为 {@link TransactionFactory} 提供基于 {@code fit-transaction} 组件的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-06-27
  */
 public class ManagedTransactionFactory implements TransactionFactory {

@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link ParameterizedString} 提供默认实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 class DefaultParameterizedString implements ParameterizedString {
@@ -156,7 +156,7 @@ class DefaultParameterizedString implements ParameterizedString {
      * <p>解析工具必然属于一个{@link ParameterizedString 参数化字符串}，并且在调用 {@link Resolver#resolve()}
      * 方法时对所属的参数化字符串产生影响。</p>
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 1.0
      */
     private class Resolver {

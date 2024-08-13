@@ -13,7 +13,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 任务定义服务Genericable。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-29
  */
 public interface TaskService {

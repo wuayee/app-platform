@@ -28,8 +28,8 @@ import java.util.Optional;
 /**
  * 为插件提供类加载器。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-06-29
  */
 public class PluginClassLoader extends URLClassLoader {

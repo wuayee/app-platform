@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 流程实例异常 Genericable。
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2024-01-11
  */
 public interface FlowExceptionService {

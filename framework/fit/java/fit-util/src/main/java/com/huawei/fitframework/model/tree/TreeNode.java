@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 /**
  * 为 {@link Tree} 提供节点定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-10
  */
 public interface TreeNode {

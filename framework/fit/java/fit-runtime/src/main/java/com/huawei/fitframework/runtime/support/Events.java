@@ -14,7 +14,7 @@ import java.time.Duration;
 /**
  * 定义运行时相关的事件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-05-17
  */
 final class Events {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.util;
 /**
  * 当对象被销毁时被回调的方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-02-25
  */
 @FunctionalInterface

@@ -29,7 +29,7 @@ import java.util.jar.Manifest;
 /**
  * 为 All In One 场景提供应用程序启动程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-01
  */
 public final class AggregatedFitLauncher {

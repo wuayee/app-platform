@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 表示 {@link ErrorMapper} 的解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-11
  */
 public class ErrorMapperResolver implements PropertyValueMapperResolver {

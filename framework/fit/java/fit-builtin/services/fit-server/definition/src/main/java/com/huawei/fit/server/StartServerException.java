@@ -7,7 +7,7 @@ package com.huawei.fit.server;
 /**
  * 启动服务器异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-16
  */
 public class StartServerException extends RuntimeException {

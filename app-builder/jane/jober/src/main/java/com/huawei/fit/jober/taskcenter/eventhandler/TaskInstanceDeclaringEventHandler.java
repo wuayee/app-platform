@@ -26,7 +26,7 @@ import java.util.Objects;
 /**
  * 为任务实例声明的事件提供处理程序。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-24
  */
 public abstract class TaskInstanceDeclaringEventHandler<E extends TaskInstanceDeclaringEvent> {

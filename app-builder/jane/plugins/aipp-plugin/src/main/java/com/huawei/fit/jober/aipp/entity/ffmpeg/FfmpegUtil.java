@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.entity.ffmpeg;
 /**
  * FfmpegUtil
  *
- * @author y00612997
+ * @author 易文渊
  * @since 2024/1/9
  */
 public class FfmpegUtil {
@@ -16,7 +16,7 @@ public class FfmpegUtil {
      *
      * @param time 输入时间，单位s
      * @return String 格式化字符串 HH::mm::ss
-     * @author y00612997
+     * @author 易文渊
      * @since 2024/1/10 9:51
      */
     public static String formatTimestamps(int time) {
@@ -33,7 +33,7 @@ public class FfmpegUtil {
      *
      * @param duration 格式化字符串 HH::mm::ss
      * @return int 输出秒数
-     * @author y00612997
+     * @author 易文渊
      * @since 2024/1/10 9:51
      */
     public static int parseDuration(String duration) {

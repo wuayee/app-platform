@@ -7,7 +7,7 @@ package com.huawei.fitframework.parameterization;
 /**
  * 当发现参数化字符串的格式错误，或参数未提供时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class StringFormatException extends IllegalArgumentException {

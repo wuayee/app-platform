@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation;
 /**
  * 为三方系统授权提供校验。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-27
  */
 public interface AuthorizationValidator {

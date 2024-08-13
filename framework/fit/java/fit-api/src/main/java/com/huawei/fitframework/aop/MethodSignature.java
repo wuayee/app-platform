@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * 方法签名接口。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-12
  */
 public interface MethodSignature extends CodeSignature {

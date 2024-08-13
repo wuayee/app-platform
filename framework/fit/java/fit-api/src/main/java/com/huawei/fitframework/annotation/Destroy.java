@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示指定方法用于销毁Bean。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-09
  */
 @Documented

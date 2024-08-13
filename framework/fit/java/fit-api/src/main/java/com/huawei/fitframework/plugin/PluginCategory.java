@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.CodeableEnum;
 /**
  * 为插件提供类别。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-06
  */
 public enum PluginCategory implements CodeableEnum<PluginCategory> {

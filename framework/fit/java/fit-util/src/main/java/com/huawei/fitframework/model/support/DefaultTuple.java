@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * {@link Tuple} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-14
  */
 public class DefaultTuple implements Tuple {

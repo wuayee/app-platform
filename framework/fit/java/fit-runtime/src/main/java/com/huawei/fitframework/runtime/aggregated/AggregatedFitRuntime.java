@@ -19,7 +19,7 @@ import java.net.URLClassLoader;
  * 为 FIT 运行时提供聚合启动场景的实现。
  * <p>聚合启动指的是所有的 Jar 包合并为一个 Jar in Jar 的单独 Jar 包进行启动。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-31
  */
 public final class AggregatedFitRuntime extends AbstractFitRuntime {

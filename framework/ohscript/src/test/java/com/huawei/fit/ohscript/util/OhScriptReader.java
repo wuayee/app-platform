@@ -14,7 +14,7 @@ import java.net.URL;
 /**
  * 用于从文件中读取 OhScript 脚本内容。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-20
  */
 public class OhScriptReader {

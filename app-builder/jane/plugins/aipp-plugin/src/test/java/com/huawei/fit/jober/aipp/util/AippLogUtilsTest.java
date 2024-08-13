@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * AippLogUtils测试类
  *
- * @author f00881613
+ * @author 方誉州
  * @since 2024-06-25
  */
 class AippLogUtilsTest {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.exception.ErrorCode;
 /**
  * 错误请求异常类，用于SPI实现时异常抛出与透传。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-07-06
  */
 @ErrorCode(400)

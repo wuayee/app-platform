@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * 表示 Bean 初始化器的工具类集合。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-01
  */
 public class BeanInitializers {

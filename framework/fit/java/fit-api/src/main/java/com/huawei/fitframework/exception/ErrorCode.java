@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 表示异常码的注解。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-15
  */
 @Documented

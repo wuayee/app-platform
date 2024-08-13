@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  *     <li>throws-pattern（异常匹配），暂不支持。</li>
  * </ul>
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-14
  */
 public class ExecutionParser extends BaseParser {

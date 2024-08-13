@@ -12,7 +12,7 @@ import com.huawei.fitframework.util.ObjectUtils;
  * 表示 {@link Merger} 的抽象父类。
  *
  * @param <V> 表示待合并的数据类型的 {@link V}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-31
  */
 public abstract class AbstractMerger<V> implements Merger<V> {

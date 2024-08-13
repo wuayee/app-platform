@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 公告信息相关的db接口。
  *
- * @author z00591349
+ * @author 张圆
  * @since 2024-06-18
  */
 @Mapper

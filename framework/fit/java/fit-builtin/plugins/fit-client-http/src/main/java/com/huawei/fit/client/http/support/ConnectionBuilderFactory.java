@@ -16,8 +16,8 @@ import java.util.Map;
 /**
  * 通过协议生产对应的 {@link ConnectionBuilder}
  *
- * @author 王成 w00863339
- * @author 季聿阶 j00559309
+ * @author 王成
+ * @author 季聿阶
  * @since 2023-11-05
  */
 public class ConnectionBuilderFactory {

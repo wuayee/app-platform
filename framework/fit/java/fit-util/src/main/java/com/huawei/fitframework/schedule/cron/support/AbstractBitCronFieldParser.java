@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * 表示 {@link CronFieldParser} 的抽象实现类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-03
  */
 public abstract class AbstractBitCronFieldParser implements CronFieldParser {

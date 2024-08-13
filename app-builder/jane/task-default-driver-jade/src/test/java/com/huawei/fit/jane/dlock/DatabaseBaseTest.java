@@ -31,7 +31,7 @@ import java.util.Properties;
 /**
  * 所有测试的父类，执行h2数据库初始化等功能
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023-12-08
  */
 @ExtendWith(MockitoExtension.class)

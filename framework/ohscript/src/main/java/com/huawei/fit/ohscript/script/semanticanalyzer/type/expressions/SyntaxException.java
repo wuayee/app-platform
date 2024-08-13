@@ -9,7 +9,7 @@ import com.huawei.fit.ohscript.script.errors.SyntaxError;
 /**
  * 语法分析阶段的语法错误
  *
- * @author 张群辉 z00544938
+ * @author 张群辉
  * @since 2023/11/20
  */
 public class SyntaxException extends Exception {

@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 自定义的线程工厂
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/3/1
  */
 public class CustomThreadFactory implements ThreadFactory {

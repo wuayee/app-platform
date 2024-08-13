@@ -9,7 +9,7 @@ import com.huawei.fitframework.aop.proxy.FitProxy;
 /**
  * FIT 生成的代理的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-30
  */
 public class FitProxyUtils {

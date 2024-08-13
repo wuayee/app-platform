@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  * 表示 {@link Solo} 的可配置订阅、元素请求、取消行为的数据发送器实现。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-22
  */
 public class FlexibleEmitterSolo<T> extends AbstractSolo<T> implements OnSubscribedObserver {

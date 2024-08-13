@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.domain.enums;
 /**
  * 流程实例Jober已知属性合集
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 1.0
  */
 public enum FlowJoberProperties {

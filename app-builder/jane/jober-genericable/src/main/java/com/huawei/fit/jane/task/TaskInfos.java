@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 /**
  * 为 {@link TaskInfo} 提供工具类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-14
  */
 public final class TaskInfos {

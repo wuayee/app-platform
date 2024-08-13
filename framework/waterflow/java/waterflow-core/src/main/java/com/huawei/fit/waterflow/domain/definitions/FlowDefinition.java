@@ -43,7 +43,7 @@ import java.util.concurrent.locks.Lock;
  * state节点手动执行是map处理类型，可以接validateBlock实现手动执行任务，与自动执行互斥
  * condition、parallel节点是just处理类型，可以接validateBlock实现手动执行任务，且不能接filterBlock产生M:N的实例数据
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 @Builder

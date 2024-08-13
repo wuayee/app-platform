@@ -9,7 +9,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderComponent;
 /**
  * AppBuilder组件持久化层
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 public interface AppBuilderComponentRepository {

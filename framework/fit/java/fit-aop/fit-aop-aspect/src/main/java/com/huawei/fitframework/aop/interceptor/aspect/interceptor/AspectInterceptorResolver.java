@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 /**
  * 解析 {@link Aspect} 注解的拦截事件提供者的解析器。
  *
- * @author 季聿阶 j00559309
- * @author 郭龙飞 gwx900499
+ * @author 季聿阶
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public class AspectInterceptorResolver extends AbstractMethodInterceptorResolver {

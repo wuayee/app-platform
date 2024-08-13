@@ -21,7 +21,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
 /**
  * 表示解析请求处理器的抽象基类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-29
  */
 public abstract class AbstractHandlerResolver {

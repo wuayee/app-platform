@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 带有任务优先级的线程池
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/3/6
  */
 public class PriorityThreadPool {
@@ -112,7 +112,7 @@ public class PriorityThreadPool {
         /**
          * 优先级信息
          *
-         * @author x00576283
+         * @author 夏斐
          * @since 2024/3/6
          */
         @lombok.Builder

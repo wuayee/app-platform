@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 /**
  * 表示 REST 接口的响应映射中的状态码。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-09
  */
 @Documented

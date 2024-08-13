@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * 表示缓存方法拦截器的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-04-07
  */
 public abstract class AbstractCacheInterceptor extends AbstractMethodInterceptor {

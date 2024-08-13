@@ -7,7 +7,7 @@ package com.huawei.databus.sdk.tools;
 /**
  * DataBus 消息发号类。当前类线程安全，发号从1开始，每次递增1，最大号与 {@code Integer.MAX_VALUE} 相等后，会被重置为1。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024/06/20
  */
 public class SeqGenerator {

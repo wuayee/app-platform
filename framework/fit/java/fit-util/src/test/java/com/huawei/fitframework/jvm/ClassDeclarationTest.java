@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * {@link ClassDeclaration} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-03
  */
 @DisplayName("测试 ClassDeclaration 类")

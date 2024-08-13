@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  * <p>该对象生成器会创建一个指定类型的无参构造方法，然后调用该构造方法生成实例。因为构造方法是动态生成的，
  * 因此不会调用任何当前已存在的构造方法，就算指定类型原本就有无参构造方法，也不会调用。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-10
  */
 public class ReflectionFactoryInstantiator<T> implements ObjectInstantiator<T> {

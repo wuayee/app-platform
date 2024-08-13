@@ -7,7 +7,7 @@ package com.huawei.fitframework.retry;
 /**
  * 表示任务执行的条件。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-17
  */
 public interface Condition {

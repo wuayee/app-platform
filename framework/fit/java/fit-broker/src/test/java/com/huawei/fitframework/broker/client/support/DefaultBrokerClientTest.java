@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 用于 {@link DefaultBrokerClient} 进行单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-06
  */
 @DisplayName("测试 DefaultBrokerClient")

@@ -31,7 +31,6 @@ import com.huawei.jade.common.vo.PageVo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -115,14 +114,13 @@ public class EvalDatasetControllerTest {
     void shouldFailWhenDeleteSingleEvalDatasetWithInvalidId() {
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
                 .param("datasetIds", "-1")
-                .param("datasetIds", "2")
                 .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }
 
     @Test
-    @DisplayName("删除评估数据集接口成功")
+    @DisplayName("批量删除评估数据集接口成功")
     void shouldOkWhenDeleteEvalDataset() {
         doNothing().when(this.evalDatasetService).delete(anyList());
 
@@ -130,8 +128,7 @@ public class EvalDatasetControllerTest {
         evalDatasetDeleteParam.setDatasetIds(Arrays.asList(1L, 2L));
 
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
-                .param("datasetIds", "1")
-                .param("datasetIds", "2")
+                .param("datasetIds", Arrays.asList("1", "2"))
                 .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
@@ -142,12 +139,18 @@ public class EvalDatasetControllerTest {
     void shouldFailWhenDeleteEvalDataset() {
         doThrow(new DataAccessException("Fail message")).when(this.evalDatasetService).delete(anyList());
 
-        EvalDatasetDeleteParam evalDatasetDeleteParam = new EvalDatasetDeleteParam();
-        evalDatasetDeleteParam.setDatasetIds(Arrays.asList(1L, 2L));
-
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
                 .param("datasetIds", "1")
-                .param("datasetIds", "2")
+                .responseType(Void.class);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("非法入参批量删除评估数据集接口失败")
+    void shouldFailWhenDeleteEvalDatasetWithInvalidInput() {
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", Arrays.asList("-1", "2"))
                 .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
@@ -241,11 +244,27 @@ public class EvalDatasetControllerTest {
     @Test
     @DisplayName("修改数据集信息接口成功")
     void shouldOkWhenUpdateDataset() {
-        Mockito.doNothing().when(this.evalDatasetService).updateEvalDataset(any());
+        doNothing().when(this.evalDatasetService).updateEvalDataset(any());
         EvalDatasetUpdateDto updateDto = new EvalDatasetUpdateDto();
         updateDto.setId(1L);
         updateDto.setName("name1");
         updateDto.setDescription("desc1");
+
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.put("/eval/dataset").jsonEntity(updateDto).responseType(Void.class);
+
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("修改数据集信息接口成功")
+    void shouldOkWhenUpdateDataset1() {
+        doNothing().when(this.evalDatasetService).updateEvalDataset(any());
+        EvalDatasetUpdateDto updateDto = new EvalDatasetUpdateDto();
+        updateDto.setId(1L);
+        updateDto.setName("name1");
+        updateDto.setDescription(null);
 
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.put("/eval/dataset").jsonEntity(updateDto).responseType(Void.class);

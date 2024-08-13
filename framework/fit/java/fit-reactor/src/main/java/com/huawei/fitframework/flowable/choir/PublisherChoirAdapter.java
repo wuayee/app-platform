@@ -14,7 +14,7 @@ import com.huawei.fitframework.inspection.Nonnull;
  * 表示 {@link com.huawei.fitframework.flowable.Choir} 的指定 {@link Publisher} 的适配。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-09
  */
 public class PublisherChoirAdapter<T> extends AbstractChoir<T> {

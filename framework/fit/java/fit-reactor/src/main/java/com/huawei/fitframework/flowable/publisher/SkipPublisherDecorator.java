@@ -17,7 +17,7 @@ import com.huawei.fitframework.flowable.util.counter.Counter;
  * 表示 {@link Publisher} 的从开始跳过指定个数元素的过滤的实现。
  *
  * @param <T> 表示发布者中待过滤数据的类型的 {@link T}。
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-03-07
  */
 public class SkipPublisherDecorator<T> implements Publisher<T> {

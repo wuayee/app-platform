@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link DefaultRequestLine} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-15
  */
 @DisplayName("测试 DefaultRequestLine 类")

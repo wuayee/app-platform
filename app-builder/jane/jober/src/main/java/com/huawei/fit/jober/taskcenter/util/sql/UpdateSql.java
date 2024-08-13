@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 /**
  * 表示更新语句。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-24
  */
 public interface UpdateSql {

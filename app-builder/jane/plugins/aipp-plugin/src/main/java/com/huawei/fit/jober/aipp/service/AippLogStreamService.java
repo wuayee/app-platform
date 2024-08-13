@@ -9,7 +9,7 @@ import com.huawei.fit.jober.aipp.vo.AippLogVO;
 /**
  * log流式服务接口.
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024-05-23
  */
 public interface AippLogStreamService {

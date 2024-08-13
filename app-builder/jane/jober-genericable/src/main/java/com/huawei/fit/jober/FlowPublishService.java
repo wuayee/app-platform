@@ -10,7 +10,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 流程推送服务Genericable。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-05-21
  */
 public interface FlowPublishService {

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 历史记录配置相关的 dto 对象
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-28
  */
 @Data

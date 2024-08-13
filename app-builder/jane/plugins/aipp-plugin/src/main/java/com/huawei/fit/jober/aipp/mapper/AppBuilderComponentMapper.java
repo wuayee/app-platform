@@ -9,7 +9,7 @@ import com.huawei.fit.jober.aipp.po.AppBuilderComponentPo;
 /**
  * AppBuilder组件映射器
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-16
  */
 public interface AppBuilderComponentMapper {

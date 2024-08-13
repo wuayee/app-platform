@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry;
 /**
  * 表示 JAR 中条目的压缩方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-16
  */
 public enum CompressionMethod {

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@link TimeSchedulerConverter} 实现类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/27
  */
 @Component

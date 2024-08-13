@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * 同一个trans下的每批次Size的过滤器，如果最终剩余的数量不满足要求，则
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/11/28
  */
 public class FlowTransBatchSizeFilter extends FlowFilter {

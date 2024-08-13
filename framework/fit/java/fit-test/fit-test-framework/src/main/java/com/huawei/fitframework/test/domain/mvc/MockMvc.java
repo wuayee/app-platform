@@ -12,7 +12,7 @@ import com.huawei.fitframework.test.domain.mvc.request.RequestParam;
 /**
  * 为测试提供模拟的 MVC。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @author 易文渊
  * @since 2024-04-09
  */

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 提供工具的通用服务。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-04-16
  */
 public interface ToolService {

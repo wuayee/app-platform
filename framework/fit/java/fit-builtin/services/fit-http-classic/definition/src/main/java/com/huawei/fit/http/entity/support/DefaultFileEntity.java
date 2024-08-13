@@ -26,7 +26,7 @@ import java.util.Optional;
 /**
  * 表示 {@link FileEntity} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public class DefaultFileEntity extends DefaultReadableBinaryEntity implements FileEntity {

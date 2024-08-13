@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link TreeValidatorImpl}对应测试类。
  *
- * @author lWX1301876
+ * @author 梁子涵
  * @since 2023-11-03 14:08
  */
 class TreeValidatorImplTest {

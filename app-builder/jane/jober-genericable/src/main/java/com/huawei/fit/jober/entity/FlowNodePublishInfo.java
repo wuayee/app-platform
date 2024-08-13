@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 流程节点信息推送对象。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-05-23
  */
 public class FlowNodePublishInfo {

@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.ObjectUtils;
  * 表示冲突上下文。
  *
  * @param <K> 表示冲突键的类型的 {@link K}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 public interface Conflict<K> {

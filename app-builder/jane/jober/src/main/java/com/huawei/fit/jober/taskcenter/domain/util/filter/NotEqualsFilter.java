@@ -18,7 +18,7 @@ import java.util.Arrays;
 /**
  * 表示判断不等于指定值的过滤器。
  *
- * @author lWX1291633
+ * @author 罗书强
  * @since 2024-04-25
  */
 public class NotEqualsFilter implements Filter {

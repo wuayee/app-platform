@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link ConfigDependencyRequirement} 的单元测试
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-03-03
  */
 @DisplayName("测试 ConfigDependencyRequirement 类")

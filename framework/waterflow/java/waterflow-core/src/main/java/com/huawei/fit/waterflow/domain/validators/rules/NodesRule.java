@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * 流程节点校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 @Component

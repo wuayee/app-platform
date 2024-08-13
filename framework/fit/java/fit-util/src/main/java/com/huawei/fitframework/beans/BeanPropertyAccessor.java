@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * 为 Bean 的属性提供访问程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-06
  */
 final class BeanPropertyAccessor {

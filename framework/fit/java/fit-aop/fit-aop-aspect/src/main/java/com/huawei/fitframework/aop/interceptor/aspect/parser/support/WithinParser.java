@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * 解析切点表达式中关键字 within 的解析器。
  * <P>用于匹配 within 表达式中包路径以及子包下任意类任意方法，支持通配符。</p>
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-14
  */
 public class WithinParser extends BaseParser {

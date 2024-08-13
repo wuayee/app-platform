@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * FlowNGeneralJober
  * 流程通用接口
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public class FlowGeneralJober extends FlowJober {

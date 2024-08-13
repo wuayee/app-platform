@@ -13,7 +13,7 @@ import com.huawei.fitframework.plugin.Plugin;
 /**
  * 发布事件
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/25
  */
 @Component

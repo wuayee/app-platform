@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * {@link MethodMatcherCollection} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-11
  */
 public class DefaultMethodMatcherCollection implements MethodMatcherCollection {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 表示文件名校验的配置。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-18
  */
 public interface FileNameValidateConfig {

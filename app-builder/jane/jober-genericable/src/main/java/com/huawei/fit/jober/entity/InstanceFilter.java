@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 为任务实例提供过滤配置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-11
  */
 public class InstanceFilter {

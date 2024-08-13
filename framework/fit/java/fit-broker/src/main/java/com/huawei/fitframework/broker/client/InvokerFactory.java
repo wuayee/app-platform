@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * 为调用器提供工厂方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-10-26
  */
 public interface InvokerFactory {

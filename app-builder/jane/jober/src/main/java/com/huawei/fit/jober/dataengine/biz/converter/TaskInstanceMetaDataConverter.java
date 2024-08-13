@@ -11,7 +11,7 @@ import com.huawei.fit.jober.entity.TaskEntity;
 /**
  * 任务实例元数据converter
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/27
  */
 public interface TaskInstanceMetaDataConverter {

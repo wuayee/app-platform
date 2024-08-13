@@ -54,7 +54,7 @@ import java.util.Set;
 /**
  * 表示 DefaultBeanContainer 的单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 @DisplayName("测试 DefaultBeanContainer 类")

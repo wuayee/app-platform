@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@link ByteBufReadableMessageBody} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-12
  */
 @DisplayName("测试 ByteBufReadableMessageBody")

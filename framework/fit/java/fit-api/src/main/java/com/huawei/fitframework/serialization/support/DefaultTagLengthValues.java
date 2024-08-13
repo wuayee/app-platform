@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 为 {@link TagLengthValues} 提供默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-05-15
  */
 public class DefaultTagLengthValues implements TagLengthValues {
@@ -68,7 +68,7 @@ public class DefaultTagLengthValues implements TagLengthValues {
     /**
      * 为 {@link TagLengthValues} 提供序列化程序。
      *
-     * @author 邬涨财 w00575064
+     * @author 邬涨财
      * @since 2024-02-19
      */
     public static class Serializer implements ByteSerializer<TagLengthValues> {

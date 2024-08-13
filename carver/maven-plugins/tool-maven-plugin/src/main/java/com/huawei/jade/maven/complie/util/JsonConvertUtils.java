@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * 将 {@link MethodEntity} 数据转换为 Json 数据的工具类。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-19
  */
 public class JsonConvertUtils {

@@ -16,8 +16,8 @@ import java.util.List;
 /**
  * 为依赖提供归档件的过滤程序。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2023-02-03
  */
 final class DependencyArtifactFilter implements ArtifactFilter {

@@ -15,7 +15,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * 定义Meta数据转换器接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-14
  */
 @Mapper

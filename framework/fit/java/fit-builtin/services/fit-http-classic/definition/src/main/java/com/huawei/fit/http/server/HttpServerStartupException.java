@@ -7,7 +7,7 @@ package com.huawei.fit.http.server;
 /**
  * 表示 Http 服务器的启动异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-08
  */
 public class HttpServerStartupException extends HttpServerException {

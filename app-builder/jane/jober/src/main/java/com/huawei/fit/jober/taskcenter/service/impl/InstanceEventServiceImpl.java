@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link InstanceEventService} 提供实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 @Component

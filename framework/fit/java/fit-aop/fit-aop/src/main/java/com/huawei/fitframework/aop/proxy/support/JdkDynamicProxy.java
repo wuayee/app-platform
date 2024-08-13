@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 /**
  * Jdk 动态代理的回调。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-25
  */
 public class JdkDynamicProxy extends AbstractAopProxy implements InvocationHandler {

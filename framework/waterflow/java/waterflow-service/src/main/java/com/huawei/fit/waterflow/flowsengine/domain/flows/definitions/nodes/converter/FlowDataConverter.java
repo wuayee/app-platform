@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 节点间传递参数的转换器
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/17
  */
 public interface FlowDataConverter {

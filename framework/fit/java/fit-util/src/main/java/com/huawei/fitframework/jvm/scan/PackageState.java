@@ -9,7 +9,7 @@ import com.huawei.fitframework.jvm.scan.support.DefaultPackageState;
 /**
  * 为类型的自动扫描提供包的状态管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-01
  */
 public interface PackageState {

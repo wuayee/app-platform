@@ -12,8 +12,8 @@ import java.lang.reflect.Method;
 /**
  * 表示 {@link ValidationMetadata} 的抽象实现。
  *
- * @author 白鹏坤 bWX1068551
- * @author 邬涨财 w00575064
+ * @author 白鹏坤
+ * @author 邬涨财
  * @since 2023-04-23
  */
 public abstract class AbstractValidationMetadata implements ValidationMetadata {

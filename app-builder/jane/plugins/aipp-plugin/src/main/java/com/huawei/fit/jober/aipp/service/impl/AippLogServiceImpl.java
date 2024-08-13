@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 /**
  * aipp实例历史记录服务接口实现
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 @Component

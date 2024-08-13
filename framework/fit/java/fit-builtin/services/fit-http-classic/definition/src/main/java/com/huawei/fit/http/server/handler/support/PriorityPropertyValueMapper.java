@@ -19,7 +19,7 @@ import java.util.Objects;
  * 表示带优先级的 {@link PropertyValueMapper}。
  * <p>{@link PriorityPropertyValueMapper} 会选取第一个成功获取的结果。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 public class PriorityPropertyValueMapper implements PropertyValueMapper {

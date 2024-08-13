@@ -15,7 +15,7 @@ import java.lang.reflect.Type;
 /**
  * 为匹配判定程序所支持的对象类型的类型提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-29
  */
 @Target(ElementType.TYPE)

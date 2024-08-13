@@ -7,7 +7,7 @@ package com.huawei.fitframework.plugin;
 /**
  * 当插件重复时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-29
  */
 public class DuplicatePluginException extends RuntimeException {

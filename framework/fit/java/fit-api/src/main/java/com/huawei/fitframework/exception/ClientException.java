@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 表示远程调用发生在客户端的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-17
  */
 @ErrorCode(ClientException.CODE)

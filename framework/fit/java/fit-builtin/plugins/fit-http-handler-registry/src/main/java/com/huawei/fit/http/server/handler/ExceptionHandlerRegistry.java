@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 表示异常处理器的注册器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-12-01
  */
 public interface ExceptionHandlerRegistry {

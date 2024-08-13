@@ -62,7 +62,7 @@ import java.util.stream.Stream;
  *
  * @param <I>该节点处理函数入参类型
  * @param <O>该节点处理函数返回值类型
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class To<I, O> extends IdGenerator implements Subscriber<I, O> {

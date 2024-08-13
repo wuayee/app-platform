@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * 为 {@link UpdateSql} 提供基于 Postgresql 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-24
  */
 class PostgresUpdateSql implements UpdateSql {

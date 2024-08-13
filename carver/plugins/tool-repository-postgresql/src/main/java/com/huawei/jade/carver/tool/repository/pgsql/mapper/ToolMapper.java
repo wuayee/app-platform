@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示用于 MyBatis 持久层引用的 Tool 接口。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/5/11
  */
 public interface ToolMapper {

@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinit
 /**
  * 流程定义校验接口
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/29
  */
 public interface Validator {

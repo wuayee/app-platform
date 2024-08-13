@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示解析 {@link com.huawei.fit.http.HttpClassicResponse} 对象参数的 {@link PropertyValueMapperResolver}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-29
  */
 public class HttpClassicResponseResolver implements PropertyValueMapperResolver {

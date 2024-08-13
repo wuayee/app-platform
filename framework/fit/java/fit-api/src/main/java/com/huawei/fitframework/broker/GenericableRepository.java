@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * 表示 {@link Genericable} 的仓库。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-08
  */
 public interface GenericableRepository {

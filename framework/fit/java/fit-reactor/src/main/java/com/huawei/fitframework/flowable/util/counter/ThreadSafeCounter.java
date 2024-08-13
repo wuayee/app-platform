@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 表示 {@link Counter} 的线程安全版本实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 public class ThreadSafeCounter implements Counter {

@@ -30,8 +30,8 @@ import javax.annotation.Resource;
  * href="https://jcp.org/en/jsr/detail?id=250">JSR-250</a> 的实现。
  * <p>该实现仅提供 {@link Resource}、{@link PostConstruct}、{@link PreDestroy} 的实现。</p>
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-06-13
  */
 public class PartialJsr250BeanResolver extends AbstractAnnotatedBeanResolver {

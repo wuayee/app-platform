@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * 表示 {@link Serializers} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-26
  */
 public class DefaultSerializers implements Serializers {

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示数据仓库的本地进程缓存。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-21
  */
 @Component

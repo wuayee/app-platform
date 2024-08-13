@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示 REST 接口的请求映射中的 Http 值聚合到方法参数上。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-14
  */
 @Documented

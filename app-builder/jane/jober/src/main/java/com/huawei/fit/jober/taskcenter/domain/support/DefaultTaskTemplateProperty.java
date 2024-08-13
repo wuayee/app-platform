@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 /**
  * 为 {@link TaskTemplateProperty} 提供实现
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-05 09:40
  */
 public class DefaultTaskTemplateProperty extends AbstractDomainObject implements TaskTemplateProperty {

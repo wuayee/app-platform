@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示文件。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-10
  */
 public interface File extends DomainObject {
@@ -43,7 +43,7 @@ public interface File extends DomainObject {
     /**
      * 为文件提供构建器。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-10-10
      */
     interface Builder extends DomainObject.Builder<File, Builder> {
@@ -67,7 +67,7 @@ public interface File extends DomainObject {
     /**
      * 为 {@link File} 提供声明。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-10-10
      */
     interface Declaration {
@@ -97,7 +97,7 @@ public interface File extends DomainObject {
         /**
          * 为文件的声明提供构建器。
          *
-         * @author 陈镕希 c00572808
+         * @author 陈镕希
          * @since 2023-10-10
          */
         interface Builder {
@@ -129,7 +129,7 @@ public interface File extends DomainObject {
     /**
      * 为 {@link File} 提供存储能力。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-10-10
      */
     interface Repo {

@@ -13,7 +13,7 @@ import java.util.Collections;
 /**
  * 编排 event.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-05
  */
 public class EventAttributes extends AbstractAttributes {

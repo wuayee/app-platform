@@ -14,7 +14,7 @@ import java.util.Locale;
 /**
  * 为 {@link StringResource} 提供组合模式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-22
  */
 final class StringResourceComposite implements StringResource {

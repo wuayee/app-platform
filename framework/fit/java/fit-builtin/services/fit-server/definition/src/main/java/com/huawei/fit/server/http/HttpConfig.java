@@ -9,7 +9,7 @@ import com.huawei.fitframework.conf.runtime.ServerConfig;
 /**
  * 表示运行时 {@code 'server.http.'} 前缀的配置项。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-10
  */
 public interface HttpConfig extends ServerConfig {

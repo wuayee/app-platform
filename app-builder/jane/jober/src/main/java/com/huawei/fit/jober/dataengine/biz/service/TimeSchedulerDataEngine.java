@@ -44,7 +44,7 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 以定时任务方式获取第三方数据实现类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/12
  */
 @Alias("scheduler")

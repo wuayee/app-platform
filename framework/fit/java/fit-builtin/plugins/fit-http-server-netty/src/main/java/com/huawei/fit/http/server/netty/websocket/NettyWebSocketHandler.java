@@ -23,7 +23,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 /**
  * 表示 Netty 用于处理 WebSocket 消息的处理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {

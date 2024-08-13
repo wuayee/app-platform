@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 当调用方法失败时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class MethodInvocationException extends RuntimeException {

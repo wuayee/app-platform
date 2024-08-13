@@ -23,7 +23,7 @@ import java.util.function.Function;
 /**
  * 表示解析带有 {@link RequestParam} 注解的参数的 {@link PropertyValueMapperResolver}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-29
  */
 public class RequestParamMapperResolver extends AbstractRequestParamMapperResolver {

@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @param <T> 表示当前类作为订阅者时，所订阅的数据类型的 {@link T}。
  * @param <R> 表示当前类作为订阅关系时，下游订阅者所订阅的数据类型的 {@link R}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-09
  */
 public abstract class AbstractOperation<T, R> extends AbstractSubscriber<T> implements Subscription {

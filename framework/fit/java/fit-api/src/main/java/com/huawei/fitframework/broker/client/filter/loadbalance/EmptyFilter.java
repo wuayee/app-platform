@@ -14,7 +14,7 @@ import java.util.Map;
  * 为 {@link com.huawei.fitframework.broker.client.Invoker.Filter} 提供空的实现。
  * <p>不进行任何过滤，直接返回输入的内容。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-01-21
  */
 public class EmptyFilter extends AbstractFilter {

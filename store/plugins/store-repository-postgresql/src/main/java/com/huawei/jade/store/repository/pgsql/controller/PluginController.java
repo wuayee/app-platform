@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * 处理插件 HTTP 请求的控制器。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-20
  */
 @Component

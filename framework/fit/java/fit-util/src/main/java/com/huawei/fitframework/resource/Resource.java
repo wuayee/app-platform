@@ -15,7 +15,7 @@ import java.net.URL;
 /**
  * 为资源提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-08
  */
 public interface Resource {

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * 表示 Http 客户端的代理执行者的默认实现。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-14
  */
 

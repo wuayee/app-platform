@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 替换原有optional返回值的接口
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/3/20
  */
 public interface DataCleanClientV2 {

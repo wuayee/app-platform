@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 表示可降级的异常，所有需要降级的情况都需要抛出该异常或者该异常的子类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-05-15
  */
 @ErrorCode(DegradableException.CODE)

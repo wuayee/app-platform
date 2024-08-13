@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 /**
  * 表示动态插件的控制器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-17
  */
 @Component

@@ -11,7 +11,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 /**
  * Instance相关转换类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-09-08
  */
 public interface InstanceConverter {

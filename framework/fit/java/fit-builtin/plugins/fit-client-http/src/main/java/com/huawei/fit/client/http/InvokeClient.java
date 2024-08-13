@@ -18,7 +18,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 /**
  * 表示真实调用的客户端。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-17
  */
 public interface InvokeClient {

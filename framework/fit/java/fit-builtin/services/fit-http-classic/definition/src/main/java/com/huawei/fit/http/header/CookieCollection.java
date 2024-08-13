@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 表示 Http 中只读的 Cookie 集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-06
  */
 public interface CookieCollection extends HeaderValue {

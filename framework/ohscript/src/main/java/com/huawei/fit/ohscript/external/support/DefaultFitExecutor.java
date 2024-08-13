@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link FitExecutor} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-18
  */
 public class DefaultFitExecutor implements FitExecutor {

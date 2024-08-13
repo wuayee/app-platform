@@ -12,7 +12,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 表示 {@link GenericableExecutor} 的单播调用实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public class UnicastGenericableExecutor extends AbstractUnicastGenericableExecutor {

@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * 表示 {@link FitableExecutor} 的多播调用实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-28
  */
 public class MulticastFitableExecutor implements FitableExecutor {

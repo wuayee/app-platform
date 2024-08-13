@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * 任意genericable调用的测试
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/23
  */
 class FlowGenericableJoberTest {

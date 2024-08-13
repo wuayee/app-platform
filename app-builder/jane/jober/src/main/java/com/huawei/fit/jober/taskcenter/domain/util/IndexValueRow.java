@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * 表示索引值数据表中的行。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-02-07
  */
 public class IndexValueRow {

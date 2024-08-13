@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 /**
  * 为单元测试提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-21
  */
 public final class Tests {

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * 校验规则公共接口
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/29
  */
 public interface Rules {

@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * 表示测试方法的信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-10
  */
 public interface TestMethod {

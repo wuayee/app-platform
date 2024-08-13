@@ -14,7 +14,7 @@ import com.huawei.fit.http.protocol.RequestLine;
 /**
  * 表示 {@link RequestLine} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-27
  */
 public class DefaultRequestLine implements RequestLine {

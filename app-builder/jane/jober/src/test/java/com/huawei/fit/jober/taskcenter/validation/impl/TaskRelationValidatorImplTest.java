@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 验证任务关联字段
  *
- * @author lWX1291633
+ * @author 罗书强
  * @since 2024-01-04
  */
 class TaskRelationValidatorImplTest {

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 为模拟 {@link MockMvc} 提供常见的共用方法。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-04-09
  */
 public interface RequestBuilder {
@@ -27,6 +27,15 @@ public interface RequestBuilder {
      * @return 表示客户端请求参数的建造者 {@link MockRequestBuilder}。
      */
     MockRequestBuilder param(String name, String value);
+
+    /**
+     * 为请求插件结构体添加键值对参数。
+     *
+     * @param name 表示请求体内请求参数的键值 {@link String}。
+     * @param values 表示待设置的请求参数列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示客户端请求参数的建造者 {@link MockRequestBuilder}。
+     */
+    MockRequestBuilder param(String name, List<String> values);
 
     /**
      * 设置客户端请求结果的类型。

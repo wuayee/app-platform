@@ -18,7 +18,7 @@ import java.util.Set;
  *
  * @param <K> 表示冲突键的类型的 {@link K}。
  * @param <E> 表示冲突值的列表中的元素类型的 {@link E}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-01
  */
 public class ListRemoveDuplicationConflictResolver<K, E> implements ConflictResolver<K, List<E>, Conflict<K>> {

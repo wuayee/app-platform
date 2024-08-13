@@ -87,7 +87,7 @@ import java.util.stream.Collectors;
 /**
  * aipp编排服务层接口实现
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-12
  */
 @Component

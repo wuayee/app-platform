@@ -10,7 +10,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示序列化方式的枚举。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-27
  */
 public enum SerializationFormat {

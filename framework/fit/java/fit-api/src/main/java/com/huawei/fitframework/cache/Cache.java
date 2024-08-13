@@ -7,7 +7,7 @@ package com.huawei.fitframework.cache;
 /**
  * 表示缓存实例。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public interface Cache {

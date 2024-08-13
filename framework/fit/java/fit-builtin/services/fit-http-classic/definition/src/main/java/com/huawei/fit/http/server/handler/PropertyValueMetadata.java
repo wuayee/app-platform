@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 /**
  * 表示属性值的元数据。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2022-12-29
  */
 public interface PropertyValueMetadata {

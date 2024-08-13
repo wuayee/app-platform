@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * 为任务实例的事件提供处理程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-19
  */
 public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
@@ -124,7 +124,7 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
     /**
      * 任务实例创建事件Handler。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-09-08
      */
     @Component
@@ -162,7 +162,7 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
     /**
      * 任务实例修改事件Handler。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-09-08
      */
     @Component
@@ -201,7 +201,7 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
     /**
      * 任务实例删除事件Handler。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-09-08
      */
     @Component

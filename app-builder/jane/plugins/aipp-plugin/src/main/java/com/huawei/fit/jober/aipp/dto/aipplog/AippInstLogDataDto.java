@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * aipp实例历史记录数据
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 @AllArgsConstructor

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link MultiValueEntity} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-05
  */
 public class DefaultMultiValueEntity extends AbstractEntity implements MultiValueEntity {

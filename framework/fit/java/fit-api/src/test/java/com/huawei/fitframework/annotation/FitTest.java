@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@link Fit} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-02-18
  */
 @DisplayName("验证 Fit 注解")

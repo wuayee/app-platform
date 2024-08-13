@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 计算和获取字符串的哈希值的工具类。
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2021-11-22
  */
 public class DigestUtils {

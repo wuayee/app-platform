@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 流程定义相关Genericable
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/12/11
  */
 public interface FlowDefinitionService {

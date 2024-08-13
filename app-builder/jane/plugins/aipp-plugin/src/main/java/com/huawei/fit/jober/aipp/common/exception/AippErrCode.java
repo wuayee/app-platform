@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 /**
  * HsipReturnCode
  *
- * @author y00612997
+ * @author 易文渊
  * @since 2023/9/26
  */
 @AllArgsConstructor
@@ -288,6 +288,11 @@ public enum AippErrCode implements ErrorCode {
      * 调试时，应用找不到失败
      */
     APP_NOT_FOUND_WHEN_DEBUG(90002926, "调试失败：应用不存在，或者已经被删除"),
+
+    /**
+     * 请输入您的问题
+     */
+    APP_CHAT_QUESTION_IS_NULL(90002927, "请输入您的问题。"),
 
     /**
      * 错误码截止值

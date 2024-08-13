@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 存放基础信息类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-13
  */
 @Data

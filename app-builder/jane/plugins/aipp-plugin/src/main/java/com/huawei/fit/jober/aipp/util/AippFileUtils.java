@@ -28,7 +28,7 @@ import java.util.Locale;
 /**
  * 文件操作工具
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024/1/22
  */
 public class AippFileUtils {

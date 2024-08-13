@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link BuilderFactory} 提供单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-06-22
  */
 @DisplayName("测试 BuilderFactory")

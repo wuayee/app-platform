@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示 Http 请求的资源存储处理器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2022-12-13
  */
 public interface ReflectibleMappingHandler extends HttpHandler {

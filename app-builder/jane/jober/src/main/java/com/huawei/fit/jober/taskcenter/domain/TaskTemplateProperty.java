@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 任务模板属性
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-04
  */
 public interface TaskTemplateProperty extends DomainObject {
@@ -58,7 +58,7 @@ public interface TaskTemplateProperty extends DomainObject {
     /**
      * 为任务模板属性提供构建器
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-04
      */
     interface Builder extends DomainObject.Builder<TaskTemplateProperty, TaskTemplateProperty.Builder> {
@@ -107,7 +107,7 @@ public interface TaskTemplateProperty extends DomainObject {
     /**
      * 为任务模板属性提供声明
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-04
      */
     interface Declaration {
@@ -135,7 +135,7 @@ public interface TaskTemplateProperty extends DomainObject {
         /**
          * 为任务模板属性声明提供构建器
          *
-         * @author yWX1299574
+         * @author 姚江
          * @since 2023-12-04
          */
         interface Builder {
@@ -184,7 +184,7 @@ public interface TaskTemplateProperty extends DomainObject {
     /**
      * 为任务模板属性提供数据库存储功能
      *
-     * @author yWX1299574
+     * @author 姚江
      * @since 2023-12-04
      */
     interface Repo {

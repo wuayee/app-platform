@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc.annotation;
 /**
  * 当注解的声明不符合预期时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 public class AnnotationDeclarationException extends RuntimeException {

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 表示注册中心的定位器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-12
  */
 public interface RegistryLocator {

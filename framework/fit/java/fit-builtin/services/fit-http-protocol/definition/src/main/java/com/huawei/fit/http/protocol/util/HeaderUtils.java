@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 用于处理 Http 消息头的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-07
  */
 public class HeaderUtils {

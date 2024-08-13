@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 列表类型转换的测试
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/20
  */
 class ArrayMappingProcessorTest {

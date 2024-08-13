@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 为任务属性触发器提供持久化能力。
  *
- * @author w30020313
+ * @author 王伟
  * @since 2023-08-08
  */
 @Mapper

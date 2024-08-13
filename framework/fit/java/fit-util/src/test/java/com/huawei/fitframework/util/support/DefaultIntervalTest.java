@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link DefaultInterval} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-02-15
  */
 public class DefaultIntervalTest {

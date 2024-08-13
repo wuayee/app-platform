@@ -16,7 +16,7 @@ import java.util.Arrays;
 /**
  * 为 {@link ColumnRef} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class DefaultColumnRef implements ColumnRef {

@@ -65,7 +65,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link TaskProperty.Repo} 提供基于 Postgresql 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-25
  */
 @Component
@@ -732,7 +732,7 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
     /**
      * 表示任务属性的数据行。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-10-23
      */
     static final class Row {

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Asynchronous注解所使用线程池配置
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-27
  */
 @Component

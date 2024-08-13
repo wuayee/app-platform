@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 /**
  * 用于在方法调用之后且抛出异常后生效的方法拦截器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-11
  */
 public class AfterThrowingInterceptor extends AbstractAdviceMethodInterceptor {
