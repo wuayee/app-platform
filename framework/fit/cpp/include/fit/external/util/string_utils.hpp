@@ -185,6 +185,15 @@ public:
      * @return true-是，false-否
      */
     static bool IsBlank(char ch);
+
+    /**
+     * 忽略大小写比较字符串
+     *
+     * @param str1 要比较的第一个字符串
+     * @param str2 要比较的第二个字符串
+     * @return 返回字符串是否相等
+     */
+    static bool IsEqualIgnoreCase(const std::string& str1, const std::string& str2);
 };
 }
 #endif // FIT_STRING_UTILS_HPP

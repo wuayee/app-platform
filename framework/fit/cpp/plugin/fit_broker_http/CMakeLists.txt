@@ -20,6 +20,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE
     $<BUILD_INTERFACE:fit_cmake_base> -fvisibility=hidden
     $<$<BOOL:${FIT_HTTP_ENABLE_SSL}>:ssl>
     $<$<BOOL:${FIT_HTTP_ENABLE_SSL}>:crypto>
+    $<$<BOOL:${FIT_HTTP_ENABLE_SSL}>:curl>
 )
 
 set_target_properties(${PLUGIN_NAME} PROPERTIES LIBRARY_OUTPUT_NAME ${PLUGIN_NAME})

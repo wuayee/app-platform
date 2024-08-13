@@ -26,7 +26,8 @@ public:
     void SetHttpConfig(string contextPath, string workerPath, int32_t protocol);
     void SetHttpsConfig(string contextPath, string workerPath, int32_t protocol, bool sslVerify, string cerPath,
         string privateKeyPath, string privateKeyPwd, string caCrtPth, string keyPwdFilePath, string sccConfFilePath);
-    int32_t InitHttpsClient();
+    void InitHttpClient();
+    void UninitHttpClient();
     HttpServer* GetHttpServer();
     HttpServer* GetHttpsServer();
     HttpClientPtr GetClient(string host, int32_t port, string contextPath);

@@ -14,8 +14,8 @@
 namespace Fit {
 namespace {
     constexpr const char* TRACE_ID = "FIT_TRACE_ID";
-    const unsigned int MAX_TRACE_NUM = 10000;
-    const unsigned int TRACE_ID_LAST_NUM = 4;
+    const size_t MAX_TRACE_NUM = 10000;
+    const size_t TRACE_ID_LAST_NUM = 4;
     const uint32_t BASE_IP_LENGTH = 2;
     Fit::string DecToHex(int value, uint32_t width)
     {
@@ -42,8 +42,8 @@ namespace {
     Fit::string GetSamplingNum()
     {
         Fit::string pre = Fit::to_string(Fit::TimeUtil::GetCurrentLocalTimestampMs());
-        Fit::string samplingNum = Fit::to_string((Fit::FitRandom()) % MAX_TRACE_NUM);
-        for (unsigned int i = samplingNum.length(); i < TRACE_ID_LAST_NUM; ++i) {
+        Fit::string samplingNum = Fit::to_string(( Fit::FitRandom<size_t>()) % MAX_TRACE_NUM);
+        for (size_t i = samplingNum.length(); i < TRACE_ID_LAST_NUM; ++i) {
             samplingNum = "0" + samplingNum;
         }
         samplingNum = pre + samplingNum;

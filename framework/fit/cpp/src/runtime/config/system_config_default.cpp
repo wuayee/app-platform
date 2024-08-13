@@ -162,7 +162,6 @@ Value &SystemConfigDefault::GetValue(const char *key) const
 FitCode SystemConfigDefault::PutItems(const Fit::map<Fit::string, Fit::string> &items)
 {
     for (auto &item : items) {
-        FIT_LOG_INFO("Item (%s=%s).", item.first.c_str(), item.second.c_str());
         SetValue(item.first.c_str(), item.second.c_str());
     }
 

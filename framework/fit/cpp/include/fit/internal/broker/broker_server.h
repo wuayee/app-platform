@@ -26,15 +26,12 @@ public:
     static BrokerServer &Instance();
 
     FitCode RequestResponse(ContextObj ctx,
-        const Fit::string &metadata,
+        const fit::hakuna::kernel::broker::shared::MetaData &metadata,
         const Fit::string &data,
         ::fit::hakuna::kernel::broker::shared::FitResponse &rsp);
 
 private:
-    bool ParseMeta(ContextObj ctx,
-        const Fit::string &metadata,
-        fit_meta_data &meta,
-        ::fit::hakuna::kernel::broker::shared::FitResponse &rsp);
+    int32_t IsAuthorized(const Fit::string& accessToken, const fit::registry::Fitable& fitableIn);
 
     FitCode GetFitableType(
         const fit_meta_data &meta,

@@ -7,10 +7,12 @@
 #include <fit/external/framework/plugin_activator.hpp>
 #include <fit/fit_log.h>
 #include <domain/trace/tracer.hpp>
+#include <domain/remote_invoker.hpp>
 namespace {
 const char * const GLOBAL_OPEN_TRACE_KEY = "tracer.process.enabled.value";
 const char * const LOCAL_OPEN_TRACE_KEY = "tracer.process.local.enabled.value";
 const char * const TRACER_ENABLED_KEY = "tracer.enabled.value";
+const char * const IS_ENABLE_ACCESS_TOKEN = "secure-access.enable-secure-access";
 /**
  * @Description: it is called when plugin start, only call once
  */
@@ -23,6 +25,7 @@ FitCode Start(::Fit::Framework::PluginContext* context)
     FIT_LOG_INFO("Broker client, global tracer enabled = %d, local tracer enabled = %d.",
         int(Fit::Tracer::GetInstance()->IsGlobalTraceEnabled()),
         int(Fit::Tracer::GetInstance()->IsLocalTraceEnabled()));
+    Fit::AuthenticationForRemoteInvoker::SetIsEnableAccessToken(config->Get(IS_ENABLE_ACCESS_TOKEN).AsBool(false));
     return FIT_OK;
 }
 

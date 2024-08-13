@@ -116,7 +116,7 @@ Fit::string BrokerClientFitConfig::GetRandomFitable() const
         return "";
     }
 
-    size_t pos = static_cast<size_t>(Fit::FitRandom()) % fitables.size();
+    size_t pos = Fit::FitRandom<size_t>() % fitables.size();
     return fitables[pos].fitableId;
 }
 

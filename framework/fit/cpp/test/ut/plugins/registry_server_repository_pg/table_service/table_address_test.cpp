@@ -92,7 +92,7 @@ TEST_F(TableAddressTest, should_success_when_save_1_address_success)
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(2).WillRepeatedly(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountAffected()).Times(1).WillOnce(Return(1));
 
         EXPECT_CALL(*connectionMock, IsOk()).Times(1).WillOnce(Return(true));
@@ -117,14 +117,14 @@ TEST_F(TableAddressTest, should_success_when_save_address_vector_success)
     auto sqlExecResultGenerator = [this, &count, dummyAddresses]() {
         ++count;
         // the last result will be called twice on isOk for now
-        auto isOkCallTime = (count == dummyAddresses.size()) ? 2 : 1;
+        auto isOkCallTime = (count == dummyAddresses.size()) ? 3 : 1;
         using namespace ::testing;
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
         EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(isOkCallTime).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountAffected()).Times(1).WillOnce(Return(1));
         return sqlExecResultMock;
     };
-    auto connectionCreator = [this, sqlCmdStr, sqlParams, sqlExecResultGenerator, dummyAddresses](const char*) {
+    auto connectionCreator = [&](const char*) {
         auto connectionMock = Fit::make_unique<SqlConnectionMock>();
 
         using namespace ::testing;
@@ -148,7 +148,7 @@ TEST_F(TableAddressTest, should_success_when_delete_by_worker_id_success)
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
 
         EXPECT_CALL(*connectionMock, IsOk()).Times(1).WillOnce(Return(true));
         EXPECT_CALL(*connectionMock, ExecParam(StrCaseEq(sqlCmdStr), Pointwise(IsTupleSameString(), sqlParams)))
@@ -173,7 +173,7 @@ TEST_F(TableAddressTest, should_success_when_select_by_worker_id_success)
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountRow()).Times(AtLeast(1)).WillRepeatedly(Return(1));
         EXPECT_CALL(*sqlExecResultMock, CountCol()).Times(AtLeast(1)).WillRepeatedly(Return(sqlResultStr.size()));
         EXPECT_CALL(*sqlExecResultMock, GetResultRow(_)).Times(1).WillOnce(Return(sqlResultStr));
@@ -205,7 +205,7 @@ TEST_F(TableAddressTest, should_success_when_select_all_success)
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountRow()).Times(AtLeast(1)).WillRepeatedly(Return(resultCount));
         EXPECT_CALL(*sqlExecResultMock, CountCol()).Times(AtLeast(1)).WillRepeatedly(Return(sqlResultStr.size()));
         EXPECT_CALL(*sqlExecResultMock, GetResultRow(_)).Times(resultCount).WillRepeatedly(Return(sqlResultStr));

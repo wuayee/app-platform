@@ -47,7 +47,7 @@ const Fit::string &fit_response_meta_data::get_message() const
 bool fit_response_meta_data::from_bytes(const Fit::string &buffer)
 {
     if (!is_valid_buffer(buffer)) {
-        FIT_LOG_ERROR("Invalid response meta data, size = %lu, data = %s.", buffer.size(),
+        FIT_LOG_INFO("Invalid response meta data, size = %lu, data = %s.", buffer.size(),
             ::Fit::StringUtils::ToHexString(buffer).c_str());
         return false;
     }

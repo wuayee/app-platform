@@ -20,7 +20,8 @@ build_options=${1:-"
     build_kms:true,
     build_ssl:true,
     install_third_party:false,
-    build_type:debug
+    build_type:debug,
+    build_libcurl:true
     "}
 fit_build_dir=${2:-"${cpp_dir}/build-tmp"}
 
@@ -36,6 +37,7 @@ build_type=$([[ "${build_options}" =~ "build_type:release" ]] && echo release ||
 cmake_build_type=$([ "${build_type}" == "release" ] && echo Release || echo Debug)
 cmake_build_test=$([ "${build_test}" == true ] && echo ON || echo OFF)
 install_third_party=$([[ "${build_options}" =~ "install_third_party:true" ]] && echo true || echo false)
+build_libcurl=$([[ "${build_options}" =~ "build_scc:true" ]] && echo true || echo false)
 ext_cmake_args=()
 
 echo "build_options=${build_options}"
@@ -46,7 +48,6 @@ echo "build_libpq=${build_libpq}"
 echo "build_librdkafka=${build_librdkafka}"
 echo "cmake_build_test=${cmake_build_test}"
 echo "cmake_build_type=${cmake_build_type}"
-
 cat /etc/os-release
 
 
@@ -122,6 +123,30 @@ if [ "${build_librdkafka}" == true ]; then
         ldconfig /usr/local/lib
     fi
     ext_cmake_args+=(-DFIT_ENABLE_LIBRDKAFKA=ON)
+fi
+
+#########libcurl#########
+if [ "${build_libcurl}" == true ]; then
+    cd ${cpp_dir}/third_party/curl
+    rm -rf build
+    mkdir -p build && cd build || exit
+
+    cmake -DCURL_USE_OPENSSL=ON \
+    -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DENABLE_DEBUG=Release \
+    -DCMAKE_INSTALL_PREFIX=${cpp_dir}/third_party/curl/install \
+    -DCMAKE_BUILD_TYPE=Release ..
+    make install
+
+    if [ -d "${cpp_dir}/third_party/curl/install/lib64" ]; then
+        mv ${cpp_dir}/third_party/curl/install/lib64 ${cpp_dir}/third_party/curl/install/lib
+    fi
+
+    cp -arv ${cpp_dir}/third_party/curl/install/* ${third_party_output_dir}
+    if [ "${install_third_party}" == true ]; then
+        cp -ar ${cpp_dir}/third_party/curl/install/* /usr/local/
+        ldconfig /usr/local/lib
+    fi
+    ext_cmake_args+=(-DFIT_ENABLE_LIBCURL=ON)
 fi
 
 ########kms##########

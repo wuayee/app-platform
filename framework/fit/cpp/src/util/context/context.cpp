@@ -95,6 +95,16 @@ void Context::SetPolicy(uint8_t policy) noexcept
     policy_ = policy;
 }
 
+void Context::SetAccessToken(const Fit::string& accessToken) noexcept
+{
+    accessToken_ = accessToken;
+}
+
+const Fit::string& Context::GetAccessToken() const noexcept
+{
+    return accessToken_;
+}
+
 const std::unique_ptr<TargetAddress>& Context::GetTargetAddress() const noexcept
 {
     return targetAddressPtr_;

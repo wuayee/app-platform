@@ -8,12 +8,15 @@
 
 #include <fit/internal/broker/broker_server.h>
 #include <fit/fit_log.h>
-#include <fit/internal/util/protocol/fit_meta_package_parser.h>
 #include <fit/internal/broker/broker_client_inner.h>
 #include <fit/internal/util/protocol/fit_response_meta_data.h>
 #include <fit/internal/util/protocol/tlv/tlv_tag_define.hpp>
 #include <genericable/com_huawei_fit_broker_server_start_server/1.0.0/cplusplus/startServer.hpp>
 #include <genericable/com_huawei_fit_broker_server_stop_server/1.0.0/cplusplus/stopServer.hpp>
+#include <genericable/com_huawei_fit_secure_access_is_authorized/1.0.0/cplusplus/isAuthorized.hpp>
+#include <genericable/com_huawei_fit_secure_access_apply_token/1.0.0/cplusplus/applyToken.hpp>
+#include <genericable/com_huawei_fit_secure_access_refresh_token/1.0.0/cplusplus/refreshToken.hpp>
+#include "broker_server_config.h"
 
 namespace Fit {
 BrokerServer &BrokerServer::Instance()
@@ -80,32 +83,6 @@ FitCode BrokerServer::StopServer()
     return FIT_OK;
 }
 
-bool BrokerServer::ParseMeta(ContextObj ctx,
-    const Fit::string &metadata,
-    fit_meta_data &meta,
-    ::fit::hakuna::kernel::broker::shared::FitResponse &rsp)
-{
-    if (!fit_meta_package_parser(metadata).parse_to(meta)) {
-        FIT_LOG_ERROR("BrokerServer received error.");
-        rsp.metadata = fit_response_meta_data(fit_meta_defines::META_VERSION_HAS_RESPONSE_META,
-            meta.get_payload_format(), 0,
-            FIT_ERR_NET_NO_REQUEST_METADATA, "No metadata").to_bytes();
-        return false;
-    }
-
-    auto globalContext = meta.GetValueByTag(TLV_GLOBAL_CONTEXT);
-    if (!globalContext.empty()) {
-        FIT_LOG_DEBUG("DeSerialize global context result %s.", globalContext.c_str());
-        Context::Global::GlobalContextDeserialize(ctx, globalContext);
-    }
-    auto exceptionContext = meta.GetValueByTag(TLV_EXCEPTION_CONTEXT);
-    if (!exceptionContext.empty()) {
-        FIT_LOG_DEBUG("Deserialize exception context result %s.", exceptionContext.c_str());
-        Context::Exception::DeserializeExceptionContext(ctx, exceptionContext);
-    }
-    return true;
-}
-
 FitCode BrokerServer::GetFitableType(
     const fit_meta_data &meta,
     Fit::Framework::Annotation::FitableType &fitableType)
@@ -137,7 +114,7 @@ FitCode BrokerServer::GetFitableType(
 }
 
 FitCode BrokerServer::RequestResponse(ContextObj ctx,
-    const Fit::string &metadata,
+    const fit::hakuna::kernel::broker::shared::MetaData &metadata,
     const Fit::string &data,
     ::fit::hakuna::kernel::broker::shared::FitResponse &rsp)
 {
@@ -147,9 +124,16 @@ FitCode BrokerServer::RequestResponse(ContextObj ctx,
         return FIT_OK;
     }
 
-    fit_meta_data meta;
-    if (!ParseMeta(ctx, metadata, meta, rsp)) {
-        return FIT_OK;
+    fit_meta_data meta = fit_meta_data::from(metadata);
+    auto globalContext = meta.GetValueByTag(TLV_GLOBAL_CONTEXT);
+    if (!globalContext.empty()) {
+        FIT_LOG_DEBUG("DeSerialize global context result %s.", globalContext.c_str());
+        Context::Global::GlobalContextDeserialize(ctx, globalContext);
+    }
+    auto exceptionContext = meta.GetValueByTag(TLV_EXCEPTION_CONTEXT);
+    if (!exceptionContext.empty()) {
+        FIT_LOG_DEBUG("Deserialize exception context result %s.", exceptionContext.c_str());
+        Context::Exception::DeserializeExceptionContext(ctx, exceptionContext);
     }
 
     FIT_LOG_DEBUG("BrokerServer received: genericId = %s, fitableId = %s, format = %d.",
@@ -172,6 +156,28 @@ void FillResponseMetadata(ContextObj ctx, fit_response_meta_data& metadata)
         FIT_LOG_DEBUG("Set exception context to TLV. [length=%lu]", exceptionContext.length());
         metadata.SetTagValue(TLV_EXCEPTION_CONTEXT, exceptionContext);
     }
+}
+
+int32_t BrokerServer::IsAuthorized(const Fit::string& accessToken, const fit::registry::Fitable& fitableIn)
+{
+    if (fitableIn.genericId == ::fit::secure::access::ApplyToken::GENERIC_ID ||
+        fitableIn.genericId == ::fit::secure::access::RefreshToken::GENERIC_ID) {
+        return FIT_OK;
+    }
+    ::fit::hakuna::kernel::shared::Fitable fitable;
+    fit::secure::access::Permission permission;
+    permission.fitable = &fitable;
+    permission.fitable->fitableId = fitableIn.fitId;
+    permission.fitable->fitableVersion = "1.0.0";
+    permission.fitable->genericableId = fitableIn.genericId;
+    permission.fitable->genericableVersion = fitableIn.genericVersion;
+
+    fit::secure::access::IsAuthorized isAuthorizedExec;
+    int32_t ret = isAuthorizedExec(&accessToken, &permission);
+    if (ret != FIT_OK) {
+        FIT_LOG_ERROR("Checkout auth error, %d.", ret);
+    }
+    return ret;
 }
 
 FitCode BrokerServer::RequestResponse(ContextObj ctx,
@@ -210,6 +216,18 @@ FitCode BrokerServer::RequestResponse(ContextObj ctx,
     }
     fitable.fitVersion = Fit::to_string(meta.get_version());
 
+    // 认证鉴权可配置
+    if (Fit::BrokerServerConfig::Instance()->IsEnableAccessToken()) {
+        ret = IsAuthorized(meta.get_access_token(), fitable);
+        if (ret != FIT_OK) {
+            FIT_LOG_ERROR("Not authorized gid:fid (%s:%s).", fitable.genericId.c_str(), fitable.fitId.c_str());
+            rsp.metadata = fit_response_meta_data(fit_meta_defines::META_VERSION_HAS_RESPONSE_META,
+                meta.get_payload_format(), 1, ret, "Unauthorized").to_bytes();
+            return FIT_OK;
+        }
+    }
+
+    FIT_LOG_DEBUG("Authorized gid:fid (%s:%s).", fitable.genericId.c_str(), fitable.fitId.c_str());
     ret = GetBrokerClient()->LocalInvoke(ctx, fitable, in, out, fitableType);
     if (ret != FIT_OK) {
         FIT_LOG_ERROR("BrokerServer LocalInvoke failed: genericId = %s, fitableId = %s, format = %d, ret = %x.",

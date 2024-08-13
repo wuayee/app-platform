@@ -4,6 +4,7 @@ file(GLOB_RECURSE PLUGINS_SRC
     registry_server/*.cpp
     loadbalance/*.cpp
     stub/*.cpp
+    secure_access/*.cpp
 )
 
 if(TARGET FitRegistryServerRepositoryOdbc)
@@ -30,6 +31,7 @@ target_include_directories(UTFitPlugins PUBLIC ${COMMON_INCLUDE}
     ${FIT_SRC_DIR}/plugin/registry_server
     ${FIT_SRC_DIR}/include
     ${FIT_SRC_DIR}/test
+    ${FIT_SRC_DIR}/plugin/secure_access
 )
 target_compile_definitions(UTFitPlugins PRIVATE
     $<$<BOOL:${FIT_HTTP_ENABLE_SSL}>:CPPHTTPLIB_OPENSSL_SUPPORT>
@@ -46,6 +48,7 @@ target_link_libraries(UTFitPlugins PUBLIC $<BUILD_INTERFACE:fit_cmake_base>
     FitPlugin_registry_server
     FitPlugin_registry_listener
     FitPlugin_broker_http
+    FitPlugin_SecureAccess
     $<$<TARGET_EXISTS:db_info_manager_for_kms>:db_info_manager_for_kms>
     $<$<TARGET_EXISTS:fit_crypto_kms>:fit_crypto_kms>
     $<$<TARGET_EXISTS:registry_server_repository_pg>:registry_server_repository_pg>
@@ -57,6 +60,7 @@ set_target_properties(UTFitPlugins PROPERTIES LINK_FLAGS "${FIT_LINK_OPTIONS}")
 set_target_properties(UTFitPlugins PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${FIT_TEST_BIN_DIR})
 add_custom_command(TARGET UTFitPlugins
     COMMAND echo "UTPlugins was compiled"
+    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/secure_access/libFitPlugin_SecureAccess_test.json ${FIT_TEST_BIN_DIR}/
 )
 
 add_test(

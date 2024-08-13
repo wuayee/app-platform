@@ -132,3 +132,22 @@ CREATE TABLE IF NOT EXISTS "registry_scene_subscribe"
     "ctime"                     timestamp(6) DEFAULT CURRENT_TIMESTAMP,
     constraint registry_scene_subscribe_index unique (scene_type, subscriber_id, subscriber_callback_fitid)
 );
+
+--
+-- Table structure for registry_token_role
+--
+-- DROP TABLE IF EXISTS "registry_token_role";
+CREATE TABLE IF NOT EXISTS "registry_token_role"
+(
+    "token" varchar(96) COLLATE "pg_catalog"."default" NOT NULL,
+    "type" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+    "role" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+    "timeout" int8,
+    "end_time" int8,
+    "ctime" timestamp(6) DEFAULT CURRENT_TIMESTAMP,
+    constraint registry_token_role_index unique (token, type, role)
+);
+
+--
+-- Install extension for generate uuid
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

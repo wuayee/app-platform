@@ -13,7 +13,6 @@
 #include <fit/stl/string.hpp>
 #include <fit/stl/memory.hpp>
 #include <fit/internal/network/network_define.h>
-
 #include "http_config.hpp"
 
 namespace Fit {
@@ -41,5 +40,4 @@ private:
     unique_ptr<httplib::Server> svr_;
 };
 }
-
 #endif

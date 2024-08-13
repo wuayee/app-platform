@@ -7,10 +7,10 @@
  */
 
 #include "http_manager.hpp"
-#include <include/http_client_factory.h>
 #include <include/http_server_factory.h>
 #include <httplib_util.hpp>
-
+#include <include/curl_http_client.h>
+#include <include/curl_https_client.h>
 namespace Fit {
 HttpManager& HttpManager::Instance()
 {
@@ -29,10 +29,16 @@ void HttpManager::InitHttpsServer(string host, int32_t port)
         HttpServerFactory::CreateHttpsServer(&httpsConfig_));
 }
 
-int32_t HttpManager::InitHttpsClient()
+void HttpManager::InitHttpClient()
 {
-    return HttpClientFactory::Instance()->InitHttps(&httpsConfig_);
+    CurlHttpClient::GlobalInit();
 }
+
+void HttpManager::UninitHttpClient()
+{
+    CurlHttpClient::GlobalUninit();
+}
+
 void HttpManager::SetHttpConfig(string contextPath, string workerPath, int32_t protocol)
 {
     httpConfig_ = HttpConfig(move(contextPath), move(workerPath), protocol);
@@ -58,21 +64,15 @@ HttpServer* HttpManager::GetHttpsServer()
 
 HttpClientPtr HttpManager::GetClient(string host, int32_t port, string contextPath)
 {
-    return Fit::make_shared<HttpClientTemp<Fit::shared_ptr<httplib::Client>>>(contextPath, &httpConfig_,
-        HttpClientFactory::Instance()->CreateHttpClient(&httpConfig_, host, port),
-        HttplibUtil::GetHttpAddress(host, port));
+    return Fit::make_shared<CurlHttpClient>(contextPath, &httpConfig_, HttplibUtil::GetHttpAddress(host, port));
 }
 
 HttpClientPtr HttpManager::GetHttpsClient(string host, int32_t port, string contextPath)
 {
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
-    return Fit::make_shared<HttpClientTemp<Fit::shared_ptr<httplib::SSLClient>>>(contextPath, &httpsConfig_,
-        HttpClientFactory::Instance()->CreateHttpsClient(&httpsConfig_, host, port),
-        HttplibUtil::GetHttpsAddress(host, port));
+    return Fit::make_shared<CurlHttpsClient>(contextPath, &httpsConfig_, HttplibUtil::GetHttpsAddress(host, port));
 #else
-    return Fit::make_shared<HttpClientTemp<Fit::shared_ptr<httplib::Client>>>(contextPath, &httpsConfig_,
-        HttpClientFactory::Instance()->CreateHttpsClientNoSSL(&httpsConfig_, host, port),
-        HttplibUtil::GetHttpsAddress(host, port));
+    return Fit::make_shared<CurlHttpClient>(contextPath, &httpsConfig_, HttplibUtil::GetHttpsAddress(host, port));
 #endif
 }
 }

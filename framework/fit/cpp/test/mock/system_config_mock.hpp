@@ -22,6 +22,4 @@ public:
     MOCK_CONST_METHOD0(GetAppName, const Fit::string&());
     MOCK_CONST_METHOD0(GetAppVersion, Fit::string());
 };
-
-
 #endif // SYSTEM_CONFIG_MOCK_HPP
