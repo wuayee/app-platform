@@ -28,7 +28,7 @@ crond
 
 mkdir -p /log/app
 chown -R runtime:edatamate /log
-echo "runtime ALL=(ALL) NOPASSWD: /databus/databus" >> /etc/sudoers
+chown -R runtime:edatamate /databus/databus
 
 # 运行 Databus 主程序
-sudo -u runtime /databus/databus
+su -c '/databus/databus' runtime

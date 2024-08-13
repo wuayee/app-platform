@@ -40,6 +40,7 @@ service cron restart
 
 mkdir -p /log/app
 chown -R runtime:edatamate /log
+chown -R runtime:edatamate /databus/databus
 
 # 运行 Databus 主程序
 su -c '/databus/databus' runtime
