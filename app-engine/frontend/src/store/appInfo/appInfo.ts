@@ -16,8 +16,8 @@ const initialState: AppI = {
   appId: '',
   tenantId: TENANT_ID,
   appInfo: {},
-  atAppId: '',
-  atAppInfo: {},
+  atAppId: null,
+  atAppInfo: null,
 };
 
 export const appStore = createSlice({
