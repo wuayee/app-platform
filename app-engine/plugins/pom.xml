@@ -16,6 +16,7 @@
         <module>app-announcement</module>
         <module>app-base</module>
         <module>app-eval</module>
+        <module>eval-task</module>
         <module>knowledge-base</module>
         <module>voice-text-adapter</module>
         <module>schema-validator</module>
