@@ -190,6 +190,11 @@ export const formatterLabel = (data) => {
   return option.label;
 };
 // 根据级联获取字段已选择的选项值
+/**
+ * @param {any} casecadeMap - 列表对应中文名称以及prop映射
+ * @param {string} formData - 初始请求数据
+ * @param {any} currentItem - 请求数据后的值
+ */
 const getSelectedCascade = (casecadeMap: any, formData: string, currentItem: any) => {
   const curIndex = casecadeMap[currentItem.belongs]?.findIndex((cas: any) => {
     return cas.prop === currentItem.prop;
@@ -210,6 +215,15 @@ const getSelectedCascade = (casecadeMap: any, formData: string, currentItem: any
   return arrOptions;
 };
 // 获取下拉
+/**
+ * @param {string} val - 下拉列表变化时获取的值
+ * @param {any} allFields - 所有下拉列表初始值
+ * @param {any} casecadeMap - 列表对应中文名称以及prop映射
+ * @param {any} category - 筛选的值参数category
+ * @param {string} formData - 初始请求数据
+ * @param {any} belongsMap - 财务指标belongs映射
+ * @param {never[]} value - 通过后端接口查询时，获取的下拉列表初始值
+ */
 export const getOptionsLabel = async (
   val: string,
   allFields: any[],

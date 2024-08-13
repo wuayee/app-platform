@@ -38,7 +38,7 @@ const ChartCondition = (props) => {
     });
     let filter2 = setFiltersVal1();
     setFilter1([...filter1, ...filter2]);
-  };
+  }
   // 设置filter1
   const setFiltersVal1 = () => {
     const filterCopy = JSON.parse(JSON.stringify(filters.current));
@@ -52,7 +52,7 @@ const ChartCondition = (props) => {
       }
       return item.value;
     });
-  };
+  }
   // 设置filter2
   const setFiltersVal2 = () => {
     const filterCopy = JSON.parse(JSON.stringify(filters.current));
@@ -67,7 +67,7 @@ const ChartCondition = (props) => {
       return item.value;
     });
     setFilter2(list);
-  };
+  }
   // 表单确定
   const handleSave = (data) => {
     const formatData = data.operator ? { [data.operator]: data.value } : data.value;
@@ -88,7 +88,7 @@ const ChartCondition = (props) => {
         aimItem && (formData.current[aimItem.category][aimItem.prop] = []);
       });
     }
-  };
+  }
   // 是否包含
   const handleFilterValue = (item, condition) => {
     item.category = condition;
@@ -101,23 +101,23 @@ const ChartCondition = (props) => {
     } else {
       item.value = formData.current[condition][item.prop];
     }
-  };
+  }
   // 确定表单回显
   const formSetValue = () => {
     setFiltersVal();
     setFiltersVal2();
-  };
+  }
   const handleConfirm = () => {
     !hasLv1.current && delete formData.current.lv1_prod_rd_team_cn_name;
     confirm(formData.current);
-  };
+  }
   const handleReset = () => {
     formData.current = JSON.parse(data.dsl);
     formSetValue();
-  };
+  }
   const handleCancel = () => {
     formSetValue();
-  };
+  }
   const handleRemove = (item) => {
     if (item.category) {
       delete formData.current[item.category][item.prop];
@@ -125,10 +125,10 @@ const ChartCondition = (props) => {
       delete formData.current[item.prop];
     }
     formSetValue();
-  };
+  }
   const getFormData = () => {
     return formData.current;
-  };
+  }
   // 初始化溯源表单
   useEffect(() => {
     formData.current = JSON.parse(data.dsl);
