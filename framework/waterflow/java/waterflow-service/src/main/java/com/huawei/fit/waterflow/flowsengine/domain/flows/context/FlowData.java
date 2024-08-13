@@ -32,7 +32,7 @@ import java.util.Optional;
  * 流程实例运行时承载的业务数据
  * 使用对象存储代替JSONObject，FIT不支持传JSONObject
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/25
  */
 @Getter

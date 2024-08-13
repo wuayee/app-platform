@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * 节点手动任务校验规则
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 @Component

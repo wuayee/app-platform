@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link VirtualFilePattern} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-04
  */
 public class DefaultVirtualFilePattern extends DefaultPattern<String> implements VirtualFilePattern {

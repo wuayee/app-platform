@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 类型的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-26
  */
 public class SchemaTypeUtils {

@@ -21,7 +21,7 @@ import java.io.InputStream;
 /**
  * {@link DefaultVersion} 的单元测试。
  *
- * @author gwx900499
+ * @author 郭龙飞
  * @since 2023-02-16
  */
 @DisplayName("测试 DefaultGenericableVersion 类以及相关类")

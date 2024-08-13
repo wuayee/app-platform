@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 表示 {@link MultiSourcesPropertyValueMapper} 的单元测试。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-02-17
  */
 public class MultiSourcePropertyValueMapperTest {

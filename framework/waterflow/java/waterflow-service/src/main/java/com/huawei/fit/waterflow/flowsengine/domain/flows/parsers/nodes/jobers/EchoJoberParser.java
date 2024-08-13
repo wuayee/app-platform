@@ -12,7 +12,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
 /**
  * Echo任务解析接口
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/8/15
  */
 public class EchoJoberParser implements JoberParser {

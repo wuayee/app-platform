@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * 表示 {@link ReschedulableExecution} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-01
  */
 @DisplayName("测试 ReschedulableExecution 类")

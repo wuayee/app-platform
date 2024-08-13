@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 /**
  * 支持多级获取.上一级 {@link Supplier} 的返回值为 {@link Optional#empty()} 时，才触发下一级的 {@link Supplier#get()}.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2021-02-02
  */
 public class OptionalUtils {
@@ -67,7 +67,7 @@ public class OptionalUtils {
     /**
      * 支持的操作接口.
      *
-     * @author 张越 z00559346
+     * @author 张越
      * @since 2021-02-02
      */
     public interface Op<R> {

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link PropertyKey} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-01-30
  */
 public class PropertyKeyTest {

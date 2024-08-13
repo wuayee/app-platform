@@ -10,7 +10,7 @@ import com.huawei.fitframework.event.Event;
 /**
  * 通用数据源Event
  *
- * @author d30022216
+ * @author 董建华
  * @since 2023-08-29
  */
 public class CommonSourceEvent implements Event {

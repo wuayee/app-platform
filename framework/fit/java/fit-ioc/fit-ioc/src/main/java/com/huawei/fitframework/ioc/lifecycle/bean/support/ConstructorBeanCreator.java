@@ -21,8 +21,8 @@ import java.util.stream.Stream;
 /**
  * 为 {@link BeanCreator} 提供基于构造方法的实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-04-28
  */
 public class ConstructorBeanCreator extends AbstractBeanCreator {

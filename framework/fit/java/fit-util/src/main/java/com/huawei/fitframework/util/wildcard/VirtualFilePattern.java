@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 为虚拟文件提供匹配模式。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-04
  */
 public interface VirtualFilePattern extends Pattern<String> {

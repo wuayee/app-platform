@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * 为 {@link InstanceEventNotifier} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-28
  */
 public class DefaultInstanceEventNotifier extends AbstractTaskInstanceEventNotifier implements InstanceEventNotifier {

@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 为内存权限申请提供结果。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-05-21
  */
 public interface MemoryPermissionResult extends DataBusIoResult {
@@ -61,7 +61,7 @@ public interface MemoryPermissionResult extends DataBusIoResult {
     /**
      * 为 {@link MemoryPermissionResult} 提供表示申请内存权限成功的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-05-21
      */
     final class SuccessResult implements MemoryPermissionResult {
@@ -114,7 +114,7 @@ public interface MemoryPermissionResult extends DataBusIoResult {
     /**
      * 为 {@link MemoryPermissionResult} 提供表示申请内存权限失败的实现。
      *
-     * @author 王成 w00863339
+     * @author 王成
      * @since 2024-03-17
      */
     final class FailureResult implements MemoryPermissionResult {

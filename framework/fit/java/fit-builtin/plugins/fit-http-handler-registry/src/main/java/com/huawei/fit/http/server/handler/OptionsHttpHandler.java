@@ -12,7 +12,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * 表示全局默认的 {@link HttpRequestMethod#OPTIONS} 处理方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-21
  */
 @Component

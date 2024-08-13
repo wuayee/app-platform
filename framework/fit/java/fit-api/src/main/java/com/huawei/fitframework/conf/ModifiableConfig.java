@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 表示可修改的配置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-17
  */
 public interface ModifiableConfig extends Config {

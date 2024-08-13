@@ -10,7 +10,7 @@ import lombok.Getter;
 /**
  * 对实体的操作类型
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-16 18:53
  */
 @Getter

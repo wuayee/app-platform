@@ -13,7 +13,7 @@ import java.util.zip.InflaterInputStream;
 /**
  * 为 {@link InflaterInputStream} 提供用于 JAR 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-29
  */
 public final class JarInflaterInputStream extends InflaterInputStream {

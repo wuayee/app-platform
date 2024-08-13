@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 为 {@link Condition} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-27
  */
 public class DefaultCondition implements Condition {

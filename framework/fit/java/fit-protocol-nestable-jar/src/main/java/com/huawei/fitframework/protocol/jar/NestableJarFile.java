@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
 /**
  * 为 {@link JarFile} 提供基于 {@link Jar} 的适配程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-22
  */
 public final class NestableJarFile extends JarFile {
@@ -124,7 +124,7 @@ public final class NestableJarFile extends JarFile {
     /**
      * 为 {@link JarEntry} 提供基于 {@link Jar.Entry} 的适配程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-22
      */
     public static final class Entry extends JarEntry {

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link File.Repo} 提供基于 Postgresql 的实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-10
  */
 @Component

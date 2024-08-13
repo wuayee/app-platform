@@ -28,7 +28,7 @@ import java.util.zip.ZipInputStream;
 /**
  * 表示 Maven 插件的任务执行器的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-23
  */
 public abstract class AbstractExecutor {

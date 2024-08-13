@@ -13,7 +13,7 @@ import com.huawei.fitframework.inspection.Nonnull;
  * 表示 {@link ObjectEntity} 的默认实现。
  *
  * @param <T> 表示对象类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class DefaultObjectEntity<T> extends AbstractEntity implements ObjectEntity<T> {

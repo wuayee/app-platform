@@ -14,8 +14,8 @@ import java.util.List;
  * 为 {@link RangedResultSet} 提供默认实现。
  *
  * @param <T> 表示结果集中数据的类型。
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public class DefaultRangedResultSet<T> implements RangedResultSet<T> {

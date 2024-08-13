@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * 表示校验元素是否为空的注解。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-08
  */
 @Retention(RetentionPolicy.RUNTIME)

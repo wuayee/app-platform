@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 表示一次性的执行策略。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-15
  */
 public class DisposableExecutePolicy extends AbstractExecutePolicy {

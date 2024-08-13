@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * {@link AppBuilderRuntimeInfo} 以及 {@link AppBuilderRuntimeInfoPo} 之间互相转换的序列化器.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-07-29
  */
 public class AppBuilderRuntimeInfoSerializer implements BaseSerializer<AppBuilderRuntimeInfo, AppBuilderRuntimeInfoPo> {

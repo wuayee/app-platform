@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 应用构建器组件类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-16
  */
 @EqualsAndHashCode(callSuper = true)

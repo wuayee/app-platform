@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示编译程序的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-23
  */
 public abstract class AbstractCompiler extends AbstractExecutor {

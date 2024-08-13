@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 创建Aipp响应体实体类对象
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-24
  */
 @Data

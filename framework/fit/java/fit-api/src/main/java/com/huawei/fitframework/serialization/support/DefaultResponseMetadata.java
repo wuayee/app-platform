@@ -24,7 +24,7 @@ import java.util.Arrays;
 /**
  * 为 {@link ResponseMetadata} 提供默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-05-14
  */
 public class DefaultResponseMetadata implements ResponseMetadata {

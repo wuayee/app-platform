@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.domain.type;
 /**
  * 为文本列表提供数据转换器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-24
  */
 public class ListTextConverter extends AbstractListDataConverter {

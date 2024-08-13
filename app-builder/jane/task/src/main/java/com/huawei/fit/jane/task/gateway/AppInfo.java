@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.gateway;
 /**
  * 为应用程序提供基础信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-17
  */
 public interface AppInfo {

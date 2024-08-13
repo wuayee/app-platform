@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * 节点解析
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 1.0
  */
 @RequiredArgsConstructor

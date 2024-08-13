@@ -11,7 +11,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 /**
  * 为指定文本的值包含指定文本提供过滤器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-15
  */
 public class ContainsFilter implements Filter {

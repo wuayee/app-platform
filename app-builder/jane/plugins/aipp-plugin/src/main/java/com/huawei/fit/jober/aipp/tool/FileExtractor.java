@@ -11,7 +11,7 @@ import java.io.File;
 /**
  * 文件内容提取
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-06-08
  */
 public interface FileExtractor {

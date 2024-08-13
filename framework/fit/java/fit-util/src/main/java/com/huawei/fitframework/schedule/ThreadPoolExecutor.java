@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 /**
  * 表示线程池化的执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-15
  */
 public interface ThreadPoolExecutor extends ThreadPool {

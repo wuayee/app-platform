@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.domain.support.DefaultInstanceEvent;
 /**
  * 表示任务实例的事件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public interface InstanceEvent {
@@ -30,7 +30,7 @@ public interface InstanceEvent {
     /**
      * 为实例事件提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-04
      */
     interface Builder {

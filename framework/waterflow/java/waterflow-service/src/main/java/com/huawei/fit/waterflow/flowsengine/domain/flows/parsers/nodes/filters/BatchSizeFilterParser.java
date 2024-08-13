@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
  * ClassName
  * 简述
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/09/25
  */
 public class BatchSizeFilterParser implements FilterParser {

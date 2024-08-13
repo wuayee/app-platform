@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 为 {@link HierarchicalTaskInstance} 提供基于 {@link TaskInstance} 的适配器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-11
  */
 public class HierarchicalTaskInstanceDecorator implements HierarchicalTaskInstance {

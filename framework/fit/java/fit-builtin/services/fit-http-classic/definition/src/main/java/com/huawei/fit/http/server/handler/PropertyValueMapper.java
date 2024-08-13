@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示属性值映射器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 @FunctionalInterface

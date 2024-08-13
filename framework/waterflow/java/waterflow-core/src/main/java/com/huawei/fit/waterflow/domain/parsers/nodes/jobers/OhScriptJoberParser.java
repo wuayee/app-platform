@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.domain.parsers.FlowGraphData;
 /**
  * ohScript脚本任务解析器
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public class OhScriptJoberParser implements JoberParser {

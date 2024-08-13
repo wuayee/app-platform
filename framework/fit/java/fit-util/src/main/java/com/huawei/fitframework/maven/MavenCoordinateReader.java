@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * 为 {@link MavenCoordinate} 提供读取程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-21
  */
 final class MavenCoordinateReader {

@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * 为任务模板提供 REST 风格API
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-12
  */
 @Component

@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 为 {@link ConfigDecryptor} 提供去除kms的a3000默认实现。
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2023/11/28
  */
 @Component("NoConfigPropertyDecrypt")

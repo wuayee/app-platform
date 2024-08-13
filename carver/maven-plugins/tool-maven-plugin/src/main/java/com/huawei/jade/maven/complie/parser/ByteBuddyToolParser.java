@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * 基于 {@link net.bytebuddy.ByteBuddy} 对于 {@link ToolMethod} 注解的工具解析器。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-12
  */
 public class ByteBuddyToolParser implements ToolParser {

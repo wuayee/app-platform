@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link SeqGenerator} 的单元测试。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-06-22
  */
 @DisplayName("测试 SeqGenerator 类")

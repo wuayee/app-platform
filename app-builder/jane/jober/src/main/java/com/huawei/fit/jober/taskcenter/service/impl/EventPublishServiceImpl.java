@@ -12,7 +12,7 @@ import com.huawei.fitframework.plugin.Plugin;
 /**
  * {@link EventPublishService} 的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-21
  */
 @Component

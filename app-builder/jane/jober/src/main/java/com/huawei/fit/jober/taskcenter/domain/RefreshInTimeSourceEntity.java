@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 表示实时刷新的数据源。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-21
  */
 public class RefreshInTimeSourceEntity extends SourceEntity {

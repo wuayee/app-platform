@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 表示 {@link JsonSchema} 的引用实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public class ReferenceSchema extends AbstractJsonSchema {

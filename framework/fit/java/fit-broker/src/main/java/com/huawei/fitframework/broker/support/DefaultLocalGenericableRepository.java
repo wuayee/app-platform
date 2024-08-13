@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 /**
  * 表示 {@link GenericableRepository} 的本地仓库。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-25
  */
 public class DefaultLocalGenericableRepository implements LocalGenericableRepository {

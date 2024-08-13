@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 /**
  * AppBuilder的App结构体
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 @Builder

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 用于加载resource目录下的资源
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/1/12
  */
 public class ResourceLoader {

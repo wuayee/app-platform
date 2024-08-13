@@ -11,7 +11,7 @@ import com.huawei.fitframework.validation.constraints.NotBlank;
 /**
  * 表示 {@link NotBlank} 约束的校验器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-08
  */
 public class NotBlankValidator implements ConstraintValidator<NotBlank, String> {

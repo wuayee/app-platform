@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 公告信息前端展示类。
  *
- * @author z00591349
+ * @author 张圆
  * @since 2024-06-18
  */
 @Data

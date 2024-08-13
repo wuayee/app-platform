@@ -7,7 +7,7 @@ package com.huawei.fit.http.entity;
 /**
  * 表示带名字的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-12
  */
 public interface NamedEntity extends Entity {

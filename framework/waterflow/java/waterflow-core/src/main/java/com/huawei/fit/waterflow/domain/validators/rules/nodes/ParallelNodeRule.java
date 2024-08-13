@@ -11,7 +11,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 并行节点校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class ParallelNodeRule implements NodeRule {

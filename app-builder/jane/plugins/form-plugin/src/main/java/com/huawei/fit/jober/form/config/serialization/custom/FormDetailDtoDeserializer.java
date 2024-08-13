@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * {@link FormDetailDto} 类型的自定义反序列化器
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-02-27
  */
 public class FormDetailDtoDeserializer extends JsonDeserializer<FormDetailDto> {

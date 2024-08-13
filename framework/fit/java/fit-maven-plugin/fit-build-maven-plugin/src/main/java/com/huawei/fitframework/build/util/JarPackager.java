@@ -25,7 +25,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * 提供 JAR 格式的打包程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-02
  */
 public final class JarPackager {

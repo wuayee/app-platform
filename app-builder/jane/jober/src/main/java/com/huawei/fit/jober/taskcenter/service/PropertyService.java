@@ -10,7 +10,7 @@ import com.huawei.fit.jober.taskcenter.declaration.TaskPropertiesDeclaration;
 /**
  * 为任务属性提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-08
  */
 public interface PropertyService {

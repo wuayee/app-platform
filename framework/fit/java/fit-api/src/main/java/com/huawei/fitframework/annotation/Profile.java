@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 指示 Bean 仅在指定的 Profile 中生效。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-14
  */
 @Conditional(ProfileCondition.class)

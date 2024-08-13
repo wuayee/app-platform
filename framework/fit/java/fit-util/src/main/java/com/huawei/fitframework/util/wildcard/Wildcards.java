@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 /**
  * 为通配符匹配提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 final class Wildcards {

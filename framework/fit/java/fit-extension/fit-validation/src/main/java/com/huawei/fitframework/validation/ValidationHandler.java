@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * </ol>
  * </p>
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-14
  */
 @Aspect

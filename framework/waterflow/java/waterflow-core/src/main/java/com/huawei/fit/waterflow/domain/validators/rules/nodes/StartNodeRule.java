@@ -11,7 +11,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 开始节点校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class StartNodeRule implements NodeRule {

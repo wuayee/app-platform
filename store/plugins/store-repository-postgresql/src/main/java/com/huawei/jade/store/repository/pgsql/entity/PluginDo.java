@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * 存入插件数据库的实体类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-07-25
  */
 @Data

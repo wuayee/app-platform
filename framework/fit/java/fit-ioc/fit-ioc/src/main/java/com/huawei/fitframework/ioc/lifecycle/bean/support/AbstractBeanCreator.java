@@ -23,8 +23,8 @@ import java.util.function.Supplier;
 /**
  * 为 {@link BeanCreator} 提供基类，以提供参数解析能力。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-05-12
  */
 public abstract class AbstractBeanCreator implements BeanCreator {

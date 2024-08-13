@@ -11,8 +11,8 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 缓存数据校验服务的默认实现。
  *
- * @author 邬涨财 w00575064
- * @author 季聿阶 j00559309
+ * @author 邬涨财
+ * @author 季聿阶
  * @since 2024-01-24
  */
 @Component

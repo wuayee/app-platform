@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 测试框架的监听类，用于监听单测类整个生命周期。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 易文渊
  * @since 2023-01-17
  */

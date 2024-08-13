@@ -46,7 +46,7 @@ import java.util.stream.Stream;
 /**
  * LlmAudio2Summary
  *
- * @author y00612997
+ * @author 易文渊
  * @since 2024/1/8
  */
 @Component

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  *     <li>参数绑定：匹配的是参数类型和个数，个数在 @param 括号中以逗号分隔，类型是在增强方法中定义，并且必须在 {@code argsName} 中声明。</li>
  * </ul>
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-27
  */
 public class AtParamsParser extends BaseParser {

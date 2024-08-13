@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * 表示 {@link FixedDelayExecutePolicy} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2022-12-05
  */
 @DisplayName("测试 FixedDelayExecutePolicy 类")

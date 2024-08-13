@@ -7,7 +7,7 @@ package com.huawei.fitframework.broker;
 /**
  * 表示泛服务实现的元数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-18
  */
 public interface FitableMetadata {

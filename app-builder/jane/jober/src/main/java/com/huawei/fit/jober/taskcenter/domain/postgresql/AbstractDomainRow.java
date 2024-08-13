@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 为领域对象存储的行提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-30
  */
 abstract class AbstractDomainRow {

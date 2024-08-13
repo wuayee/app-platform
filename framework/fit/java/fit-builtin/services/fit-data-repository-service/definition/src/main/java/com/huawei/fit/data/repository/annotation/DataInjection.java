@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示需要进行出入参数据替换的注解。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-21
  */
 @Documented

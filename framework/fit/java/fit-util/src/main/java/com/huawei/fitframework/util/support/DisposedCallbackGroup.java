@@ -10,8 +10,8 @@ import com.huawei.fitframework.util.DisposedCallback;
 /**
  * 为 {@link DisposedCallback} 提供组合。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2021-02-25
  */
 class DisposedCallbackGroup implements DisposedCallback {

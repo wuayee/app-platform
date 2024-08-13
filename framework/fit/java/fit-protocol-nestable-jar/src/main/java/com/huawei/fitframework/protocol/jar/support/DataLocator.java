@@ -10,7 +10,7 @@ import java.security.Permission;
 /**
  * 为数据提供定位程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-21
  */
 public interface DataLocator {

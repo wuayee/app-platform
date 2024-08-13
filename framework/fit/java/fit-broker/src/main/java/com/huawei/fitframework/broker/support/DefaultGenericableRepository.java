@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 表示 {@link GenericableRepository} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-08
  */
 public class DefaultGenericableRepository implements GenericableRepository, LocalExecutorRegisteredObserver {

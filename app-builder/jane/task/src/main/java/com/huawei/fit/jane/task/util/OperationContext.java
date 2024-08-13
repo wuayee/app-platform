@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.util;
 /**
  * 为操作提供上下文。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-08
  */
 public interface OperationContext {
@@ -49,7 +49,7 @@ public interface OperationContext {
     /**
      * 为 {@link OperationContext} 提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-08-08
      */
     interface Builder {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * InstanceMessage实体类
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public class InstanceMessage {

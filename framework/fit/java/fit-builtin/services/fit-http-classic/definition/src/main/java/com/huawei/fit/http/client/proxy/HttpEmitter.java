@@ -10,7 +10,7 @@ import com.huawei.fit.http.client.HttpClientException;
 /**
  * 表示客户端执行的代理。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-11
  */
 public interface HttpEmitter {

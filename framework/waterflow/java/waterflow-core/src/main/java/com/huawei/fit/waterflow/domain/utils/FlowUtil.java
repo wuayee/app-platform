@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * 流程定义中变量处理工具类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public final class FlowUtil {

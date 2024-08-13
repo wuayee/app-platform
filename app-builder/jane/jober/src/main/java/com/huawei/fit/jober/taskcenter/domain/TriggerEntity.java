@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 表示任务属性触发器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 @Data

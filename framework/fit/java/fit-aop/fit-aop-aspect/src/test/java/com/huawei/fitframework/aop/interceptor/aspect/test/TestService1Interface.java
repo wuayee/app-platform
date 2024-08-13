@@ -7,7 +7,7 @@ package com.huawei.fitframework.aop.interceptor.aspect.test;
 /**
  * 测试服务1的接口。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-25
  */
 public interface TestService1Interface extends AnotherTestService1Interface {

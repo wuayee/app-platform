@@ -20,7 +20,7 @@ import java.net.InetAddress;
 /**
  * DataBus 客户端基础 API。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public interface DataBusClient {

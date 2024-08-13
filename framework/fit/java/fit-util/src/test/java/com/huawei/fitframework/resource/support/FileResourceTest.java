@@ -25,7 +25,7 @@ import java.net.URL;
 /**
  * {@link FileResource} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-28
  */
 @DisplayName("测试 FileResource 工具类")

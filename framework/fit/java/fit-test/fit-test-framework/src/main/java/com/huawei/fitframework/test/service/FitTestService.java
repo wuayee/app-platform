@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * 测试框架的管理接口。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 易文渊
  * @since 2023-02-07
  */

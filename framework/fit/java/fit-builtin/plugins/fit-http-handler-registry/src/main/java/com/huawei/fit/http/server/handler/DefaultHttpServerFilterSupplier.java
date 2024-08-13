@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 表示获取默认的 {@link HttpServerFilter} 实例列表的提供器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-10
  */
 public class DefaultHttpServerFilterSupplier implements HttpServerFilterSupplier {

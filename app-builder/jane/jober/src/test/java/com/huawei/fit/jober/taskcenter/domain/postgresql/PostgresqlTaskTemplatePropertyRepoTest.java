@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * 为 {@link PostgresqlTaskPropertyRepo} 提供测试
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-06
  */
 @ExtendWith(MockitoExtension.class)

@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 测试 Http 提供的接口。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-17
  */
 @Component

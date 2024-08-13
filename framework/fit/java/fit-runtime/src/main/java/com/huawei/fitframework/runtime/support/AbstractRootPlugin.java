@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 /**
  * 为根插件提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-07
  */
 public abstract class AbstractRootPlugin extends AbstractPlugin implements RootPlugin {

@@ -15,7 +15,7 @@ import com.huawei.fitframework.ioc.BeanFactory;
 /**
  * 表示 {@link Info} 的构建器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-23
  */
 public class InfoBuilder implements EntityBuilder<Info> {

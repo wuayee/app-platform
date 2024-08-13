@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * 表示领域对象。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-12
  */
 public interface DomainObject {
@@ -53,7 +53,7 @@ public interface DomainObject {
      *
      * @param <D> 表示待构建的领域对象的类型。
      * @param <B> 表示构建器的实际类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-12
      */
     interface Builder<D extends DomainObject, B extends Builder<D, B>> {

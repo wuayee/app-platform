@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示服务实现元数据的实例。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-05-17
  */
 public class FitableMetaInstance {

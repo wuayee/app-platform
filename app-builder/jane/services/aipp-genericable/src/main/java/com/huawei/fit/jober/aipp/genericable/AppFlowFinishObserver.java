@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 表示 App 流程停止完成的观察者。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-24
  */
 public interface AppFlowFinishObserver {

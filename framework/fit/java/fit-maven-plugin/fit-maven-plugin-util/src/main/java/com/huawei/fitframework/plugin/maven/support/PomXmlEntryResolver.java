@@ -28,7 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * 对 pom.xml 文件进行解析的解析器。
  *
- * @author 梁济时 l00298979
+ * @author 梁济时
  * @since 2020-11-26
  */
 public class PomXmlEntryResolver implements JarEntryResolver<MavenCoordinate> {

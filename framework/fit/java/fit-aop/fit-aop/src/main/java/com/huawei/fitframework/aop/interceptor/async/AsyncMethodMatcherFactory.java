@@ -9,7 +9,7 @@ import com.huawei.fitframework.aop.interceptor.MethodMatcher;
 /**
  * 表示异步执行方法的方法匹配器的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-13
  */
 public interface AsyncMethodMatcherFactory {

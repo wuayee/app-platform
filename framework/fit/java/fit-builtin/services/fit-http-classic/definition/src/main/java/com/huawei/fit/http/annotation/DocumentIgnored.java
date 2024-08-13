@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 表示忽略 API 文档。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-22
  */
 @Documented

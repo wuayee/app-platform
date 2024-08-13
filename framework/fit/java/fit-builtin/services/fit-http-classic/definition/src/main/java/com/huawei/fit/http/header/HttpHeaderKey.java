@@ -11,7 +11,7 @@ import com.huawei.fit.http.HttpClassicRequestAttribute;
 /**
  * 表示 Fit HTTP 通信头部的键。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-20
  */
 public enum HttpHeaderKey {

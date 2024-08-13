@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 为属性的变更提供监听器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-26
  */
 public interface PropertyMonitor {

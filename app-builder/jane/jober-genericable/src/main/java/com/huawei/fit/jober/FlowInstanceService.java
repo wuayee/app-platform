@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 流程1:1运行时流程实例相关Genericable
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/12/11
  */
 public interface FlowInstanceService {

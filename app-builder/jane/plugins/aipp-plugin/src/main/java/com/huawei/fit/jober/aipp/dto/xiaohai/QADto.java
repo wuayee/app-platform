@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 聊天记录结构体
  *
- * @author l00498867
+ * @author 李鑫
  * @since 2024/3/20
  */
 @Data

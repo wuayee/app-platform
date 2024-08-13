@@ -10,7 +10,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * Jober人员服务Genericable
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-11-10
  */
 public interface UserService {

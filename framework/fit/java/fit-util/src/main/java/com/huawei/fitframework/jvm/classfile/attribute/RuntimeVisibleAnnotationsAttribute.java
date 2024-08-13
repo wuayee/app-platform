@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 为 {@link AbstractAttribute} 提供用以表示可见的运行时注解的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-29
  */
 public class RuntimeVisibleAnnotationsAttribute extends AbstractAttribute {

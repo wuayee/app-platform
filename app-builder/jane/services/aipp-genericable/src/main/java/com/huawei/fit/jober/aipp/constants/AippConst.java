@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * AIPP Constants
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-15
  */
 public class AippConst {

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * 使用泛服务的默认实现的路由的过滤器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-08-16
  */
 public class DefaultFilter extends AbstractFilter {

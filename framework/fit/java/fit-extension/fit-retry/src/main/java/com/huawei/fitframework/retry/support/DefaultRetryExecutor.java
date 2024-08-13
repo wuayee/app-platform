@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * 表示 {@link RetryExecutor} 的默认实现。
  *
  * @param <T> 表示重试执行器的返回类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-17
  */
 public class DefaultRetryExecutor<T> implements RetryExecutor<T> {

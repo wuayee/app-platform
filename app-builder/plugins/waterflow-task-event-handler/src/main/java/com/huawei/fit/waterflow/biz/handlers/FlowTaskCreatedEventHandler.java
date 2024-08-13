@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * 手动任务事件处理类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/9/14
  */
 @Component

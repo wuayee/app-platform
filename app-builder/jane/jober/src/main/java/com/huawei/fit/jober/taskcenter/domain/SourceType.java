@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.domain;
 /**
  * 表示任务数据源的类型。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 public enum SourceType {

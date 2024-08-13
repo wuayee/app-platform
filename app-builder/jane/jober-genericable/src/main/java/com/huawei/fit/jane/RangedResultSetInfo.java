@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 为分页查询提供结果集。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-07
  */
 public class RangedResultSetInfo<T> {

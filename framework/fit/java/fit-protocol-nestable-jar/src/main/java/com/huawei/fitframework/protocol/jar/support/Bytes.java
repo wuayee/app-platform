@@ -7,7 +7,7 @@ package com.huawei.fitframework.protocol.jar.support;
 /**
  * 为小端数据提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-22
  */
 final class Bytes {

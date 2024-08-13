@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示 FIT 编程框架系统内的异常集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-16
  */
 public enum Errors {

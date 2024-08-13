@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 用于表示切入点的注解。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-17
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -12,7 +12,7 @@ import java.io.InputStream;
 /**
  * 表示文件的 http 请求解析器。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-18
  */
 public class FileHttpResolver extends AbstractFileHttpResolver<File> {

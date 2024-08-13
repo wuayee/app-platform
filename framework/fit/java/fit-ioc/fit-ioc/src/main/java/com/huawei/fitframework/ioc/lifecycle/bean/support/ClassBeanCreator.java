@@ -19,8 +19,8 @@ import java.util.stream.Stream;
 /**
  * 为 {@link BeanCreator} 提供指定类型的Bean的创建程序。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-05-31
  */
 public class ClassBeanCreator extends AbstractBeanCreator {

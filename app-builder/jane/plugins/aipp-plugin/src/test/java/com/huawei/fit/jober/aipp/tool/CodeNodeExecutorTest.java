@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * CodeNodeExecutor测试类
  *
- * @author 方誉州 00881613
+ * @author 方誉州
  * @since 2024-06-28
  */
 public class CodeNodeExecutorTest {

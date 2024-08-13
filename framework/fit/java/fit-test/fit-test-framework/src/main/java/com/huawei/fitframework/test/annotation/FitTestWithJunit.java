@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
  *  3:   }
  * </pre>
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-17
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})

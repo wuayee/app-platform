@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.ErrorCode;
 /**
  * 当找不到服务地址时发生的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-08-24
  */
 @ErrorCode(TargetNotFoundException.CODE)

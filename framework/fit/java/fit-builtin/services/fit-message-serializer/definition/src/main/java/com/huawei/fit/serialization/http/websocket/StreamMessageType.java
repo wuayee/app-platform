@@ -10,7 +10,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示流式调用中通信消息体的类型。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-04-15
  */
 public enum StreamMessageType {

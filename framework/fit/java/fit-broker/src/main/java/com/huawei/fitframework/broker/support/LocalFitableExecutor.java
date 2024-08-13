@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 /**
  * 表示本地调用的执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-24
  */
 public class LocalFitableExecutor extends AbstractUnicastFitableExecutor implements LocalExecutor {

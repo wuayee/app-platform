@@ -11,7 +11,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules.Rules;
 /**
  * 流程过滤器校验接口
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/29
  */
 public interface FilterRule extends Rules {

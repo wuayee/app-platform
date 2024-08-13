@@ -61,8 +61,8 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Nod
  * all non-terminal handlers
  * script is the start symbol, labeled by SCRIPT("start")
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public enum NonTerminal implements NodeType {
     SCRIPT(true, true) {

@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * 表示从 Http 请求路径中获取值的 {@link SourceFetcher}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 public class PathVariableFetcher implements SourceFetcher {

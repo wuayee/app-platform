@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 表示文件资源的 http 请求解析器基类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-18
  */
 public abstract class AbstractFileHttpResolver<T> {

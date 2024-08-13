@@ -19,7 +19,7 @@ import java.nio.charset.Charset;
 /**
  * 表示可以任意消息体格式的序列化器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-09
  */
 public class ReadableBinaryEntitySerializer implements EntitySerializer<ReadableBinaryEntity> {

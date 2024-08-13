@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * {@link AppUpdateValidatorImpl} 的测试类
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-17
  */
 @ExtendWith(MockitoExtension.class)

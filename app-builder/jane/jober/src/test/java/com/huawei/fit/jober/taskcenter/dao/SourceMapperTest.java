@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * {@link SourceMapper}对应测试类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-09
  */
 class SourceMapperTest extends DatabaseBaseTest {

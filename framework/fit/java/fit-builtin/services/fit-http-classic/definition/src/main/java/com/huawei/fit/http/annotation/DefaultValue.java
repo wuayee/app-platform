@@ -7,7 +7,7 @@ package com.huawei.fit.http.annotation;
 /**
  * 表示注解中值的默认值。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-30
  */
 public interface DefaultValue {

@@ -16,7 +16,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * 为用以构建的 MOJO 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-28
  */
 public abstract class AbstractPackageMojo extends AbstractMojo {

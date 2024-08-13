@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * 为人员提供相关工具方法。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-07
  */
 @Component

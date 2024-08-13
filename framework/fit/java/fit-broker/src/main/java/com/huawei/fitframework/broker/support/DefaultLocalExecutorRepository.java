@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link LocalExecutorRepository} 提供默认实现。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-09-24
  */
 public class DefaultLocalExecutorRepository implements LocalExecutorRepository {

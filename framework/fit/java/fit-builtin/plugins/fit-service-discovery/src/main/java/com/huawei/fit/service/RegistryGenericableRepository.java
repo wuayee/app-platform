@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 表示注册中心相关的 {@link Genericable} 仓库。
  * <p>该仓库中仅包含注册中心查询地址的几个服务，因为这几个服务是所有服务的根服务。</p>
  *
- * @author 邬涨财 w00575064
- * @author 季聿阶 j00559309
+ * @author 邬涨财
+ * @author 季聿阶
  * @since 2023-04-17
  */
 @Order(Order.HIGHEST)

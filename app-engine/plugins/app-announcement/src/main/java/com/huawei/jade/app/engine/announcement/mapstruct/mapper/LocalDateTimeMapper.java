@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 公告信息日期转换类。
  *
- * @author z00591349
+ * @author 张圆
  * @since 2024-06-18
  */
 public class LocalDateTimeMapper {

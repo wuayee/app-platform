@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Type;
 
 /**
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-11-17
  */
 public class TypeBoundaryMatcherTest {

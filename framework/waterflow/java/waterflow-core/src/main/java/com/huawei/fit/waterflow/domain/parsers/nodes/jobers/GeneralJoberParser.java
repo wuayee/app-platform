@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.domain.parsers.FlowGraphData;
 /**
  * General任务解析接口
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public class GeneralJoberParser implements JoberParser {

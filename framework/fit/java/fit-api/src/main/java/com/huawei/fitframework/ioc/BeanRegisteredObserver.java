@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc;
 /**
  * 为Bean被注册提供观察者。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-30
  */
 @FunctionalInterface

@@ -9,7 +9,7 @@ import com.huawei.fitframework.broker.support.DefaultEndpoint;
 /**
  * 服务提供的服务端点。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-23
  */
 public interface Endpoint {

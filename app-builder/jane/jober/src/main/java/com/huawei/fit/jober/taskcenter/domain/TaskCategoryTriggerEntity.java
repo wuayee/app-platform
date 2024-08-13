@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 表示任务的类目变更触发器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-23
  */
 @Data

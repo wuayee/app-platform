@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link Jar.EntryCollection} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-12
  */
 final class JarEntryCollection implements Jar.EntryCollection {

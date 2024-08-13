@@ -22,7 +22,7 @@ import lombok.Setter;
  * 通过使用Flows里的Function++能力，可以代码简洁轻松创建非常复杂的流处理的函数链
  * 辉子 2019-10-31
  *
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public final class Flows {

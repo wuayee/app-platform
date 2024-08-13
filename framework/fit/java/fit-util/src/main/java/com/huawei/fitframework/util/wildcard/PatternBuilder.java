@@ -8,7 +8,7 @@ package com.huawei.fitframework.util.wildcard;
  * 为 {@link Pattern} 提供构建程序。
  *
  * @param <T> 表示模式匹配的元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 public interface PatternBuilder<T> {
@@ -38,7 +38,7 @@ public interface PatternBuilder<T> {
      * 为 {@link PatternBuilder} 提供符号相关的配置。
      *
      * @param <T> 表示符号的类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-07-29
      */
     interface SymbolConfigurator<T> {

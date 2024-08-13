@@ -39,7 +39,7 @@ import java.util.jar.Manifest;
 /**
  * {@link UrlClassLoaderScanner} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-02-16
  */
 @DisplayName("验证 UrlClassLoaderScanner")

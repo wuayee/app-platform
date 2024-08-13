@@ -23,7 +23,7 @@ import java.util.Objects;
  * 表示类型转换的 {@link PropertyValueMapper}。
  * <p>{@link TypeTransformationPropertyValueMapper} 会将获取到的数据转换成指定类型的数据。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-31
  */
 public class TypeTransformationPropertyValueMapper implements PropertyValueMapper {

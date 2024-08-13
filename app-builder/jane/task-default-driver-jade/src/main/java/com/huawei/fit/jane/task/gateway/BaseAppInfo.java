@@ -10,7 +10,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * 为 {@link AppInfo} 提供a3000的默认实现。
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2023/11/28
  */
 @Alias("Default-Impl")

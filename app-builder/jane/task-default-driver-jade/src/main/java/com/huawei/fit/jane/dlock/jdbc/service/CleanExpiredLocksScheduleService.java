@@ -13,7 +13,7 @@ import com.huawei.fitframework.schedule.annotation.Scheduled;
 /**
  * 分布式锁定时清理服务
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2024/2/23
  */
 @Component

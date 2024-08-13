@@ -15,7 +15,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为插件提供 JAR 格式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-29
  */
 public final class JarPlugin extends AbstractPlugin implements Plugin {

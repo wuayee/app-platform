@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * 表示 {@link PropertyValueMapperResolver} 的抽象的 Http 值映射解析器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-29
  */
 public abstract class AbstractPropertyValueMapperResolver implements PropertyValueMapperResolver {

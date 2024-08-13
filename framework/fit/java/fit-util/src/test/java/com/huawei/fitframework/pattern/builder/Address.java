@@ -7,7 +7,7 @@ package com.huawei.fitframework.pattern.builder;
 /**
  * 测试用的基本对象的接口。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-22
  */
 public interface Address {

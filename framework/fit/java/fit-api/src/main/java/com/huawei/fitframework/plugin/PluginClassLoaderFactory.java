@@ -7,7 +7,7 @@ package com.huawei.fitframework.plugin;
 /**
  * 为插件所使用的类加载程序提供工厂。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-29
  */
 @FunctionalInterface

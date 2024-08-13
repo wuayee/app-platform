@@ -10,7 +10,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * DataBus 服务释放共享内存请求
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-05-07
  */
 public class ReleaseMemoryRequest implements DataBusRequest {

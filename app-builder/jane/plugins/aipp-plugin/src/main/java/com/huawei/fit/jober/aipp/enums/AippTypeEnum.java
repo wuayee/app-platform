@@ -12,7 +12,7 @@ import java.util.Arrays;
 /**
  * aipp 类型
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024/02/22
  */
 public enum AippTypeEnum {

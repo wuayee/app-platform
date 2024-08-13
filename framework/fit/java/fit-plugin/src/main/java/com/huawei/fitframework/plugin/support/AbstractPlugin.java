@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 /**
  * 为插件提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-30
  */
 public abstract class AbstractPlugin extends AbstractDisposable implements Plugin {

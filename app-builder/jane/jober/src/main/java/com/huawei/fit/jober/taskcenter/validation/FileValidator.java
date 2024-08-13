@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 /**
  * 为文件提供校验。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-10
  */
 public interface FileValidator {

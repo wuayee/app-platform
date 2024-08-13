@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * ApplicationConfigPropertyDecrypt
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2023-12-21
  */
 public class ApplicationConfigPropertyDecrypt implements ConfigDecryptor {

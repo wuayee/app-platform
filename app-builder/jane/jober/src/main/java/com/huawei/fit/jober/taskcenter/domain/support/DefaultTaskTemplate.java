@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 为 {@link TaskTemplate} 提供默认实现
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-12-04 16:09
  */
 public class DefaultTaskTemplate extends AbstractDomainObject implements TaskTemplate {

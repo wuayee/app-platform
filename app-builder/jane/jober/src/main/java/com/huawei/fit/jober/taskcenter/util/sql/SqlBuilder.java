@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 为 SQL 语句提供构建器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public interface SqlBuilder {

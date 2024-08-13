@@ -12,7 +12,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link ParameterizedStringResolver} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class DefaultParameterizedStringResolver implements ParameterizedStringResolver {

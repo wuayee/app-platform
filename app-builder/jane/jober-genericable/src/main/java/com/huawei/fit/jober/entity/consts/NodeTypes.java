@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * 节点类型的枚举
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/14
  */
 public enum NodeTypes {

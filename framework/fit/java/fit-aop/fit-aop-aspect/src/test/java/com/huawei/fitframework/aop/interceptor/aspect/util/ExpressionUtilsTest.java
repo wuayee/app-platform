@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * {@link ExpressionUtils} 的单元测试。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-21
  */
 @DisplayName("测试 ExpressionUtils 类")

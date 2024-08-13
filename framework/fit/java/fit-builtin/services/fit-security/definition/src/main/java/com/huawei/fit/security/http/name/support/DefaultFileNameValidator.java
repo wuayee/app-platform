@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 表示 {@link FileNameValidator} 的默认实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-18
  */
 public final class DefaultFileNameValidator implements FileNameValidator {

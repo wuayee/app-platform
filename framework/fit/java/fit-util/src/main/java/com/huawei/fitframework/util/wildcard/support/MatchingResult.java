@@ -11,7 +11,7 @@ import com.huawei.fitframework.util.wildcard.Result;
  * 为 {@link Result} 提供用以匹配结果的实现。
  *
  * @param <T> 表示匹配元素的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-28
  */
 final class MatchingResult<T> extends AbstractMatcher<T> implements Result<T> {

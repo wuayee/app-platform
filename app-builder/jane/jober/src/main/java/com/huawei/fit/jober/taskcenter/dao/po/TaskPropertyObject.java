@@ -9,7 +9,7 @@ import lombok.Data;
 /**
  * (TaskProperty)实体类
  *
- * @author d30022216
+ * @author 董建华
  * @since 2023-08-09
  */
 @Data

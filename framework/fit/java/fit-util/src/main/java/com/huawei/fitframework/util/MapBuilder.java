@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  *
  * @param <K> 表示键的类型。
  * @param <V> 表示值的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class MapBuilder<K, V> {

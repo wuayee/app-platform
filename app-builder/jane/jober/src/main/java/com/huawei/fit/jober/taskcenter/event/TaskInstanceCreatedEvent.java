@@ -12,7 +12,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 当任务实例被创建时引发的事件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public class TaskInstanceCreatedEvent extends TaskInstanceEvent {

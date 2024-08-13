@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * 表示 {@link JsonSchema} 的管理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public interface JsonSchemaManager {

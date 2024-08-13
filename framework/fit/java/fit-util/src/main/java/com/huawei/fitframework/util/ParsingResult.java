@@ -10,7 +10,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
  * 为解析字符串提供结果。
  *
  * @param <T> 表示解析结果的类型的 {@link T}。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public interface ParsingResult<T> {

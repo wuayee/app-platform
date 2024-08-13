@@ -28,7 +28,7 @@ import java.util.Properties;
 /**
  * 为 {@link BeanContainerInitializedObserver} 提供用以整合 MyBatis 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-02
  */
 @Component

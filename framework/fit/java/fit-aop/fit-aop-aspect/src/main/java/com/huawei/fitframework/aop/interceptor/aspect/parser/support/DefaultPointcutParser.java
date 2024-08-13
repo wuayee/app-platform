@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * {@link PointcutParser} 默认实现。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-14
  */
 public class DefaultPointcutParser implements PointcutParser {

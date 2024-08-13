@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * 表示范围信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-07
  */
 public class RangeInfo {

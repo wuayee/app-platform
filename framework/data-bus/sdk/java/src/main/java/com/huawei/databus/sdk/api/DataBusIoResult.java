@@ -9,7 +9,7 @@ import com.huawei.databus.sdk.memory.SharedMemory;
 /**
  * 为 DataBus IO 相关请求提供结果。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public interface DataBusIoResult extends DataBusResult {

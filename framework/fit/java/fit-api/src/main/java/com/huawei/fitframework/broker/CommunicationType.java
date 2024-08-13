@@ -10,7 +10,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示泛服务的通信类型。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-17
  */
 public enum CommunicationType {

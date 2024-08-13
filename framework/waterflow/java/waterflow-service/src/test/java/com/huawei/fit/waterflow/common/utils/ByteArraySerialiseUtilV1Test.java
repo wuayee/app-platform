@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * 测试自定义二进制序列化和反序列化
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/2/26
  */
 @ExtendWith(MockitoExtension.class)

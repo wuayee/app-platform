@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * {@link AspectInterceptorResolver} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-15
  */
 public class AspectInterceptorResolverTest {

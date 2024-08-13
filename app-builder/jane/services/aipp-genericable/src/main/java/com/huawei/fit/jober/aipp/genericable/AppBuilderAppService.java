@@ -12,7 +12,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 表示 app 应用相关的 Genericable 接口。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-05-24
  */
 public interface AppBuilderAppService {

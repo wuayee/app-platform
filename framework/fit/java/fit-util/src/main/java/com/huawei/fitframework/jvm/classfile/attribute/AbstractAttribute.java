@@ -11,7 +11,7 @@ import com.huawei.fitframework.jvm.classfile.AttributeInfo;
  * 为属性提供基类。
  * TODO 待所有类型的属性都实现后，直接继承自 {@link AttributeInfo}，删除该类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-10
  */
 public abstract class AbstractAttribute {

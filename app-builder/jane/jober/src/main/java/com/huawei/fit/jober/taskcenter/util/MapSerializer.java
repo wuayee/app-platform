@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * 为 Map 提供序列化程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-01
  */
 public interface MapSerializer {

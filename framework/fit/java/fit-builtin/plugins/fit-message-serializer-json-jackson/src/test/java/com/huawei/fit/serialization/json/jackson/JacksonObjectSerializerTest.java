@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * {@link JacksonObjectSerializer} 的单元测试。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-23
  */
 @DisplayName("测试 jackson 的序列化功能")

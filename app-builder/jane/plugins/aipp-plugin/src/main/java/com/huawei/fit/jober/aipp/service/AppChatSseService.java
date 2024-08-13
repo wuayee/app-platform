@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * 本类为app chat 提供sse服务
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-07-28
  */
 public interface AppChatSseService {

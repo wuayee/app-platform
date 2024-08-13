@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * 表示 {@link WebSocketTextMessageMapper} 的映射器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-11
  */
 public class WebSocketTextMessageMapperResolver implements PropertyValueMapperResolver {

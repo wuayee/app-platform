@@ -14,8 +14,8 @@ import java.util.function.Supplier;
  * 为延迟加载提供公共组件。
  *
  * @param <T> 表示具体延迟加载的对象的类型的 {@link T}。
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-09-27
  */
 public class LazyLoader<T> implements Supplier<T> {

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示 {@link RequestContext} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-19
  */
 public class DefaultRequestContext implements RequestContext {

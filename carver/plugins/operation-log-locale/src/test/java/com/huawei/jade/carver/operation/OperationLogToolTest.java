@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * 操作日志国际化工具测试类。
  *
- * @author f00881613
+ * @author 方誉州
  * @since 2024-08-01
  */
 public class OperationLogToolTest {

@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 表示排序配置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-21
  */
 public interface OrderBy {

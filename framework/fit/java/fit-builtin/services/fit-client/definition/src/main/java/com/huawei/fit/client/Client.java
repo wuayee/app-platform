@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 请求客户端。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-19
  */
 public interface Client {

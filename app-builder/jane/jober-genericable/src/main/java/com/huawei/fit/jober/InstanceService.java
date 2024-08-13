@@ -15,7 +15,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 任务实例服务Genericable。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-14
  */
 public interface InstanceService {

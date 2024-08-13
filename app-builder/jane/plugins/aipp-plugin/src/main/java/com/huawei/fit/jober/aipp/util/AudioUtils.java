@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * 音频操作工具
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024/1/19
  */
 public class AudioUtils {

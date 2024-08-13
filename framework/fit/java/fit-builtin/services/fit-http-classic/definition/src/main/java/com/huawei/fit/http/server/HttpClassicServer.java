@@ -10,7 +10,7 @@ import com.huawei.fit.http.websocket.server.WebSocketDispatcher;
 /**
  * 表示 Http 服务器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-08
  */
 public interface HttpClassicServer extends HttpResource {

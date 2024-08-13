@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * 表示每周中的天数的字段。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-02
  */
 public class DayOfWeekCronField extends AbstractCronField {

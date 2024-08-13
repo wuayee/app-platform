@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * meta 实例排序条件, key名称转换
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-15
  */
 @Getter

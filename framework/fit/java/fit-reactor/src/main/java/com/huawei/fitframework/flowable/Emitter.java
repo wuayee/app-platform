@@ -10,7 +10,7 @@ import com.huawei.fitframework.flowable.emitter.DefaultEmitter;
  * 表示数据的发送者。
  *
  * @param <T> 表示所发送的数据的类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-13
  */
 public interface Emitter<T> {

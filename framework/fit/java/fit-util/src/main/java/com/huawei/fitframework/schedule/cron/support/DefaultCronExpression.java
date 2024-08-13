@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * 表示 {@link CronExpression} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-02
  */
 public class DefaultCronExpression implements CronExpression {

@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 查询会话响应体
  *
- * @author z00597222
+ * @author 翟卉馨
  * @since 2024-05-29
  */
 

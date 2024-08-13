@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * PPT文件的数据传输对象
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2023-05-10
  */
 @ToString

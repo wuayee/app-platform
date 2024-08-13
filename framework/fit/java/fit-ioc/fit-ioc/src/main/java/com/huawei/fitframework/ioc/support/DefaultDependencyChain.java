@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * 为 {@link DependencyChain} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-08
  */
 class DefaultDependencyChain implements DependencyChain {

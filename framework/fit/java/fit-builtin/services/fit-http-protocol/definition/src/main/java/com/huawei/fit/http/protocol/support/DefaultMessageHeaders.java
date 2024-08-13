@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * {@link MessageHeaders} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-06
  */
 public class DefaultMessageHeaders implements ConfigurableMessageHeaders {

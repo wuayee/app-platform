@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 负责监听并解析来自服务器的信息，然后将信息分派到不同的队列里。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 class ResponseDispatcher {

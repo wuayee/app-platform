@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 /**
  * 为 Bean 的模拟构建提供工具方法。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-31
  */
 @Genericable

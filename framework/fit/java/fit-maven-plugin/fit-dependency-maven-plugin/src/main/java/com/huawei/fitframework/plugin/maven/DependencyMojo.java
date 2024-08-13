@@ -21,7 +21,7 @@ import java.util.Locale;
 /**
  * Analyses dependencies for maven projects.
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 2020-10-09
  */
 @Mojo(name = "dependency", defaultPhase = LifecyclePhase.PACKAGE,

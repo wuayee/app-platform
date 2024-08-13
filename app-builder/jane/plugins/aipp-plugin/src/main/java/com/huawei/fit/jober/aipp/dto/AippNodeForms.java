@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Aipp节点表单
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-25
  */
 @Builder

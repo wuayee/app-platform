@@ -28,7 +28,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * 为启动程序提供打包程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-02
  */
 public final class LauncherRepackager extends AbstractRepackager {

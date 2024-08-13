@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 表单接口实现类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-19
  */
 @Component

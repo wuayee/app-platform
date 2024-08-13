@@ -18,7 +18,7 @@ import java.util.Queue;
 /**
  * 为注解树的节点提供属性定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 class DefaultAnnotationTreeNodeProperty implements AnnotationTreeNodeProperty {

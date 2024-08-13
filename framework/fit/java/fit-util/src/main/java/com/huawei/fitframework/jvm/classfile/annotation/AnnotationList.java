@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 为 {@link AnnotationInfo} 提供列表。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-29
  */
 public final class AnnotationList implements Iterable<AnnotationInfo> {

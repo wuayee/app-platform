@@ -10,7 +10,7 @@ import com.huawei.fitframework.merge.ConflictResolver;
 /**
  * 表示对 {@link String} 类型的冲突处理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-11
  */
 public class MergeConflictResolver implements ConflictResolver<String, String, Conflict<String>> {

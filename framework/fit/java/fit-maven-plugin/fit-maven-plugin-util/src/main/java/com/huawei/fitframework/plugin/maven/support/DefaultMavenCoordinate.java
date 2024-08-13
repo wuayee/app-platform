@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * The DefaultMavenCoordinate
  *
- * @author c00572808
+ * @author 陈镕希
  * @since 2020/12/26
  */
 @Getter

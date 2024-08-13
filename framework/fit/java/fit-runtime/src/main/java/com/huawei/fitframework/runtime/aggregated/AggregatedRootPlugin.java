@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 为根插件提供聚合启动场景的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-31
  */
 final class AggregatedRootPlugin extends AbstractRootPlugin {

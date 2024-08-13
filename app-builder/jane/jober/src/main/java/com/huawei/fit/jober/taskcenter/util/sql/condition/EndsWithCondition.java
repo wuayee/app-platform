@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 /**
  * 为判定指定文本列以指定文本结束提供条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class EndsWithCondition extends AbstractLikeCondition {

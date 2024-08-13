@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 /**
  * 为 {@code Mapper} 提供动态代理的执行处理程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @author 季聿阶
  * @since 2022-08-02
  */

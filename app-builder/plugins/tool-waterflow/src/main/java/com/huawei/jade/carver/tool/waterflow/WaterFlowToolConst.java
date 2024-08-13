@@ -7,7 +7,7 @@ package com.huawei.jade.carver.tool.waterflow;
 /**
  * WaterFlowTool Constants
  *
- * @author 黄夏露 h00804153
+ * @author 黄夏露
  * @since 2024-05-27
  */
 public class WaterFlowToolConst {

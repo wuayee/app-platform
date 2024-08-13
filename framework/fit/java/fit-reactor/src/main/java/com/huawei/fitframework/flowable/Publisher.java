@@ -10,7 +10,7 @@ package com.huawei.fitframework.flowable;
  * {@link #subscribe(Subscriber)} 方法对其进行订阅。</p>
  *
  * @param <T> 表示发布的数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-07
  */
 public interface Publisher<T> {

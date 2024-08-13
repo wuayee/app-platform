@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * @param <K> 表示键的类型。
  * @param <V> 表示值的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-20
  */
 public interface Cache<K, V> {
@@ -28,7 +28,7 @@ public interface Cache<K, V> {
      *
      * @param <K> 表示键的类型。
      * @param <V> 表示值的类型。
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-20
      */
     interface Builder<K, V> {

@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 用于注册中心的检查。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-30
  */
 @Component

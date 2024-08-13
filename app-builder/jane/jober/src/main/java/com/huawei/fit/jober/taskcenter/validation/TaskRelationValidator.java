@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.domain.RelationType;
 /**
  * 为任务关联提供校验
  *
- * @author lWX1291633
+ * @author 罗书强
  * @since 2024-01-02
  */
 public interface TaskRelationValidator {

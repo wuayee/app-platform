@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 分页查询流程定义列表response
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/10/11
  */
 @Getter
@@ -39,7 +39,7 @@ public class GetPageResponse {
     /**
      * FlowInfo内部结构体
      *
-     * @author y00679285
+     * @author 杨祥宇
      * @since 2023/10/13
      */
     @Getter

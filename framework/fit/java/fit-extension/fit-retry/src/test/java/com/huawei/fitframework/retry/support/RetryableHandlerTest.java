@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 /**
  * {@link RetryableHandler} 的单元测试类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-10-13
  */
 public class RetryableHandlerTest {

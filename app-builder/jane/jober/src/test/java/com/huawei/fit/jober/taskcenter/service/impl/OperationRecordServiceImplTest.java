@@ -44,7 +44,7 @@ import java.util.Map;
 /**
  * {@link OperationRecordServiceImpl}对应测试类
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-21 18:57
  */
 @ExtendWith(MockitoExtension.class)

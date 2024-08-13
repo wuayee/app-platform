@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 为注解的动态代理提供拦截程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 class AnnotationInvocationHandler implements InvocationHandler {

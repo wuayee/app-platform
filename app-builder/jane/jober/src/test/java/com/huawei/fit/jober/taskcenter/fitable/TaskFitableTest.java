@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * {@link TaskFitable}对应测试类。
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-02 14:30
  */
 @ExtendWith(MockitoExtension.class)

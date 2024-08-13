@@ -13,7 +13,7 @@ import java.util.List;
  * 表示支持 <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#openapi-object">OpenAPI
  * 3.1.0</a> 规范的文档类型。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-15
  */
 public interface OpenApi extends Serializable {

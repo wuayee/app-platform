@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * name 提取器.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-05
  */
 public class NameExtractor implements ValueExtractor {

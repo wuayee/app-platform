@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * AOP 调用的核心抽象代理。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-25
  */
 public abstract class AbstractAopProxy implements FitProxy {

@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 表示任务实例。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-12
  */
 public interface TaskInstance {
@@ -81,7 +81,7 @@ public interface TaskInstance {
     /**
      * 为任务实例提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     interface Builder {
@@ -161,7 +161,7 @@ public interface TaskInstance {
     /**
      * 为任务实例提供声明。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     interface Declaration {
@@ -197,7 +197,7 @@ public interface TaskInstance {
         /**
          * 为任务实例的声明提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-12-12
          */
         interface Builder {
@@ -263,7 +263,7 @@ public interface TaskInstance {
     /**
      * 为任务实例提供查询条件。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     interface Filter {
@@ -320,7 +320,7 @@ public interface TaskInstance {
         /**
          * 为任务实例的查询条件提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-12-12
          */
         interface Builder {
@@ -402,7 +402,7 @@ public interface TaskInstance {
     /**
      * 为任务实例提供数据持久化能力。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-12-12
      */
     interface Repo {

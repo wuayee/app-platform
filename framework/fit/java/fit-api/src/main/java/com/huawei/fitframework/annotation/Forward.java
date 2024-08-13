@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 /**
  * 转发注解的值。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-15
  */
 @Documented

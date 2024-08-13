@@ -34,8 +34,8 @@ import java.util.Optional;
 /**
  * 资源类处理器的配置类。
  *
- * @author 邬涨财 w00575064
- * @author 季聿阶 j00559309
+ * @author 邬涨财
+ * @author 季聿阶
  * @since 2023-08-07
  */
 @Component

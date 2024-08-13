@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 /**
  * 表示处理 FIT 通信方式的处理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-14
  */
 public class FitHttpHandler extends AbstractHttpHandler {

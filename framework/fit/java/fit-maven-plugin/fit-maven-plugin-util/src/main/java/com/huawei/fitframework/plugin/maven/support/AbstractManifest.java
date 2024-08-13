@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 表示清单文件的抽象类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-20
  */
 public abstract class AbstractManifest {

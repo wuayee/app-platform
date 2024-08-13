@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * 流程节点上下文信息对象。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-05-21
  */
 public class FlowPublishContext {

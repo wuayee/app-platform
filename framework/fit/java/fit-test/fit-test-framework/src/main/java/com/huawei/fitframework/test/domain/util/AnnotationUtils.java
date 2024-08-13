@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 注解的工具类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-01-03
  */
 public class AnnotationUtils {

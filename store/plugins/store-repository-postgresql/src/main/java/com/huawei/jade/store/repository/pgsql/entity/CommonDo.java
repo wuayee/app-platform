@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 /**
  * 数据库表公有字段。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-11
  */
 @Data

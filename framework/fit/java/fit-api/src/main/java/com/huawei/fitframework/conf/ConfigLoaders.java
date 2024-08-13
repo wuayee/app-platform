@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link ConfigLoadingResult} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-16
  */
 final class ConfigLoaders {
@@ -65,7 +65,7 @@ final class ConfigLoaders {
     /**
      * 为 {@link ConfigLoadingResult} 提供表示加载成功的实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-12-16
      */
     private static final class SuccessResult implements ConfigLoadingResult {
@@ -118,7 +118,7 @@ final class ConfigLoaders {
     /**
      * 为 {@link ConfigLoadingResult} 提供表示加载失败的实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-12-16
      */
     private static final class FailureResult implements ConfigLoadingResult {
@@ -151,7 +151,7 @@ final class ConfigLoaders {
     /**
      * 为 {@link ConfigLoaderChain} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-12-16
      */
     private static final class DefaultChain implements ConfigLoaderChain {
@@ -244,7 +244,7 @@ final class ConfigLoaders {
     /**
      * 为 {@link ConfigLoader} 提供空实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-12-20
      */
     private static final class Empty implements ConfigLoader {

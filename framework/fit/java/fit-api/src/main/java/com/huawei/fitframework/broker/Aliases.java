@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * 表示别名的集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public interface Aliases {

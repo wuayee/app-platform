@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 内存池，管理当前所有内存块的生命周期，包括内存申请、许可管理和释放。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024/3/25
  */
 class SharedMemoryPool {

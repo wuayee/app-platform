@@ -18,7 +18,7 @@ import java.util.function.Function;
  *
  * @param <T> 表示发布者中数据转换前的类型的 {@link T}。
  * @param <R> 表示发布者中数据最终类型的 {@link R}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-10
  */
 public class MapPublisherDecorator<T, R> implements Publisher<R> {

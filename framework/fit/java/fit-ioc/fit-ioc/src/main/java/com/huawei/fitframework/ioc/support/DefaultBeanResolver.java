@@ -63,7 +63,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link BeanResolver} 提供基于FIT的默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-17
  */
 public class DefaultBeanResolver implements BeanResolver {
@@ -257,7 +257,7 @@ public class DefaultBeanResolver implements BeanResolver {
     /**
      * 为 {@link BeanResolver.Factory} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-07-06
      */
     public static class Factory implements BeanResolver.Factory {

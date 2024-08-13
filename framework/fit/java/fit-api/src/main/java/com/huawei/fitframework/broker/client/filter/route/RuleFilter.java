@@ -12,7 +12,7 @@ import com.huawei.fitframework.broker.client.Router;
  * 使用规则路由的过滤器。
  * <p><b>使用规则路由时，请直接使用 {@link Fit} 注入该过滤器。</b></p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-06-17
  */
 @Genericable

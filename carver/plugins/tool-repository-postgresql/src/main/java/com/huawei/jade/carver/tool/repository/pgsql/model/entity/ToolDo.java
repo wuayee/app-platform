@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 存入数据库的工具的实体类。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/5/10
  */
 @Data

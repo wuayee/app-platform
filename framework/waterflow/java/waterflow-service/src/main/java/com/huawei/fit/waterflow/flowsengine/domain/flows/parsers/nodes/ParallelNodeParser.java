@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
 /**
  * 平行节点解析类
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/8/16
  */
 public class ParallelNodeParser implements NodeParser {

@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * {@link PostgresqlTaskRelationRepo} 对应测试类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-06
  */
 @ExtendWith(MockitoExtension.class)

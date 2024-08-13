@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * notifyInstanceChanged使用的InstanceChangedMessage结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-07-06
  */
 public class InstanceChangedMessage {

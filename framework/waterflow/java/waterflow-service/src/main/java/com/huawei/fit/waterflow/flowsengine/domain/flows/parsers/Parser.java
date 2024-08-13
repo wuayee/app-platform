@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinit
  * 流程定义解析器
  * 负责解析前端的流程定义JSON数据
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public interface Parser {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.resource.ResourceTree;
 /**
  * 为资源树的中的节点提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-10
  */
 abstract class AbstractResourceNode implements ResourceTree.Node {

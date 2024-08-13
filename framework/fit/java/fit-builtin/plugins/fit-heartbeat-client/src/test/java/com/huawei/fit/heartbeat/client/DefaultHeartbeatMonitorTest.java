@@ -33,7 +33,7 @@ import java.lang.reflect.Field;
 /**
  * {@link DefaultHeartbeatMonitor} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-16
  */
 @DisplayName("测试 DefaultHeartbeatClient")

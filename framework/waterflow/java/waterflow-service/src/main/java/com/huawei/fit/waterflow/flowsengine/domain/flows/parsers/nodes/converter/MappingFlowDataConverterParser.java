@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 基于映射关系的转换器
  *
- * @author s00558940
+ * @author 宋永坦
  * @since 2024/4/17
  */
 public class MappingFlowDataConverterParser implements FlowDataConverterParser {

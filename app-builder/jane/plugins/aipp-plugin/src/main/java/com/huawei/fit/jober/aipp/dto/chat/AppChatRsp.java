@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 创建app会话的响应结果
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-23
  */
 @Data
@@ -45,7 +45,7 @@ public class AppChatRsp {
     /**
      * Answer
      *
-     * @author 姚江 yWX1299574
+     * @author 姚江
      * @since 2024-07-29
      */
     @Data

@@ -21,7 +21,7 @@ import java.util.Set;
  * 为类路径提供键的定义。
  * <p>类路径的键用以唯一标识一个类路径，可借此对类路径进行缓存。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public interface ClassPathKey {

@@ -9,7 +9,7 @@ import com.huawei.fitframework.serialization.support.DefaultRequestMetadata;
 /**
  * 为远端服务调用提供请求元数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-27
  */
 public interface RequestMetadata {
@@ -65,7 +65,7 @@ public interface RequestMetadata {
     /**
      * 为 {@link RequestMetadata} 提供构建器。
      *
-     * @author 季聿阶 j00559309
+     * @author 季聿阶
      * @since 2023-11-27
      */
     interface Builder {

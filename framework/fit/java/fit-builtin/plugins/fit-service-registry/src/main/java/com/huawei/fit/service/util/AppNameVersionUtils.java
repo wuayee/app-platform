@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * 计算注册使用的应用版本号的工具类
  *
- * @author 李鑫 l00498867
+ * @author 李鑫
  * @since 2021-11-29
  */
 public class AppNameVersionUtils {

@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * The Size
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-14
  */
 @Retention(RetentionPolicy.RUNTIME)

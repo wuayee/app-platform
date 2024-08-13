@@ -7,7 +7,7 @@ package com.huawei.fitframework.broker;
 /**
  * 表示泛服务的路由信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-08
  */
 public interface Route {

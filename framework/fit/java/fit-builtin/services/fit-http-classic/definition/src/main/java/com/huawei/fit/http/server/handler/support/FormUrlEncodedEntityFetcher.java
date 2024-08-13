@@ -15,7 +15,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 /**
  * 表示从 {@link MultiValueEntity} 中获取值的 {@link SourceFetcher}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-28
  */
 public class FormUrlEncodedEntityFetcher extends EntityFetcher {

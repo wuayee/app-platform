@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 表示 {@link FileUploadValidator} 的各校验功能聚合实现。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 public final class AggregatedFileUploadValidator implements FileUploadValidator {

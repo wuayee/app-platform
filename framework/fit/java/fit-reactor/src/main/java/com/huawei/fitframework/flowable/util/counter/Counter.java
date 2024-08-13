@@ -7,7 +7,7 @@ package com.huawei.fitframework.flowable.util.counter;
 /**
  * 用于计数的工具类，保证不会出现数值溢出，计数器数值的值域为 [0, Long.MAX_VALUE]，保证操作的原子性和最终一致性但不保证时序性。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 public interface Counter {

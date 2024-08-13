@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 为 {@link ModifiableConfig} 提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-14
  */
 public abstract class AbstractModifiableConfig extends AbstractConfig implements ModifiableConfig {

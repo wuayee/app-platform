@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * 为 {@link AnnotationTreeNodeProperty} 提供值转换的装饰程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-28
  */
 final class ConvertedAnnotationTreeNodeProperty implements AnnotationTreeNodeProperty {

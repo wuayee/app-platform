@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 表示约束的注解。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-03-08
  */
 @Retention(RetentionPolicy.RUNTIME)

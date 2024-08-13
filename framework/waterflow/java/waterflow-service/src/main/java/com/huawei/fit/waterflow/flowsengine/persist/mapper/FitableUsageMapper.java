@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * FitableUsage的Mapper映射
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-11-16
  */
 @Mapper

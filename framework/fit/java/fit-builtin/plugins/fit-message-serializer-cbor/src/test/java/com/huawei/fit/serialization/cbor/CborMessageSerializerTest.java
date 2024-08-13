@@ -24,7 +24,7 @@ import java.util.Arrays;
 /**
  * 为 {@link CborMessageSerializer} 提供单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2020-11-23
  */
 public class CborMessageSerializerTest {

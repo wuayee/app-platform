@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * {@link MetaPropertyConverter}的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-26
  */
 @Component

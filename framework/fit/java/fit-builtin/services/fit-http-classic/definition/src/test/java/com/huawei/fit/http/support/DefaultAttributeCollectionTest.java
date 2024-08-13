@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * 为 {@link DefaultAttributeCollection} 提供单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-20
  */
 @DisplayName("测试 DefaultAttributeCollection 类")

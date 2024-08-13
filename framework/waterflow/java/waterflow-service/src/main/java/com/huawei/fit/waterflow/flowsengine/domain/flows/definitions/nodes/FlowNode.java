@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * 流程定义节点核心类
  * 流程实例流转时需要构建该对象
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 @Getter
@@ -369,7 +369,7 @@ public abstract class FlowNode {
     /**
      * flow中的一些全局公共对象
      *
-     * @author s00558940
+     * @author 宋永坦
      * @since 2024/3/16
      */
     @Getter

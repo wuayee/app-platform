@@ -7,7 +7,7 @@ package com.huawei.fitframework.util;
 /**
  * 为可销毁的对象提供定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-02-25
  */
 public interface Disposable extends AutoCloseable {

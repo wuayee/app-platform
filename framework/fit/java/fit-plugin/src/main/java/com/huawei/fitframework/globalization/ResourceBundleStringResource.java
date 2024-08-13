@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
  * 为 {@link StringResource} 提供基于 {@link ResourceBundle} 的实现。
  * <p>可用以获取指定资源的在多语言环境下使用的消息资源。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-21
  */
 final class ResourceBundleStringResource implements StringResource {

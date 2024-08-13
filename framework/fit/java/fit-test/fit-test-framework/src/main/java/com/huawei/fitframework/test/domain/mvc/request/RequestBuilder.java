@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 为模拟 {@link MockMvc} 提供常见的共用方法。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-04-09
  */
 public interface RequestBuilder {

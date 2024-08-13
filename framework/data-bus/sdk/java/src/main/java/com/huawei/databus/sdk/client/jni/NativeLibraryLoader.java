@@ -17,7 +17,7 @@ import java.nio.file.Files;
  *   <li>使用系统类加载临时链接库</li>
  * </ol>
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2024-05-17
  */
 public class NativeLibraryLoader {

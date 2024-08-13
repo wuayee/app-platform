@@ -11,7 +11,7 @@ import com.huawei.fitframework.ioc.BeanApplicableScope;
 /**
  * 定义应用范围为 {@link BeanApplicableScope#CURRENT} 的 Bean。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-30
  */
 @Component

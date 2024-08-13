@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.domain;
 /**
  * 表示属性的适用范围。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 public enum PropertyScope {

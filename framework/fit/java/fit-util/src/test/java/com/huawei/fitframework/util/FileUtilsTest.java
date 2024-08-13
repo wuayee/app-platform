@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 /**
  * {@link FileUtils} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-11-11
  */
 public class FileUtilsTest {

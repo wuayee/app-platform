@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.tianzhou;
 /**
  * 常数类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/15
  */
 public final class Constant {

@@ -7,7 +7,7 @@ package com.huawei.fitframework.plugin.maven.exception;
 /**
  * 表示Fit插件异常的类
  *
- * @author 张浩亮 z00352201
+ * @author 张浩亮
  * @since 2021/5/24
  */
 public class FitMavenPluginException extends RuntimeException {

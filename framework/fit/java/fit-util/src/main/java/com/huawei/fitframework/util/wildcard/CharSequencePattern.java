@@ -7,7 +7,7 @@ package com.huawei.fitframework.util.wildcard;
 /**
  * 为 {@link Pattern} 提供基于字节序的模式。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-29
  */
 public interface CharSequencePattern extends Pattern<Character> {

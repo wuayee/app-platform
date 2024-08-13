@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * 为 {@link UriClassPathKeyResolver} 提供组合模式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-27
  */
 public class UriClassPathKeyResolverComposite implements UriClassPathKeyResolver {

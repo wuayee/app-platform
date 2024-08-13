@@ -13,7 +13,7 @@ import java.util.Map;
  * 表示 <a href="https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#response-object">OpenAPI
  * 3.1.0</a> 文档中的响应信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-27
  */
 public interface Response extends Serializable {

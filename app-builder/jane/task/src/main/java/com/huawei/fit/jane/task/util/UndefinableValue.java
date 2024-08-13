@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 /**
  * 支持未定义的值。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 public interface UndefinableValue<T> {

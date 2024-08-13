@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * aipp实例log管理接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 @Component

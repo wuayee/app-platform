@@ -9,7 +9,7 @@ import java.time.Instant;
 /**
  * 表示进程的过期缓存。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-19
  */
 public interface WorkerCache {

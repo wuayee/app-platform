@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 表示 Http 请求提供建造者的默认实现。
  *
- * @author 王攀博 w00561424
+ * @author 王攀博
  * @since 2024-06-11
  */
 public class DefaultRequestBuilder implements RequestBuilder {

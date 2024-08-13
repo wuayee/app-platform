@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * TimeScheduler数据库对象
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/13
  */
 @Getter

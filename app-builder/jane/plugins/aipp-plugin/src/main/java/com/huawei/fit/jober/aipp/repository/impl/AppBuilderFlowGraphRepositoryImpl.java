@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 应用流程图仓库功能实现类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 @Component

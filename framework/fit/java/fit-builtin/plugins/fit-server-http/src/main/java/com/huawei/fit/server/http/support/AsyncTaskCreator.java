@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 表示 FIT 异步任务提交者。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-17
  */
 public class AsyncTaskCreator {

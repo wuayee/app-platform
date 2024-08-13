@@ -11,7 +11,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 条件节点校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class ConditionNodeRule implements NodeRule {

@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
 /**
  * 表示文本格式的消息体数据。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-11
  */
 public interface TextEntity extends Entity {

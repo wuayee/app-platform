@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 表示 OpenAPI 文档的控制器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-15
  */
 @Component

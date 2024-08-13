@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 /**
  * 为 {@link Fitable} 作用于方法上的实现提供容器类。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @see Component
  * @since 2020-09-22
  */

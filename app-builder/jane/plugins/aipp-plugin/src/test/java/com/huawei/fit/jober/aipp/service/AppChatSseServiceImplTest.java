@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * {@link AppChatSseService} 的测试类
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-08-01
  */
 @ExtendWith(MockitoExtension.class)

@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 /**
  * 表示 Aspect 定义的方法拦截器定义的方法匹配器。
  *
- * @author 郭龙飞 gwx900499
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public class AspectMethodMatcher implements MethodMatcher {

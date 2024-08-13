@@ -12,7 +12,7 @@ import com.huawei.fitframework.validation.group.TeacherGroup;
 /**
  * 学生的校验类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-05-19
  */
 @Validated(StudentGroup.class)

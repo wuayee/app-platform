@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 /**
  * 表示一个可执行的方法。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-17
  */
 public interface MethodInvocation {

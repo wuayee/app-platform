@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * 表示编译服务的任务。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-17
  */
 @Mojo(name = "build-service", defaultPhase = LifecyclePhase.COMPILE,

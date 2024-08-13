@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link CategoryAcceptor} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-28
  */
 public class DefaultCategoryAcceptor implements CategoryAcceptor {
@@ -55,7 +55,7 @@ public class DefaultCategoryAcceptor implements CategoryAcceptor {
     /**
      * 为任务实例提供属性的分类程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-10-28
      */
     private static class Classifier {

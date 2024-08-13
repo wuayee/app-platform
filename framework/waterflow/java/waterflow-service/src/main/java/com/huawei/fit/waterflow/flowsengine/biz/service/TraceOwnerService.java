@@ -10,7 +10,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 提供trace的归属服务
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2024/4/29
  */
 public interface TraceOwnerService {

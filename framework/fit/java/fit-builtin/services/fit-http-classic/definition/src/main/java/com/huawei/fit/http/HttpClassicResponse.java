@@ -7,7 +7,7 @@ package com.huawei.fit.http;
 /**
  * 表示经典的 Http 响应。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-07
  */
 public interface HttpClassicResponse extends HttpMessage {

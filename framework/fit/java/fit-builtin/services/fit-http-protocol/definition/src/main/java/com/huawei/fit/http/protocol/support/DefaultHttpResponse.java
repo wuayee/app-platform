@@ -12,7 +12,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 /**
  * 表示 {@link HttpResponse} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-11-28
  */
 public class DefaultHttpResponse implements HttpResponse {

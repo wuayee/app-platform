@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示方法描述符。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-10-20
  */
 public class MethodDescriptor {

@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * 排序方向(适配天舟规范)
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-15
  */
 @Getter

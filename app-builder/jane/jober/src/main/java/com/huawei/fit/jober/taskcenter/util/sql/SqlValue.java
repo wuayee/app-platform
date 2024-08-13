@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 表示 SQL 的数据。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-10-24
  */
 public interface SqlValue {

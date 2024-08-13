@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 为 {@link Table} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-08
  */
 class DefaultTable extends AbstractNameable implements Table {

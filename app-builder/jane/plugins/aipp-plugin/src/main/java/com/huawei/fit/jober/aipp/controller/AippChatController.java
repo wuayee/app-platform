@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * 历史对话接口
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/11
  */
 @Component

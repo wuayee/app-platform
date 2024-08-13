@@ -15,7 +15,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * App 更新校验器
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-06-20
  */
 @Component

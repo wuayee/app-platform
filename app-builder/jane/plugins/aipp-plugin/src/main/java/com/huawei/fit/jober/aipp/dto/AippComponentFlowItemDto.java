@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * 组件流程项DTO
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/22
  */
 @SuperBuilder

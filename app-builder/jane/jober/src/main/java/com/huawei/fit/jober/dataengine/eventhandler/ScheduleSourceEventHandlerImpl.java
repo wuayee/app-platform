@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 /**
  * 定时任务数据源事件Handler。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-21
  */
 @Component

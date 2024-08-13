@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 为任务实例提供查询条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-20
  */
 public class TaskInstanceFilterInfo {

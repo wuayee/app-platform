@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link VirtualDirectory} 提供基于本地文件系统的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-06
  */
 public class LocalVirtualDirectory implements VirtualDirectory {

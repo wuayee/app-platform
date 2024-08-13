@@ -7,7 +7,7 @@ package com.huawei.fit.jane.flow.graph.entity.elsa;
 /**
  * 图的实体
  *
- * @author l00498867
+ * @author 李鑫
  * @since 2024/7/27
  */
 public class GraphParam {

@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 表示异步任务查询失败。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-16
  */
 @ErrorCode(AsyncTaskNotFoundException.CODE)

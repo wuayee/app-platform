@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 流程定义节点通用型回调函数类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 1.0
  */
 public class FlowGeneralCallback extends FlowCallback {

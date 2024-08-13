@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.UndefinableValue;
 /**
  * 实例构造器
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-30
  */
 class DefaultInstanceEventDeclarationBuilder implements InstanceEventDeclaration.Builder {

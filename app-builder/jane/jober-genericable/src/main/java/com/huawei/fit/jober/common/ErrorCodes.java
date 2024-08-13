@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * 异常类型枚举类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-19
  */
 public enum ErrorCodes {

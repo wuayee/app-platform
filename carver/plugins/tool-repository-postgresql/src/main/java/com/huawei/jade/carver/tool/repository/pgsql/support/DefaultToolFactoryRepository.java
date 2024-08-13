@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 表示工厂的存储库。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/5/16
  */
 @Component

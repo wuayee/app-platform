@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * 表示 {@link com.huawei.fit.client.http.InvokeClient} 的同步实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-17
  */
 public class SyncInvokeClient extends AbstractInvokeClient {

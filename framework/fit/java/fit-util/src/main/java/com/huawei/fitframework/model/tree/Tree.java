@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 /**
  * 表示树形结构定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-10
  */
 public interface Tree {

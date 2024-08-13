@@ -12,7 +12,7 @@ import lombok.ToString;
 /**
  * PPT页面的数据传输对象
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2024-05-10
  */
 @ToString

@@ -11,7 +11,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 流程锁，内存版本的实现
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/11/07
  */
 @RequiredArgsConstructor

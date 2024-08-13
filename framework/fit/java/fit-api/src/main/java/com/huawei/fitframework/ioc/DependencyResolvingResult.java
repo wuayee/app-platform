@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * 为依赖提供解析结果。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-27
  */
 public interface DependencyResolvingResult {

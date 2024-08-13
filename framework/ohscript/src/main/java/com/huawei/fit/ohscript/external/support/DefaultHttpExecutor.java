@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link HttpExecutor} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-21
  */
 public class DefaultHttpExecutor implements HttpExecutor {

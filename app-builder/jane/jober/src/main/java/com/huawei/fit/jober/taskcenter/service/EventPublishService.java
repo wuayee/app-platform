@@ -10,7 +10,7 @@ import com.huawei.fitframework.plugin.Plugin;
 /**
  * 事件推送服务接口。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-21
  */
 public interface EventPublishService {

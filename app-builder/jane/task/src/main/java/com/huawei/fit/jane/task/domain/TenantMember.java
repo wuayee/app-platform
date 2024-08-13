@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 表示租户成员。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-10-23
  */
 public interface TenantMember extends DomainObject {
@@ -43,7 +43,7 @@ public interface TenantMember extends DomainObject {
     /**
      * 为租户成员提供构建器。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-10-23
      */
     interface Builder extends DomainObject.Builder<TenantMember, Builder> {
@@ -67,7 +67,7 @@ public interface TenantMember extends DomainObject {
     /**
      * 为 {@link TenantMember} 提供声明。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-10-11
      */
     interface Declaration {
@@ -97,7 +97,7 @@ public interface TenantMember extends DomainObject {
         /**
          * 为租户成员的声明提供构建器。
          *
-         * @author 陈镕希 c00572808
+         * @author 陈镕希
          * @since 2023-10-11
          */
         interface Builder {
@@ -129,7 +129,7 @@ public interface TenantMember extends DomainObject {
     /**
      * 为 {@link TenantMember} 提供存储能力。
      *
-     * @author 陈镕希 c00572808
+     * @author 陈镕希
      * @since 2023-10-10
      */
     interface Repo {
@@ -167,7 +167,7 @@ public interface TenantMember extends DomainObject {
     /**
      * 为租户成员提供过滤配置。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-10-17
      */
     interface Filter {
@@ -205,7 +205,7 @@ public interface TenantMember extends DomainObject {
         /**
          * 为租户成员的过滤配置提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-10-17
          */
         interface Builder {

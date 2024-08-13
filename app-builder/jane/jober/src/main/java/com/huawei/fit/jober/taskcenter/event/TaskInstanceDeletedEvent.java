@@ -11,7 +11,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 /**
  * 当任务实例被创建时引发的事件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public class TaskInstanceDeletedEvent extends TaskInstanceEvent {

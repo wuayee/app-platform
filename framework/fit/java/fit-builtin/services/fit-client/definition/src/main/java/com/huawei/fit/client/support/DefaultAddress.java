@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * 表示 {@link Address} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-19
  */
 public class DefaultAddress implements Address {

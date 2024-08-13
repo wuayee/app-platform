@@ -20,7 +20,7 @@ import java.util.Objects;
  * 表示构建插件的任务。
  * <p><b>Jar in Jar 格式的插件需要支持随机访问，因此 Jar 包不能压缩。</b></p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-28
  */
 @Mojo(name = "package-plugin", defaultPhase = LifecyclePhase.PACKAGE,

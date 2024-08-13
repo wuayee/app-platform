@@ -34,7 +34,7 @@ import java.util.Optional;
 /**
  * 流程节点解析接口
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/8/15
  */
 public interface NodeParser {

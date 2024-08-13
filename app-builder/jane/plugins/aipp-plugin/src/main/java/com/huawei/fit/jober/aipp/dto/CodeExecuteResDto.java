@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * 代码节点执行结果详细信息
  *
- * @author f00881613
+ * @author 方誉州
  * @since 2024-07-10
  */
 @Builder

@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * 配置文件解密配置器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-09-01
  */
 public class SccConfigDecryptor implements ConfigDecryptor {

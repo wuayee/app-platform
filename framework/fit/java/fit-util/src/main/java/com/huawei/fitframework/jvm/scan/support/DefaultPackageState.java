@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 为 {@link PackageState} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-01
  */
 public final class DefaultPackageState implements PackageState {

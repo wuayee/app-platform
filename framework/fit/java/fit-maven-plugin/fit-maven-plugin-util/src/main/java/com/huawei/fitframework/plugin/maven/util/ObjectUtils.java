@@ -7,7 +7,7 @@ package com.huawei.fitframework.plugin.maven.util;
 /**
  * 为Java对象提供工具方法。
  *
- * @author 梁济时 00298979
+ * @author 梁济时
  * @since 1.0
  */
 public final class ObjectUtils {

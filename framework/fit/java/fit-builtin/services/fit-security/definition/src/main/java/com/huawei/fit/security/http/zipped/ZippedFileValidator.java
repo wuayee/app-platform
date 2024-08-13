@@ -9,7 +9,7 @@ import com.huawei.fit.security.http.FitSecurityException;
 /**
  * 表示压缩文件校验器。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-11
  */
 public interface ZippedFileValidator {

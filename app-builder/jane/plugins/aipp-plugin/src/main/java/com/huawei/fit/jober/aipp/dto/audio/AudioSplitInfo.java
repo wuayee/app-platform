@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 /**
  * AudioSplitInfo
  *
- * @author y00612997
+ * @author 易文渊
  * @since 2024/1/9
  */
 @Data

@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * 可以为 {@code null} 标记的注解。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-27
  */
 @Documented

@@ -7,7 +7,7 @@ package com.huawei.fit.jober.dataengine.domain;
 /**
  * 所有Repo的基类，提供共同方法的声明。
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/7/3
  */
 public interface Repo<T> {

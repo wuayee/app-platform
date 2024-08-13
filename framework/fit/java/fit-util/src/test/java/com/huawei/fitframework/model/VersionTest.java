@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link Version} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-10-11
  */
 @DisplayName("测试 Version")

@@ -16,7 +16,7 @@ import com.huawei.fitframework.model.RangedResultSet;
 /**
  * 定义所有使用elsaClient的场景,来源a3000和elsa
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2023/12/13
  */
 public interface FlowsGraphRepo {

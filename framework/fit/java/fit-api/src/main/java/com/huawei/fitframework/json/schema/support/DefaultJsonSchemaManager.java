@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * 表示 {@link JsonSchemaManager} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-03-31
  */
 public class DefaultJsonSchemaManager implements JsonSchemaManager {

@@ -17,8 +17,8 @@ import java.util.Set;
  * begin from start grammar
  * and build a grammar tree/graph
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉 2023-05
+ * @since 2023-05-01
  */
 public class Grammar {
     /**

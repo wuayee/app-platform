@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.domain.TaskProperty;
 /**
  * 当属性被修改后引发的事件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-31
  */
 public class TaskPropertyModifiedEvent extends TaskPropertyEvent {

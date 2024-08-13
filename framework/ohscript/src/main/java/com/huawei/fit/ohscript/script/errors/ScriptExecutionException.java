@@ -11,7 +11,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
  * 表示脚本执行过程中发生的异常。
  * <p>该异常需要向外透出，由 Java 执行端捕获。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-15
  */
 public class ScriptExecutionException extends RuntimeException {

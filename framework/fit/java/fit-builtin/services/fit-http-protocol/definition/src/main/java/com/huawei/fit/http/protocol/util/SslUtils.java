@@ -25,7 +25,7 @@ import javax.net.ssl.TrustManagerFactory;
 /**
  * 表示加密通道的工具类
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-03-15
  */
 public class SslUtils {

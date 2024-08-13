@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 /**
  * {@link ThisParser} 单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-29
  */
 @DisplayName("测试 this 表达式")

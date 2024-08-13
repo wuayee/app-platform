@@ -91,7 +91,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link TaskInstance.Repo} 提供基于 {@code Postgresql} 的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-10
  */
 @Component
@@ -374,7 +374,7 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
     /**
      * 为操作提供基类。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-11
      */
     private static class Operation {

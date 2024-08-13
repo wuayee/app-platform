@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * 授权校验控制器
  *
- * @author l00498867
+ * @author 李鑫
  * @since 2024/7/27
  */
 @Component

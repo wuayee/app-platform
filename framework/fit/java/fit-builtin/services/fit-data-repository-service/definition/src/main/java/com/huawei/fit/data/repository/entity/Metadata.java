@@ -7,7 +7,7 @@ package com.huawei.fit.data.repository.entity;
 /**
  * 表示缓存数据的元数据信息。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-22
  */
 public class Metadata {

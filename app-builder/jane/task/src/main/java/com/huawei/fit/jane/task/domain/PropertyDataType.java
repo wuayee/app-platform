@@ -15,7 +15,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示任务属性的类型。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 public enum PropertyDataType implements DataConverter {

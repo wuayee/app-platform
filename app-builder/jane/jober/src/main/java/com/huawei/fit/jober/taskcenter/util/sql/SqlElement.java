@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 /**
  * 表示 SQL 中的元素。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-08
  */
 public interface SqlElement {

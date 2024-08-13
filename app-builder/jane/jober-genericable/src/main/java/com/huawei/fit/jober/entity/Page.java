@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity;
 /**
  * 分页查询参数
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-13
  */
 public class Page {

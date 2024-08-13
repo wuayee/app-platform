@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 /**
  * {@link com.huawei.fit.serialization.MessageSerializer} 的 {@link JacksonMessageSerializer} 实现的基本测试用例。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-10
  */
 @DisplayName("测试 MessageSerializer 的基本测试用例")

@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 表示可配置的 {@link Genericable}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-26
  */
 public interface ConfigurableGenericable extends Genericable {

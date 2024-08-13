@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * 提供对连接点可用状态和关于它的静态信息接口。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-23
  */
 public interface JoinPoint {

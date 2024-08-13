@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * 定时任务数据库实体
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/6/13
  */
 @Getter

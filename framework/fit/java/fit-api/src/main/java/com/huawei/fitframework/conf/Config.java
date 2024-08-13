@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * 为应用程序和插件提供配置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-18
  */
 public interface Config {

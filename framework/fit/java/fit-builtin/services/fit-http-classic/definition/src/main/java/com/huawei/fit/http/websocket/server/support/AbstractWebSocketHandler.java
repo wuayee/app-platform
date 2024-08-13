@@ -14,7 +14,7 @@ import com.huawei.fit.http.websocket.server.WebSocketHandler;
 /**
  * 表示 {@link WebSocketHandler} 的抽象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-09
  */
 public abstract class AbstractWebSocketHandler implements WebSocketHandler {

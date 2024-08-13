@@ -18,7 +18,7 @@ import java.net.URL;
 /**
  * {@link DefaultResource} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-28
  */
 @DisplayName("测试 DefaultResource 工具类")

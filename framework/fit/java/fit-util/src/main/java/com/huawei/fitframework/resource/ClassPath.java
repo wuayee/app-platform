@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示类路径。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-17
  */
 public interface ClassPath {

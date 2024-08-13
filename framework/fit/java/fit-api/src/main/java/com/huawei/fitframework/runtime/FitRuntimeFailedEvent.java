@@ -9,7 +9,7 @@ import com.huawei.fitframework.event.Event;
 /**
  * 当 FIT 运行时环境启动失败时引发的事件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-30
  */
 public interface FitRuntimeFailedEvent extends Event {

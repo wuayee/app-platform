@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link DefaultThreadFactory} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-01-03
  */
 @DisplayName("测试 DefaultThreadFactory 工具类")

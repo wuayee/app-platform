@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * EchoJober实现类，输入什么回复什么
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 1.0
  */
 public class FlowEchoJober extends FlowJober {

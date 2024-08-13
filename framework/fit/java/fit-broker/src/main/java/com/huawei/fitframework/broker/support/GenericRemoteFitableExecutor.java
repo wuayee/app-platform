@@ -16,7 +16,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 {@link FitableExecutor} 的泛化远程调用实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-10-23
  */
 public class GenericRemoteFitableExecutor extends RemoteFitableExecutor {

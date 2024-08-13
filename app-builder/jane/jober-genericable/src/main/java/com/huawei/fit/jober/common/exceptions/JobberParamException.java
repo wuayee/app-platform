@@ -10,7 +10,7 @@ import com.huawei.fit.jober.entity.OperationContext;
 /**
  * 参数错误抛出异常类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-07-14
  */
 public class JobberParamException extends JobberException {

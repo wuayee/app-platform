@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Http 媒体文件类型。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc6838">RFC 6838</a>
  * @since 2022-07-14
  */

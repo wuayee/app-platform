@@ -25,7 +25,7 @@ import java.util.Objects;
  *     <li><b>Java SE: </b>1.0.2</li>
  * </ul>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-07
  */
 public final class MethodRefInfo extends Constant {

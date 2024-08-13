@@ -39,7 +39,7 @@ import java.util.Set;
 /**
  * 表示 {@link Fitable} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-10
  */
 public class DefaultFitable implements ConfigurableFitable {

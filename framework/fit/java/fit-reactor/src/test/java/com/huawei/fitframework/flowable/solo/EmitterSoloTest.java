@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 表示 {@link Solo#fromEmitter(Emitter)} 的单元测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-06
  */
 @DisplayName("测试 EmitterSolo")

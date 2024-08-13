@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 /**
  * 为 {@link Validation} 提供单元测试。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-07-24
  */
 public class ValidationTest {

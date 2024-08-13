@@ -16,7 +16,7 @@ import java.util.function.Function;
  * 为 {@link UndefinableValue} 提供表示已定义的值的实现。
  *
  * @param <T> 表示值的实际类型。
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 class DefinedValue<T> implements UndefinableValue<T> {

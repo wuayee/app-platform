@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * {@link com.huawei.fit.http.protocol.ReadableMessageBody} 的 {@link ByteBuf} 的实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class ByteBufReadableMessageBody extends NettyReadableMessageBody {

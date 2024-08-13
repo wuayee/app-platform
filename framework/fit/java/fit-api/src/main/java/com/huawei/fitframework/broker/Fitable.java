@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 表示可执行的泛服务实现对象。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-07
  */
 public interface Fitable extends FitableMetadata {

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * FfmpegService ffmpeg服务
  *
- * @author y00612997
+ * @author 易文渊
  * @since 2024/1/7
  */
 public interface FfmpegService {
@@ -21,7 +21,7 @@ public interface FfmpegService {
      * @param inputFilePath 输入文件路径, 必须是mp4格式
      * @return FfmpegMeta {@link FfmpegMeta}
      * @throws IOException ffmpeg执行报错
-     * @author y00612997
+     * @author 易文渊
      * @since 2024/1/7 15:43
      */
     FfmpegMeta stat(String inputFilePath) throws IOException;
@@ -32,7 +32,7 @@ public interface FfmpegService {
      * @param inputFilePath 输入文件路径, 必须是mp4格式
      * @param outputFilePath 输出文件路径, 音频文件格式必须与视频保持一致, mp4视频一般为AAC
      * @throws IOException ffmpeg执行出错
-     * @author y00612997
+     * @author 易文渊
      * @since 2024/1/7 15:43
      */
     void extractAudio(String inputFilePath, String outputFilePath) throws IOException;
@@ -44,7 +44,7 @@ public interface FfmpegService {
      * @param outputPatten 输出文件目录, 输出文件名如{input_prefix}_split_%03d.{input_suffix}
      * @param segmentSize 切片长度，单位为秒
      * @throws IOException ffmpeg执行出错
-     * @author y00612997
+     * @author 易文渊
      * @since 2024/1/7 15:49
      */
     void splitAudio(String inputFilePath, String outputPatten, int segmentSize) throws IOException;

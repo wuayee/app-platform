@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.common;
 /**
  * 异常类型枚举类
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 1.0
  */
 public enum ErrorCodes {

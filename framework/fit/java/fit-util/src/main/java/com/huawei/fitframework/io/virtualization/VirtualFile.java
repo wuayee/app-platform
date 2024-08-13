@@ -14,7 +14,7 @@ import java.net.URL;
 /**
  * 为虚拟文件系统提供虚拟机文件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-30
  */
 public interface VirtualFile extends VirtualFileSystemElement {

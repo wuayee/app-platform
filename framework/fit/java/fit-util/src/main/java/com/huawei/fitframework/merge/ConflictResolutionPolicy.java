@@ -7,7 +7,7 @@ package com.huawei.fitframework.merge;
 /**
  * 为解决冲突提供策略。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-10-06
  */
 public enum ConflictResolutionPolicy {

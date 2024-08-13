@@ -15,7 +15,7 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 /**
  * 任务处理器工厂类
  *
- * @author 00693950
+ * @author 晏钰坤
  * @since 2023/9/15
  */
 public class OperatorFactory {

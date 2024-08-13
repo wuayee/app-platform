@@ -18,7 +18,7 @@ import java.util.Arrays;
 /**
  * 用于字段注入的监听类。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 季聿阶
  * @since 2023-01-17
  */

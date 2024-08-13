@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 /**
  * 为 {@link Fitable} 定义可用范围。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-30
  */
 @Documented

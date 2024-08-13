@@ -14,7 +14,7 @@ import java.io.OutputStream;
  * 载体为字节序列的序列化器。
  *
  * @param <T> 表示序列化的对象的类型。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-12-10
  */
 public interface ByteSerializer<T> {

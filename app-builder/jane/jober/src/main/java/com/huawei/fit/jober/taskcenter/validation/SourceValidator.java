@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.domain.SourceType;
 /**
  * 为任务数据源提供校验器。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-15
  */
 public interface SourceValidator extends Validator {

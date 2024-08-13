@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 为类目提供配置器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-25
  */
 public interface CategoryAcceptor {

@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 /**
  * {@link MessageSerializer} 的基本测试用例。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-10
  */
 public class MessageSerializerTest {

@@ -14,7 +14,7 @@ import java.net.URL;
 /**
  * 为 {@link Resource} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-12
  */
 public final class DefaultResource implements Resource {

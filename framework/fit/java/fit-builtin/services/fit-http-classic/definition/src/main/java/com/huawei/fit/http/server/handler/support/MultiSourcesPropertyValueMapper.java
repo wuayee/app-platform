@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * 表示多个来源的 {@link PropertyValueMapper}。
  * <p>{@link MultiSourcesPropertyValueMapper} 会将多个数据从指定的数据源取出，然后设置到指定的位置，并将多个结果进行合并。</p>
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-12-17
  */
 public class MultiSourcesPropertyValueMapper implements PropertyValueMapper {

@@ -12,7 +12,7 @@ import lombok.ToString;
 /**
  * 响应消息的数据传输对象
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2024-05-10
  */
 @Data

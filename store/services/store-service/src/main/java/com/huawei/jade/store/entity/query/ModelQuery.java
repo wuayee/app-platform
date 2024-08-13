@@ -9,7 +9,7 @@ import com.huawei.jade.common.Result;
 /**
  * 动态条件查询模型的类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-07
  */
 public class ModelQuery {

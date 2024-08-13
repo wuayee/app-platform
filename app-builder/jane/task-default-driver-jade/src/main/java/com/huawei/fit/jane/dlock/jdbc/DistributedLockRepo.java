@@ -9,7 +9,7 @@ import com.huawei.fit.jane.dlock.jdbc.utils.DistributedLockStatus;
 /**
  * 分布式锁 repo核心类
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2024/1/31
  */
 public interface DistributedLockRepo {

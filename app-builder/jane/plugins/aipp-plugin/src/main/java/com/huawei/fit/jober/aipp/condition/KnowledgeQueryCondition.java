@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 知识库查询条件集
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024-04-23
  */
 @Builder

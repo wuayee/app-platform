@@ -13,7 +13,7 @@ import java.io.InputStream;
 /**
  * 为字节提供读取程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-03-02
  */
 @FunctionalInterface

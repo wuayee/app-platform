@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 插件工具的仓库。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-07-18
  */
 @Component

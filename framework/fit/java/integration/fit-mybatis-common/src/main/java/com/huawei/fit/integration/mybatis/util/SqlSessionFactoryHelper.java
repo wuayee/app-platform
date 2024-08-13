@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link org.apache.ibatis.session.SqlSessionFactory} 提供统一的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-04-05
  */
 public final class SqlSessionFactoryHelper {

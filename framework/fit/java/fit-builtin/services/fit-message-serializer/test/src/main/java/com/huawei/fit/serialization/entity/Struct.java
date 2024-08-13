@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * 测试结构体。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-10
  */
 public class Struct {

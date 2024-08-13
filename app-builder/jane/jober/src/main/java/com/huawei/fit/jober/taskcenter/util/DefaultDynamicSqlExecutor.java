@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * 为 {@link DynamicSqlExecutor} 提供默认实现。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-07-24
  */
 @Component

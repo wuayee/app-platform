@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 /**
  * 数据源信息实体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-21
  */
 @Getter

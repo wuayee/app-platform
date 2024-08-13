@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * {@link MethodPointcut} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-11
  */
 public class DefaultMethodPointcut implements MethodPointcut {

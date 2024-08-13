@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * {@link InstanceConverter}的默认实现。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-09-08
  */
 @Component

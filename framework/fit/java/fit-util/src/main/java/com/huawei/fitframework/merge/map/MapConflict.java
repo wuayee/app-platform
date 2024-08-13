@@ -14,7 +14,7 @@ import com.huawei.fitframework.util.ObjectUtils;
  *
  * @param <K> 表示键值对中冲突点的键的类型的 {@link K}。
  * @param <V> 表示键值对中冲突点的值的类型的 {@link V}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-31
  */
 public interface MapConflict<K, V> extends Conflict<K> {

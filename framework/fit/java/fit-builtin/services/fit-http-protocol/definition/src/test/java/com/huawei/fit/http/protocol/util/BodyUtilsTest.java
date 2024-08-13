@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * {@link BodyUtils} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-02-15
  */
 @DisplayName("测试 BodyUtils 类")

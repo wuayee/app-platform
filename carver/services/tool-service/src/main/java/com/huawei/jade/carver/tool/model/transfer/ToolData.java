@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * 表示工具的数据内容。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-04-18
  */
 public class ToolData {

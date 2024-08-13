@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link ResourceResolver} 提供基于类路径的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-17
  */
 public class DefaultClassPath implements ClassPath {

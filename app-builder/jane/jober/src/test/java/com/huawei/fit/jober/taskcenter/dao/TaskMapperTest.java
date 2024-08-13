@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 /**
  * {@link TaskMapper}对应测试类
  *
- * @author 梁致强 l50033199
+ * @author 梁致强
  * @since 2023-08-09
  */
 public class TaskMapperTest extends DatabaseBaseTest {

@@ -17,7 +17,7 @@ import java.util.Objects;
  * 为 {@link SymbolClassifier} 提供默认实现。
  *
  * @param <T> 表示符号的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-04
  */
 public class DefaultSymbolClassifier<T> implements SymbolClassifier<T> {

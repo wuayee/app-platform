@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * 表示只读的 Http 消息体。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-11
  */
 public interface ReadableMessageBody extends MessageBody {

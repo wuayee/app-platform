@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * 列表数据
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-24
  */
 public class ListValue {

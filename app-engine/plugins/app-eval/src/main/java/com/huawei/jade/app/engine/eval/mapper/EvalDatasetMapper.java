@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 表示评估数据集持久层接口。
  *
- * @author 兰宇晨 l00816134
+ * @author 兰宇晨
  * @since 2024-07-27
  */
 @Mapper

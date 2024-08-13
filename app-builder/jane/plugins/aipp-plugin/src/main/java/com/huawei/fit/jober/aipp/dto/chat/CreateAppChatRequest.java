@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 创建app会话的请求体
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-23
  */
 @Builder

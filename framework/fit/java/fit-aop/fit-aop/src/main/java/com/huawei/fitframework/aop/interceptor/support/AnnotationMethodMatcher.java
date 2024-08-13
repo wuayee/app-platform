@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 /**
  * 表示携带指定注解的匹配器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-14
  */
 public class AnnotationMethodMatcher implements MethodMatcher {

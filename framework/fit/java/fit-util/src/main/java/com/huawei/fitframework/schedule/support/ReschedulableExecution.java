@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * 表示 {@link com.huawei.fitframework.schedule.ExecutePolicy.Execution} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-16
  */
 public class ReschedulableExecution implements ExecutePolicy.Execution {

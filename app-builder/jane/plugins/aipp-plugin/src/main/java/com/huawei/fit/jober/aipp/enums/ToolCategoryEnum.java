@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.enums;
 /**
  * Task 的枚举类。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024/6/12
  */
 public enum ToolCategoryEnum {

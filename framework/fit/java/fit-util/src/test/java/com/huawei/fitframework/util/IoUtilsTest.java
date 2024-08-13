@@ -40,8 +40,8 @@ import java.util.Properties;
 /**
  * {@link IoUtils} 的单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-09-29
  */
 public class IoUtilsTest {

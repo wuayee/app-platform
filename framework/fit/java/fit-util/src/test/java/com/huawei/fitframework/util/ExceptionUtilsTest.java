@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 /**
  * 为 {@link ExceptionUtils} 提供单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-05-18
  */
 public class ExceptionUtilsTest {

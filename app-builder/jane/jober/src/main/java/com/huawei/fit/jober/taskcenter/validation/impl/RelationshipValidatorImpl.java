@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * {@link RelationshipValidator} 的默认实现
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-13 14:28
  */
 @Component

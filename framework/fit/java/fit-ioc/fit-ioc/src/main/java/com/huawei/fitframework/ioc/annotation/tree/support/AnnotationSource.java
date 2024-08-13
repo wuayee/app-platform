@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * 为注解提供数据来源。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-07
  */
 final class AnnotationSource {

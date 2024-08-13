@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 表示解析 {@link Entity} 对象参数的 {@link PropertyValueMapperResolver}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-31
  */
 public class EntityResolver implements PropertyValueMapperResolver {

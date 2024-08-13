@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 /**
  * 表示 REST 接口的 {@link HttpRequestMethod#PUT} 请求映射。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-09
  */
 @Documented

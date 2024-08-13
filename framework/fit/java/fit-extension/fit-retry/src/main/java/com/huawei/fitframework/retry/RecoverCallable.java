@@ -7,7 +7,7 @@ package com.huawei.fitframework.retry;
 /**
  * 表示恢复的可调用方法。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-02-23
  */
 @FunctionalInterface

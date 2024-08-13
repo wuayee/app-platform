@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 为 {@link ConversionService} 提供配置系统的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-28
  */
 final class ConfigConversionService extends AbstractConversionService {

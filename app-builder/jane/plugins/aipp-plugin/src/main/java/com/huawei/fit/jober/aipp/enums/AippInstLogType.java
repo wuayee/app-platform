@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.enums;
 /**
  * aipp 实例历史数据类型
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024/01/08
  */
 public enum AippInstLogType {

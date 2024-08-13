@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 包含其他注解的测试注解。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-04-27
  */
 @Documented

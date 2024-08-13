@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 /**
  * {@link BeforeInterceptor} 的 Aspect 实现。
  *
- * @author 季聿阶 j00559309
- * @author 郭龙飞 gwx900499
+ * @author 季聿阶
+ * @author 郭龙飞
  * @since 2023-03-08
  */
 public class AspectBeforeInterceptor extends BeforeInterceptor {

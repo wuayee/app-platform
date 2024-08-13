@@ -9,7 +9,7 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 /**
  * json编码异常
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-02-23
  */
 public class AippJsonEncodeException extends AippException {

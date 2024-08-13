@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * 编排 node 或 event 的属性.
  *
- * @author 张越 z00559346
+ * @author 张越
  * @since 2024-08-05
  */
 public class Attribute {

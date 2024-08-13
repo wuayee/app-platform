@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * 任务数据源适配器接口。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-14
  */
 public interface SourceAdapter {

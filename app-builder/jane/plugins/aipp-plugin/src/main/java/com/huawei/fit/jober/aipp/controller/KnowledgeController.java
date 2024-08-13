@@ -23,7 +23,7 @@ import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 /**
  * 知识库服务相关接口。
  *
- * @author h00804153
+ * @author 黄夏露
  * @since 2024-04-23
  */
 @Component

@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * 表示 {@link CacheInterceptorFactory} 的抽象实现类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-13
  */
 public abstract class AbstractCacheInterceptorFactory<T extends Annotation> extends AbstractAnnotatedInterceptorFactory

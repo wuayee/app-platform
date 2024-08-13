@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * 表示经典的服务端的 Http 响应。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-25
  */
 public interface HttpClassicServerResponse extends HttpClassicResponse {

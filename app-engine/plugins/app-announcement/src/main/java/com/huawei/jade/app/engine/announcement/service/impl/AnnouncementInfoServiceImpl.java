@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * 公告信息服务实现。
  *
- * @author z00591349
+ * @author 张圆
  * @since 2024-06-18
  */
 @Component

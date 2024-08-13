@@ -10,7 +10,7 @@ import com.huawei.fitframework.exception.RetryableException;
 /**
  * 表示异步任务提交异常。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2023-11-16
  */
 @ErrorCode(AsyncTaskNotAcceptedException.CODE)

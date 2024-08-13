@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * 表示普通文件的访问器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-26
  */
 public class RegularFileVisitor extends SimpleFileVisitor<Path> {

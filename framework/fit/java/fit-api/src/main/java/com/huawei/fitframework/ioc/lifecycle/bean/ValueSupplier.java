@@ -7,7 +7,7 @@ package com.huawei.fitframework.ioc.lifecycle.bean;
 /**
  * 为值提供获取程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 @FunctionalInterface

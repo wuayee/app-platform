@@ -8,7 +8,7 @@ package com.huawei.fitframework.util;
  * 为对象提供比较器。
  *
  * @param <T> 表示待比较对象的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 @FunctionalInterface

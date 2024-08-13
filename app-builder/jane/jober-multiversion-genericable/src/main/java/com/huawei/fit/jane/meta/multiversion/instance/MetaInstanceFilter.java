@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Meta实例MetaInstanceFilter。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-12-12
  */
 public class MetaInstanceFilter {

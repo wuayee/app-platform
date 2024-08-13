@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  *
  * @param <T>
  * @param <R>
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {

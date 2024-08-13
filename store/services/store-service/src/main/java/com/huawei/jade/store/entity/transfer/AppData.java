@@ -9,7 +9,7 @@ import com.huawei.jade.carver.tool.model.transfer.ToolData;
 /**
  * 表示应用的数据内容。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-15
  */
 public class AppData extends ToolData {

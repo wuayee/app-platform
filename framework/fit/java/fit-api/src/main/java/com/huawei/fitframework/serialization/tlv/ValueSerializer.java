@@ -10,7 +10,7 @@ import com.huawei.fitframework.inspection.Nonnull;
  * 表示 {@link com.huawei.fitframework.serialization.TagLengthValues} 中值的序列化器。
  *
  * @param <T> 表示值的类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-06-15
  */
 public interface ValueSerializer<T> {

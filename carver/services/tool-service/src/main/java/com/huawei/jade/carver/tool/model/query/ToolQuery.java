@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * 动态条件查询的类。
  *
- * @author 李金绪 l00878072
+ * @author 李金绪
  * @since 2024-05-10
  */
 public class ToolQuery {

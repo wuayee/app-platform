@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * 为 DataBus 读写请求共有接口。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public interface DataBusIoRequest extends DataBusRequest {

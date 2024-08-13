@@ -9,7 +9,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 表示缓存数据键的元数据信息。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-01-23
  */
 public class CacheKeyMetadata {

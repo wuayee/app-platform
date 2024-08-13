@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * 表示可修改的 {@link Aliases}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-27
  */
 public class ConfigurableAliases implements Aliases {

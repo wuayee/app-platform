@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * {@link ConvertUtils} 的单元测试类
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-07-16
  */
 @ExtendWith(MockitoExtension.class)

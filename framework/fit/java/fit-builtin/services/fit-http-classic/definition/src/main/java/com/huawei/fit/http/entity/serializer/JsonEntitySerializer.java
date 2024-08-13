@@ -29,7 +29,7 @@ import java.util.Map;
  * 表示消息体格式为 {@code 'application/json'} 的序列化器。
  *
  * @param <T> 表示反序列化后对应的数据结构类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-11
  */
 public class JsonEntitySerializer<T> implements EntitySerializer<ObjectEntity<T>> {

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示 WebSocket 中会话的映射器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-10
  */
 public class WebSocketSessionMapper implements PropertyValueMapper {

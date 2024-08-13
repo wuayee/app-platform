@@ -9,7 +9,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 提供语音的通用服务。
  *
- * @author 张粟 z00605602
+ * @author 张粟
  * @since 2024-06-18
  */
 public interface VoiceService {

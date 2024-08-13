@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * 表示任务定义的主键。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-25
  */
 public interface PrimaryKey {

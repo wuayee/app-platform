@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * 提供 {@link HttpClassicServerRequest} 的仿真实现。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-17
  */
 public class MockHttpClassicServerRequest {

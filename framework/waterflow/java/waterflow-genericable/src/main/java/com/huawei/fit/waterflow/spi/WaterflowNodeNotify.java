@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 流程实例回调函数 Genericable。
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 1.0
  */
 public interface WaterflowNodeNotify {

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  *
  * @param <I> 传入数据类型
  * @param <O> 处理完数据类型
- * @author g00564732
+ * @author 高诗意
  * @since 1.0
  */
 public class JoinNode<I, O> extends Node<I, O> {

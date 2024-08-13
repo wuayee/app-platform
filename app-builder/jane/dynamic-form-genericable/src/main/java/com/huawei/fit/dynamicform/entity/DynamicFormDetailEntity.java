@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 /**
  * 表单详情实体类
  *
- * @author l00498867
+ * @author 李鑫
  * @since 2024/7/27
  */
 @Data

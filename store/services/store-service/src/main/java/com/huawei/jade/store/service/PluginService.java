@@ -12,7 +12,7 @@ import com.huawei.jade.store.entity.transfer.PluginData;
 /**
  * 插件的服务接口类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-15
  */
 public interface PluginService {

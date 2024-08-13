@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * 表示 {@link FitDruidDataSource} 的测试集。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @author 易文渊
  * @since 2022-08-02
  */

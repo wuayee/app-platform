@@ -15,7 +15,7 @@ import java.lang.reflect.Parameter;
 /**
  * 通过 {@link MethodJoinPoint} 适配实现 {@link MethodSignature}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-05-19
  */
 public class DefaultSignature implements MethodSignature {

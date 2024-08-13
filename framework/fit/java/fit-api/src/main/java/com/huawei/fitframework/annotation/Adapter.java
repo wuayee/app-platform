@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 /**
  * 表示适配器。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-11-15
  */
 @Documented

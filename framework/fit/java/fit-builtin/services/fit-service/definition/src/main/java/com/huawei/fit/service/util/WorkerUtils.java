@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 表示进程的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-14
  */
 public class WorkerUtils {

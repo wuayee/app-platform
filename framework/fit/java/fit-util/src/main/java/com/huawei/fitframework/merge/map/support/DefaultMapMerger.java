@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * @param <K> 表示 {@link Map} 中的键的类型的 {@link K}。
  * @param <V> 表示 {@link Map} 中的值的类型的 {@link V}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-30
  */
 public class DefaultMapMerger<K, V> extends AbstractMerger<Map<K, V>> implements MapMerger<K, V> {

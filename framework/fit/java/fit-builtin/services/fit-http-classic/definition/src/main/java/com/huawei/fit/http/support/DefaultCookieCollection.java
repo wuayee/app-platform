@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * {@link CookieCollection} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-06
  */
 public class DefaultCookieCollection extends DefaultHeaderValue implements ConfigurableCookieCollection {

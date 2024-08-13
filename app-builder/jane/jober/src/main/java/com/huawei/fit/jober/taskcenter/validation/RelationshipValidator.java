@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation;
 /**
  * 为TenantId、TaskId、TaskTypeId、SourceId提供从属关系的校验器
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-13 14:16
  */
 public interface RelationshipValidator extends Validator {

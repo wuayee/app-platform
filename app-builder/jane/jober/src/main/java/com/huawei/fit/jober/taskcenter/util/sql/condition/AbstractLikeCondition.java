@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 为模糊匹配文本的条件提供基类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public abstract class AbstractLikeCondition implements Condition {

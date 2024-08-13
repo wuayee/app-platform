@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
 /**
  * 为注解提供属性信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-03
  */
 public interface AnnotationProperty {

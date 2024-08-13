@@ -22,7 +22,7 @@ import java.util.function.Function;
  *
  * @param <T> 表示发布者中数据转换前的类型的 {@link T}。
  * @param <R> 表示发布者中数据转换成的 {@link Publisher} 的元素类型的 {@link R}。
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-02-20
  */
 public class FlatMapPublisherDecorator<T, R> implements Publisher<R> {

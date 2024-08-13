@@ -10,7 +10,7 @@ import static com.huawei.fitframework.inspection.Validation.notBlank;
 /**
  * 表示 WebSocket 关闭时的状态码和原因。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-08
  */
 public enum CloseReason {

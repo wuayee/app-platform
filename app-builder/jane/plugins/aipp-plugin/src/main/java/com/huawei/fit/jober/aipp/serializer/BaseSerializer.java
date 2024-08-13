@@ -10,7 +10,7 @@ package com.huawei.fit.jober.aipp.serializer;
  * @param <Domain> 领域对象类型
  * @param <PO> 数据对象类型
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 public interface BaseSerializer<Domain, PO> {

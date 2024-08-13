@@ -11,7 +11,7 @@ import lombok.Data;
 /**
  * 表示任务属性触发器的定义。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 @Data

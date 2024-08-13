@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 表示 WebSocket 消息的处理器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-07
  */
 public interface WebSocketHandler extends HttpResourceSupplier {

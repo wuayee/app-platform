@@ -13,7 +13,7 @@ import java.net.URLClassLoader;
 /**
  * 为应用程序使用的公共类库提供类加载程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-06-28
  */
 public class SharedClassLoader extends AbstractClassLoader {

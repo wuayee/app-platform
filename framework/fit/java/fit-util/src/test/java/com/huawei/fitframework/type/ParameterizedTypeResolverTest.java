@@ -27,8 +27,8 @@ import java.util.Set;
 /**
  * 为 {@link ParameterizedTypeResolver} 提供单元测试。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2022-07-04
  */
 @DisplayName("测试 ParameterizedTypeResolver 工具类")

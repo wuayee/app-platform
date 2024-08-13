@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * aipp运行时服务层接口
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-15
  */
 public interface AippRunTimeService {

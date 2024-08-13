@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * 表示任务树。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-09
  */
 @Data

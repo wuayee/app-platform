@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 调用 {@link Object} 方法的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-06-23
  */
 public class ObjectMethodUtils {

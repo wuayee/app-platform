@@ -15,7 +15,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 为 {@link DistributedLockProvider} 提供基于SQL数据库的实现。
  *
- * @author l00862071
+ * @author 李哲峰
  * @since 2023-12-07
  */
 @Component

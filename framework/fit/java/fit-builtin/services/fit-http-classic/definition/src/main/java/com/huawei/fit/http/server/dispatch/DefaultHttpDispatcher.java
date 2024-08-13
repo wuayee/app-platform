@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link HttpDispatcher} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-19
  */
 public class DefaultHttpDispatcher implements HttpDispatcher {

@@ -14,14 +14,14 @@ import java.util.Objects;
 /**
  * 为 {@link DataLocator} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-22
  */
 final class DataLocators {
     /**
      * 为 {@link DataLocator} 提供默认实现。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-02-21
      */
     static final class Default implements DataLocator {

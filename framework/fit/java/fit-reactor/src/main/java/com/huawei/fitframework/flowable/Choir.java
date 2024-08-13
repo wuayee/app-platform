@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  * 表示拥有 {@code 0 - n} 个数据的数据流的发布者。
  *
  * @param <T> 表示数据类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-08
  */
 public interface Choir<T> extends Publisher<T> {

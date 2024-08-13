@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * 表示重试策略的注解。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-02-21
  */
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})

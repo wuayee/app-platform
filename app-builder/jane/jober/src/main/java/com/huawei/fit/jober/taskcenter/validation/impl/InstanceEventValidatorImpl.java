@@ -15,7 +15,7 @@ import com.huawei.fitframework.annotation.Component;
 /**
  * 为 {@link InstanceEventValidator} 提供实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 @Component

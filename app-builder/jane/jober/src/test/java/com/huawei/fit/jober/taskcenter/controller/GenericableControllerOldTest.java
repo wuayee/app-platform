@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * {@link GenericableControllerOld} 对应测试类。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-06-15
  */
 @ExtendWith(MockitoExtension.class)

@@ -12,7 +12,7 @@ import com.huawei.fitframework.inspection.Validation;
 /**
  * 节点自动任务校验规则
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class GeneralJoberRule implements JoberRule {

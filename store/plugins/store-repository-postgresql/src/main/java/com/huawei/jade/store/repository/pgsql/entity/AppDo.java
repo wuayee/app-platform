@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 /**
  * 存入数据库的应用的实体类。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-15
  */
 @Data

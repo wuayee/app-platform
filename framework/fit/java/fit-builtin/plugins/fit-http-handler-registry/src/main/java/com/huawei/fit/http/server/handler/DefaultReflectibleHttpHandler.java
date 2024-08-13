@@ -35,7 +35,7 @@ import java.util.Optional;
 /**
  * 表示 {@link AbstractReflectibleHttpHandler} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-11
  */
 public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandler implements HttpHandler {

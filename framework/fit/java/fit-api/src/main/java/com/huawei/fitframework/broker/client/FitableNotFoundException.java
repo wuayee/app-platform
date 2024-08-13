@@ -10,8 +10,8 @@ import com.huawei.fitframework.exception.FitException;
 /**
  * 当无法找到指定的泛服务实现时引发的异常。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-09-03
  */
 @ErrorCode(FitableNotFoundException.CODE)

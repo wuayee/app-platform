@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * {@link com.huawei.fit.http.protocol.ReadableMessageBody} 的 {@link CompositeByteBuf} 的实现。
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-02-17
  */
 public class CompositeByteBufReadableMessageBody extends NettyReadableMessageBody {

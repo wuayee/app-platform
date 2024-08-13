@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 为实例事件提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public interface InstanceEventService {

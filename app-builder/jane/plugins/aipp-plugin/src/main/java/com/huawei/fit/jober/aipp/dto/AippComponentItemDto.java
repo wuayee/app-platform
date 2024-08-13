@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Aipp的组件信息
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/11
  */
 @SuperBuilder

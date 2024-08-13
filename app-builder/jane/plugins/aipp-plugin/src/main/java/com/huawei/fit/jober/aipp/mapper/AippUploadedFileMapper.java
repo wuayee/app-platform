@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * aipp实例文件记录db接口
  *
- * @author x00649642
+ * @author 熊以可
  * @since 2024-02-04
  */
 public interface AippUploadedFileMapper {

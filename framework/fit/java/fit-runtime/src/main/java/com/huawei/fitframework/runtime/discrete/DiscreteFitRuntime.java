@@ -24,7 +24,7 @@ import java.net.URLClassLoader;
  * 为 FIT 运行时提供离散启动场景的实现。
  * <p>离散启动指的是 FIT 框架和必要的系统插件安装在文件系统中，用户插件在用户指定目录进行启动。</p>
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-07-29
  */
 public class DiscreteFitRuntime extends AbstractFitRuntime {

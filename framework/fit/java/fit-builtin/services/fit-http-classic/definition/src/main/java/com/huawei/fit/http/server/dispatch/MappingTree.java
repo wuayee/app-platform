@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * {@link HttpRequestMethod#GET}</p>
  *
  * @param <T> 表示匹配树上的处理器类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-26
  */
 public interface MappingTree<T> {

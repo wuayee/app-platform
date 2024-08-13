@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * {@link EventAttributes} 对应测试类
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024/08/05
  */
 public class EventAttributesTest {

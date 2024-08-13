@@ -14,7 +14,7 @@ import com.huawei.fit.security.http.upload.ConfigurableFileUploadValidateConfig;
  * 表示 {@link ConfigurableFileUploadValidateConfig} 的默认实现。
  * <p>配置项不能够设置为空，如果设置为空则自动设定为默认初始值。</p>
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-12
  */
 public final class DefaultConfigurableFileUploadValidateConfig implements ConfigurableFileUploadValidateConfig {

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 异步化节点间操作内存版实现类
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class FlowContextMemoMessenger implements FlowContextMessenger {

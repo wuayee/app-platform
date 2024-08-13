@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 为任务数据源提供管理。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-08
  */
 public interface SourceService {

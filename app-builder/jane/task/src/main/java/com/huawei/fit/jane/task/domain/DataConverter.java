@@ -9,7 +9,7 @@ import com.huawei.fitframework.util.ParsingResult;
 /**
  * 表示数据类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-23
  */
 public interface DataConverter {

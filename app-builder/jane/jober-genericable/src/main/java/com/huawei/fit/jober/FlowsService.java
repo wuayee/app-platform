@@ -11,7 +11,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 流程保存及发布相关能力
  *
- * @author x00576283
+ * @author 夏斐
  * @since 2023/12/13
  */
 public interface FlowsService {

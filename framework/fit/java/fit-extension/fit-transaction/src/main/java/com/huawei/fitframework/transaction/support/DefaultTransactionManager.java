@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 /**
  * 为 {@link TransactionManager} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-25
  */
 @Component

@@ -30,8 +30,8 @@ import java.util.Stack;
  * by the end of this file, parser will build an AST object to represent a whole script structure
  * this AST will be used in script executing
  *
- * @author z00544938 huizi 2023-05
- * @since 1.0
+ * @author 张群辉
+ * @since 2023-05-01
  */
 public class Parser {
     private static final List<String> imports = new ArrayList<>();

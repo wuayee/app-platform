@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * 为 {@link StringResource} 提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-22
  */
 public final class StringResources {

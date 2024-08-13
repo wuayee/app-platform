@@ -16,7 +16,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors.Invo
  * 数据生产节点
  *
  * @param <T> 待生产数据类型
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public class DataProducer<T> extends IdGenerator implements Source<T> {

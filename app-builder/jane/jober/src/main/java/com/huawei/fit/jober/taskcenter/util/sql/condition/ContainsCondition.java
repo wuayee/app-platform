@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 /**
  * 表示检查指定文本列包含指定文本值的条件。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class ContainsCondition extends AbstractLikeCondition {

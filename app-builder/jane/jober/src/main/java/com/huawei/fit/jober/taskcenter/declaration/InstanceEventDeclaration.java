@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.UndefinableValue;
 /**
  * 为实例事件提供声明。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-04
  */
 public interface InstanceEventDeclaration {
@@ -30,7 +30,7 @@ public interface InstanceEventDeclaration {
     /**
      * 为实例事件的声明提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-09-04
      */
     interface Builder {

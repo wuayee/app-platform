@@ -20,7 +20,7 @@ import java.util.List;
  * 主要由标准的：publisher,subscriber,subscription三个组成
  * 辉子 2019-10-31
  *
- * @author g00564732
+ * @author 高诗意
  * @since 2023/08/14
  */
 public final class FitStream {

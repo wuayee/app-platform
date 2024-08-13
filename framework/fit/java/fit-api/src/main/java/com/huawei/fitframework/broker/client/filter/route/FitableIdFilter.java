@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 /**
  * 指定泛服务实现唯一标识的路由的过滤器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2021-06-11
  */
 public class FitableIdFilter extends AbstractFilter {

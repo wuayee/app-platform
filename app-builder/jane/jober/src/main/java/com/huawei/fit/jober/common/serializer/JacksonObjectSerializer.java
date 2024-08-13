@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * jackson对象序列化器
  *
- * @author lwx1301876
+ * @author 梁子涵
  * @since 2024-02-26
  */
 @Component()

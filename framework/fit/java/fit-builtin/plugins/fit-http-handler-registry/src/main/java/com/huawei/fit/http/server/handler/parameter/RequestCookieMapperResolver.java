@@ -17,7 +17,7 @@ import java.lang.annotation.Annotation;
 /**
  * 表示解析带有 {@link RequestCookie} 注解的属性值的 {@link PropertyValueMapperResolver}。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-30
  */
 public class RequestCookieMapperResolver extends AbstractRequestParamMapperResolver {

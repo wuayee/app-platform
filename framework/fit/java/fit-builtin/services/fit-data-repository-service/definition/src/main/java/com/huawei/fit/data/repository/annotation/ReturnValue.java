@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * 表示返回值的替换信息。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-01-21
  */
 @Documented

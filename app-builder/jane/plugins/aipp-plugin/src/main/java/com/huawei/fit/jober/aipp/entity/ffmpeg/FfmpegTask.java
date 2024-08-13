@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * FfmpegTask ffmpeg任务
  *
- * @author y00612997
+ * @author 易文渊
  * @since 2024/1/8
  */
 public class FfmpegTask {
@@ -27,7 +27,7 @@ public class FfmpegTask {
      * @param executable ffmpeg可执行文件路径
      * @param inputs 输入参数
      * @param outputs 输出参数
-     * @author s00664640
+     * @author 孙怡菲
      * @since 2024-05-10
      */
     public FfmpegTask(String executable, Map<String, List<String>> inputs, Map<String, List<String>> outputs) {
@@ -64,7 +64,7 @@ public class FfmpegTask {
      *
      * @return String 执行打印结果
      * @throws IOException ffmpeg执行出错
-     * @author y00612997
+     * @author 易文渊
      * @since 2024/1/10 9:47
      */
     public String exec() throws IOException {

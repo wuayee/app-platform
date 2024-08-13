@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 为应用程序提供分布式锁。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-16
  */
 public interface DistributedLockProvider {

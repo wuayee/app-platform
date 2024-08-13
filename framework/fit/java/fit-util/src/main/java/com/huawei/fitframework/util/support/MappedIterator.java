@@ -14,7 +14,7 @@ import java.util.function.Function;
  *
  * @param <F> 表示迭代的原始值的类型。
  * @param <T> 表示映射后的值的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-11-05
  */
 public class MappedIterator<F, T> implements Iterator<T> {

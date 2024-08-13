@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 表示 {@link FlexibleEmitterChoir} 的单元测试。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-22
  */
 public class FlexibleEmitterChoirTest {

@@ -18,7 +18,7 @@ import java.sql.Connection;
  *
  * <p>若父事务不存在后端事务，那么将直接复用父事务的连接。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-25
  */
 public class DummyTransaction extends AbstractTransaction {

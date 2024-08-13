@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * 为 JAR 提供缓存。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-17
  */
 public interface JarCache {

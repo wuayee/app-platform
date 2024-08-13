@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 灵感大全的两个查询接口service
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-04-26
  */
 public interface AppBuilderPromptService {

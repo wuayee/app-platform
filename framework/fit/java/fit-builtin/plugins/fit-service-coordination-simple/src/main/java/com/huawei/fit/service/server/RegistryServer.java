@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
  * 用于提供本地注册中心的服务。
  * <p><b>注意：该注册中心服务为内存版实现，仅提供于非生产环境测试使用。</b></p>
  *
- * @author 邬涨财 w00575064
- * @author 季聿阶 j00559309
+ * @author 邬涨财
+ * @author 季聿阶
  * @since 2022-04-11
  */
 @Component

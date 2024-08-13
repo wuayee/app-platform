@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * 表示 {@link CommunicationVersion} 的第 3 版实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-18
  */
 public class CommunicationVersion3 implements CommunicationVersion {

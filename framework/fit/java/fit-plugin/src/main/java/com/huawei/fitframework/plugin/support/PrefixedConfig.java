@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * 为 {@link Config} 提供增加前缀的装饰程序。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-05
  */
 final class PrefixedConfig extends AbstractConfig {

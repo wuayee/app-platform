@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 为三方系统授权提供数据模型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-27
  */
 public interface Authorization extends DomainObject {
@@ -48,7 +48,7 @@ public interface Authorization extends DomainObject {
     /**
      * 为三方系统授权提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     interface Builder extends DomainObject.Builder<Authorization, Builder> {
@@ -97,7 +97,7 @@ public interface Authorization extends DomainObject {
     /**
      * 为三方系统授权提供声明。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     interface Declaration {
@@ -132,7 +132,7 @@ public interface Authorization extends DomainObject {
         /**
          * 为三方系统授权的声明提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-11-27
          */
         interface Builder {
@@ -189,7 +189,7 @@ public interface Authorization extends DomainObject {
     /**
      * 为三方系统授权提供过滤条件。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     interface Filter {
@@ -217,7 +217,7 @@ public interface Authorization extends DomainObject {
         /**
          * 为三方系统授权的过滤条件系统构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2023-11-27
          */
         interface Builder {
@@ -266,7 +266,7 @@ public interface Authorization extends DomainObject {
     /**
      * 为系统授权提供存储能力。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2023-11-27
      */
     interface Repo {

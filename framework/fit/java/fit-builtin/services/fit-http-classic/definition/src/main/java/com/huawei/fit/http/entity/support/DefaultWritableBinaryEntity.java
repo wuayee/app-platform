@@ -18,7 +18,7 @@ import java.io.OutputStream;
 /**
  * 表示 {@link WritableBinaryEntity} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-01-28
  */
 public class DefaultWritableBinaryEntity extends AbstractEntity implements WritableBinaryEntity {

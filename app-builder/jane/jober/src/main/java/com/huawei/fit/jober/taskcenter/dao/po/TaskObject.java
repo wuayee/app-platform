@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * task表的数据访问层的Object实体
  *
- * @author 梁致强 l50033199
+ * @author 梁致强
  * @since 2023-08-08
  */
 @Data

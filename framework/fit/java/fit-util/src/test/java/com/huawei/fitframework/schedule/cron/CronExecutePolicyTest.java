@@ -30,7 +30,7 @@ import java.util.Optional;
 /**
  * 表示 {@link CronExecutePolicy} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2023-01-03
  */
 @DisplayName("测试 CronExecutePolicy")

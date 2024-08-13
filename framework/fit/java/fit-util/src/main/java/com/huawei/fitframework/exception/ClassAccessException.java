@@ -7,7 +7,7 @@ package com.huawei.fitframework.exception;
 /**
  * 当访问类型发生异常时引发的异常。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class ClassAccessException extends RuntimeException {

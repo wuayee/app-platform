@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * 表示泛服务的类型。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2021-11-22
  */
 public enum GenericableType {

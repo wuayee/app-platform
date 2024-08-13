@@ -24,7 +24,7 @@ import com.huawei.fitframework.parameterization.support.DefaultParameterizedStri
  * <p>一般来讲，对于某个业务逻辑而言，其所使用的前缀、后缀及转义字符通常保持不变，因此可将相应的 {@link ParameterizedStringResolver}
  * 实例作为静态变量，以降低内存开销。</p>
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @see ParameterizedString
  * @see ResolvedParameter
  * @since 1.0

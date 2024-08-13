@@ -18,7 +18,7 @@ import java.util.Arrays;
 /**
  * 表示判断等于指定值的过滤器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class EqualsFilter implements Filter {

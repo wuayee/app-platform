@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 表示 {@link HttpHandler} 的抽象父类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-08-24
  */
 public abstract class AbstractHttpHandler implements HttpHandler {

@@ -42,8 +42,8 @@ import javax.xml.transform.stream.StreamResult;
 /**
  * 为操作 XML 文档提供工具方法。
  *
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public final class XmlUtils {
@@ -421,7 +421,7 @@ public final class XmlUtils {
     /**
      * 为特性提供配置方法。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2020-12-13
      */
     @FunctionalInterface
@@ -450,7 +450,7 @@ public final class XmlUtils {
     /**
      * 为文档提供写入程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-05
      */
     public static class Writer {
@@ -728,7 +728,7 @@ public final class XmlUtils {
     /**
      * 为 XML 中的节点提供持有程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-10-21
      */
     public static final class NodeHolder {

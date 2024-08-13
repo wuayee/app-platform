@@ -10,8 +10,8 @@ import com.huawei.fitframework.model.Interval;
  * 为 {@link Interval} 提供默认实现。
  *
  * @param <T> 表示区间中元素的类型的 {@link T}。
- * @author 梁济时 l00815032
- * @author 季聿阶 j00559309
+ * @author 梁济时
+ * @author 季聿阶
  * @since 2020-07-24
  */
 public class DefaultInterval<T extends Comparable<T>> implements Interval<T> {

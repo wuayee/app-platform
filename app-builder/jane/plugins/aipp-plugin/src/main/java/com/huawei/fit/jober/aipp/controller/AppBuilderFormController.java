@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * app表单管理接口
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-19
  */
 @Component

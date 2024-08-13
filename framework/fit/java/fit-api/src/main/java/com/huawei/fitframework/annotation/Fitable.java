@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
  * </ol>
  * </p>
  *
- * @author 张群辉 z00544938
- * @author 季聿阶 j00559309
+ * @author 张群辉
+ * @author 季聿阶
  * @see Genericable
  * @since 2020-01-18
  */

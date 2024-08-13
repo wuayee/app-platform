@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 /**
  * 指示需要导入配置。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-01-05
  */
 @Documented

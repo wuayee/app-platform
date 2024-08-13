@@ -7,7 +7,7 @@ package com.huawei.fitframework.conf;
 /**
  * 为配置提供链式结构，并将整个链呈现为一个配置实例。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-12-14
  */
 public interface ConfigChain extends Config {

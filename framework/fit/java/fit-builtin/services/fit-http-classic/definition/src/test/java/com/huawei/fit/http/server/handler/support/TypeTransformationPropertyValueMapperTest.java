@@ -24,7 +24,7 @@ import java.lang.reflect.Parameter;
 /**
  * 表示 {@link TypeTransformationPropertyValueMapper} 的单元测试。
  *
- * @author bWX1068551
+ * @author 白鹏坤
  * @since 2023-02-21
  */
 @DisplayName("测试 TypeTransformationParameterMapper 类")

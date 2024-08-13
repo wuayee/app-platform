@@ -13,7 +13,7 @@ import java.util.Objects;
  *   <li>客户端未申请内存，从外界获取制定 ID</li>
  * </ol>
  *
- * @author 王成 w00863339
+ * @author 王成
  * @since 2024-03-17
  */
 public class SharedMemoryKey {

@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * 任务属性转换器
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2023-12-18
  */
 @Mapper

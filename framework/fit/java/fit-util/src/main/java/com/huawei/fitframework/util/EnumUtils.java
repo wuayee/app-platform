@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * 为枚举提供工具方法。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public final class EnumUtils {

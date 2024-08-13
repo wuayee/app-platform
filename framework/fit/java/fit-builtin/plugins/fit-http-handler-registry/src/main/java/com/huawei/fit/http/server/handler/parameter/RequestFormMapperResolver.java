@@ -16,7 +16,7 @@ import java.lang.annotation.Annotation;
 /**
  * 表示解析带有 {@link RequestForm} 注解的参数的 {@link PropertyValueMapperResolver}。
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2023-11-20
  */
 public class RequestFormMapperResolver extends AbstractRequestParamMapperResolver {

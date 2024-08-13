@@ -9,7 +9,7 @@ import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 /**
  * 用于 aop 的 aipp 实例历史记录服务接口
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-07-03
  */
 public interface AopAippLogService {

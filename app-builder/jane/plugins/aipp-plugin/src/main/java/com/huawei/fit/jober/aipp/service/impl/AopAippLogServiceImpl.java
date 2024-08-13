@@ -16,7 +16,7 @@ import com.huawei.fitframework.log.Logger;
 /**
  * 用于 aop 的 aipp 实例历史记录服务接口实现
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-07-03
  */
 @Component

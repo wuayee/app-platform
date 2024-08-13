@@ -21,7 +21,7 @@ import java.util.Arrays;
 /**
  * 为 {@link BeanInjector} 提供基于方法注入的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class MethodBeanInjector implements BeanInjector {

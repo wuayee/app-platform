@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 表示泛服务的实现的执行器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-03-28
  */
 public interface FitableExecutor {

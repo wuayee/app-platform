@@ -9,7 +9,7 @@ import com.huawei.fit.security.http.name.FileNameValidateConfig;
 /**
  * 表示可配置的压缩文件校验配置。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-18
  */
 public interface ConfigurableZippedFileValidateConfig extends ZippedFileValidateConfig {

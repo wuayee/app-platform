@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * 表示 {@link Cache} 的抽象实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-15
  */
 public abstract class AbstractCache implements Cache {

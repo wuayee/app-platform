@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 表示判断指定列的值在指定区间的条件。（区间由最小值与最大值限定）
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class BetweenCondition implements Condition {

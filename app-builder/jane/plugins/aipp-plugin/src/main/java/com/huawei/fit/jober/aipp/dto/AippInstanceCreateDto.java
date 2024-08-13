@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * Aipp创建实例响应
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-02-22
  */
 @Builder

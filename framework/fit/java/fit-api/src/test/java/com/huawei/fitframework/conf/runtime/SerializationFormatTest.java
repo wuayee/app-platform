@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 /**
  * 表示 {@link SerializationFormat} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-04
  */
 @DisplayName("测试 SerializationFormat")

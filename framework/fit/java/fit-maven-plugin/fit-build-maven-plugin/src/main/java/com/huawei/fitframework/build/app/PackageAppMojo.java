@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * 表示构建应用的任务。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-02-07
  */
 @Mojo(name = "package-app", defaultPhase = LifecyclePhase.PACKAGE,

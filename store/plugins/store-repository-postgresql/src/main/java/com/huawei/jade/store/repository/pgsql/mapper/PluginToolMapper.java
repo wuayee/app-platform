@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 表示用于 MyBatis 持久层引用的 PluginTool 接口。
  *
- * @author 鲁为 l00839724
+ * @author 鲁为
  * @since 2024-06-15
  */
 public interface PluginToolMapper {

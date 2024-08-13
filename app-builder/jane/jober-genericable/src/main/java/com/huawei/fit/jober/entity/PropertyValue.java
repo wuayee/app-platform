@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity;
 /**
  * PropertyValue实体类
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-28
  */
 public class PropertyValue {

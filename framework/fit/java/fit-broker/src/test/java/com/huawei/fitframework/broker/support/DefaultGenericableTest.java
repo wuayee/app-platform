@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * 表示 {@link DefaultGenericable} 的单元测试。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-17
  */
 @DisplayName("测试 DefaultGenericable")

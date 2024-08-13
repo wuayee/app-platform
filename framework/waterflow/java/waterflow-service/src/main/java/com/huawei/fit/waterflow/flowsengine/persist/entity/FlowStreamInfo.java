@@ -10,7 +10,7 @@ import lombok.Setter;
 /**
  * streamId对应结构
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/4/15
  */
 @Getter

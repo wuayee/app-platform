@@ -13,7 +13,7 @@ import java.util.TimeZone;
 /**
  * 用于转换时间的工具类
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/1/18
  */
 public class TimeUtil {

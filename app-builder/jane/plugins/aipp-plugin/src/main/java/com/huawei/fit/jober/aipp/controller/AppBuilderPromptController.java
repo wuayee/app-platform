@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 为灵感大全提供查询接口
  *
- * @author 姚江 yWX1299574
+ * @author 姚江
  * @since 2024-04-25
  */
 @Component

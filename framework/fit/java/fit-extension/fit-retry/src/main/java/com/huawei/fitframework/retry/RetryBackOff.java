@@ -8,7 +8,7 @@ package com.huawei.fitframework.retry;
  * 表示重试的退避策略。
  *
  * @param <T> 表示重试执行器的返回类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-17
  */
 @FunctionalInterface

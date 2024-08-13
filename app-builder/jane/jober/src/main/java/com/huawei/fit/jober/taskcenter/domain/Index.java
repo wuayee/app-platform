@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 为元数据提供索引。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-04
  */
 public interface Index extends DomainObject {
@@ -43,7 +43,7 @@ public interface Index extends DomainObject {
     /**
      * 为索引提供构建器。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-04
      */
     interface Builder extends DomainObject.Builder<Index, Builder> {
@@ -84,7 +84,7 @@ public interface Index extends DomainObject {
     /**
      * 为索引提供声明。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-04
      */
     interface Declaration {
@@ -105,7 +105,7 @@ public interface Index extends DomainObject {
         /**
          * 为索引声明提供构建器。
          *
-         * @author 梁济时 l00815032
+         * @author 梁济时
          * @since 2024-01-04
          */
         interface Builder {
@@ -155,7 +155,7 @@ public interface Index extends DomainObject {
     /**
      * 为索引提供持久化能力。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2024-01-04
      */
     interface Repo {

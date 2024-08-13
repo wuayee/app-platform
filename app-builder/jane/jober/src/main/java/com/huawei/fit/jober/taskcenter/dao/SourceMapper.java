@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 为任务数据源提供持久化能力。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-08
  */
 @Mapper

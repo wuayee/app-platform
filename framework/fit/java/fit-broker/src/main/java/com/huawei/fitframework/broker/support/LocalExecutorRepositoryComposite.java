@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 /**
  * 组合的服务实现的本地执行器仓库。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2020-09-25
  */
 public class LocalExecutorRepositoryComposite implements LocalExecutorRepository {

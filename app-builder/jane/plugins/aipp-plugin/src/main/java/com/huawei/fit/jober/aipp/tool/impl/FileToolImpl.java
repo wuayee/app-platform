@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 /**
  * 文件工具类实现。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2024-05-30
  */
 @Component

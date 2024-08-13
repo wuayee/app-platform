@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 /**
  * 表示通过方法注解来生成方法拦截器的工厂。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-12-14
  */
 public abstract class AbstractAnnotatedInterceptorFactory implements MethodInterceptorFactory {

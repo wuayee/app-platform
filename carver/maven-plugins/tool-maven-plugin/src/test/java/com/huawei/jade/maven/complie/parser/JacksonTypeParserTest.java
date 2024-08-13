@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 表示 {@link JacksonTypeParser} 的单元测试。
  *
- * @author 杭潇 h00675922
+ * @author 杭潇
  * @since 2024-06-29
  */
 @DisplayName("测试 JacksonTypeParser 类")

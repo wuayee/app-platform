@@ -17,7 +17,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link TreeValidator} 提供实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-08-17
  */
 @Component

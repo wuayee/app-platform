@@ -13,7 +13,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为事务提供传播策略的定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-08-22
  */
 public enum TransactionPropagationPolicy implements TransactionPropagator {

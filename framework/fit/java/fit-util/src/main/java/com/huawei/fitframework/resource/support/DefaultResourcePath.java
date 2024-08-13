@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 /**
  * 为资源路径提供节点定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-07-22
  */
 public final class DefaultResourcePath implements ResourcePath {
@@ -65,7 +65,7 @@ public final class DefaultResourcePath implements ResourcePath {
     /**
      * 为资源路径提供节点。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-07-27
      */
     private abstract static class Node implements ResourcePath.Node {

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 /**
  * {@link ConditionParamsExtractor} 对应测试类
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024/08/05
  */
 public class JadeConditionParamsExtractorTest {

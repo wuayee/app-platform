@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * {@link MetaInstanceService}的实现类。
  *
- * @author 孙怡菲 s00664640
+ * @author 孙怡菲
  * @since 2023-12-12
  */
 // 本类暂用于aipp未上线前，之后需要删除

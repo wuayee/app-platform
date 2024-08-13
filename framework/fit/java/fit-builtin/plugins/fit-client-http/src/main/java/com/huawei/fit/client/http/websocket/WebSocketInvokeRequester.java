@@ -11,7 +11,7 @@ import com.huawei.fit.http.websocket.Session;
 /**
  * 表示流式调用请求的发起器。
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-05-14
  */
 public interface WebSocketInvokeRequester {

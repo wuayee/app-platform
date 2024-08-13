@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 为 {@link FilterParser} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2024-01-12
  */
 public class DefaultFilterParser implements FilterParser {

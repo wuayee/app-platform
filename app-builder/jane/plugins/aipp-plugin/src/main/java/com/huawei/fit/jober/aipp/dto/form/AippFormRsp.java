@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 /**
  * Aipp表单信息
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-02-22
  */
 @EqualsAndHashCode(callSuper = true)

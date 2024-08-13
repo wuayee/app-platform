@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * 表示 {@link WebSocketHandler} 的注册器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-12-09
  */
 @Component

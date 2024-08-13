@@ -27,7 +27,7 @@ import java.util.List;
  * 默认的测试框架管理类。
  * <p>当前包括测试上下文和单测类监听类。</p>
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @author 易文渊
  * @since 2023-02-02
  */

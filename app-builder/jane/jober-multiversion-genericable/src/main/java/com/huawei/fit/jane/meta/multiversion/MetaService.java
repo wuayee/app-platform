@@ -16,7 +16,7 @@ import com.huawei.fitframework.annotation.Genericable;
 /**
  * 提供给AIPP的元数据服务。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2024-02-08
  */
 public interface MetaService {

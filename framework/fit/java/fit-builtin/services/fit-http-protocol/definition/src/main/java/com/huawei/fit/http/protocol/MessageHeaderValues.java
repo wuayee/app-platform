@@ -7,7 +7,7 @@ package com.huawei.fit.http.protocol;
 /**
  * Http 常用消息头的值。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-09-04
  */
 public class MessageHeaderValues {

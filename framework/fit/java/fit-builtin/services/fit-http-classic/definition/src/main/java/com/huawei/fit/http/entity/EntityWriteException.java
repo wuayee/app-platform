@@ -7,7 +7,7 @@ package com.huawei.fit.http.entity;
 /**
  * 表示消息体写回时发生的异常。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-14
  */
 public class EntityWriteException extends EntityException {

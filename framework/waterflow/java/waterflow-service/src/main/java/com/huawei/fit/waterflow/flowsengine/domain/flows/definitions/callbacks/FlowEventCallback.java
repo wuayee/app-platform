@@ -9,7 +9,7 @@ import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowTransCompleti
 /**
  * 流程事件回调类
  *
- * @author y00679285
+ * @author 杨祥宇
  * @since 2024/2/28
  */
 public interface FlowEventCallback {

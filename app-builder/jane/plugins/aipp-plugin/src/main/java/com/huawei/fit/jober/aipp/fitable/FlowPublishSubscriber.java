@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 /**
  * 订阅节点运行时信息.
  *
- * @author z00559346 张越
+ * @author 张越
  * @since 2024-05-23
  */
 @Component

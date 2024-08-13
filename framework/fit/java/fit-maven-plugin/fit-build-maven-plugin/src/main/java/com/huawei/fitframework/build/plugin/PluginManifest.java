@@ -22,7 +22,7 @@ import java.io.OutputStream;
 /**
  * 为插件提供 Manifest。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-06
  */
 public class PluginManifest extends AbstractManifest {
@@ -142,7 +142,7 @@ public class PluginManifest extends AbstractManifest {
     /**
      * 为 {@link PluginManifest} 提供构建程序。
      *
-     * @author 梁济时 l00815032
+     * @author 梁济时
      * @since 2022-09-06
      */
     public static class Builder {

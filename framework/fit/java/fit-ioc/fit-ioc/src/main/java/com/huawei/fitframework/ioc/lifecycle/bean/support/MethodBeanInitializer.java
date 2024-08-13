@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
 /**
  * 为 {@link BeanInitializer} 提供基于方法进行初始化的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-04-28
  */
 public class MethodBeanInitializer implements BeanInitializer {

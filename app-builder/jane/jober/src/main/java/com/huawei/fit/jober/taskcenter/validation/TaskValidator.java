@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 /**
  * 为任务定义提供校验器。
  *
- * @author 梁致强 l50033199
+ * @author 梁致强
  * @since 2023-08-17
  */
 public interface TaskValidator extends Validator {

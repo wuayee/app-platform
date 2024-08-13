@@ -7,7 +7,7 @@ package com.huawei.fit.jober.entity.task;
 /**
  * 表示任务类型。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-12-18
  */
 public class TaskType {

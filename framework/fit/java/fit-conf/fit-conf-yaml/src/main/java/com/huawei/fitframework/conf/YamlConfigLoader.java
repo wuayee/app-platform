@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * 为 {@link ConfigLoader} 提供基于YAML格式的实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-05-25
  */
 public class YamlConfigLoader extends AbstractConfigLoader {

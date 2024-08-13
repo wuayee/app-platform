@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * 领域对象构建器
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-12
  */
 public abstract class AbstractDomainObjectBuilder<T extends DomainObject, B extends DomainObject.Builder<T, B>>

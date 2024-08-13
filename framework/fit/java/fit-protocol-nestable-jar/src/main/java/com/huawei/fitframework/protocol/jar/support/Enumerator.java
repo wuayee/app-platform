@@ -10,7 +10,7 @@ import java.io.IOException;
  * 为内容提供迭代程序。
  *
  * @param <T> 表示内容的类型。
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-09-19
  */
 interface Enumerator<T> {

@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 /**
  * {@link AutomaticConvolutionImpl}对应测试类。
  *
- * @author yWX1299574
+ * @author 姚江
  * @since 2023-11-01 13:48
  */
 @ExtendWith(MockitoExtension.class)

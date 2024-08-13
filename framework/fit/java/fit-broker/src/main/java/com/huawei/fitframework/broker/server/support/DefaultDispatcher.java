@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * 表示 {@link Dispatcher} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-10-17
  */
 public class DefaultDispatcher implements Dispatcher {

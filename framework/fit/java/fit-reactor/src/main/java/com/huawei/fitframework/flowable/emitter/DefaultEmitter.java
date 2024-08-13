@@ -14,7 +14,7 @@ import java.util.List;
  * 表示 {@link Emitter} 的可观测的实现。
  *
  * @param <T> 表示发送数据的类型的 {@link T}。
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-13
  */
 public class DefaultEmitter<T> implements Emitter<T> {

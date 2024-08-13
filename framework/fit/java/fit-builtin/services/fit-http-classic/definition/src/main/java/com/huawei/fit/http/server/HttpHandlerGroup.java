@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 表示 Http 处理器组。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-08-22
  */
 public interface HttpHandlerGroup {

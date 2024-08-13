@@ -7,7 +7,7 @@ package com.huawei.fitframework.event;
 /**
  * 为应用程序提供事件定义。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2022-11-18
  */
 public interface Event {

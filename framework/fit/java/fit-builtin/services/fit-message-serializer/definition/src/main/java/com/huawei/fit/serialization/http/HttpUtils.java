@@ -15,7 +15,7 @@ import java.util.Base64;
 /**
  * 表示 Http 通信过程中通过 TLV 来传输扩展信息的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2024-02-17
  */
 public class HttpUtils {

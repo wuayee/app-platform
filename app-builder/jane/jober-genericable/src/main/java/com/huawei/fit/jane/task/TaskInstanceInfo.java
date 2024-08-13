@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * 表示任务实例的信息。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-11-20
  */
 public class TaskInstanceInfo {

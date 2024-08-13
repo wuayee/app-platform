@@ -13,7 +13,7 @@ import lombok.Setter;
 /**
  * 定时任务数据源ORM数据对象。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-14
  */
 @Getter

@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 /**
  * 为 {@link Map} 提供工具类。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-12-11
  */
 public class Maps {

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 /**
  * 为枚举提供工具方法。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-07
  */
 public final class Enums {

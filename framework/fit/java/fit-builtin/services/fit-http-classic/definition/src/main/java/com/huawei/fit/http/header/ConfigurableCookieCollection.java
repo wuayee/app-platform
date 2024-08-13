@@ -10,7 +10,7 @@ import com.huawei.fit.http.support.DefaultCookieCollection;
 /**
  * 表示 Http 中的可读可写的 Cookie 集合。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-07
  */
 public interface ConfigurableCookieCollection extends CookieCollection {

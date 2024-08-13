@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * {@link MappingTree} 的默认实现。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-07-26
  */
 public class DefaultMappingTree<T> implements MappingTree<T> {

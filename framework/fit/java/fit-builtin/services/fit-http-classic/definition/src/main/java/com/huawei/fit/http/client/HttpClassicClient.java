@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
 /**
  * 表示 Http 客户端。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2022-11-22
  */
 public interface HttpClassicClient extends HttpResource {

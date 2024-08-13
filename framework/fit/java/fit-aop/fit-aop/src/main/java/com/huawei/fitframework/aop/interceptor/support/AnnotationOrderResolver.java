@@ -22,7 +22,7 @@ import com.huawei.fitframework.util.ObjectUtils;
  * </ol>
  * </p>
  *
- * @author 詹高扬 z50029227
+ * @author 詹高扬
  * @since 2022-08-01
  */
 public class AnnotationOrderResolver implements OrderResolver {

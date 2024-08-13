@@ -21,7 +21,7 @@ import java.util.Map;
  * 表示 {@link ZippedFileValidator} 的各类型校验器聚合实现。
  * <p>当前仅支持对于 zip 和 jar 类型的压缩文件进行校验，保留该聚合实现的目的是。</p>
  *
- * @author 何天放 h00679269
+ * @author 何天放
  * @since 2024-07-20
  */
 public final class AggregatedZippedFileValidator implements ZippedFileValidator {

@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 /**
  * aspect 的表达式工具类。
  *
- * @author 白鹏坤 bWX1068551
+ * @author 白鹏坤
  * @since 2023-03-17
  */
 public class ExpressionUtils {

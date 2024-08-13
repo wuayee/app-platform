@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * 表示消息序列化器的工具类。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-09-21
  */
 public class MessageSerializerUtils {

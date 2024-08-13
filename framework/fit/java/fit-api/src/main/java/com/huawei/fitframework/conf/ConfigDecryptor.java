@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * 为配置提供解密器。
  *
- * @author 季聿阶 j00559309
+ * @author 季聿阶
  * @since 2023-04-14
  */
 public interface ConfigDecryptor {

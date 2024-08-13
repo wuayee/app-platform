@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 /**
  * 为数组提供迭代器。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 1.0
  */
 public class ArrayIterator<T> implements Iterator<T> {

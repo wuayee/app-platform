@@ -13,7 +13,7 @@ import com.huawei.jade.authentication.context.UserContextHolder;
 /**
  * 为 {@link Authenticator} 提供不含sso的a3000默认实现。
  *
- * @author s00664640
+ * @author 孙怡菲
  * @since 2023/11/28
  */
 @Component

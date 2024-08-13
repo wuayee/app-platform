@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * 应用数据序列化与反序列化实现类
  *
- * @author 邬涨财 w00575064
+ * @author 邬涨财
  * @since 2024-04-17
  */
 public class AppBuilderAppSerializer implements BaseSerializer<AppBuilderApp, AppBuilderAppPo> {

@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task.gateway;
 /**
  * 用户信息结构体。
  *
- * @author 陈镕希 c00572808
+ * @author 陈镕希
  * @since 2023-08-03
  */
 public class EmployeeVO {

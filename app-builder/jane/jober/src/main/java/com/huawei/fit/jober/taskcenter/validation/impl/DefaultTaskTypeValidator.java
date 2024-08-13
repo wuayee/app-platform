@@ -16,7 +16,7 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 为 {@link TaskTypeValidator} 提供默认实现。
  *
- * @author 梁济时 l00815032
+ * @author 梁济时
  * @since 2023-09-13
  */
 @Component

@@ -16,7 +16,7 @@ import com.huawei.jade.voice.service.VoiceService;
 /**
  * 处理 HTTP 请求的控制器。
  *
- * @author 张粟 z00605602
+ * @author 张粟
  * @since 2024/6/18
  */
 @Component

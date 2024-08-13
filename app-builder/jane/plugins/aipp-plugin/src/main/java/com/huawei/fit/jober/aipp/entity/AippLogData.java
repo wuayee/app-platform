@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 /**
  * aipp实例历史记录json数据
  *
- * @author l00611472
+ * @author 刘信宏
  * @since 2024-01-08
  */
 @Builder
