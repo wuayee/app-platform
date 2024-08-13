@@ -15,10 +15,10 @@ from concurrent.futures import ThreadPoolExecutor
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-from fitframework.api.decorators import fitable
+from fitframework.api.decorators import fit, fitable
 from fitframework.api.exception import FIT_OK
 from fitframework.api.logging import sys_plugin_logger
-from fitframework.core.exception.fit_exception import InternalErrorCode
+from fitframework.core.exception.fit_exception import InternalErrorCode, FitException
 from fitframework.core.network.http_header import HttpHeader
 from fitframework.core.network.fit_response import FitResponse
 from fitframework.core.network.metadata.metadata_utils import TagLengthValuesUtil
@@ -116,6 +116,34 @@ def _get_result_queue(worker_id: str, instance_id: str) -> Optional[Queue]:
         if worker_id not in _worker_infos or _worker_infos.get(worker_id).instance_id != instance_id:
             return None
         return _worker_infos.get(worker_id).result_queue
+
+
+class HealthCheckHandler(tornado.web.RequestHandler):
+    def initialize(self, executor: ThreadPoolExecutor):
+        self.executor: ThreadPoolExecutor = executor
+
+    async def get(self):
+        self.set_status(HTTPStatus.OK)
+        self.write("OK")
+
+
+class PluginsReadyCheckHandler(tornado.web.RequestHandler):
+    def initialize(self, executor: ThreadPoolExecutor):
+        self.executor: ThreadPoolExecutor = executor
+
+    @tornado.concurrent.run_on_executor
+    def process_plugins_ready_task(self):
+        try:
+            return get_all_plugins_ready(), HTTPStatus.OK, {}
+        except FitException:
+            return "NOT OK", HTTPStatus.OK, {}
+
+    async def get(self):
+        body, status, headers = await self.process_plugins_ready_task()
+        self.set_status(status)
+        for key in headers:
+            self.set_header(key, headers[key])
+        self.write(body)
 
 
 class PollingTaskHandler(tornado.web.RequestHandler):
@@ -293,7 +321,9 @@ def init_fit_https_server(port):
 
 _executor = ThreadPoolExecutor(get_server_thread_count())
 _app = tornado.web.Application(
-    [(get_context_path() + r"/fit/async/await-response", PollingTaskHandler, dict(executor=_executor)),
+    [(get_context_path() + r"/fit/health", HealthCheckHandler, dict(executor=_executor)),
+     (get_context_path() + r"/fit/pluginsReady", PluginsReadyCheckHandler, dict(executor=_executor)),
+     (get_context_path() + r"/fit/async/await-response", PollingTaskHandler, dict(executor=_executor)),
      (get_context_path() + r"/fit/([^/]+)/([^/]+)", FitHandler, dict(executor=_executor)),
      (get_context_path() + r"/fit/websocket/([^/]+)/([^/]+)", WebSocketHandler, dict(executor=_executor))])
 
