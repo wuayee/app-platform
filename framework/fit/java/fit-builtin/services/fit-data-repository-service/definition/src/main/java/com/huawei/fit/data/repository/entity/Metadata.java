@@ -49,4 +49,9 @@ public class Metadata {
     public int getLength() {
         return this.length;
     }
+
+    @Override
+    public String toString() {
+        return "Metadata{type='" + type + ", length=" + length + '}';
+    }
 }

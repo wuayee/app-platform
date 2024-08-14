@@ -21,7 +21,11 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.huawei.fit.databus</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>0.2.17</version>
+        </dependency>
         <!-- FIT Services -->
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
