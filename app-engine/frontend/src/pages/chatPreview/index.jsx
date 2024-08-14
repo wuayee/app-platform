@@ -67,7 +67,6 @@ const ChatPreview = (props) => {
   let currentInfo = useRef();
   let feedRef = useRef();
   let testRef = useRef(false);
-  let controller = useRef(null);
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
   const listRef = useRef([]);
@@ -79,6 +78,7 @@ const ChatPreview = (props) => {
     currentInfo.current = appInfo;
     return () => {
       closeConnected();
+      dispatch(setChatList([]));
     };
   }, []);
   useEffect(() => {
@@ -251,6 +251,7 @@ const ChatPreview = (props) => {
       if (messageData.formAppearance?.length) {
         let obj = messageProcess(runningInstanceId.current, messageData, atAppInfo);
         chatForm(obj);
+        saveLocalChatId(messageData);
         return;
       }
       // 普通日志
@@ -258,6 +259,7 @@ const ChatPreview = (props) => {
         if (log.type === 'FORM') {
           let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
           chatForm(obj);
+          saveLocalChatId(messageData);
         }
         if (messageType.includes(log.type)) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
@@ -343,7 +345,7 @@ const ChatPreview = (props) => {
     initObj.finished = status === 'ARCHIVED';
     idx = listRef.current.length - 1;
     if (testRef.current) {
-      initObj.msgType = 'form';
+      initObj.messageType = 'form';
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
@@ -380,7 +382,9 @@ const ChatPreview = (props) => {
   function onStop(str) {
     let item = listRef.current[listRef.current.length - 1];
     item.content = str;
+    item.recieveType = undefined;
     item.loading = false;
+    item.messageType = 'form';
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
   }
@@ -390,7 +394,7 @@ const ChatPreview = (props) => {
     if (!runningInstanceId.current) return;
     const res = await stopInstance(tenantId, runningInstanceId.current, { content: str });
     if (res.code === 0) {
-      onStop(str);
+      onStop(res.data || str);
       Message({ type: 'success', content: '已终止对话' });
       closeConnected();
       return res.code;
@@ -410,7 +414,7 @@ const ChatPreview = (props) => {
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
     scrollToBottom();
-    chatStreaming(response); 
+    chatStreaming(response);
   }
   function scrollToBottom() {
     setTimeout(() => {

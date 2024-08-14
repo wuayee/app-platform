@@ -29,10 +29,6 @@ module.exports = {
         },
       },
       {
-        test: /\.svg$/,
-        use: ['@svgr/webpack']
-      },
-      {
         test: /\.(png|jpg|gif)$/,
         type: 'javascript/auto',
         include: [path.resolve(__dirname, "src")],

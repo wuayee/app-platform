@@ -1,148 +1,61 @@
 
-import Icon, {UploadOutlined} from '@ant-design/icons';
+import Icon, { UploadOutlined } from '@ant-design/icons';
 import React from 'react';
-import Edit from './svg/edit.svg';
-import Clear from './svg/clear.svg';
-import ClearChat from './svg/clear2.svg';
-import Send from './svg/send2.svg';
-import SendActive from './svg/send-active.svg';
-import AddFlow from './svg/add-flow.svg';
-import LeftArrow from './svg/left-arrow.svg';
-import Start from './svg/start.svg';
-import DataRetrieval from './svg/data-retrieval.svg';
-import Llm from './svg/llm.svg';
-import End from './svg/end.svg';
-import Api from './svg/api.svg';
-import Flow from './svg/flow.svg';
-import Talk from './svg/talk.svg';
-import TalkFlow from './svg/talk2.svg';
-import ConfigFlow from './svg/config2.svg';
-import ManualCheck from './svg/manual-check.svg';
-import DownLoad from './svg/download.svg';
-import FullScreen from './svg/full.svg';
-import User from './svg/user.svg';
-import If from './svg/if.svg';
-import Fit from './svg/fit.svg';
-import Link from './images/ai/link.svg';
-import At from './images/ai/at.svg';
-import Panle from './images/ai/panel.svg';
-import PanleClose from './images/ai/panel-active.svg';
-import AppBox from './svg/app-box.svg';
-import CreateApp from './svg/create-app.svg';
-import TabLeft from './images/ai/icon1.svg';
-import TabRight from './images/ai/icon2.svg';
-import Audio from './images/ai/audio.svg';
-import AudioActive from './images/ai/audio-active.svg';
-import Avatar from './images/avatar-default.svg';
-import AppDefault from './svg/app-default.svg';
-import History from './svg/history.svg';
-import ArrowDown from './svg/arrow_down_normal.svg';
-import Languages from './svg/setting.svg';
-import Rebot from './svg/rebot.svg';
-import Like from './svg/like.svg';
-import Unlike from './svg/unlike.svg';
-import Close from './svg/close.svg';
-import Run from  './svg/run-solid.svg';
-import LikeSelect from './svg/likeSelect.svg';
-import UnlikeSelect from './svg/unlikeSelect.svg';
-import Share from './svg/share.svg';
-import Copy from './svg/copy.svg';
-import Delete from './svg/delete.svg';
-import DeleteContent from './svg/deleteContent.svg';
-import More from './svg/more.svg';
-import ClearFile from './svg/clear-file.svg';
-import WorkFlow from './svg/work-flow.svg';
-import NewFeat from './svg/new-feat.svg';
-import Rocket from './svg/rocket.svg';
-import Fix from './svg/fix.svg';
-import Code from './svg/code.svg';
-import Play from './svg/play-sound.svg';
-import Stop from './svg/stop-sound.svg';
-import ChatUser from './svg/chat-user.svg';
+import { BaseIcons } from '../components/icons/base';
 
 // 编辑按钮
-const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
-const ClearIcon = (props) => <Icon component={() => (<Clear/>)} {...props} />;
-const ClearChatIcon = (props) => <Icon component={() => (<ClearChat/>)} {...props} />;
-const SendIcon = (props) => <Icon component={() => (<Send/>)} {...props} />;
-const SendActiveIcon = (props) => <Icon component={() => (<SendActive />)} {...props} />;
-const AddFlowIcon = (props) => <Icon component={() => (<AddFlow />)} {...props} />;
-const LeftArrowIcon = (props) => <Icon component={() => (<LeftArrow />)} {...props} />;
-const StartIcon = (props) => <Icon component={() => (<Start />)} {...props} />;
-const EndIcon = (props) => <Icon component={() => (<End />)} {...props} />;
-const ApiIcon = (props) => <Icon component={() => (<Api />)} {...props} />;
-const LlmIcon = (props) => <Icon component={() => (<Llm />)} {...props} />;
-const ManualCheckIcon = (props) => <Icon component={() => (<ManualCheck />)} {...props} />;
-const IfIcon = (props) => <Icon component={() => (<If />)} {...props} />;
-const FitIcon = (props) => <Icon component={() => (<Fit />)} {...props} />;
-const DataRetrievalIcon = (props) => <Icon component={() => (<DataRetrieval />)} {...props} />;
+const LeftArrowIcon = (props) => <Icon component={() => (<BaseIcons.LeftArrow />)} {...props} />;
+const StartIcon = (props) => <Icon component={() => (<BaseIcons.Start />)} {...props} />;
+const EndIcon = (props) => <Icon component={() => (<BaseIcons.End />)} {...props} />;
+const LlmIcon = (props) => <Icon component={() => (<BaseIcons.LLM />)} {...props} />;
+const ManualCheckIcon = (props) => <Icon component={() => (<BaseIcons.ManualCheck />)} {...props} />;
+const IfIcon = (props) => <Icon component={() => (<BaseIcons.If />)} {...props} />;
+const FitIcon = (props) => <Icon component={() => (<BaseIcons.Fit />)} {...props} />;
+const DataRetrievalIcon = (props) => <Icon component={() => (<BaseIcons.DataRetrieval />)} {...props} />;
 const UploadIcon = (props) => <UploadOutlined {...props} />;
-const FlowIcon = (props) => <Icon component={() => (<Flow/>)} {...props} />;
-const TalkIcon = (props) => <Icon component={() => (<Talk/>)} {...props} />;
-const TalkFlowIcon = (props) => <Icon component={() => (<TalkFlow/>)} {...props} />;
-const ConfigFlowIcon = (props) => <Icon component={() => (<ConfigFlow/>)} {...props} />;
-const DownLoadIcon = (props) => <Icon component={() => (<DownLoad/>)} {...props} />;
-const FullScreenIcon = (props) => <Icon component={() => (<FullScreen/>)} {...props} />;
-const UserIcon = (props) => <Icon component={() => (<User/>)} {...props} />;
-const LinkIcon = (props) => <Icon component={() => (<Link/>)} {...props} />;
-const AtIcon = (props) => <Icon component={() => (<At/>)} {...props} />;
-const PanleIcon = (props) => <Icon component={() => (<Panle/>)} {...props} />;
-const PanleCloseIcon = (props) => <Icon component={() => (<PanleClose/>)} {...props} />;
-const AppBoxIcon = (props) => <Icon component={() => (<AppBox/>)} {...props} />;
-const CreateAppIcon = (props) => <Icon component={() => (<CreateApp/>)} {...props} />;
-const TabLeftIcon = (props) => <Icon component={() => (<TabLeft/>)} {...props} />;
-const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props} />;
-const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
-const AudioActiveIcon = (props) => <Icon component={() => (<AudioActive/>)} {...props} />;
-const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
-const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
-const CloseIcon = (props) => <Icon component={() => (<Close />)} {...props} />;
-const RunIcon = (props) => <Icon component={() => (<Run />)} {...props} />;
-const HistoryIcon = (props) => <Icon component={() => (<History />)} {...props} />;
-const ArrowDownIcon = (props) => <Icon component={() => (<ArrowDown />)} {...props} />;
-const LanguagesIcon = (props) => <Icon component={() => (<Languages />)} {...props} />;
-const RebotIcon = (props) => <Icon component={() => (<Rebot />)} {...props} />;
-const LikeIcon = (props) => <Icon component={() => (<Like />)} {...props} />;
-const UnlikeIcon = (props) => <Icon component={() => (<Unlike />)} {...props} />;
-const LikeSelectIcon = (props) => <Icon component={() => (<LikeSelect />)} {...props} />;
-const UnlikeSelectIcon = (props) => <Icon component={() => (<UnlikeSelect />)} {...props} />;
-const ShareIcon = (props) => <Icon component={() => (<Share />)} {...props} />;
-const CopyIcon = (props) => <Icon component={() => (<Copy />)} {...props} />;
-const DeleteIcon = (props) => <Icon component={() => (<Delete />)} {...props} />;
-const DeleteContentIcon = (props) => <Icon component={() => (<DeleteContent />)} {...props} />;
-const MoreIcon = (props) => <Icon component={() => (<More />)} {...props} />;
-const ClearFileIcon = (props) => <Icon component={() => (<ClearFile />)} {...props} />;
-const WorkFlowIcon = (props) => <Icon component={() => (<WorkFlow />)} {...props} />;
-const NewFeatIcon = (props) => <Icon component={() => (<NewFeat />)} {...props} />;
-const RocketIcon = (props) => <Icon component={() => (<Rocket />)} {...props} />;
-const FixIcon = (props) => <Icon component={() => (<Fix />)} {...props} />;
-const CodeIcon = (props) => <Icon component={() => (<Code />)} {...props} />;
-const ChatUserIcon = (props) => <Icon component={() => (<ChatUser />)} {...props} />;
-const PlayIcon = (props) => <Icon component={() => (<Play />)} {...props} />;
-const StopIcon = (props) => <Icon component={() => (<Stop />)} {...props} />;
+const ConfigFlowIcon = (props) => <Icon component={() => (<BaseIcons.ConfigFlow/>)} {...props} />;
+const DownLoadIcon = (props) => <Icon component={() => (<BaseIcons.DownLoad/>)} {...props} />;
+const FullScreenIcon = (props) => <Icon component={() => (<BaseIcons.FullScreen/>)} {...props} />;
+const LinkIcon = (props) => <Icon component={() => (<BaseIcons.Link/>)} {...props} />;
+const AtIcon = (props) => <Icon component={() => (<BaseIcons.At/>)} {...props} />;
+const PanleIcon = (props) => <Icon component={() => (<BaseIcons.Panle/>)} {...props} />;
+const PanleCloseIcon = (props) => <Icon component={() => (<BaseIcons.PanleClose/>)} {...props} />;
+const AppBoxIcon = (props) => <Icon component={() => (<BaseIcons.AppBox/>)} {...props} />;
+const CreateAppIcon = (props) => <Icon component={() => (<BaseIcons.CreateApp/>)} {...props} />;
+const AudioIcon = (props) => <Icon component={() => (<BaseIcons.Audio/>)} {...props} />;
+const AudioActiveIcon = (props) => <Icon component={() => (<BaseIcons.AudioActive/>)} {...props} />;
+const CloseIcon = (props) => <Icon component={() => (<BaseIcons.Close />)} {...props} />;
+const RunIcon = (props) => <Icon component={() => (<BaseIcons.Run />)} {...props} />;
+const HistoryIcon = (props) => <Icon component={() => (<BaseIcons.History />)} {...props} />;
+const RebotIcon = (props) => <Icon component={() => (<BaseIcons.Rebot />)} {...props} />;
+const LikeIcon = (props) => <Icon component={() => (<BaseIcons.Like />)} {...props} />;
+const UnlikeIcon = (props) => <Icon component={() => (<BaseIcons.Unlike />)} {...props} />;
+const LikeSelectIcon = (props) => <Icon component={() => (<BaseIcons.LikeSelect />)} {...props} />;
+const UnlikeSelectIcon = (props) => <Icon component={() => (<BaseIcons.UnlikeSelect />)} {...props} />;
+const ShareIcon = (props) => <Icon component={() => (<BaseIcons.Share />)} {...props} />;
+const CopyIcon = (props) => <Icon component={() => (<BaseIcons.Copy />)} {...props} />;
+const DeleteIcon = (props) => <Icon component={() => (<BaseIcons.Delete />)} {...props} />;
+const DeleteContentIcon = (props) => <Icon component={() => (<BaseIcons.DeleteContent />)} {...props} />;
+const ClearFileIcon = (props) => <Icon component={() => (<BaseIcons.ClearFile />)} {...props} />;
+const NewFeatIcon = (props) => <Icon component={() => (<BaseIcons.NewFeat />)} {...props} />;
+const RocketIcon = (props) => <Icon component={() => (<BaseIcons.Rocket />)} {...props} />;
+const FixIcon = (props) => <Icon component={() => (<BaseIcons.Fix />)} {...props} />;
+const CodeIcon = (props) => <Icon component={() => (<BaseIcons.Code />)} {...props} />;
+const ChatUserIcon = (props) => <Icon component={() => (<BaseIcons.ChatUser />)} {...props} />;
+const PlayIcon = (props) => <Icon component={() => (<BaseIcons.Play />)} {...props} />;
+const StopIcon = (props) => <Icon component={() => (<BaseIcons.Stop />)} {...props} />;
 
 export {
-  EditIcon,
-  ClearIcon,
-  ClearChatIcon,
-  SendIcon,
-  SendActiveIcon,
-  AddFlowIcon,
   LeftArrowIcon,
   StartIcon,
   DataRetrievalIcon,
   EndIcon,
-  ApiIcon,
   ManualCheckIcon,
   LlmIcon,
   UploadIcon,
-  FlowIcon,
-  TalkIcon,
-  TalkFlowIcon,
   ConfigFlowIcon,
   DownLoadIcon,
   FullScreenIcon,
-  UserIcon,
   IfIcon,
   FitIcon,
   LinkIcon,
@@ -151,15 +64,9 @@ export {
   PanleCloseIcon,
   AppBoxIcon,
   CreateAppIcon,
-  TabLeftIcon,
-  TabRightIcon,
   AudioIcon,
   AudioActiveIcon,
-  AvatarIcon,
-  AppDefaultIcon,
   HistoryIcon,
-  ArrowDownIcon,
-  LanguagesIcon,
   RebotIcon,
   LikeIcon,
   UnlikeIcon,
@@ -171,9 +78,7 @@ export {
   CopyIcon,
   DeleteIcon,
   DeleteContentIcon,
-  MoreIcon,
   ClearFileIcon,
-  WorkFlowIcon,
   NewFeatIcon,
   RocketIcon,
   FixIcon,

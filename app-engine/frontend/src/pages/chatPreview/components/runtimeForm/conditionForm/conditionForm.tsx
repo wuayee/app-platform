@@ -6,7 +6,6 @@ import { Message } from '@shared/utils/message';
 import { ChatContext } from '@/pages/aippIndex/context';
 import ChartCondition from '../../chart-message/chart-condition'
 import ChartMessage from '../../chart-message/chart-message';
-import { useAppSelector } from '@/store/hook';
 
 const ConditionForm = (props) => {
   const { data } = props;
@@ -14,7 +13,6 @@ const ConditionForm = (props) => {
   const [chartConfig, setChartConfig] = useState();
   const [loading, setLoading] = useState(false);
   const { tenantId, conditionConfirm } = useContext(ChatContext);
-  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   useEffect(() => {
     if (!data?.formData) return;
     if (data.formData) {
@@ -30,10 +28,6 @@ const ConditionForm = (props) => {
 
   // 表单确定
   const formConfirm = async (filter) => {
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中，请稍后再试' });
-      return
-    }
     try {
       setLoading(true);
       let params = {
@@ -53,9 +47,9 @@ const ConditionForm = (props) => {
     }
   }
   return <>
-      { !data && <div className="title">溯源表单</div>}
-      { filters && ( <Spin spinning={loading}>  <ChartCondition data={filters} confirm={formConfirm} /> </Spin>)}
-      { chartConfig && <ChartMessage chartConfig={chartConfig} />}
+    { !data && <div className="title">溯源表单</div>}
+    { filters && (<Spin spinning={loading}>  <ChartCondition data={filters} confirm={formConfirm} /> </Spin>)}
+    { chartConfig && <ChartMessage chartConfig={chartConfig} />}
   </>
 };
 
