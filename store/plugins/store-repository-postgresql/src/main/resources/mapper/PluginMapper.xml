@@ -10,6 +10,7 @@
         <result column="plugin_id" property="pluginId"/>
         <result column="plugin_name" property="pluginName"/>
         <result column="extension" property="extension"/>
+        <result column="deploy_status" property="deployStatus"/>
     </resultMap>
     <insert id="addPlugin" parameterType="com.huawei.jade.store.repository.pgsql.entity.PluginDo">
         insert into store_plugin
@@ -75,12 +76,30 @@
         </if>
     </sql>
     <select id="getPluginByPluginId" resultMap="Plugin">
-        select "creator", "modifier", "plugin_id", "plugin_name", "extension"
+        select "creator", "modifier", "plugin_id", "plugin_name", "extension", "deploy_status"
         from "store_plugin"
         where "plugin_id" = #{pluginId}
     </select>
+    <select id="getPluginsByDeployStatus" resultMap="Plugin">
+        select "creator", "modifier", "plugin_id", "plugin_name", "extension", "deploy_status"
+        from "store_plugin"
+        where "deploy_status" = #{deployStatus}
+    </select>
+    <select id="getPluginsCountByDeployStatus">
+        select count("plugin_id")
+        from "store_plugin"
+        where "deploy_status" = #{deployStatus}
+    </select>
+    <update id="updateDeployStatus">
+        update "store_plugin"
+        set "deploy_status" = #{deployStatus}
+        where "plugin_id" in
+        <foreach collection="pluginIdList" item="pluginId" open="(" close=")" separator=",">
+            #{pluginId}
+        </foreach>
+    </update>
     <select id="getPlugins" parameterType="com.huawei.jade.store.entity.query.PluginQuery" resultMap="Plugin">
-        select distinct i."updated_time", i."creator", i."modifier", i."plugin_id", i."plugin_name", i."extension"::text
+        select distinct i."updated_time", i."creator", i."modifier", i."plugin_id", i."plugin_name", i."extension"::text, i."deploy_status"
         from "store_plugin" i
         left join "store_plugin_tool" pt on i."plugin_id" = pt."plugin_id"
         left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags

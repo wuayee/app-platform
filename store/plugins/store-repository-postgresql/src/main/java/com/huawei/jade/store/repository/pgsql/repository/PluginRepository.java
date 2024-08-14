@@ -7,6 +7,7 @@ package com.huawei.jade.store.repository.pgsql.repository;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public interface PluginRepository {
      * 根据动态查询条件分页查询插件的总数。
      *
      * @param pluginQuery 表示查询参数的实体类的 {@link PluginQuery}。
-     * @return 插件工具总数的 {@code int}。
+     * @return 插件总数的 {@code int}。
      */
     int getPluginsCount(PluginQuery pluginQuery);
 
@@ -55,4 +56,28 @@ public interface PluginRepository {
      * @return 表示插件信息的 {@link PluginDo}。
      */
     PluginDo getPluginByPluginId(String pluginId);
+
+    /**
+     * 根据部署状态查询插件列表。
+     *
+     * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
+     * @return 插件列表的 {@link List}{@code <}{@link PluginData}{@code >}。
+     */
+    List<PluginDo> getPlugins(DeployStatus deployStatus);
+
+    /**
+     * 根据部署状态查询插件的总数。
+     *
+     * @param deployStatus 表示部署状态的 {@link DeployStatus}。
+     * @return 插件总数的 {@code int}。
+     */
+    int getPluginsCount(DeployStatus deployStatus);
+
+    /**
+     * 更新插件列表的部署状态。
+     *
+     * @param pluginIdList 表示插件唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
+     */
+    void updateDeployStatus(List<String> pluginIdList, DeployStatus deployStatus);
 }

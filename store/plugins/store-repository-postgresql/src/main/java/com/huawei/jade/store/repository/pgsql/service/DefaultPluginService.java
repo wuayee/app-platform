@@ -8,6 +8,7 @@ import static com.huawei.jade.store.repository.pgsql.entity.PluginDo.toPluginDat
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.ListResult;
@@ -18,6 +19,7 @@ import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
 import com.huawei.jade.store.repository.pgsql.repository.PluginRepository;
 import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.service.PluginToolService;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import java.util.List;
 import java.util.Set;
@@ -31,6 +33,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DefaultPluginService implements PluginService {
+    private static final Logger logger = Logger.get(DefaultPluginService.class);
+    private static final String FITABLE_ID = "store-repository-pgsql";
+
     private final PluginRepository pluginRepository;
     private final PluginToolService pluginToolService;
     private final ObjectSerializer serializer;
@@ -50,7 +55,7 @@ public class DefaultPluginService implements PluginService {
     }
 
     @Override
-    @Fitable(id = "store-repository-pgsql")
+    @Fitable(id = FITABLE_ID)
     public String addPlugin(PluginData pluginData) {
         String pluginId = this.pluginRepository.addPlugin(pluginData);
         List<PluginToolData> pluginToolDataList = pluginData.getPluginToolDataList();
@@ -62,7 +67,7 @@ public class DefaultPluginService implements PluginService {
     }
 
     @Override
-    @Fitable(id = "store-repository-pgsql")
+    @Fitable(id = FITABLE_ID)
     public ListResult<PluginData> getPlugins(PluginQuery pluginQuery) {
         if (pluginQuery == null) {
             return ListResult.empty();
@@ -76,8 +81,8 @@ public class DefaultPluginService implements PluginService {
         Set<String> excludeTags = pluginQuery.getExcludeTags();
         pluginQuery.setExcludeTags(excludeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         List<PluginDo> pluginDos = this.pluginRepository.getPlugins(pluginQuery);
-        List<PluginData> pluginDataList = pluginDos.stream().map(pluginDo -> toPluginData(pluginDo, serializer))
-                .collect(Collectors.toList());
+        List<PluginData> pluginDataList =
+                pluginDos.stream().map(pluginDo -> toPluginData(pluginDo, serializer)).collect(Collectors.toList());
 
         pluginQuery.setLimit(null);
         pluginQuery.setOffset(null);
@@ -86,7 +91,29 @@ public class DefaultPluginService implements PluginService {
     }
 
     @Override
-    @Fitable(id = "store-repository-pgsql")
+    @Fitable(id = FITABLE_ID)
+    public List<PluginData> getPlugins(DeployStatus deployStatus) {
+        List<PluginDo> pluginDos = this.pluginRepository.getPlugins(deployStatus);
+        return pluginDos.stream()
+                .map(pluginDo -> PluginDo.toPluginData(pluginDo, serializer))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Fitable(id = FITABLE_ID)
+    public int getPluginsCount(DeployStatus deployStatus) {
+        return this.pluginRepository.getPluginsCount(deployStatus);
+    }
+
+    @Override
+    @Fitable(id = FITABLE_ID)
+    public void updateDeployStatus(List<String> pluginIdList, DeployStatus deployStatus) {
+        this.pluginRepository.updateDeployStatus(pluginIdList, deployStatus);
+        logger.info("Succeed in updating deploy status. [deployStatus={}]", deployStatus);
+    }
+
+    @Override
+    @Fitable(id = FITABLE_ID)
     public PluginData getPlugin(String pluginId) {
         PluginData pluginData = toPluginData(this.pluginRepository.getPluginByPluginId(pluginId), serializer);
         List<PluginToolData> pluginToolDataList = this.pluginToolService.getPluginTools(pluginId);
@@ -95,7 +122,7 @@ public class DefaultPluginService implements PluginService {
     }
 
     @Override
-    @Fitable(id = "store-repository-pgsql")
+    @Fitable(id = FITABLE_ID)
     public String deletePlugin(String pluginId) {
         List<PluginToolData> pluginToolDataList = this.pluginToolService.getPluginTools(pluginId);
         for (PluginToolData pluginToolData : pluginToolDataList) {

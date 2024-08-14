@@ -70,6 +70,17 @@ public class PluginData {
     private Map<String, Object> extension;
 
     /**
+     * 表示插件的部署状态。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时不传入。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private String deployStatus;
+
+    /**
      * 表示插件包含的插件工具数据。
      * <p>
      *     <ul>
@@ -169,6 +180,25 @@ public class PluginData {
     public void setExtension(Map<String, Object> extension) {
         this.extension = extension;
     }
+
+    /**
+     * 获取插件的部署状态。
+     *
+     * @return 表示部署状态的 {@link String}。
+     */
+    public String getDeployStatus() {
+        return deployStatus;
+    }
+
+    /**
+     * 设置插件的部署状态。
+     *
+     * @param deployStatus 表示插件部署状态的 {@link String}。
+     */
+    public void setDeployStatus(String deployStatus) {
+        this.deployStatus = deployStatus;
+    }
+
 
     /**
      * 获取插件包含的插件工具的列表。

@@ -12,6 +12,7 @@ import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
 import com.huawei.jade.store.repository.pgsql.mapper.PluginMapper;
 import com.huawei.jade.store.repository.pgsql.repository.PluginRepository;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import java.util.List;
 
@@ -64,5 +65,20 @@ public class DefaultPluginRepository implements PluginRepository {
     @Override
     public PluginDo getPluginByPluginId(String pluginId) {
         return this.pluginMapper.getPluginByPluginId(pluginId);
+    }
+
+    @Override
+    public List<PluginDo> getPlugins(DeployStatus deployStatus) {
+        return this.pluginMapper.getPluginsByDeployStatus(deployStatus);
+    }
+
+    @Override
+    public int getPluginsCount(DeployStatus deployStatus) {
+        return this.pluginMapper.getPluginsCountByDeployStatus(deployStatus);
+    }
+
+    @Override
+    public void updateDeployStatus(List<String> pluginIdList, DeployStatus deployStatus) {
+        this.pluginMapper.updateDeployStatus(pluginIdList, deployStatus);
     }
 }

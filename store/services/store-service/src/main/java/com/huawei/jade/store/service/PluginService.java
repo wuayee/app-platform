@@ -8,6 +8,9 @@ import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.service.support.DeployStatus;
+
+import java.util.List;
 
 /**
  * 插件的服务接口类。
@@ -33,6 +36,33 @@ public interface PluginService {
      */
     @Genericable(id = "com.huawei.jade.store.plugin.getPlugins")
     ListResult<PluginData> getPlugins(PluginQuery pluginQuery);
+
+    /**
+     * 根据部署状态查询插件列表。
+     *
+     * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
+     * @return 插件列表的 {@link List}{@code <}{@link PluginData}{@code >}。
+     */
+    @Genericable(id = "com.huawei.jade.store.plugin.getPlugins.byDeployStatus")
+    List<PluginData> getPlugins(DeployStatus deployStatus);
+
+    /**
+     * 根据部署状态查询插件数量。
+     *
+     * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
+     * @return 插件数量的 {@code int}。
+     */
+    @Genericable(id = "com.huawei.jade.store.plugin.getPluginsCount.byDeployStatus")
+    int getPluginsCount(DeployStatus deployStatus);
+
+    /**
+     * 更新插件列表的部署状态。
+     *
+     * @param pluginIdList 表示插件唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
+     */
+    @Genericable(id = "com.huawei.jade.store.plugin.updateDeployStatus")
+    void updateDeployStatus(List<String> pluginIdList, DeployStatus deployStatus);
 
     /**
      * 基于插件的唯一标识查询某个插件。

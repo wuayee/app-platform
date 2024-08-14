@@ -6,6 +6,7 @@ package com.huawei.jade.store.repository.pgsql.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.serialization.ObjectSerializer;
@@ -15,6 +16,7 @@ import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;
 import com.huawei.jade.store.repository.pgsql.repository.PluginRepository;
 import com.huawei.jade.store.service.PluginToolService;
+import com.huawei.jade.store.service.support.DeployStatus;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,6 +77,7 @@ public class DefaultPluginServiceTest {
         List<PluginDo> pluginDos = new ArrayList<>();
         PluginDo pluginDo = new PluginDo();
         pluginDo.setPluginId("testPluginId");
+        pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
         pluginDos.add(pluginDo);
 
         Mockito.when(this.pluginRepository.getPlugins(pluginQuery)).thenReturn(pluginDos);
@@ -83,11 +86,43 @@ public class DefaultPluginServiceTest {
     }
 
     @Test
+    @DisplayName("根据部署状态查询插件列表时，返回成功")
+    void shouldSuccessWhenGetPluginsByDeployStatus() {
+        DeployStatus deployStatus = DeployStatus.DEPLOYED;
+        List<PluginDo> pluginDos = new ArrayList<>();
+        PluginDo pluginDo = new PluginDo();
+        pluginDo.setPluginId("testPluginId");
+        pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
+        pluginDos.add(pluginDo);
+
+        Mockito.when(this.pluginRepository.getPlugins(deployStatus)).thenReturn(pluginDos);
+        assertThat(this.pluginService.getPlugins(deployStatus).get(0).getPluginId()).isEqualTo("testPluginId");
+    }
+
+    @Test
+    @DisplayName("根据部署状态查询插件数量时，返回成功")
+    void shouldSuccessWhenGetPluginsCountByDeployStatus() {
+        DeployStatus deployStatus = DeployStatus.DEPLOYED;
+        Mockito.when(this.pluginRepository.getPluginsCount(deployStatus)).thenReturn(0);
+        assertThat(this.pluginService.getPluginsCount(deployStatus)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("更新插件列表部署状态时，返回成功")
+    void shouldSuccessWhenUpdateDeployStatus() {
+        DeployStatus deployStatus = DeployStatus.DEPLOYED;
+        List<String> pluginIdList = new ArrayList<>();
+        this.pluginRepository.updateDeployStatus(pluginIdList, deployStatus);
+        verify(this.pluginRepository).updateDeployStatus(pluginIdList, deployStatus);
+    }
+
+    @Test
     @DisplayName("查询插件时，返回成功")
     void shouldSuccessWhenGetPlugin() {
         String pluginId = "testPluginId";
         PluginDo pluginDo = new PluginDo();
         pluginDo.setPluginId(pluginId);
+        pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
         List<PluginToolData> pluginToolDataList = new ArrayList<>();
         Mockito.when(this.pluginRepository.getPluginByPluginId(pluginId)).thenReturn(pluginDo);
         Mockito.when(this.pluginToolService.getPluginTools(pluginId)).thenReturn(pluginToolDataList);
