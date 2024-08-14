@@ -39,11 +39,13 @@ class FitDruidDataSourceTest {
     @DisplayName("当配置存在时，正确注册数据源")
     void shouldRegisterDataSourceToContainer() throws SQLException {
         Map<String, Object> properties = new HashMap<>();
-        properties.put("druid.driver", "org.h2.Driver");
-        properties.put("druid.url", "jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1");
-        properties.put("druid.username", "root");
-        properties.put("druid.password", "");
-        properties.put("druid.redundant-value", "1");
+        properties.put("fit.datasource.primary.", "app-engine");
+        properties.put("fit.datasource.instances.app-engine.mode.", "shared");
+        properties.put("fit.datasource.instances.app-engine.druid.driver", "org.h2.Driver");
+        properties.put("fit.datasource.instances.app-engine.url",
+                "jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1");
+        properties.put("fit.datasource.instances.app-engine.username", "root");
+        properties.put("fit.datasource.instances.app-engine.password", "");
 
         Config config = new MapConfig("p", properties);
 
@@ -84,6 +86,6 @@ class FitDruidDataSourceTest {
         when(container.beans()).thenReturn(beans);
 
         assertThatThrownBy(() -> new FitDruidDataSource(container,
-                config).get()).isInstanceOf(IllegalStateException.class);
+                config).get()).isInstanceOf(IllegalArgumentException.class);
     }
 }
