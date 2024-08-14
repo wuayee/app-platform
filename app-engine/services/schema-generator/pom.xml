@@ -5,21 +5,28 @@
 
     <parent>
         <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>jade-app-engine-parent</artifactId>
+        <artifactId>app-engine-service-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>app-engine-service-parent</artifactId>
-    <packaging>pom</packaging>
+    <groupId>com.huawei.jade.service</groupId>
+    <artifactId>app-engine-schema-generator</artifactId>
 
-    <modules>
-        <module>app-base</module>
-        <module>knowledge-base</module>
-        <module>simple-uid-generator</module>
-        <module>voice-service</module>
-        <module>schema-validator</module>
-        <module>schema-generator</module>
-    </modules>
+    <dependencies>
+        <!-- FIT -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>jade-common-service</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

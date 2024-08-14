@@ -26,5 +26,22 @@
       "{\n  \"name\": \"Jerry\",\n  \"age\": 100,\n  \"email\": \"123456@qq.com\"\n, \"preference\" : {\"language\": \"chinese\"}}",
       "{\n  \"name\": \"Alex\",\n  \"age\": 100,\n  \"email\": \"123456@qq.com\"\n, \"preference\" : {\"language\": \"engilish\"}}"
     ]
+  },
+  {
+    "schema": "{\"type\": \"object\",\"properties\": {\"phoneNumbers\": {\"type\": \"array\",\"items\": {\"type\": [\"string\",\"integer\"]}}}}",
+    "content": [
+      "{\"phoneNumbers\" : [12345, \"hello\"]}",
+      "{\"phoneNumbers\" : [12345, 567]}",
+      "{\"phoneNumbers\" : [\"hello\", \"你好\"]}"
+    ]
+  },
+  {
+    "schema": "{\"type\": \"object\",\"properties\": {\"phoneNumbers\": {\"type\": \"array\", \"items\": {\"anyOf\" : [{\"type\" : \"string\"}, {\"type\" : \"object\", \"properties\" : {\"country\" : {\"type\" : \"string\"}}}]}}}}",
+    "content": [
+      "{\"phoneNumbers\": [{\"country\": \"chinese\"}, \"hello\"]}",
+      "{\"phoneNumbers\": [{\"country\": \"chinese\"}]}"
+    ]
   }
+
+
 ]
