@@ -1,5 +1,5 @@
-import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 import EvaluationStartIcon from "@/components/asserts/icon-evaluation-start.svg?react";
+import {startNodeDrawer} from "@/components/start/startNodeDrawer.jsx";
 
 /**
  * 评估开始节点绘制器
@@ -7,7 +7,7 @@ import EvaluationStartIcon from "@/components/asserts/icon-evaluation-start.svg?
  * @override
  */
 export const evaluationStartNodeDrawer = (shape, div, x, y) => {
-    const self = jadeNodeDrawer(shape, div, x, y);
+    const self = startNodeDrawer(shape, div, x, y);
     self.type = "evaluationStartNodeDrawer";
 
     /**
