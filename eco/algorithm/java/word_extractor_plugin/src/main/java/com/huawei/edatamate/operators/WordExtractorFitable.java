@@ -4,8 +4,6 @@
 
 package com.huawei.edatamate.operators;
 
-import com.huawei.fit.data.repository.annotation.Parameter;
-import com.huawei.fit.data.repository.annotation.ReturnValue;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
