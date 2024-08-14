@@ -47,12 +47,12 @@ const AppOverview: React.FC = () => {
             {appIcon ?
               <img width={100} height={100} src={appIcon} />
               :
-              <img src='./src/assets/images/knowledge/knowledge-base.png' />
+              <img width={100} height={100} src='./src/assets/images/knowledge/knowledge-base.png' />
             }
 
             <Flex className='details-content' vertical gap='middle'>
               <div className='detail-name'>
-                <span className='text'>{detail?.name || 'Test AppName'}</span>
+                <span className='text'>{detail?.name || ''}</span>
                 {
                   (detail.attributes?.latest_version || detail.state === 'active') ?
                     (

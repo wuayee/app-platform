@@ -55,7 +55,8 @@ const Index = (props) => {
       'question': values.Question,
       'context': {
         'use_memory': false,
-        dimension: dimension.name
+        'user_context': { ...values },
+        'dimension': values.dimension
       }
     };
     if (chatId) {
