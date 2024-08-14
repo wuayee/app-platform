@@ -31,11 +31,8 @@ static void CreateDirectory(const std::string &directory)
         dir[pos] = '\0';
         /*
          * S_IRWXU: 允许文件路径所有者阅读、编写、执行它。
-         * S_IRWXG: 允许文件路径所属组阅读、编写、执行它。
-         * S_IROTH: 允许其他所有用户阅读它。
-         * S_IXOTH: 允许其他所有用户执行它。
          */
-        if (mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
+        if (mkdir(dir.c_str(), S_IRWXU) == -1) {
             logger.Debug("Failed to create the directory {}: {}", dir.c_str(), strerror(errno));
         }
         dir[pos] = delimiter;
@@ -83,6 +80,8 @@ inline void CreateFileIfNotExists(const std::string &filePath)
         // 如果不存在，创建新文件并关闭
         logger.Debug("{} does not exist. A new one is being created", filePath);
         std::ofstream(filePath).close();
+        // 设置文件权限为 0600 (rw-------)，允许文件路径所有者阅读、编写它。
+        chmod(filePath.c_str(), 0600);
         return;
     }
     fileCheck.close();
