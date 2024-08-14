@@ -3,16 +3,40 @@
 """
 功 能：大数据缓存接口对外提供的装饰器
 """
-from typing import Callable
+from typing import Callable, Optional
 from functools import wraps
 
 from fit_common_struct.core import Endpoint
+from fitframework.api.logging import fit_logger
 from fitframework.api.decorators import local_context, fit
 from fitframework.utils.json_path_utlis import convert_field_by_json_path
 
 
 @local_context('worker.id')
 def _worker_id():
+    pass
+
+
+# 缓存本pod的名称
+_this_pod = None
+
+
+def _get_this_pod() -> str:
+    # 获取本pod的名称
+    global _this_pod
+    if not _this_pod:
+        # 预期的worker_id格式为POD_NAME@WORKER_NAME，用以区分异同POD情况
+        _this_pod = _worker_id().split("@", 1)[0]
+    return _this_pod
+
+
+def _address_filter_by_current_worker_id(endpoint: Endpoint):
+    return endpoint.address.workerId == _worker_id()
+
+
+@fit("com.huawei.fit.bigdata.cache.is_databus", address_filter=_address_filter_by_current_worker_id)
+def is_backend_databus() -> bool:
+    # 获取是否cache使用的是databus实现
     pass
 
 
@@ -39,51 +63,89 @@ def _disassemble_global_index(global_index) -> (str, str):
         global_index_as_str = global_index
     else:
         global_index_as_str = global_index.decode("utf-8")
-    index, worker_id = global_index_as_str.split("@")
+    index, worker_id = global_index_as_str.split("@", 1)
     return index, worker_id
 
 
 def _get_cached_value_by_global_index(index: str, worker_id: str, content_type: str):
-    def address_filter_by_worker_id(endpoint: Endpoint):
+    def address_filter_remote(endpoint: Endpoint):
         return endpoint.address.workerId == worker_id
 
-    @fit("com.huawei.fit.bigdata.cache.read.meta", address_filter=address_filter_by_worker_id)
+    # 默认去远端取信息
+    cache_address_filter = address_filter_remote
+    # 同Pod的DataBus的Cache fitables应当使用本地的就行, 异Pod的还是要去远端拿的
+    if is_backend_databus() and _get_this_pod() == worker_id.split("@", 1)[0]:
+        cache_address_filter = _address_filter_by_current_worker_id
+
+    @fit("com.huawei.fit.bigdata.cache.read.meta", address_filter=cache_address_filter)
     def read_meta_from_cache(_: str) -> CacheValueMetadata:
         pass
 
-    @fit("com.huawei.fit.bigdata.cache.delete", address_filter=address_filter_by_worker_id)
-    def delete_value_from_cache(_: str) -> None:
+    @fit("com.huawei.fit.bigdata.cache.read.meta", address_filter=address_filter_remote)
+    def read_meta_from_remote_cache(_: str) -> CacheValueMetadata:
         pass
 
-    meta: CacheValueMetadata = read_meta_from_cache(index)
-    if meta.type is None:
-        raise Exception(f"cannot read meta from cache. [worker_id={worker_id}, index={index}]")
+    meta: Optional[CacheValueMetadata] = None
+    is_local_cache = True
+    try:
+        meta = read_meta_from_cache(index)
+    except Exception:
+        meta = read_meta_from_remote_cache(index)
+        is_local_cache = False
+    if meta.type is None or not meta.type or meta.type == "unknown":
+        meta = read_meta_from_remote_cache(index)
+        is_local_cache = False
+        fit_logger.info("Read meta type from remote, result is [%s]", meta.type)
+        if meta.type is None:
+            raise Exception(f"cannot read meta from cache. [worker_id={worker_id}, index={index}]")
     if meta.type != content_type:
-        raise Exception(f"type of data is incorrect. "
-                        f"[worker_id={worker_id}, index={index} ,data_type={meta.type}, content_type={content_type}]")
+        raise Exception(f"type of data is incorrect. " +
+                        f"[worker_id={worker_id}, index={index}, data_type={meta.type}, content_type={content_type}]")
     if worker_id != _worker_id():
-        def address_filter_by_current_worker_id(endpoint: Endpoint):
-            return endpoint.address.workerId == _worker_id()
-
-        @fit("com.huawei.fit.bigdata.cache.validate.capacity", address_filter=address_filter_by_current_worker_id)
+        @fit("com.huawei.fit.bigdata.cache.validate.capacity", address_filter=_address_filter_by_current_worker_id)
         def validate_capacity(to_allocate_memory: int) -> None:
             pass
 
         validate_capacity(meta.length)
-    if content_type == "str":
-        @fit("com.huawei.fit.bigdata.cache.read.str", address_filter=address_filter_by_worker_id)
-        def read_str_from_cache(_: str) -> str:
-            pass
+    is_local_cache, result = _cache_read(index, meta, cache_address_filter, address_filter_remote, is_local_cache)
 
-        result = read_str_from_cache(index)
-    else:
-        @fit("com.huawei.fit.bigdata.cache.read.bytes", address_filter=address_filter_by_worker_id)
-        def read_bytes_from_cache(_: str) -> bytes:
-            pass
-
-        result = read_bytes_from_cache(index)
-    delete_value_from_cache(index)
+    _cache_delete(index, cache_address_filter if is_local_cache else address_filter_remote)
     return result
+
+
+def _cache_read(index, meta, address_filter, fallback_address_filter, is_readable_locally):
+    result = None
+    try:
+        if is_readable_locally:
+            result = _cache_fitable_read(address_filter, index, meta)
+    except Exception:
+        is_readable_locally = False
+
+    if not is_readable_locally:
+        fit_logger.debug("Read content from remote.")
+        result = _cache_fitable_read(fallback_address_filter, index, meta)
+    fit_logger.info(f"Read content [index={index}], read type {meta.type} from local {is_readable_locally}.")
+    return is_readable_locally, result
+
+
+def _cache_fitable_read(address_filter, index, meta):
+    if meta.type == "str":
+        @fit("com.huawei.fit.bigdata.cache.read.str", address_filter=address_filter)
+        def read_from_local_cache(_index: str) -> str:
+            pass
+    else:
+        @fit("com.huawei.fit.bigdata.cache.read.bytes", address_filter=address_filter)
+        def read_from_local_cache(_index: str) -> bytes:
+            pass
+    return read_from_local_cache(index)
+
+
+def _cache_delete(index, address_filter):
+    @fit("com.huawei.fit.bigdata.cache.delete", address_filter=address_filter)
+    def delete_value_from_cache(_index: str) -> None:
+        pass
+
+    delete_value_from_cache(index)
 
 
 def _replace_global_index_with_content(global_index):
@@ -155,6 +217,7 @@ def data_injection(arguments_json_path: dict, return_json_paths) -> Callable:
     def decorator(func):
         @wraps(func)
         def wrapper(*args):
+            fit_logger.debug(f"data_injection decorator called with {args}")
             if arguments_json_path is not None:
                 converted_args = _convert_arguments_with_json_paths_and_method(args, arguments_json_path,
                                                                                _replace_global_index_with_content)
