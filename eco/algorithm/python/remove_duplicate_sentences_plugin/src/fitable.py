@@ -6,7 +6,7 @@ since: 2023/11/02 22:00
 from typing import List
 
 from common.model import FlowData
-from .plugin import DuplicateSentencesFilterPlugin
+from eco.algorithm.python.remove_duplicate_sentences_plugin.src.plugin import DuplicateSentencesFilterPlugin
 
 
 def remove_duplicate_sentences(flow_data_list: List[FlowData]):
