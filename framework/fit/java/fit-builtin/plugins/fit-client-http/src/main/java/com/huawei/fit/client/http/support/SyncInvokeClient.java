@@ -13,8 +13,11 @@ import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.broker.CommunicationType;
 import com.huawei.fitframework.conf.runtime.ClientConfig;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
+import com.huawei.fitframework.exception.ClientException;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.ioc.BeanContainer;
+
+import java.io.IOException;
 
 /**
  * 表示 {@link com.huawei.fit.client.http.InvokeClient} 的同步实现。
@@ -32,8 +35,11 @@ public class SyncInvokeClient extends AbstractInvokeClient {
         HttpClassicClient client = this.buildHttpClient(request);
         HttpClassicClientRequest clientRequest = this.buildClientRequest(client, request);
         clientRequest.entity(this.buildHttpEntity(clientRequest, request));
-        HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest, request.returnType());
-        return HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
+        try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest, request.returnType())) {
+            return HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
+        } catch (IOException e) {
+            throw new ClientException("Failed to close http classic client.", e);
+        }
     }
 
     @Override

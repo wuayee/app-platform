@@ -28,9 +28,11 @@ import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDatasetService;
 import com.huawei.jade.common.vo.PageVo;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +54,13 @@ public class EvalDatasetControllerTest {
     private EvalDatasetService evalDatasetService;
 
     private HttpClassicClientResponse<?> response;
+
+    @AfterEach
+    void teardown() throws IOException {
+        if (this.response != null) {
+            this.response.close();
+        }
+    }
 
     @Test
     @DisplayName("创建评估数据集接口成功")
@@ -93,8 +102,9 @@ public class EvalDatasetControllerTest {
     void shouldOkWhenDeleteSingleEvalDataset() {
         doNothing().when(this.evalDatasetService).delete(anyList());
 
-        MockRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.delete("/eval/dataset").param("datasetIds", "1").responseType(Void.class);
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "1")
+                .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -102,8 +112,9 @@ public class EvalDatasetControllerTest {
     @Test
     @DisplayName("非法入参删除单个评估数据集接口失败")
     void shouldFailWhenDeleteSingleEvalDatasetWithInvalidId() {
-        MockRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.delete("/eval/dataset").param("datasetIds", "-1").responseType(Void.class);
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "-1")
+                .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }
@@ -128,8 +139,9 @@ public class EvalDatasetControllerTest {
     void shouldFailWhenDeleteEvalDataset() {
         doThrow(new DataAccessException("Fail message")).when(this.evalDatasetService).delete(anyList());
 
-        MockRequestBuilder requestBuilder =
-                MockMvcRequestBuilders.delete("/eval/dataset").param("datasetIds", "1").responseType(Void.class);
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/eval/dataset")
+                .param("datasetIds", "1")
+                .responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }

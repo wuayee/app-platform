@@ -418,13 +418,12 @@ public class AippRunTimeServiceImpl
         String flowDefinitionId = cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
         this.appChatSSEService.addEmitter(metaInst.getId(), emitter, new CountDownLatch(1));
-        this.appChatSSEService.send(metaInst.getId(),
-                AppChatRsp.builder()
-                        .instanceId(metaInst.getId())
-                        .atChatId(ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID)))
-                        .chatId(ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID)))
-                        .status(FlowTraceStatus.READY.name())
-                        .build());
+        this.appChatSSEService.send(metaInst.getId(), AppChatRsp.builder()
+                .instanceId(metaInst.getId())
+                .atChatId(ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID)))
+                .chatId(ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID)))
+                .status(FlowTraceStatus.READY.name())
+                .build());
         boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
         if (!isMemorySwitch) {
             this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
@@ -437,11 +436,7 @@ public class AippRunTimeServiceImpl
             String aippType = ObjectUtils.cast(meta.getAttributes()
                     .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
             businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
-                    this.getMemories(meta.getId(),
-                            memoryType,
-                            memoryChatId,
-                            memoryConfigs,
-                            aippType,
+                    this.getMemories(meta.getId(), memoryType, memoryChatId, memoryConfigs, aippType,
                             businessData,
                             context));
             this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
@@ -932,11 +927,10 @@ public class AippRunTimeServiceImpl
     }
 
     private void uploadChatHistory(String aippId, OperationContext context, Map<String, Object> businessData) {
-        HttpClassicClientRequest postRequest =
-                httpClientFactory.create().createRequest(HttpRequestMethod.POST, uploadChatHistoryUrl);
+        HttpClassicClientRequest postRequest = httpClientFactory.create()
+                .createRequest(HttpRequestMethod.POST, uploadChatHistoryUrl);
         postRequest.entity(ObjectEntity.create(postRequest, this.buildUploadHttpBody(businessData, context)));
-        try {
-            HttpClassicClientResponse<Object> response = HttpUtils.execute(postRequest);
+        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(postRequest)) {
             if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
                 log.error("aipp {} uploadChatHistory fail:{}", aippId, response.reasonPhrase());
                 throw new AippException(context, AippErrCode.XIAOHAI_UPLOAD_CHAT_HISTORY_HTTP_ERROR);
@@ -1141,8 +1135,8 @@ public class AippRunTimeServiceImpl
 
     @Override
     public Map<String, Object> shared(List<Map<String, Object>> chats) {
-        HttpClassicClientRequest postRequest =
-                httpClientFactory.create().createRequest(HttpRequestMethod.POST, this.sharedUrl);
+        HttpClassicClientRequest postRequest = httpClientFactory.create()
+                .createRequest(HttpRequestMethod.POST, this.sharedUrl);
         postRequest.entity(ObjectEntity.create(postRequest, JsonUtils.toJsonString(chats)));
         try {
             String respContent = HttpUtils.sendHttpRequest(postRequest);
@@ -1155,8 +1149,9 @@ public class AippRunTimeServiceImpl
 
     @Override
     public Map<String, Object> getShareData(String shareId) {
-        HttpClassicClientRequest getRequest = this.httpClientFactory.create()
-                .createRequest(HttpRequestMethod.GET, this.sharedUrl + "?shareId=" + shareId);
+        HttpClassicClientRequest getRequest = this.httpClientFactory.create().createRequest(
+                HttpRequestMethod.GET,
+                this.sharedUrl + "?shareId=" + shareId);
         try {
             String respContent = HttpUtils.sendHttpRequest(getRequest);
             return JsonUtils.parseObject(respContent);

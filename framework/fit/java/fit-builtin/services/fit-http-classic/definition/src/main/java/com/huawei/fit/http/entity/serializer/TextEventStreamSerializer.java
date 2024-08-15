@@ -14,6 +14,7 @@ import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.entity.support.DefaultTextEventStreamEntity;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 
 import java.io.BufferedReader;
@@ -47,13 +48,13 @@ public class TextEventStreamSerializer implements EntitySerializer<TextEventStre
     }
 
     @Override
-    public void serializeEntity(TextEventStreamEntity entity, Charset charset, OutputStream out) {
+    public void serializeEntity(@Nonnull TextEventStreamEntity entity, Charset charset, OutputStream out) {
         throw new UnsupportedOperationException("The operation serialize text event stream is nonsupport.");
     }
 
     @Override
-    public TextEventStreamEntity deserializeEntity(InputStream in, Charset charset, HttpMessage httpMessage,
-            Type type) {
+    public TextEventStreamEntity deserializeEntity(@Nonnull InputStream in, Charset charset,
+            @Nonnull HttpMessage httpMessage, Type type) {
         Choir<TextEvent> stream = Choir.create(emitter -> {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));

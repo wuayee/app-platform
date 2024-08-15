@@ -15,9 +15,11 @@ import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.test.TestController;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -31,13 +33,22 @@ public class DefaultHttpExceptionAdviceTest {
     @Fit
     private MockMvc mockMvc;
 
+    private HttpClassicClientResponse<?> response;
+
+    @AfterEach
+    void tearDown() throws IOException {
+        if (this.response != null) {
+            this.response.close();
+        }
+    }
+
     @Test
     @DisplayName("测试拦截 FitException")
     public void shouldOkWhenInterceptException() {
         String url = "/nonsupport/exception";
-        HttpClassicClientResponse<?> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
+        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
-        assertThat(response.objectEntity()).isNotEmpty()
+        assertThat(this.response.objectEntity()).isNotEmpty()
                 .get()
                 .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code", 404)
                         .hasFieldOrPropertyWithValue("msg", "test error")

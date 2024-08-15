@@ -37,11 +37,13 @@ import com.huawei.jade.app.engine.uid.UidGenerator;
 import com.huawei.jade.common.vo.PageVo;
 
 import org.apache.ibatis.session.SqlSessionException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
@@ -89,6 +91,13 @@ public class EvalDataIntegrationTest {
         doNothing().when(this.schemaValidator).validate(anyString(), anyList());
         when(this.versionGenerator.getUid()).thenReturn(1L, 2L, 3L, 4L, 5L, 6L);
         when(this.datasetMapper.getSchema(anyLong())).thenReturn("");
+    }
+
+    @AfterEach
+    void teardown() throws IOException {
+        if (this.response != null) {
+            this.response.close();
+        }
     }
 
     @Test
@@ -164,14 +173,16 @@ public class EvalDataIntegrationTest {
         List<EvalDataEntity> dataEntities = this.evalDataMapper.listEvalData(queryParam);
         assertThat(dataEntities.size()).isEqualTo(2);
         EvalDataEntity entity = dataEntities.get(0);
-        assertThat(entity).extracting(EvalDataEntity::getId, EvalDataEntity::getContent).containsExactly(1L, "{}");
+        assertThat(entity).extracting(EvalDataEntity::getId,
+                EvalDataEntity::getContent).containsExactly(1L, "{}");
 
         queryParam.setVersion(5L);
         assertThat(this.evalDataMapper.countEvalData(queryParam)).isEqualTo(1);
         dataEntities = this.evalDataMapper.listEvalData(queryParam);
         assertThat(dataEntities.size()).isEqualTo(1);
         entity = dataEntities.get(0);
-        assertThat(entity).extracting(EvalDataEntity::getId, EvalDataEntity::getContent).containsExactly(3L, "{{}}");
+        assertThat(entity).extracting(EvalDataEntity::getId,
+                EvalDataEntity::getContent).containsExactly(3L, "{{}}");
     }
 
     @Test
@@ -241,7 +252,7 @@ public class EvalDataIntegrationTest {
     @Test
     @Sql(scripts = "sql/test_insert_data.sql")
     @DisplayName("评估数据增删改查成功")
-    void shouldOkWhenCrudData() {
+    void shouldOkWhenCrudData() throws IOException {
         // 初始化数据库后，数据集 id2 的数据量为 0。
         EvalDataQueryParam dataQueryParam = new EvalDataQueryParam();
         dataQueryParam.setDatasetId(2L);
@@ -257,6 +268,7 @@ public class EvalDataIntegrationTest {
                 MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         // 查询插入新数据后，数据量为 1。
         EvalDataQueryParam queryParam = new EvalDataQueryParam();
@@ -276,13 +288,15 @@ public class EvalDataIntegrationTest {
                 MockMvcRequestBuilders.put("/eval/data").jsonEntity(evalDataUpdateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         // 查询更新前数据内容
         queryParam.setVersion(1L);
         List<EvalDataEntity> dataEntities = this.evalDataMapper.listEvalData(queryParam);
         assertThat(dataEntities.size()).isEqualTo(1);
         EvalDataEntity entity = dataEntities.get(0);
-        assertThat(entity).extracting(EvalDataEntity::getId, EvalDataEntity::getContent).containsExactly(3L, "{}");
+        assertThat(entity).extracting(EvalDataEntity::getId,
+                EvalDataEntity::getContent).containsExactly(3L, "{}");
 
         // 查询更新后数据内容
         queryParam.setVersion(2L);
@@ -290,10 +304,12 @@ public class EvalDataIntegrationTest {
         dataEntities = this.evalDataMapper.listEvalData(queryParam);
         assertThat(dataEntities.size()).isEqualTo(1);
         entity = dataEntities.get(0);
-        assertThat(entity).extracting(EvalDataEntity::getId, EvalDataEntity::getContent).containsExactly(4L, "{{}}");
+        assertThat(entity).extracting(EvalDataEntity::getId,
+                EvalDataEntity::getContent).containsExactly(4L, "{{}}");
 
         // 删除数据 id3
-        requestBuilder = MockMvcRequestBuilders.delete("/eval/data").param("dataIds", "4").responseType(Void.class);
+        requestBuilder =
+                MockMvcRequestBuilders.delete("/eval/data").param("dataIds", "4").responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
 

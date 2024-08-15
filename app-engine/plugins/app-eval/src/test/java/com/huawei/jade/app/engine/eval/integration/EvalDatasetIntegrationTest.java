@@ -39,10 +39,12 @@ import com.huawei.jade.app.engine.schema.SchemaValidator;
 import com.huawei.jade.app.engine.uid.UidGenerator;
 import com.huawei.jade.common.vo.PageVo;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
@@ -94,9 +96,16 @@ public class EvalDatasetIntegrationTest {
         when(this.datasetMapper.getSchema(anyLong())).thenReturn("");
     }
 
+    @AfterEach
+    void teardown() throws IOException {
+        if (this.response != null) {
+            this.response.close();
+        }
+    }
+
     @Test
     @DisplayName("创建评估数据集接口成功后，插入新数据成功")
-    void shouldOkWhenCreateEvalDataset() {
+    void shouldOkWhenCreateEvalDataset() throws IOException {
         // 创建评估数据集。
         EvalDatasetCreateDto evalDatasetCreateDto = new EvalDatasetCreateDto();
         evalDatasetCreateDto.setName("ds1");
@@ -109,6 +118,7 @@ public class EvalDatasetIntegrationTest {
                 MockMvcRequestBuilders.post("/eval/dataset").jsonEntity(evalDatasetCreateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         // 查询数据集数量为 1。
         EvalDatasetQueryParam datasetQueryParam = new EvalDatasetQueryParam();
@@ -256,7 +266,7 @@ public class EvalDatasetIntegrationTest {
 
     @Test
     @DisplayName("评估数据集增删改查成功")
-    void shouldOkWhenCrudEvalDataset() {
+    void shouldOkWhenCrudEvalDataset() throws IOException {
         // 创建评估数据集。
         EvalDatasetCreateDto evalDatasetCreateDto = new EvalDatasetCreateDto();
         evalDatasetCreateDto.setName("ds1");
@@ -269,6 +279,7 @@ public class EvalDatasetIntegrationTest {
                 MockMvcRequestBuilders.post("/eval/dataset").jsonEntity(evalDatasetCreateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         // 查询数据集数量为 1。
         EvalDatasetQueryParam datasetQueryParam = new EvalDatasetQueryParam();
@@ -293,6 +304,7 @@ public class EvalDatasetIntegrationTest {
         requestBuilder = MockMvcRequestBuilders.put("/eval/dataset").jsonEntity(updateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         datasetEntities = this.datasetMapper.listEvalDataset(datasetQueryParam);
         assertThat(datasetEntities.size()).isEqualTo(1);
