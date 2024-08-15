@@ -6,9 +6,10 @@
 import threading
 
 
-class Cache:
+class DefaultCache:
     def __init__(self):
         self._cache = {}
+        self._meta = dict()
         self._lock = threading.Lock()
         self._next_id = 0
 
@@ -22,6 +23,7 @@ class Cache:
             key = hex(self._next_id)[2:].zfill(8)
             self._next_id += 1
             self._cache[key] = value
+            self._meta[key] = ("str" if isinstance(value, str) else "bytes", len(value))
             return key
 
     def read(self, key: str):
@@ -32,6 +34,17 @@ class Cache:
         """
         with self._lock:
             return self._cache.get(key)
+
+    def read_meta(self, key: str):
+        """
+        根据指定键读取缓存中的元数据
+        :param key: 被缓存数据的键
+        :return: 元数据(user_data, memory_size)，如果找不到则返回(None, None)
+        """
+        meta = self._meta.get(key)
+        if not meta:
+            return None, None
+        return meta
 
     def delete(self, key: str) -> None:
         """
@@ -49,9 +62,3 @@ class Cache:
         """
         with self._lock:
             return len(self._cache), sum(map(lambda x: len(x[1]), self._cache.items()))
-
-
-class CacheValueMetadata:
-    def __init__(self, type: str, length: int):
-        self.type = type
-        self.length = length
