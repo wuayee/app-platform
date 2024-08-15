@@ -70,13 +70,12 @@ int32_t SecureAccess::IsAuthorized(const string& token, const Permission& permis
 
 int32_t SecureAccess::RefreshAccessToken(const string& refreshToken, vector<AuthTokenRole>& tokenRoles)
 {
-    vector<AuthTokenRole> refreshTokenRoles = tokenRoleRepo_->Query({refreshToken});
-    if (refreshTokenRoles.empty()) {
+    tokenRoles = tokenRoleRepo_->Query({refreshToken});
+    if (tokenRoles.empty()) {
         FIT_LOG_INFO("Refresh token is invalid.");
         return FIT_ERR_AUTHENTICATION_INVALID_FRESH_TOKEN;
     }
-    tokenRoles = {GetAccessToken(refreshTokenRoles.front().role)};
-    tokenRoles.insert(tokenRoles.end(), refreshTokenRoles.begin(), refreshTokenRoles.end());
+    tokenRoles.emplace_back(GetAccessToken(tokenRoles.front().role));
     FIT_LOG_DEBUG("Refresh access token.");
     return FIT_OK;
 }

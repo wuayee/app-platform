@@ -46,8 +46,7 @@ int32_t SecureAccessClient::UpdateToken(Fit::string& token)
     }
 
     // 刷新token失败，需要重新申请token
-    if (ret == FIT_ERR_AUTHENTICATION_INVALID_FRESH_TOKEN || refreshTokenInfo.token.empty()
-        || refreshTokenInfo.status != TOKEN_STATUS_NORMAL) {
+    if (ret == FIT_ERR_AUTHENTICATION_INVALID_FRESH_TOKEN) {
         FIT_LOG_WARN("Refresh token failed, error code is %d.", ret);
         ret = ApplyToken();
         if (ret != FIT_OK) {
@@ -82,7 +81,7 @@ void SecureAccessClient::UpdateTokenInfo(const vector<AuthTokenRole>& authTokenR
 
 int32_t SecureAccessClient::RefreshToken(const Fit::string& refreshToken)
 {
-    FIT_LOG_DEBUG("Refresh token.");
+    FIT_LOG_INFO("Refresh token.");
     vector<AuthTokenRole> authTokenRoles {};
     int32_t ret = SecureAccess::Instance().RefreshAccessToken(refreshToken, authTokenRoles);
     if (ret != FIT_OK) {
@@ -95,7 +94,7 @@ int32_t SecureAccessClient::RefreshToken(const Fit::string& refreshToken)
 
 int32_t SecureAccessClient::ApplyToken()
 {
-    FIT_LOG_DEBUG("Apply token.");
+    FIT_LOG_INFO("Apply token.");
     Fit::string accessKey = SecureAccessConfig::Instance().AccessKey();
     uint64_t timestampInt;
     int32_t result = UtilByRepo::Instance().GetCurrentTimeMs(timestampInt);

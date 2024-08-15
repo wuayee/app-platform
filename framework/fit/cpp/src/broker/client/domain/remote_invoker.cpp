@@ -309,6 +309,7 @@ FitCode AuthenticationForRemoteInvoker::Invoke(ContextObj context, ::Fit::Framew
             FIT_LOG_ERROR("Get token failed.");
             return ret;
         }
+        ContextSetAccessToken(context, token.c_str());
         ret = RemoteInvoker::Invoke(context, in, out);
     }
     return ret;
