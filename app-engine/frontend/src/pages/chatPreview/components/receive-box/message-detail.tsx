@@ -1,12 +1,24 @@
 
 import React from 'react';
-import Markdown from 'react-markdown';
-import { trans } from '@shared/utils/common';
+import { marked } from 'marked';
+import hljs from 'highlight.js';
 import ChartMessage from '../chart-message/chart-message';
+import 'highlight.js/styles/monokai-sublime.min.css'
 
 // 消息详情
 const MessageBox = (props) => {
-  const { content, markdownSyntax, chartConfig, finished } = props;
+  const { content, chartConfig, finished } = props;
+
+  const markedProcess = (content) => {
+    return marked(content, {
+      highlight: (code, lang) => {
+        if (code) {
+          const validLanguage = hljs.getLanguage(lang) ? lang : 'javascript';
+          return hljs.highlight(code, { language: validLanguage }).value;
+        }
+      }
+    })
+  }
   return (
     <>{(
       <div className='receive-info'>
@@ -14,9 +26,7 @@ const MessageBox = (props) => {
           chartConfig ?
             (<ChartMessage chartConfig={chartConfig} />) :
             (
-              markdownSyntax ?
-                (<Markdown>{content}</Markdown>) :
-                <div className='receive-info-html' dangerouslySetInnerHTML={{ __html: trans(content) }}></div>
+              <div className='receive-info-html' dangerouslySetInnerHTML={{ __html: markedProcess(content) }}></div>
             )
         }
         {

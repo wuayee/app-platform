@@ -31,20 +31,20 @@ const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inpu
     <>
       {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource} />}
       {currentSteps === 1 &&
-        (type === 'text' ? <TextSplitClear form={formStepSecond} /> : <TableSecondForm form={formStepSecond}/>)}
+        (type === 'text' ? <TextSplitClear form={formStepSecond} /> : <TableSecondForm form={formStepSecond} />)}
       {currentSteps === 2 &&
-        ( true ? (
+        (true ? (
           <Empty
             imageStyle={{ height: 60 }}
             description={<span>恭喜您，知识库已完成创建</span>}
           >
-            <Button type='primary' onClick={() => navigate(-1)}>
+            <Button type='primary' onClick={() => window.history.back()}>
               点击返回
             </Button>
           </Empty>
         ) : (
-          <Progress percent={30} />
-        ))}
+            <Progress percent={30} />
+          ))}
     </>
   );
 };

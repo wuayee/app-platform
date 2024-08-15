@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import type { TableProps } from 'antd';
-import { useHistory,useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../../components/icons';
@@ -34,7 +34,7 @@ const KnowledgeBaseDetailCreateTable = () => {
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
   const id = searchParams.id;
   const navigate = useHistory().push;
-  const [ selectValue, setSelectValue ] = useState();
+  const [selectValue, setSelectValue] = useState();
 
   // 表格id判断提交还是修改
   const table_id = searchParams.tableid;
@@ -129,7 +129,7 @@ const KnowledgeBaseDetailCreateTable = () => {
         return;
       };
       if (res) {
-        navigate(-1);
+        window.history.back();
       };
     } finally {
       setLoading(false);
@@ -137,7 +137,7 @@ const KnowledgeBaseDetailCreateTable = () => {
   }
 
   const onCancle = () => {
-    navigate(-1);
+    window.history.back();
   }
 
   useEffect(() => {
@@ -153,7 +153,7 @@ const KnowledgeBaseDetailCreateTable = () => {
       for (let i = 0; i < name.length; i++) {
         let code = name.charCodeAt(i);
         if (code > 255) {
-          n +=2;
+          n += 2;
         } else {
           n += 1
         }
@@ -221,7 +221,7 @@ const KnowledgeBaseDetailCreateTable = () => {
                 name='knowledgeBaseName'
                 rules={[
                   { required: true, message: '输入不能为空' },
-                  { validator: changeName}
+                  { validator: changeName }
                 ]}
               >
                 <Input placeholder='请输入' />

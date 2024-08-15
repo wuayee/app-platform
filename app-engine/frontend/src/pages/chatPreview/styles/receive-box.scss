@@ -48,6 +48,15 @@
       margin: 0;
       white-space: pre-wrap;
     }
+    pre {
+      padding: 12px;
+      border-radius: 4px;
+      background-color: #333333;
+      margin: 0;
+      code {
+        color: #cccccc;
+      }
+    }
     .receive-tips {
       font-size: 12px;
       margin-top: 6px;

@@ -47,7 +47,7 @@ const EditorBtnHome = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAt, setShowAt] = useState(false);
   const [appName, setAppName] = useState('');
-  const [appIcon, setAppIcon] = useState(knowledgeBase);
+  const [appIcon, setAppIcon] = useState();
   const [openHistorySignal, setOpenHistorySignal] = useState(null);
   const [searchKey, setSearchKey] = useState(null);
   let openUploadRef = useRef(null);
