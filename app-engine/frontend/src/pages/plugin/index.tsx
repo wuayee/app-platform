@@ -31,6 +31,7 @@ const Plugin = () => {
         onClose={onClose}
         closeIcon={false}
         open={open}
+        destroyOnClose
         extra={
           <CloseOutlined onClick={() => setOpen(false)} />
         }

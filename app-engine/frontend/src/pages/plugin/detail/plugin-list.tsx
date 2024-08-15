@@ -34,7 +34,7 @@ const PliginList = (props) => {
         <div className='plugin-detail'>
           <div className='aui-header-1 '>
             <div className='aui-title-1'>插件管理</div>
-            {/* <Button size='small' onClick={() => setOpen(true)}>部署</Button> */}
+            <Button size='small' onClick={() => setOpen(true)}>部署</Button>
           </div>
           <div className='plugin-detail-list'>
             <div className='list-head'>
@@ -70,17 +70,18 @@ const PliginList = (props) => {
                 ))}
               </div>
             ) : (
-              <div className='empty-box'>
-                <EmptyItem />
-              </div>
-            )}
+                <div className='empty-box'>
+                  <EmptyItem />
+                </div>
+              )}
           </div>
           <Drawer
             title='部署插件'
-            width={900}
+            width={1000}
             onClose={onClose}
             closeIcon={false}
             open={open}
+            destroyOnClose
             extra={<CloseOutlined onClick={() => setOpen(false)} />}
             footer={null}
           >
