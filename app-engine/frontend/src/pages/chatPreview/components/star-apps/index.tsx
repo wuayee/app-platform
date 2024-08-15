@@ -22,7 +22,7 @@ interface StarAppsProps {
   handleAt: (val: any) => void;
 }
 
-const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
+const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
   const dispatch = useAppDispatch();
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
@@ -31,33 +31,21 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
 
     // 设为默认
     2: async (item: AnyAction) => {
-      try {
-        await updateCollectionApp(getLocalUser(), item.appId)
-        getUserCollectionList();
-      } catch (error) {
-        
-      }
+      await updateCollectionApp(getLocalUser(), item.appId)
+      getUserCollectionList();
     },
     3: async (item: AnyAction) => {
-      try {
-        await updateCollectionApp(getLocalUser(), HOME_APP_ID);
-        getUserCollectionList();
-      } catch (error) {
-        
-      }
+      await updateCollectionApp(getLocalUser(), HOME_APP_ID);
+      getUserCollectionList();
     },
     1: async (item: AnyAction) => {
-      try {
-        if(item?.id) {
-          await cancelUserCollection({
-            usrInfo: getLocalUser(),
-            aippId: item.aippId,
-          })
-        }
-        getUserCollectionList();
-      } catch (error) {
-        
+      if (item?.id) {
+        await cancelUserCollection({
+          usrInfo: getLocalUser(),
+          aippId: item.aippId,
+        })
       }
+      getUserCollectionList();
     }
   }
   const items: any[] = [
@@ -80,13 +68,13 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
 
   // 数据转换
   const translateData = (remoteData: any): any[] => {
-    
+
     const defaultData = remoteData?.data?.defaultApp || null;
 
     // 设置默认应用
     const collectionList: any[] = remoteData?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);
-    const data = collectionList.filter(item=> item);
+    const data = collectionList.filter(item => item);
     const res = data.map(item => {
       const attr = JSON.parse((item?.attributes ?? JSON.stringify({})))
       return ({
@@ -96,20 +84,16 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
         author: item.createBy,
         desc: attr.description,
         appAvatar: attr.icon,
-        authorAvatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=1',
+        authorAvatar: '',
       })
     })
-    return res.filter(item=> item);
+    return res.filter(item => item);
   }
 
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
-    try {
-      const res = await getUserCollection(getLocalUser());
-      setApps([...translateData(res)]);
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await getUserCollection(getLocalUser());
+    setApps([...translateData(res)]);
   }
 
   // 点击操作
@@ -163,10 +147,10 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
       <div className='app-wrapper'>
         {apps.map((app, index) => (
           <div className='app-item' key={app.id}>
-            {index=== 0 ? <div className='app-item-default'>默认应用</div> : ''}
-            
+            {index === 0 ? <div className='app-item-default'>默认应用</div> : ''}
+
             <div className='app-item-content'>
-              { app.appAvatar ? <Avatar size={48} src={app.appAvatar} /> : <Avatar size={48} src={avatarNormal} />}
+              {app.appAvatar ? <Avatar size={48} src={app.appAvatar} /> : <Avatar size={48} src={avatarNormal} />}
               <div className='app-item-text'>
                 <div className='app-item-text-header'>
                   <div className='app-item-title' title={app.name}>{app.name}</div>
@@ -190,16 +174,18 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
                 <UserOutlined />
                 <span className='text'>由{app.author}创建</span>
               </div>
-              <Dropdown menu={{ items: [items[index>0?0:1]], onClick: (info)=> {
-                clickOpera(info, app)
-              } }} trigger={['click']} >
+              <Dropdown menu={{
+                items: [items[index > 0 ? 0 : 1]], onClick: (info) => {
+                  clickOpera(info, app)
+                }
+              }} trigger={['click']} >
                 <EllipsisOutlined className='app-item-footer-more' />
               </Dropdown>
             </div>
           </div>
         ))}
       </div>
-      <div style={{float:'right', marginTop: 12 }}>
+      <div style={{ float: 'right', marginTop: 12 }}>
         <Button onClick={() => dispatch(setOpenStar(false))} className='close-button'>
           关闭
         </Button>

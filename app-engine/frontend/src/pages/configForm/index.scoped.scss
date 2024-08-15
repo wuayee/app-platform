@@ -1,7 +1,7 @@
 .config-form-wrap {
   height: 100%;
-  width: 500px;
   flex-shrink: 0;
+  width: 500px;
   .config-form {
     height: 100%;
     width: 100%;
@@ -16,7 +16,7 @@
       padding-bottom: 0;
       margin-bottom: 20px;
       .config-left {
-        > span {
+        >span {
           &:last-child {
             .line {
               width: 0;
@@ -70,5 +70,20 @@
     vertical-align: -0.1rem;
     fill: currentColor;
     overflow: hidden;
+  }
+}
+@media only screen and (max-width: 2000px) {
+  .config-form-wrap {
+    width: 450px;
+  }
+}
+@media only screen and (max-width: 1700px) {
+  .config-form-wrap {
+    width: 400px;
+  }
+}
+@media only screen and (max-width: 1500px) {
+  .config-form-wrap {
+    width: 350px;
   }
 }
