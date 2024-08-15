@@ -3,11 +3,10 @@
 """
 since: 2023/11/02 22:00
 """
-
 from typing import List
 
 from common.model import FlowData
-from .plugin import LegendCleanerPlugin
+from eco.algorithm.python.legend_cleaner_plugin.src.plugin import LegendCleanerPlugin
 
 
 def clean_legend(flow_data_list: List[FlowData]):

@@ -11,8 +11,8 @@ import queue
 import threading
 
 from common.model import FlowData
-from .plugin import PdfExtractorPlugin
-from .layout_extractor_model import LayoutExtractorModel
+from eco.algorithm.python.pdf_extractor_cpu_plugin.src.plugin import PdfExtractorPlugin
+from eco.algorithm.python.pdf_extractor_cpu_plugin.src.layout_extractor_model import LayoutExtractorModel
 
 input_queue = queue.Queue()
 

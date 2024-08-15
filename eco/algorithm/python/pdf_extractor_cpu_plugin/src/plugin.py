@@ -20,7 +20,6 @@ import pandas as pd
 import numpy as np
 
 
-
 def pdf_slicer(meta_list: List) -> List[Dict[str, bytes]]:
     pass
 
