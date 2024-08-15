@@ -79,10 +79,10 @@ public class ComplexSpanAttributeParser implements SpanAttributeParser {
             }
             String[] kv = attr.split(":");
             if (kv.length != 2) {
-                LOGGER.warn("Split key-value fail, expression is {}.", attr);
+                LOGGER.warn("Split key-value fail, attribute is {}.", attr);
                 continue;
             }
-            expMap.put(kv[0], kv[1]);
+            expMap.put(kv[0].trim(), kv[1].trim());
         }
 
         return expMap.entrySet().stream().peek(pair -> {
