@@ -115,15 +115,14 @@ public class FileController extends AbstractController {
         log.info("getFile url={}", baseUrl);
         HttpClassicClientRequest request = factory.create(HttpUtils.requestConfig(this.xiaoHaiReadTimeout))
                 .createRequest(HttpRequestMethod.GET, baseUrl);
-        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(request)) {
-            if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
-                throw new IOException(String.format(Locale.ROOT,
-                        "send http fail. url=%s result=%d",
-                        request.requestUri(),
-                        response.statusCode()));
-            }
-            return response.entityBytes();
+        HttpClassicClientResponse<Object> response = HttpUtils.execute(request);
+        if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
+            throw new IOException(String.format(Locale.ROOT,
+                    "send http fail. url=%s result=%d",
+                    request.requestUri(),
+                    response.statusCode()));
         }
+        return response.entityBytes();
     }
 
     /**

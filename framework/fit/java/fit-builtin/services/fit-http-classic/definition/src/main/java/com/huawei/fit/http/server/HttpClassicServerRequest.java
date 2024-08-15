@@ -11,13 +11,15 @@ import com.huawei.fit.http.protocol.Address;
 import com.huawei.fit.http.protocol.ServerRequest;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
 
+import java.io.Closeable;
+
 /**
  * 表示经典的服务端的 Http 请求。
  *
  * @author 季聿阶
  * @since 2022-07-07
  */
-public interface HttpClassicServerRequest extends HttpClassicRequest {
+public interface HttpClassicServerRequest extends HttpClassicRequest, Closeable {
     /**
      * 获取 Http 请求的所有属性集合。
      *

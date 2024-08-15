@@ -17,7 +17,6 @@ import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -62,10 +61,6 @@ public class TextEventStreamSerializer implements EntitySerializer<TextEventStre
                 emitter.complete();
             } catch (Exception e) {
                 emitter.fail(e);
-            }
-            try {
-                httpMessage.close();
-            } catch (IOException ignored) {
             }
         });
         return new DefaultTextEventStreamEntity(httpMessage, stream);

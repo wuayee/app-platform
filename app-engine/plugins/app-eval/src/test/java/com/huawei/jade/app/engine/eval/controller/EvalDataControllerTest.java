@@ -27,12 +27,10 @@ import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 import com.huawei.jade.common.vo.PageVo;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
@@ -53,13 +51,6 @@ public class EvalDataControllerTest {
     private EvalDataService evalDataService;
 
     private HttpClassicClientResponse<?> response;
-
-    @AfterEach
-    void teardown() throws IOException {
-        if (this.response != null) {
-            this.response.close();
-        }
-    }
 
     @Test
     @DisplayName("批量创建评估数据接口成功")

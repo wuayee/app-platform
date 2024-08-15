@@ -42,6 +42,7 @@ public interface HttpClassicClientResponse<T> extends HttpClassicResponse {
 
     /**
      * 获取 Http 消息的消息体的结构化数据的二进制内容。
+     * <p>如果已经调用过 {@link #entity()} 方法来获取消息体，则无法调用当前方法。</p>
      *
      * @return 表示消息体的结构化数据的二进制内容的 {@code byte[]}。
      */

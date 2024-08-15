@@ -15,7 +15,6 @@ import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 
-import java.io.Closeable;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ import java.util.Optional;
  * @author 季聿阶
  * @since 2022-08-03
  */
-public interface HttpMessage extends HttpResourceSupplier, Closeable {
+public interface HttpMessage extends HttpResourceSupplier {
     /**
      * 获取 Http 消息的版本号。
      *

@@ -26,12 +26,10 @@ import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.service.PluginToolService;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,13 +58,6 @@ public class PluginControllerTest {
 
     private HttpClassicClientResponse<?> response;
 
-    @AfterEach
-    void teardown() throws IOException {
-        if (this.response != null) {
-            this.response.close();
-        }
-    }
-
     @Test
     @DisplayName("当添加插件时，返回正确结果。")
     void shouldReturnOkWhenAddPlugin() {
@@ -76,8 +67,8 @@ public class PluginControllerTest {
         pluginData.setPluginToolDataList(new ArrayList<>());
         Mockito.when(this.pluginService.addPlugin(any())).thenReturn(pluginId);
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/store/plugins")
-            .jsonEntity(pluginData)
-            .responseType(TypeUtils.parameterized(Result.class, new Type[] {String.class}));
+                .jsonEntity(pluginData)
+                .responseType(TypeUtils.parameterized(Result.class, new Type[] {String.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -92,8 +83,8 @@ public class PluginControllerTest {
         pluginToolData.setSchema(schema);
         Mockito.when(this.pluginToolService.addPluginTool(any())).thenReturn(uniqueName);
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/store/plugins/tools")
-            .jsonEntity(pluginToolData)
-            .responseType(TypeUtils.parameterized(Result.class, new Type[] {String.class}));
+                .jsonEntity(pluginToolData)
+                .responseType(TypeUtils.parameterized(Result.class, new Type[] {String.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -106,7 +97,7 @@ public class PluginControllerTest {
         pluginToolData.setUniqueName(uniqueName);
         Mockito.when(this.pluginToolService.getPluginTool(anyString())).thenReturn(pluginToolData);
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/store/plugins/tools/testUniqueName")
-            .responseType(TypeUtils.parameterized(Result.class, new Type[] {PluginToolData.class}));
+                .responseType(TypeUtils.parameterized(Result.class, new Type[] {PluginToolData.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -119,7 +110,7 @@ public class PluginControllerTest {
         pluginData.setPluginId(pluginId);
         Mockito.when(this.pluginService.getPlugin(anyString())).thenReturn(pluginData);
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/store/plugins/testPluginId")
-            .responseType(TypeUtils.parameterized(Result.class, new Type[] {PluginData.class}));
+                .responseType(TypeUtils.parameterized(Result.class, new Type[] {PluginData.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -131,16 +122,16 @@ public class PluginControllerTest {
         List<PluginToolData> pluginToolDataList = new ArrayList<>();
         ListResult<PluginToolData> pluginToolDataListResult = ListResult.create(pluginToolDataList, 1);
         Mockito.when(this.pluginToolService.getPluginTools(Mockito.any(PluginToolQuery.class)))
-            .thenReturn(pluginToolDataListResult);
+                .thenReturn(pluginToolDataListResult);
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/store/plugins/tools/search")
-            .param("name", "testToolName")
-            .param("mode", "or")
-            .param("includeTags", "FIT")
-            .param("excludeTags", "APP")
-            .param("pageNum", "1")
-            .param("pageSize", "10")
-            .param("version", "version")
-            .responseType(TypeUtils.parameterized(Result.class, new Type[] {List.class}));
+                .param("name", "testToolName")
+                .param("mode", "or")
+                .param("includeTags", "FIT")
+                .param("excludeTags", "APP")
+                .param("pageNum", "1")
+                .param("pageSize", "10")
+                .param("version", "version")
+                .responseType(TypeUtils.parameterized(Result.class, new Type[] {List.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -153,12 +144,12 @@ public class PluginControllerTest {
         ListResult<PluginData> pluginDataListResult = ListResult.create(pluginDataList, 1);
         Mockito.when(this.pluginService.getPlugins(Mockito.any(PluginQuery.class))).thenReturn(pluginDataListResult);
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/store/plugins/search")
-            .param("mode", "or")
-            .param("includeTags", "FIT")
-            .param("excludeTags", "APP")
-            .param("pageNum", "1")
-            .param("pageSize", "10")
-            .responseType(TypeUtils.parameterized(Result.class, new Type[] {List.class}));
+                .param("mode", "or")
+                .param("includeTags", "FIT")
+                .param("excludeTags", "APP")
+                .param("pageNum", "1")
+                .param("pageSize", "10")
+                .responseType(TypeUtils.parameterized(Result.class, new Type[] {List.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
