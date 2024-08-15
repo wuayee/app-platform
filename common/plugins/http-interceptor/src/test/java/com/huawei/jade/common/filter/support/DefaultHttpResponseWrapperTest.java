@@ -58,12 +58,12 @@ public class DefaultHttpResponseWrapperTest {
     public void shouldOkWhenInterceptData(String url) {
         this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {String.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.SUCCESS.getCode())
+        assertThat(this.response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.SUCCESS.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
-                        .hasFieldOrPropertyWithValue("data", "test")
-        );
+                        .hasFieldOrPropertyWithValue("data", "test"));
     }
 
     @Test
@@ -72,12 +72,12 @@ public class DefaultHttpResponseWrapperTest {
         String url = "/support/void";
         this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.SUCCESS.getCode())
+        assertThat(this.response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.SUCCESS.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
-                        .hasFieldOrPropertyWithValue("data", null)
-        );
+                        .hasFieldOrPropertyWithValue("data", null));
     }
 
     @Test
@@ -86,12 +86,12 @@ public class DefaultHttpResponseWrapperTest {
         String url = "/support/int";
         this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Integer.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.SUCCESS.getCode())
+        assertThat(this.response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.SUCCESS.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
-                        .hasFieldOrPropertyWithValue("data", 0)
-        );
+                        .hasFieldOrPropertyWithValue("data", 0));
     }
 
     @Test
@@ -108,12 +108,12 @@ public class DefaultHttpResponseWrapperTest {
         String url = "/nonsupport/result";
         this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.INTERNAL_ERROR.getCode())
+        assertThat(this.response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.INTERNAL_ERROR.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.INTERNAL_ERROR.getMsg())
-                        .hasFieldOrPropertyWithValue("data", null)
-        );
+                        .hasFieldOrPropertyWithValue("data", null));
     }
 
     @Test
