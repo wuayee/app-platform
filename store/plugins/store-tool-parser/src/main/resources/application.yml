@@ -1,4 +1,12 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.store.tool.parser'
+      - 'com.huawei.jade.store.tool.parser'
+
+plugin:
+  deploy:
+    # 单位 分钟
+    timeout: 10
+    query:
+      #单位： 秒
+      interval: 10
