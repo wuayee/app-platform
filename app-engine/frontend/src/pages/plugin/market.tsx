@@ -9,7 +9,7 @@ import EmptyItem from '../../components/empty/empty-item';
 import { PluginCardTypeE, sourceTabs } from './helper';
 import UploadToolDrawer from './upload/uploadTool';
 
-const MarketItems = () => {
+const MarketItems = ({ reload }) => {
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -20,19 +20,19 @@ const MarketItems = () => {
 
   useEffect(() => {
     getPluginList();
-  }, [selectedSource, name, pageNum, pageSize]);
+  }, [selectedSource, name, pageNum, pageSize, reload]);
   const getPluginList = async () => {
     let params;
     params =
       selectedSource === 'APP'
         ? {
-          name,
+          name: '',
           pageNum: pageNum,
           pageSize,
           excludeTags: selectedSource,
         }
         : {
-          name,
+          name: '',
           pageNum: pageNum,
           pageSize,
           includeTags: selectedSource,

@@ -10,13 +10,30 @@
   border: 1px solid #ebebeb;
   border-radius: 8px;
   margin-bottom: 10px;
+  position: relative;
+  .header-content {
+    flex-grow: 1;
+    width: 0;
+  }
   .plugin-card-header {
     display: flex;
     gap: 16px;
     align-items: center;
+    width: 100%;
     img {
       width: 52px;
       height: 52px;
+    }
+    .header-name {
+      display: flex;
+      .text {
+        margin-bottom: 8px;
+        font-size: 20px;
+        max-width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
   .plugin-card-user {
@@ -65,9 +82,30 @@
     border-radius: 10px;
     margin-left: 8px;
   }
-
   .footer-more {
     font-size: 24px;
     color: #000000;
+  }
+  .plugin-tag {
+    color: rgb(89, 89, 89);
+    border: 1px solid rgb(89, 89, 89);
+    margin-left: 6px;
+    border-radius: 4px;
+    padding: 0 6px;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+  .deployed {
+    border-color: rgb(0, 179, 54);
+    color: rgb(0, 179, 54);
+  }
+  .deploying {
+    border-color: #2673E5;
+    color: #2673E5;
+  }
+  .deployment_failed {
+    border-color: #f66f6a;
+    color: #f66f6a;
   }
 }

@@ -1,8 +1,7 @@
 import { get, post, del } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { AIPP_URL, PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
-
+const { PLUGIN_URL, AIPP_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 // 获取插件工具列表，应用于流程编排页面
 export function getPluginTools(data: {
   pageNum: number;
@@ -89,3 +88,15 @@ export function uploadPlugin(param, toolsName) {
   });
 }
 
+// 获取部署插件列表
+export function getDeployTool(status) {
+  const url = `${PLUGIN_URL}/plugins/by-status/${status}`;
+  return get(url);
+}
+
+
+// 部署部署插件列表
+export function setDeployTool(data) {
+  const url = `${PLUGIN_URL}/plugins/deploy`;
+  return post(url, data);
+}

@@ -23,12 +23,9 @@
     }
   }
   .table-content {
-    height: calc(100% - 120px);
+    max-height: calc(100% - 120px);
     overflow: auto;
     padding-right: 6px;
-    .ant-empty {
-      margin-top: 50%;
-    }
   }
   .table-list {
     display: flex;

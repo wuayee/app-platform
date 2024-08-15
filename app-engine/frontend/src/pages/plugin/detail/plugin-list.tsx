@@ -82,13 +82,9 @@ const PliginList = (props) => {
             closeIcon={false}
             open={open}
             extra={<CloseOutlined onClick={() => setOpen(false)} />}
-            footer={[
-              <Button key='back' onClick={() => setOpen(false)}>
-                关闭
-              </Button>,
-            ]}
+            footer={null}
           >
-            <DeployMent />
+            <DeployMent cancle={() => setOpen(false)} confirm={confirm} />
           </Drawer>
         </div>
       }
