@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -50,16 +51,22 @@ public class StoreControllerTest {
     @Mock
     private StoreService storeService;
 
+    private HttpClassicClientResponse<?> response;
+
     private MockedStatic<UserContextHolder> opContextHolderMock;
 
     @BeforeEach
     void setUp() {
         opContextHolderMock = mockStatic(UserContextHolder.class);
-        this.opContextHolderMock.when(UserContextHolder::get).thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
+        this.opContextHolderMock.when(UserContextHolder::get)
+                .thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
     }
 
     @AfterEach
-    void teardown() {
+    void teardown() throws IOException {
+        if (this.response != null) {
+            this.response.close();
+        }
         this.opContextHolderMock.close();
     }
 
@@ -67,14 +74,15 @@ public class StoreControllerTest {
     @DisplayName("当根据参数查询工具时，返回正确结果。")
     void shouldReturnCorrectPluginsWhenGetPlugins() {
         ToolDto toolDto = new ToolDto();
-        Mockito.when(this.storeService.getPlugins(any(), any())).thenReturn(toolDto);
+        Mockito.when(this.storeService.getPlugins(any(), any()))
+                .thenReturn(toolDto);
         MockRequestBuilder requestBuilder =
                 MockMvcRequestBuilders.get("/v1/api/31f20efc7e0848deab6a6bc10fc3021e/store/plugins")
                         .param("excludeTags", "APP")
                         .param("pageNum", "1")
                         .param("pageSize", "10")
                         .responseType(TypeUtils.parameterized(Rsp.class, new Type[] {ToolDto.class}));
-        HttpClassicClientResponse<?> response = this.mockMvc.perform(requestBuilder);
-        assertThat(response.statusCode()).isEqualTo(200);
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
     }
 }

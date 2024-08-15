@@ -104,8 +104,6 @@ public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResp
         } catch (EntityReadException e) {
             throw new UnsupportedMediaTypeException(StringUtils.format("Unsupported media type. [mimeType='{0}']",
                     this.mimeTypeOrDefault().value()), e);
-        } finally {
-            this.close();
         }
     }
 
@@ -114,12 +112,11 @@ public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResp
             return BodyUtils.readBody(this.clientResponse.body(), this.headers());
         } catch (IOException e) {
             throw new ClientException("Failed to read body.", e);
-        } finally {
-            this.close();
         }
     }
 
-    private void close() {
+    @Override
+    public void close() {
         try {
             this.clientResponse.close();
         } catch (IOException e) {

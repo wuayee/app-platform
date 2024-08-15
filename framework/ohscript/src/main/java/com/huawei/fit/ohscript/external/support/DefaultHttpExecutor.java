@@ -23,6 +23,7 @@ import com.huawei.fitframework.model.MultiValueMap;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,9 +63,12 @@ public class DefaultHttpExecutor implements HttpExecutor {
         HttpClassicClientRequest request = httpClient.createRequest(httpMethod, url);
         this.setRequestHeaders(request, args);
         this.setRequestEntity(request, args);
-        HttpClassicClientResponse<Object> response = request.exchange();
-        this.setResponseHeaders(response, result);
-        this.setResponseEntity(response, result);
+        try (HttpClassicClientResponse<Object> response = request.exchange()) {
+            this.setResponseHeaders(response, result);
+            this.setResponseEntity(response, result);
+        } catch (IOException e) {
+            throw new ScriptExecutionException("Failed to execute by http.", e);
+        }
         return result;
     }
 

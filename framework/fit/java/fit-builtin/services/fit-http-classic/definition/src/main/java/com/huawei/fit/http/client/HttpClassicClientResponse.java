@@ -9,6 +9,7 @@ import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
 
+import java.io.Closeable;
 import java.util.Optional;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Optional;
  * @author 季聿阶
  * @since 2022-11-25
  */
-public interface HttpClassicClientResponse<T> extends HttpClassicResponse {
+public interface HttpClassicClientResponse<T> extends HttpClassicResponse, Closeable {
     /**
      * 获取 Http 响应中的结构体类型的实体对象。
      *

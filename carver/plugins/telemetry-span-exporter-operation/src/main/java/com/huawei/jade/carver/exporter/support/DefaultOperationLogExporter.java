@@ -23,6 +23,7 @@ import com.huawei.jade.carver.operation.OperationLogLocaleService;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.carver.operation.support.OperationLogFields;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -83,11 +84,14 @@ public class DefaultOperationLogExporter implements OperationLogExporter {
         HttpClassicClientRequest request =
                 this.httpClient.get().createRequest(HttpRequestMethod.POST, this.collectorUri);
         request.entity(Entity.createObject(request, fields));
-        HttpClassicClientResponse<Object> response = request.exchange();
-        if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
-            log.error("Failed to log POST operation. [code={}, reason={}]",
-                    response.statusCode(),
-                    response.reasonPhrase());
+        try (HttpClassicClientResponse<Object> response = request.exchange()) {
+            if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
+                log.error("Failed to log POST operation. [code={}, reason={}]",
+                        response.statusCode(),
+                        response.reasonPhrase());
+            }
+        } catch (IOException e) {
+            log.error("Failed to log POST operation.", e);
         }
     }
 

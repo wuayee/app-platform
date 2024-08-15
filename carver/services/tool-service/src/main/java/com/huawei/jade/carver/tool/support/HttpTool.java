@@ -35,6 +35,7 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.Tool;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -97,19 +98,22 @@ public class HttpTool extends AbstractTool {
 
     @Override
     public Object execute(Object... args) throws HttpClientException {
-        HttpClassicClientResponse<Object> response = this.emitter.emit(args);
-        if (response.statusCode() == HttpResponseStatus.NO_CONTENT.statusCode()) {
-            return null;
-        }
-        Optional<Entity> opEntity = response.entity();
-        isTrue(opEntity.isPresent(), () -> new HttpClientException("Cannot get response entity."));
-        Entity entity = opEntity.get();
-        if (entity instanceof ObjectEntity) {
-            return ((ObjectEntity<?>) entity).object();
-        } else if (entity instanceof TextEntity) {
-            return ((TextEntity) entity).content();
-        } else {
-            return null;
+        try (HttpClassicClientResponse<Object> response = this.emitter.emit(args)) {
+            if (response.statusCode() == HttpResponseStatus.NO_CONTENT.statusCode()) {
+                return null;
+            }
+            Optional<Entity> opEntity = response.entity();
+            isTrue(opEntity.isPresent(), () -> new HttpClientException("Cannot get response entity."));
+            Entity entity = opEntity.get();
+            if (entity instanceof ObjectEntity) {
+                return ((ObjectEntity<?>) entity).object();
+            } else if (entity instanceof TextEntity) {
+                return ((TextEntity) entity).content();
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            throw new HttpClientException("Failed to execute http tool.", e);
         }
     }
 

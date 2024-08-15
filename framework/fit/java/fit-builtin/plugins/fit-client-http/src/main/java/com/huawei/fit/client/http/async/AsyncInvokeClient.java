@@ -16,12 +16,15 @@ import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fitframework.broker.CommunicationType;
 import com.huawei.fitframework.conf.runtime.ClientConfig;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
+import com.huawei.fitframework.exception.ClientException;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.UuidUtils;
+
+import java.io.IOException;
 
 /**
  * 表示 {@link com.huawei.fit.client.http.InvokeClient} 的异步实现。
@@ -47,18 +50,21 @@ public class AsyncInvokeClient extends AbstractInvokeClient {
         // 第一步：提交异步任务。
         HttpClassicClientRequest clientRequest = this.buildAsyncClientRequest(client, request, asyncTaskId);
         clientRequest.entity(this.buildHttpEntity(clientRequest, request));
-        HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest, request.returnType());
-        Response response = HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
-        if (clientResponse.statusCode() != HttpResponseStatus.ACCEPTED.statusCode()) {
-            // 服务器不支持异步长任务，应按照同步请求处理。
-            log.warn("Async task not supported. Use Sync instead. [asyncTaskId={}]", asyncTaskId);
-            return response;
-        } else if (response.metadata().code() != ResponseMetadata.CODE_OK) {
-            // 如果返回值不为 OK，则将结果返回给上层。
-            return response;
-        } else {
-            targetWorkerId = TlvUtils.getWorkerId(response.metadata().tagValues());
-            targetWorkerInstanceId = TlvUtils.getWorkerInstanceId(response.metadata().tagValues());
+        try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest, request.returnType())) {
+            Response response = HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
+            if (clientResponse.statusCode() != HttpResponseStatus.ACCEPTED.statusCode()) {
+                // 服务器不支持异步长任务，应按照同步请求处理。
+                log.warn("Async task not supported. Use Sync instead. [asyncTaskId={}]", asyncTaskId);
+                return response;
+            } else if (response.metadata().code() != ResponseMetadata.CODE_OK) {
+                // 如果返回值不为 OK，则将结果返回给上层。
+                return response;
+            } else {
+                targetWorkerId = TlvUtils.getWorkerId(response.metadata().tagValues());
+                targetWorkerInstanceId = TlvUtils.getWorkerInstanceId(response.metadata().tagValues());
+            }
+        } catch (IOException e) {
+            throw new ClientException("Failed to close http classic client response.", e);
         }
 
         // 第二步：从指定服务器的长轮询链接中获取异步结果数据，该操作为阻塞操作。

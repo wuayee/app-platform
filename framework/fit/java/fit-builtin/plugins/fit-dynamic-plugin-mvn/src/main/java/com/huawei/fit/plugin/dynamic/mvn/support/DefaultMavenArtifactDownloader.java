@@ -56,14 +56,15 @@ public class DefaultMavenArtifactDownloader implements MavenArtifactDownloader {
                 this.url + groupId.replace('.', SEPARATOR_URL) + SEPARATOR_URL + artifactId + SEPARATOR_URL + version
                         + SEPARATOR_URL + artifactId + "-" + version + Jar.FILE_EXTENSION;
         HttpClassicClientRequest request = this.factory.create().createRequest(HttpRequestMethod.GET, actualUrl);
-        HttpClassicClientResponse<Object> exchange = request.exchange();
-        File downloaded = new File(this.root, artifactId + "-" + version);
-        try (OutputStream out = Files.newOutputStream(downloaded.toPath())) {
-            byte[] bytes = exchange.entityBytes();
-            out.write(bytes);
-            out.flush();
+        try (HttpClassicClientResponse<Object> exchange = request.exchange()) {
+            File downloaded = new File(this.root, artifactId + "-" + version);
+            try (OutputStream out = Files.newOutputStream(downloaded.toPath())) {
+                byte[] bytes = exchange.entityBytes();
+                out.write(bytes);
+                out.flush();
+            }
+            return downloaded;
         }
-        return downloaded;
     }
 }
 
