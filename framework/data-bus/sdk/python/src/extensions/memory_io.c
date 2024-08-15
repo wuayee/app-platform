@@ -11,7 +11,7 @@
 #include "memory_write.h"
 
 // databus.memory_io.read函数注释文档
-static const char * const DATABUS_MEMORY_IO_READ_DOC = \
+PyDoc_STRVAR(DATABUS_MEMORY_IO_READ_DOC, \
 "读取大小为`size`, 位于`memory_id对应的内存地址 + offset`的共享内存.\n"
 "\n"
 "Args:\n"
@@ -25,10 +25,10 @@ static const char * const DATABUS_MEMORY_IO_READ_DOC = \
 "    以bytes类型返回内存内容\n"
 "\n"
 "Raises:\n"
-"     IOError: 内存附加/读取/分离错误";
+"     IOError: 内存附加/读取/分离错误");
 
 // databus.memory_io.write函数注释文档
-static const char * const DATABUS_MEMORY_IO_WRITE_DOC = \
+PyDoc_STRVAR(DATABUS_MEMORY_IO_WRITE_DOC, \
 "对位于`memory_id对应的内存地址 + offset`的共享内存写入`contents`.\n"
 "\n"
 "Args:\n"
@@ -42,7 +42,7 @@ static const char * const DATABUS_MEMORY_IO_WRITE_DOC = \
 "    以int类型返回写入长度\n"
 "\n"
 "Raises:\n"
-"     IOError: 内存附加/读取/分离错误";
+"     IOError: 内存附加/读取/分离错误");
 
 /*
  * databus.memory_io.read函数
