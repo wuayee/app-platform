@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.metrics.mapper.ConversationRecordMapper">
+    <resultMap id="ConversationRecord" type="com.huawei.jade.app.engine.metrics.po.ConversationRecordPo" >
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="question" property="question"/>
+        <result column="answer" property="answer"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="instance_id" property="instanceId"/>
+    </resultMap>
+
+    <resultMap id="MetricsFeedbackVOResultMap" type="com.huawei.jade.app.engine.metrics.vo.MetricsFeedbackVo">
+        <id property="id" column="id" />
+        <result property="question" column="question" />
+        <result property="answer" column="answer" />
+        <result property="createTime" column="create_time" />
+        <result property="responseTime" column="response_time" />
+        <result property="createUser" column="create_user" />
+        <result property="userFeedback" column="user_feedback" />
+        <result property="userFeedbackText" column="user_feedback_text" />
+    </resultMap>
+
+    <!-- Query for total_requests, total_active_users, and average_response_time -->
+    <select id="getBasicMetrics" resultType="map">
+        SELECT 'total_requests' as metric, COUNT(*) AS value FROM conversation_record
+        WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+        UNION
+        SELECT 'total_active_users' as metric, COUNT(DISTINCT user) AS value FROM conversation_record
+        WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+        UNION
+        SELECT 'average_response_time' as metric, EXTRACT(EPOCH FROM AVG(finish_time - create_time))*1000 AS value FROM conversation_record
+        WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <!-- Query for average response time range -->
+    <select id="getAvgResponseRange" resultType="map">
+        WITH time_ranges AS (
+            SELECT 'below 500ms' AS range
+            UNION ALL
+            SELECT '501-1000ms'
+            UNION ALL
+            SELECT '1001ms-2000ms'
+            UNION ALL
+            SELECT 'above 2000ms'
+        ),
+        response_data AS (
+            SELECT
+            CASE
+                WHEN EXTRACT(EPOCH FROM finish_time - create_time)*1000 &lt; 500 THEN 'below 500ms'
+                WHEN EXTRACT(EPOCH FROM finish_time - create_time)*1000 BETWEEN 500 AND 1000 THEN '501-1000ms'
+                WHEN EXTRACT(EPOCH FROM finish_time - create_time)*1000 BETWEEN 1000 AND 2000 THEN '1001ms-2000ms'
+                ELSE 'above 2000ms'
+            END AS range,
+            COUNT(*) AS count
+            FROM conversation_record
+            WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+            GROUP BY range
+        )
+        SELECT
+            tr.range,
+            COALESCE(rd.count, 0) AS count
+        FROM
+            time_ranges tr
+        LEFT JOIN
+            response_data rd ON tr.range = rd.range
+        ORDER BY
+            CASE tr.range
+                WHEN 'below 500ms' THEN 1
+                WHEN '501-1000ms' THEN 2
+                WHEN '1001ms-2000ms' THEN 3
+                WHEN 'above 2000ms' THEN 4
+            END
+    </select>
+
+    <!-- Query for top 5 users -->
+    <select id="getTopUsers" resultType="com.huawei.jade.app.engine.metrics.vo.UserAccessVo">
+        SELECT
+            create_user AS createUser,
+            COUNT(*) AS accessCount
+        FROM
+            conversation_record
+        WHERE
+            app_id = #{appId}
+          AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY
+            create_user
+        ORDER BY
+            accessCount DESC
+        LIMIT
+            5
+    </select>
+
+    <!-- filter by time to query conversation_record -->
+    <select id="getRecordByTime" resultMap="ConversationRecord">
+        SELECT app_id, question, answer, create_user, create_time, finish_time, instance_id
+        FROM conversation_record
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <!-- insert conversation_record -->
+    <insert id="insertConversationRecord" parameterType="com.huawei.jade.app.engine.metrics.po.ConversationRecordPo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO conversation_record (app_id, question, answer, create_user, create_time, finish_time, instance_id)
+        VALUES (#{appId}, #{question}, #{answer},  #{createUser}, #{createTime}, #{finishTime}, #{instanceId})
+    </insert>
+
+    <select id="getByCondition" resultType="com.huawei.jade.app.engine.metrics.vo.MetricsFeedbackVo">
+        SELECT
+            cr.id,
+            cr.question,
+            cr.answer,
+            cr.create_time AS createTime,
+            EXTRACT(EPOCH FROM (cr.finish_time - cr.create_time)) * 1000 AS responseTime,
+            cr.create_user AS createUser,
+            COALESCE(ufi.usr_feedback, -1) AS userFeedback,
+            COALESCE(ufi.usr_feedback_text, '') AS userFeedbackText
+        FROM
+            conversation_record cr
+                LEFT JOIN
+            usr_feedback_info ufi ON cr.instance_id = ufi.instance_id
+        WHERE
+            cr.app_id = #{metricsFeedbackDTO.appId}
+            <if test="metricsFeedbackDTO.startTime != null and metricsFeedbackDTO.endTime != null">
+                AND cr.create_time BETWEEN #{metricsFeedbackDTO.startTime} AND #{metricsFeedbackDTO.endTime}
+            </if>
+            <if test="metricsFeedbackDTO.question != null">
+                AND cr.question LIKE CONCAT('%', #{metricsFeedbackDTO.question}, '%')
+            </if>
+            <if test="metricsFeedbackDTO.answer != null">
+                AND cr.answer LIKE CONCAT('%', #{metricsFeedbackDTO.answer}, '%')
+            </if>
+            <if test="metricsFeedbackDTO.createUser != null">
+                AND cr.create_user LIKE CONCAT('%', #{metricsFeedbackDTO.createUser}, '%')
+            </if>
+        ORDER BY
+            <if test="metricsFeedbackDTO.isSortByResponseTime != null and metricsFeedbackDTO.isSortByResponseTime">
+                responseTime ${metricsFeedbackDTO.orderDirection},
+            </if>
+            <if test="metricsFeedbackDTO.isSortByCreateTime != null and metricsFeedbackDTO.isSortByCreateTime">
+                createTime ${metricsFeedbackDTO.orderDirection},
+            </if>
+            cr.id
+        LIMIT
+            #{metricsFeedbackDTO.pageSize} OFFSET (#{metricsFeedbackDTO.pageIndex} - 1) * #{metricsFeedbackDTO.pageSize}
+    </select>
+
+    <select id="getCountByCondition" resultType="java.lang.Long">
+        SELECT count(*)
+        FROM conversation_record
+        WHERE
+        app_id = #{appId}
+        <if test="startTime != null and endTime != null">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="question != null">
+            AND question LIKE CONCAT('%', #{question}, '%')
+        </if>
+        <if test="answer != null">
+            AND answer LIKE CONCAT('%', #{answer}, '%')
+        </if>
+        <if test="createUser != null">
+            AND create_user LIKE CONCAT('%', #{createUser}, '%')
+        </if>
+    </select>
+</mapper>
