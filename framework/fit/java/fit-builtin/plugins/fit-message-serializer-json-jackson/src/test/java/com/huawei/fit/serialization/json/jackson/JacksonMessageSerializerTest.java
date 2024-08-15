@@ -7,6 +7,8 @@ package com.huawei.fit.serialization.json.jackson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.test.box.Box;
+import com.huawei.fit.serialization.test.person.PersonAlias;
+import com.huawei.fit.serialization.test.person.PersonName;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -207,6 +210,27 @@ public class JacksonMessageSerializerTest {
                 assertThat(actualBox.getTList()).hasSize(1);
                 assertThat(actualBox.getTMap()).hasSize(1);
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("当给定的参数存在别名时")
+    class GivenParamsHasAlias {
+        @Test
+        @DisplayName("当请求存在别名时，反序列化结果正确")
+        void givenRequestWithAliasWhenDeserializeThenReturnCorrectResult() {
+            String expected = "[{\"first_name\":\"foo\",\"person_name\":{\"first\":\"f\"}}]";
+            Object[] actual = JacksonMessageSerializerTest.this.messageSerializer.deserializeRequest(new Type[] {
+                    PersonAlias.class
+            }, expected.getBytes(StandardCharsets.UTF_8));
+            assertThat(actual).hasSize(1).singleElement().isInstanceOf(PersonAlias.class);
+            PersonAlias personAlias = ObjectUtils.cast(actual[0]);
+            assertThat(personAlias).returns("foo", PersonAlias::firstName).returns(null, PersonAlias::lastName);
+            PersonName name = personAlias.getName();
+            assertThat(name).isNotNull()
+                    .returns("f", PersonName::getFirst)
+                    .returns(null, PersonName::getMiddle)
+                    .returns(null, PersonName::getLast);
         }
     }
 }
