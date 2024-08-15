@@ -18,6 +18,8 @@ import com.huawei.fit.data.repository.entity.CacheKeyMetadata;
 import com.huawei.fit.data.repository.entity.Metadata;
 import com.huawei.fit.data.repository.entity.MetadataType;
 import com.huawei.fit.data.repository.exception.CapacityOverflowException;
+import com.huawei.fit.data.repository.support.CachedDataNotFoundException;
+import com.huawei.fit.data.repository.support.DataBusRepository;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Scope;
 import com.huawei.fitframework.aop.ProceedingJoinPoint;
@@ -28,7 +30,9 @@ import com.huawei.fitframework.broker.client.filter.loadbalance.WorkerFilter;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ArrayUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.UuidUtils;
@@ -52,6 +56,7 @@ import java.util.Optional;
 @Component
 public class DataInjectionAspect {
     private static final String STAR = "*";
+    private static final Logger log = Logger.get(DataInjectionAspect.class);
 
     private final DataRepository dataRepository;
     private final ValueFetcher valueFetcher;
@@ -156,7 +161,41 @@ public class DataInjectionAspect {
         }
         String actualValueId = actualValueIdInfo.substring(0, index);
         String targetWorkerId = actualValueIdInfo.substring(index + 1);
-        Object actualValue = this.getActualValue(actualValueId, targetWorkerId);
+        String originalTargetWorkerId = "";
+        boolean isDatabusUsedForRemote = false;
+        // 如果 DataBus 服务已经打开，而且本机、目标机的 worker ID 均含有 Pod 标识符，则通过查看 Pod 是否相等，判断是否应该发起
+        // 跨 Pod 的 FIT 请求，还是从本地 DataBus 直接读取数据内容。
+        if (DataBusRepository.INSTANCE.checkRunningWithRetry() && targetWorkerId.indexOf("@") > 0
+                && workerId.indexOf("@") > 0) {
+            String targetPodName = targetWorkerId.substring(0, targetWorkerId.indexOf("@"));
+            String localPodName = workerId.substring(0, workerId.indexOf("@"));
+            // 相同 Pod 时直接从本地读取数据。
+            if (targetPodName.equals(localPodName)) {
+                originalTargetWorkerId = targetWorkerId;
+                targetWorkerId = workerId;
+                isDatabusUsedForRemote = true;
+                log.info("Same Pod, using local databus retrieval. [id={}]", actualValueId);
+            } else {
+                log.info("Different Pods, Using FIT remote retrieval. [id={}]", actualValueId);
+            }
+        } else {
+            log.info("DataBus unavailable. Using FIT remote retrieval. [id={}]", actualValueId);
+        }
+
+        Object actualValue = null;
+        try {
+            actualValue = this.getActualValue(actualValueId, targetWorkerId);
+        } catch (FitException e) {
+            // 如果使用了 DataBus 获取异地数据失败，则再次尝试向异地进程直接发送 FIT 数据请求。
+            // 这样做的好处是避免 DataBus 断连又重连后，远端数据被缓存在对端进程内部而无法被 DataBus 获取。
+            if (isDatabusUsedForRemote && e.getCause() instanceof CachedDataNotFoundException) {
+                log.warn("DataBus remote retrieval failed, downgrade to FIT retrival. [id={}]", actualValueId);
+                actualValue = this.getActualValue(actualValueId, originalTargetWorkerId);
+            } else {
+                // 如果是使用 DataBus 获取本地数据未果，则直接重抛出而不必重试
+                throw e;
+            }
+        }
         this.valueSetter.set(arg, path, actualValue);
         return Optional.of(new CacheKeyMetadata(actualValueId, targetWorkerId));
     }

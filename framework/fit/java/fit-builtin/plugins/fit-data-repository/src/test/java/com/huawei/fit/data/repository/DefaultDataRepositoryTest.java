@@ -22,7 +22,7 @@ public class DefaultDataRepositoryTest {
     @Test
     @DisplayName("超过超时时间，缓存会被删除")
     void shouldDelete() {
-        DefaultDataRepository repository = new DefaultDataRepository(1, 0, 1);
+        DefaultDataRepository repository = new DefaultDataRepository(1, 0, 1, "", 0, false);
         repository.save("id", "OK");
         ThreadUtils.sleep(3000);
         String id = repository.getString("id");
@@ -32,7 +32,7 @@ public class DefaultDataRepositoryTest {
     @Test
     @DisplayName("未超过超时时间，缓存不会被删除")
     void shouldNotDelete() {
-        DefaultDataRepository repository = new DefaultDataRepository(10, 0, 1);
+        DefaultDataRepository repository = new DefaultDataRepository(10, 0, 1, "", 0, false);
         repository.save("id", "OK");
         ThreadUtils.sleep(3000);
         String id = repository.getString("id");
