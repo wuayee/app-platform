@@ -9,6 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import com.huawei.fitframework.io.virtualization.VirtualDirectory;
 import com.huawei.fitframework.resource.classpath.ClassPath;
 import com.huawei.fitframework.resource.classpath.ClassPathKey;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public final class FileClassPathKey implements ClassPathKey {
         } catch (IOException ex) {
             throw new IllegalArgumentException(StringUtils.format(
                     "The file of classpath key is not canonical. [file={0}]",
-                    file.getPath()));
+                    FileUtils.path(file)));
         }
     }
 
@@ -70,7 +71,7 @@ public final class FileClassPathKey implements ClassPathKey {
 
     @Override
     public String toString() {
-        return this.file.getPath();
+        return FileUtils.path(this.file);
     }
 
     @Override

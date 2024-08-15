@@ -6,6 +6,8 @@ package com.huawei.fitframework.util.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.fitframework.util.FileUtils;
+
 import java.io.File;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -64,6 +66,6 @@ public class FileIterator implements Iterator<File> {
 
     @Override
     public String toString() {
-        return this.root.getPath();
+        return FileUtils.path(this.root);
     }
 }

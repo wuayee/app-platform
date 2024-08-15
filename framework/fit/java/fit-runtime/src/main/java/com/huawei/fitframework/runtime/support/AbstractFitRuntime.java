@@ -38,6 +38,7 @@ import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
 import com.huawei.fitframework.runtime.FitRuntimeStartupException;
 import com.huawei.fitframework.runtime.shared.ClassLoaderSharedJarRegistry;
 import com.huawei.fitframework.util.ClassUtils;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.LockUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -448,17 +449,17 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
         } catch (IOException ex) {
             throw new FitRuntimeStartupException(StringUtils.format(
                     "The file name of external config is not canonical. [path={0}]",
-                    file.getPath()), ex);
+                    FileUtils.path(file)), ex);
         }
         if (!file.exists()) {
             throw new FitRuntimeStartupException(StringUtils.format(
                     "The file of external config does not exist. [path={0}]",
-                    file.getPath()));
+                    FileUtils.path(file)));
         }
         if (!file.isFile()) {
             throw new FitRuntimeStartupException(StringUtils.format(
                     "The file of external config is not regular. [path={0}]",
-                    file.getPath()));
+                    FileUtils.path(file)));
         }
         Resource resource = Resource.fromFile(file);
         return ConfigLoader.loadConfig(this.loaderOfConfigs, resource, EXTERNAL_FILE_CONFIG_NAME);

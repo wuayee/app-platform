@@ -131,12 +131,12 @@ final class DirectoryResourceTree extends AbstractResourceTree {
 
         @Override
         public String toString() {
-            return this.file.getPath();
+            return FileUtils.path(this.file);
         }
     }
 
     @Override
     public String toString() {
-        return this.directory.getPath();
+        return FileUtils.path(this.directory);
     }
 }

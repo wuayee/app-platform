@@ -4,6 +4,8 @@
 
 package com.huawei.fitframework.protocol.jar.support;
 
+import static com.huawei.fitframework.protocol.jar.support.Locations.path;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -65,10 +67,7 @@ final class DataRandomReaders {
                 if (part < 0) {
                     throw new EOFException(String.format(Locale.ROOT,
                             "No enough data to read. [file=%s, position=%s, length=%d, actual=%d]",
-                            this.locator.file().getPath(),
-                            position,
-                            length,
-                            read));
+                            path(this.locator.file()), position, length, read));
                 } else {
                     read += part;
                 }
