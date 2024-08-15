@@ -20,12 +20,14 @@ FitCode MessageToJson(ContextObj ctx, const ::fit::secure::access::TokenInfo &va
     rapidjson::Writer<rapidjson::StringBuffer> &writer)
 {
     writer.StartObject();
-    writer.String("accessToken");
-    MessageToJson(ctx, ExtractArgToRef(value.GetAccessToken()), writer);
+    writer.String("token");
+    MessageToJson(ctx, ExtractArgToRef(value.GetToken()), writer);
     writer.String("timeout");
     MessageToJson(ctx, value.GetTimeout(), writer);
-    writer.String("refreshToken");
-    MessageToJson(ctx, ExtractArgToRef(value.GetAccessToken()), writer);
+    writer.String("type");
+    MessageToJson(ctx, ExtractArgToRef(value.GetType()), writer);
+    writer.String("status");
+    MessageToJson(ctx, ExtractArgToRef(value.GetStatus()), writer);
     writer.EndObject();
     return FIT_OK;
 }
@@ -39,16 +41,20 @@ FitCode JsonToMessage(ContextObj ctx, const rapidjson::Value &jsonValue,
     }
     value = {};
 
-    if (jsonValue.HasMember("accessToken") && !jsonValue["accessToken"].IsNull()) {
-        JsonToMessage(ctx, jsonValue["accessToken"], value.accessToken);
+    if (jsonValue.HasMember("token") && !jsonValue["token"].IsNull()) {
+        JsonToMessage(ctx, jsonValue["token"], value.token);
     }
 
     if (jsonValue.HasMember("timeout") && !jsonValue["timeout"].IsNull()) {
         JsonToMessage(ctx, jsonValue["timeout"], value.timeout);
     }
 
-    if (jsonValue.HasMember("refreshToken") && !jsonValue["refreshToken"].IsNull()) {
-        JsonToMessage(ctx, jsonValue["refreshToken"], value.refreshToken);
+    if (jsonValue.HasMember("type") && !jsonValue["type"].IsNull()) {
+        JsonToMessage(ctx, jsonValue["type"], value.type);
+    }
+
+    if (jsonValue.HasMember("status") && !jsonValue["status"].IsNull()) {
+        JsonToMessage(ctx, jsonValue["status"], value.status);
     }
     return FIT_OK;
 }

@@ -76,6 +76,7 @@ int32_t SecureAccess::RefreshAccessToken(const string& refreshToken, vector<Auth
         return FIT_ERR_AUTHENTICATION_INVALID_FRESH_TOKEN;
     }
     tokenRoles = {GetAccessToken(refreshTokenRoles.front().role)};
+    tokenRoles.insert(tokenRoles.end(), refreshTokenRoles.begin(), refreshTokenRoles.end());
     FIT_LOG_DEBUG("Refresh access token.");
     return FIT_OK;
 }

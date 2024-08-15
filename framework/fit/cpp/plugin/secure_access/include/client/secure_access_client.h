@@ -8,6 +8,7 @@
 #define SECURE_ACCESS_CLIENT_H
 #include <component/com_huawei_fit_secure_access_token_info/1.0.0/cplusplus/TokenInfo.hpp>
 #include <fit/stl/mutex.hpp>
+#include <fit/internal/secure_access/auth_token_role.h>
 namespace Fit {
 class SecureAccessClient {
 public:
@@ -16,9 +17,11 @@ public:
 private:
     int32_t ApplyToken();
     int32_t RefreshToken(const Fit::string& freshToken);
+    void UpdateTokenInfo(const vector<AuthTokenRole>& authTokenRoles);
 private:
     Fit::mutex mutex_ {};
-    ::fit::secure::access::TokenInfo tokenInfo_ {};
+    ::fit::secure::access::TokenInfo refreshToken_ {};
+    ::fit::secure::access::TokenInfo accessToken_ {};
 };
 }
 #endif

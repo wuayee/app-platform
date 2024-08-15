@@ -12,7 +12,7 @@ namespace {
 const char * const GLOBAL_OPEN_TRACE_KEY = "tracer.process.enabled.value";
 const char * const LOCAL_OPEN_TRACE_KEY = "tracer.process.local.enabled.value";
 const char * const TRACER_ENABLED_KEY = "tracer.enabled.value";
-const char * const IS_ENABLE_ACCESS_TOKEN = "secure-access.enable-secure-access";
+const char * const IS_ENABLE_ACCESS_TOKEN = "secure-access.enable";
 /**
  * @Description: it is called when plugin start, only call once
  */

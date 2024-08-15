@@ -25,6 +25,9 @@ void CurlHttpsClient::OpenSsl(CURL* curl)
     curl_easy_setopt(curl, CURLOPT_SSLCERT, config_->GetCerPath().c_str());
     curl_easy_setopt(curl, CURLOPT_SSLKEY, config_->GetPrivateKeyPath().c_str());
     Fit::string keyPwd = config_->GetPrivateKeyPwd();
+    if (keyPwd.empty()) {
+        return;
+    }
     CryptoManager::Instance().Get(config_->GetCryptoType())->Decrypt(keyPwd.c_str(), keyPwd.length(), keyPwd);
     if (keyPwd.empty()) {
         keyPwd = config_->GetPrivateKeyPwd();

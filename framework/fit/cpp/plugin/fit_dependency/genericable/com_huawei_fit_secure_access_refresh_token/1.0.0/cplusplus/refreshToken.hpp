@@ -17,7 +17,7 @@ namespace secure {
 namespace access {
 struct __RefreshToken {
     using InType = ::Fit::Framework::ArgumentsIn<const Fit::string *>;
-    using OutType = ::Fit::Framework::ArgumentsOut<fit::secure::access::TokenInfo **>;
+    using OutType = ::Fit::Framework::ArgumentsOut<Fit::vector<fit::secure::access::TokenInfo> **>;
 };
 
 class RefreshToken : public ::Fit::Framework::ProxyClient<FitCode(__RefreshToken::InType, __RefreshToken::OutType)> {

@@ -10,6 +10,7 @@
 #include <genericable/com_huawei_fit_secure_access_sign/1.0.0/cplusplus/sign.hpp>
 #include <genericable/com_huawei_fit_secure_access_get_token/1.0.0/cplusplus/getToken.hpp>
 #include <fit/stl/memory.hpp>
+#include <fit/internal/secure_access/auth_token_role.h>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
@@ -24,7 +25,15 @@ public:
     void TearDown() override
     {
     }
-public:
+
+    fit::secure::access::TokenInfo GetToken(Fit::vector<fit::secure::access::TokenInfo>& tokenInfoRet, string type)
+    {
+        EXPECT_EQ(tokenInfoRet.size(), 2);
+        if (tokenInfoRet[0].type == type) {
+            return tokenInfoRet[0];
+        }
+        return tokenInfoRet[1];
+    }
 };
 
 TEST_F(SecureAccessInterfaceTest, should_return_true_when_apply_token_and_check_auth_given_param)
@@ -51,27 +60,38 @@ TEST_F(SecureAccessInterfaceTest, should_return_true_when_apply_token_and_check_
     Fit::string* signatureOut = new Fit::string();
     auto signRet = signExec(&accessKey, &timestamp, &signatureOut);
 
-    fit::secure::access::TokenInfo* tokenInfoRet = new fit::secure::access::TokenInfo();
+    Fit::vector<fit::secure::access::TokenInfo>* tokenInfoRet = new Fit::vector<fit::secure::access::TokenInfo>;
     auto applyTokenRet = applyTokenExec(&accessKey, &timestamp, signatureOut, &tokenInfoRet);
-    auto isAuthorizedRet = isAuthorizedExec(&tokenInfoRet->accessToken, &permission);
+    fit::secure::access::TokenInfo accessToken = GetToken(*tokenInfoRet, ACCESS_TOKEN_TYPE);
+    auto isAuthorizedRet = isAuthorizedExec(&accessToken.token, &permission);
 
-    fit::secure::access::TokenInfo* refreshTokenInfo = new fit::secure::access::TokenInfo();
-    auto refreshTokenRet = refreshTokenExec(&tokenInfoRet->refreshToken, &refreshTokenInfo);
+    Fit::vector<fit::secure::access::TokenInfo>* refreshTokenInfos = new Fit::vector<fit::secure::access::TokenInfo>;
+    fit::secure::access::TokenInfo refreshToken = GetToken(*tokenInfoRet, FRESH_TOKEN_TYPE);
+    auto refreshTokenRet = refreshTokenExec(&refreshToken.token, &refreshTokenInfos);
 
     // then
     EXPECT_EQ(signRet, FIT_OK);
     EXPECT_EQ(*signatureOut, signature);
     EXPECT_EQ(applyTokenRet, FIT_OK);
-    EXPECT_EQ(tokenInfoRet->accessToken.empty(), false);
-    EXPECT_EQ(tokenInfoRet->refreshToken.empty(), false);
-    EXPECT_EQ(tokenInfoRet->timeout, 3600);
+    EXPECT_NE(tokenInfoRet, nullptr);
+    EXPECT_EQ(tokenInfoRet->size(), 2);
+    EXPECT_EQ(accessToken.token.empty(), false);
+    EXPECT_EQ(accessToken.type, ACCESS_TOKEN_TYPE);
+    EXPECT_EQ(accessToken.status, TOKEN_STATUS_NORMAL);
+    EXPECT_EQ(refreshToken.token.empty(), false);
+    EXPECT_EQ(refreshToken.type, FRESH_TOKEN_TYPE);
+    EXPECT_EQ(refreshToken.status, TOKEN_STATUS_NORMAL);
     EXPECT_EQ(isAuthorizedRet, FIT_OK);
-
     EXPECT_EQ(refreshTokenRet, FIT_OK);
-    EXPECT_EQ(refreshTokenInfo->accessToken.empty(), false);
-    EXPECT_NE(refreshTokenInfo->accessToken, refreshTokenInfo->refreshToken);
-    EXPECT_EQ(refreshTokenInfo->refreshToken, tokenInfoRet->refreshToken);
-    EXPECT_EQ(refreshTokenInfo->timeout, 3600);
+
+    accessToken = GetToken(*refreshTokenInfos, ACCESS_TOKEN_TYPE);
+    refreshToken = GetToken(*refreshTokenInfos, FRESH_TOKEN_TYPE);
+    EXPECT_EQ(accessToken.token.empty(), false);
+    EXPECT_EQ(accessToken.type, ACCESS_TOKEN_TYPE);
+    EXPECT_EQ(accessToken.status, TOKEN_STATUS_NORMAL);
+    EXPECT_EQ(refreshToken.token.empty(), false);
+    EXPECT_EQ(refreshToken.type, FRESH_TOKEN_TYPE);
+    EXPECT_EQ(refreshToken.status, TOKEN_STATUS_NORMAL);
 }
 
 TEST_F(SecureAccessInterfaceTest, should_return_error_when_get_token_given_param)

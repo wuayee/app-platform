@@ -14,10 +14,10 @@
 namespace {
 using namespace Fit;
 int32_t ApplyToken(ContextObj ctx, const Fit::string* accessKey, const Fit::string* timestamp,
-    const Fit::string* signature, fit::secure::access::TokenInfo** ret)
+    const Fit::string* signature, vector<fit::secure::access::TokenInfo>** tokenInfos)
 {
-    *ret = Fit::Context::NewObj<fit::secure::access::TokenInfo>(ctx);
-    if (*ret == nullptr) {
+    *tokenInfos = Fit::Context::NewObj<vector<fit::secure::access::TokenInfo>>(ctx);
+    if (*tokenInfos == nullptr) {
         FIT_LOG_ERROR("New result failed.");
         return FIT_ERR_FAIL;
     }
@@ -28,13 +28,13 @@ int32_t ApplyToken(ContextObj ctx, const Fit::string* accessKey, const Fit::stri
         return FIT_ERR_FAIL;
     }
 
-    for (const AuthTokenRole& tokenRole : authTokenRoles) {
-        if (tokenRole.type == Fit::string(ACCESS_TOKEN_TYPE)) {
-            (*ret)->accessToken = tokenRole.token;
-            (*ret)->timeout = tokenRole.timeout;
-        } else if (tokenRole.type == Fit::string(FRESH_TOKEN_TYPE)) {
-            (*ret)->refreshToken = tokenRole.token;
-        }
+    for (const auto& tokenRole : authTokenRoles) {
+        fit::secure::access::TokenInfo tokenInfo {};
+        tokenInfo.token = tokenRole.token;
+        tokenInfo.timeout = tokenRole.timeout;
+        tokenInfo.type = tokenRole.type;
+        tokenInfo.status = TOKEN_STATUS_NORMAL;
+        (**tokenInfos).emplace_back(tokenInfo);
     }
     return FIT_OK;
 }

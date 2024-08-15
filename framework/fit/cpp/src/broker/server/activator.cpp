@@ -8,7 +8,7 @@
 #include <fit/fit_log.h>
 #include "broker_server_config.h"
 namespace {
-const char * const IS_ENABLE_ACCESS_TOKEN = "secure-access.enable-secure-access";
+const char * const IS_ENABLE_ACCESS_TOKEN = "secure-access.enable";
 
 FitCode Start(::Fit::Framework::PluginContext* context)
 {

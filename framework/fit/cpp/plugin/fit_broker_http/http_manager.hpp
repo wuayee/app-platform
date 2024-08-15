@@ -11,6 +11,7 @@
 
 #include <fit/stl/string.hpp>
 #include <fit/stl/memory.hpp>
+#include <fit/stl/mutex.hpp>
 
 #include "http_server.hpp"
 #include "http_client.hpp"
@@ -34,6 +35,9 @@ public:
     HttpClientPtr GetHttpsClient(string host, int32_t port, string contextPath);
 
 private:
+    HttpConfig* GetHttpConfig();
+    HttpConfig* GetHttpsConfig();
+private:
     HttpManager() = default;
     HttpManager(HttpManager&&) = delete;
     HttpManager(const HttpManager&) = delete;
@@ -42,8 +46,9 @@ private:
 
     unique_ptr<HttpServer> httpServer_;
     unique_ptr<HttpServer> httpsServer_;
-    HttpConfig httpConfig_;
-    HttpConfig httpsConfig_;
+    Fit::mutex mutex_ {};
+    unique_ptr<HttpConfig> httpConfig_ {nullptr};
+    unique_ptr<HttpConfig> httpsConfig_ {nullptr};
 };
 }
 

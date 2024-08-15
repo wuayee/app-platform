@@ -5,8 +5,8 @@
  * Date         :
  */
 
-#ifndef COM_HUAWEI_FIT_SECURE_ACCESS_APPLY_TOKEN_G_H
-#define COM_HUAWEI_FIT_SECURE_ACCESS_APPLY_TOKEN_G_H
+#ifndef COM_HUAWEI_FIT_SECURE_ACCESS_TOKEN_INFO_G_H
+#define COM_HUAWEI_FIT_SECURE_ACCESS_TOKEN_INFO_G_H
 #include <fit/stl/string.hpp>
 #include <fit/stl/vector.hpp>
 #include <fit/stl/bits.hpp>
@@ -16,13 +16,14 @@ namespace fit {
 namespace secure {
 namespace access {
 struct TokenInfo : public FitBase {
-    Fit::string accessToken;
+    Fit::string token;
     int64_t timeout {}; // 超时时间，单位秒
-    Fit::string refreshToken;
+    Fit::string type; // 分为 refresh_token 和 access_token
+    Fit::string status; // normal 和 invalid 两个状态
 
-    bool HasAccessToken() const noexcept
+    bool HasToken() const noexcept
     {
-        return hasFields_[_FieldIndex::accessToken];
+        return hasFields_[_FieldIndex::token];
     }
 
     bool HasTimeout() const noexcept
@@ -30,39 +31,52 @@ struct TokenInfo : public FitBase {
         return hasFields_[_FieldIndex::timeout];
     }
 
-    bool HasRefreshToken() const noexcept
+    bool HasType() const noexcept
     {
-        return hasFields_[_FieldIndex::refreshToken];
+        return hasFields_[_FieldIndex::type];
     }
 
-    const Fit::string &GetAccessToken() const
+    bool HasStatus() const noexcept
     {
-        if (!HasAccessToken()) {
-            FIT_THROW_INVALID_ARGUMENT("no access token setted");
+        return hasFields_[_FieldIndex::status];
+    }
+
+    const Fit::string &GetToken() const
+    {
+        if (!HasToken()) {
+            FIT_THROW_INVALID_ARGUMENT("no token setted");
         }
-        return accessToken;
+        return token;
     }
 
     int64_t GetTimeout() const
     {
         if (!HasTimeout()) {
-            FIT_THROW_INVALID_ARGUMENT("no timeout setted");
+            FIT_THROW_INVALID_ARGUMENT("no token timeout setted");
         }
         return timeout;
     }
 
-    const Fit::string &GetRefreshToken() const
+    const Fit::string &GetType() const
     {
-        if (!HasRefreshToken()) {
-            FIT_THROW_INVALID_ARGUMENT("no refresh token setted");
+        if (!HasType()) {
+            FIT_THROW_INVALID_ARGUMENT("no token type setted");
         }
-        return refreshToken;
+        return type;
     }
 
-    void SetAccessToken(const Fit::string& val)
+    const Fit::string &GetStatus() const
     {
-        accessToken = val;
-        hasFields_[_FieldIndex::accessToken] = true;
+        if (!HasStatus()) {
+            FIT_THROW_INVALID_ARGUMENT("no token status setted");
+        }
+        return status;
+    }
+
+    void SetToken(const Fit::string& val)
+    {
+        token = val;
+        hasFields_[_FieldIndex::token] = true;
     }
 
     void SetTimeout(int64_t val)
@@ -71,16 +85,22 @@ struct TokenInfo : public FitBase {
         hasFields_[_FieldIndex::timeout] = true;
     }
 
-    void SetRefreshToken(const Fit::string& val)
+    void SetType(const Fit::string& val)
     {
-        refreshToken = val;
-        hasFields_[_FieldIndex::refreshToken] = true;
+        type = val;
+        hasFields_[_FieldIndex::type] = true;
     }
 
-    Fit::string &MutableAccessToken()
+    void SetStatus(const Fit::string& val)
     {
-        hasFields_[_FieldIndex::accessToken] = true;
-        return accessToken;
+        status = val;
+        hasFields_[_FieldIndex::status] = true;
+    }
+
+    Fit::string &MutableToken()
+    {
+        hasFields_[_FieldIndex::token] = true;
+        return token;
     }
 
     int64_t &MutableTimeout()
@@ -89,16 +109,22 @@ struct TokenInfo : public FitBase {
         return timeout;
     }
 
-    Fit::string &MutableRefreshToken()
+    Fit::string &MutableType()
     {
-        hasFields_[_FieldIndex::refreshToken] = true;
-        return refreshToken;
+        hasFields_[_FieldIndex::type] = true;
+        return type;
     }
 
-    void ClearAccessToken()
+    Fit::string &MutableStatus()
     {
-        hasFields_[_FieldIndex::accessToken] = false;
-        accessToken.clear();
+        hasFields_[_FieldIndex::status] = true;
+        return status;
+    }
+
+    void ClearToken()
+    {
+        hasFields_[_FieldIndex::token] = false;
+        token.clear();
     }
 
     void ClearTimeout()
@@ -107,26 +133,33 @@ struct TokenInfo : public FitBase {
         timeout = int64_t {};
     }
 
-    void ClearRefreshToken()
+    void ClearType()
     {
-        hasFields_[_FieldIndex::refreshToken] = false;
-        refreshToken.clear();
+        hasFields_[_FieldIndex::type] = false;
+        type.clear();
+    }
+
+    void ClearStatus()
+    {
+        hasFields_[_FieldIndex::status] = false;
+        status.clear();
     }
 
     void Reset()
     {
-        ClearAccessToken();
+        ClearToken();
         ClearTimeout();
-        ClearRefreshToken();
+        ClearType();
+        ClearStatus();
     }
-
 private:
-    static constexpr uint32_t FIELD_COUNT = 3;
+    static constexpr uint32_t FIELD_COUNT = 4;
     ::Fit::Bits<FIELD_COUNT> hasFields_ { true };
     struct _FieldIndex {
-        static constexpr uint32_t accessToken = 0;
+        static constexpr uint32_t token = 0;
         static constexpr uint32_t timeout = 1;
-        static constexpr uint32_t refreshToken = 2;
+        static constexpr uint32_t type = 2;
+        static constexpr uint32_t status = 3;
     };
 };
 }

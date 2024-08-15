@@ -81,7 +81,7 @@ FitCode HttpServer::Start(Handler handler)
 
         res.set_content(handlerRes.payload.data(), handlerRes.payload.size(), HTTP_CONTENT_TYPE_JSON);
         res.set_header(HEADER_FIT_META, to_std_string(Base64Encode(handlerRes.metadata)));
-        // ¼æÈÝÐÂ½á¹¹
+        // å…¼å®¹æ–°ç»“æž„
         res.set_header(HEADER_FIT_DATA_FORMAT, std::to_string(handlerRes.meta.get_payload_format()));
         res.set_header(HEADER_FIT_CODE, std::to_string(handlerRes.meta.get_code()));
         res.set_header(HEADER_FIT_MESSAGE, to_std_string(handlerRes.meta.get_message()));

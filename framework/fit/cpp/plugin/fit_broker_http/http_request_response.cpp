@@ -41,6 +41,10 @@ bool ParseMetaDataFromBytes(FitResponseV2* result, const Fit::bytes metadataByte
 template<typename F>
 FitCode HttpRequestResponseTemplateV5(F&& getClient, ContextObj ctx, const RequestParam* req, FitResponseV2** result)
 {
+    if (getClient == nullptr) {
+        FIT_LOG_ERROR("Client is null.");
+        return FIT_ERR_FAIL;
+    }
     auto response = Context::NewObj<FitResponseV2>(ctx);
     if (response == nullptr) {
         FIT_LOG_ERROR("Bad alloc, target(%s:%d:%s).", req->address.host.c_str(), req->address.port,

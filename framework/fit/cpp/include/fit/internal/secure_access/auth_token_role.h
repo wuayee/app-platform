@@ -14,6 +14,8 @@
 namespace Fit {
 constexpr const char *FRESH_TOKEN_TYPE = "refresh_token";
 constexpr const char *ACCESS_TOKEN_TYPE = "access_token";
+constexpr const char *TOKEN_STATUS_NORMAL = "normal";
+constexpr const char *TOKEN_STATUS_INVALID = "invalid";
 constexpr const uint64_t DEFAULT_ACCESS_TOKEN_EXPIRED_TIME_SECONDS = 60 * 60; // 默认访问令牌超时时间 60 min
 constexpr const uint64_t DEFAULT_FRESH_TOKEN_EXPIRED_TIME_SECONDS = 24 * 60 * 60; // 默认刷新令牌超时时间 24 h
 constexpr const uint64_t SECOND_TO_MILLION_SECOND = 1000; // 1s 等于 1000 ms
