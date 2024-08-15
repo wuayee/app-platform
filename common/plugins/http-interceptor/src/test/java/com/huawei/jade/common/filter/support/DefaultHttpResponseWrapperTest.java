@@ -19,13 +19,12 @@ import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.filter.config.DefaultHttpResponseWrapperConfig;
 import com.huawei.jade.common.test.TestController;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
@@ -43,62 +42,54 @@ public class DefaultHttpResponseWrapperTest {
     @Fit
     private MockMvc mockMvc;
 
-    private HttpClassicClientResponse<?> response;
-
-    @AfterEach
-    void tearDown() throws IOException {
-        if (this.response != null) {
-            this.response.close();
-        }
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"/support/string", "/support/result"})
     @DisplayName("测试拦截正常数据")
     public void shouldOkWhenInterceptData(String url) {
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
+        HttpClassicClientResponse<?> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {String.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.SUCCESS.getCode())
+        assertThat(response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.SUCCESS.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
-                        .hasFieldOrPropertyWithValue("data", "test")
-        );
+                        .hasFieldOrPropertyWithValue("data", "test"));
     }
 
     @Test
     @DisplayName("测试拦截 void")
     public void shouldOkWhenInterceptVoid() {
         String url = "/support/void";
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
+        HttpClassicClientResponse<?> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.SUCCESS.getCode())
+        assertThat(response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.SUCCESS.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
-                        .hasFieldOrPropertyWithValue("data", null)
-        );
+                        .hasFieldOrPropertyWithValue("data", null));
     }
 
     @Test
     @DisplayName("测试拦截数值类型")
     public void shouldOkWhenInterceptInteger() {
         String url = "/support/int";
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
+        HttpClassicClientResponse<?> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Integer.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.SUCCESS.getCode())
+        assertThat(response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.SUCCESS.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.SUCCESS.getMsg())
-                        .hasFieldOrPropertyWithValue("data", 0)
-        );
+                        .hasFieldOrPropertyWithValue("data", 0));
     }
 
     @Test
     @DisplayName("测试白名单不拦截字符串")
     public void shouldOkWhenNoInterceptString() {
         String url = "/nonsupport/string";
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url).responseType(String.class));
+        HttpClassicClientResponse<?> response =
+                this.mockMvc.perform(MockMvcRequestBuilders.get(url).responseType(String.class));
         assertThat(response.textEntity()).map(TextEntity::content).hasValue("test");
     }
 
@@ -106,22 +97,24 @@ public class DefaultHttpResponseWrapperTest {
     @DisplayName("测试白名单不拦截错误")
     public void shouldOkWhenNoInterceptResult() {
         String url = "/nonsupport/result";
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
+        HttpClassicClientResponse<?> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(
-                objectEntity -> assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", CommonRetCode.INTERNAL_ERROR.getCode())
+        assertThat(response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code",
+                                CommonRetCode.INTERNAL_ERROR.getCode())
                         .hasFieldOrPropertyWithValue("msg", CommonRetCode.INTERNAL_ERROR.getMsg())
-                        .hasFieldOrPropertyWithValue("data", null)
-        );
+                        .hasFieldOrPropertyWithValue("data", null));
     }
 
     @Test
     @DisplayName("测试流式请求不拦截")
+    @Disabled("待流式客户端整改后修改")
     public void shouldOkWhenNoInterceptStream() {
         String url = "/support/stream";
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url).responseType(Integer.class));
-        assertThat(this.response.textEventStreamEntity()).map(entity -> entity.stream()
+        HttpClassicClientResponse<?> response =
+                this.mockMvc.perform(MockMvcRequestBuilders.get(url).responseType(Integer.class));
+        assertThat(response.textEventStreamEntity()).map(entity -> entity.stream()
                 .map(textEvent -> ObjectUtils.<Integer>cast(textEvent.data()))
                 .reduce(Integer::sum)
                 .block()).hasValue(Optional.of(6));

@@ -39,12 +39,10 @@ import com.huawei.jade.app.engine.schema.SchemaValidator;
 import com.huawei.jade.app.engine.uid.UidGenerator;
 import com.huawei.jade.common.vo.PageVo;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
@@ -94,13 +92,6 @@ public class EvalDatasetIntegrationTest {
         doNothing().when(this.schemaValidator).validate(anyString(), anyList());
         when(this.versionGenerator.getUid()).thenReturn(1L, 2L, 3L, 4L, 5L, 6L);
         when(this.datasetMapper.getSchema(anyLong())).thenReturn("");
-    }
-
-    @AfterEach
-    void teardown() throws IOException {
-        if (this.response != null) {
-            this.response.close();
-        }
     }
 
     @Test

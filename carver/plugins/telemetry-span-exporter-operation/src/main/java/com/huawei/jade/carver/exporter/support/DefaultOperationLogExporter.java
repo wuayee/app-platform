@@ -23,7 +23,6 @@ import com.huawei.jade.carver.operation.OperationLogLocaleService;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.carver.operation.support.OperationLogFields;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +37,7 @@ import java.util.stream.Collectors;
 @Component
 public class DefaultOperationLogExporter implements OperationLogExporter {
     private static final Logger log = Logger.get(DefaultOperationLogExporter.class);
-    private static final List<String> HTTPS_CONFIG_KEYS = Arrays.asList(
-            "client.http.secure.ignore-trust",
+    private static final List<String> HTTPS_CONFIG_KEYS = Arrays.asList("client.http.secure.ignore-trust",
             "client.http.secure.ignore-hostname",
             "client.http.secure.trust-store-file",
             "client.http.secure.trust-store-password",
@@ -82,18 +80,14 @@ public class DefaultOperationLogExporter implements OperationLogExporter {
         if (StringUtils.isBlank(this.collectorUri)) {
             return;
         }
-        try (HttpClassicClientRequest request = this.httpClient.get()
-                .createRequest(HttpRequestMethod.POST, this.collectorUri)) {
-            request.entity(Entity.createObject(request, fields));
-            try (HttpClassicClientResponse<Object> response = request.exchange()) {
-                if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
-                    throw new IOException(StringUtils.format("response with code: {0}, reason: {1}",
-                            response.statusCode(),
-                            response.reasonPhrase()));
-                }
-            }
-        } catch (IOException e) {
-            log.error("POST operation log failed, error: {}", e.getMessage());
+        HttpClassicClientRequest request =
+                this.httpClient.get().createRequest(HttpRequestMethod.POST, this.collectorUri);
+        request.entity(Entity.createObject(request, fields));
+        HttpClassicClientResponse<Object> response = request.exchange();
+        if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
+            log.error("Failed to log POST operation. [code={}, reason={}]",
+                    response.statusCode(),
+                    response.reasonPhrase());
         }
     }
 

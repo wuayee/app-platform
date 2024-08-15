@@ -94,11 +94,10 @@ public class AippFileUtils {
             throws JobberException {
         HttpClassicClientRequest request = httpClient.createRequest(HttpRequestMethod.GET, s3Url);
         File tmpFile;
-        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(request)) {
+        try {
+            HttpClassicClientResponse<Object> response = HttpUtils.execute(request);
             if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
-                throw new IOException(String.format(Locale.ROOT,
-                        "bad result code=%d",
-                        response.statusCode()));
+                throw new IOException(String.format(Locale.ROOT, "bad result code=%d", response.statusCode()));
             }
             tmpFile = createFile(instId, fileType + "_" + UUIDUtil.uuid());
             try (InputStream inStream = new ByteArrayInputStream(response.entityBytes());
