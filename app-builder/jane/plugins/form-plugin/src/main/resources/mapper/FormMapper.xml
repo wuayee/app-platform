@@ -38,7 +38,14 @@
             </if>
         </where>
         <if test="cond.sort != null">
-            order by ${cond.sort}
+            <choose>
+                <when test="cond.sort == 'create_time'">
+                    order by create_time
+                </when>
+                <otherwise>
+                    order by update_time
+                </otherwise>
+            </choose>
             <choose>
                 <when test="cond.order == 'ascend'">
                     asc
