@@ -4,7 +4,7 @@ import {convertParameter, convertReturnFormat} from "@/components/util/MethodMet
 import {updateInput} from "@/components/util/JadeConfigUtils.js";
 
 /**
- * code节点组件
+ * 评估算法节点组件
  *
  * @param jadeConfig
  */

@@ -34,6 +34,8 @@ import {
 } from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsNodeState.jsx";
 import {evaluationStartComponent} from "@/components/evaluation/evaluationStart/evaluationStartComponent.jsx";
 import {evaluationStartNodeStart} from "@/components/evaluation/evaluationStart/evaluationStartNodeStart.jsx";
+import {evaluationTestSetNodeState} from "@/components/evaluation/evaluationTestset/evaluationTestSetNodeState.jsx";
+import {evaluationTestSetComponent} from "@/components/evaluation/evaluationTestset/evaluationTestSetComponent.jsx";
 import {evaluationEndNodeEnd} from "@/components/evaluation/evaluationEnd/evaluationEndNodeEnd.jsx";
 import {evaluationEndComponent} from "@/components/evaluation/evaluationEnd/evaluationEndComponent.jsx";
 
@@ -106,6 +108,8 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("evaluationStartNodeStart", evaluationStartNodeStart);
         self.registerPlugin("evaluationAlgorithmsComponent", evaluationAlgorithmsComponent);
         self.registerPlugin("evaluationAlgorithmsNodeState", evaluationAlgorithmsNodeState);
+        self.registerPlugin("evaluationTestSetComponent", evaluationTestSetComponent);
+        self.registerPlugin("evaluationTestSetNodeState", evaluationTestSetNodeState);
         self.registerPlugin("evaluationEndComponent", evaluationEndComponent);
         self.registerPlugin("evaluationEndNodeEnd", evaluationEndNodeEnd);
         return initialize.apply(self);
