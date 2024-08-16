@@ -17,7 +17,8 @@ import '@shared/utils/rendos';
 import '../../styles/send-editor.scss';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setUseMemory } from '@/store/common/common';
-import {uploadChatFile,voiceToText} from '@shared/http/aipp'
+import {uploadChatFile,voiceToText} from '@shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 
 const AudioBtn = forwardRef((props, ref) => {
   const [active, setActive] = useState(props.active || false);
@@ -41,6 +42,7 @@ const SendEditor = (props) => {
     chatType,
     filterRef
   } = props;
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
@@ -235,9 +237,7 @@ const SendEditor = (props) => {
           { showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div> }
         </div>
       </div>
-      <div className='chat-tips'>
-          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 -
-      </div>
+      <div className='chat-tips'>{t('accuracyNotice')}</div>
      { showSelect &&  (
       <EditorSelect
         chatSelectDom={selectDom}

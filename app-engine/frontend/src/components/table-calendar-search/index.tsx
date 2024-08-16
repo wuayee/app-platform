@@ -3,11 +3,13 @@ import { CalendarOutlined } from '@ant-design/icons';
 import { DatePicker, TableColumnType } from 'antd';
 import { Button, Space } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
-import type { DatePickerProps, GetProps } from 'antd';
+import type { GetProps } from 'antd';
+import { useTranslation } from "react-i18next";
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
 const { RangePicker } = DatePicker;
+const { t } = useTranslation();
 
 /*
 * @params:
@@ -37,7 +39,7 @@ const TableCalendarSearch = (searchKeyName: string, async: boolean = true): Tabl
               close();
             }}
           >
-            关闭
+            {t('close')}
           </Button>
           <Button
             type='primary'
@@ -45,7 +47,7 @@ const TableCalendarSearch = (searchKeyName: string, async: boolean = true): Tabl
             size='small'
             style={{ minWidth: 60, height: 24, backgroundColor: '#2673e5' }}
           >
-            确定
+            {t('ok')}
           </Button>
         </Space>
       </div>

@@ -1,10 +1,11 @@
 import React from 'react';
 import type { ReactElement } from 'react';
-import { Card, Dropdown } from 'antd';
+import { Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { Icons } from '../icons/index';
 import './index.scoped.scss';
+import { useTranslation } from "react-i18next";
 
 export interface knowledgeBase {
   name: string;
@@ -22,16 +23,17 @@ const App = ({
   knowledge: knowledgeBase;
   clickMore: (type: 'delete') => void;
 }) => {
+  const { t } = useTranslation();
   // 路由
   const navigate = useHistory().push;
   const operatorItems: MenuProps['items'] = [
     {
       key: 'modify',
-      label: '修改',
+      label: t('modify'),
     },
     {
       key: 'delete',
-      label:'删除',
+      label: t('delete'),
     },
   ];
   const clickItem = (info: any) => {
@@ -51,9 +53,6 @@ const App = ({
     const y = date.getFullYear();
     const m = date.getMonth() + 1;
     const d = date.getDate();
-    const hh = date.getHours();
-    const mm = date.getMinutes();
-    const ss = date.getSeconds();
     return `${y}.${m}.${d}`;
   };
   return (
@@ -65,7 +64,7 @@ const App = ({
         <div className='card-title'>
           <div className='card-name'>{knowledge.name}</div> 
           <div className='card-create'>
-            {`${knowledge.ownerName} 创建于${formateTime(knowledge.createdAt as any as Date)}`}
+            {`${knowledge.ownerName} ${t('createAt')}${formateTime(knowledge.createdAt as any as Date)}`}
           </div>
         </div>
       </div>

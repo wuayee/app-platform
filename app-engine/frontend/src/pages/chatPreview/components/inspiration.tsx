@@ -22,8 +22,10 @@ import { pduMap } from '../common/config';
 import { HOME_APP_ID, FINANCE_APP_ID, TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
 import '../styles/inspiration.scss';
 import { isBusinessMagicCube } from '@shared/utils/common';
+import { useTranslation } from "react-i18next";
 
 const Inspiration = (props) => {
+  const { t } = useTranslation();
   const { inspirationClick, setEditorSelect } = props;
   const {
     messageChecked,
@@ -75,9 +77,9 @@ const Inspiration = (props) => {
     if (childNodes.length) {
       let h = getDepth(childNodes);
       if (h === 1) {
-        let arr = [{ title: '全部', id: 'root' }];
+        let arr = [{ title: t('all'), id: 'root' }];
         let arr1 = arr.concat(childNodes);
-        arr1.push({ title: '其他', id: 'others' });
+        arr1.push({ title: t('others'), id: 'others' });
         setPromptTypeList(arr1);
         setCurrentPromptType('root');
         getPromptList('root');
@@ -161,7 +163,7 @@ const Inspiration = (props) => {
       return;
     }
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     if (item.name && item.auto) {

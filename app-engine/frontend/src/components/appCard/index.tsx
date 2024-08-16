@@ -6,6 +6,7 @@ import { cancelUserCollection, collectionApp } from '@/shared/http/appDev';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { addCollectionApp, removeCollectionApp } from '@/store/collection/collection';
 import './style.scoped.scss';
+import { useTranslation } from "react-i18next";
 
 export interface CardInfoType {
   name: string;
@@ -16,19 +17,15 @@ export interface CardInfoType {
 }
 
 const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
-
+  const { t } = useTranslation();
   const [count, setCount] = useState(0);
-
   const [loading, setLoading] = useState(false);
-
   const collectionStore = useAppSelector((state: any) => state.collectionStore.value);
-
   const dispatch = useAppDispatch();
-
   const operatorItems: MenuProps['items'] = [
     {
       key: 'delete',
-      label: <div>删除</div>,
+      label: <div>{t('delete')}</div>,
     },
   ];
   const clickItem = (info: any) => {
@@ -89,7 +86,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
         <div className='img_box'>
           {cardInfo.icon && <img width={'100%'} src={cardInfo.icon} alt='' />}
           {!cardInfo.icon && (
-            <img width={'100%'} src='/src/assets/images/knowledge/knowledge-base.png' alt='' />
+            <img width={'100%'} src='./src/assets/images/knowledge/knowledge-base.png' alt='' />
           )}
         </div>
         <div className='infoArea'>
@@ -97,7 +94,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
             <div className='headerTitle'>{cardInfo?.name}</div>
           </Tooltip>
           <div className='title_info'>
-            <img width={18} height={18} src='/src/assets/images/ai/user.jpg' alt='' />
+            <img width={18} height={18} src='./src/assets/images/ai/user.jpg' alt='' />
             <div className='createBy'>{cardInfo.createBy || cardInfo.creator}</div>
           </div>
         </div>
@@ -144,7 +141,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 };
 

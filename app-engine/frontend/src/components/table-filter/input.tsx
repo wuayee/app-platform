@@ -3,14 +3,15 @@ import React from 'react';
 import type { TableColumnType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
+import { useTranslation } from "react-i18next";
 
-
+const { t } = useTranslation();
 // 自定义搜索面板
 const getColumnSearchProps = (dataIndex: string, onChange?: any): TableColumnType<string> => ({
   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
     <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
       <Input
-        placeholder={`请输入`}
+        placeholder={t('plsEnter')}
         value={selectedKeys[0]}
         onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
         onPressEnter={() => {
@@ -28,7 +29,7 @@ const getColumnSearchProps = (dataIndex: string, onChange?: any): TableColumnTyp
           size="small"
           style={{ width: 90 }}
         >
-          搜索
+          {t('search')}
         </Button>
         <Button
           onClick={
@@ -40,7 +41,7 @@ const getColumnSearchProps = (dataIndex: string, onChange?: any): TableColumnTyp
           size="small"
           style={{ width: 90 }}
         >
-          重置
+          {t('reset')}
         </Button>
       </Space>
     </div>

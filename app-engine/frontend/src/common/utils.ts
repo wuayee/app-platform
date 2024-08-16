@@ -1,4 +1,4 @@
-const uuid = function (isLong) {
+export const uuid = function (isLong) {
     if (isLong) {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -13,4 +13,11 @@ const uuid = function (isLong) {
     }
 };
 
-export {uuid};
+export const bytesToSize = function (bytes) {
+  if (!bytes) return '--';
+  if (bytes === 0) return '0 B';
+  let k = 1024,
+    sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+  return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
+}

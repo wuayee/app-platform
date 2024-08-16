@@ -39,8 +39,10 @@ import {
 import { storage } from '@shared/storage';
 import { EventSourceParserStream } from '@shared/event-source/stream';
 import { isBusinessMagicCube } from '@shared/utils/common';
+import { useTranslation } from "react-i18next";
 
 const ChatPreview = (props) => {
+  const { t } = useTranslation();
   const { previewBack, chatType } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
@@ -143,7 +145,7 @@ const ChatPreview = (props) => {
     const reciveInitObj = deepClone(initChat);
     if (atAppInfo) {
       reciveInitObj.appName = atAppInfo.name;
-      reciveInitObj.appIcon = atAppInfo.attributes.icon;
+      reciveInitObj.appIcon = atAppInfo.attributes?.icon;
       reciveInitObj.isAt = true;
     }
     let arr = [...listRef.current, reciveInitObj];
@@ -275,7 +277,7 @@ const ChatPreview = (props) => {
         dispatch(setChatRunning(false));
       }
     } catch (err) {
-      onStop('数据解析异常');
+      onStop(t('dataParseError'));
       dispatch(setChatRunning(false));
     }
   };
