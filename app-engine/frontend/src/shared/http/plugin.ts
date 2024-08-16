@@ -1,7 +1,7 @@
 import { get, post, del } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+const { AIPP_URL, PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 
 // 获取插件工具列表，应用于流程编排页面
 export function getPluginTools(data: {
