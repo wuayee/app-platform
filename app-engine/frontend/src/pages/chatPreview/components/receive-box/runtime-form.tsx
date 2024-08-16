@@ -40,12 +40,19 @@ const RuntimeForm = (props) => {
         />
         break;
       case 'questionClar':
-        return <QuestionClar dataDimension={dataDimension} data={props.formConfig} mode={props.formConfig.type} />
+        return <QuestionClar
+          dataDimension={dataDimension}
+          data={props.formConfig} mode={props.formConfig.type}
+          tenantId={tenantId}
+          confirmCallBack={props.confirmCallBack}
+        />
         break;
       case 'conditionForm':
         return <ConditionForm
           data={props.formConfig}
           chatRunning={chatRunning}
+          tenantId={tenantId}
+          confirmCallBack={props.confirmCallBack}
         />
         break;
       default:

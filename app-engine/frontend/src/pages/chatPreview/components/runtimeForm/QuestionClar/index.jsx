@@ -13,18 +13,19 @@ import {
 import { formatYYYYMM } from './question-util.js';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { resumeInstance, getClarifyOptions, getFuClarifyOptions } from '@shared/http/aipp';
+import { resumeInstance, getClarifyOptions, getFuClarifyOptions, stopInstance } from '@shared/http/aipp';
 import { ChatContext } from '../../../../aippIndex/context';
 import './index.scoped.scss';
+import { saveContent } from '@shared/http/sse';
 
 dayjs.extend(customParseFormat);
 
 const QuestionClar = (props) => {
   const id = 'questionClarResult';
-  const { dataDimension, data, mode } = props;
+  const { dataDimension, data, mode, confirmCallBack, tenantId } = props;
   const [questionInfo, setQuestionInfo] = useState(null);
   const { RangePicker } = DatePicker;
-  const { handleRejectClar, tenantId, questionClarConfirm } = useContext(ChatContext);
+  const { handleRejectClar, conditionConfirm } = useContext(ChatContext);
 
   useEffect(() => {
     if (!data?.formData) return;
@@ -156,7 +157,7 @@ const QuestionClar = (props) => {
   const getTypeOptions = useMemo(() => {
     if (!questionInfo) return;
     const { groupBy } = questionInfo;
-    let groupByType = groupBy.type;
+    let groupByType = groupBy?.type || '';
     // 辅产品 前端自己定义枚举
     if (groupByType === 'PRODUCT' && groupProType === '辅产品') {
       groupByType = 'AID_PRODUCT';
@@ -187,7 +188,7 @@ const QuestionClar = (props) => {
     const obj = questionInfo;
     if (!obj) return false;
     if (type === 'groupBy') {
-      const groupByType = obj['groupBy'].type;
+      const groupByType = obj['groupBy']?.type || '';
       return FinanceGroupType[groupByType];
     }
     return obj[type];
@@ -279,7 +280,12 @@ const QuestionClar = (props) => {
   };
 
   // 拒绝
-  const rejectClar = throttle(() => handleRejectClar(), 500, { trailing: false });
+  const rejectClar = throttle(() => confirmCallBack ? rejectQuestion() : handleRejectClar(), 500, { trailing: false });
+  const rejectQuestion = () => {
+    stopInstance(tenantId, data?.formData?.instanceId, { content: '不好意思，请明确条件后重新提问' }).then(()=>{
+      confirmCallBack();
+    });
+  }
   // 出参使用，处理数据格式
   const processData = (indicator) => {
     let data = {};
@@ -348,7 +354,12 @@ const QuestionClar = (props) => {
         [id]: JSON.stringify(info),
       },
     };
-    questionClarConfirm(params, data?.formData?.instanceId)
+    const res = await saveContent(tenantId, data?.formData?.instanceId, params);
+    if (res.status !== 200) {
+      Message({ type: 'warning', content: res.msg || '对话失败' });
+      return;
+    }
+    confirmCallBack ? confirmCallBack() : conditionConfirm(res);
   }
 
   return (<>

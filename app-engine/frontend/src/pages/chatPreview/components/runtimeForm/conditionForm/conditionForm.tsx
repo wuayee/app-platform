@@ -8,11 +8,11 @@ import ChartCondition from '../../chart-message/chart-condition'
 import ChartMessage from '../../chart-message/chart-message';
 
 const ConditionForm = (props) => {
-  const { data } = props;
+  const { data, confirmCallBack, tenantId } = props;
   const [filters, setFilters] = useState();
   const [chartConfig, setChartConfig] = useState();
   const [loading, setLoading] = useState(false);
-  const { tenantId, conditionConfirm } = useContext(ChatContext);
+  const { conditionConfirm } = useContext(ChatContext);
   useEffect(() => {
     if (!data?.formData) return;
     if (data.formData) {
@@ -41,7 +41,7 @@ const ConditionForm = (props) => {
         Message({ type: 'warning', content: res.msg || '保存失败' });
         return;
       }
-      conditionConfirm(res);
+      confirmCallBack ? confirmCallBack() : conditionConfirm(res);
     } finally {
       setLoading(false);
     }
