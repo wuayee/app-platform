@@ -16,18 +16,18 @@ const AppDetail: React.FC = () => {
       label: t('overview'),
       children: <AppOverview />
     },
-    // {
-    //   key: '2',
-    //   label: t('analyse'),
-    //   disabled: true,
-    //   children: <AppAnalyse />,
-    // },
-    // {
-    //   key: '3',
-    //   label: t('feedback'),
-    //   disabled: true,
-    //   children: <FeedBack />,
-    // },
+    {
+      key: '2',
+      label: t('analyse'),
+      disabled: true,
+      children: <AppAnalyse />,
+    },
+    {
+      key: '3',
+      label: t('feedback'),
+      disabled: true,
+      children: <FeedBack />,
+    },
     // {
     //   key: '4',
     //   label: t('evaluate'),
