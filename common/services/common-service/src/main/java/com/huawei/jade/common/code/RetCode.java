@@ -45,7 +45,7 @@ public interface RetCode {
      * @return 表示系统返回码的 {@code int}。
      */
     default int convertModelCode(int subSystemId, int modelId, int modelCode) {
-        return (subSystemId << 24) | (modelId & 0xFF) << 16 | (modelCode & 0xFFFF);
+        return subSystemId * 10000000 + modelId * 100000 + modelCode;
     }
 
     /**
@@ -58,6 +58,6 @@ public interface RetCode {
      * @return 表示系统返回码的 {@code int}。
      */
     default int convertSubModelCode(int subSystemId, int modelId, int subModelId, int subModelCode) {
-        return this.convertModelCode(subSystemId, modelId, (subModelId & 0xFF) << 8 | (subModelCode & 0xFF));
+        return this.convertModelCode(subSystemId, modelId, subModelId * 1000 + subModelCode);
     }
 }
