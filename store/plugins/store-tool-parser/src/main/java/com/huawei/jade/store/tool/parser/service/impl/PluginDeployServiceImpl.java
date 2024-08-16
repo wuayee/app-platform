@@ -103,8 +103,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
      * @param serializer 表示对象序列化的序列化器的 {@link ObjectSerializer}。
      * @param registryService 表示注册中心的 {@link RegistryService}。
      * @param pluginToolService 表示插件工具服务的 {@link PluginToolService}。
-     * @param timeout 表示部署超时时间。
-     * @param interval 表示部署状态查询间隔。
+     * @param timeout 表示部署超时时间的 {@link Integer}。
+     * @param interval 表示部署状态查询间隔的 {@link Integer}。
      */
     public PluginDeployServiceImpl(PluginService pluginService, @Fit(alias = "json") ObjectSerializer serializer,
         RegistryService registryService, PluginToolService pluginToolService,
@@ -240,7 +240,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         Path deployPath = this.generateDeployPath(pluginFullName).resolve(pluginFullName);
         Path persistentPath = this.generatePersistentPath(pluginData);
         if (!this.completenessCheck(persistentPath.resolve(pluginFullName).toFile(),
-            persistentPath.resolve(PLUGIN_JSON).toFile())) {
+            this.getChecksumFromPluginData(pluginData))) {
             log.error("Completeness check failed before deploy, [pluginFile={0}]", pluginId);
             pluginService.updateDeployStatus(Collections.singletonList(pluginId), DeployStatus.DEPLOYMENT_FAILED);
             return;
@@ -264,6 +264,11 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             this.undeployPlugin(pluginId);
             pluginService.updateDeployStatus(Collections.singletonList(pluginId), DeployStatus.DEPLOYMENT_FAILED);
         }
+    }
+
+    private String getChecksumFromPluginData(PluginData pluginData) {
+        Map<String, Object> extension = pluginData.getExtension();
+        return this.getStringInMapObject(extension.get(CHECKSUM));
     }
 
     private boolean queryToolsRegisterResult(List<FitableInfo> fitableInfos) {
@@ -373,6 +378,11 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         return false;
     }
 
+    private boolean completenessCheck(File pluginFile, String expectCheckSum) {
+        String fileChecksum = SecurityUtils.signatureOf(pluginFile, "sha-256", 1024);
+        return expectCheckSum.equals(fileChecksum);
+    }
+
     private PluginData saveMetadata(File toolsJsonFile, String toolsName, File validationFile, File pluginFile) {
         String pluginId = this.generatePluginId(this.getJsonInfo(validationFile));
         this.checkUniquePluginId(pluginId);
@@ -396,7 +406,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             pluginData.getExtension().getOrDefault(PLUGIN_NAME, FileUtils.ignoreExtension(pluginFile.getName()))));
         pluginData.setPluginToolDataList(pluginToolData);
         pluginData.setDeployStatus(DeployStatus.UNDEPLOYED.name());
-        this.savePluginToPersistentPath(newFile, toolsJsonFile, validationFile, pluginData);
+        this.savePluginToPersistentPath(newFile, pluginData);
         this.pluginService.addPlugin(pluginData);
         return pluginData;
     }
@@ -410,16 +420,16 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         Map<String, Object> jsonInfo = this.getJsonInfo(validationFile);
         Object description = jsonInfo.getOrDefault(DESCRIPTION, StringUtils.EMPTY);
         Object codeType = jsonInfo.get(TYPE);
-        Object name = jsonInfo.getOrDefault(NAME, FileUtils.ignoreExtension(pluginFullName));
+        Object pluginName = jsonInfo.getOrDefault(NAME, FileUtils.ignoreExtension(pluginFullName));
         Object checkSum = jsonInfo.get(CHECKSUM);
-        if (codeType instanceof String && description instanceof String && name instanceof String
+        if (codeType instanceof String && description instanceof String && pluginName instanceof String
             && checkSum instanceof String) {
             Map<String, Object> extension = cast(jsonInfo.get((String) codeType));
             extension.put(CHECKSUM, this.getStringInMapObject(checkSum));
             extension.put(TYPE, codeType);
             extension.put(DESCRIPTION, this.getStringInMapObject(description));
             extension.put(PLUGIN_FULL_NAME, pluginFullName);
-            extension.put(PLUGIN_NAME, this.getStringInMapObject(name));
+            extension.put(PLUGIN_NAME, this.getStringInMapObject(pluginName));
             return extension;
         }
         throw new IllegalStateException("The data type is incorrect in plugin.json file.");
@@ -453,16 +463,11 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         }
     }
 
-    private void savePluginToPersistentPath(File pluginFile, File validationFile, File toolsJsonFile,
-        PluginData pluginData) {
+    private void savePluginToPersistentPath(File pluginFile, PluginData pluginData) {
         try {
             Path persistentPath = this.generatePersistentPath(pluginData);
             FileUtils.ensureDirectory(persistentPath.toFile());
             Files.copy(pluginFile.toPath(), Paths.get(persistentPath.toString(), pluginFile.getName()),
-                StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(validationFile.toPath(), Paths.get(persistentPath.toString(), validationFile.getName()),
-                StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(toolsJsonFile.toPath(), Paths.get(persistentPath.toString(), toolsJsonFile.getName()),
                 StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new IllegalStateException(StringUtils.format("Failed to copy file. [toolFile={0}]", pluginFile), e);

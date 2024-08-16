@@ -74,8 +74,8 @@ public class UploadPluginController {
     /**
      * 删除插件的请求。
      *
-     * @param pluginId 表示插件 id 的 {@link String}。
-     * @return 表示格式化之后的返回消息的 {@link Result}。
+     * @param pluginId 表示插件唯一标示的 {@link String}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @DeleteMapping(value = "/delete/{pluginId}", description = "删除插件")
     public Result<String> deletePlugin(@PathVariable("pluginId") String pluginId) {
@@ -93,7 +93,7 @@ public class UploadPluginController {
      * 部署插件。
      *
      * @param deployParam 表示部署参数的 {@link DeployParam}。
-     * @return 表示格式化之后的返回消息的 {@link Result}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @PostMapping(path = "/deploy", description = "部署插件")
     public Result<String> deployPlugin(@RequestBody DeployParam deployParam) {
@@ -112,7 +112,7 @@ public class UploadPluginController {
      * 查询部署中的插件。
      *
      * @param status 表示插件部署状态的 {@link String}。
-     * @return 表示格式化之后的返回消息的 {@link Result}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link PluginData}{@code >}{@code >}。
      */
     @GetMapping(path = "/by-status/{deploy-status}", description = "查询部署中的插件")
     public Result<List<PluginData>> queryDeployingCount(@PathVariable("deploy-status") String status) {

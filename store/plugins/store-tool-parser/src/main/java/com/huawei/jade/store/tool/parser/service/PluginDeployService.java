@@ -19,7 +19,7 @@ public interface PluginDeployService {
     /**
      * 上传插件。
      *
-     * @param namedEntities 表示插件包的 {@link List<NamedEntity>}。
+     * @param namedEntities 表示插件包的 {@link List}{@code <}{@link NamedEntity}{@code >}。
      * @param toolNames 表示工具名称的 {@link String}。
      */
     void uploadPlugins(List<NamedEntity> namedEntities, String toolNames);
@@ -27,14 +27,14 @@ public interface PluginDeployService {
     /**
      * 部署插件。
      *
-     * @param pluginIds 表示插件id列表的 {@link List<String>}。
+     * @param pluginIds 表示插件唯一标示列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     void deployPlugins(List<String> pluginIds);
 
     /**
      * 删除插件。
      *
-     * @param pluginId 表示插件id的 {@link String}。
+     * @param pluginId 表示插件唯一标示的 {@link String}。
      * @return 表示删除数量的 {@link int}。
      */
     int deletePlugin(String pluginId);
@@ -51,7 +51,7 @@ public interface PluginDeployService {
      * 根据部署状态查询插件信息。
      *
      * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
-     * @return 表示插件信息列表的 {@link List<PluginData>}。
+     * @return 表示插件信息列表的 {@link List}{@code <}{@link PluginData}{@code >}。
      */
     List<PluginData> queryPluginsByDeployStatus(DeployStatus deployStatus);
 }

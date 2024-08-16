@@ -15,18 +15,18 @@ public class DeployParam {
     List<String> pluginIds;
 
     /**
-     * 获取插件 id 列表。
+     * 获取插件唯一标示列表。
      *
-     * @return 表示任务唯一标识的 {@link List<String>}。
+     * @return 表示插件唯一标示列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     public List<String> getPluginIds() {
         return this.pluginIds;
     }
 
     /**
-     * 设置插件 id 列表。
+     * 设置插件唯一标示列表。
      *
-     * @param pluginIds 表示插件 id 列表的 {@link List<String>}。
+     * @param pluginIds 表示插件唯一标示列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     public void setPluginIds(List<String> pluginIds) {
         this.pluginIds = pluginIds;
