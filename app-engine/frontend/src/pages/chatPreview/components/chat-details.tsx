@@ -8,8 +8,10 @@ import { setOpenStar } from '@/store/chatStore/chatStore';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import robot2 from '@assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
+import { useTranslation } from 'react-i18next';
 
 const ChatDetail = () => {
+  const { t } = useTranslation();
   const [modalInfo, setModalInfo] = useState({});
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
@@ -43,8 +45,8 @@ const ChatDetail = () => {
           <div className='head-inner'>
             <div className='inner-left'>
               <div className='title'>ModelEngine</div>
-              <div className='sub-title'>你的专属AI智能编排研发平台</div>
-              <div className='desc'>AI助力研发，开始创建专属应用吧～</div>
+              <div className='sub-title'>{t('platformTitle')}</div>
+              <div className='desc'>{t('platformSubTitle')}</div>
             </div>
             <div className='inner-right'>
               <div className=''>
@@ -52,7 +54,9 @@ const ChatDetail = () => {
               </div>
             </div>
             <div className='inner-right-chat'>
-              Hi~我是ModelEngine的超级应用 <strong>小海</strong>，我可以<strong>呼唤其他应用</strong>协同工作，也可以<strong>解答存储领域相关任何问题</strong>，试试向我提问吧~
+              {t('xiaohaiGreet1')} <strong>{t('xiaohai')}</strong>，{t('xiaohaiGreet2')}
+              <strong>{t('xiaohaiGreet3')}</strong>{t('xiaohaiGreet4')}
+              <strong>{t('xiaohaiGreet5')}</strong>，{t('xiaohaiGreet6')}
             </div>
           </div>
           <div className='head-nav'>
@@ -60,11 +64,8 @@ const ChatDetail = () => {
               <div className='tag-home-page'>
                 <CreateAppIcon />
               </div>
-              <div className='nav-title'>创建应用</div>
-              <div className='nav-desc'>
-                通过跟小海聊天轻松定制你的专属应用 -
-                上传自有数据，知识库模型训练，为业务带来更多价值。立即开始创建应用吧!
-              </div>
+              <div className='nav-title'>{t('createApp')}</div>
+              <div className='nav-desc'>{t('createAppDescription')}</div>
             </div>
             <div
               className={`nav-right ${openStar ? 'nav-item-active' : ''}`}
@@ -73,10 +74,8 @@ const ChatDetail = () => {
               <div className='tag-home-page'>
                 <AppBoxIcon />
               </div>
-              <div className='nav-title'>应用百宝箱</div>
-              <div className='nav-desc'>
-                我们拥有海量的应用，让您可以轻松获取和部署各种专业的应用,涵盖不同领域和功能，马上开启你的探索应用市场之旅。
-              </div>
+              <div className='nav-title'>{t('appTreasure')}</div>
+              <div className='nav-desc'>{t('appTreasureDescription')}</div>
             </div>
           </div>
         </div>

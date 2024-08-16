@@ -1,4 +1,5 @@
 import moment from 'moment';
+import i18n from '../locale/i18n';
 
 export function formatLocalDate(date: number | string | Date): string {
   const isNil = date === undefined || date === null || date === '';
@@ -20,7 +21,7 @@ export function getExecTime(startTime, endTime): string {
   const usedTime = etime - stime;
 
   if (usedTime < 0) {
-    return `0小时0分钟0秒`;
+    return i18n.t('zeroCostTime');
   }
 
   // 计算出小时数
@@ -34,7 +35,7 @@ export function getExecTime(startTime, endTime): string {
   // 计算相差秒数
   const seconds = Math.floor(leave2 / 1000);
 
-  const time = `${hours}小时${minutes}分钟${seconds}秒`;
+  const time = `${hours}${i18n.t('hour')}${minutes}${i18n.t('minute')}${seconds}${i18n.t('second')}`;
   return time;
 }
 
@@ -46,31 +47,31 @@ export function getDaysAndHours(startTime, endTime): string {
   const usedTime = etime - stime;
 
   if (usedTime < 0) {
-    return `刚刚`;
+    return i18n.t('justNow');
   }
 
   let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
   if (days > 0) {
-    return `${days}天前`;
+    return `${days}${i18n.t('daysAgo')}`;
   }
   // 计算天数后剩余的毫秒数
   const leave0 = usedTime % (24 * 3600 * 1000);
   // 计算出小时数
   const hours = Math.floor(leave0 / (3600 * 1000));
   if (hours > 0) {
-    return `${hours}小时前`;
+    return `${hours}${i18n.t('hoursAgo')}`;
   }
   // 计算小时数后剩余的毫秒数
   const leave1 = leave0 % (3600 * 1000);
   // 计算相差分钟数
   const minutes = Math.floor(leave1 / (60 * 1000));
   if (minutes > 0) {
-    return `${minutes}分钟前`;
+    return `${minutes}${i18n.t('minutesAgo')}`;
   }
   // 计算分钟数后剩余的毫秒数
   const leave2 = leave1 % (60 * 1000);
   // 计算相差秒数
   const seconds = Math.floor(leave2 / 1000);
 
-  return `${seconds}秒前`;
+  return `${seconds}${i18n.t('secondsAgo')}`;
 }

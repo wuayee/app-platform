@@ -283,3 +283,29 @@ export const fileValidate = (file, fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gi
   }
   return true
 }
+
+/**
+ * 获取cookie中cname字段的值
+ * @param {String} cname 需要获取的字段
+ * @return {String} 字段的值
+ */
+export const getCookie = (cname) => {
+  const name = `${cname}=`;
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    const c = ca[i].trim();
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
+/**
+ * 设置cookie中cname字段的值
+ * @param {String} cname 需要设置的字段
+ * @param {String} cvalue 需要设置的字段值
+ */
+export const setCookie = (cname, cvalue) => {
+  document.cookie = `${cname}=${cvalue};`;
+}

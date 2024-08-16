@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, Drawer, Input, Dropdown } from 'antd';
 import { AnyAction } from 'redux';
-import { useHistory } from 'react-router-dom';
 import {
   SearchOutlined,
   EllipsisOutlined,
@@ -17,12 +16,14 @@ import { Message } from '@shared/utils/message';
 import avatarNormal from '@/assets/images/knowledge/knowledge-base.png';
 import { HOME_APP_ID } from '../send-editor/common/config';
 import './style.scoped.scss';
+import { useTranslation } from "react-i18next";
 
 interface StarAppsProps {
   handleAt: (val: any) => void;
 }
 
 const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
@@ -51,11 +52,11 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
   const items: any[] = [
     {
       key: '2',
-      label: '设为默认',
+      label: t('setDefaultApp'),
     },
     {
       key: '3',
-      label: '取消默认',
+      label: t('cancelDefaultApp'),
     },
   ];
 
@@ -104,7 +105,7 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
   // 开始聊天
   const startChat = (item: any) => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return
     }
     dispatch(setCurAppId(item?.appId))
@@ -131,7 +132,7 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
       title={
         <div className='app-title'>
           <div className='app-title-left'>
-            <span>选择收藏的应用</span>
+            <span>{t('collections')}</span>
           </div>
           <CloseOutlined
             style={{ fontSize: 20 }}
@@ -143,11 +144,11 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
       onClose={() => dispatch(setOpenStar(false))}
       open={openStar}
     >
-      <Input placeholder='搜索应用' prefix={<SearchOutlined />} />
+      <Input placeholder={t('search')} prefix={<SearchOutlined />} />
       <div className='app-wrapper'>
         {apps.map((app, index) => (
           <div className='app-item' key={app.id}>
-            {index === 0 ? <div className='app-item-default'>默认应用</div> : ''}
+            {index=== 0 ? <div className='app-item-default'>{t('defaultApp')}</div> : ''}
 
             <div className='app-item-content'>
               {app.appAvatar ? <Avatar size={48} src={app.appAvatar} /> : <Avatar size={48} src={avatarNormal} />}
@@ -162,7 +163,7 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
                       style={{ color: '#1677ff', cursor: 'pointer' }}
                       onClick={() => startChat(app)}
                     >
-                      开始聊天
+                      {t('startChat')}
                     </span>
                   </div>
                 </div>
@@ -172,7 +173,7 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
             <div className='app-item-footer'>
               <div>
                 <UserOutlined />
-                <span className='text'>由{app.author}创建</span>
+                <span className='text'>{t('by')}{app.author}{t('create')}</span>
               </div>
               <Dropdown menu={{
                 items: [items[index > 0 ? 0 : 1]], onClick: (info) => {
@@ -187,7 +188,7 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
       </div>
       <div style={{ float: 'right', marginTop: 12 }}>
         <Button onClick={() => dispatch(setOpenStar(false))} className='close-button'>
-          关闭
+          {t('close')}
         </Button>
       </div>
     </Drawer>
