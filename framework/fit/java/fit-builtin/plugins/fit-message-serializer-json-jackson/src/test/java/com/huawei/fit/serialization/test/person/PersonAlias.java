@@ -21,6 +21,9 @@ public class PersonAlias {
     @JsonProperty("last_name")
     private String lastName;
 
+    @Property(name = "person_name")
+    private PersonName name;
+
     /**
      * 获取名字。
      *
@@ -55,5 +58,23 @@ public class PersonAlias {
      */
     public void lastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    /**
+     * 设置名字。
+     *
+     * @return 表示名字的 {@link PersonName}。
+     */
+    public PersonName getName() {
+        return this.name;
+    }
+
+    /**
+     * 设置名字。
+     *
+     * @param name 表示待设置名字的 {@link PersonName}。
+     */
+    public void setName(PersonName name) {
+        this.name = name;
     }
 }

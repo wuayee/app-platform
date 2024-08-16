@@ -7,7 +7,7 @@ import {EvaluationInput} from "@/components/evaluation/evaluationAlgorithms/Eval
 import httpUtil from "@/components/util/httpUtil.jsx";
 
 /**
- * 获取评估算法接待你配置数据
+ * 获取评估算法节点配置数据
  *
  * @param shape 评估算法节点shape
  * @return {*} 配置数据

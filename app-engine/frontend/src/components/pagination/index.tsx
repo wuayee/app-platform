@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pagination } from 'antd';
+import { useTranslation } from "react-i18next";
 
 interface paginationProps {
   // 当前页
@@ -57,6 +58,7 @@ const defaultConfig: paginationProps = {
 
 const App: React.FC = (props: paginationProps = defaultConfig) => {
   const config = {...defaultConfig, ...props }
+  const { t } = useTranslation();
   return (
     <>
       <div style={{
@@ -66,7 +68,7 @@ const App: React.FC = (props: paginationProps = defaultConfig) => {
         fontSize: '12px'
 
       }}>
-        { config.showTotalFunc ? (<span>共{props.total}条</span>) : <span></span>}
+        { config.showTotalFunc ? (<span>{t('total')}{props.total}{t('piece')}</span>) : <span></span>}
         <Pagination {...config} />
       </div>
     </>

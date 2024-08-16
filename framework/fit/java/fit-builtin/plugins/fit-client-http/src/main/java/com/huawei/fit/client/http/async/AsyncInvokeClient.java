@@ -48,25 +48,23 @@ public class AsyncInvokeClient extends AbstractInvokeClient {
         String targetWorkerInstanceId;
 
         // 第一步：提交异步任务。
-        try (HttpClassicClientRequest clientRequest = this.buildAsyncClientRequest(client, request, asyncTaskId)) {
-            clientRequest.entity(this.buildHttpEntity(clientRequest, request));
-            try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest,
-                    request.returnType())) {
-                Response response = HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
-                if (clientResponse.statusCode() != HttpResponseStatus.ACCEPTED.statusCode()) {
-                    // 服务器不支持异步长任务，应按照同步请求处理。
-                    log.warn("Async task not supported. Use Sync instead. [asyncTaskId={}]", asyncTaskId);
-                    return response;
-                } else if (response.metadata().code() != ResponseMetadata.CODE_OK) {
-                    // 如果返回值不为 OK，则将结果返回给上层。
-                    return response;
-                } else {
-                    targetWorkerId = TlvUtils.getWorkerId(response.metadata().tagValues());
-                    targetWorkerInstanceId = TlvUtils.getWorkerInstanceId(response.metadata().tagValues());
-                }
+        HttpClassicClientRequest clientRequest = this.buildAsyncClientRequest(client, request, asyncTaskId);
+        clientRequest.entity(this.buildHttpEntity(clientRequest, request));
+        try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest, request.returnType())) {
+            Response response = HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
+            if (clientResponse.statusCode() != HttpResponseStatus.ACCEPTED.statusCode()) {
+                // 服务器不支持异步长任务，应按照同步请求处理。
+                log.warn("Async task not supported. Use Sync instead. [asyncTaskId={}]", asyncTaskId);
+                return response;
+            } else if (response.metadata().code() != ResponseMetadata.CODE_OK) {
+                // 如果返回值不为 OK，则将结果返回给上层。
+                return response;
+            } else {
+                targetWorkerId = TlvUtils.getWorkerId(response.metadata().tagValues());
+                targetWorkerInstanceId = TlvUtils.getWorkerInstanceId(response.metadata().tagValues());
             }
         } catch (IOException e) {
-            throw new ClientException("Failed to close http classic client.", e);
+            throw new ClientException("Failed to close http classic client response.", e);
         }
 
         // 第二步：从指定服务器的长轮询链接中获取异步结果数据，该操作为阻塞操作。

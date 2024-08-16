@@ -10,10 +10,15 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.MybatisTest;
 import com.huawei.fitframework.test.annotation.Sql;
 import com.huawei.fitframework.test.domain.db.DatabaseModel;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
+import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
 import com.huawei.jade.app.engine.task.po.EvalTaskPo;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
  * 表示 {@link EvalTaskMapper} 的测试集。
@@ -40,5 +45,37 @@ public class EvalTaskMapperTest {
 
         this.evalTaskMapper.create(evalTaskPo);
         assertThat(evalTaskPo.getId()).isNotEqualTo(null);
+    }
+
+    @Test
+    @Sql(scripts = "sql/test_create_task.sql")
+    @DisplayName("分页查询数据集元数据成功")
+    void shouldOkWhenListEvalTask() {
+        EvalTaskQueryParam queryParam = new EvalTaskQueryParam();
+        queryParam.setAppId("123456");
+        queryParam.setPageIndex(1);
+        queryParam.setPageSize(2);
+        List<EvalTaskEntity> taskEntities = this.evalTaskMapper.listEvalTask(queryParam);
+        assertThat(taskEntities.size()).isEqualTo(2);
+
+        for (int i = 0; i < taskEntities.size(); i++) {
+            EvalTaskEntity entity = taskEntities.get(i);
+            assertThat(entity).extracting(EvalTaskEntity::getId,
+                            EvalTaskEntity::getName,
+                            EvalTaskEntity::getDescription,
+                            EvalTaskEntity::getStatus,
+                            EvalTaskEntity::getCreatedBy,
+                            EvalTaskEntity::getUpdatedBy,
+                            EvalTaskEntity::getAppId,
+                            EvalTaskEntity::getWorkflowId)
+                    .containsExactly(Long.valueOf(i + 1),
+                            StringUtils.format("task{0}", i + 1),
+                            StringUtils.format("desc{0}", i + 1),
+                            "online",
+                            StringUtils.format("user{0}", i + 1),
+                            StringUtils.format("user{0}", i + 1),
+                            "123456",
+                            StringUtils.format("wf{0}", i + 1));
+        }
     }
 }

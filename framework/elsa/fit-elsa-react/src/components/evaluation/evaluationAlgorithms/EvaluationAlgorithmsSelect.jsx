@@ -7,7 +7,7 @@ import React from "react";
 /**
  * 算法选择组件
  *
- * @param algorithms 算法描述信息
+ * @param algorithms 接口获取的算法列表
  * @param disabled 是否禁用
  * @param selectedAlgorithm 选择的算法
  * @return {JSX.Element} 算法选择组件

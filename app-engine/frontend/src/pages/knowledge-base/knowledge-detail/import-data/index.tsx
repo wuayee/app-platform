@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Steps } from 'antd';
-import { useHistory, useLocation} from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { SelectForm } from '../../../../components/select-form';
@@ -100,10 +100,10 @@ const KnowledgeBaseDetailImportData = () => {
   };
 
   // 创建知识表
-  const createKnowledgeTable = async () => {};
+  const createKnowledgeTable = async () => { };
 
   const onCancle = async () => {
-    navigate(-1);
+    window.history.back();
     const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}_${file.name}`);
     await deleteLocalFile(id, table_id, fileIds);
     formDataSource.setFieldValue('selectedFile', []);
@@ -132,7 +132,7 @@ const KnowledgeBaseDetailImportData = () => {
         }
         formValue.current.dataSource = { ...res };
 
-        if(table_type === 'table') {
+        if (table_type === 'table') {
           // 获取表格列
           const result = await getTableColums({
             repositoryId: id as string,
@@ -140,8 +140,8 @@ const KnowledgeBaseDetailImportData = () => {
             fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || ''
           });
 
-          if(result && result?.length) {
-            formStepSecond.setFieldValue('tableCustom', result.map((item, index)=> ({
+          if (result && result?.length) {
+            formStepSecond.setFieldValue('tableCustom', result.map((item, index) => ({
               description: item.desc,
               dataType: item.dataType,
               colName: item.name,
@@ -169,7 +169,7 @@ const KnowledgeBaseDetailImportData = () => {
         }
 
         // 表格创建逻辑
-        if(table_type === 'table') {
+        if (table_type === 'table') {
           const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || '';
 
           const data = (res?.tableCustom || []).map(item => ({
@@ -182,13 +182,13 @@ const KnowledgeBaseDetailImportData = () => {
             repositoryId: id as string,
             knowledgeTableId: table_id as string,
             fileName,
-            columns:data
+            columns: data
           })
         }
 
         setCurrentSteps(currentSteps + 1);
       }
-    } catch (error) {}
+    } catch (error) { }
     setLoading(false);
   };
 
@@ -196,7 +196,7 @@ const KnowledgeBaseDetailImportData = () => {
   }, []);
 
   const handleSubmit = async () => {
-    navigate(-1);
+    window.history.back();
   };
 
   return (

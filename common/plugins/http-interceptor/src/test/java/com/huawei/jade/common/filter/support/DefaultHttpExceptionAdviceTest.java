@@ -48,9 +48,9 @@ public class DefaultHttpExceptionAdviceTest {
         String url = "/nonsupport/exception";
         this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
-        assertThat(this.response.objectEntity()).hasValueSatisfying(objectEntity ->
-                assertThat(objectEntity.object())
-                        .hasFieldOrPropertyWithValue("code", 404)
+        assertThat(this.response.objectEntity()).isNotEmpty()
+                .get()
+                .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code", 404)
                         .hasFieldOrPropertyWithValue("msg", "test error")
                         .hasFieldOrPropertyWithValue("data", null));
     }

@@ -40,6 +40,11 @@ function App() {
                 testCodeUrl: "https://localhost:8080/fit/CodeNode.tool/Python_REPL_TEST",
             }
         });
+        configs.push({
+            node: "evaluationAlgorithmsNodeState", urls: {
+                datasetUrlPrefix: "http://10.245.113.7:8080/eval/",
+            }
+        });
 
         JadeFlow.edit(stage, "1111", graphData, configs).then(agent => {
             window.agent = agent;
@@ -68,7 +73,7 @@ function App() {
                 }}>打开drawer</Button>
             </div>
             {/*<div id={"stageContainer"} style={{position: "relative"}}>*/}
-                <div id="stage" style={{position: "relative", width: 1600, height: 800}}></div>
+            <div id="stage" style={{position: "relative", width: 1600, height: 800}}></div>
             {/*</div>*/}
             <CodeDrawer container={document.getElementById("stage")}
                         width={1232}

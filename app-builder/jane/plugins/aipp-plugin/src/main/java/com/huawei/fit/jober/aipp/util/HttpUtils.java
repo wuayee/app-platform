@@ -39,9 +39,8 @@ public class HttpUtils {
      * @return HTTP 回复
      * @throws IOException 当 HTTP 请求发送失败，或者 HTTP 回复内容不存在时，抛出该异常
      */
-    public static String sendHttpRequest(HttpClassicClientRequest httpRequest)
-            throws IOException {
-        try(HttpClassicClientResponse<Object> response = HttpUtils.execute(httpRequest)) {
+    public static String sendHttpRequest(HttpClassicClientRequest httpRequest) throws IOException {
+        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(httpRequest)) {
             if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
                 throw new IOException(String.format(Locale.ROOT,
                         "send http fail. url=%s result=%d",

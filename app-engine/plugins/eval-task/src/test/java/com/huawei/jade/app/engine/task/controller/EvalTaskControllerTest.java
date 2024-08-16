@@ -7,6 +7,7 @@ package com.huawei.jade.app.engine.task.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
@@ -15,14 +16,19 @@ import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.task.dto.EvalTaskCreateDto;
+import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
 import com.huawei.jade.app.engine.task.service.EvalTaskService;
+import com.huawei.jade.common.vo.PageVo;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 表示 {@link EvalTaskController} 的测试集。
@@ -40,13 +46,6 @@ public class EvalTaskControllerTest {
     private EvalTaskService evalTaskService;
 
     private HttpClassicClientResponse<?> response;
-
-    @AfterEach
-    void teardown() throws IOException {
-        if (this.response != null) {
-            this.response.close();
-        }
-    }
 
     @Test
     @DisplayName("创建评估任务接口成功")
@@ -77,5 +76,47 @@ public class EvalTaskControllerTest {
                 MockMvcRequestBuilders.post("/eval/task").jsonEntity(evalTaskCreateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("分页查询评估任务接口成功")
+    void shouldOkWhenQueryEvalTask() {
+        Long taskId = 1L;
+        String name = "task1";
+        String description = "eval task";
+        String status = "published";
+        String appId = "123456";
+        String workflowId = "flow1";
+
+        EvalTaskEntity entity = new EvalTaskEntity();
+        entity.setId(taskId);
+        entity.setName(name);
+        entity.setDescription(description);
+        entity.setStatus(status);
+        entity.setAppId(appId);
+        entity.setWorkflowId(workflowId);
+        List<EvalTaskEntity> entities = Collections.singletonList(entity);
+        when(this.evalTaskService.listEvalTask(any())).thenReturn(PageVo.of(1, entities));
+
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/eval/task")
+                .param("appId", "123456")
+                .param("pageIndex", "1")
+                .param("pageSize", "10")
+                .responseType(TypeUtils.parameterized(PageVo.class, new Type[] {EvalTaskEntity.class}));
+
+        this.response = this.mockMvc.perform(requestBuilder);
+        assertThat(this.response.statusCode()).isEqualTo(200);
+        assertThat(this.response.objectEntity()).isPresent();
+
+        PageVo<EvalTaskEntity> target = ObjectUtils.cast(this.response.objectEntity().get().object());
+        assertThat(target.getTotal()).isEqualTo(1);
+        assertThat(target.getItems()).isNotEmpty();
+        assertThat(target.getItems().get(0)).extracting(EvalTaskEntity::getId,
+                        EvalTaskEntity::getName,
+                        EvalTaskEntity::getDescription,
+                        EvalTaskEntity::getStatus,
+                        EvalTaskEntity::getAppId,
+                        EvalTaskEntity::getWorkflowId)
+                .containsExactly(taskId, name, description, status, appId, workflowId);
     }
 }

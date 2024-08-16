@@ -6,6 +6,7 @@ import DetailCard from '../knowledge-card/detail-card';
 import Pagination from '@/components/pagination/index';
 import { getTableColumns, getTableList, getTextList } from '@/shared/http/knowledge';
 import './index.scoped.scss';
+import { useTranslation } from "react-i18next";
 
 interface props {
   // 知识表类型
@@ -17,6 +18,7 @@ interface props {
 }
  
 const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
+  const { t } = useTranslation();
   const navigate = useHistory().push;
  
   // 展示的数据
@@ -78,7 +80,7 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
       }));
       if(newCol.length) {
         newCol.push({
-          title: '操作',
+          title: t('operate'),
           width: 200,
           render(_, record: any, index: any) {
                 const deleteFunc =async () => {
@@ -89,8 +91,8 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
                 return (
                   <>
                     <div>
-                      <Button type="link" size="small" onClick={modifyFunc} disabled={true}>修改</Button>
-                      <Button type="link" size="small" onClick={deleteFunc} disabled={true}>删除</Button>
+                      <Button type="link" size="small" onClick={modifyFunc} disabled={true}>{t('modify')}</Button>
+                      <Button type="link" size="small" onClick={deleteFunc} disabled={true}>{t('delete')}</Button>
                     </div>
                   </>
                 )
@@ -169,10 +171,10 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
             display: 'flex',
             alignItems: 'center'
           }} disabled={true}>
-            {<KnowledgeIcons.add/>} 添加行
+            {<KnowledgeIcons.add/>} {t('addLine')}
         </Button>
         <Input 
-            placeholder="搜索"  
+            placeholder={t('search')}
             style={{
             width: 368,
             height: 32,

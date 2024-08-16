@@ -83,7 +83,7 @@ const ChatRunning = () => {
   return (
     <div className='chat-running-container'>
       <div className='chat-running-chat'>
-        <Button type='text' onClick={() => { navigate(-1) }}>返回</Button>
+        <Button type='text' onClick={() => { window.history.back() }}>返回</Button>
         <span className='running-app-name'>{appInfo.name}</span>
       </div>
       <CommonChat chatType='active' />

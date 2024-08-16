@@ -252,7 +252,7 @@ public class EvalDataIntegrationTest {
     @Test
     @Sql(scripts = "sql/test_insert_data.sql")
     @DisplayName("评估数据增删改查成功")
-    void shouldOkWhenCrudData() {
+    void shouldOkWhenCrudData() throws IOException {
         // 初始化数据库后，数据集 id2 的数据量为 0。
         EvalDataQueryParam dataQueryParam = new EvalDataQueryParam();
         dataQueryParam.setDatasetId(2L);
@@ -268,6 +268,7 @@ public class EvalDataIntegrationTest {
                 MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         // 查询插入新数据后，数据量为 1。
         EvalDataQueryParam queryParam = new EvalDataQueryParam();
@@ -287,6 +288,7 @@ public class EvalDataIntegrationTest {
                 MockMvcRequestBuilders.put("/eval/data").jsonEntity(evalDataUpdateDto).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
+        this.response.close();
 
         // 查询更新前数据内容
         queryParam.setVersion(1L);

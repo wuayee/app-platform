@@ -29,9 +29,11 @@ import { getAppInfo } from '@/shared/http/aipp';
 import { setUseMemory } from '@/store/common/common';
 import { updateChatId } from "@/shared/utils/common";
 import { HOME_APP_ID } from '../common/config';
+import { useTranslation } from 'react-i18next';
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
+  const { t } = useTranslation();
   const { fileCallBack, editorRef, chatType } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
@@ -47,7 +49,7 @@ const EditorBtnHome = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAt, setShowAt] = useState(false);
   const [appName, setAppName] = useState('');
-  const [appIcon, setAppIcon] = useState(knowledgeBase);
+  const [appIcon, setAppIcon] = useState();
   const [openHistorySignal, setOpenHistorySignal] = useState(null);
   const [searchKey, setSearchKey] = useState(null);
   let openUploadRef = useRef(null);
@@ -56,7 +58,7 @@ const EditorBtnHome = (props) => {
       setShowAt(false);
     })
     setAppIcon(appInfo.attributes?.icon);
-    setAppName(appInfo.name || '应用');
+    setAppName(appInfo.name || t('app'));
   }, [appInfo]);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const EditorBtnHome = (props) => {
       setAppName(atAppInfo.name);
     } else {
       setAppIcon(appInfo.attributes?.icon);
-      setAppName(appInfo.name || '应用');
+      setAppName(appInfo.name || t('app'));
     }
   }, [atAppInfo])
 
@@ -161,7 +163,7 @@ const EditorBtnHome = (props) => {
   //点击“新聊天”按钮回调
   const onClickNewChat = () => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中，请稍后再试' })
+      Message({ type: 'warning', content: t('tryLater') })
       return;
     }
     dispatch(setChatRunning(false));
@@ -182,7 +184,7 @@ const EditorBtnHome = (props) => {
   // 检验是否正在对话中
   const isChatRunning = () => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return true;
     }
     return false;
@@ -200,10 +202,10 @@ const EditorBtnHome = (props) => {
         <div className='inner-item'>
           {appIcon ? <img src={appIcon} alt='' /> : <img src={knowledgeBase} alt='' />}
           <div className={['switch-app', atAppId ? 'switch-active' : null].join(' ')} onClick={onClickShowMore}>
-            {atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span>}
+            {atAppId && <span style={{ marginLeft: '6px' }}>{t('chatWith')}</span>}
             <span className='item-name' title={appName}>{appName}</span>
-            {!appInfo.hideHistory && <img src='/src/assets/images/ai/list.png' className='app-menu' />}
-            {atAppId && <span style={{ marginLeft: '6px' }}>对话</span>}
+            {!appInfo.hideHistory && <img src='./src/assets/images/ai/list.png' className='app-menu' />}
+            {atAppId && <span style={{ marginLeft: '6px' }}>{t('chat')}</span>}
           </div>
           <LinkIcon onClick={uploadClick} />
           {(!atAppId && appId === HOME_APP_ID) && <AtIcon onClick={atClick} />}
@@ -221,10 +223,10 @@ const EditorBtnHome = (props) => {
               <div className='inner-item'>
                 { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
                 {showMulti && <div className='multi-conversation-title'>
-                  <span>多轮对话</span>
+                  <span>{t('multiTurnConversation')}</span>
                   <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange} />
                 </div>}
-                <span className='item-clear' onClick={onClickNewChat}>+ 新聊天</span>
+                <span className='item-clear' onClick={onClickNewChat}>+ {t('newChat')}</span>
               </div>
             )
         }
@@ -234,12 +236,12 @@ const EditorBtnHome = (props) => {
         searchKey={searchKey}
         setSearchKey={setSearchKey} />}
       <Modal
-        title='确认清空当前聊天'
+        title={t('clearCurrentChat')}
         open={isModalOpen}
         onOk={(e) => handleOk(e.timeStamp)}
         onCancel={() => setIsModalOpen(false)}
         centered>
-        <span>清空后当前窗口聊天内容将不会被系统保存。</span>
+        <span>{t('clearCurrentChatContent')}</span>
       </Modal>
       <StarApps
         handleAt={atItemClick}

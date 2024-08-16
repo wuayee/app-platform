@@ -246,7 +246,6 @@ export const BaseIcons = {
   ),
   Panle: () => (
     <svg width='48px' height='48px' viewBox='0 0 48 48' version='1.1'>
-      <title>Conversation/ico_Close</title>
       <g id='页面-2备份' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
         <g id='首页Chat备份-9' transform='translate(-1582.000000, -820.000000)'>
           <g id='语音提问-响应中' transform='translate(547.000000, 820.000000)'>
@@ -276,7 +275,6 @@ export const BaseIcons = {
   ),
   PanleClose: () => (
     <svg width='48px' height='48px' viewBox='0 0 48 48' version='1.1'>
-      <title>Icon/48px/panel fold_Close</title>
       <g id='Icon/48px/panel-fold_Close' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
         <circle id='椭圆形' fill='#FFFFFF' cx='24' cy='24' r='24'></circle>
         <g id='Conversation/ico_fold'>
@@ -303,7 +301,6 @@ export const BaseIcons = {
   ),
   AppBox: () => (
     <svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1">
-      <title>编组</title>
       <defs>
         <linearGradient x1="15.3472726%" y1="11.2064742%" x2="49.95977%" y2="99.8969153%" id="linearGradient-1">
           <stop stop-color="#86DBFF" offset="0%"></stop>
@@ -347,7 +344,6 @@ export const BaseIcons = {
   ),
   CreateApp: () => (
     <svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1">
-      <title>编组</title>
       <defs>
         <linearGradient x1="-4.0298897%" y1="0.370991313%" x2="50%" y2="100%" id="linearGradient-1">
           <stop stop-color="#49B4FF" offset="0%"></stop>
@@ -382,7 +378,6 @@ export const BaseIcons = {
   ),
   Audio: () => (
     <svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1">
-      <title>Conversation/ico_Text</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="首页Chat" transform="translate(-364.000000, -956.000000)">
           <g id="语音提问-响应中" transform="translate(340.000000, 820.000000)">
@@ -398,7 +393,6 @@ export const BaseIcons = {
   ),
   AudioActive: () => (
     <svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1">
-      <title>Conversation/ico_Text</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="首页Chat" transform="translate(-364.000000, -956.000000)">
           <g id="语音提问-响应中" transform="translate(340.000000, 820.000000)">
@@ -414,7 +408,6 @@ export const BaseIcons = {
   ),
   History: () => (
     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-      <title>Icon/24px/History n</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-97.000000, -254.000000)">
           <g id="button-/-small_32-/-history-n备份-13" transform="translate(97.000000, 254.000000)">
@@ -430,7 +423,6 @@ export const BaseIcons = {
   ),
   Rebot: () => (
     <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
-      <title>ICON/16/ Reboot</title>
       <g id="ICON/16/-Reboot" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="编组" transform="translate(1.502645, 2.166667)" fill="#4D4D4D" fillRule="nonzero">
           <path d="M12.1013705,6.57626579 L12.1913846,6.58258855 C12.464021,6.62645195 12.6494782,6.88302574 12.6056148,7.15566215 C12.128196,10.1230966 9.56345343,12.3333333 6.53381276,12.3333333 C4.32842749,12.3333333 2.33847164,11.1587288 1.2469565,9.32028135 L0.987365617,10.453584 C0.932298236,10.6927871 0.714132181,10.8520511 0.477330671,10.8409799 L0.3879387,10.8286673 C0.118835194,10.7667164 -0.0490952693,10.4983438 0.012855535,10.2292403 L0.548054745,7.90442749 C0.610060329,7.63508645 0.878826356,7.46714309 1.14808984,7.52948462 L3.4662927,8.06621004 C3.7353187,8.12849667 3.90291406,8.39707863 3.84062752,8.66610465 C3.77834078,8.93513062 3.50975883,9.10272598 3.24073283,9.04043934 L2.08511286,8.772832 C2.99467975,10.3341153 4.6727628,11.3333333 6.53381276,11.3333333 C9.07007216,11.3333333 11.2185016,9.48186576 11.618311,6.99681873 C11.652427,6.78476819 11.8152196,6.6254557 12.0141647,6.58575985 L12.1013705,6.57626579 Z M6.53381276,0 C8.6680806,0 10.6113586,1.09947013 11.7285179,2.86352122 L12.0180917,1.96591204 C12.0937479,1.7324025 12.3249348,1.5927099 12.559877,1.62432762 L12.64786,1.64436562 C12.9105582,1.72947894 13.0545194,2.01143578 12.9694062,2.27413401 L12.234199,4.54332155 C12.1489849,4.80633066 11.8665009,4.95026309 11.6036347,4.86460933 L9.34089902,4.12730545 C9.0783436,4.04175278 8.93485451,3.75955541 9.02040702,3.49699993 C9.10595986,3.23444456 9.38815723,3.09095547 9.65071265,3.17650815 L11.0209577,3.62551432 C11.0146087,3.61599958 11.0085396,3.60620323 11.002768,3.59612998 C10.0897894,2.00271719 8.39915611,1 6.53381276,1 C3.99782533,1 1.84955191,2.85107775 1.44943214,5.33578375 C1.40552968,5.60841388 1.14892932,5.79383429 0.876299194,5.74993183 C0.603669069,5.70602937 0.418248659,5.44942901 0.462151118,5.17679889 C0.939940582,2.20977141 3.50449693,0 6.53381276,0 Z" id="形状结合"></path>
@@ -440,7 +432,6 @@ export const BaseIcons = {
   ),
   Like: () => (
     <svg width="24.0000013px" height="22.0416667px" viewBox="0 0 24.0000013 22.0416667" version="1.1">
-      <title>Conversation/ico_Bad_Normal备份</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-571.999999, -551.958333)" fillRule="nonzero">
           <g id="Conversation/ico_Bad_Normal备份" transform="translate(572.000000, 551.958333)">
@@ -483,7 +474,6 @@ export const BaseIcons = {
   ),
   LikeSelect: () => (
     <svg width="24.0000013px" height="22.0416667px" viewBox="0 0 24.0000013 22.0416667" version="1.1">
-      <title>Conversation/ico_Bad_Normal备份 6</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-775.999999, -551.958333)" fillRule="nonzero">
           <g id="Conversation/ico_Bad_Normal备份-6" transform="translate(776.000000, 551.958333)">
@@ -496,7 +486,6 @@ export const BaseIcons = {
   ),
   UnlikeSelect: () => (
     <svg width="24.0000013px" height="22.0416667px" viewBox="0 0 24.0000013 22.0416667" version="1.1">
-      <title>Conversation/ico_Bad_Normal备份 4</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-815.999999, -551.958333)" fillRule="nonzero">
           <g id="Conversation/ico_Bad_Normal备份-4" transform="translate(816.000000, 551.958333)">
@@ -508,26 +497,16 @@ export const BaseIcons = {
     </svg>
   ),
   Share: () => (
-    <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-      <title>Icon/24px/share n</title>
-      <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-        <g id="icon" transform="translate(-97.000000, -158.000000)">
-          <g id="button-/-small_32-/-history-n备份-7" transform="translate(97.000000, 158.000000)">
-            <rect id="矩形" fill="#D8D8D8" fillRule="nonzero" opacity="0" x="0" y="0" width="32" height="32"></rect>
-            <g id="编组-2">
-              <rect id="矩形" fill="#D8D8D8" fillRule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
-              <g id="编组" transform="translate(2.000000, 2.000000)" stroke="#4D4D4D" strokeLinejoin="round" strokeWidth="1.4">
-                <path d="M16.135,7.23247232 C14.1775,7.23247232 12.5825,5.61140094 12.5825,3.61878102 C12.5825,1.62616109 14.1775,0 16.135,0 C18.0925,0 19.6875,1.62107138 19.6875,3.61623616 C19.6875,5.61140094 18.095,7.23247232 16.135,7.23247232 L16.135,7.23247232 Z" id="路径" strokeLinecap="round"></path>
-                <path d="M16.4475,20 C14.49,20 12.895,18.3789286 12.895,16.3837638 C12.895,14.3885991 14.4875,12.7675277 16.4475,12.7675277 C18.4075,12.7675277 20,14.3911439 20,16.3837638 C20,18.3763838 18.4075,20 16.4475,20 Z" id="路径" strokeLinecap="round"></path>
-                <path d="M3.5525,14.6329049 C1.595,14.6329049 0,13.0118336 0,11.0192136 C0,9.02659371 1.5925,7.40297748 3.5525,7.40297748 C5.5125,7.40297748 7.105,9.02404886 7.105,11.0192136 C7.105,13.0143784 5.51,14.6329049 3.5525,14.6329049 Z" id="路径" strokeLinecap="round"></path>
-                <line x1="7" y1="9" x2="13" y2="5" id="路径-2"></line>
-                <line x1="7" y1="13" x2="13" y2="16" id="路径-3"></line>
-              </g>
-            </g>
-          </g>
-        </g>
-      </g>
-    </svg>
+    <svg viewBox="0 0 1024 1024" version="1.1" p-id="3168" width="24" height="24">
+      <path d="M832 640c-64 0-121.6 32-153.6 76.8 0 0 0-6.4 6.4-6.4L371.2 544v6.4c6.4-25.6 12.8-44.8 12.8-70.4s-6.4-44.8-12.8-64c0 6.4 
+      6.4 12.8 6.4 19.2l294.4-134.4c-6.4-6.4-12.8-19.2-19.2-32C684.8 339.2 755.2 384 832 384c108.8 0 192-83.2 
+      192-192s-83.2-192-192-192-192 83.2-192 192c0 25.6 6.4 44.8 12.8 64 0-6.4-6.4-12.8-6.4-19.2L352 371.2c6.4 
+      12.8 12.8 19.2 12.8 32C339.2 332.8 268.8 288 192 288c-108.8 0-192 83.2-192 192s83.2 192 192 192c64 0 
+      121.6-32 153.6-76.8 0 0 0 6.4-6.4 6.4l307.2 166.4v-6.4c0 25.6-6.4 44.8-6.4 70.4 0 108.8 83.2 192 192 192s192-83.2 
+      192-192-83.2-192-192-192z m0-576c70.4 0 128 57.6 128 128s-57.6 128-128 128-128-57.6-128-128 57.6-128 128-128zM192 608c-70.4 
+      0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128-57.6 128-128 128z m172.8-44.8c0 6.4-6.4 12.8-12.8 19.2 6.4-6.4 12.8-12.8 
+      12.8-19.2z m307.2 166.4c-6.4 6.4-6.4 12.8-12.8 19.2 0-6.4 6.4-12.8 12.8-19.2zM832 960c-70.4 0-128-57.6-128-128s57.6-128 128-128 
+      128 57.6 128 128-57.6 128-128 128z" fill="#515151" p-id="3169"></path></svg>
   ),
   Copy: () => (
     <svg viewBox="0 0 1024 1024" p-id="4133" id="mx_n_1716534254396" width="24" height="24">
@@ -553,7 +532,6 @@ export const BaseIcons = {
   ),
   Delete: () => (
     <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-      <title>ICON/24/Delect</title>
       <g id="ICON/24/Delect" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <path d="M20,6 L20,19.1282051 C20,20.7142536 18.5251733,22 16.7058824,22 L7.29411765,22 C5.47482671,22 4,20.7142536 4,19.1282051 L4,6 L20,6 Z M18,8 L6,8 L6,18.7008547 C6,19.3585868 6.60746534,19.9202522 7.41278719,19.9922177 L7.58823529,20 L16.4117647,20 C17.2432619,20 17.9061604,19.4821834 17.9908513,18.8401834 L18,18.7008547 L18,8 Z" id="形状" fill="#4D4D4D" fillRule="nonzero"></path>
         <path d="M17,7 L7,7 L7,4 C7,2.8954305 7.85769205,2 8.91570881,2 L15.0842912,2 C16.1423079,2 17,2.8954305 17,4 L17,7 Z M9,6 L15,6 L15,4 L9,4 L9,6 Z" id="形状" fill="#4D4D4D" fillRule="nonzero"></path>
@@ -565,7 +543,6 @@ export const BaseIcons = {
   ),
   DeleteContent: () => (
     <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
-      <title>Icon/16px/delete n</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-102.000000, -346.000000)">
           <g id="Icon/16px/delete_normal" transform="translate(102.000000, 346.000000)">
@@ -579,7 +556,6 @@ export const BaseIcons = {
   ),
   ClearFile: () => (
     <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
-      <title>Icon/16px/delete n</title>
       <g id="页面-2备份" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-102.000000, -346.000000)">
           <g id="Icon/16px/delete_normal" transform="translate(102.000000, 346.000000)">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dropdown, Flex, MenuProps, Tag, Button, Popconfirm, message, Drawer } from 'antd';
+import { Flex, Tag, Button, message, Drawer } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
@@ -7,8 +7,10 @@ import { IconMap, PluginCardTypeE } from '@/pages/plugin/helper';
 import { deletePluginAPI } from '../../shared/http/plugin';
 import Detail from '../../pages/plugin/detail/detail';
 import './style.scss';
+import { useTranslation } from "react-i18next";
 
 const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isShow, setIsShow] = useState(false);
   const navigate = useHistory().push;
@@ -96,15 +98,15 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
                   .then((res) => {
                     if (res.code === 0) {
                       getPluginList();
-                      message.success('删除成功！');
+                      message.success(`${t('deleteSuccess')}！`);
                     }
                   })
                   .catch(() => {
-                    message.error('删除失败！');
+                    message.error(`${t('deleteFail')}！`);
                   });
               }}
             >
-              删除
+              {t('delete')}
             </Button>
           </div>
         )}
