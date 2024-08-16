@@ -15,6 +15,7 @@ import com.huawei.fit.service.entity.FitableInfo;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.schedule.Task;
 import com.huawei.fitframework.schedule.ThreadPoolExecutor;
@@ -87,6 +88,14 @@ public class PluginDeployServiceImpl implements PluginDeployService {
     private static final String FITABLE_ID = "fitableId";
     private static final String GENERICABLE_ID = "genericableId";
     private static final String DEFAULT_VERSION = "1.0.0";
+    private static final String TOOL_SCHEMA = "schema";
+    private static final String PARAMETERS = "parameters";
+    private static final String REQUIRED = "required";
+    private static final String PROPERTIES = "properties";
+    private static final String ORDER = "order";
+    private static final String RUNNABLES = "runnables";
+    private static final String EXTENSIONS = "extensions";
+    private static final String TAGS = "tags";
 
     private final PluginService pluginService;
     private final ObjectSerializer serializer;
@@ -345,6 +354,12 @@ public class PluginDeployServiceImpl implements PluginDeployService {
     private File getFileByName(File tempDir, String targetFileName) {
         for (File file : this.getFiles(tempDir)) {
             if (file.getName().equals(targetFileName)) {
+                if (targetFileName.equals(PLUGIN_JSON)) {
+                    this.validatePluginJson(file);
+                }
+                if (targetFileName.equals(TOOLS_JSON)) {
+                    this.validateToolsJson(file);
+                }
                 return file;
             }
         }
@@ -519,5 +534,103 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             return (String) object;
         }
         throw new IllegalStateException("Object can not cast to string.");
+    }
+
+    private void validateToolsJson(File toolsJson) {
+        Map<String, Object> tool = this.getJsonInfo(toolsJson);
+        this.validateToolSchema(tool);
+        this.validateToolRunnables(tool);
+        this.validateToolExtensions(tool);
+    }
+
+    private void validateToolExtensions(Map<String, Object> tool) {
+        if (!tool.containsKey(EXTENSIONS)) {
+            throw new FitException("Tools.json should contain extensions.");
+        }
+        Map<String, Object> extensions = cast(tool.get(EXTENSIONS));
+        if (!extensions.containsKey(TAGS)) {
+            throw new FitException("Extensions in tools.json should contain tags.");
+        }
+        List<String> tags = cast(extensions.get(TAGS));
+        if (tags.isEmpty()) {
+            throw new FitException("Tags in tools.json extensions cannot be empty.");
+        }
+    }
+
+    private void validateToolRunnables(Map<String, Object> tool) {
+        if (!tool.containsKey(RUNNABLES)) {
+            throw new FitException("Tools.json should contain runnables.");
+        }
+        Map<String, Object> runnables = cast(tool.get(RUNNABLES));
+        if (runnables.containsKey(FIT)) {
+            Map<String, Object> fit = cast(runnables.get(FIT));
+            if (!fit.containsKey(FITABLE_ID)) {
+                throw new FitException("Runnables in tools.json should contain fitableId.");
+            }
+            if (!fit.containsKey(GENERICABLE_ID)) {
+                throw new FitException("Runnables in tools.json should contain genericableId.");
+            }
+        }
+    }
+
+    private void validateToolSchema(Map<String, Object> tool) {
+        if (!tool.containsKey(TOOL_SCHEMA)) {
+            throw new FitException("Tools.json should contain schema.");
+        }
+        Map<String, Object> schema = cast(tool.get(TOOL_SCHEMA));
+        if (!schema.containsKey(PARAMETERS)) {
+            throw new FitException("Schema in tools.json should contain parameters.");
+        }
+        Map<String, Object> parameters = cast(schema.get(PARAMETERS));
+        if (!parameters.containsKey(REQUIRED)) {
+            throw new FitException("Parameters in tools.json should contain required.");
+        }
+        if (!parameters.containsKey(PROPERTIES)) {
+            throw new FitException("Parameters in tools.json should contain properties.");
+        }
+        List<String> required = cast(parameters.get(REQUIRED));
+        Map<String, Object> properties = cast(parameters.get(PROPERTIES));
+        if (required.size() > properties.size()) {
+            throw new FitException("The size of required in tools.json cannot be larger than properties size.");
+        }
+        if (!schema.containsKey(ORDER)) {
+            throw new FitException("Schema in tools.json should contain order.");
+        }
+        List<String> order = cast(schema.get(REQUIRED));
+        if (!order.isEmpty() && order.size() != properties.size()) {
+            throw new FitException("Order size should be zero or equal to properties size in tools.json.");
+        }
+    }
+
+    private void validatePluginJson(File pluginJson) {
+        Map<String, Object> plugin = this.getJsonInfo(pluginJson);
+        if (!plugin.containsKey(TYPE)) {
+            throw new FitException("Plugin.json should contain type.");
+        }
+        if (plugin.get(TYPE).equals(PYTHON)) {
+            if (!plugin.containsKey(PYTHON)) {
+                throw new FitException("Plugin.json should contain python.");
+            }
+            Map<String, Object> python = cast(plugin.get(PYTHON));
+            if (python.size() > 1) {
+                throw new FitException("Plugin.json cannot contain other properties.");
+            }
+            if (!python.containsKey(NAME)) {
+                throw new FitException("Python plugin.json must contain name.");
+            }
+        } else if (plugin.get(TYPE).equals(JAVA)) {
+            Map<String, Object> java = cast(plugin.get(JAVA));
+            if (java.size() > 2) {
+                throw new FitException("Plugin.json cannot contain other properties.");
+            }
+            if (!java.containsKey(ARTIFACT_ID)) {
+                throw new FitException("Java plugin.json must contain artifactId.");
+            }
+            if (!java.containsKey(GROUP_ID)) {
+                throw new FitException("Java plugin.json must contain groupId.");
+            }
+        } else {
+            throw new FitException("Plugin.json type can only contain python and java.");
+        }
     }
 }
