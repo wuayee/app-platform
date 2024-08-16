@@ -264,4 +264,57 @@ public class DefaultHttpDispatcherTest {
             return DefaultHttpDispatcherTest.this.dispatcher;
         }
     }
+
+    @Nested
+    @DisplayName("注册了一个有需转义字符的路径样式的处理器后")
+    class AfterRegistering1EscapeHandler {
+        @BeforeEach
+        void setup() {
+            when(DefaultHttpDispatcherTest.this.handler.pathPattern()).thenReturn("/a/ \"#%&()+,/:;<=>?@\\|");
+            this.dispatcher().register(HttpRequestMethod.GET.name(), DefaultHttpDispatcherTest.this.handler);
+        }
+
+        @Test
+        @DisplayName("当转发路径匹配的请求时，请求被注册的处理器处理")
+        void requestIsHandledWhenDispatchingMatchedPath() {
+            when(DefaultHttpDispatcherTest.this.request.method()).thenReturn(HttpRequestMethod.GET);
+            when(DefaultHttpDispatcherTest.this.request.path()).thenReturn(
+                    "/a/%20%22%23%25%26%28%29%2B%2C%2F%3A%3B%3C%3D%3E%3F%40%5C%7C");
+            HttpHandler httpHandler = this.dispatcher().dispatch(DefaultHttpDispatcherTest.this.request, null);
+            assertThat(httpHandler).isEqualTo(DefaultHttpDispatcherTest.this.handler);
+        }
+
+        @Test
+        @DisplayName("当转发路径不匹配的请求时，抛出 HttpHandlerNotFoundException")
+        void throwExceptionWhenDispatchingNotMatchedPath() {
+            when(DefaultHttpDispatcherTest.this.request.method()).thenReturn(HttpRequestMethod.GET);
+            when(DefaultHttpDispatcherTest.this.request.path()).thenReturn("/b/b/c");
+            HttpHandlerNotFoundException exception =
+                    catchThrowableOfType(() -> this.dispatcher().dispatch(DefaultHttpDispatcherTest.this.request, null),
+                            HttpHandlerNotFoundException.class);
+            assertThat(exception).isNotNull().hasMessage("No http handler for http request. [method=GET, path=/b/b/c]");
+        }
+
+        @Test
+        @DisplayName("当再注册一个相同的有路径变量的处理器时，抛出 RegisterHttpHandlerException")
+        void throwExceptionWhenRegisteringAnotherSamePathPatternHandler() {
+            RegisterHttpHandlerException exception = catchThrowableOfType(() -> this.dispatcher()
+                            .register(HttpRequestMethod.GET.name(), DefaultHttpDispatcherTest.this.handler),
+                    RegisterHttpHandlerException.class);
+            assertThat(exception).isNotNull()
+                    .hasMessage("Http handler has been registered. [method=GET, pattern=/a/ \"#%&()+,/:;<=>?@\\|]");
+        }
+
+        @Test
+        @DisplayName("可以成功获取所有注册的处理器")
+        void shouldReturnAllRegisteredHandlers() {
+            Map<HttpRequestMethod, List<HttpHandler>> mapping = this.dispatcher().getHttpHandlersMapping();
+            assertThat(mapping).hasSize(1);
+            assertThat(mapping.get(HttpRequestMethod.GET)).containsExactly(DefaultHttpDispatcherTest.this.handler);
+        }
+
+        private HttpDispatcher dispatcher() {
+            return DefaultHttpDispatcherTest.this.dispatcher;
+        }
+    }
 }
