@@ -297,6 +297,8 @@ class PluginDeployServiceImplTest {
     @Test
     @DisplayName("保存插件抛出异常符合预期")
     void testSavePlugin() throws IOException, NoSuchMethodException {
+        Method method = PluginDeployServiceImpl.class.getDeclaredMethod("savePlugin", File.class, String.class);
+        method.setAccessible(true);
         String targetFile = "src/test/resources/test";
         Path filePath = Paths.get(targetFile);
         FileUtils.ensureDirectory(filePath.toFile());
@@ -305,9 +307,7 @@ class PluginDeployServiceImplTest {
         Path pluginJsonFile = Paths.get(filePath.toFile().getParentFile().getPath(), "plugin.json");
         Files.copy(tooFile, filePath.resolve("tools.json"), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(pluginJsonFile, filePath.resolve("plugin.json"), StandardCopyOption.REPLACE_EXISTING);
-        Method method = PluginDeployServiceImpl.class.getDeclaredMethod("savePlugin", File.class, String.class);
-        method.setAccessible(true);
         assertThrows(InvocationTargetException.class,
-            () -> method.invoke(pluginDeployServiceImplUnderTest, filePath.toFile(), "无敌乘法"));
+            () -> method.invoke(pluginDeployServiceImplUnderTest, filePath.toFile(), "add list,add itself"));
     }
 }

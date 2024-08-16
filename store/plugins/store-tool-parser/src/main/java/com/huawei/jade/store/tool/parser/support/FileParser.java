@@ -56,19 +56,24 @@ public class FileParser {
         }
         pluginData.setName(methodName);
         pluginData.setDescription(validateSchemaStringField(schemaNode, DESCRIPTION));
-        Map<String, Object> runnables =
-                notNull(ObjectUtils.cast(toolFile.get(RUNNABLES)), "Tool runnables cannot be null.");
+        Map<String, Object> runnables = notNull(ObjectUtils.cast(toolFile.get(RUNNABLES)),
+            "Tool runnables cannot be null.");
         pluginData.setRunnables(runnables);
-        Map<String, Object> extensions =
-                notNull(ObjectUtils.cast(toolFile.get(EXTENSIONS)), "Tool extensions cannot be null.");
-        List<String> tags = notNull(ObjectUtils.cast(extensions.get(TAGS)), "Tool tags cannot be null.");
+        List<String> tags;
+        if (toolFile.get(TAGS) != null) {
+            tags = notNull(ObjectUtils.cast(toolFile.get(TAGS)), "Tool tags cannot be null.");
+        } else {
+            Map<String, Object> extensions = notNull(ObjectUtils.cast(toolFile.get(EXTENSIONS)),
+                "Tool extensions cannot be null.");
+            tags = notNull(ObjectUtils.cast(extensions.get(TAGS)), "Tool tags cannot be null.");
+        }
         pluginData.setTags(new HashSet<>(tags));
         return pluginData;
     }
 
     private static String validateSchemaStringField(Map<String, Object> schemaNode, String filedName) {
-        Object filed =
-                notNull(schemaNode.get(filedName), "Tool schema filed value cannot be null. [filed={0}]", filedName);
+        Object filed = notNull(schemaNode.get(filedName), "Tool schema filed value cannot be null. [filed={0}]",
+            filedName);
         if (filed instanceof String) {
             return notBlank((String) filed, "Tool schema filed value cannot be blank. [filed={0}]", filedName);
         }
