@@ -83,6 +83,18 @@ class NettyHttpClassicServerTest {
     }
 
     @Test
+    @DisplayName("当提供 netty 的服务端绑定端口超过 65535 时，抛出异常")
+    void givenLargePortThenThrowException() {
+        assertThatThrownBy(() -> this.classicServer.bind(65536)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("当提供 netty 的服务端绑定 Https 端口超过 65535 时，抛出异常")
+    void givenLargeHttpsPortThenThrowException() {
+        assertThatThrownBy(() -> this.classicServer.bind(65536, true)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("获取序列化器的集合")
     void shouldReturnSerializers() {
         Serializers actual = this.classicServer.serializers();
