@@ -12,11 +12,12 @@ import '../styles/deploy-table.scss';
 const Deploy = ({ pluginRef }) => {
   const [tableData, setTableData] = useState([]);
   const [pluginData, setPluginData] = useState([]);
-  const [pluginBackData, setPluginBackData] = useState([]);
+  const [pluginLength, setPluginLength] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(0);
   const [name, setName] = useState('');
+  const [rightName, setRightName] = useState('');
   const pluginList = useRef([]);
 
   // 获取所有列表
@@ -44,6 +45,7 @@ const Deploy = ({ pluginRef }) => {
     const response = await getDeployTool('deployed');
     if (response.code === 0) {
       setPluginData(response.data || []);
+      setPluginLength(response.data.length);
       pluginList.current = JSON.parse(JSON.stringify(response.data));
     }
   };
@@ -55,21 +57,35 @@ const Deploy = ({ pluginRef }) => {
       }
     });
     if (checked) {
-      pluginData.push(item);
       pluginList.current.push(item);
-      setPluginData(pluginData);
+      searchPluginData(rightName);
     } else {
-      let pluginList = pluginBackData.filter(pluginItem => pluginItem.pluginId !== item.pluginId);
-      setPluginData(pluginList);
+      let pluginCheckList = pluginData.filter(pluginItem => pluginItem.pluginId !== item.pluginId);
+      pluginList.current = pluginList.current.filter(pluginItem => pluginItem.pluginId !== item.pluginId);
+      setPluginData(pluginCheckList);
     }
+    setPluginLength(pluginList.current.length);
     setTableData(JSON.parse(JSON.stringify(tableData)));
   }
   const filterByName = (value: string, type: string) => {
-    if (value !== name) {
-      type === 'table' ? setName(value) : '';
+    if (type === 'table') {
+      setName(value);
+    } else {
+      searchPluginData(value);
+      setRightName(value);
     }
   };
   const handleSearch = debounce(filterByName, 1000);
+  // 右侧插件列表搜索
+  const searchPluginData = (val) => {
+    setRightName(val);
+    if (val.trim().length) {
+      let list = pluginList.current.filter(pluginItem => pluginItem.pluginName.indexOf(val) !== -1);
+      setPluginData(list);
+      return
+    }
+    setPluginData(pluginList.current);
+  }
   // 对外暴露方法
   useImperativeHandle(pluginRef, () => {
     return {
@@ -131,7 +147,7 @@ const Deploy = ({ pluginRef }) => {
       <div className='deploy-table'>
         <div className='table-title'>
           <span>已选</span>
-          <span className='num'>{pluginData.length}</span>
+          <span className='num'>{pluginLength}</span>
           <span className='tips'>最多可选20个</span>
         </div>
         <div className='table-search'>
