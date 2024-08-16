@@ -16,6 +16,7 @@ import com.huawei.fit.http.server.HttpHandlerGroup;
 import com.huawei.fit.http.server.HttpHandlerNotFoundException;
 import com.huawei.fit.http.server.RegisterHttpHandlerException;
 import com.huawei.fit.http.server.dispatch.support.DefaultMappingTree;
+import com.huawei.fitframework.resource.UrlUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.OptionalUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -95,7 +96,8 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
         if (MapUtils.isEmpty(handlers)) {
             return Optional.empty();
         }
-        HttpHandler handler = handlers.get(request.path());
+        String path = UrlUtils.decodeValue(request.path());
+        HttpHandler handler = handlers.get(path);
         return Optional.ofNullable(handler);
     }
 
@@ -104,7 +106,8 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
         if (mappingTree == null) {
             return Optional.empty();
         }
-        return mappingTree.search(request.path());
+        String path = UrlUtils.decodeValue(request.path());
+        return mappingTree.search(path);
     }
 
     private Optional<HttpHandler> selectFromWildcardHandlers(HttpClassicServerRequest request) {
@@ -112,9 +115,10 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
         if (MapUtils.isEmpty(handlers)) {
             return Optional.empty();
         }
+        String path = UrlUtils.decodeValue(request.path());
         for (Map.Entry<String, HttpHandler> entry : handlers.entrySet()) {
             PathPattern pattern = Pattern.forPath(entry.getKey(), PATH_SEPARATOR);
-            if (pattern.matches(request.path())) {
+            if (pattern.matches(path)) {
                 return Optional.of(entry.getValue());
             }
         }
