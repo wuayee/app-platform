@@ -78,8 +78,8 @@ public class EvalDatasetController {
     /**
      * 查询评估数据集元数据。
      *
-     * @param queryParam 表示评估数据集创建传输对象的 {@link EvalDatasetQueryParam}。
-     * @return 表示评估数据查询结果的 {@link PageVo}{@code <}{@link EvalDatasetEntity}{@code >}。
+     * @param queryParam 表示评估数据集传输对象的 {@link EvalDatasetQueryParam}。
+     * @return 表示评估数据集查询结果的 {@link PageVo}{@code <}{@link EvalDatasetEntity}{@code >}。
      */
     @GetMapping(description = "查询评估数据集元数据")
     public PageVo<EvalDatasetEntity> queryEvalDataset(@RequestBean @Validated EvalDatasetQueryParam queryParam) {
@@ -89,8 +89,8 @@ public class EvalDatasetController {
     /**
      * 通过唯一标识查询评估数据集元数据。
      *
-     * @param datasetId 表示评估数据集创建传输对象的 {@link Long}。
-     * @return 表示评估数据查询结果的 {@link EvalDatasetEntity}。
+     * @param datasetId 表示评估数据集传输对象的 {@link Long}。
+     * @return 表示评估数集据查询结果的 {@link EvalDatasetEntity}。
      */
     @GetMapping(path = "/{id}", description = "通过唯一标识查询评估数据集元数据")
     public EvalDatasetEntity queryEvalDatasetById(

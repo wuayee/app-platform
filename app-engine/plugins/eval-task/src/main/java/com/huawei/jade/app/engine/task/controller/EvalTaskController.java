@@ -4,15 +4,19 @@
 
 package com.huawei.jade.app.engine.task.controller;
 
+import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PostMapping;
+import com.huawei.fit.http.annotation.RequestBean;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
 import com.huawei.jade.app.engine.task.convertor.EvalTaskConvertor;
 import com.huawei.jade.app.engine.task.dto.EvalTaskCreateDto;
+import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
 import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
 import com.huawei.jade.app.engine.task.service.EvalTaskService;
+import com.huawei.jade.common.vo.PageVo;
 
 /**
  * 表示评估任务管理接口集。
@@ -43,5 +47,16 @@ public class EvalTaskController {
     public void createEvalTask(@RequestBody @Validated EvalTaskCreateDto createDto) {
         EvalTaskEntity entity = EvalTaskConvertor.INSTANCE.convertDtoToEntity(createDto);
         this.evalTaskService.createEvalTask(entity);
+    }
+
+    /**
+     * 查询评估任务元数据。
+     *
+     * @param queryParam 表示评估任务创建传输对象的 {@link EvalTaskQueryParam}。
+     * @return 表示评估任务查询结果的 {@link PageVo}{@code <}{@link EvalTaskEntity}{@code >}。
+     */
+    @GetMapping(description = "查询评估任务元数据")
+    public PageVo<EvalTaskEntity> queryEvalTask(@RequestBean @Validated EvalTaskQueryParam queryParam) {
+        return this.evalTaskService.listEvalTask(queryParam);
     }
 }
