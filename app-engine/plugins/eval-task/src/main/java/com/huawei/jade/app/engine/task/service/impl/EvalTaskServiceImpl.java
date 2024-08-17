@@ -25,6 +25,11 @@ import java.util.List;
 public class EvalTaskServiceImpl implements EvalTaskService {
     private final EvalTaskMapper taskMapper;
 
+    /**
+     * 表示评估任务服务实现的构建器。
+     *
+     * @param taskMapper 表示评估任务服务持久层接口的 {@link EvalTaskMapper}。
+     */
     public EvalTaskServiceImpl(EvalTaskMapper taskMapper) {
         this.taskMapper = taskMapper;
     }
