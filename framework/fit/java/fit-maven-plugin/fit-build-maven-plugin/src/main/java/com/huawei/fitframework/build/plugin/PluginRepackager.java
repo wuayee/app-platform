@@ -10,6 +10,7 @@ import com.huawei.fitframework.build.support.AbstractRepackager;
 import com.huawei.fitframework.build.util.JarPackager;
 import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.protocol.jar.Jar;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import org.apache.maven.artifact.Artifact;
@@ -56,7 +57,7 @@ final class PluginRepackager extends AbstractRepackager {
             this.packageDependencies(packager, this.project().getArtifacts());
         } catch (IOException ex) {
             throw new MojoExecutionException(StringUtils.format("Failed to repackage plugin JAR. [file={0}]",
-                    target.getPath()), ex);
+                    FileUtils.path(target)), ex);
         }
     }
 

@@ -15,6 +15,7 @@ import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.protocol.jar.Jar.Entry;
 import com.huawei.fitframework.protocol.jar.JarEntryLocation;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.IoUtils;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -125,7 +126,8 @@ public abstract class AbstractRepackager extends AbstractExecutor {
             this.log().info(StringUtils.format("Backup original jar file successfully. [new={0}]", target.getName()));
             return target;
         } catch (IOException e) {
-            throw new MojoExecutionException(StringUtils.format("Failed to backup JAR. [file={0}]", origin.getPath()));
+            throw new MojoExecutionException(StringUtils.format("Failed to backup JAR. [file={0}]",
+                    FileUtils.path(origin)));
         }
     }
 
@@ -141,7 +143,7 @@ public abstract class AbstractRepackager extends AbstractExecutor {
             return Jar.from(file);
         } catch (IOException e) {
             throw new MojoExecutionException(StringUtils.format("Failed to load JAR from file. [file={0}]",
-                    file.getPath()), e);
+                    FileUtils.path(file)), e);
         }
     }
 

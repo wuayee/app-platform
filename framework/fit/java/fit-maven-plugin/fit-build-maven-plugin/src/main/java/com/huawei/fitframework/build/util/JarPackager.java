@@ -6,6 +6,7 @@ package com.huawei.fitframework.build.util;
 
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.protocol.jar.JarEntryLocation;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.IoUtils;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -161,7 +162,7 @@ public final class JarPackager {
             this.out.closeEntry();
         } catch (IOException ex) {
             throw new MojoExecutionException(StringUtils.format("Failed to store file into JAR. [file={0}, entry={1}]",
-                    file.getPath(),
+                    FileUtils.path(file),
                     entry.getName()), ex);
         }
     }
@@ -180,7 +181,7 @@ public final class JarPackager {
             }
         } catch (IOException ex) {
             throw new MojoExecutionException(StringUtils.format("Failed to compute CRC-32 of file. [file={0}]",
-                    file.getPath()), ex);
+                    FileUtils.path(file)), ex);
         }
         return crc32.getValue();
     }

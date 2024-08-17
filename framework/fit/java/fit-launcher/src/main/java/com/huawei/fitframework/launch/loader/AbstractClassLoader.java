@@ -95,11 +95,31 @@ public abstract class AbstractClassLoader extends URLClassLoader {
         } catch (MalformedURLException e) {
             throw new IllegalStateException(String.format(Locale.ROOT,
                     "Invalid path of JAR. [path=%s]",
-                    file.getPath()));
+                    path(file)));
         } catch (IOException e) {
             throw new IllegalStateException(String.format(Locale.ROOT,
                     "The file is not canonical. [path=%s]",
-                    file.getPath()));
+                    path(file)));
+        }
+    }
+
+    /**
+     * 获取指定文件的标准化路径。
+     *
+     * @param file 表示待获取路径的文件的 {@link File}。
+     * @return 表示文件的路径的 {@link String}。
+     * @throws IllegalStateException 当标准化失败时。
+     */
+    private static String path(File file) {
+        if (file == null) {
+            return null;
+        }
+
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IllegalStateException(String.format("Failed to canonicalize file. [file=%s]", file.getPath()),
+                    e);
         }
     }
 }

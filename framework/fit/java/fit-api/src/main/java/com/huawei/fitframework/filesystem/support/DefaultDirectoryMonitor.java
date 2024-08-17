@@ -16,6 +16,7 @@ import com.huawei.fitframework.schedule.ExecutePolicy;
 import com.huawei.fitframework.schedule.Task;
 import com.huawei.fitframework.schedule.ThreadPoolScheduler;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.LockUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -122,7 +123,7 @@ public class DefaultDirectoryMonitor implements DirectoryMonitor {
             } catch (InterruptedException e) {
                 Thread.interrupted();
                 throw new IllegalStateException(StringUtils.format("Failed to stop directory monitor. [directory={0}]",
-                        this.directory.getPath()), e);
+                        FileUtils.path(this.directory)), e);
             }
             this.isStarted = false;
         }
