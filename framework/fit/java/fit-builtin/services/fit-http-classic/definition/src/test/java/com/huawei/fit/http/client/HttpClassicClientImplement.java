@@ -14,6 +14,7 @@ import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.value.ValueFetcher;
 
 import java.lang.reflect.Type;
@@ -72,5 +73,15 @@ public class HttpClassicClientImplement implements HttpClassicClient {
         int statusCode = request.exchange(responseType).statusCode();
         when(httpClassicClientResponse.statusCode()).thenReturn(statusCode);
         return httpClassicClientResponse;
+    }
+
+    @Override
+    public Choir<Object> exchangeStream(HttpClassicClientRequest request) {
+        return null;
+    }
+
+    @Override
+    public <T> Choir<T> exchangeStream(HttpClassicClientRequest request, Type responseType) {
+        return null;
     }
 }
