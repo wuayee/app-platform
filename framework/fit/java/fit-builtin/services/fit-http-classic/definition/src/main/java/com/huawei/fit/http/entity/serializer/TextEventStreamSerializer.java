@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 /**
@@ -57,7 +56,7 @@ public class TextEventStreamSerializer implements EntitySerializer<TextEventStre
             @Nonnull HttpMessage httpMessage, Type type) {
         Choir<TextEvent> stream = Choir.create(emitter -> {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
                 emitData(emitter, reader);
                 emitter.complete();
             } catch (Exception e) {

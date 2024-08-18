@@ -27,6 +27,7 @@ import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.support.AbstractHttpClassicRequest;
 import com.huawei.fitframework.exception.ClientException;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.model.MultiValueMap;
 
 import java.io.IOException;
@@ -144,6 +145,16 @@ public class DefaultHttpClassicClientRequest extends AbstractHttpClassicRequest 
         } finally {
             this.close();
         }
+    }
+
+    @Override
+    public Choir<Object> exchangeStream() {
+        return this.exchangeStream(Object.class);
+    }
+
+    @Override
+    public <T> Choir<T> exchangeStream(Type responseType) {
+        return new TextStreamChoir<>(this, responseType);
     }
 
     @Override
