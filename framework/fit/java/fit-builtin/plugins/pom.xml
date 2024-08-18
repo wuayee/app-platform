@@ -15,11 +15,9 @@
 
     <modules>
         <module>fit-client-http</module>
-        <module>fit-heartbeat-client</module>
         <module>fit-http-client-okhttp</module>
         <module>fit-http-handler-registry</module>
         <module>fit-http-server-netty</module>
-        <module>fit-logger</module>
         <module>fit-message-serializer-cbor</module>
         <module>fit-message-serializer-json-jackson</module>
         <module>fit-object-serializer-cbor</module>
