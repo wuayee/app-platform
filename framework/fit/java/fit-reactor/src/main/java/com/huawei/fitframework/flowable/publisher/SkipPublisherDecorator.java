@@ -12,6 +12,7 @@ import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.Subscription;
 import com.huawei.fitframework.flowable.operation.AbstractOperation;
 import com.huawei.fitframework.flowable.util.counter.Counter;
+import com.huawei.fitframework.inspection.Nonnull;
 
 /**
  * 表示 {@link Publisher} 的从开始跳过指定个数元素的过滤的实现。
@@ -43,7 +44,7 @@ public class SkipPublisherDecorator<T> implements Publisher<T> {
         }
 
         @Override
-        protected void onSubscribed0(Subscription subscription) {
+        protected void onSubscribed0(@Nonnull Subscription subscription) {
             long skipCount = this.skipConsumeCount.getValue();
             super.onSubscribed0(subscription);
             if (skipCount > 0) {

@@ -5,6 +5,7 @@
 package com.huawei.fitframework.flowable.subscriber;
 
 import com.huawei.fitframework.flowable.Subscription;
+import com.huawei.fitframework.inspection.Nonnull;
 
 import java.util.List;
 
@@ -104,7 +105,7 @@ public class ConcurrentRecordSubscriber<T> extends RecordSubscriber<T> {
     }
 
     @Override
-    protected void complete(Subscription subscription) {
+    protected void complete(@Nonnull Subscription subscription) {
         synchronized (this) {
             super.complete(subscription);
         }

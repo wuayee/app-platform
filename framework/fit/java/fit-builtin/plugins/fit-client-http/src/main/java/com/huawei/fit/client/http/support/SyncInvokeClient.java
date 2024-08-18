@@ -33,12 +33,10 @@ public class SyncInvokeClient extends AbstractInvokeClient {
     @Override
     public Response requestResponse(@Nonnull Request request) {
         HttpClassicClient client = this.buildHttpClient(request);
-        try (HttpClassicClientRequest clientRequest = this.buildClientRequest(client, request)) {
-            clientRequest.entity(this.buildHttpEntity(clientRequest, request));
-            try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest,
-                    request.returnType())) {
-                return HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
-            }
+        HttpClassicClientRequest clientRequest = this.buildClientRequest(client, request);
+        clientRequest.entity(this.buildHttpEntity(clientRequest, request));
+        try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest, request.returnType())) {
+            return HttpClientUtils.getResponse(this.getContainer(), request, clientResponse);
         } catch (IOException e) {
             throw new ClientException("Failed to close http classic client.", e);
         }

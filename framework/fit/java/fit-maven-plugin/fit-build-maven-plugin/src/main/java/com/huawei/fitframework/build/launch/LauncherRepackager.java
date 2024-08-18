@@ -11,6 +11,7 @@ import com.huawei.fitframework.build.util.ArtifactDownloader;
 import com.huawei.fitframework.build.util.JarPackager;
 import com.huawei.fitframework.launch.AggregatedFitLauncher;
 import com.huawei.fitframework.protocol.jar.Jar;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import org.apache.maven.artifact.Artifact;
@@ -55,7 +56,7 @@ public final class LauncherRepackager extends AbstractRepackager {
             this.packageBaseArtifacts(packager, baseArtifacts);
         } catch (IOException ex) {
             throw new MojoExecutionException(StringUtils.format("Failed to repackage application JAR. [file={0}]",
-                    target.getPath()), ex);
+                    FileUtils.path(target)), ex);
         }
     }
 

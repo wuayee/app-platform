@@ -4,76 +4,80 @@
 
 package com.huawei.fitframework.datasource.support;
 
+import static com.huawei.fitframework.inspection.Validation.notBlank;
+
 import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.datasource.AccessMode;
-import com.huawei.fitframework.datasource.FitDataSource;
+import com.huawei.fitframework.util.EnumUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.util.function.Predicate;
+
 /**
- * 表示 {@link FitDataSource} 的配置。
+ * 数据源配置类。
  *
  * @author 易文渊
+ * @author 李金绪
  * @since 2024-07-27
  */
 public class FitDataSourceConfig {
-    private static final String CONFIG_PREFIX = "fit.datasource.";
-    private static final String DEFAULT_DATASOURCE_NAME = "master";
+    /**
+     * 表示数据源实例的前缀。
+     */
+    public static final String INSTANCE_PREFIX = "fit.datasource.instances.";
+
+    /**
+     * 表示数据源的模式。
+     */
+    public static final String PRIMARY_MODE = "mode";
+
+    /**
+     * 表示分隔符。
+     */
+    public static final String SEPARATOR = ".";
+    private static final String PRIMARY_PREFIX = "fit.datasource.primary.";
 
     private String name;
     private AccessMode mode;
 
     /**
-     * 根据插件配置创建 {@link FitDataSourceConfig}。
+     * 创建数据源配置对象。
      *
-     * @param config 表示插件配置的 {@link Config}。
+     * @param config 表示配置的 {@link Config}。
      * @return 表示数据源配置的 {@link FitDataSourceConfig}。
      */
     public static FitDataSourceConfig create(Config config) {
-        FitDataSourceConfig fitDataSourceConfig =
-                ObjectUtils.getIfNull(config.get(CONFIG_PREFIX, FitDataSourceConfig.class), FitDataSourceConfig::new);
-        if (StringUtils.isBlank(fitDataSourceConfig.getName())) {
-            fitDataSourceConfig.setName(DEFAULT_DATASOURCE_NAME);
-        }
-        if (fitDataSourceConfig.getMode() == null) {
-            fitDataSourceConfig.setMode(AccessMode.EXCLUSIVE);
-        }
-        return fitDataSourceConfig;
+        String primaryName = config.get(PRIMARY_PREFIX, String.class);
+        notBlank(primaryName, "The primary data source is not configured.");
+        String primaryMode =
+                config.get(INSTANCE_PREFIX + primaryName + SEPARATOR + PRIMARY_MODE + SEPARATOR, String.class);
+        notBlank(primaryMode, "The primary data source mode is not configured.");
+        FitDataSourceConfig fitConfig = new FitDataSourceConfig();
+        fitConfig.setName(primaryName);
+        fitConfig.setMode(ObjectUtils.cast(toEnum(AccessMode.class, primaryMode)));
+        return fitConfig;
     }
 
-    /**
-     * 获取数据源名字。
-     *
-     * @return 表示数据源名字的 {@link String}。
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * 设置数据源名字。
-     *
-     * @param name 表示数据源名字的 {@link String}。
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 获取数据源访问模式。
-     *
-     * @return 表示数据源访问模式的 {@link AccessMode}。
-     */
     public AccessMode getMode() {
         return this.mode;
     }
 
-    /**
-     * 设置数据源访问模式。
-     *
-     * @param mode 表示数据源访问模式的 {@link AccessMode}。
-     */
     public void setMode(AccessMode mode) {
         this.mode = mode;
+    }
+
+    private static Object toEnum(Class<?> enumClass, String value) {
+        Class<? extends Enum<?>> actualClass = ObjectUtils.cast(enumClass);
+        Predicate<Enum> predicate = enumConstant -> StringUtils.equalsIgnoreCase(enumConstant.toString(), value);
+        return EnumUtils.firstOrDefault(ObjectUtils.cast(actualClass), predicate);
     }
 }

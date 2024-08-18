@@ -7,6 +7,7 @@ package com.huawei.fitframework.io.support;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.io.RandomAccessor;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.io.File;
@@ -89,6 +90,6 @@ public class FileRandomAccessor implements RandomAccessor {
 
     @Override
     public String toString() {
-        return this.file.getPath();
+        return FileUtils.path(this.file);
     }
 }

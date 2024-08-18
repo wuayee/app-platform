@@ -6,6 +6,7 @@ package com.huawei.fit.http.server.netty;
 
 import static com.huawei.fitframework.inspection.Validation.greaterThan;
 import static com.huawei.fitframework.inspection.Validation.isTrue;
+import static com.huawei.fitframework.inspection.Validation.lessThanOrEquals;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.Serializers;
@@ -126,14 +127,20 @@ public class NettyHttpClassicServer implements HttpClassicServer {
             this.httpsPort = greaterThan(port,
                     0,
                     "The port to bind to netty http server cannot be less than 1. [port={0}, isSecure={1}]",
-                    port,
-                    true);
+                    port, true);
+            this.httpsPort = lessThanOrEquals(port,
+                    65535,
+                    "The port to bind to netty http server cannot be more than 65535. [port={0}, isSecure={1}]",
+                    port, true);
         } else {
             this.httpPort = greaterThan(port,
                     0,
                     "The port to bind to netty http server cannot be less than 1. [port={0}, isSecure={1}]",
-                    port,
-                    false);
+                    port, false);
+            this.httpPort = lessThanOrEquals(port,
+                    65535,
+                    "The port to bind to netty http server cannot be more than 65535. [port={0}, isSecure={1}]",
+                    port, false);
         }
         return this;
     }

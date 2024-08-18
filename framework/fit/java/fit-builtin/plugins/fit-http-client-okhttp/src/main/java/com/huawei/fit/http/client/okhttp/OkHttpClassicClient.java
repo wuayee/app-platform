@@ -18,6 +18,7 @@ import com.huawei.fit.http.client.support.DefaultHttpClassicClientRequest;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.value.ValueFetcher;
 
 import java.lang.reflect.Type;
@@ -64,5 +65,16 @@ public class OkHttpClassicClient extends AbstractHttpClassicClient {
     public <T> HttpClassicClientResponse<T> exchange(HttpClassicClientRequest request, Type responseType) {
         notNull(request, "The http classic request to exchange cannot be null.");
         return request.exchange(responseType);
+    }
+
+    @Override
+    public Choir<Object> exchangeStream(HttpClassicClientRequest request) {
+        return this.exchangeStream(request, Object.class);
+    }
+
+    @Override
+    public <T> Choir<T> exchangeStream(HttpClassicClientRequest request, Type responseType) {
+        notNull(request, "The http classic request to exchange cannot be null.");
+        return request.exchangeStream(responseType);
     }
 }

@@ -37,6 +37,18 @@ public interface Worker<T> extends Subscriber<T> {
      *
      * @param observer 表示用于处理回调的 {@link WorkerObserver}。
      * @param publisher 表示需要被辅助消费的响应式流的 {@link Publisher}。
+     * @param <T> 表示响应式流中元素类型的 {@link T}。
+     * @return 表示所创建的用于辅助消费的 {@link Worker}。
+     */
+    static <T> Worker<T> create(WorkerObserver<T> observer, Publisher<T> publisher) {
+        return create(observer, publisher, 0);
+    }
+
+    /**
+     * 创建具有默认实现的 {@link Worker}。
+     *
+     * @param observer 表示用于处理回调的 {@link WorkerObserver}。
+     * @param publisher 表示需要被辅助消费的响应式流的 {@link Publisher}。
      * @param id 表示用于区分不同 {@link Worker} 的 {@code long}。
      * @param <T> 表示响应式流中元素类型的 {@link T}。
      * @return 表示所创建的用于辅助消费的 {@link Worker}。

@@ -4,6 +4,8 @@
 
 package com.huawei.fitframework.protocol.jar;
 
+import static com.huawei.fitframework.protocol.jar.support.Locations.path;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Permission;
@@ -104,7 +106,7 @@ public final class NestableJarFile extends JarFile {
     @Override
     public String getName() {
         // 该属性会在 ZipFile 类型中用作对文件权限的判断，因此此处必然返回所在文件的路径。
-        return this.jar.location().file().getPath();
+        return path(this.jar.location().file());
     }
 
     @Override

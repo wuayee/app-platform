@@ -14,16 +14,15 @@ import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.entity.support.DefaultTextEventStreamEntity;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 /**
@@ -48,24 +47,20 @@ public class TextEventStreamSerializer implements EntitySerializer<TextEventStre
     }
 
     @Override
-    public void serializeEntity(TextEventStreamEntity entity, Charset charset, OutputStream out) {
+    public void serializeEntity(@Nonnull TextEventStreamEntity entity, Charset charset, OutputStream out) {
         throw new UnsupportedOperationException("The operation serialize text event stream is nonsupport.");
     }
 
     @Override
-    public TextEventStreamEntity deserializeEntity(InputStream in, Charset charset, HttpMessage httpMessage,
-            Type type) {
+    public TextEventStreamEntity deserializeEntity(@Nonnull InputStream in, Charset charset,
+            @Nonnull HttpMessage httpMessage, Type type) {
         Choir<TextEvent> stream = Choir.create(emitter -> {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
                 emitData(emitter, reader);
                 emitter.complete();
             } catch (Exception e) {
                 emitter.fail(e);
-            }
-            try {
-                httpMessage.close();
-            } catch (IOException ignored) {
             }
         });
         return new DefaultTextEventStreamEntity(httpMessage, stream);

@@ -223,12 +223,12 @@ public abstract class FlowsDataBaseTest {
      */
     protected Map<String, Object> flowsExecutorWithOnlyStateNode1To1() {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put("cudehubUser", "user");
-        businessData.put("cudehubBranch", "branch");
-        businessData.put("libingStatus", "status");
-        businessData.put("cudehubTag", "tag");
-        businessData.put("libingId", "id");
-        businessData.put("application", "tianzhou");
+        businessData.put("xxxUser", "user");
+        businessData.put("xxxBranch", "branch");
+        businessData.put("xxxStatus", "status");
+        businessData.put("xxxTag", "tag");
+        businessData.put("xxxId", "id");
+        businessData.put("application", "testApp");
         return businessData;
     }
 
@@ -250,7 +250,7 @@ public abstract class FlowsDataBaseTest {
             }
         });
         businessData.put("approvedResult", "success");
-        businessData.put("application", "tianzhou");
+        businessData.put("application", "testApp");
         return businessData;
     }
 
@@ -262,7 +262,7 @@ public abstract class FlowsDataBaseTest {
     protected Map<String, Object> flowsManualExecutorWithConditionNodeFirstBranchTrue() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approvedResult", "success");
-        businessData.put("application", "tianzhou");
+        businessData.put("application", "testApp");
         return businessData;
     }
 
@@ -274,7 +274,7 @@ public abstract class FlowsDataBaseTest {
     protected Map<String, Object> flowsManualExecutorWithConditionNodeCircle() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approved.result", "success");
-        businessData.put("application", "tianzhou");
+        businessData.put("application", "testApp");
         return businessData;
     }
 
@@ -288,7 +288,7 @@ public abstract class FlowsDataBaseTest {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approvedResult", "success");
         businessData.put("approved", approved);
-        businessData.put("application", "tianzhou");
+        businessData.put("application", "testApp");
         return businessData;
     }
 
@@ -300,7 +300,7 @@ public abstract class FlowsDataBaseTest {
     protected Map<String, Object> flowsExecuteFilterFromMToN() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approvedResult", "success");
-        businessData.put("application", "tianzhou");
+        businessData.put("application", "testApp");
         return businessData;
     }
 
@@ -344,11 +344,11 @@ public abstract class FlowsDataBaseTest {
         allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
-        assertEquals("hello: echo: user", resultBusinessData.get("cudehubUser"));
-        assertEquals("hello: echo: branch", resultBusinessData.get("cudehubBranch"));
-        assertEquals("echo: status", resultBusinessData.get("libingStatus"));
-        assertEquals("hello: echo: tag", resultBusinessData.get("cudehubTag"));
-        assertEquals("echo: id", resultBusinessData.get("libingId"));
+        assertEquals("hello: echo: user", resultBusinessData.get("xxxUser"));
+        assertEquals("hello: echo: branch", resultBusinessData.get("xxxBranch"));
+        assertEquals("echo: status", resultBusinessData.get("xxxStatus"));
+        assertEquals("hello: echo: tag", resultBusinessData.get("xxxTag"));
+        assertEquals("echo: id", resultBusinessData.get("xxxId"));
     }
 
     /**
@@ -517,7 +517,7 @@ public abstract class FlowsDataBaseTest {
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(6, resultBusinessData.size());
-        assertEquals("branch", resultBusinessData.get("cudehubBranch"));
+        assertEquals("branch", resultBusinessData.get("xxxBranch"));
     }
 
     /**

@@ -108,17 +108,19 @@ public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResp
     }
 
     private byte[] actualEntityBytes() {
-        byte[] bytes;
         try {
-            bytes = BodyUtils.readBody(this.clientResponse.body(), this.headers());
+            return BodyUtils.readBody(this.clientResponse.body(), this.headers());
         } catch (IOException e) {
             throw new ClientException("Failed to read body.", e);
         }
-        return bytes;
     }
 
     @Override
-    public void close() throws IOException {
-        this.clientResponse.close();
+    public void close() {
+        try {
+            this.clientResponse.close();
+        } catch (IOException e) {
+            // Ignore
+        }
     }
 }

@@ -47,7 +47,7 @@ public abstract class AbstractFitDataSource implements FitDataSource {
 
     private DataSource getDataSource(BeanContainer container, Config config, String name, AccessMode mode) {
         if (mode == AccessMode.EXCLUSIVE) {
-            return this.buildDataSource(config);
+            return this.buildDataSource(config, name);
         }
         return container.all(FitDataSource.class)
                 .stream()
@@ -55,7 +55,7 @@ public abstract class AbstractFitDataSource implements FitDataSource {
                 .filter(ds -> ds != this && ds.mode() == AccessMode.SHARED && Objects.equals(ds.name(), name))
                 .findFirst()
                 .map(FitDataSource::get)
-                .orElseGet(() -> this.buildDataSource(config));
+                .orElseGet(() -> this.buildDataSource(config, name));
     }
 
     @Override
@@ -72,7 +72,8 @@ public abstract class AbstractFitDataSource implements FitDataSource {
      * 创建数据源。
      *
      * @param config 表示插件配置的 {@link Config}。
+     * @param name 表示数据源的名称的 {@link String}。
      * @return 表示数据源的 {@link DataSource}。
      */
-    protected abstract DataSource buildDataSource(Config config);
+    protected abstract DataSource buildDataSource(Config config, String name);
 }

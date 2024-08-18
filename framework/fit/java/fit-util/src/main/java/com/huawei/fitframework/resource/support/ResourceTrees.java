@@ -10,6 +10,7 @@ import com.huawei.fitframework.pattern.flyweight.WeakCache;
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.protocol.jar.JarLocation;
 import com.huawei.fitframework.resource.ResourceTree;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.io.File;
@@ -72,7 +73,7 @@ public final class ResourceTrees {
             } catch (IOException ex) {
                 throw new IllegalStateException(StringUtils.format(
                         "Failed to load JAR of resource tree from file. [file={0}]",
-                        file.getPath()), ex);
+                        FileUtils.path(file)), ex);
             }
         } else {
             return DIRS.get(file);

@@ -18,7 +18,6 @@ import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -75,10 +74,7 @@ public class DefaultHttpEmitter implements HttpEmitter {
         for (int i = 0; i < args.length; ++i) {
             this.appliers.get(i).apply(requestBuilder, args[i]);
         }
-        try (HttpClassicClientRequest request = requestBuilder.build()) {
-            return this.client.exchange(request, Object.class);
-        } catch (IOException e) {
-            throw new HttpClientException("Client request error.", e);
-        }
+        HttpClassicClientRequest request = requestBuilder.build();
+        return this.client.exchange(request, Object.class);
     }
 }
