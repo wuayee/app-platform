@@ -16,6 +16,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
@@ -123,12 +124,8 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions,
-            Operators.Filter<T> filter, Operators.Validator<T> validator) {
-        List<FlowContext<T>> all = this.contextsMap.stream()
-                .filter(context -> context.getStreamId().equals(streamId))
-                .filter(context -> subscriptions.contains(context.getPosition()))
-                .filter(context -> context.getStatus() == PENDING)
-                .collect(Collectors.toList());
+            Set<String> excludeTraceIds, Operators.Filter<T> filter, Operators.Validator<T> validator) {
+        List<FlowContext<T>> all = getFlowContexts(streamId, subscriptions, excludeTraceIds);
         List<FlowContext<T>> flowContexts = filter.process(all);
         return flowContexts.stream()
                 .filter(context -> validator.check(context, flowContexts))
@@ -137,12 +134,8 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
-            Operators.Filter<T> filter) {
-        List<FlowContext<T>> all = this.contextsMap.stream()
-                .filter(context -> context.getStreamId().equals(streamId))
-                .filter(context -> subscriptions.contains(context.getPosition()))
-                .filter(context -> context.getStatus() == PENDING)
-                .collect(Collectors.toList());
+            Set<String> excludeTraceIds, Operators.Filter<T> filter) {
+        List<FlowContext<T>> all = getFlowContexts(streamId, subscriptions, excludeTraceIds);
         return filter.process(all);
     }
 
@@ -153,6 +146,15 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
     @Override
     public void updateFlowData(List<FlowContext<T>> contexts) {
         save(contexts);
+    }
+
+    private List<FlowContext<T>> getFlowContexts(String streamId, List<String> subscriptions,
+            Set<String> excludeTraceIds) {
+        return this.contextsMap.stream().filter(context -> context.getStreamId().equals(streamId))
+                .filter(context -> subscriptions.contains(context.getPosition()))
+                .filter(context -> context.getStatus() == PENDING)
+                .filter(context -> !context.getTraceId().stream().anyMatch(excludeTraceIds::contains))
+                .collect(Collectors.toList());
     }
 
     /**
