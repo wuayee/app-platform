@@ -1,6 +1,7 @@
 import {Collapse, Switch} from 'antd';
 import PropTypes from "prop-types";
 import MultiConversationContent from "@/components/start/MultiConversationContent.jsx";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -25,7 +26,7 @@ export default function MultiConversation({
                                               disabled = false,
                                               props = {},
                                           }) {
-
+    const { t } = useTranslation();
     const switchValue = props?.switch?.value ?? true;
     const onSwitchChange = props?.switch?.onChange || {}
 
@@ -35,7 +36,7 @@ export default function MultiConversation({
                 {<Panel
                     key={"multiConversationPanel"}
                     header={<div className="panel-header">
-                        <span className="jade-panel-header-font">多轮对话</span>
+                        <span className="jade-panel-header-font">{t('multipleRoundsOfConversation')}</span>
                         <Switch
                             value={switchValue}
                             disabled={disabled}

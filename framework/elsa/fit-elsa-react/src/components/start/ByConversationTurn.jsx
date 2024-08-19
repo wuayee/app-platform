@@ -1,6 +1,7 @@
 import {Slider} from "antd";
 import "./style.css";
 import PropTypes from "prop-types";
+import {useTranslation} from "react-i18next";
 
 ByConversationTurn.propTypes = {
     propValue: PropTypes.string.isRequired, // 确保 propValue 是一个必需的number类型
@@ -16,10 +17,11 @@ ByConversationTurn.propTypes = {
  * @returns {JSX.Element} Memory按对话轮次的Dom
  */
 export default function ByConversationTurn({propValue, onValueChange, disabled}) {
+    const { t } = useTranslation();
     const intValue = parseInt(propValue);
 
     const defaultRecalls = {
-        1: '1', [3]: '默认', 10: '10'
+        1: '1', [3]: t('default'), 10: '10'
     };
 
     return (<>

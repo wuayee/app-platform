@@ -1,5 +1,6 @@
 import {Input, Form} from "antd";
 import PropTypes from "prop-types";
+import {useTranslation} from "react-i18next";
 
 const {TextArea} = Input;
 
@@ -19,11 +20,12 @@ Description.propTypes = {
  * @returns {JSX.Element} 开始节点关于入参描述的Dom
  */
 export default function Description({itemId, propValue, disableModifiable, onChange}) {
+    const { t } = useTranslation();
     return (<Form.Item
         className="jade-form-item"
-        label="字段描述"
+        label={t('fieldDescription')}
         name={`description-${itemId}`}
-        rules={[{required: true, message: "参数描述不能为空"}]}
+        rules={[{required: true, message: t('paramDescriptionCannotBeEmpty')}]}
         initialValue={propValue}
     >
         <TextArea
@@ -32,7 +34,7 @@ export default function Description({itemId, propValue, disableModifiable, onCha
             value={propValue}
             disabled={disableModifiable}
             onChange={e => onChange("description", e.target.value)} // 当文本输入框的值发生变化时调用父组件传递的回调函数
-            placeholder="请输入字段描述"
+            placeholder={t('pleaseInsertFieldDescription')}
         />
     </Form.Item>);
 }

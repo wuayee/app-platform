@@ -6,7 +6,7 @@ import Customizing from '@/components/start/Customizing.jsx';
 import {Form} from 'antd';
 import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
 import PropTypes from "prop-types";
-
+import {useTranslation} from "react-i18next";
 
 MultiConversationContent.propTypes = {
     itemId: PropTypes.string.isRequired, // 确保 itemId 是一个必需的string类型
@@ -29,6 +29,7 @@ export default function MultiConversationContent({
                                                      disabled = false,
                                                      props = {},
                                                  }) {
+    const { t } = useTranslation();
     const typeValue = props?.type?.value || '';
     const onTypeChange = props?.type?.onChange || {}
     const valueValue = props?.value?.value || '';
@@ -45,9 +46,9 @@ export default function MultiConversationContent({
                 return (<>
                     <Form.Item
                         className="jade-form-item"
-                        label="请选择对话轮次"
+                        label={t('pleaseSelectADialogueRound')}
                         name={`byConversationTurn-${itemId}`}
-                        rules={[{required: true, message: "对话轮次不能为空"}]}
+                        rules={[{required: true, message: t('conversationTurnCannotBeEmpty')}]}
                         validateTrigger="onBlur"
                         initialValue={valueValue}
                     >
@@ -132,7 +133,7 @@ export default function MultiConversationContent({
 
     const getOptions = (config) => {
         const defaultOptions = [
-            { value: 'ByConversationTurn', label: '按对话轮次' },
+            { value: 'ByConversationTurn', label: t('byConversationTurn') },
             // 430演示大模型选项不需要按条数、按Token大小、按时间，暂时屏蔽
             // { value: 'ByNumber', label: '按条数' },
             // { value: 'ByTokenSize', label: '按Token大小' },
@@ -160,9 +161,9 @@ export default function MultiConversationContent({
         <div className={`jade-custom-panel-content ${className}`}>
             <Form.Item
                 className="jade-form-item"
-                label="请选择记忆方式"
+                label={t('pleaseSelectAMemoryMode')}
                 name={`multiConversationType-${itemId}`}
-                rules={[{required: true, message: "记忆方式不能为空"}]}
+                rules={[{required: true, message: t('memoryModeCannotBeEmpty')}]}
                 validateTrigger="onBlur"
                 initialValue={typeValue}
             >
