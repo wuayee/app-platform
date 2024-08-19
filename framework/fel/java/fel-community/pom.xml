@@ -15,7 +15,5 @@
 
     <modules>
         <module>model-openai</module>
-        <module>tokenizer-jtokkit</module>
-        <module>vectorstore-milvus</module>
     </modules>
 </project>

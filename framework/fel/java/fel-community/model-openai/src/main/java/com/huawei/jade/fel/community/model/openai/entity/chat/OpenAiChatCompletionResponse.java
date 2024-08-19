@@ -7,6 +7,7 @@ package com.huawei.jade.fel.community.model.openai.entity.chat;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fitframework.annotation.Alias;
+import com.huawei.fitframework.annotation.Aliases;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.core.chat.ChatMessage;
@@ -52,7 +53,7 @@ public class OpenAiChatCompletionResponse {
      * 模型响应消息。
      */
     public static class OpenAiChatCompletionChoice {
-        @Alias("delta")
+        @Aliases(@Alias("delta"))
         private OpenAiChatMessage message;
     }
 }
