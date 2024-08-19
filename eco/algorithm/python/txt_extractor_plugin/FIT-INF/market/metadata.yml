@@ -1,10 +1,10 @@
 name: 'TXT文本抽取插件'
 language: 'Python'
-vendor: 'Huawei'
+vendor: 'ModelEngine'
 operators:
 - operator:
     name: 'TXT文本抽取'
-    fitableId: 'com.huawei.eDataMate.operators.txt_extractor_plugin'
+    fitableId: 'modelengine.operators.txt_extractor_plugin'
     version: '1.0.0'
     description: '抽取TXT中的文本'
     types:
@@ -16,4 +16,3 @@ operators:
       after: ''
     labels:
     - '文本'
-    - '医疗'
