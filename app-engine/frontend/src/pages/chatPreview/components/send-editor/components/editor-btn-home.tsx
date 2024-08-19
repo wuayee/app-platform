@@ -8,7 +8,9 @@ import {
   AtIcon,
   HistoryIcon,
   ArrowDownIcon,
-  ClearChatIcon
+  ClearChatIcon,
+  ShareIcon,
+  NotificationIcon
 } from '@/assets/icon';
 import { clearInstance } from '@shared/http/aipp';
 import ReferencingApp from './referencing-app';
@@ -34,7 +36,7 @@ import { useTranslation } from 'react-i18next';
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
   const { t } = useTranslation();
-  const { fileCallBack, editorRef, chatType } = props;
+  const { fileCallBack, editorRef, chatType, setEditorShow } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
@@ -221,6 +223,8 @@ const EditorBtnHome = (props) => {
             ) :
             (
               <div className='inner-item'>
+                {/* <NotificationIcon onClick={historyChatClick} /> */}
+                <ShareIcon onClick={() => setEditorShow(true, 'share')} />
                 { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
                 {showMulti && <div className='multi-conversation-title'>
                   <span>{t('multiTurnConversation')}</span>

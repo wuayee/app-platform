@@ -148,7 +148,7 @@ const StarApps: React.FC<StarAppsProps> = ({ handleAt }) => {
       <div className='app-wrapper'>
         {apps.map((app, index) => (
           <div className='app-item' key={app.id}>
-            {index=== 0 ? <div className='app-item-default'>{t('defaultApp')}</div> : ''}
+            {index === 0 ? <div className='app-item-default'>{t('defaultApp')}</div> : ''}
 
             <div className='app-item-content'>
               {app.appAvatar ? <Avatar size={48} src={app.appAvatar} /> : <Avatar size={48} src={avatarNormal} />}

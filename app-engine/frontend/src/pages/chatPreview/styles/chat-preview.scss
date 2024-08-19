@@ -17,7 +17,9 @@
     line-height: 18px;
     text-align: center;
     padding: 0 48px;
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     .switch-item {
       position: absolute;
       display: flex;
@@ -161,6 +163,7 @@
   }
 
   .send-editor-container {
+    position: relative;
     >div {
       padding: 0 24px;
     }
