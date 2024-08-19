@@ -6,18 +6,20 @@
 
 package modelengine.fel.engine.operators.patterns;
 
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE;
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM;
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID;
+
 import modelengine.fel.core.pattern.Pattern;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * {@link FlowPattern} 的简单实现，仅支持注册一个监听器，使用 {@link ThreadPoolExecutor} 创建的线程池执行。
@@ -28,10 +30,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2024-04-22
  */
 public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
-    private static final Integer MAXIMUM_POOL_SIZE = 50;
-    private static final ExecutorService THREAD_POOL =
-            new ThreadPoolExecutor(0, MAXIMUM_POOL_SIZE, 60L, TimeUnit.SECONDS, new SynchronousQueue<>());
-
     private EmitterListener<O, FlowSession> handler;
     private final Operators.ProcessMap<I, O> processor;
 
@@ -57,7 +55,12 @@ public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
     @Override
     public O invoke(I data) {
         FlowSession session = AiFlowSession.require();
-        THREAD_POOL.execute(() -> this.emit(this.processor.process(data, session), session));
+        this.emit(this.processor.process(data, session), session);
+        FlowSession flowSession = new FlowSession(session);
+        flowSession.setInnerState(IS_SESSION_COMPLETE, true);
+        flowSession.setInnerState(IS_SYSTEM, true);
+        flowSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
+        this.emit(null, flowSession);
         return null;
     }
 

@@ -40,8 +40,9 @@ public class Predictable<T> implements ConverseListener<T> {
         Validation.notNull(flow, "Flow can not be null.");
         Validation.notNull(converseCallBack, "Callback can not be null.");
         this.converseCallBack = FlowCallBack.<T>builder()
-                .doOnSuccess(converseCallBack.successCb().andThen(latch::data))
+                .doOnConsume(converseCallBack.consumeCb().andThen(latch::data))
                 .doOnError(converseCallBack.errorCb().andThen(latch::throwable))
+                .doOnCompleted(converseCallBack.completedCb())
                 .doOnFinally(latch::countDown)
                 .build();
         this.flowErrorCb = (exception, retryable, contexts) -> {
@@ -53,12 +54,21 @@ public class Predictable<T> implements ConverseListener<T> {
     }
 
     @Override
-    public void onSuccess(String flowId, T data) {
+    public void onConsume(String flowId, T data) {
+        // 对话数据消费回调由直接起会话的流程触发
+        if (!Objects.equals(flowId, this.flowId)) {
+            return;
+        }
+        this.converseCallBack.consumeCb().accept(data);
+    }
+
+    @Override
+    public void onConverseCompleted(String flowId) {
         // 对话结束回调由直接起会话的流程触发
         if (!Objects.equals(flowId, this.flowId)) {
             return;
         }
-        this.converseCallBack.successCb().accept(data);
+        this.converseCallBack.completedCb().exec();
     }
 
     @Override

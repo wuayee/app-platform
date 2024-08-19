@@ -6,11 +6,12 @@
 
 package modelengine.fel.engine.activities;
 
+import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.Prompt;
 import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.document.Content;
 import modelengine.fel.core.document.Document;
-import modelengine.fel.core.pattern.Measurable;
+import modelengine.fel.core.document.Measurable;
 import modelengine.fel.core.pattern.Parser;
 import modelengine.fel.core.pattern.Pattern;
 import modelengine.fel.core.pattern.PostProcessor;
@@ -25,11 +26,14 @@ import modelengine.fel.engine.activities.processors.AiFlatMap;
 import modelengine.fel.engine.flows.AiFlow;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.flows.Conversation;
+import modelengine.fel.engine.operators.models.FlowModel;
 import modelengine.fel.engine.operators.patterns.AbstractFlowPattern;
 import modelengine.fel.engine.operators.patterns.FlowPattern;
 import modelengine.fel.engine.operators.patterns.SimpleFlowPattern;
 import modelengine.fel.engine.operators.prompts.PromptTemplate;
 import modelengine.fel.engine.util.AiFlowSession;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.states.Start;
@@ -405,14 +409,13 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> delegate(Pattern<O, R> pattern) {
         Validation.notNull(pattern, "Pattern operator cannot be null.");
         FlowPattern<O, R> flowPattern = this.castFlowPattern(pattern);
-        Processor<O, R> processor = this.publisher().map(input -> {
+        Processor<O, R> orProcessor = this.publisher().flatMap(input -> {
+            FlowBoundedEmitter<R> cachedEmitter = FlowBoundedEmitter.from(flowPattern);
             AiFlowSession.applyPattern(flowPattern, input.getData(), input.getSession());
-            return null;
+            return Flows.source(cachedEmitter);
         }, null);
-        this.displayPatternProcessor(pattern, processor);
-        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.flow().origin()), this.flow());
-        state.offer(flowPattern);
-        return state;
+        this.displayPatternProcessor(pattern, orProcessor);
+        return new AiState<>(new State<>(orProcessor, this.flow().origin()), this.flow());
     }
 
     private <R> void displayPatternProcessor(Pattern<O, R> pattern, Processor<O, R> processor) {
@@ -515,6 +518,25 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             prompts.forEach(prompt -> messages.addAll(prompt.messages()));
             return ObjectUtils.<Prompt>cast(messages);
         }, null).displayAs("prompt"), this.flow().origin()), this.flow());
+    }
+
+    /**
+     * 生成大模型流式调用节点。
+     *
+     * @param model 表示流式模型算子实现的 {@link FlowModel}{@code <}{@link O}{@code >}。
+     * @param <M> 表示模型节点的输入数据类型。
+     * @return 表示大模型流式调用节点的 {@link AiState}{@code <}{@link ChatMessage}{@code , }{@link D}{@code ,
+     * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
+     */
+    public <M extends ChatMessage> AiState<ChatMessage, D, O, RF, F> generate(FlowModel<O, M> model) {
+        Validation.notNull(model, "Streaming Model operator cannot be null.");
+        Processor<O, ChatMessage> processor = this.publisher().flatMap(input -> {
+            FlowSession session = input.getSession();
+            input.setKeyBy(session.getId());
+            return Flows.source(AiFlowSession.applyPattern(model, input.getData(), input.getSession()));
+        }, null).displayAs("generate");
+        return new AiState<>(new State<>(processor, this.flow().origin()), this.flow());
     }
 
     /**

@@ -8,6 +8,7 @@ package modelengine.fel.core.chat;
 
 import modelengine.fel.core.tool.ToolCall;
 import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,5 +60,14 @@ public interface ChatMessage {
      */
     default List<ToolCall> toolCalls() {
         return Collections.emptyList();
+    }
+
+    /**
+     * 判断模型响应是否是调用工具。
+     *
+     * @return 表示是否是调用工具的 {@code boolean}。
+     */
+    default boolean isToolCall() {
+        return CollectionUtils.isNotEmpty(this.toolCalls());
     }
 }

@@ -123,7 +123,6 @@ public interface Tool {
          */
         Map<String, Object> returnType();
 
-
         /**
          * 获取输出转换器的工具方法。
          *

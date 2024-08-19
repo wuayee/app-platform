@@ -1,8 +1,14 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.bridge.fitflow;
+
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE;
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM;
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID;
 
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
@@ -26,8 +32,6 @@ import java.util.function.Function;
  * @since 2024/8/16
  */
 public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
-    private static final String CONSUMER_KEY = "consumer";
-
     private final List<Tuple> dataDuet = new ArrayList<>();
 
     private final FlowSession flowSession;
@@ -59,7 +63,7 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
         this.flowSession = new FlowSession(flowSession);
         this.flowSession.setInnerState(BOUNDED_SESSION_ID, UUIDUtil.uuid());
         this.dataConverter = dataConverter;
-        publisher.subscribe(new EmitterSubscriber<>(this));
+        publisher.subscribe(new FitBoundedEmitter.EmitterSubscriber<>(this));
     }
 
     @Override
@@ -68,7 +72,6 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
             this.dataDuet.add(Tuple.duet(data, session));
             return;
         }
-        session.<Action>getInnerState(CONSUMER_KEY).exec();
         super.emit(data, session);
     }
 
@@ -84,48 +87,25 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
         });
     }
 
-    /**
-     * 错误扩展响应。
-     *
-     * @param cause 表示错误异常的 {@link Exception}。
-     */
-    protected abstract void errorAction(Exception cause);
-
-    /**
-     * 结束扩展响应。
-     */
-    protected abstract void completedAction();
-
-    /**
-     * 发射数据时的扩展响应。
-     *
-     * @param source 表示源数据的 {@link O}。
-     * @param target 标识转换后的 {@link D}。
-     */
-    protected abstract void consumeAction(O source, D target);
-
-    private void doEmit(D data, Action action) {
+    private void doEmit(D data) {
         FlowSession newSession = new FlowSession(this.flowSession);
-        newSession.setInnerState(CONSUMER_KEY, action);
         this.emit(data, newSession);
     }
 
-    private void doComplete(Action action) {
+    private void doComplete() {
         FlowSession newSession = new FlowSession(this.flowSession);
-        newSession.setInnerState(CONSUMER_KEY, action);
-        newSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID, UUIDUtil.uuid());
-        newSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        newSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
+        newSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
+        newSession.setInnerState(IS_SYSTEM, true);
+        newSession.setInnerState(IS_SESSION_COMPLETE, true);
         newSession.setInnerState(IS_BOUNDED, true);
         newSession.setInnerState(IS_BOUNDED_COMPLETE, true);
         this.emit(null, newSession);
     }
 
-    private void doError(Exception cause, Action action) {
+    private void doError(Exception cause) {
         FlowSession newSession = new FlowSession(this.flowSession);
-        newSession.setInnerState(CONSUMER_KEY, action);
-        newSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID, UUIDUtil.uuid());
-        newSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
+        newSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
+        newSession.setInnerState(IS_SYSTEM, true);
         newSession.setInnerState(IS_BOUNDED, true);
         newSession.setInnerState(IS_BOUNDED_ERROR, true);
         newSession.setInnerState(BOUNDED_ERROR, cause);
@@ -133,16 +113,7 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
     }
 
     @Override
-    public void start(FlowSession session) {
-    }
-
-    @FunctionalInterface
-    private interface Action {
-        /**
-         * 执行响应。
-         */
-        void exec();
-    }
+    public void start(FlowSession session) {}
 
     /**
      * 订阅FIT响应式数据流的数据发射器
@@ -170,13 +141,13 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
         @Override
         public void consume(O source) {
             D target = this.emitter.dataConverter.apply(source);
-            this.emitter.doEmit(target, () -> this.emitter.consumeAction(source, target));
+            this.emitter.doEmit(target);
         }
 
         @Override
         public void complete() {
             this.emitter.isComplete = true;
-            this.emitter.doComplete(this.emitter::completedAction);
+            this.emitter.doComplete();
         }
 
         @Override
@@ -187,7 +158,7 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
         @Override
         public void fail(Exception cause) {
             this.emitter.isError = true;
-            this.emitter.doError(cause, () -> this.emitter.errorAction(cause));
+            this.emitter.doError(cause);
         }
 
         @Override

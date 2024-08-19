@@ -38,7 +38,6 @@ import modelengine.fitframework.resource.web.Media;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +52,6 @@ import java.util.stream.Collectors;
  * @since 2024-05-08
  */
 @DisplayName("测试委托单元")
-@Disabled
 public class PatternTest {
     @Test
     @DisplayName("测试 RunnableParallel")
@@ -70,12 +68,12 @@ public class PatternTest {
                 .converse()
                 .bind(memory);
 
-        converse.doOnSuccess(r -> answer.append(r.text())).offer("question").await();
+        converse.doOnConsume(r -> answer.append(r.text())).offer("question").await();
         assertThat(answer.toString()).isEqualTo("answer question from context with my history");
 
         // 验证 runnableParallel 中 join 初始值重新获取，不影响后续的请求。
         StringBuilder answer1 = new StringBuilder();
-        converse.doOnSuccess(r -> answer1.append(r.text())).offer("question1").await();
+        converse.doOnConsume(r -> answer1.append(r.text())).offer("question1").await();
         assertThat(answer1.toString()).isEqualTo("answer question1 from context with my history");
     }
 

@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-package modelengine.fel.core.pattern;
+package modelengine.fel.core.document;
 
 /**
  * 表示具有量化能力的对象。

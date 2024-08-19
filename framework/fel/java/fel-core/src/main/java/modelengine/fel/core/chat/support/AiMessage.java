@@ -10,7 +10,6 @@ import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import modelengine.fel.core.chat.MessageType;
 import modelengine.fel.core.tool.ToolCall;
-import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,15 +51,6 @@ public class AiMessage extends AbstractChatMessage {
     @Override
     public List<ToolCall> toolCalls() {
         return this.toolCalls;
-    }
-
-    /**
-     * 判断模型响应是否是调用工具。
-     *
-     * @return 表示是否是调用工具的 {@code boolean}。
-     */
-    public boolean isToolCall() {
-        return CollectionUtils.isNotEmpty(this.toolCalls);
     }
 
     @Override

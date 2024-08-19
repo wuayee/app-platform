@@ -8,7 +8,6 @@ package modelengine.fel.core.document;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fel.core.pattern.Measurable;
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.resource.web.Media;
 

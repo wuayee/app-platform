@@ -1,12 +1,15 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.bridge.fitflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import lombok.Data;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
@@ -16,8 +19,6 @@ import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.flowable.Publisher;
-
-import lombok.Data;
 
 import org.junit.jupiter.api.Test;
 
@@ -54,21 +55,6 @@ class FitBoundedEmitterTest {
          */
         public TestEmitter(FlowSession flowSession, Publisher<O> publisher, Function<O, D> builder) {
             super(flowSession, publisher, builder);
-        }
-
-        @Override
-        protected void errorAction(Exception cause) {
-            count.incrementAndGet();
-        }
-
-        @Override
-        protected void completedAction() {
-            count.incrementAndGet();
-        }
-
-        @Override
-        protected void consumeAction(O source, D target) {
-            count.incrementAndGet();
         }
     }
 

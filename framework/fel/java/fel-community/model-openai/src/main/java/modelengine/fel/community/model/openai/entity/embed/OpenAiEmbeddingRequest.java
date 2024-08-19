@@ -27,10 +27,9 @@ public class OpenAiEmbeddingRequest {
      *
      * @param input 表示输入的文本列表的 {@link List}{@code <}{@link String}{@code >}。
      * @param model 表示调用的模型名称的 {@link String}。
-     * @throws IllegalArgumentException
-     * <ul>
-     *     <li>当 {@code model} 为空字符串时；</li>
-     *     <li>当 {@code input} 为空集合时。</li>
+     * @throws IllegalArgumentException <ul>
+     * <li>当 {@code model} 为空字符串时；</li>
+     * <li>当 {@code input} 为空集合时。</li>
      * </ul>
      */
     public OpenAiEmbeddingRequest(List<String> input, String model) {

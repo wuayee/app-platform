@@ -6,6 +6,10 @@
 
 package modelengine.fel.engine.flows;
 
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE;
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM;
+import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID;
+
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.memory.Memory;
 import modelengine.fel.engine.activities.AiStart;
@@ -13,6 +17,7 @@ import modelengine.fel.engine.activities.FlowCallBack;
 import modelengine.fel.engine.util.StateKey;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.inspection.Validation;
 
 import java.util.List;
@@ -61,6 +66,12 @@ public class Conversation<D, R> {
         ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.start().offer(data, newSession);
+
+        FlowSession flowSession = new FlowSession(newSession);
+        flowSession.setInnerState(IS_SESSION_COMPLETE, true);
+        flowSession.setInnerState(IS_SYSTEM, true);
+        flowSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
+        this.flow.start().offer((D) null, flowSession);
         return latch;
     }
 
@@ -78,6 +89,12 @@ public class Conversation<D, R> {
         ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
+
+        FlowSession flowSession = new FlowSession(newSession);
+        flowSession.setInnerState(IS_SESSION_COMPLETE, true);
+        flowSession.setInnerState(IS_SYSTEM, true);
+        flowSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
+        this.flow.origin().offer(nodeId, null, flowSession);
         return latch;
     }
 
@@ -148,8 +165,8 @@ public class Conversation<D, R> {
      * @return 表示设置完成功回调的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public Conversation<D, R> doOnSuccess(Consumer<R> processor) {
-        this.callBackBuilder.doOnSuccess(processor);
+    public Conversation<D, R> doOnConsume(Consumer<R> processor) {
+        this.callBackBuilder.doOnConsume(processor);
         return this;
     }
 

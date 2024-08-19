@@ -11,6 +11,7 @@ import modelengine.fel.engine.activities.AiStart;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.states.Start;
+import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
 
 /**
  * AI 流程创建入口的 API 集合。
@@ -27,7 +28,7 @@ public class AiFlows {
      * }{@link ProcessFlow}{@code <}{@link D}{@code >, }{@link AiProcessFlow}{@code <}{@link D}{@code , ?>>}。
      */
     public static <D> AiStart<D, D, D, ProcessFlow<D>, AiProcessFlow<D, ?>> create() {
-        Start<D, D, D, ProcessFlow<D>> start = Flows.create();
+        Start<D, D, D, ProcessFlow<D>> start = Flows.create(ThreadMode.SESSION);
         AiProcessFlow<D, ?> flow = new AiProcessFlow<>(start.getFlow());
         return new AiStart<>(start, flow);
     }

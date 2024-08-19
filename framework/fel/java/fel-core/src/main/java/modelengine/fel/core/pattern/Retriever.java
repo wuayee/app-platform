@@ -6,6 +6,8 @@
 
 package modelengine.fel.core.pattern;
 
+import modelengine.fel.core.document.Measurable;
+
 import java.util.List;
 
 /**

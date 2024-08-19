@@ -6,6 +6,8 @@
 
 package modelengine.fel.core.chat.support;
 
+import static modelengine.fitframework.util.ObjectUtils.cast;
+
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.Prompt;
 
@@ -30,7 +32,20 @@ public class ChatMessages implements Prompt {
      * @return 表示创建成功的 {@link ChatMessages}。
      */
     public static ChatMessages from(ChatMessage... message) {
-        return ChatMessages.from(Arrays.asList(message));
+        return from(Arrays.asList(message));
+    }
+
+    /**
+     * 从给定的提示中创建 {@link ChatMessages} 的实例。
+     *
+     * @param prompt 表示提示的 {@link Prompt}。
+     * @return 表示创建成功的 {@link ChatMessages}。
+     */
+    public static ChatMessages from(Prompt prompt) {
+        if (prompt instanceof ChatMessages) {
+            return cast(prompt);
+        }
+        return from(prompt.messages());
     }
 
     /**

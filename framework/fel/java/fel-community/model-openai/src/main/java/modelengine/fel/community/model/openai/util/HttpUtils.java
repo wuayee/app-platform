@@ -26,10 +26,9 @@ public class HttpUtils {
      *
      * @param request 表示 http 请求的 {@link HttpClassicClientRequest}。
      * @param apiKey 表示用于认证密钥的 {@link String}。
-     * @throws IllegalArgumentException
-     * <ul>
-     *     <li>当 {@code request} 为 {@code null} 时；</li>
-     *     <li>当 {@code apiKey} 为空字符串时。</li>
+     * @throws IllegalArgumentException <ul>
+     * <li>当 {@code request} 为 {@code null} 时；</li>
+     * <li>当 {@code apiKey} 为空字符串时。</li>
      * </ul>
      */
     public static void setBearerAuth(HttpClassicClientRequest request, String apiKey) {

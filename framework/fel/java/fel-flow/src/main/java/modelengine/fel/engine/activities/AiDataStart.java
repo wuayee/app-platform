@@ -9,7 +9,7 @@ package modelengine.fel.engine.activities;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
-import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.states.DataStart;
@@ -37,7 +37,7 @@ public class AiDataStart<O, D, I> {
      * @throws IllegalArgumentException 当 {@code state} 为 {@code null} 时。
      */
     public AiDataStart(AiStart<O, D, I, ProcessFlow<D>, AiProcessFlow<D, ?>> state, D data) {
-        this(state, FlowEmitter.mono(data));
+        this(state, FlowBoundedEmitter.mono(data));
     }
 
     /**
@@ -49,7 +49,7 @@ public class AiDataStart<O, D, I> {
      * @throws IllegalArgumentException 当 {@code state} 为 {@code null} 时。
      */
     public AiDataStart(AiStart<O, D, I, ProcessFlow<D>, AiProcessFlow<D, ?>> state, D[] data) {
-        this(state, FlowEmitter.flux(data));
+        this(state, FlowBoundedEmitter.flux(data));
     }
 
     /**

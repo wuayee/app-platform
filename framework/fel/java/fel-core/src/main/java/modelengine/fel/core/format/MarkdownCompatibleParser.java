@@ -30,10 +30,9 @@ public class MarkdownCompatibleParser<O> implements OutputParser<O> {
      *
      * @param outputParser 表示对象解析器的 {@link OutputParser}。
      * @param prefix 表示代码类型的 {@link String}。
-     * @throws IllegalArgumentException
-     * <ul>
-     *     <li>当 {@code outputParser} 为 {@code null} 时；</li>
-     *     <li>当 {@code prefix} 为空字符串时。</li>
+     * @throws IllegalArgumentException <ul>
+     * <li>当 {@code outputParser} 为 {@code null} 时；</li>
+     * <li>当 {@code prefix} 为空字符串时。</li>
      * </ul>
      */
     public MarkdownCompatibleParser(OutputParser<O> outputParser, String prefix) {

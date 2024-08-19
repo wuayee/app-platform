@@ -77,7 +77,7 @@ public class ConversationTest {
         void shouldOkWhenASyncFlowWithCustomCallback() {
             StringBuilder callbackAnswer = new StringBuilder();
             Conversation<Integer, String> converse = flow.converse();
-            String flowAnswer = converse.doOnSuccess(data -> callbackAnswer.append("answer ").append(data))
+            String flowAnswer = converse.doOnConsume(data -> callbackAnswer.append("answer ").append(data))
                     .doOnFinally(() -> callbackAnswer.append(" finally"))
                     .offer(5)
                     .await(500, TimeUnit.MILLISECONDS);

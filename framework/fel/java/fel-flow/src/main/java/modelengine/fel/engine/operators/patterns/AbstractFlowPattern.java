@@ -61,7 +61,12 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
      * @throws IllegalStateException 当流程发生异常时。
      */
     public Pattern<I, O> sync() {
-        return new SimplePattern<>(data -> this.getFlow().converse(AiFlowSession.require()).offer(data).await());
+        return new SimplePattern<>(data -> {
+            FlowSession require = AiFlowSession.require();
+            FlowSession session = new FlowSession();
+            session.copySessionState(require);
+            return this.getFlow().converse(session).offer(data).await();
+        });
     }
 
     /**
