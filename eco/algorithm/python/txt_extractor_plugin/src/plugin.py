@@ -20,6 +20,7 @@ class TxtExtractorPlugin:
         for content in contents:
             start = time.time()
             try:
+                # 去除文档的首尾空格，导致重复段落检验算子出现问题。经研发团队和测试团队讨论，在文本抽取时不进行首尾空格去除处理
                 # 用utf-8-sig的格式进行抽取，可以避免uft-8 BOM编码格式的文件在抽取后产生隐藏字符作为前缀。
                 content.text = content.data.decode(encoding='utf-8-sig').replace("\r\n", "\n")
                 content.data = b""  # 将content.data置空
