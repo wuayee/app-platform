@@ -26,3 +26,38 @@
 5. 目录和文档在同一页会导致换行换行处理有误
 6. 表格抽取时存在行列丢失
 7. 半框线和无框线表格抽取易出错
+
+
+## 调用接口输入
+
+```python
+inputs = {
+    "businessData": {
+
+    },
+    "passData": {
+        "data": b"xxx",
+        "text": "",
+        "meta": {"fileName": "xxx.pdf", "fileType": "pdf"}  # 待处理数据元信息 
+    },
+    "contextData": ""
+}
+
+```
+
+## 调用接口输出
+
+```python
+outputs = {
+    "businessData": {
+
+    },
+    "passData": {
+        "data": "",
+        "text": "机器学习是人工智能的一个分支。",  # 处理后数据
+        "meta": {"fileName": "xxx.doc"}  # 处理后数据元信息 
+    },
+    "contextData": ""
+}
+
+```
