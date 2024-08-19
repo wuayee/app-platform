@@ -17,44 +17,44 @@ import com.huawei.jade.common.model.ModelInfo;
  */
 public enum PluginDeployRetCode implements RetCode, ModelInfo {
     /**
-     * 插件上传校验失败，未上传文件
+     * 插件上传校验失败，未上传文件。
      */
-    NO_FILE_UPLOADED_ERROR(130901001, "No file entity found in the received file."),
+    NO_FILE_UPLOADED_ERROR(1, "No file entity found in the received file."),
 
     /**
-     * 插件上传校验失败，非zip压缩包
+     * 插件上传校验失败，非zip压缩包。
      */
-    UPLOADED_FILE_FORMAT_ERROR(130901002, "The uploaded file must be a zip file."),
+    UPLOADED_FILE_FORMAT_ERROR(2, "The uploaded file must be a zip file."),
 
     /**
-     * 上传文件中没有插件
+     * 上传文件中没有插件。
      */
-    NO_PLUGIN_FOUND_ERROR(130901003, "No plugin found in the uploaded file."),
+    NO_PLUGIN_FOUND_ERROR(3, "No plugin found in the uploaded file."),
 
     /**
-     * 上传文件中缺少文件，占位符代表缺少的文件名称
+     * 上传文件中缺少文件，占位符代表缺少的文件名称。
      */
-    FILE_MISSING_ERROR(130901004, "Missing {0} in the uploaded file."),
+    FILE_MISSING_ERROR(4, "Missing {0} in the uploaded file."),
 
     /**
-     * 插件唯一性校验失败
+     * 插件唯一性校验失败。
      */
-    PLUGIN_UNIQUE_CHECK_ERROR(130901005, "Failed to verify the file uniqueness."),
+    PLUGIN_UNIQUE_CHECK_ERROR(5, "Failed to verify the file uniqueness."),
 
     /**
-     * json 文件解析失败
+     * json文件解析失败。
      */
-    JSON_PARSE_ERROR(130901006, "Failed to convert json data. msg: {0}"),
+    JSON_PARSE_ERROR(6, "Failed to convert json data. Msg: {0}"),
 
     /**
-     * 插件不存在
+     * 插件不存在。
      */
-    PLUGIN_NOT_EXISTS(130901007, "Plugin id {0} not exists"),
+    PLUGIN_NOT_EXISTS(7, "Plugin id {0} not exists"),
 
     /**
-     * 插件完整性校验失败
+     * 插件完整性校验失败。
      */
-    PLUGIN_COMPLETENESS_CHECK_ERROR(130901008, "Failed to verify the file completeness.");
+    PLUGIN_COMPLETENESS_CHECK_ERROR(8, "Failed to verify the file completeness.");
 
     private final int code;
 
@@ -67,7 +67,7 @@ public enum PluginDeployRetCode implements RetCode, ModelInfo {
 
     @Override
     public int getCode() {
-        return this.code;
+        return convertSubModelCode(this.getSubSystemId(), this.getModelId(), this.getSubModelId(), this.code);
     }
 
     @Override
@@ -87,6 +87,6 @@ public enum PluginDeployRetCode implements RetCode, ModelInfo {
 
     @Override
     public int getSubModelId() {
-        return 0x01;
+        return 1;
     }
 }

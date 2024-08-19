@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -174,10 +175,10 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
     }
 
     private void sendTextEventStream(TextEventStreamEntity eventStreamEntity) throws IOException {
-        ObjectSerializer objectSerializer = eventStreamEntity.belongTo()
-                .jsonSerializer()
-                .orElseThrow(() -> new IllegalStateException("The serializer cannot be null."));
+        ObjectSerializer objectSerializer = this.jsonSerializer()
+                .orElseThrow(() -> new IllegalStateException("The json serializer cannot be null."));
         AtomicReference<Exception> exception = new AtomicReference<>();
+        CountDownLatch latch = new CountDownLatch(1);
         eventStreamEntity.stream()
                 .map(sse -> sse.serialize(objectSerializer).getBytes(StandardCharsets.UTF_8))
                 .subscribe(null, (subscription, bytes) -> {
@@ -187,7 +188,16 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
                         subscription.cancel();
                         exception.set(e);
                     }
-                }, null, ((ignore, e) -> exception.set(e)));
+                }, subscription -> latch.countDown(), ((ignore, e) -> {
+                    exception.set(e);
+                    latch.countDown();
+                }));
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new InternalServerErrorException("Failed to execute handler.", e);
+        }
         Exception e = exception.get();
         if (e == null) {
             return;

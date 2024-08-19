@@ -262,13 +262,17 @@ public final class FileUtils {
      * @param file 表示待获取路径的文件的 {@link File}。
      * @return 表示文件的路径的 {@link String}。
      * @throws IllegalStateException 当标准化失败时。
-     * @see #canonicalize(File)
      */
     public static String path(File file) {
         if (file == null) {
             return null;
         }
-        return canonicalize(file).getPath();
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IllegalStateException(StringUtils.format("Failed to canonicalize file. [file={0}]",
+                    file.getPath()), e);
+        }
     }
 
     /**

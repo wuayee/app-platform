@@ -17,7 +17,6 @@ import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.PartitionedEntity;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.common.Result;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.support.DeployStatus;
@@ -54,7 +53,7 @@ public class UploadPluginController {
      *
      * @param receivedFiles 表示分块的消息体数据的 {@link PartitionedEntity}。
      * @param toolNames 表示工具名的列表的 {@link String}。
-     * @return 表示格式化之后的返回消息的 {@link Result}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @PostMapping(path = "/save", description = "保存上传工具文件")
     public Result<String> saveUploadFile(PartitionedEntity receivedFiles, @RequestParam("toolNames") String toolNames) {
@@ -67,26 +66,21 @@ public class UploadPluginController {
         if (entityList.isEmpty()) {
             throw new PluginDeployException(PluginDeployRetCode.NO_FILE_UPLOADED_ERROR);
         }
-        pluginDeployService.uploadPlugins(entityList, toolNames);
+        this.pluginDeployService.uploadPlugins(entityList, toolNames);
         return Result.ok(null, 1);
     }
 
     /**
      * 删除插件的请求。
      *
-     * @param pluginId 表示插件唯一标示的 {@link String}。
+     * @param pluginId 表示插件唯一标识的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @DeleteMapping(value = "/delete/{pluginId}", description = "删除插件")
     public Result<String> deletePlugin(@PathVariable("pluginId") String pluginId) {
         notBlank(pluginId, "The plugin id cannot be blank.");
-        try {
-            int deleteNum = pluginDeployService.deletePlugin(pluginId);
-            return Result.ok(null, deleteNum);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            throw new IllegalStateException(StringUtils.format("Failed to delete the plugin, [pluginId={0}]", pluginId),
-                e);
-        }
+        int deleteNum = this.pluginDeployService.deletePlugin(pluginId);
+        return Result.ok(null, deleteNum);
     }
 
     /**
@@ -98,14 +92,9 @@ public class UploadPluginController {
     @PostMapping(path = "/deploy", description = "部署插件")
     public Result<String> deployPlugin(@RequestBody DeployParam deployParam) {
         notNull(deployParam, "The deploy param cannot be null.");
-        try {
-            List<String> pluginIds = deployParam.getPluginIds();
-            pluginDeployService.deployPlugins(pluginIds);
-            return Result.ok(null, pluginIds.size());
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            throw new IllegalStateException(
-                StringUtils.format("Failed to deploy  plugins, [pluginIds={0}]", deployParam.getPluginIds()), e);
-        }
+        List<String> pluginIds = deployParam.getPluginIds();
+        this.pluginDeployService.deployPlugins(pluginIds);
+        return Result.ok(null, pluginIds.size());
     }
 
     /**
@@ -117,7 +106,7 @@ public class UploadPluginController {
     @GetMapping(path = "/by-status/{deploy-status}", description = "查询部署中的插件")
     public Result<List<PluginData>> queryDeployingCount(@PathVariable("deploy-status") String status) {
         DeployStatus deployStatus = DeployStatus.from(status);
-        return Result.ok(pluginDeployService.queryPluginsByDeployStatus(deployStatus),
-            pluginDeployService.queryCountByDeployStatus(deployStatus));
+        return Result.ok(this.pluginDeployService.queryPluginsByDeployStatus(deployStatus),
+            this.pluginDeployService.queryCountByDeployStatus(deployStatus));
     }
 }

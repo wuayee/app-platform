@@ -32,6 +32,11 @@
             <artifactId>jade-common-service</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>authentication-service</artifactId>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
@@ -44,10 +49,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>authentication-service</artifactId>
         </dependency>
     </dependencies>
 

@@ -59,7 +59,7 @@ public class DiscreteRootPlugin extends AbstractRootPlugin {
             jar = Jar.from(launcher);
         } catch (IOException e) {
             throw new FitRuntimeStartupException(StringUtils.format("Failed to load JAR of launcher. [location={0}]",
-                    launcher.getPath()), e);
+                    FileUtils.path(launcher)), e);
         }
         MavenCoordinate coordinate;
         try {

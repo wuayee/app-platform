@@ -25,7 +25,6 @@ import com.huawei.jade.store.service.support.DeployStatus;
 import com.huawei.jade.store.tool.parser.param.DeployParam;
 import com.huawei.jade.store.tool.parser.service.PluginDeployService;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,8 @@ import java.util.Map;
 /**
  * 表示 {@link UploadPluginController} 的单元测试。
  *
- * @since 2024-08-07
+ * @author 罗帅
+ * @since 2024-8-07
  */
 @MvcTest(classes = {UploadPluginController.class})
 @DisplayName("测试 PluginController")
@@ -86,7 +86,7 @@ class UploadPluginControllerTest {
         when(mockPluginService.getPlugin("pluginId")).thenReturn(pluginData);
         when(mockPluginService.deletePlugin("pluginId")).thenReturn("result");
         final Result<String> result = uploadPluginControllerUnderTest.deletePlugin("pluginId");
-        Assertions.assertEquals(result.getCode(), 0);
+        assertThat(result.getCode()).isEqualTo(0);
     }
 
     @Test

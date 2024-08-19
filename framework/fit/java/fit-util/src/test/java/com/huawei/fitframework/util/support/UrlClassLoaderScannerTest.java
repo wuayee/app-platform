@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fitframework.resource.UrlUtils;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 
@@ -146,7 +147,7 @@ public class UrlClassLoaderScannerTest {
                     mocked.when(() -> Files.walk(any(), anyInt(), any())).thenThrow(new IOException());
                     IllegalStateException exception = catchThrowableOfType(actual::scan, IllegalStateException.class);
                     assertThat(exception).isNotNull()
-                            .hasMessage("Failed to scan class directory. [directory=" + directory.getPath() + "]")
+                            .hasMessage("Failed to scan class directory. [directory=" + FileUtils.path(directory) + "]")
                             .cause()
                             .isInstanceOf(IOException.class);
                 }

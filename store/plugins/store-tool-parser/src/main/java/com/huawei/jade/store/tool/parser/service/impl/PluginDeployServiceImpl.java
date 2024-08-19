@@ -14,7 +14,7 @@ import com.huawei.fit.service.entity.FitableAddressInstance;
 import com.huawei.fit.service.entity.FitableInfo;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.schedule.Task;
 import com.huawei.fitframework.schedule.ThreadPoolExecutor;
@@ -30,6 +30,8 @@ import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.service.PluginToolService;
 import com.huawei.jade.store.service.support.DeployStatus;
 import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
+import com.huawei.jade.store.tool.parser.config.PluginDeployQueryConfig;
+import com.huawei.jade.store.tool.parser.config.RegistryQueryPoolConfig;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 import com.huawei.jade.store.tool.parser.service.PluginDeployService;
 import com.huawei.jade.store.tool.parser.support.FileParser;
@@ -58,9 +60,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * 插件部署服务实现类
+ * 插件部署服务实现类。
  *
- * @since 2024/8/13
+ * @author 罗帅
+ * @since 2024-8-13
  */
 @Component
 public class PluginDeployServiceImpl implements PluginDeployService {
@@ -101,8 +104,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
     private final ThreadPoolExecutor registerQueryThread;
     private final RegistryService registryService;
     private final PluginToolService pluginToolService;
-    private final int timeout;
-    private final int interval;
+    private final PluginDeployQueryConfig pluginDeployQueryConfig;
+    private final RegistryQueryPoolConfig registryQueryPoolConfig;
 
     /**
      * 通过插件服务来初始化 {@link PluginDeployServiceImpl} 的新实例。
@@ -111,31 +114,32 @@ public class PluginDeployServiceImpl implements PluginDeployService {
      * @param serializer 表示对象序列化的序列化器的 {@link ObjectSerializer}。
      * @param registryService 表示注册中心的 {@link RegistryService}。
      * @param pluginToolService 表示插件工具服务的 {@link PluginToolService}。
-     * @param timeout 表示部署超时时间的 {@link Integer}。
-     * @param interval 表示部署状态查询间隔的 {@link Integer}。
+     * @param pluginDeployQueryConfig 表示插件部署状态查询配置参数的 {@link PluginDeployQueryConfig}。
+     * @param registryQueryPoolConfig 表示查询注册中心的线程池配置参数的 {@link RegistryQueryPoolConfig}。
      */
     public PluginDeployServiceImpl(PluginService pluginService, @Fit(alias = "json") ObjectSerializer serializer,
         RegistryService registryService, PluginToolService pluginToolService,
-        @Value("${plugin.deploy.timeout}") Integer timeout,
-        @Value("${plugin.deploy.query.interval}") Integer interval) {
+        PluginDeployQueryConfig pluginDeployQueryConfig, RegistryQueryPoolConfig registryQueryPoolConfig) {
         this.pluginService = notNull(pluginService, "The plugin service cannot be null.");
         this.pluginToolService = notNull(pluginToolService, "The plugin tool service cannot be null.");
         this.serializer = notNull(serializer, "The object serializer cannot be null.");
         this.registryService = notNull(registryService, "The registry service cannot be null.");
+        this.pluginDeployQueryConfig = Validation.notNull(pluginDeployQueryConfig,
+            "The plugin deploy query config cannot be null.");
+        this.registryQueryPoolConfig = Validation.notNull(registryQueryPoolConfig,
+            "The registry query pool config cannot be null.");
         this.registerQueryThread = ThreadPoolExecutor.custom()
-            .threadPoolName("registerQueryThread")
+            .threadPoolName("registry-query-pool")
             .awaitTermination(500L, TimeUnit.MILLISECONDS)
             .isImmediateShutdown(false)
-            .corePoolSize(20)
-            .maximumPoolSize(20)
-            .keepAliveTime(1, TimeUnit.SECONDS)
-            .workQueueCapacity(10)
+            .corePoolSize(this.registryQueryPoolConfig.getCorePoolSize())
+            .maximumPoolSize(this.registryQueryPoolConfig.getMaximumPoolSize())
+            .keepAliveTime(60L, TimeUnit.SECONDS)
+            .workQueueCapacity(this.registryQueryPoolConfig.getWorkQueueCapacity())
             .isDaemonThread(false)
             .exceptionHandler((thread, throwable) -> {})
             .rejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy())
             .build();
-        this.timeout = timeout;
-        this.interval = interval;
         this.initDeployStatus();
     }
 
@@ -161,7 +165,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             }
             File targetTemporaryFile = Paths.get(TEMPORARY_TOOL_PATH, filename).toFile();
             this.storeTemporaryFile(filename, file, targetTemporaryFile);
-            log.info("Save the file {} to the temporary file directory ", filename);
+            log.info("Save the file to the temporary file directory. [fileName={}]", filename);
             File tempDir = new File(TEMPORARY_TOOL_PATH, "unzip");
             try {
                 FileUtils.unzip(targetTemporaryFile).target(tempDir).start();
@@ -176,9 +180,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
 
     @Override
     public void deployPlugins(List<String> toDeployPluginIds) {
-        toDeployPluginIds.forEach(s -> Optional.ofNullable(pluginService.getPlugin(s))
-            .orElseThrow(() -> new PluginDeployException(PluginDeployRetCode.PLUGIN_NOT_EXISTS, s)));
-        List<PluginData> deployedPlugins = pluginService.getPlugins(DeployStatus.DEPLOYED);
+        this.validatePluginIds(toDeployPluginIds);
+        List<PluginData> deployedPlugins = this.pluginService.getPlugins(DeployStatus.DEPLOYED);
         List<String> deployedPluginIds = deployedPlugins.stream()
             .map(PluginData::getPluginId)
             .collect(Collectors.toList());
@@ -186,21 +189,26 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             CollectionUtils.difference(deployedPluginIds, toDeployPluginIds));
         List<String> newDeployedIds = new ArrayList<>(CollectionUtils.difference(toDeployPluginIds, deployedPluginIds));
         if (CollectionUtils.isNotEmpty(toUnDeployedIds)) {
-            pluginService.updateDeployStatus(toUnDeployedIds, DeployStatus.UNDEPLOYED);
+            this.pluginService.updateDeployStatus(toUnDeployedIds, DeployStatus.UNDEPLOYED);
             toUnDeployedIds.forEach(this::undeployPlugin);
         }
         if (CollectionUtils.isNotEmpty(newDeployedIds)) {
-            pluginService.updateDeployStatus(newDeployedIds, DeployStatus.DEPLOYING);
+            this.pluginService.updateDeployStatus(newDeployedIds, DeployStatus.DEPLOYING);
             newDeployedIds.forEach(this::deployPlugin);
         }
+    }
+
+    private void validatePluginIds(List<String> toDeployPluginIds) {
+        toDeployPluginIds.forEach(s -> Optional.ofNullable(this.pluginService.getPlugin(s).getPluginId())
+            .orElseThrow(() -> new PluginDeployException(PluginDeployRetCode.PLUGIN_NOT_EXISTS, s)));
     }
 
     @Override
     public int deletePlugin(String pluginId) {
         PluginData pluginData = this.pluginService.getPlugin(pluginId);
         if (pluginData.getPluginId() == null) {
-            // 无此插件时，返回删除数量为0
-            log.warn("no plugin found when try to delete. [pluginFile={0}]", pluginId);
+            // 无此插件时，返回删除数量为 0
+            log.warn("No plugin found when try to delete. [pluginFile={}]", pluginId);
             return 0;
         }
         this.pluginService.deletePlugin(pluginId);
@@ -209,7 +217,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         FileUtils.delete(deployPath.toFile());
         Path persistentPath = this.generatePersistentPath(pluginData);
         FileUtils.delete(persistentPath.toFile());
-        // 正常删除，返回删除数量为1
+        // 正常删除，返回删除数量为 1
         return 1;
     }
 
@@ -229,8 +237,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             this.getPluginFullName(pluginData));
         try {
             FileUtils.delete(deployedPath.toFile());
-        } catch (IllegalArgumentException e) {
-            log.error("failed to delete plugin, [pluginFile={0}]", pluginId, e);
+        } catch (IllegalStateException e) {
+            log.error("Failed to delete plugin. [pluginFile={}]", pluginId, e);
         }
     }
 
@@ -249,7 +257,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         Path persistentPath = this.generatePersistentPath(pluginData);
         if (!this.completenessCheck(persistentPath.resolve(pluginFullName).toFile(),
             this.getChecksumFromPluginData(pluginData))) {
-            log.error("Completeness check failed before deploy, [pluginFile={0}]", pluginId);
+            log.error("Completeness check failed before deploy. [pluginFile={}]", pluginId);
             pluginService.updateDeployStatus(Collections.singletonList(pluginId), DeployStatus.DEPLOYMENT_FAILED);
             return;
         }
@@ -258,7 +266,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             Files.copy(persistentPath.resolve(pluginFullName), deployPath, StandardCopyOption.REPLACE_EXISTING);
             List<FitableInfo> fitableInfos = this.pluginToolService.getPluginTools(pluginId)
                 .stream()
-                .map(pluginToolData -> this.getFitableInfo(pluginToolData))
+                .map(this::getFitableInfo)
                 .collect(Collectors.toList());
             if (this.queryToolsRegisterResult(fitableInfos)) {
                 this.pluginService.updateDeployStatus(Collections.singletonList(pluginId), DeployStatus.DEPLOYED);
@@ -282,18 +290,18 @@ public class PluginDeployServiceImpl implements PluginDeployService {
     private boolean queryToolsRegisterResult(List<FitableInfo> fitableInfos) {
         long startTimestamp = System.currentTimeMillis();
         while (!isQueryTimeout(startTimestamp)) {
-            ThreadUtils.sleep(this.interval * 1000L);
             List<FitableAddressInstance> result = registryService.queryFitables(fitableInfos, "");
             if (result.size() == fitableInfos.size() && result.stream()
                 .allMatch(info -> info.getApplicationInstances().size() > 0)) {
                 return true;
             }
+            ThreadUtils.sleep(this.pluginDeployQueryConfig.getInterval() * 1000L);
         }
         return false;
     }
 
     private boolean isQueryTimeout(long startTimestamp) {
-        return System.currentTimeMillis() - startTimestamp > 1000L * 60 * this.timeout;
+        return System.currentTimeMillis() - startTimestamp > this.pluginDeployQueryConfig.getTimeout() * 1000L;
     }
 
     private FitableInfo getFitableInfo(PluginToolData pluginToolData) {
@@ -509,11 +517,12 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         if (pluginData.getPluginId() == null) {
             return;
         }
-        // 如果已有相同插件的状态不是未部署，插件唯一性校验失败，插件上传失败
-        if (!Objects.equals(pluginData.getDeployStatus(), DeployStatus.UNDEPLOYED.toString())) {
+        // 如果已有相同插件的状态是已部署或者部署中，插件唯一性校验失败，插件上传失败
+        if (Objects.equals(pluginData.getDeployStatus(), DeployStatus.DEPLOYED.toString()) || Objects.equals(
+            pluginData.getDeployStatus(), DeployStatus.DEPLOYING.toString())) {
             throw new PluginDeployException(PluginDeployRetCode.PLUGIN_UNIQUE_CHECK_ERROR);
         }
-        // 未部署的相同插件可以被新插件替换
+        // 未部署或者部署失败的相同插件可以被新插件替换
         this.deletePlugin(pluginId);
     }
 
@@ -628,9 +637,14 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         Map<String, Object> schema = cast(tool.get(TOOL_SCHEMA));
         if (!schema.containsKey(PARAMETERS)) {
             throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
-                "cchema in tools.json should contain key: parameters.");
+                "schema in tools.json should contain key: parameters.");
         }
         Map<String, Object> parameters = cast(schema.get(PARAMETERS));
+        if (!parameters.containsKey(TYPE) || !Objects.equals("object",
+            this.getStringInMapObject(parameters.get(TYPE)))) {
+            throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
+                "parameters in tools.json should contain key: type, value: object.");
+        }
         if (!parameters.containsKey(REQUIRED)) {
             throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
                 "parameters in tools.json should contain key: required.");
@@ -671,16 +685,31 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             if (!python.containsKey(NAME)) {
                 throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
                     "python plugin.json must contain key: name.");
+            } else {
+                if (StringUtils.isBlank(this.getStringInMapObject(python.get(NAME)))) {
+                    throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
+                        "python plugin.json must contain valid key: name.");
+                }
             }
         } else if (plugin.get(TYPE).equals(JAVA)) {
             Map<String, Object> java = cast(plugin.get(JAVA));
             if (!java.containsKey(ARTIFACT_ID)) {
                 throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
                     "java plugin.json must contain key: artifactId.");
+            } else {
+                if (StringUtils.isBlank(this.getStringInMapObject(java.get(ARTIFACT_ID)))) {
+                    throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
+                        "java plugin.json must contain valid key: artifactId.");
+                }
             }
             if (!java.containsKey(GROUP_ID)) {
                 throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
                     "java plugin.json must contain key: groupId.");
+            } else {
+                if (StringUtils.isBlank(this.getStringInMapObject(java.get(GROUP_ID)))) {
+                    throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
+                        "java plugin.json must contain valid key: groupId.");
+                }
             }
         } else {
             throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,

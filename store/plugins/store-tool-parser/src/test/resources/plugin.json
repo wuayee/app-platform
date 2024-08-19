@@ -1,8 +1,8 @@
 {
   "checksum": "db81e8a0b56840996dac63f4768b1f2021d6fb06805cfed646b6dc944e116e82",
    "type": "java",
-   "name":"插件名",
-   "description":"这是一个插件描述",
+   "name": "插件名",
+   "description": "这是一个插件描述",
    "java": {
       "artifactId": "jade-demo-parent",
       "groupId": "store-demo-plugin",

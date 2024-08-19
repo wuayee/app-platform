@@ -91,7 +91,7 @@ public abstract class AbstractOperation<T, R> extends AbstractSubscriber<T> impl
     }
 
     @Override
-    protected void consume(Subscription subscription, T data) {
+    protected void consume(@Nonnull Subscription subscription, T data) {
         if (this.isTerminated()) {
             return;
         }
@@ -108,7 +108,7 @@ public abstract class AbstractOperation<T, R> extends AbstractSubscriber<T> impl
     protected abstract void consume0(Subscription subscription, T data);
 
     @Override
-    protected void complete(Subscription subscription) {
+    protected void complete(@Nonnull Subscription subscription) {
         if (this.cancelled.get()) {
             return;
         }
@@ -126,7 +126,7 @@ public abstract class AbstractOperation<T, R> extends AbstractSubscriber<T> impl
     }
 
     @Override
-    protected void fail(Subscription subscription, Exception cause) {
+    protected void fail(@Nonnull Subscription subscription, Exception cause) {
         if (this.cancelled.get()) {
             return;
         }

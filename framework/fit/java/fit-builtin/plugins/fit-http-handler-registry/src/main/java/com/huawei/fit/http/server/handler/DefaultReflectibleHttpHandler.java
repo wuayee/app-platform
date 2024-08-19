@@ -10,9 +10,8 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.EntitySerializer;
 import com.huawei.fit.http.entity.ObjectEntity;
-import com.huawei.fit.http.entity.support.DefaultObjectEntity;
-import com.huawei.fit.http.entity.support.DefaultTextEntity;
-import com.huawei.fit.http.entity.support.DefaultTextEventStreamEntity;
+import com.huawei.fit.http.entity.TextEntity;
+import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.HttpResponse;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fit.http.server.DoHttpHandlerException;
@@ -190,11 +189,11 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
         } else if (result instanceof Entity) {
             response.entity(cast(result));
         } else if (result instanceof String) {
-            response.entity(new DefaultTextEntity(response, cast(result)));
+            response.entity(TextEntity.create(response, (String) result));
         } else if (result instanceof Choir) {
-            response.entity(new DefaultTextEventStreamEntity(response, cast(result)));
+            response.entity(TextEventStreamEntity.create(response, (Choir<?>) result));
         } else {
-            response.entity(new DefaultObjectEntity<>(response, result));
+            response.entity(ObjectEntity.create(response, result));
         }
     }
 }

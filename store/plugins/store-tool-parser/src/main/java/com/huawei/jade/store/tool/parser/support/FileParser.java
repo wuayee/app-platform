@@ -71,12 +71,13 @@ public class FileParser {
         return pluginData;
     }
 
-    private static String validateSchemaStringField(Map<String, Object> schemaNode, String filedName) {
-        Object filed = notNull(schemaNode.get(filedName), "Tool schema filed value cannot be null. [filed={0}]",
-            filedName);
-        if (filed instanceof String) {
-            return notBlank((String) filed, "Tool schema filed value cannot be blank. [filed={0}]", filedName);
+    private static String validateSchemaStringField(Map<String, Object> schemaNode, String fieldName) {
+        Object field = notNull(schemaNode.get(fieldName), "Tool schema field value cannot be null. [field={0}]",
+            fieldName);
+        if (field instanceof String) {
+            return notBlank((String) field, "Tool schema field value cannot be blank. [field={0}]", fieldName);
         }
-        throw new IllegalArgumentException(StringUtils.format("Failed to obtain the {0} data in schema.", filedName));
+        throw new IllegalArgumentException(
+            StringUtils.format("Failed to obtain the data in schema. [field={0}]", fieldName));
     }
 }

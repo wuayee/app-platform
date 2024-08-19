@@ -9,6 +9,7 @@ import com.huawei.fitframework.flowable.Solo;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.choir.FlexibleEmitterChoir;
 import com.huawei.fitframework.flowable.util.OnSubscribedObserver;
+import com.huawei.fitframework.inspection.Nonnull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -47,7 +48,7 @@ public class FlexibleEmitterSolo<T> extends AbstractSolo<T> implements OnSubscri
     }
 
     @Override
-    protected void subscribe0(Subscriber<T> subscriber) {
+    protected void subscribe0(@Nonnull Subscriber<T> subscriber) {
         Solo.fromPublisher(this.adapted).subscribe(subscriber);
     }
 }

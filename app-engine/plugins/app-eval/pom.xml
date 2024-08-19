@@ -13,7 +13,7 @@
     <artifactId>app-engine-eval-plugin</artifactId>
 
     <dependencies>
-        <!-- Fit -->
+        <!-- FIT -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
@@ -45,7 +45,7 @@
             <artifactId>app-engine-schema-validator</artifactId>
         </dependency>
 
-        <!-- Orm -->
+        <!-- ORM -->
         <dependency>
             <groupId>com.huawei.fit.integration</groupId>
             <artifactId>fit-druid</artifactId>
@@ -100,7 +100,7 @@
 
     <build>
         <plugins>
-            <!-- Fit -->
+            <!-- FIT -->
             <plugin>
                 <groupId>com.huawei.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>

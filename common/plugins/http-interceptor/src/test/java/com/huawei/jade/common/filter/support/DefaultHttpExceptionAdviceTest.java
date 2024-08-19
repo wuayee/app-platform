@@ -8,16 +8,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.common.filter.HttpResult;
+import com.huawei.jade.common.localemessage.LocaleMessageHandler;
 import com.huawei.jade.common.test.TestController;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -33,6 +36,9 @@ public class DefaultHttpExceptionAdviceTest {
     @Fit
     private MockMvc mockMvc;
 
+    @Mock
+    private LocaleMessageHandler messageHandler;
+
     private HttpClassicClientResponse<?> response;
 
     @AfterEach
@@ -45,6 +51,8 @@ public class DefaultHttpExceptionAdviceTest {
     @Test
     @DisplayName("测试拦截 FitException")
     public void shouldOkWhenInterceptException() {
+        Mockito.when(messageHandler.getLocaleMessage(Mockito.any(), Mockito.any(), Mockito.any()))
+            .thenReturn("test error");
         String url = "/nonsupport/exception";
         this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));

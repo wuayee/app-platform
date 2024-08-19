@@ -62,7 +62,7 @@ public class PublisherSoloAdapter<T> extends AbstractSolo<T> {
         public PublisherAdapterSubscription(Subscriber<T> subscriber, Publisher<T> publisher) {
             this.subscriber = notNull(subscriber, "The subscriber cannot be null.");
             this.worker = Worker.create(this, notNull(publisher, "The publisher cannot be null."), 0);
-            worker.run();
+            this.worker.run();
         }
 
         @Override

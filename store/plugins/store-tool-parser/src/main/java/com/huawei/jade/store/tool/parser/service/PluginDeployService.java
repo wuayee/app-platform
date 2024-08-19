@@ -11,9 +11,10 @@ import com.huawei.jade.store.service.support.DeployStatus;
 import java.util.List;
 
 /**
- * 插件部署服务接口
+ * 插件部署服务接口。
  *
- * @since 2024/8/13
+ * @author 罗帅
+ * @since 2024-8-13
  */
 public interface PluginDeployService {
     /**
@@ -27,15 +28,15 @@ public interface PluginDeployService {
     /**
      * 部署插件。
      *
-     * @param pluginIds 表示插件唯一标示列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param pluginIds 表示插件唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     void deployPlugins(List<String> pluginIds);
 
     /**
      * 删除插件。
      *
-     * @param pluginId 表示插件唯一标示的 {@link String}。
-     * @return 表示删除数量的 {@link int}。
+     * @param pluginId 表示插件唯一标识的 {@link String}。
+     * @return 表示删除数量的 {@code int}。
      */
     int deletePlugin(String pluginId);
 
@@ -43,7 +44,7 @@ public interface PluginDeployService {
      * 根据部署状态查询插件数量。
      *
      * @param deployStatus 表示插件部署状态的 {@link DeployStatus}。
-     * @return 表示插件数量的 {@link int}。
+     * @return 表示插件数量的 {@code int}。
      */
     int queryCountByDeployStatus(DeployStatus deployStatus);
 

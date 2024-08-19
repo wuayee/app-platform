@@ -9,10 +9,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
@@ -27,7 +27,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Optional;
 
 /**
  * 表示 {@link DefaultHttpResponseWrapper} 的测试套。
@@ -120,10 +119,7 @@ public class DefaultHttpResponseWrapperTest {
     @DisplayName("测试流式请求不拦截")
     public void shouldOkWhenNoInterceptStream() {
         String url = "/support/stream";
-        this.response = this.mockMvc.perform(MockMvcRequestBuilders.get(url).responseType(Integer.class));
-        assertThat(this.response.textEventStreamEntity()).map(entity -> entity.stream()
-                .map(textEvent -> ObjectUtils.<Integer>cast(textEvent.data()))
-                .reduce(Integer::sum)
-                .block()).hasValue(Optional.of(6));
+        Choir<Integer> choir = this.mockMvc.streamPerform(MockMvcRequestBuilders.get(url).responseType(Integer.class));
+        assertThat(choir.reduce(Integer::sum).block()).hasValue(6);
     }
 }

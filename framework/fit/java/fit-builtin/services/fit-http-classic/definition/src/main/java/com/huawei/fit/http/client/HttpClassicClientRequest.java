@@ -8,6 +8,7 @@ import com.huawei.fit.http.HttpClassicRequest;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.header.ConfigurableCookieCollection;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.model.MultiValueMap;
 
 import java.lang.reflect.Type;
@@ -73,4 +74,20 @@ public interface HttpClassicClientRequest extends HttpClassicRequest {
      * @return 表示交换回来的 Http 响应的 {@link HttpClassicClientResponse}。
      */
     <T> HttpClassicClientResponse<T> exchange(Type responseType);
+
+    /**
+     * 延迟发送当前 Http 请求，交换 Http 流式响应。
+     *
+     * @return 表示交换回来的 Http 流式响应的 {@link Choir}{@code <}{@link Object}{@code >}。
+     */
+    Choir<Object> exchangeStream();
+
+    /**
+     * 延迟发送当前 Http 请求，交换 Http 流式响应。
+     *
+     * @param responseType 表示期待的返回的流式数据值类型的 {@link Type}。
+     * @param <T> 表示期待的返回的流式数据值类型的 {@link T}。
+     * @return 表示交换回来的 Http 流式响应的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    <T> Choir<T> exchangeStream(Type responseType);
 }

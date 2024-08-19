@@ -12,6 +12,7 @@ import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.io.IOException;
@@ -86,4 +87,22 @@ public interface HttpClassicClient extends HttpResource {
             throw new IllegalStateException("Failed to close http classic client response.", e);
         }
     }
+
+    /**
+     * 发送 Http 请求，获取 Http 响应的流式数据内容。
+     *
+     * @param request 表示 Http 请求的 {@link HttpClassicClientRequest}。
+     * @return 表示 Http 响应的流式数据内容的 {@link Choir}{@code <}{@link Object}{@code >}。
+     */
+    Choir<Object> exchangeStream(HttpClassicClientRequest request);
+
+    /**
+     * 发送 Http 请求，获取 Http 响应的流式数据内容。
+     *
+     * @param request 表示 Http 请求的 {@link HttpClassicClientRequest}。
+     * @param responseType 表示期待的流式返回值类型的 {@link Type}。
+     * @param <T> 表示期待的流式返回值类型的 {@link T}。
+     * @return 表示 Http 响应的流式数据内容的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    <T> Choir<T> exchangeStream(HttpClassicClientRequest request, Type responseType);
 }

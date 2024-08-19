@@ -10,7 +10,7 @@ package com.huawei.jade.carver.telemetry.aop.stub;
  * @author 刘信宏
  * @since 2024-07-29
  */
-public interface NestedWithSpanService {
+public interface NestedSpanTestService {
     /**
      * 嵌套操作的名称。
      */

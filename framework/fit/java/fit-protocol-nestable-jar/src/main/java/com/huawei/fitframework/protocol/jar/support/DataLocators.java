@@ -4,6 +4,8 @@
 
 package com.huawei.fitframework.protocol.jar.support;
 
+import static com.huawei.fitframework.protocol.jar.support.Locations.path;
+
 import java.io.File;
 import java.io.FilePermission;
 import java.security.Permission;
@@ -47,7 +49,7 @@ final class DataLocators {
             this.offset = offset;
             this.length = length;
             if (permission == null) {
-                this.permission = new FilePermission(this.file.getPath(), FILE_PERMISSION_ACTION);
+                this.permission = new FilePermission(path(this.file), FILE_PERMISSION_ACTION);
             } else {
                 this.permission = permission;
             }
@@ -58,10 +60,10 @@ final class DataLocators {
                 throw new IllegalArgumentException("The file of a data locator cannot be null.");
             } else if (!file.exists()) {
                 throw new IllegalArgumentException(String.format(Locale.ROOT,
-                        "The file of data locator does not exist. [path=%s]", file.getPath()));
+                        "The file of data locator does not exist. [path=%s]", path(file)));
             } else if (!file.isFile()) {
                 throw new IllegalArgumentException(String.format(Locale.ROOT,
-                        "THe file of data locator is not a regular file. [path=%s]", file.getPath()));
+                        "THe file of data locator is not a regular file. [path=%s]", path(file)));
             } else {
                 return file;
             }
@@ -122,7 +124,8 @@ final class DataLocators {
 
         @Override
         public String toString() {
-            return String.format(Locale.ROOT, "%s?offset=%d&length=%d", this.file.getPath(), this.offset, this.length);
+            return String.format(Locale.ROOT, "%s?offset=%d&length=%d",
+                    path(this.file), this.offset, this.length);
         }
     }
 }

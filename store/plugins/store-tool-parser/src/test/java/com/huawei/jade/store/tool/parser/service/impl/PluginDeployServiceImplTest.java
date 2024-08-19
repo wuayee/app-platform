@@ -4,9 +4,9 @@
 
 package com.huawei.jade.store.tool.parser.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,6 +29,8 @@ import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.service.PluginToolService;
 import com.huawei.jade.store.service.support.DeployStatus;
+import com.huawei.jade.store.tool.parser.config.PluginDeployQueryConfig;
+import com.huawei.jade.store.tool.parser.config.RegistryQueryPoolConfig;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -60,9 +62,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 插件部署服务测试类
+ * 表示 {@link PluginDeployServiceImpl} 的单元测试。
  *
- * @since 2024/8/13
+ * @author 罗帅
+ * @since 2024-8-13
  */
 @ExtendWith(MockitoExtension.class)
 class PluginDeployServiceImplTest {
@@ -81,8 +84,15 @@ class PluginDeployServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        PluginDeployQueryConfig pluginDeployQueryConfig = new PluginDeployQueryConfig();
+        pluginDeployQueryConfig.setInterval(10);
+        pluginDeployQueryConfig.setTimeout(60);
+        RegistryQueryPoolConfig registryQueryPoolConfig = new RegistryQueryPoolConfig();
+        registryQueryPoolConfig.setCorePoolSize(20);
+        registryQueryPoolConfig.setMaximumPoolSize(20);
+        registryQueryPoolConfig.setWorkQueueCapacity(10);
         pluginDeployServiceImplUnderTest = new PluginDeployServiceImpl(mockPluginService, serializer,
-            mockRegistryService, mockPluginToolService, 1, 10);
+            mockRegistryService, mockPluginToolService, pluginDeployQueryConfig, registryQueryPoolConfig);
     }
 
     @AfterEach
@@ -92,8 +102,8 @@ class PluginDeployServiceImplTest {
             FileUtils.delete(targetFile.toFile());
         }
         Path testFile = Paths.get("src/test/resources/test/");
-        if (Files.exists(targetFile)) {
-            FileUtils.delete(targetFile.toFile());
+        if (Files.exists(testFile)) {
+            FileUtils.delete(testFile.toFile());
         }
     }
 
@@ -160,9 +170,9 @@ class PluginDeployServiceImplTest {
         final List<FitableInfo> fitables = Arrays.asList(fitableInfo);
         when(mockRegistryService.queryFitables(fitables, "")).thenReturn(fitableAddressInstances);
         Object result = method.invoke(pluginDeployServiceImplUnderTest, fitables);
-        if (result instanceof Boolean) {
-            assertTrue((Boolean) result);
-        }
+        assertThat(result).isInstanceOf(Boolean.class);
+        boolean resAfterCast = cast(result);
+        assertThat(resAfterCast).isTrue();
     }
 
     @Test
@@ -171,9 +181,9 @@ class PluginDeployServiceImplTest {
         Method method = PluginDeployServiceImpl.class.getDeclaredMethod("getFitableInfo", PluginToolData.class);
         method.setAccessible(true);
         Object fitableInfo = method.invoke(pluginDeployServiceImplUnderTest, mockPluginToolData());
-        if (fitableInfo instanceof FitableInfo) {
-            assertEquals("1.0.0", ((FitableInfo) fitableInfo).getFitableVersion());
-        }
+        assertThat(fitableInfo).isInstanceOf(FitableInfo.class);
+        FitableInfo infoAfterCast = cast(fitableInfo);
+        assertThat(infoAfterCast.getFitableVersion()).isEqualTo("1.0.0");
     }
 
     @Test
@@ -186,18 +196,19 @@ class PluginDeployServiceImplTest {
         String toolsJsonFile = "src/test/resources/tools.json";
         String validationFile = "src/test/resources/plugin.json";
         String toolFile = "src/test/resources/tool.zip";
-        String toolName = "无敌乘法";
-        assertThrows(InvocationTargetException.class,
+        String toolName = "toolName";
+        assertThatThrownBy(
             () -> method.invoke(pluginDeployServiceImplUnderTest, Paths.get(toolsJsonFile).toFile(), toolName,
-                Paths.get(validationFile).toFile(), Paths.get(toolFile).toFile()));
+                Paths.get(validationFile).toFile(), Paths.get(toolFile).toFile())).isInstanceOf(
+            InvocationTargetException.class);
     }
 
     @Test
     @DisplayName("插件信息为空时部署插件符合预期")
     void testDeployPlugins_PluginServiceGetPluginReturnsNull() {
         when(mockPluginService.getPlugin("pluginId")).thenReturn(null);
-        assertThrows(PotentialStubbingProblem.class,
-            () -> pluginDeployServiceImplUnderTest.deployPlugins(Arrays.asList("value")));
+        assertThatThrownBy(() -> pluginDeployServiceImplUnderTest.deployPlugins(Arrays.asList("value"))).isInstanceOf(
+            PotentialStubbingProblem.class);
     }
 
     @Test
@@ -214,7 +225,7 @@ class PluginDeployServiceImplTest {
     void testDeletePlugin() {
         when(mockPluginService.getPlugin("pluginId")).thenReturn(mockPluginData());
         final int result = pluginDeployServiceImplUnderTest.deletePlugin("pluginId");
-        assertEquals(1, result);
+        assertThat(result).isEqualTo(1);
         verify(mockPluginService).deletePlugin("pluginId");
     }
 
@@ -223,7 +234,7 @@ class PluginDeployServiceImplTest {
     void testQueryCountByDeployStatus() {
         when(mockPluginService.getPluginsCount(DeployStatus.DEPLOYED)).thenReturn(0);
         final int result = pluginDeployServiceImplUnderTest.queryCountByDeployStatus(DeployStatus.DEPLOYED);
-        assertEquals(0, result);
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
@@ -245,7 +256,7 @@ class PluginDeployServiceImplTest {
         when(mockPluginService.getPlugins(DeployStatus.DEPLOYED)).thenReturn(pluginData);
         final List<PluginData> result = pluginDeployServiceImplUnderTest.queryPluginsByDeployStatus(
             DeployStatus.DEPLOYED);
-        assertEquals(1, result.size());
+        assertThat(result.size()).isEqualTo(1);
     }
 
     @Test
@@ -254,7 +265,7 @@ class PluginDeployServiceImplTest {
         when(mockPluginService.getPlugins(DeployStatus.DEPLOYED)).thenReturn(Collections.emptyList());
         final List<PluginData> result = pluginDeployServiceImplUnderTest.queryPluginsByDeployStatus(
             DeployStatus.DEPLOYED);
-        assertEquals(Collections.emptyList(), result);
+        assertThat(result).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -265,9 +276,8 @@ class PluginDeployServiceImplTest {
         method.setAccessible(true);
         String targetFile = "src/test/resources/tool.tar";
         String fileName = "fileName";
-        assertThrows(InvocationTargetException.class,
-            () -> method.invoke(pluginDeployServiceImplUnderTest, fileName, mock(FileEntity.class),
-                Paths.get(targetFile).toFile()));
+        assertThatThrownBy(() -> method.invoke(pluginDeployServiceImplUnderTest, fileName, mock(FileEntity.class),
+            Paths.get(targetFile).toFile())).isInstanceOf(InvocationTargetException.class);
     }
 
     @Test
@@ -276,8 +286,8 @@ class PluginDeployServiceImplTest {
         HttpMessage httpMessage = mock(HttpMessage.class);
         Entity entity = FileEntity.createAttachment(httpMessage, "tool.jar", mock(InputStream.class), 100);
         NamedEntity namedEntity = new DefaultNamedEntity(httpMessage, "generic", entity);
-        assertThrows(PluginDeployException.class,
-            () -> pluginDeployServiceImplUnderTest.uploadPlugins(Collections.singletonList(namedEntity), "toolName"));
+        assertThatThrownBy(() -> pluginDeployServiceImplUnderTest.uploadPlugins(Collections.singletonList(namedEntity),
+            "toolName")).isInstanceOf(PluginDeployException.class);
     }
 
     @Test
@@ -288,9 +298,9 @@ class PluginDeployServiceImplTest {
             "TestOfDefaultClientResponse".getBytes(StandardCharsets.UTF_8))) {
             Entity entity = FileEntity.createAttachment(httpMessage, "tool.zip", inputStream, 1);
             NamedEntity namedEntity = new DefaultNamedEntity(httpMessage, "generic", entity);
-            assertThrows(StringFormatException.class,
+            assertThatThrownBy(
                 () -> pluginDeployServiceImplUnderTest.uploadPlugins(Collections.singletonList(namedEntity),
-                    "toolName"));
+                    "toolName")).isInstanceOf(StringFormatException.class);
         }
     }
 
@@ -307,7 +317,7 @@ class PluginDeployServiceImplTest {
         Path pluginJsonFile = Paths.get(filePath.toFile().getParentFile().getPath(), "plugin.json");
         Files.copy(tooFile, filePath.resolve("tools.json"), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(pluginJsonFile, filePath.resolve("plugin.json"), StandardCopyOption.REPLACE_EXISTING);
-        assertThrows(InvocationTargetException.class,
-            () -> method.invoke(pluginDeployServiceImplUnderTest, filePath.toFile(), "add list,add itself"));
+        assertThatThrownBy(() -> method.invoke(pluginDeployServiceImplUnderTest, filePath.toFile(),
+            "add list,add itself")).isInstanceOf(InvocationTargetException.class);
     }
 }

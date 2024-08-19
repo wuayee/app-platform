@@ -23,6 +23,7 @@ import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.protocol.jar.JarEntryLocation;
 import com.huawei.fitframework.util.ClassUtils;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.IoUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.XmlUtils;
@@ -105,7 +106,7 @@ public final class AppRepackager extends AbstractRepackager {
             }
         } catch (IOException ex) {
             throw new MojoExecutionException(StringUtils.format("Failed to repackage application JAR. [file={0}]",
-                    target.getPath()), ex);
+                    FileUtils.path(target)), ex);
         }
     }
 
@@ -158,7 +159,7 @@ public final class AppRepackager extends AbstractRepackager {
                 } catch (IOException ex) {
                     throw new MojoExecutionException(StringUtils.format(
                             "Failed to load manifest from entry in JAR. [file={0}, entry={1}]",
-                            file.getPath(),
+                            FileUtils.path(file),
                             entry.name()), ex);
                 }
                 manifest.getMainAttributes().putValue(MANIFEST_BUILT_BY_KEY, MANIFEST_BUILT_BY_VALUE);
@@ -174,7 +175,7 @@ public final class AppRepackager extends AbstractRepackager {
                 } catch (IOException ex) {
                     throw new MojoExecutionException(StringUtils.format(
                             "Failed to write manifest of JAR. [file={0}, entry={1}]",
-                            file.getPath(),
+                            FileUtils.path(file),
                             entry.name()), ex);
                 }
             } else if (!isJar(entry) && isUtf8(entry)) {
