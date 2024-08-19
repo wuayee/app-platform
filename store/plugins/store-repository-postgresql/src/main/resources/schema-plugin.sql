@@ -11,7 +11,7 @@ create table if not exists store_plugin
     "plugin_id"     char(64)                              not null,
     "plugin_name"   varchar(256)                          not null,
     "extension"     json        default '{}'::json        not null,
-    "deploy_status" varchar(10) default 'UNDEPLOYED'      not null,
+    "deploy_status" varchar(20) default 'UNDEPLOYED'      not null,
     unique ("plugin_id")
 );
 comment on column store_plugin.id is '插件的自增主键';

@@ -44,7 +44,17 @@ public enum PluginDeployRetCode implements RetCode, ModelInfo {
     /**
      * json文件解析失败。
      */
-    JSON_PARSE_ERROR(6, "Failed to convert json data.");
+    JSON_PARSE_ERROR(6, "Failed to convert json data. Msg: {0}"),
+
+    /**
+     * 插件不存在。
+     */
+    PLUGIN_NOT_EXISTS(7, "Plugin id {0} not exists"),
+
+    /**
+     * 插件完整性校验失败。
+     */
+    PLUGIN_COMPLETENESS_CHECK_ERROR(8, "Failed to verify the file completeness.");
 
     private final int code;
 
