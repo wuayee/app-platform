@@ -9,6 +9,7 @@ import ToolIcon from "./asserts/icon-tool.svg?react";
 import {Header} from "@/components/Header.jsx";
 import {Footer} from "@/components/Footer.jsx";
 import {Tooltip} from "antd";
+import {I18nextProvider} from "react-i18next";
 
 const WATER_DROP_DISTANCE = 500;
 
@@ -56,7 +57,11 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
             return;
         }
         self.root = ReactDOM.createRoot(self.reactContainer);
-        self.root.render(<JadeWrapper/>);
+        self.root.render(
+            <I18nextProvider i18n={shape.graph.i18n}>
+                <JadeWrapper/>
+            </I18nextProvider>
+        );
     };
 
     /**

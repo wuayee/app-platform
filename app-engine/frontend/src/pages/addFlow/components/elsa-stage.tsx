@@ -14,6 +14,7 @@ import { setAppInfo } from '../../../store/appInfo/appInfo';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 import { Button, Alert } from "antd";
+import i18n from '../../../locale/i18n';
 import { useTranslation } from "react-i18next";
 
 const Stage = (props) => {
@@ -55,7 +56,7 @@ const Stage = (props) => {
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
     ];
-    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, i18n, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
       render.current = true;
       agent.onChange((dirtyAction) => {
