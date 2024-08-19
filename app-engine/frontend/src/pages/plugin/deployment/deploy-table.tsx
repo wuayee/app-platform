@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useImperativeHandle, useRef } from 'react';
-import { Input, Checkbox, Empty } from 'antd';
+import { Input, Button, Checkbox, Empty, Tooltip, Modal } from 'antd';
 import { RightOutlined, CloseOutlined } from '@ant-design/icons';
 import { Icons } from '@/components/icons';
 import Pagination from '@/components/pagination/index';
@@ -12,6 +12,7 @@ import '../styles/deploy-table.scss';
 const Deploy = ({ pluginRef }) => {
   const [tableData, setTableData] = useState([]);
   const [pluginData, setPluginData] = useState([]);
+  const [deployedData, setDeployedData] = useState([]);
   const [pluginLength, setPluginLength] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -44,8 +45,9 @@ const Deploy = ({ pluginRef }) => {
   const getDeployData = async () => {
     const response = await getDeployTool('deployed');
     if (response.code === 0) {
-      setPluginData(response.data || []);
+      setPluginData(response.data);
       setPluginLength(response.data.length);
+      setDeployedData(response.data);
       pluginList.current = JSON.parse(JSON.stringify(response.data));
     }
   };
@@ -90,7 +92,10 @@ const Deploy = ({ pluginRef }) => {
   useImperativeHandle(pluginRef, () => {
     return {
       getCheckedList: () => {
-        return pluginData
+        return pluginData;
+      },
+      getDeployedList: () => {
+        return deployedData;
       }
     }
   });
@@ -172,9 +177,17 @@ const Deploy = ({ pluginRef }) => {
                 {PluginCnType[item.deployStatus]}
               </span>
             </div>
-            <div className='right' title={item.extension?.description}>
-              <span className='desc'>{item.extension?.description}</span>
-              <span className='icon' onClick={() => onChange(false, item)}><CloseOutlined /></span>
+            <div className='right'>
+              <span className='desc' title={item.extension?.description}>{item.extension?.description}</span>
+              <span className='icon' onClick={() => onChange(false, item)}>
+                {item.deployStatus === 'deployed' ? <Tooltip
+                  placement='left'
+                  title='取消已部署的插件，会导致正在运行的应用不可用，请谨慎操作'
+                  color='#ffffff'
+                  overlayInnerStyle={{ color: '#333333' }}>
+                  <CloseOutlined />
+                </Tooltip> : <CloseOutlined />}
+              </span>
             </div>
           </div>)}
           {pluginData.length === 0 && <Empty
@@ -184,7 +197,6 @@ const Deploy = ({ pluginRef }) => {
         </div>
       </div>
     </div>
-
   </>
 };
 export default Deploy;
