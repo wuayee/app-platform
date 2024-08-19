@@ -10,6 +10,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.fel.core.chat.ChatMessage;
 import com.huawei.jade.fel.core.chat.MessageType;
+import com.huawei.jade.fel.core.tool.ToolCall;
 
 import java.util.List;
 import java.util.Map;
@@ -32,19 +33,9 @@ public class OpenAiChatMessage {
             .build();
 
     private String role;
-
-    /**
-     * 使用 {@link Object} 对类型进行通用表示，有以下两种类型：
-     * <ol>
-     *     <li>{@link String} 类型，表示单纯文本消息；</li>
-     *     <li>由 {@link UserContent} 组成的列表。</li>
-     * </ol>
-     */
     private Object content;
-
     @Property(name = "tool_call_id")
     private String toolCallId;
-
     @Property(name = "tool_calls")
     private List<OpenAiToolCall> toolCalls;
 
@@ -73,11 +64,25 @@ public class OpenAiChatMessage {
         return openAiChatMessage;
     }
 
+    /**
+     * 获取消息内容，使用 {@link Object} 对类型进行通用表示，有以下两种类型：
+     * <ol>
+     *     <li>{@link String} 类型，表示单纯文本消息；</li>
+     *     <li>由 {@link UserContent} 组成的列表。</li>
+     * </ol>
+     *
+     * @return 表示消息内容的 {@link Object}。
+     */
     public Object content() {
-        return content;
+        return this.content;
     }
 
-    public List<OpenAiToolCall> toolCalls() {
-        return this.toolCalls;
+    /**
+     * 获取消息的工具调用。
+     *
+     * @return 表示工具调用的 {@link List}{@code <}{@link ToolCall}{@code >}。
+     */
+    public List<ToolCall> toolCalls() {
+        return CollectionUtils.asParent(this.toolCalls);
     }
 }

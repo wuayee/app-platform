@@ -21,12 +21,14 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.pool.TypePool;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
  */
 public class ByteBuddyToolParser implements ToolParser {
     private static final String DOT = ".";
+
     private final TypePool typePool;
     private final String rootPath;
 
@@ -48,7 +51,12 @@ public class ByteBuddyToolParser implements ToolParser {
 
     @Override
     public List<ToolEntity> parseTool(File classFile) {
-        String normalizedPath = classFile.getAbsolutePath();
+        String normalizedPath;
+        try {
+            normalizedPath = classFile.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed get class canonical path.");
+        }
         if (!normalizedPath.startsWith(rootPath)) {
             throw new IllegalStateException("The class not in root directory.");
         }
@@ -70,8 +78,8 @@ public class ByteBuddyToolParser implements ToolParser {
             tool.setNamespace(toolMethod.namespace());
             tool.setName(toolMethod.name());
             tool.setDescription(toolMethod.description());
-            tool.setReturnType(Validation.notNull(JacksonTypeParser.getParameterSchema(methodDescription.getReturnType()),
-                    "The return type cannot be null.").toString());
+            tool.setReturnType(Validation.notNull(JacksonTypeParser.getParameterSchema(
+                    methodDescription.getReturnType()), "The return type cannot be null.").toString());
             tool.setExtraParameters(Arrays.asList(toolMethod.extraParams()));
             tool.setReturnConvertor(toolMethod.returnConverter());
             tool.setExtensions(parseAttributes(toolMethod));
@@ -99,9 +107,9 @@ public class ByteBuddyToolParser implements ToolParser {
         tool.setFitableId(fitableId);
         for (TypeDescription.Generic interfaceType : typeDescription.getInterfaces()) {
             TypeDescription interfaceDescription = interfaceType.asErasure();
-            String genericable = this.parseGenericable(methodDescription, interfaceDescription);
-            if (genericable != null) {
-                tool.setGenericableId(genericable);
+            Optional<String> genericable = this.parseGenericable(methodDescription, interfaceDescription);
+            if (genericable.isPresent()) {
+                tool.setGenericableId(genericable.get());
                 return;
             }
         }
@@ -130,7 +138,7 @@ public class ByteBuddyToolParser implements ToolParser {
         return parameterEntities;
     }
 
-    private String parseGenericable(MethodDescription.InDefinedShape methodDescription,
+    private Optional<String> parseGenericable(MethodDescription.InDefinedShape methodDescription,
             TypeDescription interfaceDescription) {
         for (MethodDescription.InDefinedShape interfaceMethod : interfaceDescription.getDeclaredMethods()) {
             if (methodDescription.getName().equals(interfaceMethod.getName()) && methodDescription.getDescriptor()
@@ -138,11 +146,11 @@ public class ByteBuddyToolParser implements ToolParser {
                 AnnotationDescription.Loadable<Genericable> genericableAnnotation =
                         interfaceMethod.getDeclaredAnnotations().ofType(Genericable.class);
                 if (genericableAnnotation != null) {
-                    return genericableAnnotation.load().value();
+                    return Optional.of(genericableAnnotation.load().value());
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     private Map<String, String> parseAttributes(ToolMethod toolMethod) {

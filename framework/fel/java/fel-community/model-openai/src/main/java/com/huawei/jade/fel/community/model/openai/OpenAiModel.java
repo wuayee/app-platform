@@ -78,8 +78,8 @@ public class OpenAiModel implements EmbedModel, ChatModel {
                 .createRequest(HttpRequestMethod.POST, UrlUtils.combine(this.baseUrl, OpenAiApi.EMBEDDING_ENDPOINT));
         HttpUtils.setBearerAuth(request, StringUtils.blankIf(option.apiKey(), this.defaultApiKey));
         request.jsonEntity(new OpenAiEmbeddingRequest(inputs, option.model()));
-        try (HttpClassicClientResponse<OpenAiEmbeddingResponse> response =
-                     request.exchange(OpenAiEmbeddingResponse.class)) {
+        Class<OpenAiEmbeddingResponse> clazz = OpenAiEmbeddingResponse.class;
+        try (HttpClassicClientResponse<OpenAiEmbeddingResponse> response = request.exchange(clazz)) {
             return response.objectEntity()
                     .map(entity -> CollectionUtils.<Embedding, OpenAiEmbedding>asParent(entity.object().data()))
                     .orElseThrow(() -> new FitException("The response body is abnormal."));

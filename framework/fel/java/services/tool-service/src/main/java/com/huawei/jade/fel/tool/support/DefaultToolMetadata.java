@@ -9,7 +9,6 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
 import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -71,10 +70,6 @@ public class DefaultToolMetadata implements Tool.Metadata {
         this.parametersDefaultValues = this.extractParamDefaultValue(properties);
         this.returnSchema = getIfNull(cast(schema.get(ToolSchema.RETURN_SCHEMA)), Collections::emptyMap);
         this.returnConverter = nullIf(cast(this.returnSchema.get(ToolSchema.RETURN_CONVERTER)), StringUtils.EMPTY);
-        Validation.isTrue(properties.size() == this.parameterOrder().size(),
-                "The size of properties[size={0}] must equals to the parameter names[size={1}]. ",
-                properties.size(),
-                this.parameterOrder().size());
     }
 
     private static Type convertJsonSchemaTypeToJavaType(String schemaType) {

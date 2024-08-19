@@ -115,7 +115,7 @@ public class OpenAiChatEntityTest {
             OpenAiChatMessage openaiMessage = SERIALIZER.deserialize(json, OpenAiChatMessage.class);
             assertThat(openaiMessage).hasFieldOrPropertyWithValue("role", "assistant")
                     .hasFieldOrPropertyWithValue("content", "test")
-                    .satisfies(chatMessage -> assertThat(chatMessage.toolCalls()).extracting(OpenAiToolCall::id)
+                    .satisfies(chatMessage -> assertThat(chatMessage.toolCalls()).extracting(ToolCall::id)
                             .containsExactly("id_1"));
         }
     }

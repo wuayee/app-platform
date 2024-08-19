@@ -71,8 +71,9 @@ public class JacksonTypeParser {
             return getMapSchema();
         } else if (typeDescription.isEnum()) {
             return getEnumSchema();
+        } else {
+            return getObjectSchema(typeDescription);
         }
-        return getObjectSchema(typeDescription);
     }
 
     private static boolean isWrapperType(TypeDescription typeDescription) {

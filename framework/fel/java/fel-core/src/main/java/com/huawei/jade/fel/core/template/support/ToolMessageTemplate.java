@@ -26,6 +26,7 @@ public class ToolMessageTemplate extends AbstractMessageTemplate {
      * 使用 mustache 模板语法创建 {@link ToolMessageTemplate} 的实例。
      *
      * @param template 表示使用 mustache 模板语法的 {@link String}。
+     * @param id 表示工具调用唯一编号的 {@link String}。
      * @see <a href="https://mustache.github.io/">mustache</a>。
      */
     public ToolMessageTemplate(String template, String id) {
@@ -36,6 +37,7 @@ public class ToolMessageTemplate extends AbstractMessageTemplate {
      * 使用字符串模板创建 {@link ToolMessageTemplate} 的实例。
      *
      * @param template 表示字符串模板的 {@link StringTemplate}。
+     * @param id 表示工具调用唯一编号的 {@link String}。
      */
     public ToolMessageTemplate(StringTemplate template, String id) {
         super(template);

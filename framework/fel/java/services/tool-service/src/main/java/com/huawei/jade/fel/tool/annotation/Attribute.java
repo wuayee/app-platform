@@ -4,6 +4,12 @@
 
 package com.huawei.jade.fel.tool.annotation;
 
+/**
+ * 用于工具方法额外参数的定义。
+ *
+ * @author 易文渊
+ * @since 2024-08-19
+ */
 public @interface Attribute {
     /**
      * 获取属性的键。

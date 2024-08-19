@@ -51,6 +51,7 @@ public class Prompts {
      * 构造人工智能提示词模板。
      *
      * @param template 表示使用 mustache 模板语法的 {@link String}。
+     * @param toolCalls 表示工具调用数组的 {@link ToolCall}{@code []}。
      * @return 表示人工智能模板的 {@link PromptTemplate}{@code <}{@link Tip}{@code >}。
      */
     public static PromptTemplate<Tip> ai(String template, ToolCall... toolCalls) {
@@ -61,6 +62,7 @@ public class Prompts {
      * 构造工具调用提示词模板。
      *
      * @param template 表示使用 mustache 模板语法的 {@link String}。
+     * @param id 表示工具调用唯一编号的 {@link String}。
      * @return 表示人类提示词模板的 {@link PromptTemplate}{@code <}{@link Tip}{@code >}。
      * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
      */

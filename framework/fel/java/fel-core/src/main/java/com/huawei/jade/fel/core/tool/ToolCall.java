@@ -38,6 +38,9 @@ public interface ToolCall {
     @Nonnull
     String arguments();
 
+    /**
+     * 表示 {@link ToolCall} 的构建器。
+     */
     interface Builder {
         /**
          * 设置工具调用的唯一编号。

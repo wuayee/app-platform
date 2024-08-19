@@ -117,7 +117,7 @@ public class MilvusVectorStore implements VectorStore {
         if (!this.hasIndex()) {
             this.createIndex();
         }
-        if (!hasLoadCollection()) {
+        if (!this.hasLoadCollection()) {
             this.loadCollection();
         }
     }

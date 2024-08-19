@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 表示 {@link ToolExecuteService} 得默认实现。
+ * 表示 {@link ToolExecuteService} 的默认实现。
  *
  * @author 易文渊
  * @since 2024-08-15
@@ -84,7 +84,7 @@ public class DefaultToolExecutor implements ToolExecuteService {
         if (StringUtils.isBlank(convertor)) {
             return output.getClass() == String.class ? cast(output) : serializer.serialize(output);
         }
-        Tool convertorTool = getTool(group, convertor);
+        Tool convertorTool = this.getTool(group, convertor);
         return convertorTool.execute(output).toString();
     }
 }

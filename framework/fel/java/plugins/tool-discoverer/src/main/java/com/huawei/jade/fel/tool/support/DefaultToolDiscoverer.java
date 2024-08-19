@@ -47,6 +47,7 @@ public class DefaultToolDiscoverer implements PluginStartedObserver, PluginStopp
      *
      * @param toolRepository 表示工具仓库的 {@link ToolRepository}。
      * @param serializer 表示对象序列化器的 {@link ObjectSerializer}。
+     * @param maxNum 表示插件最大工具数量的 {@code int}。
      * @throws IllegalArgumentException 当 {@code toolRepository}、{@code objectSerializer} 为 {@code null} 时。
      */
     public DefaultToolDiscoverer(ToolRepository toolRepository, ObjectSerializer serializer,

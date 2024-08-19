@@ -11,7 +11,6 @@ package com.huawei.jade.fel.tool;
  * @since 2024-06-26
  */
 public interface ToolSchema {
-
     /**
      * 表示工具的命名空间。
      */

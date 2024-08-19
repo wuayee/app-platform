@@ -84,7 +84,7 @@ public interface Operand {
          * @return 表示过滤器键的 {@link String}。
          */
         public String key() {
-            return payload;
+            return this.payload;
         }
     }
 
@@ -141,7 +141,7 @@ public interface Operand {
          * @return 表示过滤器表达式操作符枚举的 {@link Operator}。
          */
         public Operator op() {
-            return op;
+            return this.op;
         }
 
         /**
@@ -150,7 +150,7 @@ public interface Operand {
          * @return 表示左操作数的 {@link Operand}。
          */
         public Operand left() {
-            return left;
+            return this.left;
         }
 
         /**
@@ -159,7 +159,7 @@ public interface Operand {
          * @return 表示右操作数的 {@link Operand}。
          */
         public Operand right() {
-            return right;
+            return this.right;
         }
     }
 }
