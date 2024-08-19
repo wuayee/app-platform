@@ -61,6 +61,7 @@ public class MethodToolMetadataTest {
         Invoker invoker = mock(Invoker.class);
         when(client.getRouter(eq("t1"), eq(this.testMethod))).thenReturn(router);
         when(router.route(any())).thenReturn(invoker);
+        when(invoker.communicationType(any())).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
@@ -91,15 +92,18 @@ public class MethodToolMetadataTest {
                 .put("name", "test_method_default_implementation_name")
                 .put("index", "test_method_index")
                 .put("description", "This is a demo FIT function.")
-                .put(SchemaKey.PARAMETERS, MapBuilder.<String, Object>get()
-                        .put("type", "object")
-                        .put(SchemaKey.PARAMETERS_PROPERTIES, MapBuilder.<String, Object>get()
-                                .put("p1", MapBuilder.<String, Object>get()
-                                        .put("type", "string")
-                                        .put("default", "This is the first parameter.")
-                                        .build())
+                .put(SchemaKey.PARAMETERS,
+                        MapBuilder.<String, Object>get()
+                                .put("type", "object")
+                                .put(SchemaKey.PARAMETERS_PROPERTIES,
+                                        MapBuilder.<String, Object>get()
+                                                .put("p1",
+                                                        MapBuilder.<String, Object>get()
+                                                                .put("type", "string")
+                                                                .put("default", "This is the first parameter.")
+                                                                .build())
+                                                .build())
                                 .build())
-                        .build())
                 .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
                 .put(SchemaKey.RETURN_SCHEMA, MapBuilder.<String, Object>get().put("type", "string").build())
                 .build();
