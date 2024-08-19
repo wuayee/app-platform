@@ -10,8 +10,10 @@ import PublishModal from '../../components/publish-modal';
 import TestModal from '../../components/test-modal';
 import TestStatus from '../../components/test-status';
 import TimeLineDrawer from '../../../components/timeLine';
+import { useTranslation } from "react-i18next";
 
 const AddHeader = (props) => {
+  const { t } = useTranslation();
   const { handleDebugClick, testTime, testStatus } = props;
   const { appInfo, showTime, setFlowInfo } = useContext(FlowContext);
   const [open, setOpen] = useState(false);
@@ -51,7 +53,7 @@ const AddHeader = (props) => {
   async function updateAppWorkFlow(optionType = '') {
     const res = await updateAppInfo(tenantId, appId, appInfo);
     if (res.code === 0) {
-      Message({ type: 'success', content: '编辑成功' })
+      Message({ type: 'success', content: t('editSuccess') });
       optionType && editRef.current.handleCancel();
       setFlowInfo(JSON.parse(JSON.stringify(appInfo)));
     } else {
@@ -68,37 +70,37 @@ const AddHeader = (props) => {
           <LeftArrowIcon className='back-icon' onClick={handleBackClick} />
           {(appInfo.attributes?.icon && appInfo.attributes?.icon !== 'null') ?
             <img src={appInfo.attributes?.icon} /> :
-            <img src='/src/assets/images/knowledge/knowledge-base.png' />
+            <img src='./src/assets/images/knowledge/knowledge-base.png' />
           }
           <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
-          <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={handleEditClick} />
+          <img className='edit-icon' src='./src/assets/images/ai/edit.png' onClick={handleEditClick} />
           {
             (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
               (
                 <div className='status-tag'>
-                  <img src='/src/assets/images/ai/complate.png' />
-                  <span>已发布</span>
+                  <img src='./src/assets/images/ai/complate.png' />
+                  <span>{t('published')}</span>
                 </div>
               ) :
               (
                 <div className='status-tag'>
-                  <img src='/src/assets/images/ai/publish.png' />
-                  <span>未发布</span>
+                  <img src='./src/assets/images/ai/publish.png' />
+                  <span>{t('unPublished')}</span>
                 </div>
               )
           }
-          {showTime && <span>自动保存：{getCurrentTime()}</span>}
+          {showTime && <span>{t('autoSave')}：{getCurrentTime()}</span>}
           <TestStatus testTime={testTime} testStatus={testStatus} />
         </div>
         <div className='header-grid'>
           {
             (appInfo.attributes?.latest_version || appInfo.state === 'active') &&
             <span className='history' onClick={versionDetail}>
-              <img src='/src/assets/images/ai/time.png' />
+              <img src='./src/assets/images/ai/time.png' />
             </span>
           }
-          <span className='header-btn test-btn' onClick={handleDebugClick}>调试</span>
-          <span className='header-btn' onClick={handleUploadFlow}><UploadIcon />发布</span>
+          <span className='header-btn test-btn' onClick={handleDebugClick}>{t('debug')}</span>
+          <span className='header-btn' onClick={handleUploadFlow}><UploadIcon />{t('publish')}</span>
         </div>
       </div>
       <PublishModal

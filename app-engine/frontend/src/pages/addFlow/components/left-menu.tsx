@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import BasicItems from './basic-item';
 import ToolItems from './tool-item';
+import { useTranslation } from "react-i18next";
 
 const LeftMenu = (props) => {
+  const { t } = useTranslation();
   const { dragData, menuClick } = props;
   const [activeKey, setActiveKey] = useState('basic');
   const tab = [
-    { name: '基础', key: 'basic' },
-    { name: '插件', key: 'plugin' }
+    { name: t('basic'), key: 'basic' },
+    { name: t('plugin'), key: 'plugin' }
   ]
   const handleClick = (key) => {
     setActiveKey(key);

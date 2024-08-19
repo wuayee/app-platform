@@ -3,11 +3,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Modal, Input, Button } from 'antd';
 import { getHuggingFaceList } from '@shared/http/appBuilder';
-import Pagination from '../../../components/pagination/index';
 import EmptyItem from '../../../components/empty/empty-item';
 const { Search } = Input;
+import { useTranslation } from "react-i18next";
 
 const HuggingFaceModal = (props) => {
+  const { t } = useTranslation();
   const { showModal, setShowModal, onModelSelectCallBack, taskName, selectModal } = props;
   const [name, setName] = useState('');
   const [pageNum, setPageNum] = useState(1);
@@ -57,19 +58,19 @@ const HuggingFaceModal = (props) => {
   }
   return <>
     <Modal
-      title='选择HuggingFace模型'
+      title={t('plsChooseHFModel')}
       open={showModal}
       onCancel={() => setShowModal(false)}
       width='1100px'
       footer={
         <div className='drawer-footer'>
-          <Button onClick={() => setShowModal(false)}>取消</Button>
-          <Button type='primary' onClick={confirm}>确定</Button>
+          <Button onClick={() => setShowModal(false)}>{t('cancel')}</Button>
+          <Button type='primary' onClick={confirm}>{t('ok')}</Button>
         </div>
       }
     >
       <div className='tool-modal-search'>
-        <Search size='large' onSearch={filterByName} placeholder='请输入' allowClear />
+        <Search size='large' onSearch={filterByName} placeholder={t('plsEnter')} allowClear />
       </div>
       <div className='tool-modal-content'>
         <div className='content-left'>
@@ -78,20 +79,20 @@ const HuggingFaceModal = (props) => {
               <div className={`left-item ${activeKey === card.name ? 'active' : ''}`}
                 key={card.taskName}
                 onClick={() => itemClick(card)}>
-                <div className='card-detail' onClick={() => window.open(`https://${card.url}`)}>查看详情</div>
+                <div className='card-detail' onClick={() => window.open(`https://${card.url}`)}>{t('checkMore')}</div>
                 <div className='item-top'>
                   <div className='top-left'>
-                    <img src='/src/assets/images/ai/hugging-face.png' alt='' />
+                    <img src='./src/assets/images/ai/hugging-face.png' alt='' />
                   </div>
                   <div className='top-right'>
                     <div className='item-title' title={card.name}>{card.name} </div>
                     <div className='item-tag'>
                       <span>
-                        <img src='/src/assets/images/ai/download.png' alt='' />
+                        <img src='./src/assets/images/ai/download.png' alt='' />
                         {card.context.downloads}
                       </span>
                       <span>
-                        <img src='/src/assets/images/ai/like.png' alt='' />
+                        <img src='./src/assets/images/ai/like.png' alt='' />
                         {card.context.likes}
                       </span>
                     </div>
@@ -100,7 +101,7 @@ const HuggingFaceModal = (props) => {
                 <div className='item-bottom' title={card.context.description}>{card.context.description}</div>
               </div>
             )}
-            {list.length === 0 && <div className='tool-empty'><EmptyItem text='暂无数据' /></div>}
+            {list.length === 0 && <div className='tool-empty'><EmptyItem text={t('noData')} /></div>}
           </div>
         </div>
       </div>

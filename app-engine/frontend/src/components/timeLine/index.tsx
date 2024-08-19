@@ -4,11 +4,13 @@ import { Drawer, Timeline, Empty } from 'antd';
 import { useParams } from 'react-router-dom';
 import { CloseOutlined } from '@ant-design/icons';
 import { getVersion } from '@shared/http/aipp';
+import { useTranslation } from "react-i18next";
 
 const TimeLine = (props) => {
   const { open, setOpen } = props;
   const [ timeList, setTimeList ] = useState([]);
   const { tenantId, appId } = useParams();
+  const { t } = useTranslation();
 
   useEffect(() => {
     open && getVersion(tenantId, appId).then(res => {
@@ -34,7 +36,7 @@ const TimeLine = (props) => {
   }
   return <>
     <Drawer
-      title='发布历史'
+      title={t('publishHistory')}
       placement='right'
       width='420px'
       closeIcon={false}
@@ -46,11 +48,11 @@ const TimeLine = (props) => {
       }>
       <div>
         <div style={{ marginBottom: '18px', display: 'flex', alignItems: 'center' }}>
-          <img src='/src/assets/images/ai/tag.png'  />
-          <span style={{ marginLeft: '12px' }}>不可恢复历史版本</span>
+          <img src='./src/assets/images/ai/tag.png'  />
+          <span style={{ marginLeft: '12px' }}>{t('cannotRevertVersion')}</span>
         </div>
         { timeList.length > 0 ? <Timeline  items={timeList} /> : 
-          <div style={{ marginTop: '300px' }}><Empty description="暂无数据" /></div>  
+          <div style={{ marginTop: '300px' }}><Empty description={t('noData')} /></div>
         }
       </div>
     </Drawer>

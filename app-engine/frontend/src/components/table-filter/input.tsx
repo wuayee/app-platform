@@ -3,11 +3,10 @@ import React from 'react';
 import type { TableColumnType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
-import { useTranslation } from "react-i18next";
+import { TFunction } from "react-i18next";
 
-const { t } = useTranslation();
 // 自定义搜索面板
-const getColumnSearchProps = (dataIndex: string, onChange?: any): TableColumnType<string> => ({
+const getColumnSearchProps = (dataIndex: string, onChange?: any, t?: TFunction): TableColumnType<string> => ({
   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
     <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
       <Input

@@ -3,8 +3,10 @@ import { UploadFile } from 'antd';
 import Upload from 'antd/es/upload/Upload';
 import React, { useState } from 'react';
 import './style.scoped.scss';
+import { useTranslation } from "react-i18next";
 
 const LiveUpload: React.FC = ({customRequest}: any) => {
+  const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const customRequestInner= async ({file}: any) => {
     try {
@@ -31,7 +33,7 @@ const LiveUpload: React.FC = ({customRequest}: any) => {
           color: 'grey',
           lineHeight: '40px'
         }}>
-          请选择文件
+          {t('pickFile')}
         </span>
         <span style={{
           position: 'absolute',

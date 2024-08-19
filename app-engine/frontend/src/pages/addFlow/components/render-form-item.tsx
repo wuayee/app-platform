@@ -1,8 +1,10 @@
 
 import React, { useEffect } from 'react';
 import { Input, Form, InputNumber, Switch } from 'antd';
+import { useTranslation } from "react-i18next";
 
 const RenderFormItem = (props) => {
+  const { t } = useTranslation();
   const { type, name, isRequired } = props;
   const [form] = Form.useForm();
 
@@ -25,7 +27,7 @@ const RenderFormItem = (props) => {
       return Promise.resolve();
     }
     if (isNaN(value)) {
-      return Promise.reject(new Error('请输入一个有效的数字'));
+      return Promise.reject(new Error(t('plsEnterValidNumber')));
     }
     return Promise.resolve();
   };
@@ -45,11 +47,11 @@ const RenderFormItem = (props) => {
         name={name}
         label={customLabel}
         rules={[
-          { required: isRequired !== false, message: '请输入字符串' },
+          { required: isRequired !== false, message: t('plsEnterString') },
         ]}
         className='debug-form-item'
       >
-        <Input.TextArea placeholder={`请输入${name}`} rows={3} />
+        <Input.TextArea placeholder={`${t('plsEnter')}${name}`} rows={3} />
       </Form.Item>
     }
     {type === 'Integer' &&
@@ -59,7 +61,7 @@ const RenderFormItem = (props) => {
         initialValue={null}
         rules={[
           { validator: validateNumber },
-          { required: isRequired !== false, message: '请输入一个整数' }
+          { required: isRequired !== false, message: t('plsEnterInt') }
         ]}
         className='debug-form-item'
       >
@@ -67,7 +69,7 @@ const RenderFormItem = (props) => {
           min={0}
           step={1}
           style={{ width: '100%' }}
-          placeholder={`请输入${name}`}
+          placeholder={`${t('plsEnter')}${name}`}
           onBlur={(e) => handleBlur(e.target.value, true)}
         />
       </Form.Item>
@@ -79,7 +81,7 @@ const RenderFormItem = (props) => {
         initialValue={null}
         rules={[
           { validator: validateNumber },
-          { required: isRequired !== false, message: '请输入一个数字' }
+          { required: isRequired !== false, message: t('plsEnterNumber') }
         ]}
         className='debug-form-item'
       >
@@ -88,7 +90,7 @@ const RenderFormItem = (props) => {
           step={1}
           formatter={(value) => value > 1e21 ? 'Infinity' : value}
           style={{ width: '100%' }}
-          placeholder={`请输入${name}`}
+          placeholder={`${t('plsEnter')}${name}`}
           onBlur={(e) => handleBlur(e.target.value, false)}
         />
       </Form.Item>
@@ -99,7 +101,7 @@ const RenderFormItem = (props) => {
         label={customLabel}
         initialValue={true}
         rules={[
-          { required: isRequired !== false, message: '请输入字符串' },
+          { required: isRequired !== false, message: t('plsEnterInt') },
         ]}
         className='debug-form-item'
       >

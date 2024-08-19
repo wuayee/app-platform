@@ -4,8 +4,10 @@ import { Drawer, Form, Input, Button } from 'antd';
 import { useParams, useHistory } from 'react-router-dom';
 import { createAipp } from "@shared/http/aipp";
 import { CloseOutlined } from '@ant-design/icons';
+import { useTranslation } from "react-i18next";
 
 const AddWaterFlow = (props) => {
+  const { t } = useTranslation();
   const { open, setOpen } = props;
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -33,7 +35,7 @@ const AddWaterFlow = (props) => {
   }
   return <>
     <Drawer
-      title='创建工具流'
+      title={t('createWorkflow')}
       placement='right'
       width='420px'
       closeIcon={false}
@@ -41,10 +43,10 @@ const AddWaterFlow = (props) => {
       open={open}
       footer={[
         <Button key="back" onClick={() => setOpen(false)}>
-          取消
+          {t('cancel')}
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={confrimClick}>
-          确定
+          {t('ok')}
         </Button>
       ]}
       extra={
@@ -58,19 +60,19 @@ const AddWaterFlow = (props) => {
           className='edit-form-content'
         >
           <Form.Item
-            label="名称"
+            label={t('name')}
             name="name"
-            rules={[{ required: true, message: '请输入名称' }, {
+            rules={[{ required: true, message: t('plsEnterName') }, {
               type: 'string',
               max: 64,
-              message: '输入字符长度范围：1 - 64'
+              message: t('enterNameRule')
             }]}
           >
             <Input maxLength={64} showCount />
           </Form.Item>
           <Form.Item
             label="简介"
-            name="description"
+            name={t('description')}
           >
             <Input.TextArea rows={3} showCount maxLength={300} />
           </Form.Item>

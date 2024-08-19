@@ -64,7 +64,7 @@ const ImportTable = ({ open, setOpen, repositoryId, knowledgeTableId }: props) =
             initialValues={initialValues}
             style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
           >
-            <Form.Item label={t('pickFile')}  name = 'selectedFile' validateStatus={'error'}
+            <Form.Item label={t('pickOneFile')}  name = 'selectedFile' validateStatus={'error'}
               rules={[
                 {
                   required: true,
