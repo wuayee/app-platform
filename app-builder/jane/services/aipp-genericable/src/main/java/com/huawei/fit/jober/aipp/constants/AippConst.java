@@ -53,19 +53,34 @@ public class AippConst {
     public static final String CONTENT_DELIMITER = "; ";
 
     /**
-     * flow_component_data
+     * flow_component_data_zh
      */
-    public static final String FLOW_COMPONENT_DATA_KEY = "flow_component_data";
+    public static final String FLOW_COMPONENT_DATA_ZH_KEY = "flow_component_data_zh";
 
     /**
-     * form_component_data
+     * flow_component_data_en
      */
-    public static final String FORM_COMPONENT_DATA_KEY = "form_component_data";
+    public static final String FLOW_COMPONENT_DATA_EN_KEY = "flow_component_data_en";
 
     /**
-     * basic_node_component_data
+     * form_component_data_zh
      */
-    public static final String BASIC_NODE_COMPONENT_DATA_KEY = "basic_node_component_data";
+    public static final String FORM_COMPONENT_DATA_ZH_KEY = "form_component_data_zh";
+
+    /**
+     * form_component_data_en
+     */
+    public static final String FORM_COMPONENT_DATA_EN_KEY = "form_component_data_en";
+
+    /**
+     * basic_node_component_data_zh
+     */
+    public static final String BASIC_NODE_COMPONENT_DATA_ZH_KEY = "basic_node_component_data_zh";
+
+    /**
+     * basic_node_component_data_en
+     */
+    public static final String BASIC_NODE_COMPONENT_DATA_EN_KEY = "basic_node_component_data_en";
 
     /**
      * tool_context_key

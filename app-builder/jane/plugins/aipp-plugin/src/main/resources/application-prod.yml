@@ -5,7 +5,7 @@ fit:
       - 'com.huawei.jade.fel'
       - 'com.huawei.jade.voice.to.text'
   messages:
-    basename: i18n/messages
+    basename: i18n/messages, i18n/ui
   datasource:
     primary: 'app-engine'
     instances:

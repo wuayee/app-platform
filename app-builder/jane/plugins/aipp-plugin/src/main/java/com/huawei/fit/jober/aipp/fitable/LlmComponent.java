@@ -40,6 +40,7 @@ import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.UuidUtils;
+import com.huawei.jade.common.ui.globalization.LocaleUiWord;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatOptions;
@@ -76,6 +77,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
     private static final String PROMPT_TEMPLATE = "{{1}}";
     private static final String CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
     private static final String AGENT_NODE_ID = "agent";
+    private static final String UI_WORD_KEY = "aipp.fitable.LlmComponent";
 
     // 暂时使用ConcurrentHashMap存储父节点的元数据
     private final ConcurrentHashMap<String, AippLlmMeta> llmCache = new ConcurrentHashMap<>();
@@ -89,6 +91,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
     private final AippLogStreamService aippLogStreamService;
     private final BrokerClient client;
     private final ObjectSerializer serializer;
+    private final LocaleUiWord localeUiWord;
 
     /**
      * 大模型节点构造器，内部通过提供的agent和tool构建智能体工作流。
@@ -103,6 +106,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
      * @param aippLogStreamService 表示提供日志流服务的 {@link AippLogStreamService}。
      * @param client 表示消息代理客户端的 {@link BrokerClient}。
      * @param serializer 表示序列化器的 {@link ObjectSerializer}。
+     * @param localeUiWord 表示界面词国际化转换器的 {@link LocaleUiWord}。
      */
     public LlmComponent(FlowInstanceService flowInstanceService,
             MetaInstanceService metaInstanceService,
@@ -110,7 +114,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
             ToolProvider toolProvider,
             @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) AbstractAgent<Prompt, Prompt> agent,
             AippLogService aippLogService, AippLogStreamService aippLogStreamService, BrokerClient client,
-            ObjectSerializer serializer) {
+            ObjectSerializer serializer, LocaleUiWord localeUiWord) {
         this.flowInstanceService = flowInstanceService;
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
@@ -126,6 +130,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
                 .id(AGENT_NODE_ID)
                 .delegate(agent)
                 .close();
+        this.localeUiWord = localeUiWord;
     }
 
     /**
@@ -219,7 +224,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
             this.addAnswer(llmMeta, fileContent);
         } catch (FitException e) {
             // 打印错误日志
-            String errorMsg = "无法解析文件";
+            String errorMsg = this.localeUiWord.getLocaleMessage(UI_WORD_KEY);
             this.doOnAgentError(llmMeta, errorMsg);
         }
     }

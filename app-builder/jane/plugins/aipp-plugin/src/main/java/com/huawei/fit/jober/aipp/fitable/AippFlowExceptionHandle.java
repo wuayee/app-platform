@@ -20,6 +20,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.common.ui.globalization.LocaleUiWord;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,13 +35,18 @@ import java.util.Map;
 @Component
 public class AippFlowExceptionHandle implements FlowExceptionService {
     private static final Logger log = Logger.get(AippFlowExceptionHandle.class);
+    private static final String UI_WORD_KEY = "aipp.fitable.AippFlowExceptionHandle";
+    private static final String UI_WORD_KEY_HINT = "aipp.fitable.AippFlowExceptionHandle.hint";
 
     private final AippLogService aippLogService;
     private final MetaInstanceService metaInstanceService;
+    private final LocaleUiWord localeUiWord;
 
-    public AippFlowExceptionHandle(@Fit AippLogService aippLogService, @Fit MetaInstanceService metaInstanceService) {
+    public AippFlowExceptionHandle(@Fit AippLogService aippLogService, @Fit MetaInstanceService metaInstanceService,
+            @Fit LocaleUiWord localeUiWord) {
         this.aippLogService = aippLogService;
         this.metaInstanceService = metaInstanceService;
+        this.localeUiWord = localeUiWord;
     }
 
     private void addErrorLog(String aippInstId, List<Map<String, Object>> contexts, String errorMessage) {
@@ -50,9 +56,9 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
                 return;
             }
         }
-        String msg = "很抱歉，我遇到了问题，请稍后重试。";
+        String msg = this.localeUiWord.getLocaleMessage(UI_WORD_KEY);
         if (StringUtils.isNotEmpty(errorMessage)) {
-            msg += "\n提示：" + errorMessage;
+            msg += "\n" + this.localeUiWord.getLocaleMessage(UI_WORD_KEY_HINT) + ": " + errorMessage;
         }
         this.aippLogService.insertErrorLog(msg, contexts);
     }

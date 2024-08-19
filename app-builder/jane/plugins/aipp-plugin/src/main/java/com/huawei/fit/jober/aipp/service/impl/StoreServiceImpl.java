@@ -31,6 +31,7 @@ import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.common.ui.globalization.LocaleUiWord;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.service.EcoTaskService;
@@ -138,8 +139,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private List<StoreBasicNodeInfoDto> buildBasicNodesConfig() {
-        List<StoreBasicNodeInfoDto> basicNodeList = JsonUtils.parseArray(
-                COMPONENT_DATA.get(AippConst.BASIC_NODE_COMPONENT_DATA_KEY), StoreBasicNodeInfoDto[].class);
+        List<StoreBasicNodeInfoDto> basicNodeList =
+                LocaleUiWord.getLocale().getLanguage().equals(Locale.ENGLISH.getLanguage())
+                        ? JsonUtils.parseArray(COMPONENT_DATA.get(AippConst.BASIC_NODE_COMPONENT_DATA_EN_KEY),
+                        StoreBasicNodeInfoDto[].class)
+                        : JsonUtils.parseArray(COMPONENT_DATA.get(AippConst.BASIC_NODE_COMPONENT_DATA_ZH_KEY),
+                                StoreBasicNodeInfoDto[].class);
         setUniqueName(basicNodeList);
         return basicNodeList;
     }
