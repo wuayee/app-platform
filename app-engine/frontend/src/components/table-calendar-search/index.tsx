@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
 const { RangePicker } = DatePicker;
-const { t } = useTranslation();
 
 /*
 * @params:
@@ -17,7 +16,7 @@ const { t } = useTranslation();
 * async: 是否异步表格；若为true，则不触发onfilter方法（表格数据项筛选）,由调用方在onChange中处理筛选逻辑。
 */
 const TableCalendarSearch = (searchKeyName: string, async: boolean = true): TableColumnType<any> => {
-
+  const { t } = useTranslation();
   return ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, close }) => (
       <div style={{ padding: 8, width: 360 }} onKeyDown={(e) => e.stopPropagation()}>

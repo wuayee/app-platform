@@ -12,9 +12,11 @@ import { useAppDispatch, useAppSelector } from '../../store/hook';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
+import { useTranslation } from "react-i18next";
 
 const Apps: React.FC = () => {
   const tenantId = TENANT_ID;
+  const { t } = useTranslation();
   const navigate = useHistory().push;
   const [appData, setAppData] = useState<any[]>([]);
   const [total, setTotal] = useState(1);
@@ -108,14 +110,14 @@ const Apps: React.FC = () => {
   return (
     <div className='apps_root'>
       <div className='apps_header'>
-        <div className='apps_title'>应用市场</div>
+        <div className='apps_title'>{t('appMarket')}</div>
       </div>
       <div className='apps_main'>
         <div className='operatorArea'>
           <Input
             showCount
             maxLength={64}
-            placeholder='搜索'
+            placeholder={t('search')}
             style={{ width: '200px', height: '35px' }}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
             onChange={(e) => handleSearch(e.target.value)}

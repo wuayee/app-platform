@@ -12,8 +12,10 @@ import { Message } from '@shared/utils/message';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { getUser } from '../helper';
+import { useTranslation } from "react-i18next";
 
 const AippIndex = () => {
+  const { t } = useTranslation();
   const { appId, tenantId } = useParams();
   const [ showElsa, setShowElsa ] = useState(false);
   const [ spinning, setSpinning] = useState(false);
@@ -64,7 +66,7 @@ const AippIndex = () => {
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
       if (res.code === 0) {
-        Message({type: 'success', content: '保存配置成功'});
+        Message({type: 'success', content: t('saveConfigSuccess')});
         getAippDetails();
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;

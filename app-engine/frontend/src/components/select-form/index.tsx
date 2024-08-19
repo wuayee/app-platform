@@ -5,6 +5,7 @@ import Preview from './preview';
 import { TextSplitClear } from './text-split-clear';
 import TableSecondForm from './table-second-form';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 interface inputProps {
   currentSteps: number;
@@ -27,6 +28,7 @@ interface inputProps {
 
 const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inputProps) => {
   const navigate = useHistory().push;
+  const { t } = useTranslation();
   return (
     <>
       {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource} />}
@@ -36,10 +38,10 @@ const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inpu
         (true ? (
           <Empty
             imageStyle={{ height: 60 }}
-            description={<span>恭喜您，知识库已完成创建</span>}
+            description={<span>{t('knowledgeCreated')}</span>}
           >
             <Button type='primary' onClick={() => window.history.back()}>
-              点击返回
+              {t('clickReturn')}
             </Button>
           </Empty>
         ) : (

@@ -10,8 +10,10 @@ import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
 import './styles/index.scss';
 import FlowTest from "./components/flow-test";
+import { useTranslation } from "react-i18next";
 
 const AddFlow = (props) => {
+  const { t } = useTranslation();
   const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus,
     showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [dragData, setDragData] = useState([]);
@@ -64,7 +66,7 @@ const AddFlow = (props) => {
       setDebugTypes(window.agent.getFlowRunInputMetaData());
       setShowDebug(true);
     }).catch(err => {
-      let str = typeof (err) === 'string' ? err : '请输入流程必填项';
+      let str = typeof (err) === 'string' ? err : t('plsEnterFlowRequiredItem');
       Message({ type: "warning", content: str });
     })
   }
@@ -104,7 +106,7 @@ const AddFlow = (props) => {
                 setDragData={setDragData}
               />
             ) : (
-                <Tooltip placement="rightTop" title="展开编排区">
+                <Tooltip placement="rightTop" title={t('expandArrange')}>
                   <div className="menu-icon" onClick={menuClick}>
                     <ConfigFlowIcon />
                   </div>

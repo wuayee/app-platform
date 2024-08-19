@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import Pagination from '../../../../components/pagination';
 import AppEvalute from './app-evalute/app-evalute';
 import { getAppInfo } from '../../../../shared/http/aipp';
+import { useTranslation } from "react-i18next";
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
@@ -29,6 +30,7 @@ type Filters = Parameters<OnChange>[1];
 
 
 const TestSet: React.FC = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
 
@@ -125,35 +127,35 @@ const TestSet: React.FC = () => {
       key: 'datasetName',
       dataIndex: 'datasetName',
       title: '测试集名称',
-      ...getColumnSearchProps('datasetName', filterChange)
+      ...getColumnSearchProps('datasetName', filterChange, t)
     },
     {
       key: 'description',
       dataIndex: 'description',
       title: '测试集描述',
       filteredValue: filteredInfo.description || null,
-      ...getColumnSearchProps('description', filterChange)
+      ...getColumnSearchProps('description', filterChange, t)
     },
     {
       key: 'author',
       dataIndex: 'author',
       title: '创建人',
       filteredValue: filteredInfo.author || null,
-      ...getColumnSearchProps('author', filterChange)
+      ...getColumnSearchProps('author', filterChange, t)
     },
     {
       key: 'createTime',
       dataIndex: 'createTime',
       title: '创建时间',
       filteredValue: filteredInfo.createTime || null,
-      ...getColumnTimePickerProps('createTime', filterChange)
+      ...getColumnTimePickerProps('createTime', filterChange, t)
     },
     {
       key: 'modifyTime',
       dataIndex: 'modifyTime',
       title: '修改时间',
       filteredValue: filteredInfo.modifyTime || null,
-      ...getColumnTimePickerProps('modifyTime', filterChange)
+      ...getColumnTimePickerProps('modifyTime', filterChange, t)
     },
     {
       key: 'action',

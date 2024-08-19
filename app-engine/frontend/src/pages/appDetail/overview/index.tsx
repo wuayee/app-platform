@@ -7,9 +7,10 @@ import { useHistory, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
 import { useAppDispatch } from '../../../store/hook';
 import { setAppInfo } from "../../../store/appInfo/appInfo";
+import { useTranslation } from "react-i18next";
 
 const AppOverview: React.FC = () => {
-
+  const { t } = useTranslation();
   const navigate = useHistory().push;
   const { appId, tenantId } = useParams();
   const [detail, setDetail] = useState({});
@@ -24,7 +25,7 @@ const AppOverview: React.FC = () => {
           setAppIcon(res.data?.attributes?.icon);
         }
       } else {
-        Message({ type: 'error', content: res.message || '获取详情数据失败' })
+        Message({ type: 'error', content: res.message || t('getDetailFail') });
       }
     });
   }, [])
@@ -58,13 +59,13 @@ const AppOverview: React.FC = () => {
                     (
                       <div className="status-tag">
                         <img src='./src/assets/images/ai/complate.png' />
-                        <span>已发布</span>
+                        <span>{t('published')}</span>
                       </div>
                     ) :
                     (
                       <div className="status-tag">
                         <img src='./src/assets/images/ai/publish.png' />
-                        <span>未发布</span>
+                        <span>{t('unPublished')}</span>
                       </div>
                     )
                 }
@@ -75,13 +76,13 @@ const AppOverview: React.FC = () => {
                   <span>{detail?.createBy || 'Admin'}</span>
                 </Flex>
                 <Flex gap='small'>
-                  <span>创建于</span>
+                  <span>{t('createAt')}</span>
                   <span>{detail?.createAt}</span>
                 </Flex>
               </Flex>
               <Flex gap={20}>
                 <Flex gap={4} align='center'>
-                  <span>应用ID：</span>
+                  <span>{t('app')}ID：</span>
                   <span>{detail?.id}</span>
                 </Flex>
               </Flex>
@@ -94,12 +95,12 @@ const AppOverview: React.FC = () => {
         <Button type='primary' onClick={gotoArrange} style={{
           width: '96px',
           height: '32px',
-        }}>去编排</Button>
+        }}>{t('toArrange')}</Button>
         <Divider style={{ margin: 0, backgroundColor: '#D7D8DA' }} />
         <div>
           <Flex gap='large'>
             <div className='remarks'>
-              <span className='left'>对话开场白：</span>
+              <span className='left'>{t('prologue')}：</span>
               <span className='right'>{detail?.attributes?.greeting || '-'}</span>
             </div>
           </Flex>

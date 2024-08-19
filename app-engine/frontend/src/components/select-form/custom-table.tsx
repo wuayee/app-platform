@@ -3,7 +3,8 @@ import type { TableProps } from 'antd';
 import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './style.scoped.scss';
-import { Recoverable } from 'repl';
+import { useTranslation } from "react-i18next";
+import i18n from '../../locale/i18n';
 
 interface Item {
   key: string;
@@ -13,13 +14,13 @@ interface Item {
 }
 
 const options=[
-  { value: 'other', label: '其他索引' },
-  { value: 'vector', label: '向量索引' },
+  { value: 'other', label: i18n.t('otherIndex') },
+  { value: 'vector', label: i18n.t('vectorIndex') },
 ];
 
 const dataOptions=[
-  { value: 'VARCHAR', label: '字符' },
-  { value: 'NUMBER', label: '数字' },
+  { value: 'VARCHAR', label: i18n.t('character') },
+  { value: 'NUMBER', label: i18n.t('number') },
 ];
 
 
@@ -63,6 +64,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   children,
   ...restProps
 }) => {
+  const { t } = useTranslation();
   const inputNode =
     inputType === 'select' ? (
       <Select
@@ -81,7 +83,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
           rules={[
             {
               required: true,
-              message: `请输入 ${title}!`,
+              message: `${t('plsEnter')} ${title}!`,
             },
           ]}
         >
@@ -101,6 +103,7 @@ interface PriceInputProps {
 }
 
 const CustomTable: React.FC<PriceInputProps> = (props) => {
+  const { t } = useTranslation();
   const { id, value = [], onChange } = props;
   const [form] = Form.useForm();
   const [data, setData] = useState(value);
@@ -161,13 +164,13 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
 
   const columns = [
     {
-      title: '列名',
+      title: t('colName'),
       dataIndex: 'colName',
       width: '30%',
       editable: true,
     },
     {
-      title: '数据类型',
+      title: t('dataType'),
       dataIndex: 'dataType',
       width: '30%',
       editable: true,
@@ -178,7 +181,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
       }
     },
     {
-      title: '索引类型',
+      title: t('indexType'),
       dataIndex: 'indexType',
       width: '30%',
       editable: true,
@@ -189,7 +192,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
       }
     },
     {
-      title: '操作',
+      title: t('operate'),
       dataIndex: 'operation',
       width: '10%',
       render: (_: any, record: Item) => {
@@ -197,13 +200,13 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
         return editable ? (
           <Space>
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-              保存
+              {t('save')}
             </Typography.Link>
           </Space>
         ) : (
           <Space>
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-              编辑
+              {t('edit')}
             </Typography.Link>
             <a onClick={()=> {removeData(record)}}>删除</a>
           </Space>
@@ -240,7 +243,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
     <Form<FieldType> form={form} component={false}>
       <div className='custom-table-header'>
         <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={ editingKey ? true : false }>
-          添加列
+          {t('addCol')}
         </Button>
       </div>
       <Table

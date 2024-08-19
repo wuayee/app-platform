@@ -14,14 +14,14 @@ import { setAppInfo } from '../../../store/appInfo/appInfo';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 import { Button, Alert } from "antd";
+import { useTranslation } from "react-i18next";
 
 const Stage = (props) => {
+  const { t } = useTranslation();
   const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
-  const [showModal, setShowModal] = useState(false);
-  const [showTools, setShowTools] = useState(false);
-  const [taskName, setTaskName] = useState('');
-  const [selectModal, setSelectModal] = useState('');
-  const [skillList, setSkillList] = useState([]);
+  const [ showModal, setShowModal ] = useState(false);
+  const [ taskName, setTaskName ] = useState('');
+  const [ selectModal, setSelectModal ] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo, setShowTime } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
@@ -32,7 +32,6 @@ const Stage = (props) => {
   const render = useRef(false);
   const modalRef = useRef();
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     if (appInfo.name && !render.current) {
       currentApp.current = JSON.parse(JSON.stringify(appInfo));
@@ -72,22 +71,9 @@ const Stage = (props) => {
         setTaskName(taskName.trim());
         modelCallback.current = onSelect;
         setShowModal(true);
-      });
-      // 知识库模态框
-      agent.onKnowledgeBaseSelect((args) => {
-        let { selectedKnowledgeBases, onSelect } = args;
-        knowledgeCallback.current = onSelect;
-        modalRef.current.showModal(selectedKnowledgeBases);
-      });
-      // 插件模态框
-      agent.onPluginSelect((args) => {
-        let { selectedPluginUniqueNames, onSelect } = args;
-        setSkillList(selectedPluginUniqueNames);
-        pluginCallback.current = onSelect;
-        setShowTools(true);
-      });
-    });
-    getAddFlowConfig(tenantId, { pageNum: 1, pageSize: 20, tag: 'Builtin', version: '' }).then(res => {
+      })
+    })
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin',version:''}).then(res => {
       if (res.code === 0) {
         setDragData(res.data);
       }
@@ -130,7 +116,7 @@ const Stage = (props) => {
     window.agent.validate().then(() => {
       updateAppRunningFlow();
     }).catch((err) => {
-      let str = typeof (err) === 'string' ? err : '请输入流程必填项';
+      let str = typeof (err) === 'string' ? err : t('plsEnterFlowRequiredItem');
       Message({ type: 'warning', content: str });
     });
   }
@@ -144,7 +130,7 @@ const Stage = (props) => {
         setFlowInfo(currentApp.current);
       }
       setShowTime(true);
-      Message({ type: 'success', content: type ? '高级配置更新成功' : '工具流更新成功' });
+      Message({ type: 'success', content: type ? t('graphUpdateSuccess') : t('flowUpdateSuccess') });
     }
   }
   // 拖拽完成回调
@@ -205,12 +191,12 @@ const Stage = (props) => {
     {showFlowChangeWarning && <Alert
       className='flow-change-warning-content'
       message=""
-      description="你已经修改了工作流，需要重新调试成功才可以发布。"
+      description={t('flowChangeWarningContent')}
       type="info"
       onClose={handleCloseFlowChangeWarningAlert}
       action={
         <Button size="small" type="link" onClick={handleClickNoMoreTips}>
-          不再提示
+          {t('noMoreTips')}
           </Button>
       }
       closable
