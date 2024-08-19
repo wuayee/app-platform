@@ -17,117 +17,117 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * stream里承载数据上下文
+ * 流里承载数据上下文。
  *
  * @since 1.0
  */
 public final class FlowContext<T> extends IdGenerator implements StateContext {
     /**
-     * 通过from.offer(data)而不是.offer(context)发起的数据会新增一个trace，这个trace会延续到flow end
+     * 通过 from.offer(data) 而不是 .offer(context) 发起的数据会新增一个路径，这个路径会延续到流的终点。
      */
     @Getter
     private final Set<String> traceId;
 
     /**
-     * 数据发起的起始节点:上任何一个publisher都可以发起数据，不一定是stream的起始节点
-     * 只要通过from.offer(data)而不是.offer(context)的都是数据发起节点
+     * 数据发起的起始节点上：任何一个 Publisher 都可以发起数据，不一定是流的起始节点。
+     * 只要通过 from.offer(data) 而不是 .offer(context) 的都是数据发起节点。
      */
     @Getter
     private final String rootId;
 
     /**
-     * 得到所处stream id
+     * 得到所处流的唯一标识。
      */
     @Getter
     private final String streamId;
 
     /**
-     * 上下文里带的数据，这是关键属性
+     * 上下文里带的数据，这是关键属性。
      */
     @Getter
     @Setter
     private T data;
 
     /**
-     * 上下文当前所处的位置:那个处理节点上
+     * 上下文当前所处的位置：处理节点上。
      */
     @Getter
     private String position;
 
     /**
-     * 如果是parallel节点，是否join了
+     * 如果是并行节点，标识是否合并。
      */
     @Getter
     private boolean joined;
 
     /**
-     * 上下文当前的状态值
+     * 上下文当前的状态值。
      */
     @Getter
     private FlowNodeStatus status = FlowNodeStatus.NEW;
 
     /**
-     * 上下文所有的transaction
-     * 当数据是一个数据的时候，这个数组在一个FlowTransId里，在reduce，produce时默认统一处理
+     * 上下文所有的 transaction。
+     * 当数据是一个数据的时候，这个数组在一个 FlowTransId 里，在 reduce，produce 时默认统一处理。
      */
     @Getter
     @Setter
     private FlowSession session;
 
     /**
-     * 上下文所处的平行节点id：如果该上下文在平行节点才有效
+     * 上下文所处的并行节点唯一标识：如果该上下文在并行节点才有效。
      */
     @Getter
     private String parallel;
 
     /**
-     * 所处平行节点模式，是either还是all
+     * 所处并行节点模式，是 either 还是 all。
      */
     @Getter
     private String parallelMode;
 
     /**
-     * 来源于哪个context
+     * 来源于哪个 context。
      */
     @Getter
     @Setter
     private String previous;
 
     /**
-     * context的生产批次ID
+     * context 的生产批次唯一标识。
      */
     @Getter
     private String batchId;
 
     /**
-     * 转向哪个context批次
+     * 转向哪个 context 批次。
      */
     @Getter
     private String toBatch;
 
     /**
-     * 标记该context是否已经发出事件
+     * 标记该 context 是否已经发出事件。
      */
     @Getter
     @Setter
     private boolean sent;
 
     /**
-     * 当前context创建时间
+     * 当前 context 创建时间。
      */
     @Getter
     @Setter
     private LocalDateTime createAt;
 
     /**
-     * 当前context更新时间
+     * 当前 context 更新时间。
      */
     @Getter
     @Setter
     private LocalDateTime updateAt;
 
     /**
-     * 当前context处理完成时间
+     * 当前 context 处理完成时间。
      */
     @Getter
     @Setter
@@ -141,6 +141,15 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
 
     private boolean isAccumulator;
 
+    /**
+     * 创建一个 {@link FlowContext} 实例。
+     *
+     * @param streamId 表示所处流唯一标识的 {@link String}。
+     * @param rootId 表示数据发起的起始节点唯一标识的 {@link String}。
+     * @param data 表示上下文里所带数据的 {@link T}。
+     * @param traceId 表示路径唯一标识的 {@link Set}{@code <}的{@link String}{@code >}。
+     * @param position 表示上下文当前所处的位置的 {@link String}。
+     */
     public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position) {
         this(streamId, rootId, data, traceId, position, "", "");
     }
@@ -160,10 +169,10 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置所在的位置，线或者节点的id ，链式操作
+     * 设置所在的位置，线或者节点的唯一标识，链式操作。
      *
-     * @param position 所在的位置
-     * @return context自身
+     * @param position 表示所在的位置的 {@link String}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> setPosition(String position) {
         this.position = position;
@@ -171,13 +180,13 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置节点状态，链式操作
+     * 设置节点状态，链式操作。
      * <p>
      * 参考{@link FlowNodeStatus}
      * </p>
      *
-     * @param status 节点状态
-     * @return context自身
+     * @param status 表示节点状态的 {@link FlowNodeStatus}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> setStatus(FlowNodeStatus status) {
         this.status = status;
@@ -185,10 +194,10 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置并行节点的id，链式操作
+     * 设置并行节点的唯一标识，链式操作。
      *
-     * @param parallel 并行节点的id
-     * @return context自身
+     * @param parallel 表示并行节点唯一标识的 {@link String}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> setParallel(String parallel) {
         this.parallel = parallel;
@@ -196,13 +205,13 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置并行的模式，链式操作
+     * 设置并行的模式，链式操作。
      * <p>
      * 参考{@link com.huawei.fit.waterflow.domain.enums.ParallelMode}
      * </p>
      *
-     * @param parallelMode 并行模式
-     * @return context自身
+     * @param parallelMode 表示并行模式的 {@link String}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> setParallelMode(String parallelMode) {
         this.parallelMode = parallelMode;
@@ -210,10 +219,10 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置批次id，链式操作
+     * 设置批次唯一标识，链式操作。
      *
-     * @param batchId 批次id
-     * @return context自身
+     * @param batchId 表示批次唯一标识的 {@link String}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> batchId(String batchId) {
         this.batchId = batchId;
@@ -221,10 +230,10 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置toBatch的id，链式操作
+     * 设置 toBatch 的唯一标识，链式操作。
      *
-     * @param toBatchId toBatch的id
-     * @return context自身
+     * @param toBatchId 表示 toBatchId 的 {@link String}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> toBatch(String toBatchId) {
         this.toBatch = toBatchId;
@@ -232,10 +241,10 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * inFlowTrans
+     * 设置当前 context 所在的会话。
      *
-     * @param flowSession flowTrans
-     * @return FlowContext<T>
+     * @param flowSession 表示流会话的 {@link FlowSession}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
      */
     public FlowContext<T> inFlowTrans(FlowSession flowSession) {
         this.session = flowSession;
@@ -243,16 +252,20 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * generate是在map，reduce，produce的过程中把大多数上一个context的内容复制给下一个
+     * 在 map，reduce，produce 的过程中把大多数上一个 context 的内容复制给下一个。
      *
-     * @param data 处理后的数据
-     * @param position 处理后所处的节点
-     * @param <R> 处理后数据类型
-     * @return 新的上下文
+     * @param data 表示处理后数据的 {@link R}。
+     * @param position 表示处理后所处的节点的 {@link String}。
+     * @return 表示新的上下文的 {@link FlowContext}{@code <}{@link R}{@code >}。
      */
     public <R> FlowContext<R> generate(R data, String position) {
-        FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
-                this.parallel, this.parallelMode);
+        FlowContext<R> context = new FlowContext<>(this.streamId,
+                this.rootId,
+                data,
+                this.traceId,
+                this.position,
+                this.parallel,
+                this.parallelMode);
         context.position = position;
         context.previous = this.id;
         context.session = this.session;
@@ -262,28 +275,31 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * generate是在map，reduce，produce的过程中把大多数上一个context的内容复制给下一个
+     * 在 map，reduce，produce 的过程中把大多数上一个 context 的内容复制给下一个。
      *
-     * @param dataList 处理后的数据
-     * @param position 处理后所处的节点
-     * @param <R> 处理后数据类型
-     * @return 新的上下文
+     * @param dataList 表示处理后数据的 {@link List}{@code <}{@link R}{@code >}。
+     * @param position 表示处理后所处节点的 {@link String}。
+     * @return 表示新的上下文的 {@link List}{@code <}{@link FlowContext}{@code <}{@link R}{@code >}{@code >}。
      */
     public <R> List<FlowContext<R>> generate(List<R> dataList, String position) {
         return dataList.stream().map(data -> this.generate(data, position)).collect(Collectors.toList());
     }
 
     /**
-     * 用于when.convert数据时候的转换context，除了包裹的数据类型不一样，所有其他信息都一样
+     * 用于 when.convert 数据时候的转换 context，除了包裹的数据类型不一样，所有其他信息都一样。
      *
-     * @param <R> 转换后的数据类型
-     * @param data 转换后的数据
-     * @param id contextId
-     * @return 转换后的context
+     * @param data 表示转换后数据的 {@link R}。
+     * @param id 表示 contextId 的 {@link String}。
+     * @return 表示转换后的 context 的 {@link FlowContext}{@code <}{@link R}{@code >}。
      */
     public <R> FlowContext<R> convertData(R data, String id) {
-        FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
-                this.parallel, this.parallelMode);
+        FlowContext<R> context = new FlowContext<>(this.streamId,
+                this.rootId,
+                data,
+                this.traceId,
+                this.position,
+                this.parallel,
+                this.parallelMode);
         context.previous = this.previous;
         context.status = this.status;
         context.id = id;
@@ -299,9 +315,9 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * join节点，将context的状态设置为joined
+     * 合并节点，将 context 的状态设置为 joined。
      *
-     * @param joined 是否join
+     * @param joined 表示是否合并的 {@link Boolean}。
      */
     public void join(boolean joined) {
         this.joined = joined;
@@ -318,34 +334,34 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 将本context设置为accumulator
+     * 将 context 设置为 accumulator。
      */
     public void setAsAccumulator() {
         this.isAccumulator = true;
     }
 
     /**
-     * 判定是否是accumulator
+     * 判定是否是 accumulator。
      *
-     * @return true/false
+     * @return 表示返回值的 {@code boolean}。
      */
     public boolean isAccumulator() {
         return this.isAccumulator;
     }
 
     /**
-     * 获取keyBy
+     * 获取 keyBy。
      *
-     * @return keyBy
+     * @return 表示返回值的 {@link Object}。
      */
     public Object keyBy() {
         return this.keyBy;
     }
 
     /**
-     * 设置keyBy的key，将会影响session的key
+     * 设置 keyBy 的键，将会影响会话的键。
      *
-     * @param key 目标key
+     * @param key 表示目标键的 {@link Object}。
      */
     public void setKeyBy(Object key) {
         this.keyBy = key;

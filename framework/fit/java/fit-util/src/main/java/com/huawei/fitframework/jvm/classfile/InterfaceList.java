@@ -24,6 +24,13 @@ public final class InterfaceList implements Iterable<U2> {
     private final ClassFile file;
     private final List<U2> interfaces;
 
+    /**
+     * 获取接口列表所属的类文件。
+     *
+     * @param file 表示接口列表所属类文件的 {@link ClassFile}。
+     * @param in 表示接口列表所在的输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public InterfaceList(ClassFile file, InputStream in) throws IOException {
         this.file = Validation.notNull(file, "The owning class file of the interfaces cannot be null.");
         U2 count = U2.read(in);

@@ -410,7 +410,7 @@ public class LockUtilsTest {
                 this.lock = lock;
             }
 
-            protected void recordSurroundSleep() {
+            void recordSurroundSleep() {
                 synchronized (this.list) {
                     this.list.notifyAll();
                     this.list.add(0);

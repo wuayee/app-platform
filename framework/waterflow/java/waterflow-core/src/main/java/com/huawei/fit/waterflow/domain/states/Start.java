@@ -27,28 +27,35 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * 开始节点，包装了from
+ * 开始节点，包装了 from。
  *
- * @param <O> 这个节点的输出数据类型
- * @param <D> 这个节点对应flow的初始数据类型
+ * @param <O> 表示这个节点的输出数据类型。
+ * @param <D> 表示这个节点对应流的初始数据类型。
  * @since 1.0
  */
 public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     /**
-     * from
+     * 表示节点起点的 {@link From}{@code <}{@link O}{@code >}。
      */
     protected final Publisher<O> from;
 
+    /**
+     * 构造一个 {@link Start} 实例。
+     *
+     * @param from 表示节点起点的 {@link From}{@code <}{@link O}{@code >}。
+     * @param flow 表的节点对应流的 {@link Flow}{@code <}{@link D}{@code >}。
+     */
     public Start(Publisher<O> from, F flow) {
         super(flow);
         this.from = from;
     }
 
     /**
-     * 设置该节点的别名id
+     * 设置该节点的唯一标识。
      *
-     * @param id 别名id
-     * @return 节点自身
+     * @param id 表示唯一标识的 {@link String}。
+     * @return 表示节点自身的 {@link Start}{@code <}{@link O}{@code ,}
+     *         {@link D}{@code ,}{@link I}{@code ,}{@link F}{@code >}。
      */
     public Start<O, D, I, F> id(String id) {
         ObjectUtils.<From>cast(this.from).setId(id);
@@ -56,56 +63,57 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * 获取该节点的publisher
+     * 获取该节点的 Publisher。
      *
-     * @return publisher
+     * @return 表示该节点的 Publisher 的 {@link Publisher}{@code <}{@link O}{@code >}。
      */
     public Publisher<O> publisher() {
         return this.from;
     }
 
     /**
-     * 获取所有订阅改节点的下游节点id列表
+     * 获取所有订阅该节点的下游节点唯一标识列表。
      *
-     * @return 下游节点id列表
+     * @return 表示下游节点唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     public List<String> getSubscriptionsId() {
         return this.from.getSubscriptions().stream().map(Identity::getId).collect(Collectors.toList());
     }
 
     /**
-     * 开启条件节点
+     * 开启条件节点。
      *
-     * @return 条件节点
+     * @return 表示条件节点的 {@link Conditions}{@code <}{@link D}{@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     public Conditions<D, O, F> conditions() {
         return new Conditions<>(new State<>(this.from.conditions(null), this.getFlow()));
     }
 
     /**
-     * 开启平行节点,默认all模式,啥也不预处理
+     * 开启并行节点，默认 all 模式，不预处理。
      *
-     * @return 平行节点
+     * @return 表示并行节点的 {@link Parallel}{@code <}{@link D}{@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     public Parallel<D, O, F> parallel() {
         return this.parallel(ParallelMode.ALL);
     }
 
     /**
-     * 开启平行节点,啥也不预处理
+     * 开启并行节点，不预处理。
      *
-     * @param mode 平行节点模式：Either还是All
-     * @return 平行节点
+     * @param mode 表示并行节点模式的 {@link ParallelMode}。
+     * @return 表示并行节点的 {@link Parallel}{@code <}{@link D}{@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     private Parallel<D, O, F> parallel(ParallelMode mode) {
         return new Parallel<>(new State<>(this.from.parallel(mode, null), this.getFlow()));
     }
 
     /**
-     * just，只处理，不转换
+     * 只处理，不转换。
      *
-     * @param processor just转换器
-     * @return 新的处理节点
+     * @param processor 表示 just 转换器的 {@link Operators.Just}{@code <}{@link O}{@code >}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link O}{@code ,}{@link D}
+     *         {@code ,}{@link O}{@code , }{@link F}{@code >}。
      */
     public State<O, D, O, F> just(Operators.Just<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData());
@@ -113,10 +121,11 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * just，只处理，不转换
+     * 只处理，不转换。
      *
-     * @param processor 携带session KV状态数据的just转换器
-     * @return 新的处理节点
+     * @param processor 表示处理器的 {@link Operators.ProcessJust}{@code <}{@link O}{@code ,}{@link D}{@code >}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link O}{@code , }{@link D}
+     *         {@code , }{@link O}{@code , }{@link F}{@code >}。
      */
     public State<O, D, O, F> just(Operators.ProcessJust<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData(), input);
@@ -124,11 +133,11 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * map,处理，并转换类型
+     * 处理，并转换类型。
      *
-     * @param processor map处理器
-     * @param <R> 处理完类型
-     * @return 新的处理节点
+     * @param processor 表示 map 处理器的 {@link Operators.Map}{@code <}{@link O}{@code ,}{@link R}{@code >}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }
+     *         {@link O}{@code , }{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> map(Operators.Map<O, R> processor) {
         Operators.Map<FlowContext<O>, R> wrapper = input -> processor.process(input.getData());
@@ -136,10 +145,12 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * process处理，并往下发射新的数据，支持操作session KV状态数据
+     * 处理，并往下发射新的数据，支持操作 session KV 状态数据。
      *
-     * @param processor 携带数据、KV下文和发射器的处理器
-     * @return 新的处理节点
+     * @param processor 表示携带数据、KV 下文和发射器的处理器的{@link Operators.Process}{@code <}{@link O}
+     *                  {@code ,}{@link R}{@code >}}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code ,}{@link D}
+     *         {@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> process(Operators.Process<O, R> processor) {
         AtomicReference<State<R, D, O, F>> wrapper = new AtomicReference<>();
@@ -152,11 +163,12 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * map处理，并转换类型
+     * 处理，并转换类型。
      *
-     * @param processor 携带KV下文的map处理器
-     * @param <R> 处理完类型
-     * @return 新的处理节点
+     * @param processor 表示携带 KV 下文的 map 处理器的 {@link Operators.ProcessMap}{@code <}{@link O}
+     *                  {@code ,}{@link R}{@code >}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}
+     *         {@code , }{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> map(Operators.ProcessMap<O, R> processor) {
         Operators.Map<FlowContext<O>, R> wrapper = input -> processor.process(input.getData(), input);
@@ -164,11 +176,11 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * flat map,处理，1变多，并转换类型
+     * 处理，并转换类型。
      *
-     * @param processor flat map处理器
-     * @param <R> 处理完类型
-     * @return 新的处理节点
+     * @param processor 表示 flat map 处理器的 {@link Operators.FlatMap}{@code <}{@link O}{@code ,}{@link R}{@code >}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code , }{@link D}
+     *         {@code , }{@link O}{@code ,}{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> flatMap(Operators.FlatMap<O, R> processor) {
         Validation.notNull(processor, "Flat map processor can not be null.");
@@ -177,12 +189,13 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * 缓存流中的数据
+     * 缓存流中的数据。
      * <p>
-     * 通常出现在window后，当满足window的条件后，为后续节点提供window中缓存的数据列表
+     * 通常出现在 window 后，当满足 window 的条件后，为后续节点提供 window 中缓存的数据列表。
      * </p>
      *
-     * @return buffer后的节点
+     * @return 表示缓存后的节点的 {@link State}{@code <}{@link List}{@code <}{@link O}{@code >}{@code ,}
+     *         {@link D}{@code ,}{@link O}{@code >}{@code,}{@link F}{@code >}。
      */
     public State<List<O>, D, O, F> buffer() {
         State<List<O>, D, O, F> state = this.reduce(null, (acc, cur) -> {
@@ -203,8 +216,8 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * </p>
      *
      * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link O}{@code >}。
-     * @return 表示数据聚合节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
-     * }{@link F}{@code >}。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }
+     *         {@link O}{@code ,}{@link F}{@code >}。
      */
     public State<O, D, O, F> reduce(Operators.Reduce<O, O> processor) {
         return this.reduce(null, processor);
@@ -218,9 +231,8 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      *
      * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
      * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
-     * @param <R> 表示输出数据类型。
-     * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
-     * }{@link F}{@code >}。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }
+     *         {@link O}{@code ,}{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public <R> State<R, D, O, F> reduce(Supplier<R> init, Operators.Reduce<O, R> processor) {
@@ -234,8 +246,8 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @param init 表示初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
      * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示输出数据类型。
-     * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
-     * }{@link F}{@code >}。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }
+     *         {@link O}{@code ,}{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public <R> State<R, D, O, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> processor) {
@@ -272,10 +284,11 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * 形成一个window，window中的数据满足条件后，将触发后续的数据聚合处理
+     * 形成一个 window，window 中的数据满足条件后，将触发后续的数据聚合处理。
      *
-     * @param window window的条件
-     * @return window的后续节点
+     * @param window 表示 window 条件的 {@link Operators.Window}{@code <}{@link O}{@code >}。
+     * @return 表示 window 的后续节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }
+     *         {@link O}{@code ,}{@link F}{@code >}。
      */
     public State<O, D, O, F> window(Operators.Window<O> window) {
         final Map<Object, WindowToken<O>> windowTokens = new HashMap<>();
@@ -301,11 +314,10 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * 聚合处理
+     * 对数据流进行分组处理，根据指定的 keyGetter 获取的键进行分组。
      *
-     * @param keyGetter 提供聚合的key
-     * @param <R> 聚合后的key类型
-     * @return 聚合后的节点，其数据类型为 {@link Tuple}
+     * @param keyGetter 表示提供聚合键的 {@link Operators.Map}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @return 表示聚合后的节点的 {@link Tuple}{@code <}{@link R}{@code , }{@link O}{@code >}。
      */
     public <R> State<Tuple<R, O>, D, O, F> keyBy(Operators.Map<O, R> keyGetter) {
         Operators.Map<FlowContext<O>, Tuple<R, O>> wrapper = input -> {
@@ -317,11 +329,11 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * produce处理节点：m->n
+     * 生成一个数据处理节点，将每个数据通过指定的方式进行处理后，形成一个新的数据，并继续发送。
      *
-     * @param processor produce处理器
-     * @param <R> 处理完类型
-     * @return 新的处理节点
+     * @param processor 表示处理器的 {@link Operators.Produce}{@code <}{@link O}{@code ,}{@link R}{@code >}。
+     * @return 表示新的处理节点的 {@link State}{@code <}{@link List}{@code <}{@link R}{@code >}
+     *         {@code ,}{@link D}{@code ,?,}{@link F}{@code >}
      */
     public <R> State<List<R>, D, ?, F> produce(Operators.Produce<O, R> processor) {
         return this.buffer().map(contexts -> processor.process(contexts));

@@ -172,7 +172,7 @@ public class DataBlockJarEntryLocationTest {
 
         @Nested
         @DisplayName("解析 JAR 中记录的位置信息")
-        class parseJarLocationInfo {
+        class ParseJarLocationInfo {
             @Test
             @DisplayName("给定不存在的 Url 字符串值，抛出异常")
             void givenNotExistUrlValueThenThrowException() {

@@ -38,6 +38,12 @@ public class Zip extends AbstractZip<Zip> {
 
     private Predicate<File> predicate;
 
+    /**
+     * 构造一个新的 {@link Zip} 实例。
+     *
+     * @param zipFile 表示压缩文件的 {@link File}。
+     * @param charset 表示压缩文件的字符集 {@link Charset}。
+     */
     public Zip(File zipFile, Charset charset) {
         super(zipFile, charset);
         this.targets = new ArrayList<>();

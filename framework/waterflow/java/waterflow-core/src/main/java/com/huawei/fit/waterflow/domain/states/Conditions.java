@@ -8,30 +8,38 @@ import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 
 /**
- * 条件节点
+ * 条件节点，用于表示一个条件判断，在流程中，可以有多个条件节点，每个条件节点后面可以跟一个或多个条件分支。
  *
- * @param <D> 原始数据类型
- * @param <I> 入参数据类型
- * @param <F> 内部流程类型
+ * @param <D> 表示原始数据类型。
+ * @param <I> 表示入参数据类型。
+ * @param <F> 表示内部流程类型。
  * @since 1.0
  */
 public class Conditions<D, I, F extends Flow<D>> extends Activity<D, F> {
     /**
-     * node
+     * 条件节点，用于表示一个条件判断，在流程中，可以有多个条件节点，每个条件节点后面可以跟一个或多个条件分支。
      */
     protected final State<I, D, I, F> node;
 
+    /**
+     * 定义流程的分支，类似于流程图中的菱形节点。
+     *
+     * @param node 表示条件节点的 {@link State}{@code <} {@link I}{@code ,} {@link D}
+     *             {@code ,} {@link I}{@code ,} {@link F}{@code >}。
+     */
     protected Conditions(State<I, D, I, F> node) {
         super(node.getFlow());
         this.node = node;
     }
 
     /**
-     * 条件节点后面只能跟match：条件分支
+     * 创建一个分支，在满足该分支条件时执行逻辑。
      *
-     * @param whether 条件判定函数
-     * @param processor 该条件分支的处理逻辑
-     * @return 得到条件关系，这里不是真实的节点，节点在MatchHappen后面在出来
+     * @param whether 表示条件判定函数的 {@link Operators.Whether}{@code <} {@link I}{@code >}。
+     * @param processor 表示处理器的 {@link Operators.BranchProcessor}{@code <} {@link O}{@code ,} {@link D}{@code ,}
+     *                  {@link I}{@code ,} {@link F}{@code >}。
+     * @return 表示条件关系的 {@link MatchHappen}{@code <} {@link O}{@code ,}I}{@code ,}
+     *         {@link D}{@code ,} {@link I}{@code ,} {@link F}{@code >}。
      */
     public <O> MatchHappen<O, D, I, F> match(Operators.Whether<I> whether,
             Operators.BranchProcessor<O, D, I, F> processor) {
@@ -39,11 +47,13 @@ public class Conditions<D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * 条件节点后面只能跟match：条件分支
+     * 在满足条件时跳转到指定节点。
      *
-     * @param whether 条件判定函数
-     * @param processor 分支命中后的处理逻辑，通常最终是调用to跳转
-     * @return 得到条件关系，这里不是真实的节点节点在MatchHappen后面在出来
+     * @param whether 表示条件判定函数的 {@link Operators.Whether}{@code <} {@link I}{@code >}。
+     * @param processor 表示处理器的 {@link Operators.BranchToProcessor}{@code <} {@link D}{@code ,}
+     *                  {@link I}{@code ,} {@link F}{@code >}。
+     * @return 表示条件关系的 {@link MatchHappen}{@code <} {@link I}{@code ,}
+     *         {@link D}{@code ,} {@link I}{@code ,} {@link F}{@code >}。
      */
     public MatchToHappen<D, I, F> matchTo(Operators.Whether<I> whether,
             Operators.BranchToProcessor<D, I, F> processor) {

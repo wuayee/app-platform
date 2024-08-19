@@ -63,6 +63,13 @@ public class JacksonObjectSerializer implements ObjectSerializer {
 
     private final ObjectMapper mapper;
 
+    /**
+     * 序列化对象为 Json 格式的字符串。
+     *
+     * @param dateTimeFormat 表示日期时间格式的 {@link String}。
+     * @param dateFormat 表示日期格式的 {@link String}。
+     * @param zoneId 表示时区唯一标识的 {@link String}。
+     */
     public JacksonObjectSerializer(@Value("${date-time-format}") String dateTimeFormat,
             @Value("${date-format}") String dateFormat, @Value("${time-zone}") String zoneId) {
         VisibilityChecker<VisibilityChecker.Std> visibilityChecker = VisibilityChecker.Std.defaultInstance()
