@@ -104,7 +104,7 @@ public interface FlowsService {
      * @param context 操作人上下文信息
      * @return 0 代表删除成功， 其他代表失败
      */
-    @Genericable(id = "81dc0ee4860149c884e2347d4ef26e23 ")
+    @Genericable(id = "81dc0ee4860149c884e2347d4ef26e23")
     int deleteFlows(String flowId, String version, OperationContext context);
 
     /**
