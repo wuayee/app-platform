@@ -15,6 +15,12 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 用于构建 Jar 文件的工具类。
+ *
+ * @author 季聿阶
+ * @since 2024-03-29
+ */
 public final class JarBuilder implements Closeable {
     private final ZipOutputStream zip;
     private final Set<String> packages;
@@ -59,6 +65,14 @@ public final class JarBuilder implements Closeable {
         return crc32.getValue();
     }
 
+    /**
+     * 将给定的字节数组作为一个新的 Jar 条目添加到 Jar 文件中。
+     *
+     * @param entryName 表示条目名称的 {@link String}。
+     * @param bytes 表示要添加的字节数组的 {@code byte[]}。
+     * @return 表示条目的 CRC32 值的 {@code long}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public long store(String entryName, byte[] bytes) throws IOException {
         this.ensurePackage(parent(entryName));
         CRC32 crc32 = new CRC32();
@@ -79,6 +93,13 @@ public final class JarBuilder implements Closeable {
         this.zip.close();
     }
 
+    /**
+     * 新建一个 JarBuilder 实例，该实例将会将 Jar 文件的内容写入到指定的文件中。
+     *
+     * @param file 表示指定的文件的 {@link File}。
+     * @return 表示 JarBuilder 实例的 {@link JarBuilder}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public static JarBuilder of(File file) throws IOException {
         return new JarBuilder(new ZipOutputStream(Files.newOutputStream(file.toPath())));
     }

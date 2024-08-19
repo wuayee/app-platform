@@ -24,6 +24,13 @@ public final class FieldInfo {
 
     private final FieldList list;
 
+    /**
+     * 构造一个表示字段信息的对象。
+     *
+     * @param list 表示字段所在列表的 {@link FieldList}。
+     * @param in 表示用于读取字段信息输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public FieldInfo(FieldList list, InputStream in) throws IOException {
         this.list = Validation.notNull(list, "The owning list of a field cannot be null.");
         Validation.notNull(in, "The input stream to read field info cannot be null.");

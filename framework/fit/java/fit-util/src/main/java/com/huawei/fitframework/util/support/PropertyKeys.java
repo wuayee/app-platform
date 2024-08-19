@@ -22,6 +22,11 @@ public class PropertyKeys {
 
     private final List<PropertyKey> keys;
 
+    /**
+     * 获取键经过切分后的所有部分。
+     *
+     * @param key 表示键的 {@link String}。
+     */
     public PropertyKeys(String key) {
         this.keys = StringUtils.splitToList(key, KEY_SEPARATOR)
                 .stream()

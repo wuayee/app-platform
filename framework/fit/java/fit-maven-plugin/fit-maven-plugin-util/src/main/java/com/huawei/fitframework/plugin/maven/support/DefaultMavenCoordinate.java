@@ -58,6 +58,11 @@ public class DefaultMavenCoordinate implements MavenCoordinate {
         private String artifactId;
         private String version;
 
+        /**
+         * 创建一个 {@link Builder} 实例，根据已有的 Maven 坐标进行初始化。
+         *
+         * @param coordinate 表示已有的 Maven 坐标的 {@link MavenCoordinate}。
+         */
         public Builder(MavenCoordinate coordinate) {
             if (coordinate != null) {
                 this.groupId = coordinate.getGroupId();

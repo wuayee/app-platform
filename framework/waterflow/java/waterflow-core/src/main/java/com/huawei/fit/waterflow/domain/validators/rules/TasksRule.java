@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 节点手动任务校验规则
+ * 节点手动任务校验规则。
  *
  * @author 杨祥宇
  * @since 1.0
@@ -28,9 +28,14 @@ import java.util.Optional;
 @Component
 public class TasksRule implements FlowRule {
     private final BrokerClient brokerClient;
-
     private Map<FlowTaskType, TaskRule> taskRuleMap;
 
+    /**
+     * 初始化任务规则映射。
+     * 根据任务类型，将对应的任务规则放入映射中。
+     *
+     * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+     */
     public TasksRule(BrokerClient brokerClient) {
         this.brokerClient = brokerClient;
         initialTaskRuleMap();
@@ -44,10 +49,10 @@ public class TasksRule implements FlowRule {
     }
 
     /**
-     * 校验流程定义的合法性
-     * 当校验不通过时，抛出运行时异常{@link WaterflowParamException}
+     * 校验流程定义的合法性。
+     * 当校验不通过时，抛出运行时异常 {@link WaterflowParamException}。
      *
-     * @param flowDefinition 流程定义实体
+     * @param flowDefinition 表示流程定义实体的 {@link FlowDefinition}。
      */
     @Override
     public void apply(FlowDefinition flowDefinition) {

@@ -76,6 +76,13 @@ class ClassInfoTest {
         assertThat(classInfo.toString()).isEqualTo(newClassInfo.toString());
     }
 
+    /**
+     * 获取常量对象。
+     *
+     * @param url 表示类文件 url 的 {@link String}。
+     * @param tag 表示常量的标签的 {@link U1}。
+     * @return 表示常量对象的 {@link T}。
+     */
     public static <T extends Constant> T getConstant(String url, U1 tag) {
         Constant constant = null;
         try (InputStream in = ClassInfoTest.class.getClassLoader().getResourceAsStream(url)) {

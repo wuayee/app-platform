@@ -49,6 +49,9 @@ import javax.sql.DataSource;
  */
 @DisplayName("测试 Transactional 注解")
 class TransactionalTest {
+    /**
+     * 测试 {@link Transactional} 注解的行为。
+     */
     @Component
     public static class TestService {
         @Transactional(propagation = TransactionPropagationPolicy.REQUIRES_NEW,
@@ -58,6 +61,11 @@ class TransactionalTest {
         }
     }
 
+    /**
+     * 创建一个 {@link BeanContainer} 实例，用于测试。
+     *
+     * @throws SQLException 如果无法获取数据库连接。
+     */
     @Test
     @DisplayName("执行被 @Transactional 注解修饰的方法，在事务中执行")
     void should_execute_in_transaction() throws SQLException {
@@ -90,6 +98,11 @@ class TransactionalTest {
         assertNull(transactionManager.active());
     }
 
+    /**
+     * 创建一个 {@link BeanContainer} 实例，用于测试。
+     *
+     * @return 表示创建的实例的  {@link BeanContainer}。
+     */
     protected static BeanContainer container() {
         FitRuntime runtime = mock(FitRuntime.class);
         when(runtime.resolverOfBeans()).thenReturn(new DefaultBeanResolver());

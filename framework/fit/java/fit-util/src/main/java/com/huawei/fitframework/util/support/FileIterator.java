@@ -24,6 +24,11 @@ public class FileIterator implements Iterator<File> {
     private final Stack<File> stack;
     private File next;
 
+    /**
+     * 构造一个新的 {@link FileIterator} 实例。
+     *
+     * @param root 表示要枚举的根文件的 {@link File}。
+     */
     public FileIterator(File root) {
         this.root = notNull(root, "The root file to enumerate cannot be null.");
         this.stack = new Stack<>();

@@ -24,6 +24,13 @@ public final class MethodInfo {
 
     private final MethodList list;
 
+    /**
+     * 获取方法所属的方法列表。
+     *
+     * @param list 表示方法列表的 {@link MethodList}。
+     * @param in 表示输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public MethodInfo(MethodList list, InputStream in) throws IOException {
         this.list = Validation.notNull(list, "The owning list of a method cannot be null.");
         Validation.notNull(in, "The input stream to read field info cannot be null.");

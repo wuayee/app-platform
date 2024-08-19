@@ -25,6 +25,13 @@ public final class MethodList implements Iterable<MethodInfo> {
     private final ClassFile file;
     private final List<MethodInfo> methods;
 
+    /**
+     * 获取方法列表所在的类文件。
+     *
+     * @param file 表示方法列表所在类文件的 {@link ClassFile}。
+     * @param in 表示方法列表的输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public MethodList(ClassFile file, InputStream in) throws IOException {
         this.file = Validation.notNull(file, "The owning class file of the field list cannot be null.");
         U2 count = U2.read(in);

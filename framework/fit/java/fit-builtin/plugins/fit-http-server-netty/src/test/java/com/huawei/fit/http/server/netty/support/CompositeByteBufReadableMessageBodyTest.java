@@ -6,10 +6,12 @@ package com.huawei.fit.http.server.netty.support;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("测试 HttpClassicRequestAssembler 类")
 class CompositeByteBufReadableMessageBodyTest {
-
     @Test
     @DisplayName("测试读取空 CompositeByteBuf 的行为")
     void testReadOnEmptyBody() throws IOException {
@@ -34,7 +35,6 @@ class CompositeByteBufReadableMessageBodyTest {
     @Test
     @DisplayName("测试 CompositeByteBuf 所管理的 ByteBuf 的引用计数")
     void testReadRefCount() throws IOException {
-
         byte[] bytes = new byte[] {44, 32, 67, 104, 101, 110, 103};
         ByteBuf actual = Unpooled.wrappedBuffer(bytes);
         CompositeByteBufReadableMessageBody body = new CompositeByteBufReadableMessageBody();
@@ -55,7 +55,7 @@ class CompositeByteBufReadableMessageBodyTest {
         CompositeByteBufReadableMessageBody body = new CompositeByteBufReadableMessageBody();
         body.write(actualBuf, true);
         assertThat(body.read0(actual, 0, 1)).isEqualTo(1);
-        assertThat(actual[0]).isEqualTo((byte)104);
+        assertThat(actual[0]).isEqualTo((byte) 104);
         assertThat(body.read0(actual, 0, 1)).isEqualTo(0);
     }
 
@@ -95,6 +95,6 @@ class CompositeByteBufReadableMessageBodyTest {
         body.write(buf3, true);
         assertThat(body.available()).isEqualTo(7);
         assertThat(body.read0(actual, 11, 7)).isEqualTo(7);
-        assertThat(new String(actual)).isEqualTo("hello world, Cheng");
+        assertThat(new String(actual, StandardCharsets.UTF_8)).isEqualTo("hello world, Cheng");
     }
 }
