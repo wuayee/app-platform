@@ -21,6 +21,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.common.ui.globalization.LocaleUiWord;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -37,16 +38,19 @@ import java.util.Map;
 @Component
 public class CompositeFileReader implements FlowableService {
     private static final Logger log = Logger.get(CompositeFileReader.class);
+    private static final String UI_WORD_KEY = "aipp.fitable.CompositeFileReader";
 
     private final OperatorService operatorService;
     private final MetaInstanceService metaInstanceService;
     private final AippLogService aippLogService;
+    private final LocaleUiWord localeUiWord;
 
     public CompositeFileReader(OperatorService operatorService, MetaInstanceService metaInstanceService,
-            AippLogService aippLogService) {
+            AippLogService aippLogService, LocaleUiWord localeUiWord) {
         this.operatorService = operatorService;
         this.metaInstanceService = metaInstanceService;
         this.aippLogService = aippLogService;
+        this.localeUiWord = localeUiWord;
     }
 
     @Fitable("com.huawei.fit.jober.aipp.fitable.CompositeFileReader")
@@ -60,7 +64,7 @@ public class CompositeFileReader implements FlowableService {
         String extractResult = operatorService.fileExtractor(
                 file, FileExtensionEnum.findType(fileName));
         if (extractResult.isEmpty()) {
-            String msg = "很抱歉！无法识别文件中的内容，您可以尝试换个文件";
+            String msg = this.localeUiWord.getLocaleMessage(UI_WORD_KEY);
             this.aippLogService.insertErrorLog(msg, flowData);
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "text result is empty.");
         }

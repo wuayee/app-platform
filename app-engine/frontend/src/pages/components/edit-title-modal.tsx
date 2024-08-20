@@ -2,13 +2,15 @@
 import React, { useEffect, useState, useImperativeHandle, useContext } from 'react';
 import { Input, Modal, Form, Button } from 'antd';
 import { FlowContext } from '../aippIndex/context';
+import { useTranslation } from 'react-i18next';
 import './styles/edit-modal.scss';
 
 const EditTitleModal = (props) => {
+  const { t } = useTranslation();
   const { modalRef, onFlowNameChange } = props;
-  const [ form ] = Form.useForm();
-  const [ isModalOpen, setIsModalOpen] = useState(false);
-  const [ loading, setLoading ] = useState(false);
+  const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { appInfo } = useContext(FlowContext);
   const showModal = () => {
     setIsModalOpen(true);
@@ -41,7 +43,7 @@ const EditTitleModal = (props) => {
   return <>
     {(
       <Modal
-        title='修改基础信息'
+        title={t('modifyingBasicInfo')}
         width='600px'
         maskClosable={false}
         forceRender={true}
@@ -50,10 +52,10 @@ const EditTitleModal = (props) => {
         onCancel={handleCancel}
         footer={[
           <Button key='back' onClick={handleCancel}>
-            取消
+            {t('cancel')}
           </Button>,
           <Button key='submit' type='primary' loading={loading} onClick={handleOk}>
-            确定
+            {t('ok')}
           </Button>
         ]}>
         <div style={{ marginBottom: '30px' }}>
@@ -64,18 +66,18 @@ const EditTitleModal = (props) => {
             className='edit-form-content'
           >
             <Form.Item
-              label='名称'
+              label={t('name')}
               name='name'
-              rules={[{ required: true, message: '请输入名称' },  {
+              rules={[{ required: true, message: t('plsEnter') }, {
                 type: 'string',
                 max: 64,
-                message: '输入字符长度范围：1 - 64'
+                message: `${t('characterLength')}：1 - 64`
               }]}
             >
               <Input maxLength={64} showCount />
             </Form.Item>
             <Form.Item
-              label='简介'
+              label={t('description')}
               name='description'
             >
               <Input.TextArea rows={4} maxLength={300} showCount />

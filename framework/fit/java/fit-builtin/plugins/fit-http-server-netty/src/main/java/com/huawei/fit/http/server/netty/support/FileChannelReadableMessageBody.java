@@ -34,6 +34,9 @@ public class FileChannelReadableMessageBody extends NettyReadableMessageBody {
     private final AtomicLong writePosition = new AtomicLong(0);
     private final AtomicLong readPosition = new AtomicLong(0);
 
+    /**
+     * 使用给定的 {@link FileChannel} 创建 {@link FileChannelReadableMessageBody} 实例。
+     */
     public FileChannelReadableMessageBody() {
         try {
             this.file = Files.createTempFile("netty-channel-", ".tmp").toFile();

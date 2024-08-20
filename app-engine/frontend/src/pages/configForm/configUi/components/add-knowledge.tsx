@@ -5,11 +5,13 @@ import { Drawer, Pagination, Table, Button, Input, Dropdown, Select, Tag } from 
 import { CloseOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
 import { getKnowledges, getKnowledgesList } from '@shared/http/appBuilder';
 import { formatDateTime } from '@/shared/utils/common';
+import { useTranslation } from 'react-i18next';
 import '../styles/add-knowledge.scss';
 const { Search } = Input;
 const { Option } = Select;
 
 const AddKnowledge = (props) => {
+  const { t } = useTranslation();
   const { modalRef, tenantId, handleDataChange } = props;
   const [open, setOpen] = useState(false);
   const [knowledgeOptions, setKnowledgeOptions] = useState([]);
@@ -24,7 +26,7 @@ const AddKnowledge = (props) => {
   const navigate = useHistory().push;
   const columns = [
     {
-      title: '名称',
+      title: t('name'),
       dataIndex: 'name',
       key: 'name',
       render: (text) => <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -33,25 +35,25 @@ const AddKnowledge = (props) => {
       </span>,
     },
     {
-      title: '条数',
+      title: t('numberOfPieces'),
       dataIndex: 'recordNum',
       key: 'recordNum',
       sorter: (a, b) => a.recordNum - b.recordNum,
     },
     {
-      title: '后端类型',
+      title: t('backendType'),
       dataIndex: 'serviceType',
       key: 'serviceType',
     },
   ]
   const selectBefore = (
-    <Select defaultValue='市场'>
-      <Option value='个人' disabled>个人</Option>
-      <Option value='市场' disabled>市场</Option>
+    <Select defaultValue={t('market')}>
+      <Option value={t('owner')} disabled>{t('owner')}</Option>
+      <Option value={t('market')} disabled>{t('market')}</Option>
     </Select>
   );
   const btnItems = [
-    { key: 'knowledge', label: '知识库' }
+    { key: 'knowledge', label: t('knowledgeBase') }
   ];
   const cancel = () => {
     setOpen(false)
@@ -158,7 +160,11 @@ const AddKnowledge = (props) => {
   }
   // 创建知识库
   const createClick = ({ key }) => {
-    navigate(`/knowledge-base/create`);
+    if (window.self !== window.top) {
+      window.parent.location.href = `${window.parent.location.origin}/#/model-knowledge/create`;
+    } else {
+      navigate(`/knowledge-base/create`);
+    }
   }
   const rowSelection = {
     selectedRowKeys,
@@ -203,9 +209,9 @@ const AddKnowledge = (props) => {
     knowledgeItem?.id ? getTableList(knowledgeItem) : setKnowledgeTable([]);
   }, [knowledgeItem]);
 
-  return <>{(
+  return <>
     <Drawer
-      title='选择知识库'
+      title={t('selectRepository')}
       placement='right'
       width='1000px'
       closeIcon={false}
@@ -213,9 +219,9 @@ const AddKnowledge = (props) => {
       open={open}
       footer={
         <div className='drawer-footer'>
-          <Button onClick={cancel}>取消</Button>
+          <Button onClick={cancel}>{t('cancel')}</Button>
           <Button type='primary' onClick={confirm}>
-            确定
+            {t('ok')}
           </Button>
         </div>
       }
@@ -228,11 +234,11 @@ const AddKnowledge = (props) => {
             prefix={<SearchOutlined />}
             addonBefore={selectBefore}
             allowClear
-            placeholder='搜索'
+            placeholder={t('search')}
             onSearch={onSearch}
           />
           <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
-            <Button type='primary' icon={<DownOutlined />}>创建</Button>
+            <Button type='primary' icon={<DownOutlined />}>{t('create')}</Button>
           </Dropdown>
         </div>
         <div className='knowledge-check-info'>
@@ -252,7 +258,7 @@ const AddKnowledge = (props) => {
         </div>
         <div className='knowledge-check-list'>
           <div className='knowledge-left'>
-            <div className='item-title'>知识库</div>
+            <div className='item-title'>{t('knowledgeBase')}</div>
             <div className='item-inner'>
               {
                 knowledgeOptions?.map((item, index) => {
@@ -276,7 +282,7 @@ const AddKnowledge = (props) => {
               <div className='right'>
                 <div className='knowledge-title'>{knowledgeItem?.name}</div>
                 <div className='knowledge-user'>{knowledgeItem?.ownerName}
-                    创建于：{formatDateTime(knowledgeItem?.createdAt)}
+                  {t('createAt')}：{formatDateTime(knowledgeItem?.createdAt)}
                 </div>
                 <div className='knowledge-desc'>{knowledgeItem?.description}</div>
               </div>
@@ -291,7 +297,7 @@ const AddKnowledge = (props) => {
         </div>
       </div>
     </Drawer>
-  )}</>
+  </>
 };
 
 

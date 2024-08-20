@@ -1,125 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import * as echarts from 'echarts';
-import './style.scoped.scss';
 import { Card, Select } from 'antd';
-import { getAnalysisData } from '../../../shared/http/apps';
+import { getAnalysisData } from '@/shared/http/apps';
 import { useParams } from 'react-router-dom';
-
-const timeOption = [
-  { value: '0', label: '今天' },
-  { value: '1', label: '昨天' },
-  { value: '2', label: '过去7天 ' },
-  { value: '3', label: '过去30天' },
-  { value: '4', label: '本周' },
-  { value: '5', label: '上周' },
-  { value: '6', label: '本月' },
-  { value: '7', label: '上月' },
-];
-
-const top5UserOption = {
-  xAxis: {
-    type: 'category',
-    axisTick: {
-      show: false, // 是否显示坐标轴刻度
-    },
-    data: [],
-  },
-  yAxis: {
-    type: 'value',
-    axisLabel: {
-      show: true,
-      interval: 'auto',
-    },
-  },
-  series: [
-    {
-      data: [],
-      type: 'bar',
-      barWidth: '25%',
-    },
-  ],
-};
-
-const top5DepartmentOption = {
-  xAxis: {
-    type: 'category',
-    axisTick: {
-      show: false, // 是否显示坐标轴刻度
-    },
-    data: [],
-  },
-  yAxis: {
-    type: 'value',
-    axisLabel: {
-      show: true,
-      interval: 'auto',
-      formatter: '{value} %',
-    },
-  },
-  series: [
-    {
-      data: [],
-      type: 'bar',
-      barWidth: '25%',
-    },
-  ],
-};
-
-const speedOption = {
-  tooltip: {
-    trigger: 'item',
-  },
-  legend: {
-    orient: 'vertical',
-    top: 80,
-    left: 450,
-    selectedMode: false,
-    formatter(params) {
-      return params;
-    },
-  },
-  series: [
-    {
-      type: 'pie',
-      radius: ['80%', '94%'],
-      avoidLabelOverlap: true,
-      itemStyle: {
-        borderRadius: 2,
-        borderColor: '#fff',
-        borderWidth: 2,
-      },
-      label: {
-        show: false,
-        position: 'center',
-      },
-      labelLine: {
-        show: false,
-      },
-      data: [],
-    },
-  ],
-};
-
-const tradeOption = {
-  tooltip: {
-    trigger: 'item'
-  },
-  xAxis: {
-    type: 'category',
-    boundaryGap: false,
-    data: [],
-  },
-  yAxis: {
-    type: 'value',
-  },
-  series: [
-    {
-      data: [],
-      type: 'line',
-      smooth: true,
-    },
-  ],
-};
+import { useTranslation } from 'react-i18next';
+import { timeOption, top5UserOption, tradeOption, speedOption } from './common';
+import './style.scoped.scss';
 
 const AnalyseCard = ({ info }) => (
   <Card className='card'>
@@ -133,7 +19,7 @@ const AnalyseCard = ({ info }) => (
           <span style={{ color: info?.sign==='down'?'#c63939':'#53ab6b' }}> {info?.percent}%</span>
         </div> */}
       </div>
-      <img width={60} height={65} src='/src/assets/images/knowledge/knowledge-base.png' />
+      <img width={60} height={65} src='./src/assets/images/knowledge/knowledge-base.png' />
     </div>
   </Card>
 );
@@ -148,6 +34,7 @@ const ChartCard = ({ info }: any) => (
 );
 
 const AppAnalyse: React.FC = () => {
+  const { t } = useTranslation();
   const [graphData, setgraphData] = useState({ allRequest: {}, allActive: {}, avgSpeed: {} });
   const [time, setTime] = useState('0');
   const [total, setTotal] = useState(0);
@@ -178,9 +65,9 @@ const AppAnalyse: React.FC = () => {
 
   // 设置Tab数据
   const setTabData = (metrics: any) => {
-    const allRequest = { title: '总请求数', num: metrics?.total_requests?.value ?? 0, unit: '个', sign: 'down', percent: 2 };
-    const allActive = { title: '总活跃用户数', num: metrics?.total_active_users?.value ?? 0, unit: '个', sign: 'up', percent: 2 };
-    const avgSpeed = { title: '平均响应速度', num: metrics?.average_response_time?.value ?? 0, unit: 'ms', sign: 'down', percent: 2 };
+    const allRequest = { title: t('totalRequestNum'), num: metrics?.total_requests?.value ?? 0, unit: t('num'), sign: 'down', percent: 2 };
+    const allActive = { title: t('totalPV'), num: metrics?.total_active_users?.value ?? 0, unit: t('num'), sign: 'up', percent: 2 };
+    const avgSpeed = { title: t('averRspSpeed'), num: metrics?.average_response_time?.value ?? 0, unit: 'ms', sign: 'down', percent: 2 };
     setgraphData({ allRequest, allActive, avgSpeed })
   }
 
@@ -265,14 +152,14 @@ const AppAnalyse: React.FC = () => {
         <AnalyseCard info={graphData.avgSpeed} />
       </div>
       <div className='chart-cards'>
-        <ChartCard info={{ id: 'top5User', title: 'Top5用户', height: 300 }} />
+        <ChartCard info={{ id: 'top5User', title: `Top5${t('user')}`, height: 300 }} />
         <Card className='chart-card'>
-          <div className='title'>平均响应速度</div>
+          <div className='title'>{t('averRspSpeed')}</div>
           <div style={{ display: 'flex' }}>
             <div id='speed' style={{ width: 600, height: 250 }} />
             <div className='speed-number'>
               <div className='number'>{total}</div>
-              <div>数据条数</div>
+              <div>{t('dataPieces')}</div>
             </div>
           </div>
           <div style={{
@@ -290,7 +177,7 @@ const AppAnalyse: React.FC = () => {
       <div className='chart-cards' style={{
         width: '100%'
       }}>
-        <ChartCard info={{ id: 'trade', height: 350, title: '用户访趋势', width: '100%' }} />
+        <ChartCard info={{ id: 'trade', height: 350, title: t('userAccessTrend'), width: '100%' }} />
         {/* <ChartCard info={{ id: 'top5Department', title: 'Top5部门', height: 300 }} /> */}
       </div>
     </div>

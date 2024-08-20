@@ -1,23 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
 import AddWaterFlow from './add-waterflow-drawer';
-import '../styles/tool-modal.scss';
 import { Message } from '@shared/utils/message';
 import CreateWorkflow from './create-workflow';
-import { getMyPlugin, getPluginTools } from '../../../shared/http/plugin';
-import { useAppSelector } from '../../../store/hook';
+import { getMyPlugin, getPluginTools } from '@/shared/http/plugin';
+import { useAppSelector } from '@/store/hook';
 import { PluginTypeE } from './model';
-
+import { useTranslation } from 'react-i18next';
 import { deepClone } from '../../chatPreview/utils/chat-process';
 const { Search } = Input;
 const { Option } = Select;
+import '../styles/tool-modal.scss';
 
 const ToolDrawer = (props) => {
+  const { t } = useTranslation();
   const { showModal, setShowModal, checkData, confirmCallBack, type, modalType, toolsConfirm } = props;
   const [activeKey, setActiveKey] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ const ToolDrawer = (props) => {
   const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const tab = [
-    { name: '全部', key: '' },
+    { name: t('all'), key: '' },
     { name: 'Builtin', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
@@ -50,8 +51,8 @@ const ToolDrawer = (props) => {
   }, [props.checkData]);
   const items = categoryItems;
   const btnItems = [
-    { key: 'tool', label: '工具' },
-    { key: 'workflow', label: '工具流' },
+    { key: 'tool', label: t('tool') },
+    { key: 'workflow', label: t('workflow') },
   ];
   const handleChange = (value: string) => {
     setPageNum(1);
@@ -59,9 +60,9 @@ const ToolDrawer = (props) => {
     getPluginList();
   };
   const selectBefore = (
-    <Select defaultValue='市场' onChange={handleChange}>
-      <Option value={PluginTypeE.OWER}>个人</Option>
-      <Option value={PluginTypeE.MARKET}>市场</Option>
+    <Select defaultValue={t('market')} onChange={handleChange}>
+      <Option value={PluginTypeE.OWER}>{t('owner')}</Option>
+      <Option value={PluginTypeE.MARKET}>{t('market')}</Option>
     </Select>
   );
   const handleClick = (key) => {
@@ -122,7 +123,7 @@ const ToolDrawer = (props) => {
       const type = item.type || 'toolInvokeNodeState';
       handleClickAddToolNode(type, { clientX: 400 + 10 * index, clientY: 300 + 10 * index }, item);
     });
-    Message({ type: 'success', content: '添加插件成功' });
+    Message({ type: 'success', content: t('addPluginSuccess') });
   };
 
   // 添加工作流
@@ -179,15 +180,15 @@ const ToolDrawer = (props) => {
   return (
     <>
       <Modal
-        title='更多插件'
+        title={t('morePlugins')}
         open={showModal}
         onCancel={() => setShowModal(false)}
         width='1100px'
         footer={
           <div className='drawer-footer'>
-            <Button onClick={() => setShowModal(false)}>取消</Button>
+            <Button onClick={() => setShowModal(false)}>{t('cancel')}</Button>
             <Button type='primary' onClick={confirm}>
-              确定
+              {t('ok')}
             </Button>
           </div>
         }
@@ -198,11 +199,11 @@ const ToolDrawer = (props) => {
             size='large'
             addonBefore={selectBefore}
             onSearch={filterByName}
-            placeholder='请输入'
+            placeholder={t('plsEnter')}
           />
           <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
             <Button type='primary' icon={<DownOutlined />}>
-              创建
+              {t('create')}
             </Button>
           </Dropdown>
         </div>
@@ -240,7 +241,7 @@ const ToolDrawer = (props) => {
             )}
             {!pluginData.length && (
               <div className='tool-empty'>
-                <Empty description='暂无数据' />
+                <Empty description={t('noData')} />
               </div>
             )}
           </Spin>

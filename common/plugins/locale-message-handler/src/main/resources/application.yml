@@ -1,0 +1,6 @@
+fit:
+  beans:
+    packages:
+      - 'com.huawei.jade.common.localemessage'
+  messages:
+    basename: i18n/aipp,i18n/store

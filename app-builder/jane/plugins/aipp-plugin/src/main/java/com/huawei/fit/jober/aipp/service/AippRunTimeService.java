@@ -80,7 +80,8 @@ public interface AippRunTimeService {
      * @param context 操作上下文
      * @return 实例id
      */
-    String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext, OperationContext context);
+    Choir<Object> startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext,
+            OperationContext context);
 
     /**
      * 启动一个最新版本的Aipp
@@ -165,8 +166,9 @@ public interface AippRunTimeService {
      * @param context 操作上下文
      * @param instanceId 实例id
      * @param msgArgs 用于终止时返回的信息
+     * @return 终止对话后返回的信息
      */
-    void terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context);
+    String terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context);
 
     /**
      * 终止aipp全部实例

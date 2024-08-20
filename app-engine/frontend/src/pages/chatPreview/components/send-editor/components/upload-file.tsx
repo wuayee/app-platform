@@ -1,15 +1,15 @@
-
 import React, { useImperativeHandle, useState } from 'react';
-import { Modal, Upload  } from 'antd';
+import { Modal, Upload } from 'antd';
 import { uploadChatFile } from '@shared/http/aipp';
 import { Message } from '@shared/utils/message';
 import { fileTypeSet } from '../../../utils/chat-process';
 import exportImg from '@assets/images/ai/export.png'
 import { useAppSelector } from '@/store/hook';
+import { useTranslation } from 'react-i18next';
 
 const { Dragger } = Upload;
-
 const UploadFile = ({ openUploadRef, fileSend }) => {
+  const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
@@ -21,7 +21,7 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
       'showModal': showModal
     }
   });
-  
+
   const beforeUpload = (file) => {
     return false;
   };
@@ -35,12 +35,12 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
       suffix = '';
     }
     if (!suffix) {
-      Message({ type: 'warning', content: '文件格式错误' });
+      Message({ type: 'warning', content: t('fileFormatError') });
       return
     }
     let fileType = fileTypeSet(suffix);
     if (['video', 'extras'].includes(fileType)) {
-      Message({ type: 'warning', content: '暂不支持该文件类型' });
+      Message({ type: 'warning', content: t('noSupportFileType') });
       return
     }
     let headers = {
@@ -53,32 +53,32 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
       fileSend(result.data, fileType);
       setModalOpen(false);
     } else {
-      Message({ type: 'error', content: result.msg || '上传文件失败' });
+      Message({ type: 'error', content: result.msg || t('uploadFileFail') });
     }
   };
   return <>{(
-    <Modal 
-      title='上传文件' 
+    <Modal
+      title={t('uploadFile')}
       open={modalOpen}
       onCancel={() => setModalOpen(false)}
-      footer={null} 
+      footer={null}
       centered>
-      <div style={{ margin: '12px 0' }}>解析文件或通过文件与应用对话</div>
+      <div style={{ margin: '12px 0' }}>{t('uploadFileContent')}</div>
       <div className='dragger-modal'>
-      <Dragger
-        beforeUpload={beforeUpload}
-        onChange={onChange}
-        fileList={[]}
-        maxCount={1}
-      >
-        <p className='ant-upload-drag-icon'>
-          <img src={exportImg} alt='' />
-        </p>
-        <p className='ant-upload-text'>将文件拖到此处 或 点击上传文件</p>
-        <p className='ant-upload-hint'>
-          支持文档，图片，音频类型的文件
-        </p>
-      </Dragger>
+        <Dragger
+          beforeUpload={beforeUpload}
+          onChange={onChange}
+          fileList={[]}
+          maxCount={1}
+        >
+          <p className='ant-upload-drag-icon'>
+            <img src={exportImg} alt='' />
+          </p>
+          <p className='ant-upload-text'>{t('dragFile')}</p>
+          <p className='ant-upload-hint'>
+            {t('fileType')}
+          </p>
+        </Dragger>
       </div>
     </Modal>
   )}</>

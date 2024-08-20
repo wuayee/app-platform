@@ -8,16 +8,16 @@ import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { setHistorySwitch } from '@/store/common/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { storage } from '@/shared/storage';
-import { trans } from '@shared/utils/common';
+import { useTranslation } from 'react-i18next';
 import './index.scoped..scss';
 
 const ChatRunning = () => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notice, setNotice] = useState('');
   const { appId, tenantId } = useParams();
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
-  const navigate = useHistory().push;
 
   // 获取aipp详情
   const getAippDetails = async () => {
@@ -70,7 +70,7 @@ const ChatRunning = () => {
       storage.set('chatVersionMap', arr);
     }
   }
-
+  // 点击显示弹层
   useEffect(() => {
     dispatch(setAppId(appId));
     getAippDetails();
@@ -78,27 +78,27 @@ const ChatRunning = () => {
 
   useEffect(() => {
     dispatch(setHistorySwitch(getHistorySwitchValue(appInfo)));
-  }, [appInfo.id])
+  }, [appInfo.id]);
 
   return (
     <div className='chat-running-container'>
       <div className='chat-running-chat'>
-        <Button type='text' onClick={() => { navigate(-1) }}>返回</Button>
+        <Button type='text' onClick={() => { window.history.back() }}>{t('return')}</Button>
         <span className='running-app-name'>{appInfo.name}</span>
       </div>
       <CommonChat chatType='active' />
       <Modal
-        title='更新日志'
+        title={t('updateLog')}
         width={800}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         centered
         footer={null}>
         <div style={{ maxHeight: '400px', overflow: 'auto' }}>
-          <div dangerouslySetInnerHTML={{ __html: trans(notice) }}></div>
+          <div dangerouslySetInnerHTML={{ __html: notice }}></div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Button onClick={() => setIsModalOpen(false)}>我知道了</Button>
+          <Button onClick={() => setIsModalOpen(false)}>{t('gotIt')}</Button>
         </div>
       </Modal>
     </div>

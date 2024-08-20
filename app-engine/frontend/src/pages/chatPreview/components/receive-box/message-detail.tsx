@@ -1,12 +1,25 @@
 
 import React from 'react';
-import Markdown from 'react-markdown';
-import { trans } from '@shared/utils/common';
+import { marked } from 'marked';
+import hljs from 'highlight.js';
 import ChartMessage from '../chart-message/chart-message';
+import { useTranslation } from 'react-i18next';
+import 'highlight.js/styles/monokai-sublime.min.css';
 
 // 消息详情
 const MessageBox = (props) => {
-  const { content, markdownSyntax, chartConfig, finished } = props;
+  const { t } = useTranslation();
+  const { content, chartConfig, finished } = props;
+  const markedProcess = (content) => {
+    return marked(content, {
+      highlight: (code, lang) => {
+        if (code) {
+          const validLanguage = hljs.getLanguage(lang) ? lang : 'javascript';
+          return hljs.highlight(code, { language: validLanguage }).value;
+        }
+      }
+    })
+  }
   return (
     <>{(
       <div className='receive-info'>
@@ -14,15 +27,13 @@ const MessageBox = (props) => {
           chartConfig ?
             (<ChartMessage chartConfig={chartConfig} />) :
             (
-              markdownSyntax ?
-                (<Markdown>{content}</Markdown>) :
-                <div className='receive-info-html' dangerouslySetInnerHTML={{ __html: trans(content) }}></div>
+              <div className='receive-info-html' dangerouslySetInnerHTML={{ __html: markedProcess(content) }}></div>
             )
         }
         {
           finished &&
           <div className='receive-tips'>
-            以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记
+            {t('receiveTips')}
           </div>
         }
       </div>

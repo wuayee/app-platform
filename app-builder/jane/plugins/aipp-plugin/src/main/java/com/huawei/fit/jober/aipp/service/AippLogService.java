@@ -205,4 +205,13 @@ public interface AippLogService {
      * @return 表示查询到的日志列表的 {@link List}{@code <}{@link AippInstLog}{@code >}。
      */
     List<AippInstLog> queryAndFilterLogsByLogType(String instanceId, List<String> filterLogTypes);
+
+    /**
+     * 查询指定实例且指定类型的的日志。
+     *
+     * @param instanceId 表示指定实例 id 的 {@link String}。
+     * @param logTypes 表示指定日志类型列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示查询到的日志列表的 {@link List}{@code <}{@link AippInstLog}{@code >}。
+     */
+    List<AippInstLog> queryLogsByInstanceIdAndLogTypes(String instanceId, List<String> logTypes);
 }

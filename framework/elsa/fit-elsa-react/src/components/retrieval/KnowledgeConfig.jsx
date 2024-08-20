@@ -3,6 +3,7 @@ import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 _KnowledgeConfig.propTypes = {
     maximum: PropTypes.number.isRequired,
@@ -19,14 +20,15 @@ _KnowledgeConfig.propTypes = {
  */
 function _KnowledgeConfig({maximum, disabled}) {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const maxRecallsTip = <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-        <p>从知识返回到模型的最大段落数。数字越大，返回的内容越多。</p>
+        <p>{t('returnsTheMaximumValuePopover')}</p>
     </div>;
 
     const defaultRecalls = {
         1: '1',
-        [3]: '默认',
+        [3]: t('default'),
         10: '10',
     };
 
@@ -43,7 +45,7 @@ function _KnowledgeConfig({maximum, disabled}) {
                                 userSelect: 'none',
                                 marginRight: '4px',
                                 color: 'rgb(37, 43, 58)'
-                            }}>返回最大值</span>
+                            }}>{t('returnsTheMaximumValue')}</span>
                     <Popover content={maxRecallsTip}>
                         <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                     </Popover>

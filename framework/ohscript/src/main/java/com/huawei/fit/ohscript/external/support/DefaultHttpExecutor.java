@@ -60,13 +60,12 @@ public class DefaultHttpExecutor implements HttpExecutor {
     private Map<String, Object> doExecute(HttpClassicClient httpClient, HttpRequestMethod httpMethod, String url,
             Map<String, ReturnValue> args) {
         Map<String, Object> result = new HashMap<>();
-        try (HttpClassicClientRequest request = httpClient.createRequest(httpMethod, url)) {
-            this.setRequestHeaders(request, args);
-            this.setRequestEntity(request, args);
-            try (HttpClassicClientResponse<Object> response = request.exchange()) {
-                this.setResponseHeaders(response, result);
-                this.setResponseEntity(response, result);
-            }
+        HttpClassicClientRequest request = httpClient.createRequest(httpMethod, url);
+        this.setRequestHeaders(request, args);
+        this.setRequestEntity(request, args);
+        try (HttpClassicClientResponse<Object> response = request.exchange()) {
+            this.setResponseHeaders(response, result);
+            this.setResponseEntity(response, result);
         } catch (IOException e) {
             throw new ScriptExecutionException("Failed to execute by http.", e);
         }
@@ -77,8 +76,8 @@ public class DefaultHttpExecutor implements HttpExecutor {
         if (!args.containsKey(REQUEST_HEADERS)) {
             return;
         }
-        Map<String, ReturnValue> headerValues = getIfNull(cast(args.get(REQUEST_HEADERS).value()),
-                Collections::emptyMap);
+        Map<String, ReturnValue> headerValues =
+                getIfNull(cast(args.get(REQUEST_HEADERS).value()), Collections::emptyMap);
         for (Map.Entry<String, ReturnValue> entry : headerValues.entrySet()) {
             request.headers().add(ValueUtils.getActualKey(entry.getKey()), String.valueOf(entry.getValue().value()));
         }
@@ -88,8 +87,8 @@ public class DefaultHttpExecutor implements HttpExecutor {
         if (!args.containsKey(REQUEST_ENTITY)) {
             return;
         }
-        Map<String, ReturnValue> entityValues = getIfNull(cast(args.get(REQUEST_ENTITY).value()),
-                Collections::emptyMap);
+        Map<String, ReturnValue> entityValues =
+                getIfNull(cast(args.get(REQUEST_ENTITY).value()), Collections::emptyMap);
         if (!entityValues.containsKey(REQUEST_ENTITY_DATA)) {
             return;
         }
@@ -135,8 +134,8 @@ public class DefaultHttpExecutor implements HttpExecutor {
                 TextEntity textEntity = cast(entity);
                 result.put(RESPONSE_ENTITY, textEntity.content());
             } else {
-                String message = StringUtils.format("Not supported content type. [contentType={0}]",
-                        entity.resolvedMimeType());
+                String message =
+                        StringUtils.format("Not supported content type. [contentType={0}]", entity.resolvedMimeType());
                 throw new ScriptExecutionException(message);
             }
         });

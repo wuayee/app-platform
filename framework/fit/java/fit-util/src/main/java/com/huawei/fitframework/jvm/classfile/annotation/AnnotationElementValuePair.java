@@ -25,6 +25,13 @@ public final class AnnotationElementValuePair {
     private final U2 nameIndex;
     private final AnnotationElementValue value;
 
+    /**
+     * 构造一个表示注解元素值对的对象。
+     *
+     * @param list 表示所属的注解元素值对列表的 {@link AnnotationElementValuePairList}。
+     * @param in 表示包含注解元素值对的输入流的 {@link InputStream}。
+     * @throws IOException 如果无法从输入流中读取数据，则抛出此异常。
+     */
     public AnnotationElementValuePair(AnnotationElementValuePairList list, InputStream in) throws IOException {
         this.list = notNull(list, "The owning list of a annotation element value pair cannot be null.");
         notNull(in, "The input stream that contains annotation element value pair cannot be null.");

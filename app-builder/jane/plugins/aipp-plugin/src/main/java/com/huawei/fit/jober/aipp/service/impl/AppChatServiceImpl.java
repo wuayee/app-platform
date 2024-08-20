@@ -7,18 +7,25 @@ package com.huawei.fit.jober.aipp.service.impl;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
+import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
+import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap;
 import com.huawei.fit.jober.aipp.entity.ChatInfo;
+import com.huawei.fit.jober.aipp.enums.AippInstLogType;
+import com.huawei.fit.jober.aipp.enums.AppState;
+import com.huawei.fit.jober.aipp.enums.RestartModeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
+import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.jober.aipp.service.AppChatService;
+import com.huawei.fit.jober.aipp.util.AippLogUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.ServerInternalException;
@@ -33,6 +40,7 @@ import com.huawei.fitframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +54,14 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AppChatServiceImpl implements AppChatService {
+    private static final int FROM_OTHER_CHAT = 2;
+    private static final String DEFAULT_CHAT_NAME_PREFIX = "@appBuilderDebug-";
+
     private final AppBuilderAppFactory appFactory;
     private final AippChatMapper aippChatMapper;
     private final AippRunTimeService aippRunTimeService;
     private final AppBuilderAppService appService;
+    private final AippLogService aippLogService;
     private final AppBuilderAppRepository appRepository;
 
     @Override
@@ -68,6 +80,50 @@ public class AppChatServiceImpl implements AppChatService {
         this.saveChatInfos(body, context, ObjectUtils.cast(tuple.get(0).orElseThrow(this::generalServerException)),
                 hasAtOtherApp, chatAppId);
         return ObjectUtils.cast(tuple.get(1).orElseThrow(this::generalServerException));
+    }
+
+    @Override
+    public Choir<Object> restartChat(String instanceId, Map<String, Object> additionalContext,
+            OperationContext operationContext) {
+        String path = this.aippLogService.getParentPath(instanceId);
+        String parentInstanceId = path.split(AippLogUtils.PATH_DELIMITER)[1];
+        if (StringUtils.isEmpty(parentInstanceId)) {
+            throw new AippException(AippErrCode.PARENT_INSTANCE_ID_NOT_FOUND, instanceId);
+        }
+        // 这个方法查询的chatList，0号位一定是原对话，1号位一定是at对话（如果有的话），详见本类saveChatInfo方法
+        List<QueryChatRsp> chatList = this.aippChatMapper.selectChatListByInstId(parentInstanceId);
+        if (CollectionUtils.isEmpty(chatList)) {
+            throw new AippParamException(AippErrCode.CHAT_NOT_FOUND_BY_INSTANCE_ID, parentInstanceId);
+        }
+        String restartMode = ObjectUtils.cast(additionalContext.getOrDefault(AippConst.RESTART_MODE,
+                RestartModeEnum.OVERWRITE.getMode()));
+        additionalContext.put(AippConst.RESTART_MODE, restartMode);
+        CreateAppChatRequest body = this.buildChatBody(parentInstanceId, additionalContext, chatList);
+        if (StringUtils.equals(RestartModeEnum.OVERWRITE.getMode(), restartMode)) {
+            this.aippChatMapper.deleteWideRelationshipByInstanceId(parentInstanceId);
+            this.aippLogService.deleteInstanceLog(parentInstanceId);
+        }
+        boolean isDebug = AppState.INACTIVE.getName()
+                .equals(JsonUtils.parseObject(chatList.get(0).getAttributes()).get(AippConst.ATTR_CHAT_STATE_KEY));
+        return this.chat(body, operationContext, isDebug);
+    }
+
+    private CreateAppChatRequest buildChatBody(String parentInstanceId, Map<String, Object> additionalContext,
+            List<QueryChatRsp> chatList) {
+        CreateAppChatRequest.CreateAppChatRequestBuilder bodyBuilder = CreateAppChatRequest.builder();
+        List<AippInstLog> instLogs = this.aippLogService.queryLogsByInstanceIdAndLogTypes(parentInstanceId,
+                Arrays.asList(AippInstLogType.QUESTION.name(), AippInstLogType.HIDDEN_QUESTION.name()));
+        AippInstLog questionLog = instLogs.get(0);
+        String question = ObjectUtils.cast(JsonUtils.parseObject(questionLog.getLogData()).get("msg"));
+        bodyBuilder.question(question);
+        bodyBuilder.chatId(chatList.get(0).getChatId());
+        bodyBuilder.appId(chatList.get(0).getAppId());
+        CreateAppChatRequest.Context.ContextBuilder contextBuilder = CreateAppChatRequest.Context.builder();
+        contextBuilder.userContext(additionalContext);
+        if (chatList.size() == FROM_OTHER_CHAT) {
+            contextBuilder.atChatId(chatList.get(1).getChatId());
+        }
+        return bodyBuilder.context(contextBuilder.build()).build();
     }
 
     private void validateApp(String appId) {
@@ -102,12 +158,10 @@ public class AppChatServiceImpl implements AppChatService {
 
     private Map<String, Object> convertContextToBusinessData(CreateAppChatRequest body) {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, body.getContext().getUseMemory());
-        businessData.put("dimension", body.getContext().getDimension());
-        if (body.getChatId() != null) {
-            // 如果已经存在chatId，表示为继续对话，需要将chatId往后传递，以便取出历史记录
-            businessData.put("chatId", body.getChatId());
+        if (body.getContext().getUseMemory() != null) {
+            businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, body.getContext().getUseMemory());
         }
+        businessData.put("dimension", body.getContext().getDimension());
         if (MapUtils.isNotEmpty(body.getContext().getUserContext())) {
             businessData.putAll(body.getContext().getUserContext());
         }
@@ -150,7 +204,7 @@ public class AppChatServiceImpl implements AppChatService {
 
     private void buildAndInsertChatInfo(AppBuilderApp app, Map<String, String> attributes, String chatName,
             String chatId, String operator) {
-        String cutChatName = chatName.length() > 64 ? chatName.substring(0, 32) : chatName;
+        String cutChatName = this.generateChatName(chatName);
         LocalDateTime operateTime = LocalDateTime.now();
         ChatInfo chatInfo = ChatInfo.builder()
                 .appId(app.getId()).version(app.getVersion())
@@ -158,6 +212,13 @@ public class AppChatServiceImpl implements AppChatService {
                 .status(AippConst.CHAT_STATUS).updater(operator).createTime(operateTime).updateTime(operateTime)
                 .creator(operator).build();
         this.aippChatMapper.insertChat(chatInfo);
+    }
+
+    private String generateChatName(String chatName) {
+        if (chatName == null) {
+            return DEFAULT_CHAT_NAME_PREFIX + UUIDUtil.uuid().substring(0, 6);
+        }
+        return chatName.length() > 64 ? chatName.substring(0, 32) : chatName;
     }
 
     private void buildAndInsertWideRelationInfo(String instId, String chatId) {

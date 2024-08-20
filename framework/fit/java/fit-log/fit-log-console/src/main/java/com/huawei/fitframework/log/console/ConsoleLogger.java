@@ -192,6 +192,8 @@ public class ConsoleLogger implements Logger {
                 Thread.currentThread().getName(),
                 scope,
                 message);
+        // 去除日志中的 \r \n \b 特殊字符，预防日志审计的抵赖的安全风险
+        log = log.replaceAll("[\r\b\n]", "");
         log = color.format(log);
         System.out.println(log);
         if (error != null) {

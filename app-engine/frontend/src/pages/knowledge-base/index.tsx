@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Input, Modal }from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { useHistory } from 'react-router-dom';
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
@@ -8,8 +8,10 @@ import { Message } from '@/shared/utils/message';
 import '../../index.scss';
 import './styles/index.scoped.scss';
 import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowledge';
+import { useTranslation } from 'react-i18next';
 
 const KnowledgeBase = () => {
+  const { t } = useTranslation();
   // 路由
   const navigate = useHistory().push;
 
@@ -30,20 +32,20 @@ const KnowledgeBase = () => {
   const modalRef = useRef()
 
   // 获取数据列表
-  const getKnowledgeList = ()=> {
+  const getKnowledgeList = () => {
     queryKnowledgeBase({
       offset: page - 1,
       size: pageSize,
       name: searchName,
-    }).then(res=> {
-      if(res) {
-        let data = (res?.result || []).map((item: knowledgeBase)=> {
+    }).then(res => {
+      if (res) {
+        let data = (res?.result || []).map((item: knowledgeBase) => {
           return ({
             ...item,
-            icon: ()=> (<>
-              <img src='/src/assets/images/knowledge/knowledge-base.png'/>
+            icon: () => (<>
+              <img src='./src/assets/images/knowledge/knowledge-base.png' />
             </>),
-            
+
           })
         });
         setTotal(res?.count || 0);
@@ -55,25 +57,25 @@ const KnowledgeBase = () => {
   // 删除知识库
   const deleteKnowBase = (id: string) => {
     modalRef.current = Modal.warning({
-      title: '删除知识库',
+      title: t('deleteKnowledgeBase'),
       centered: true,
-      okText: '确定',
+      okText: t('ok'),
       footer: (
         <div className='drawer-footer'>
-          <Button onClick={() => modalRef.current.destroy()}>取消</Button>
-          <Button type="primary" onClick={() => confirm(id)}>确定</Button>
+          <Button onClick={() => modalRef.current.destroy()}>{t('cancel')}</Button>
+          <Button type="primary" onClick={() => confirm(id)}>{t('ok')}</Button>
         </div>
       ),
       content: (
         <div style={{ margin: '8px 0' }}>
-          <span>删除后无法恢复，是否确定删除</span>
+          <span>{t('deleteKnowledgeTips')}</span>
         </div>
       )
     })
   }
   const confirm = (id) => {
     deleteKnowledgeBase(id).then((res: any) => {
-      Message({ type: 'success', content: '删除成功' });
+      Message({ type: 'success', content: t('deleteSuccess') });
       setPage(1);
       getKnowledgeList();
       modalRef.current.destroy()
@@ -87,7 +89,7 @@ const KnowledgeBase = () => {
 
   // 点击操作
   const clickOpera = (operaType: string, id: string) => {
-    if(operaType === 'delete') {
+    if (operaType === 'delete') {
       deleteKnowBase(id)
     } else if (operaType === 'modify') {
       modifyKnowledgeBase(id)
@@ -96,17 +98,17 @@ const KnowledgeBase = () => {
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
-    if(page!==curPage) {
+    if (page !== curPage) {
       setPage(curPage);
     }
-    if(pageSize!=curPageSize) {
+    if (pageSize != curPageSize) {
       setPageSize(curPageSize);
     }
   }
 
   // 搜索值发生变化
   const onSearchValueChange = (newSearchVal: any) => {
-    if(newSearchVal !== searchName) {
+    if (newSearchVal !== searchName) {
       setPage(1);
       setSearchName(newSearchVal);
     }
@@ -117,43 +119,43 @@ const KnowledgeBase = () => {
     navigate('/knowledge-base/create')
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     getKnowledgeList()
   }, [page, pageSize, searchName]);
   return (
     <div className='aui-fullpage'>
       <div className='aui-header-1'>
-        <div className='aui-title-1'>知识库概览</div>
+        <div className='aui-title-1'>{t('knowledgeOverview')}</div>
       </div>
       <div className='aui-block'>
-          <div className='operatorArea'>
-            <Button type='primary' onClick={createKnowledge}>创建</Button>
-            <Input 
-              className='knowledge-search'
-              showCount
-              style={{ width: '200px' }}
-              maxLength={20}
-              placeholder="搜索"
-              onChange={(e)=>onSearchValueChange(e.target.value)}
-              prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
+        <div className='operatorArea'>
+          <Button type='primary' onClick={createKnowledge}>{t('create')}</Button>
+          <Input
+            className='knowledge-search'
+            showCount
+            style={{ width: '200px' }}
+            maxLength={20}
+            placeholder={t('search')}
+            onChange={(e) => onSearchValueChange(e.target.value)}
+            prefix={<Icons.search color={'rgb(230, 230, 230)'} />} />
 
-          </div>
-          <div className='containerArea'>
-              {knowledgeData.map(knowledge=> (<>
-                <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
-                  flex: '0'
-                }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
-              </>))}
+        </div>
+        <div className='containerArea'>
+          {knowledgeData.map(knowledge => (<>
+            <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
+              flex: '0'
+            }} clickMore={(e) => clickOpera(e, knowledge.id)} />
+          </>))}
 
-          </div>
-          <Pagination 
-            total = {total} 
-            current={page} 
-            onChange={paginationChange}
-            pageSizeOptions={[8,16,32,60]}
-            showQuickJumper
-            pageSize={pageSize}
-          />
+        </div>
+        <Pagination
+          total={total}
+          current={page}
+          onChange={paginationChange}
+          pageSizeOptions={[8, 16, 32, 60]}
+          showQuickJumper
+          pageSize={pageSize}
+        />
       </div>
     </div>
   )

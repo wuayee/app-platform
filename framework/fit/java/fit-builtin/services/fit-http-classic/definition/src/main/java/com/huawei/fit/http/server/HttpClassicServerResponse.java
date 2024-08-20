@@ -13,6 +13,7 @@ import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.ServerResponse;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerResponse;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 /**
@@ -21,7 +22,7 @@ import java.io.IOException;
  * @author 季聿阶
  * @since 2022-11-25
  */
-public interface HttpClassicServerResponse extends HttpClassicResponse {
+public interface HttpClassicServerResponse extends HttpClassicResponse, Closeable {
     /**
      * 设置 Http 响应的状态码。
      *

@@ -1,21 +1,26 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DatePicker } from 'antd';
 import { numToDate } from '../utils/chart-condition';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
-dayjs.locale('zh-cn');
-const { RangePicker } = DatePicker;
+import { getCookie } from '@/shared/utils/common';
+import 'dayjs/locale/zh-cn';
 
+dayjs.extend(customParseFormat);
+const cLocale = getCookie('locale');
+if (cLocale === 'zh') {
+  dayjs.locale('zh-cn');
+}
+
+const { RangePicker } = DatePicker;
 // 日期类型
 const DateFilter = (props) => {
   const { filterCurrent, setFilterCurrent } = props;
-  const [ dateType, setDateType ] = useState('');
-  const [ timeRange, setTimeRange ] = useState([dayjs('2015-01', 'YYYY-MM'), dayjs('2015-06', 'YYYY-MM')]);
-  const [ dateValue, setDateValue ] = useState<any>();
+  const [dateType, setDateType] = useState('');
+  const [timeRange, setTimeRange] = useState([dayjs('2015-01', 'YYYY-MM'), dayjs('2015-06', 'YYYY-MM')]);
+  const [dateValue, setDateValue] = useState<any>();
   const dateFormat = 'YYYY-MM';
 
   useEffect(() => {
@@ -29,7 +34,7 @@ const DateFilter = (props) => {
   // 数据初始化处理
   const dateValueInit = (type) => {
     if (type === 'date') {
-      let dateItem =  dayjs(numToDate(filterCurrent.value[0]), dateFormat);
+      let dateItem = dayjs(numToDate(filterCurrent.value[0]), dateFormat);
       setDateValue(dateItem);
     } else {
       let arr = [];
@@ -40,7 +45,7 @@ const DateFilter = (props) => {
       setTimeRange(arr);
     }
   }
- 
+
   // 数据处理
   const handleChangeDate = (date, dateString) => {
     const arr = [Number(dateString.split('-').join(''))];
@@ -60,24 +65,24 @@ const DateFilter = (props) => {
     <div style={{ minWidth: '200px' }}>
       {
         dateType === 'date' ? (
-          <DatePicker 
+          <DatePicker
             locale={locale}
-            onChange={handleChangeDate} 
-            value={dateValue} 
+            onChange={handleChangeDate}
+            value={dateValue}
             // minDate={dayjs('2023-01', dateFormat)}
             // maxDate={dayjs('2024-12', dateFormat)}
-            picker='month' 
+            picker='month'
           />
         ) : (
-          <RangePicker 
-            locale={locale}
-            onChange={handleChange} 
-            value={timeRange} 
-            // minDate={dayjs('2023-01', dateFormat)}
-            // maxDate={dayjs('2024-12', dateFormat)}
-            picker='month' 
-          />
-        )
+            <RangePicker
+              locale={locale}
+              onChange={handleChange}
+              value={timeRange}
+              // minDate={dayjs('2023-01', dateFormat)}
+              // maxDate={dayjs('2024-12', dateFormat)}
+              picker='month'
+            />
+          )
       }
     </div>
   </>

@@ -9,7 +9,6 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.To;
 import com.huawei.fitframework.broker.client.ClientLocalExecutorNotFoundException;
-import com.huawei.fitframework.broker.client.FitableNotFoundException;
 import com.huawei.fitframework.broker.client.TargetNotFoundException;
 import com.huawei.fitframework.broker.server.ServerLocalExecutorNotFoundException;
 import com.huawei.fitframework.exception.ClientException;
@@ -45,7 +44,6 @@ public class Retryable<I> {
      */
     public static boolean isRetryableException(Exception exception) {
         return exception.getCause() instanceof CapacityOverflowException
-                || exception.getCause() instanceof FitableNotFoundException
                 || exception.getCause() instanceof TargetNotFoundException
                 || exception.getCause() instanceof ClientException
                 || exception.getCause() instanceof ClientLocalExecutorNotFoundException

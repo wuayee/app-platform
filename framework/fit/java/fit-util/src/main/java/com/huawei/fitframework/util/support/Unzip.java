@@ -42,6 +42,12 @@ public class Unzip extends AbstractZip<Unzip> {
     private final List<Function<Conflict, ConflictResolutionPolicy>> conflictResolvers;
     private ConflictResolutionPolicy conflictResolutionPolicy;
 
+    /**
+     * 添加一个对解包文件内容项的过滤条件。
+     *
+     * @param zipFile 表示待解包的 {@code .zip} 文件的 {@link File}。
+     * @param charset 表示待解包文件的字符集的 {@link Charset}。
+     */
     public Unzip(File zipFile, Charset charset) {
         super(zipFile, charset);
         this.redirectors = new ArrayList<>();

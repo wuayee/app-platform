@@ -2,10 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Select } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { multiModal } from "../../common/common";
 
 const Multimodal = () => {
-  const [ showMultiControl, setShowMultiControl ] = useState(true);
+  const { t } = useTranslation();
+
+  const [showMultiControl, setShowMultiControl] = useState(true);
   const onArrowClick = (value, func) => {
     func(!value);
   }
@@ -15,10 +18,10 @@ const Multimodal = () => {
         <div className="control-header">
           <div className="control-title">
             {
-              showMultiControl ? <DownOutlined onClick={() => onArrowClick(showMultiControl, setShowMultiControl)}/>
-                : <UpOutlined onClick={() => onArrowClick(showMultiControl, setShowMultiControl)}/>
+              showMultiControl ? <DownOutlined onClick={() => onArrowClick(showMultiControl, setShowMultiControl)} />
+                : <UpOutlined onClick={() => onArrowClick(showMultiControl, setShowMultiControl)} />
             }
-            <div style={{marginLeft: "10px"}}>多模态</div>
+            <div style={{ marginLeft: "10px" }}>{t('multimodal')}</div>
           </div>
         </div>
         <Form.Item
@@ -26,13 +29,13 @@ const Multimodal = () => {
           label=""
           style={{
             marginTop: "10px",
-            display: showMultiControl ? "block":"none",
+            display: showMultiControl ? "block" : "none",
           }}
         >
           <Select
             mode="multiple"
             allowClear
-            placeholder="选择多模态"
+            placeholder={t('selectMultimodal')}
             defaultValue={["file", "image", "radio", "video"]}
             options={multiModal}
           ></Select>

@@ -7,7 +7,10 @@ import CheckFilter from './condition-checkbox-form';
 import OpratorFilter from './condition-operator';
 import { belongsMap, casecadeMap, conditionMap } from '../common/condition';
 import { getOptionsLabel } from '../utils/chart-condition';
+import { useTranslation } from 'react-i18next';
+
 const AddConditionForm = (props: any) => {
+  const { t } = useTranslation();
   const { formData, conditions, addRef } = props;
   const [filterItem, setFilterItem] = useState({
     label: '',
@@ -95,17 +98,17 @@ const AddConditionForm = (props: any) => {
   return (
     <>
       <div className='add-form'>
-        <div className='add-form-label'>字段名</div>
+        <div className='add-form-label'>{t('fieldName')}</div>
         <div className='add-form-content'>
           <Select
             showSearch
-            placeholder='请输入搜索'
+            placeholder={t('plsEnter')}
             optionFilterProp='label'
             onChange={onChange}
             options={options}
           />
         </div>
-        <div className='add-form-label'>字段值</div>
+        <div className='add-form-label'>{t('fieldValue')}</div>
         <div className={`add-form-content ${!filterItem.label.length ? 'no-click' : ''}`}>
           {filterItem.operator && (
             <OpratorFilter filterCurrent={filterItem} setFilterCurrent={setFilterItem} />

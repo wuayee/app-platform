@@ -109,8 +109,9 @@ class AsyncTaskServer {
     }
 
     private boolean startLongPolling(Request request, HttpClassicClient client, WorkerConfig workerConfig) {
-        try (HttpClassicClientRequest clientRequest = this.buildRequest(client, request, workerConfig);
-             HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest)) {
+        try (HttpClassicClientResponse<Object> clientResponse = client.exchange(this.buildRequest(client,
+                request,
+                workerConfig))) {
             Response response = HttpClientUtils.getResponse(this.container, request, clientResponse);
             if (response.metadata().code() == AsyncTaskNotFoundException.CODE) {
                 // 如果返回值为任务未找到 (AsyncTaskNotFoundException)，则说明服务器端已无任务，客户端现有的任务已丢失。

@@ -6,9 +6,11 @@ import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
 import { getRecommends } from '@shared/http/chat';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
+import { useTranslation } from 'react-i18next';
 
 // 猜你想问
 const Recommends = (props) => {
+  const { t } = useTranslation();
   const { onSend } = props;
   const [visible, setVisible] = useState(false);
   const [recommendList, setRecommendList] = useState([]);
@@ -30,7 +32,7 @@ const Recommends = (props) => {
   // 猜你想问
   const recommendClick = (item) => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     onSend(item);
@@ -38,7 +40,7 @@ const Recommends = (props) => {
   // 换一批
   const refreshClick = () => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     if (chatList && chatList.length) {
@@ -95,9 +97,9 @@ const Recommends = (props) => {
       {
         (recommendList?.length > 0) && (
           <div className='recommends-top'>
-            <span className='title'>猜你想问</span>
+            <span className='title'>{t('guessAsk')}</span>
             <RebotIcon onClick={refreshClick} />
-            <span className='refresh' onClick={refreshClick}>换一批</span>
+            <span className='refresh' onClick={refreshClick}>{t('changeBatch')}</span>
           </div>
         )
       }
@@ -118,10 +120,10 @@ const Recommends = (props) => {
           }
         </div>
         <Tooltip
-          title={inspirationOpen ? '收起创意灵感' : '打开创意灵感'}
+          title={inspirationOpen ? t('collapse') : t('open')}
           overlayInnerStyle={{ color: '#212121' }}
           open={visible}
-          zIndex='100'
+          zIndex={100}
           color='white'
         >
           <div className='list-right'

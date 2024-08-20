@@ -5,12 +5,15 @@
 package com.huawei.jade.carver.telemetry.aop.parsers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.stub.WithSpanObjectParse;
+
+import com.alibaba.fastjson.JSONPathException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +53,7 @@ public class ComplexSpanAttributeParserTest {
 
     @Test
     @DisplayName("匹配解析器，表达式为null")
-    void shouldNotOkWhenNullMatchParser() {
+    void shouldFailWhenNullMatchParser() {
         assertThat(this.parser.match(null)).isEqualTo(false);
     }
 
@@ -64,14 +67,14 @@ public class ComplexSpanAttributeParserTest {
     @ParameterizedTest
     @ValueSource(strings = {"k1:v1,", "k1:v1;k2:v2", "k1|v1", "k1,$[0].v1", "k1?v1"})
     @DisplayName("匹配解析器，分隔符异常")
-    void shouldNotOkWhenDelimiterWrongParser(String expression) {
+    void shouldFailWhenDelimiterWrongParser(String expression) {
         assertThat(this.parser.match(expression)).isEqualTo(false);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"k*:$[0].v1", "#$:v1.v1", "&:v1", "$[1].v1", "k1:[[1]].v1", "k1:v1..v2", "k1:$..v1.v2"})
     @DisplayName("匹配解析器，键或值符号异常")
-    void shouldNotOkWhenKVWrongParser(String expression) {
+    void shouldFailWhenKVWrongParser(String expression) {
         assertThat(this.parser.match(expression)).isEqualTo(false);
     }
 
@@ -85,7 +88,7 @@ public class ComplexSpanAttributeParserTest {
     @ParameterizedTest
     @ValueSource(strings = {"k1:v1.v2;k2:$[1].v1", "k3:[0].v1.v2  k4:$.v1.v2", "k5;v1#k6"})
     @DisplayName("匹配解析器，多组键值对分隔符异常匹配")
-    void shouldNotOkWhenMatchMultipleKVParser(String expression) {
+    void shouldFailWhenMatchMultipleKVParser(String expression) {
         assertThat(this.parser.match(expression)).isEqualTo(false);
     }
 
@@ -118,6 +121,21 @@ public class ComplexSpanAttributeParserTest {
         Map<String, String> multiple = this.parser.parse("k:$.k1.k2,kk:k11", this.kvObj);
         assertThat(multiple).isInstanceOf(Map.class).hasFieldOrPropertyWithValue("k", "v");
         assertThat(multiple).isInstanceOf(Map.class).hasFieldOrPropertyWithValue("kk", "{k22=v}");
+
+        Map<String, String> multiple2 = this.parser.parse("k  :$.k1.k2, kk:k11", this.kvObj);
+        assertThat(multiple2).isInstanceOf(Map.class).hasFieldOrPropertyWithValue("k", "v");
+        assertThat(multiple2).isInstanceOf(Map.class).hasFieldOrPropertyWithValue("kk", "{k22=v}");
+
+        Map<String, String> multiple3 = this.parser.parse("\tk:\n$.k1.k2,\rkk:\nk11.k22", this.kvObj);
+        assertThat(multiple3).isInstanceOf(Map.class).hasFieldOrPropertyWithValue("k", "v");
+        assertThat(multiple3).isInstanceOf(Map.class).hasFieldOrPropertyWithValue("kk", "v");
+
+        assertThatThrownBy(() -> this.parser.parse("k:$.k1 .k2,kk:k 11",
+                this.kvObj)).isInstanceOf(JSONPathException.class);
+        assertThatThrownBy(() -> this.parser.parse("k:$.k1.k\t2,kk:k\n11.k22", this.kvObj)).isInstanceOf(
+                JSONPathException.class);
+        assertThatThrownBy(() -> this.parser.parse("k:$.k1.k2,kk:k11.k\r22",
+                this.kvObj)).isInstanceOf(JSONPathException.class);
     }
 
     @Test

@@ -10,9 +10,9 @@ import ImgSendBox from './img-send-box';
 import '../../styles/send-box.scss';
 
 const SendBox = (props) => {
-  const { content, checked, sendType} = props.chatItem;
-  const { checkCallBack, showCheck }  = useContext(ChatContext);
-  const [ showIcon, setShowIcon ] = useState(true);
+  const { content, checked, sendType } = props.chatItem;
+  const { checkCallBack, showCheck } = useContext(ChatContext);
+  const [showIcon, setShowIcon] = useState(true);
   const currentUser = localStorage.getItem('currentUser') || '';
   const location = useLocation();
 
@@ -25,20 +25,20 @@ const SendBox = (props) => {
     const { pathname } = location;
     if (pathname.includes('/chatShare/')) {
       setShowIcon(false);
-    } 
+    }
   }, [location]);
   return <>{(
     <div className='send-box'>
       { showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
-        <ChatUserIcon /> 
+        <ChatUserIcon />
         <span title={currentUser}>{currentUser}</span>
       </div>
       <div className='send-info'>
         <span className='send-info-inner'>
-          { sendType === 'text' ? 
-            (<div dangerouslySetInnerHTML={{ __html: trans(content) }}></div>) : 
-            (<ImgSendBox sendType={sendType} content={content} isRecieve={false} />) 
+          {sendType === 'text' ?
+            (<div dangerouslySetInnerHTML={{ __html: trans(content) }}></div>) :
+            (<ImgSendBox sendType={sendType} content={content} isRecieve={false} />)
           }
           {
             showIcon && <SendBtn content={content} sendType={sendType} />

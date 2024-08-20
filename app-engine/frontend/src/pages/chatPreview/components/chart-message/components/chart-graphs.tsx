@@ -1,24 +1,26 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown } from 'antd';
-import screenfull from 'screenfull';
+import screenfull from '@/shared/screenfull/screenfull';
 import { chartTypeMap, items, getOptions } from '../utils/chart-graphs';
 import { DownOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import * as echarts from 'echarts';
 
 // 图表组件
 const ChartGraphs = (props) => {
-  const { chartPieData, chartData, chartType} = props.chatItem;
+  const { t } = useTranslation();
+  const { chartPieData, chartData, chartType } = props.chatItem;
   const chartRef = useRef(null);
   const myChart = useRef(null);
-  const [ chartTypeName, setChartTypeName ] = useState('推荐');
+  const [chartTypeName, setChartTypeName] = useState(t('recommends'));
   useEffect(() => {
     initChart();
     screenfull.on('change', () => {
       myChart?.current.resize();
     });
   }, [props.chatItem]);
-  const seriesMap:any = {
+  const seriesMap: any = {
     pie: chartPieData,
     circlepie: chartPieData,
     line: chartData,
@@ -33,7 +35,7 @@ const ChartGraphs = (props) => {
     resizeObserver.observe(chartRef.current);
   }
   // 图表切换回调
-  function onClick ({ key }) {
+  function onClick({ key }) {
     const clickItem = items.filter(item => item.key === key)[0];
     let { label } = clickItem;
     setChartTypeName(label);
@@ -75,7 +77,7 @@ const ChartGraphs = (props) => {
       <div className='chart-drop'>
         <Dropdown menu={{ items, onClick }} trigger={['click']}>
           <span>
-            { chartTypeName }  
+            {chartTypeName}
             <DownOutlined className='chart-icon' />
           </span>
         </Dropdown>

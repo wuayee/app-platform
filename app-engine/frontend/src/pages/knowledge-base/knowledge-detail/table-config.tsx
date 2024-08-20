@@ -3,16 +3,16 @@ import { Button } from 'antd';
 import React from 'react';
 import { KnowledgeIcons } from '../../../components/icons';
 import { deleteKnowledgeTableType } from '../../../shared/http/knowledge';
+import i18n from '@/locale/i18n';
 
-
-export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader', data:any)=> {}): TableProps<any>['columns'] => {
+export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader', data: any) => { }): TableProps<any>['columns'] => {
   return [
     {
-      title: '名称',
+      title: i18n.t('name'),
       dataIndex: 'name',
       key: 'name',
       render(value, record) {
-        const onClick = ()=> {
+        const onClick = () => {
           refresh('clickHeader', record)
         }
         return (<>
@@ -21,7 +21,7 @@ export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader'
             gap: 8,
             cursor: 'pointer'
           }} onClick={onClick}>
-            {record?.format === 'TABLE' ? (<KnowledgeIcons.tableXlsx/>) : (<KnowledgeIcons.tableText/>)}
+            {record?.format === 'TABLE' ? (<KnowledgeIcons.tableXlsx />) : (<KnowledgeIcons.tableText />)}
             <span style={{
               color: '#2673E5',
               fontSize: 14
@@ -31,22 +31,22 @@ export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader'
       }
     },
     {
-      title: '条数',
+      title: i18n.t('numberOfPieces'),
       dataIndex: 'recordNum',
       key: 'recordNum',
     },
     {
-      title: '后端服务',
+      title: i18n.t('backendService'),
       dataIndex: 'serviceType',
       key: 'serviceType',
     },
     {
-      title: '创建时间',
+      title: i18n.t('createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render(value, record, index) {
-        const formateTime = (dateStr: Date)=> {
-          if(!dateStr) return ''
+        const formateTime = (dateStr: Date) => {
+          if (!dateStr) return ''
           const date = new Date(dateStr);
           const y = date.getFullYear();
           const m = date.getMonth() + 1;
@@ -57,32 +57,32 @@ export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader'
           return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
         }
         return (
-        <>
-          {formateTime(value)}
-        </>)
+          <>
+            {formateTime(value)}
+          </>)
       },
     },
     {
-      title: '操作',
+      title: i18n.t('operate'),
       dataIndex: 'operator',
       key: 'operator',
       width: 200,
       render(_, record, index) {
-        const deleteFunc =async () => {
+        const deleteFunc = async () => {
           await deleteKnowledgeTableType(record?.id as string);
           refresh('delete', record);
         };
 
-        const modifyFunc = async ()=> {
+        const modifyFunc = async () => {
           refresh('modify', record);
         }
         return (
-        <>
-          <div>
-            <Button type="link" size="small" onClick={modifyFunc}>修改</Button>
-            <Button type="link" size="small" onClick={deleteFunc}>删除</Button>
-          </div>
-        </>)
+          <>
+            <div>
+              <Button type="link" size="small" onClick={modifyFunc}>{i18n.t('modify')}</Button>
+              <Button type="link" size="small" onClick={deleteFunc}>{i18n.t('delete')}</Button>
+            </div>
+          </>)
       },
     },
   ]

@@ -9,6 +9,7 @@ import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {DATA_TYPES} from "@/common/Consts.js";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -28,6 +29,7 @@ _JadeObservableOutput.propTypes = {
 function _JadeObservableOutput({disabled, output}) {
     const shape = useShapeContext();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const [outputTreeData, setOutputTreeData] = useState(() => [convertToTreeData(output, 1, null)]);
 
     // 组件初始化时注册observable.
@@ -91,7 +93,7 @@ function _JadeObservableOutput({disabled, output}) {
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["codeOutputPanel"]}>
             {<Panel key={"codeOutputPanel"}
                     header={<div className="panel-header">
-                        <span className="jade-panel-header-font">输出</span>
+                        <span className="jade-panel-header-font">{t('output')}</span>
                         <Popover content={content}>
                             <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
@@ -256,9 +258,9 @@ const TreeNode = ({node, disabled, shape, dispatch, output}) => {
             <Col flex={"0 0 " + inputWidth + "px"} style={{marginRight: '8px'}}>
                 <Form.Item name={`property-${shape.id}-${key}`}
                            id={`property-${node.id}-${key}`}
-                           rules={[{required: true, message: "字段值不能为空"}, {
+                           rules={[{required: true, message: t('fieldValueCannotBeEmpty')}, {
                                pattern: /^[^\s]*$/,
-                               message: "禁止输入空格"
+                               message: t('spacesAreNotAllowed')
                            }]}
                            initialValue={title}
                 >

@@ -4,6 +4,9 @@
 
 package com.huawei.jade.carver.telemetry.aop;
 
+import static com.huawei.jade.carver.telemetry.aop.stub.SpanDemo.EXCEPTION_MESSAGE;
+import static com.huawei.jade.carver.telemetry.aop.stub.SpanDemo.PARENT_SPAN_NAME;
+import static com.huawei.jade.carver.telemetry.aop.stub.SpanDemo.SPAN_ATTRIBUTE_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,11 +19,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.fitframework.util.MapBuilder;
@@ -31,8 +30,9 @@ import com.huawei.jade.carver.telemetry.aop.observers.ParamSpanAttributeInjector
 import com.huawei.jade.carver.telemetry.aop.observers.ThreadLocalSpanEventInjector;
 import com.huawei.jade.carver.telemetry.aop.parsers.ComplexSpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.parsers.DefaultSpanAttributeParser;
-import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanService;
-import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanServiceImpl;
+import com.huawei.jade.carver.telemetry.aop.stub.NestedSpanTestService;
+import com.huawei.jade.carver.telemetry.aop.stub.NestedSpanTestServiceImpl;
+import com.huawei.jade.carver.telemetry.aop.stub.SpanDemo;
 import com.huawei.jade.carver.telemetry.aop.stub.WithSpanObjectParse;
 import com.huawei.jade.carver.telemetry.aop.stub.WithSpanParserDemo;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
@@ -44,8 +44,6 @@ import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.ContextKey;
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,18 +60,11 @@ import java.util.Collections;
  * @since 2024-07-25
  */
 @FitTestWithJunit(includeClasses = {
-        WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class,
-        SpanAttributeParserRepository.class, DefaultSpanAttributeParser.class, ComplexSpanAttributeParser.class,
-        WithSpanParserDemo.class, SpanEndObserverRepository.class, ParamSpanAttributeInjector.class,
-        ThreadLocalSpanEventInjector.class
+        WithSpanAspect.class, SpanDemo.class, NestedSpanTestServiceImpl.class, SpanAttributeParserRepository.class,
+        DefaultSpanAttributeParser.class, ComplexSpanAttributeParser.class, WithSpanParserDemo.class,
+        SpanEndObserverRepository.class, ParamSpanAttributeInjector.class, ThreadLocalSpanEventInjector.class
 })
 public class WithSpanAspectTest {
-    private static final String EXCEPTION_MESSAGE = " exception message.";
-
-    private static final String SPAN_ATTRIBUTE_KEY = "player";
-
-    private static final String PARENT_SPAN_NAME = "operation.handle.nested";
-
     @Mock
     private OpenTelemetry mockOpenTelemetry;
 
@@ -87,7 +78,7 @@ public class WithSpanAspectTest {
     private Span mockSpan;
 
     @Fit
-    private WithSpanDemo withSpanDemo;
+    private SpanDemo spanDemo;
 
     @Fit
     private WithSpanParserDemo withSpanParserDemo;
@@ -118,7 +109,7 @@ public class WithSpanAspectTest {
     @DisplayName("触发切面，成功设置 Span 属性。")
     void shouldOkWhenHandleSuccessThenSetSpanAttr() {
         String playerArg = "playerArg";
-        this.withSpanDemo.handleSuccess(playerArg);
+        this.spanDemo.handleSuccess(playerArg);
 
         verify(this.mockSpan).setAttribute(eq(SPAN_ATTRIBUTE_KEY), eq(playerArg));
         verify(this.mockSpan).end();
@@ -128,8 +119,7 @@ public class WithSpanAspectTest {
     @DisplayName("触发切面，业务异常，成功设置异常 Span 属性。")
     void shouldOkWhenHandleExceptionThenSetSpanEvent() {
         String playerArg = "playerArg";
-        WithSpanDemo handler = this.withSpanDemo;
-        assertThatThrownBy(() -> handler.handleException(playerArg)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> this.spanDemo.handleException(playerArg)).isInstanceOf(IllegalStateException.class);
 
         verify(this.mockSpan).recordException(argThat(throwable -> {
             assertThat(throwable.getMessage()).isEqualTo(playerArg + EXCEPTION_MESSAGE);
@@ -149,13 +139,13 @@ public class WithSpanAspectTest {
         }).when(this.mockSpan).storeInContext(any(Context.class));
 
         String playerArg = "playerArg";
-        this.withSpanDemo.handleSuccessNested(playerArg);
+        this.spanDemo.handleNested(playerArg);
 
         verify(this.mockSpan, times(1)).makeCurrent();
         verify(this.mockTrace).spanBuilder(eq(PARENT_SPAN_NAME));
-        verify(this.mockTrace).spanBuilder(eq(NestedWithSpanService.NESTED_SPAN_NAME));
+        verify(this.mockTrace).spanBuilder(eq(NestedSpanTestService.NESTED_SPAN_NAME));
         verify(this.mockSpan).setAttribute(eq(SPAN_ATTRIBUTE_KEY), eq(playerArg));
-        verify(this.mockSpan).setAttribute(eq(NestedWithSpanService.NESTED_ATTR_KEY), eq(playerArg));
+        verify(this.mockSpan).setAttribute(eq(NestedSpanTestService.NESTED_ATTR_KEY), eq(playerArg));
         verify(this.mockSpan, times(2)).end();
     }
 
@@ -201,46 +191,5 @@ public class WithSpanAspectTest {
         verify(this.mockSpan).setAttribute(eq("player2"), eq("v1"));
         verify(this.mockSpan).setAttribute(eq("player3"), eq(""));
         verify(this.mockSpan).end();
-    }
-
-    @Component
-    static class WithSpanDemo {
-        private static final Logger log = Logger.get(WithSpanDemo.class);
-
-        @Fit
-        private NestedWithSpanService nestedService;
-
-        /**
-         * 成功操作。
-         *
-         * @param player 表示操作参数的 {@link String}。
-         */
-        @WithSpan(value = "operation.handle.success")
-        @GetMapping("/span-demo-success")
-        public void handleSuccess(@RequestParam("player_req") @SpanAttribute(SPAN_ATTRIBUTE_KEY) String player) {
-            log.debug("input param: {}", player);
-        }
-
-        /**
-         * 嵌套操作。
-         *
-         * @param player 表示操作参数的 {@link String}。
-         */
-        @WithSpan(value = PARENT_SPAN_NAME)
-        @GetMapping("/span-demo-nested")
-        public void handleSuccessNested(@RequestParam("player_req") @SpanAttribute(SPAN_ATTRIBUTE_KEY) String player) {
-            this.nestedService.invoke(player);
-        }
-
-        /**
-         * 异常操作。
-         *
-         * @param player 表示操作参数的 {@link String}。
-         */
-        @WithSpan(value = "operation.handle.exception")
-        @GetMapping("/span-demo-exception")
-        public void handleException(@RequestParam("player_req") @SpanAttribute(SPAN_ATTRIBUTE_KEY) String player) {
-            throw new IllegalStateException(player + EXCEPTION_MESSAGE);
-        }
     }
 }

@@ -6,26 +6,43 @@
   background-position: center;
   display: flex;
   flex-direction: column;
-  gap:16px;
+  gap: 16px;
   border: 1px solid #ebebeb;
   border-radius: 8px;
   margin-bottom: 10px;
-   .plugin-card-header {
+  position: relative;
+  .header-content {
+    flex-grow: 1;
+    width: 0;
+  }
+  .plugin-card-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+    img {
+      width: 52px;
+      height: 52px;
+    }
+    .header-name {
       display: flex;
-      gap:16px;
-      align-items: center;
-      img {
-        width: 52px;
-        height: 52px;
+      .text {
+        margin-bottom: 8px;
+        font-size: 20px;
+        max-width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
-   }
-   .plugin-card-user {
-      display: flex;
-      gap:4px;
-      align-items: center;
-      flex-wrap: wrap;
-   }
-   .card-content {
+    }
+  }
+  .plugin-card-user {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .card-content {
     word-break: break-all;
     line-height: 22px;
     text-align: justify;
@@ -36,26 +53,59 @@
     padding: 16px 0;
     display: flex;
     justify-content: space-between;
-    gap:32px;
+    gap: 32px;
     border-top: 1px solid #ebebeb;
     color: #808080;
     align-items: center;
+    .card-footer-content {
+      display: flex;
+      gap: 14px;
+    }
+    .card-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      span {
+        font-size: 12px;
+        font-weight: 700;
+      }
+    }
+    .footer-icon {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
-  .footer-type{
+  .footer-type {
     border-radius: 10px;
   }
-  .version{
+  .version {
     border-radius: 10px;
     margin-left: 8px;
   }
-  
-  .footer-more{
+  .footer-more {
     font-size: 24px;
     color: #000000;
   }
+  .plugin-tag {
+    color: rgb(89, 89, 89);
+    border: 1px solid rgb(89, 89, 89);
+    margin-left: 6px;
+    border-radius: 4px;
+    padding: 0 6px;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+  .deployed {
+    border-color: rgb(0, 179, 54);
+    color: rgb(0, 179, 54);
+  }
+  .deploying {
+    border-color: #2673E5;
+    color: #2673E5;
+  }
+  .deployment_failed {
+    border-color: #f66f6a;
+    color: #f66f6a;
+  }
 }
-
-
-
-
-

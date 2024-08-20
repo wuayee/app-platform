@@ -3,8 +3,10 @@ import { Tree, Input, Button, Menu, Dropdown } from 'antd';
 import { PlusOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { uuid } from '../../../common/utils';
 import { Message } from '@shared/utils/message';
+import { useTranslation } from 'react-i18next';
 
 const TreeComponent = (props) => {
+  const { t } = useTranslation();
   const { setDisabled, category } = props;
   const [treeData, setTreeData] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -30,7 +32,7 @@ const TreeComponent = (props) => {
    */
   const hasNodeEditing = () => {
     if (editingId) {
-      Message({ type: 'warning', content: '存在编辑中的节点，请先处理' });
+      Message({ type: 'warning', content: t('editedProcess') });
       return true;
     }
     return false;
@@ -54,7 +56,7 @@ const TreeComponent = (props) => {
     const editTag = (e, id) => {
       if (hasNodeEditing()) return;
       if (hasSelectedNode(id)) {
-        Message({ type: 'warning', content: '该分类已选中，不能进行编辑操作' });
+        Message({ type: 'warning', content: t('editedSelected') });
         return;
       }
       setEditingId(id);
@@ -68,12 +70,12 @@ const TreeComponent = (props) => {
       let { value } = e.target;
       value = value.trim();
       if (value === '') {
-        Message({ type: 'warning', content: '分类名称不能为空' });
-      } else if (value === '其他') {
-        Message({ type: 'warning', content: `分类名称不能为'其他'` });
+        Message({ type: 'warning', content: t('categoryEmpty') });
+      } else if (value === t('others')) {
+        Message({ type: 'warning', content: t('categoryNotBe')`${t('others')}` });
       } else {
         if (!validateTitle(value, node.parent.split(':')[0], id)) {
-          Message({ type: 'warning', content: '同层级的分类名称不能重复' });
+          Message({ type: 'warning', content: t('categoryLevel') });
           return;
         }
         if (id === 'key') {
@@ -91,11 +93,11 @@ const TreeComponent = (props) => {
     const addTag = () => {
       if (hasNodeEditing()) return;
       if (hasInspiration(id)) {
-        Message({ type: 'error', content: '分类下已有灵感大全，请先删除灵感大全' });
+        Message({ type: 'error', content: t('categoryExists') });
         return;
       }
       if (hasSelectedNode(id)) {
-        Message({ type: 'warning', content: '该分类已选中，不能进行添加操作' });
+        Message({ type: 'warning', content: t('categoryAdded') });
         return;
       }
       let newNode = { id: 'key', title: '', children: [], parent: id };
@@ -163,14 +165,14 @@ const TreeComponent = (props) => {
       if (hasNodeEditing()) return;
       const [parentNode, id] = parent.split(':');
       if (children.length) {
-        Message({ type: 'warning', content: '删除不可逆，请先删除子元素' });
+        Message({ type: 'warning', content: t('categoryDeletion') });
       } else if (hasInspiration(id)) {
-        Message({ type: 'warning', content: '分类下已有灵感大全，请先删除灵感大全' });
+        Message({ type: 'warning', content: t('categoryExists') });
       } else if (hasSelectedNode(id)) {
-        Message({ type: 'warning', content: '该分类已选中，不能进行删除操作' });
+        Message({ type: 'warning', content: t('categoryDeleted') });
       } else {
         handleDelete(parentNode, id);
-        Message({ type: 'success', content: '删除成功' });
+        Message({ type: 'success', content: t('deleteSuccess') });
       }
     }
 
@@ -222,9 +224,9 @@ const TreeComponent = (props) => {
     }
 
     const dropItems = [
-      { key: 'add', icon: <PlusCircleOutlined />, onClick: (e) => addTag(), label: '添加分类' },
-      { key: 'edit', icon: <EditOutlined />, onClick: (e) => editTag(e, id), label: '编辑分类' },
-      { key: 'delete', icon: <DeleteOutlined />, onClick: (e) => deleteNode(parent), label: '删除' },
+      { key: 'add', icon: <PlusCircleOutlined />, onClick: (e) => addTag(), label: t('addClassification') },
+      { key: 'edit', icon: <EditOutlined />, onClick: (e) => editTag(e, id), label: t('editClassification') },
+      { key: 'delete', icon: <DeleteOutlined />, onClick: (e) => deleteNode(parent), label: t('delete') },
     ];
 
     const dropMenu = (
@@ -258,7 +260,7 @@ const TreeComponent = (props) => {
     let length = treeData.length;
     const newTree = {
       id,
-      title: `新建分类${length}`,
+      title: `${t('addClassification')}${length}`,
       children: [],
       parent: 'root:' + id,
     }
@@ -273,7 +275,7 @@ const TreeComponent = (props) => {
         <div>
           <Button type='link' onClick={createTagTree}>
             <PlusOutlined />
-              创建分类
+            {t('addClassification')}
           </Button>
         </div>
         <Tree

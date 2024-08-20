@@ -1,13 +1,14 @@
 import React from 'react';
-import { Flex, Tag } from 'antd';
-import { Icons } from '../../../components/icons';
-import { StarOutlined, UserOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
+import { Icons } from '@/components/icons';
 import { useHistory } from 'react-router';
+import { useAppSelector } from '@/store/hook';
+import { getAppInfoByVersion } from '@/shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 import '../styles/tool-card.scss';
-import { useAppSelector } from '../../../store/hook';
-import { getAppInfoByVersion } from '../../../shared/http/aipp';
 
 const ToolCard = ({ pluginData, tenantId }: any) => {
+  const { t } = useTranslation();
   const navigate = useHistory().push;
   const appId = useAppSelector((state) => state.appStore.appId);
 
@@ -50,24 +51,13 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
         </div>
       </div>
       <div className='card-content'>
-        {pluginData.description === 'null' ? '暂无描述' : pluginData.description}
+        {pluginData.description === 'null' ? t('noDescription') : pluginData.description}
       </div>
       {/* 卡片底部 */}
-      <div className='card-footer'>
-        {/* <Flex gap={16}>
-        <span>
-          <UserOutlined style={{ marginRight: 8 }} />
-          {pluginData.downloadCount}
-        </span>
-        <span>
-          <StarOutlined style={{ marginRight: 8 }} />
-          {pluginData.likeCount}
-        </span>
-      </Flex> */}
-      </div>
+      <div className='card-footer'></div>
       <div className='card-detail' onClick={detailClick}>
-        查看详情
-    </div>
+        {t('checkMore')}
+      </div>
     </div >
   )
 }

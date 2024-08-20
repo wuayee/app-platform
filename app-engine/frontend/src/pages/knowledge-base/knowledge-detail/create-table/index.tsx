@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import type { TableProps } from 'antd';
-import { useHistory,useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../../components/icons';
 import { createKnowledgeTableRow, getKnowledgeTableType } from '../../../../shared/http/knowledge';
+import { useTranslation } from 'react-i18next';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -31,10 +32,11 @@ type FieldType = {
 
 
 const KnowledgeBaseDetailCreateTable = () => {
+  const { t } = useTranslation();
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
   const id = searchParams.id;
   const navigate = useHistory().push;
-  const [ selectValue, setSelectValue ] = useState();
+  const [selectValue, setSelectValue] = useState();
 
   // 表格id判断提交还是修改
   const table_id = searchParams.tableid;
@@ -129,7 +131,7 @@ const KnowledgeBaseDetailCreateTable = () => {
         return;
       };
       if (res) {
-        navigate(-1);
+        window.history.back();
       };
     } finally {
       setLoading(false);
@@ -137,7 +139,7 @@ const KnowledgeBaseDetailCreateTable = () => {
   }
 
   const onCancle = () => {
-    navigate(-1);
+    window.history.back();
   }
 
   useEffect(() => {
@@ -153,13 +155,13 @@ const KnowledgeBaseDetailCreateTable = () => {
       for (let i = 0; i < name.length; i++) {
         let code = name.charCodeAt(i);
         if (code > 255) {
-          n +=2;
+          n += 2;
         } else {
           n += 1
         }
       }
       if (n > 255) {
-        return Promise.reject('字符串长度不能大于255');
+        return Promise.reject(t('stringLengthTips'));
       } else {
         return Promise.resolve();
       }
@@ -195,7 +197,7 @@ const KnowledgeBaseDetailCreateTable = () => {
       <div className='aui-fullpage'>
         <div className='aui-header-1'>
           <div className='aui-title-1'>
-            <BreadcrumbSelf currentLabel={table_id ? '修改知识表' : '添加知识表'} searchFlag={true}></BreadcrumbSelf>
+            <BreadcrumbSelf currentLabel={table_id ? t('modify') : t('additions')} searchFlag={true}></BreadcrumbSelf>
           </div>
         </div>
         <div className='aui-block' style={{
@@ -217,28 +219,28 @@ const KnowledgeBaseDetailCreateTable = () => {
               style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
             >
               <Form.Item
-                label="知识表名称"
+                label={t('knowledgeTableName')}
                 name='knowledgeBaseName'
                 rules={[
-                  { required: true, message: '输入不能为空' },
-                  { validator: changeName}
+                  { required: true, message: t('cannotBeEmpty') },
+                  { validator: changeName }
                 ]}
               >
-                <Input placeholder='请输入' />
+                <Input placeholder={t('plsEnter')} />
               </Form.Item>
 
-              <Form.Item label="类型选择" name='knowledgeBaseType' rules={[{ required: true, message: '输入不能为空' }]} style={{
+              <Form.Item label={t('typeSelection')} name='knowledgeBaseType' rules={[{ required: true, message: t('cannotBeEmpty') }]} style={{
                 marginTop: 16
               }}>
                 <Select options={groupList} allowClear onChange={selectChange} />
               </Form.Item>
 
-              <Form.Item label="后端服务" name='knowledgeBaseRemoteService' rules={[{ required: true, message: '输入不能为空' }]} style={{
+              <Form.Item label={t('backendService')} name='knowledgeBaseRemoteService' rules={[{ required: true, message: t('cannotBeEmpty') }]} style={{
                 marginTop: 16
               }}>
                 <Select options={serviceList} allowClear />
               </Form.Item>
-              <Form.Item label="格式" name='knowledgeBaseFormat' style={{
+              <Form.Item label={t('formatting')} name='knowledgeBaseFormat' style={{
                 marginTop: 16
               }}>
                 <Radio.Group size="large" style={{
@@ -257,7 +259,7 @@ const KnowledgeBaseDetailCreateTable = () => {
                       alignItems: 'center',
                       gap: 4,
                     }}>
-                      {<KnowledgeIcons.text></KnowledgeIcons.text>} 文本
+                      {<KnowledgeIcons.text></KnowledgeIcons.text>} {t('text')}
                     </div>
                   </Radio.Button>
 
@@ -272,12 +274,12 @@ const KnowledgeBaseDetailCreateTable = () => {
                       alignItems: 'center',
                       gap: 4,
                     }}>
-                      {<KnowledgeIcons.table></KnowledgeIcons.table>} 表格
+                      {<KnowledgeIcons.table></KnowledgeIcons.table>} {t('table')}
                     </div>
                   </Radio.Button>
                 </Radio.Group>
               </Form.Item>
-              <Form.Item label="是否导入数据" name='importData' style={{
+              <Form.Item label={t('isImportData')} name='importData' style={{
                 width: 150,
                 marginTop: 16,
               }}>
@@ -285,8 +287,8 @@ const KnowledgeBaseDetailCreateTable = () => {
                   display: 'flex',
                   justifyContent: 'space-between'
                 }}>
-                  <Radio value={true}>是</Radio>
-                  <Radio value={false}> 否</Radio>
+                  <Radio value={true}>{t('yes')}</Radio>
+                  <Radio value={false}> {t('no')}</Radio>
                 </Radio.Group>
               </Form.Item>
 
@@ -299,10 +301,10 @@ const KnowledgeBaseDetailCreateTable = () => {
           }}>
             <Button onClick={onCancle} style={{
               borderRadius: 4,
-            }}>取消</Button>
+            }}>{t('cancel')}</Button>
             <Button type="primary" loading={loading} onClick={submit} style={{
               borderRadius: 4,
-            }}>确定</Button>
+            }}>{t('ok')}</Button>
           </div>
           <div />
         </div>

@@ -1,7 +1,7 @@
 // 添加工具
-export const handleClickAddBasicNode = (type, e) => {
+export const handleClickAddBasicNode = (item, e) => {
   e.clientX += 100;
-  window.agent.createNode(type, e);
+  window.agent.createNode(item.type, e, item);
 }
 // 拖动工具添加
 export const handleDragBasicNode = (item, e) => {

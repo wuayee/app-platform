@@ -1,18 +1,20 @@
 import React from 'react';
-import { Dropdown, Flex, MenuProps, Tag } from 'antd';
+import { Dropdown, MenuProps, Tag } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
 import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 import './style.scss';
 
 const WorkflowCard = ({ pluginData }: any) => {
+  const { t } = useTranslation();
   const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
     {
-      label: <div onClick={DropdownItemClick}>编排</div>,
+      label: <div onClick={DropdownItemClick}>{t('arrange')}</div>,
       key: 'choreography',
     },
   ];
@@ -58,12 +60,12 @@ const WorkflowCard = ({ pluginData }: any) => {
       {/* 卡片底部 */}
       <div className='card-footer'>
         <div>
-          <Flex gap={14}>
+          <div className='card-footer-content'>
             <span>
               {
                 (pluginData?.attributes?.latest_version || pluginData.state === 'active') ?
-                  <Tag bordered={false} color="processing" className='footer-type'>已发布</Tag> :
-                  <Tag bordered={false} className='footer-type'>草稿</Tag>
+                  <Tag bordered={false} color='processing' className='footer-type'>{t('published')}</Tag> :
+                  <Tag bordered={false} className='footer-type'>{t('draft')}</Tag>
               }
             </span>
             <span hidden>
@@ -74,7 +76,7 @@ const WorkflowCard = ({ pluginData }: any) => {
               <StarOutlined style={{ marginRight: 8 }} />
               {pluginData?.likeCount}
             </span>
-          </Flex>
+          </div>
         </div>
         <div onClick={(e) => { e.stopPropagation(); }}>
           <Dropdown menu={{ items: operatItems }} trigger={['click']}>

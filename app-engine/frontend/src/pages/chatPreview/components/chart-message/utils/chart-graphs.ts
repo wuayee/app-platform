@@ -1,9 +1,10 @@
-import screenfull from 'screenfull';
+import screenfull from '@/shared/screenfull/screenfull';
+import i18n from '@/locale/i18n';
 
 // 初始化echarts图表
 export const getOptions = (props, seriesData, type, chartRef) => {
-  const { chartPieData, chartData, chartTitle, chartType, xAxisData, yAxisData, legendData} = props.chatItem;
-  const gridMap:any = {
+  const { chartPieData, chartData, chartTitle, chartType, xAxisData, yAxisData, legendData } = props.chatItem;
+  const gridMap: any = {
     pie: {
       right: legendData && 140,
     },
@@ -20,7 +21,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
       bottom: getEndPosition(legendData) < 100 ? 50 : 20,
     },
   };
-  const legendConfig:any = {
+  const legendConfig: any = {
     type: 'scroll',
     textStyle: {
       width: 120,
@@ -33,7 +34,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
     },
     data: legendData,
   };
-  const seriesMap:any = {
+  const seriesMap: any = {
     pie: chartPieData,
     circlepie: chartPieData,
     line: chartData,
@@ -79,7 +80,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
     yAxis: yAxisData,
     dataZoom: [
       {
-        show:  !type.includes('pie') && getEndPosition(xAxisData) < 100,
+        show: !type.includes('pie') && getEndPosition(xAxisData) < 100,
         start: 0,
         end: getEndPosition(xAxisData),
         type: 'slider',
@@ -103,11 +104,11 @@ export const getOptions = (props, seriesData, type, chartRef) => {
       feature: {
         saveAsImage: {
           pixelRatio: 2,
-          title: '保存'
+          title: i18n.t('save')
         },
         myFull: { // 全屏
           show: true,
-          title: '全屏',
+          title: i18n.t('fullscreen'),
           icon: 'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAANVJREFUWEdjZBhgwDjA9jPAHaBiaCjK8fu/NiEHXbly4QA+NTo6Bg6EzPjBynj1zvnzr0Hq4A7Q0dEPY2JmXElI86WLF/CGmp6+wX9CZvz/xxB2+fKF1YPLAbq6BqGMTAyrwK7/z9Dw7x/DQWw+ITcKmJgYHBgYGeoh5v8LvXTp0hqcIYAcRISCk1h55CgmGAWjDhgNgQEJAWJTM7XVDZ66gNo+I9a80RAYDYHBEwK4aitiUzMhdaO14WgIDP4QGFSNUnxZavj2Cwa8a0aoJKOV/IDXBQDgZwww+OlbrwAAAABJRU5ErkJggg==',
           onclick: (e) => {
             fullScreenTable(chartRef)
@@ -138,7 +139,7 @@ export const fullScreenTable = (chartRef) => {
   }
   screenfull.request(chartRef.current);
 }
-export const chartTypeMap:any = {
+export const chartTypeMap: any = {
   TABLE: 'table',
   BAR: 'bar',
   LINE: 'line',
@@ -147,17 +148,17 @@ export const chartTypeMap:any = {
   FORECAST: 'line',
   BAR_STACK: 'bar'
 }
-export const items:any = [
+export const items: any = [
   {
-    label: '推荐',
+    label: i18n.t('recommends'),
     key: 'normal',
   },
   {
-    label: '柱状图',
+    label: i18n.t('barchart'),
     key: 'BAR',
   },
   {
-    label: '折线图',
+    label: i18n.t('lineChart'),
     key: 'LINE',
   },
 ]

@@ -150,13 +150,13 @@ public class AppRunTimeController extends AbstractController {
      */
     @WithSpan(value = "operation.appRuntime.history")
     @PostMapping(path = "/start/instances/{instance_id}", description = "用户选择历史后启动流程")
-    public Rsp<String> startFlowByUserSelectMemory(HttpClassicServerRequest httpRequest,
+    public Choir<Object> startFlowByUserSelectMemory(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId,
             @PathVariable("instance_id") @SpanAttribute("instance_id") String metaInstId,
             @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
                     example = "图片url, 文本输入, prompt") @RequestBody Map<String, Object> initContext) {
         OperationContext context = this.contextOf(httpRequest, tenantId);
-        return Rsp.ok(aippRunTimeService.startFlowWithUserSelectMemory(metaInstId, initContext, context));
+        return this.aippRunTimeService.startFlowWithUserSelectMemory(metaInstId, initContext, context);
     }
 
     /**
@@ -253,16 +253,16 @@ public class AppRunTimeController extends AbstractController {
      * @param tenantId 租户id
      * @param instanceId 实例id
      * @param msgArgs 用于终止时返回的信息
-     * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
+     * @return 返回终止信息的 {@link Rsp}{@code <}{@link String}{@code >}
      */
     @WithSpan(value = "operation.appRuntime.terminate")
     @PutMapping(path = "/instances/{instance_id}/terminate", description = "终止实例任务")
-    public Rsp<Void> terminateAippInstance(HttpClassicServerRequest httpRequest,
+    public Rsp<String> terminateAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId,
             @PathVariable("instance_id") @SpanAttribute("instance_id") String instanceId,
             @RequestBody Map<String, Object> msgArgs) {
-        this.aippRunTimeService.terminateInstance(instanceId, msgArgs, this.contextOf(httpRequest, tenantId));
-        return Rsp.ok();
+        return Rsp.ok(this.aippRunTimeService.terminateInstance(instanceId, msgArgs,
+                this.contextOf(httpRequest, tenantId)));
     }
 
     /**

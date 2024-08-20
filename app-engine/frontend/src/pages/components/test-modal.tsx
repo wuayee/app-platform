@@ -1,9 +1,11 @@
-import React, {  useState, useImperativeHandle } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 import { Modal, Button } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const TestModal = (props) => {
+  const { t } = useTranslation();
   const { testRef, handleDebugClick, type } = props;
-  const [ isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -25,7 +27,7 @@ const TestModal = (props) => {
   })
   return <>{(
     <Modal
-      title={type ? '需要调试成功才能发布应用' : '需要调试成功才能发布工具流'}
+      title={type ? t('debugTip') : t('debugTip2')}
       width='380px'
       maskClosable={false}
       centered
@@ -34,13 +36,15 @@ const TestModal = (props) => {
       onCancel={handleCancel}
       footer={[
         <Button key='back' onClick={handleCancel}>
-          取消
+          {t('cancel')}
         </Button>,
         <Button key='test' type='primary' onClick={handleOK}>
-          调试
+          {t('ok')}
         </Button>
       ]}>
-      <p>为了保证{type ? '应用' : '工作流'}运行正常，必须进行测试</p>
+      { type ? <p>{t('testTip')}</p> : <p>{t('testTip2')}</p>}
+
+
     </Modal>
   )}</>
 };

@@ -129,4 +129,12 @@ public interface AippChatMapper {
      * @return List<QueryChatRsp> 会话记录列表
      */
     List<QueryChatRsp> selectChatListByChatIds(@Param("chatIds") List<String> chatIds);
+
+    /**
+     * 根据会话实例Id 查询会话
+     *
+     * @param instId 会话实例id
+     * @return List<QueryChatRsp> 会话记录列表
+     */
+    List<QueryChatRsp> selectChatListByInstId(String instId);
 }

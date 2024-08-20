@@ -1,9 +1,8 @@
 import React from 'react';
+import { DatePicker, TableColumnType, Button, Space } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
-import { DatePicker, TableColumnType } from 'antd';
-import { Button, Space } from 'antd';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
-import type { DatePickerProps, GetProps } from 'antd';
+import type { GetProps } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -15,14 +14,14 @@ const { RangePicker } = DatePicker;
 * async: 是否异步表格；若为true，则不触发onfilter方法（表格数据项筛选）,由调用方在onChange中处理筛选逻辑。
 */
 const TableCalendarSearch = (searchKeyName: string, async: boolean = true): TableColumnType<any> => {
-
+  const { t } = useTranslation();
   return ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, close }) => (
       <div style={{ padding: 8, width: 360 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Space direction="vertical" size={12}>
+        <Space direction='vertical' size={12}>
           <RangePicker
             showTime={{ format: 'HH:mm:ss' }}
-            format="YYYY-MM-DD HH:mm:ss"
+            format='YYYY-MM-DD HH:mm:ss'
             onChange={(_, dateString) => {
               setSelectedKeys(dateString);
             }}
@@ -37,7 +36,7 @@ const TableCalendarSearch = (searchKeyName: string, async: boolean = true): Tabl
               close();
             }}
           >
-            关闭
+            {t('close')}
           </Button>
           <Button
             type='primary'
@@ -45,7 +44,7 @@ const TableCalendarSearch = (searchKeyName: string, async: boolean = true): Tabl
             size='small'
             style={{ minWidth: 60, height: 24, backgroundColor: '#2673e5' }}
           >
-            确定
+            {t('ok')}
           </Button>
         </Space>
       </div>

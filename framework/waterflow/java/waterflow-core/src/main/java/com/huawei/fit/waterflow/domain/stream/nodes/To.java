@@ -47,8 +47,10 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -78,6 +80,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      */
     private static final int MAX_CONCURRENCY = 1;
 
+    private static final int MAX_TRACE_CONCURRENCY = 16;
+
     private static final int SLEEP_MILLS = 10;
 
     /**
@@ -101,6 +105,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Getter
     private final FlowLocks locks;
+
+    private final Map<String, Integer> traceConcurrency = new HashMap<>();
 
     // 默认自动流转过滤器是按batchID批次过滤contexts
     private final Operators.Filter<I> defaultAutoFilter = (contexts) -> {
@@ -154,11 +160,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * 该节点同时处理最多MAX_TRAFFIC条数据，这种情况适合n条a数据生产出m条b数据，是一个producing操作
      */
     private Operators.Produce<FlowContext<I>, O> produce;
-
-    /**
-     * 当前并发度，已经提交的批次
-     */
-    private volatile int curConcurrency = 0;
 
     /**
      * 当前节点预处理是否在运行中
@@ -487,7 +488,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             Optional.ofNullable(this.globalErrorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
             GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
         } finally {
-            updateConcurrency(-1);
+            updateConcurrency(preList, -1);
         }
     }
 
@@ -523,8 +524,44 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         this.callback.process(new ToCallback<>(contexts));
     }
 
-    private synchronized void updateConcurrency(int newConcurrency) {
-        this.curConcurrency += newConcurrency;
+    private synchronized void updateConcurrency(List<FlowContext<I>> ready, int distance) {
+        ready.stream().forEach(c -> c.getTraceId().forEach(traceId -> this.updateConcurrency(traceId, distance)));
+    }
+
+    private void updateConcurrency(String traceId, int distance) {
+        Integer concurrency = this.traceConcurrency.get(traceId);
+        if (concurrency == null) {
+            this.traceConcurrency.put(traceId, distance);
+            return;
+        }
+        concurrency += distance;
+        if (concurrency == 0) {
+            this.traceConcurrency.remove(traceId);
+        }
+    }
+
+    /**
+     * 判断该节点是否达到负载上限
+     *
+     * @return true-已经满负载， false-未满负载
+     */
+    public synchronized boolean isOverLimit() {
+        return this.traceConcurrency.size() >= MAX_TRACE_CONCURRENCY && this.traceConcurrency.entrySet()
+                .stream()
+                .allMatch(e -> e.getValue() >= MAX_CONCURRENCY);
+    }
+
+    /**
+     * 获取满负载的traceIds
+     *
+     * @return 满负载的traceIds
+     */
+    public synchronized Set<String> getOverLimitTraceIds() {
+        return this.traceConcurrency.entrySet()
+                .stream()
+                .filter(e -> e.getValue() >= MAX_CONCURRENCY)
+                .map(e -> e.getKey())
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -659,7 +696,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             @Override
             protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
                 return to.flowContextRepo.requestProducingContext(to.streamId,
-                        to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.postFilter());
+                        to.froms.stream().map(Identity::getId).collect(Collectors.toList()),
+                        to.getOverLimitTraceIds(), to.postFilter());
             }
         },
         MAPPING {
@@ -686,8 +724,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             @Override
             protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
                 return to.flowContextRepo.requestMappingContext(to.streamId,
-                        to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.defaultFilter(),
-                        to.validator);
+                        to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.getOverLimitTraceIds(),
+                        to.defaultFilter(), to.validator);
             }
         };
 
@@ -715,10 +753,17 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
          */
         public <T1, R1> void request(To<T1, R1> to) {
             while (true) {
-                if (to.curConcurrency >= MAX_CONCURRENCY) {
+                Optional<FlowExecutors.ConcurrencyHolder> concurrencyHolder = FlowExecutors.incrementConcurrency();
+                if (!concurrencyHolder.isPresent()) {
                     SleepUtil.sleep(SLEEP_MILLS);
                     continue;
                 }
+                if (to.isOverLimit()) {
+                    concurrencyHolder.get().release();
+                    SleepUtil.sleep(SLEEP_MILLS);
+                    continue;
+                }
+                boolean isSubmitted = false;
                 List<FlowContext<T1>> ready = new ArrayList<>();
                 try {
                     ready = requestReady(to);
@@ -732,7 +777,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     if (to.inParallelMode(ready)) {
                         to.onProcess(ready);
                     } else {
-                        this.submit(to, ready);
+                        this.submit(to, ready, concurrencyHolder.get());
+                        isSubmitted = true;
                     }
                 } catch (Exception ex) {
                     // 如果是数据库或者redis挂了，会死循环，线程不退出等待数据库或者redis恢复
@@ -741,6 +787,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                             to.streamId, to.id, r.getId(), ex));
                     LOG.error("process main loop exception details: ", ex);
                 } finally {
+                    if (!isSubmitted) {
+                        concurrencyHolder.get().release();
+                    }
                     SleepUtil.sleep(SLEEP_MILLS);
                 }
             }
@@ -765,10 +814,10 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 if (CollectionUtils.isEmpty(ready)) {
                     return new ArrayList<>();
                 }
-                if (to.curConcurrency >= MAX_CONCURRENCY) {
+                if (to.isOverLimit()) {
                     throw new WaterflowException(FLOW_NODE_MAX_TASK, to.getId());
                 }
-                to.updateConcurrency(1);
+                to.updateConcurrency(ready, 1);
                 to.flowContextRepo.updateStatus(ready, ready.get(0).getStatus().toString(), ready.get(0).getPosition());
                 return ready;
             } finally {
@@ -790,9 +839,12 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             return pre.stream().filter(context -> context.getStatus() == READY).collect(Collectors.toList());
         }
 
-        private <T1, R1> void submit(To<T1, R1> to, List<FlowContext<T1>> ready) {
-            FlowExecutors.getThreadPool(StringUtils.join(Constant.STREAM_ID_SEPARATOR, to.streamId, to.id),
-                    MAX_CONCURRENCY).execute(Task.builder().runnable(() -> to.onProcess(ready)).buildDisposable());
+        private <T1, R1> void submit(To<T1, R1> to, List<FlowContext<T1>> ready,
+                FlowExecutors.ConcurrencyHolder concurrencyHolder) {
+            FlowExecutors.getThreadPool().execute(Task.builder().runnable(() -> {
+                to.onProcess(ready);
+                concurrencyHolder.release();
+            }).buildDisposable());
         }
 
         private <T1, R1> void handleProcessConcurrentConflict(To<T1, R1> to) {

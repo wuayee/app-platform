@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import JSZip from 'jszip';
-import { bytesToSize } from '@/common/util';
+import { bytesToSize } from '@/common/utils';
 import { Message } from '@/shared/utils/message';
 import { fileValidate } from '@/shared/utils/common';
+import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
 
 const DraggerUpload = (props) => {
+  const { t } = useTranslation();
   const [fileList, setFileList] = useState([]);
   const customRequest = async (val) => {
     if (fileValidate(val.file, ['zip'], 100)) {
@@ -29,14 +31,14 @@ const DraggerUpload = (props) => {
                 fileObj[val.file.uid].push(fileJson);
                 props.addFileData(fileObj, val.file);
               } catch {
-                Message({ type: 'warning', content: `${val.file.name} tools.json文件解析错误` })
+                Message({ type: 'warning', content: `${val.file.name} tools.json${t('fileParseError')}` });
               }
             });
           });
         }
       });
       if (!hasTool) {
-        Message({ type: 'warning', content: `${val.file.name}解析错误` })
+        Message({ type: 'warning', content: `${val.file.name}${t('parseError')}` });
       }
     }
   }
@@ -57,7 +59,7 @@ const DraggerUpload = (props) => {
   const beforeUpload = (file) => {
     let name = fileList.filter(item => item.name === file.name)[0];
     if (name) {
-      Message({ type: 'warning', content: `${file.name} 该文件已上传` });
+      Message({ type: 'warning', content: `${file.name} ${t('fileUploaded')}` });
       return false
     }
     return true
@@ -76,11 +78,11 @@ const DraggerUpload = (props) => {
     <div>
       <Upload.Dragger {...uploadProps}>
         <p className='ant-upload-drag-icon'>
-          <img width={32} height={32} src='/src/assets/images/ai/upload.png' />
+          <img width={32} height={32} src='./src/assets/images/ai/upload.png' />
         </p>
-        <p className='ant-upload-text'>将文件拖到这里，或者点击上传</p>
-        <p className='ant-upload-hint'>支持 {props?.accept} 格式文件, 最大文件不能大于100M, 最多同时上传5个zip包</p>
-        <p className='ant-upload-hint'>插件名称不允许非字母数字中文</p>
+        <p className='ant-upload-text'>{t('fileUploadContent1')}</p>
+        <p className='ant-upload-hint'>{t('support')} {props?.accept} {t('fileUploadContent2')}</p>
+        <p className='ant-upload-hint'>{t('fileUploadContent3')}</p>
       </Upload.Dragger>
       <div className='file-upload-list'>
         {fileList?.map((item) => (
@@ -90,8 +92,8 @@ const DraggerUpload = (props) => {
               <span>({bytesToSize(item.size)})</span>
             </div>
             <div className='file-item-right'>
-              <img src='/src/assets/images/ai/complate.png' />
-              <img src='/src/assets/images/ai/delete.png' onClick={() => onRemove(item.uid)} />
+              <img src='./src/assets/images/ai/complate.png' />
+              <img src='./src/assets/images/ai/delete.png' onClick={() => onRemove(item.uid)} />
             </div>
           </div>
         ))}

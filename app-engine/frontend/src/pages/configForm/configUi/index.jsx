@@ -10,9 +10,11 @@ import Inspiration from './components/inspiration';
 import Recommend from './components/recommend';
 import { setHistorySwitch } from '@/store/common/common';
 import { MultiConversationContent } from '@fit-elsa/elsa-react';
+import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
 
 function ConfigUI(props) {
+    const {t} = useTranslation();
     const { formData, handleConfigDataChange, inspirationChange, status, activeKey } = props;
     const [ form ] = Form.useForm();
     const [ inspirationValues, setInspirationValues ] = useState(null);
@@ -53,19 +55,19 @@ function ConfigUI(props) {
     const getItems = (panelStyle) => [
       {
         key: '1',
-        label: '大模型',
+        label: t('LLM'),
         children: <LLM updateData={updateConfig} />,
         style: panelStyle,
       },
       {
         key: '2',
-        label: '插件',
+        label:  t('plugin'),
         children: <Skill waterflowChange={waterflowChange} pluginData={pluginValue} updateData={updateConfig} />,
         style: panelStyle,
       },
       {
         key: '3',
-        label: '知识库',
+        label: t('knowledgeBase'),
         children: <Knowledge knowledge={knowledge} updateData={updateConfig} />,
         style: panelStyle,
       },
@@ -73,7 +75,7 @@ function ConfigUI(props) {
     const getItems2 = (panelStyle) => [
       {
         key: '4',
-        label: '猜你想问',
+        label: t('guessAsk'),
         children: <Recommend updateData={updateConfig} recommendValues={recommendValues}/>,
         style: panelStyle,
       },
@@ -81,7 +83,7 @@ function ConfigUI(props) {
         key: '5',
         label: (
           <div>
-            多轮对话
+            {t('multipleRoundsOfConversation')}
             <Switch 
               className='conversation-switch'
               onChange={(checked, event) => historySwitchChange(checked, event)}
@@ -107,7 +109,7 @@ function ConfigUI(props) {
       },
       {
         key: '6',
-        label: '创意灵感',
+        label: t('creativeInspiration'),
         children: <Inspiration inspirationValues={inspirationValues} updateData={updateConfig}/>,
         style: panelStyle,
       }

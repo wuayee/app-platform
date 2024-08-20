@@ -1,33 +1,33 @@
-import { Button, DatePicker } from 'antd';
 import React from 'react';
+import { Space, Button, DatePicker } from 'antd';
 import type { TableColumnType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { Space } from 'antd';
 import { TableIcons } from '../icons/table';
+import { TFunction } from 'react-i18next';
 
 // 自定义搜索面板
-const getColumnTimePickerProps = (dataIndex: string, onChange?: any): TableColumnType<string> => ({
+const getColumnTimePickerProps = (dataIndex: string, onChange?: any, t?: TFunction): TableColumnType<string> => ({
   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
     <div style={{ padding: 8, display: 'flex', flexDirection: 'column' }} onKeyDown={(e) => e.stopPropagation()}>
       <DatePicker.RangePicker
-        placeholder={['请选择', '请选择']}
+        placeholder={[t('plsChoose'), t('plsChoose')]}
         value={selectedKeys as any}
         format='YYYY-MM-DD'
         onChange={(date, dateString) => {
-          setSelectedKeys((date? date : []) as any)
+          setSelectedKeys((date ? date : []) as any)
         }}
       />
       <Space>
         <Button
-          type="primary"
+          type='primary'
           onClick={() => {
             onChange(selectedKeys as string[], confirm, dataIndex);
           }}
           icon={<SearchOutlined />}
-          size="small"
+          size='small'
           style={{ width: 90 }}
         >
-          搜索
+          {t('search')}
         </Button>
         <Button
           onClick={
@@ -36,10 +36,10 @@ const getColumnTimePickerProps = (dataIndex: string, onChange?: any): TableColum
               onChange([], confirm, dataIndex);
             }
           }
-          size="small"
+          size='small'
           style={{ width: 90 }}
         >
-          重置
+          {t('reset')}
         </Button>
       </Space>
     </div>
@@ -47,7 +47,7 @@ const getColumnTimePickerProps = (dataIndex: string, onChange?: any): TableColum
   filterIcon: (filtered: boolean) => (
     <>
       <div style={{ color: filtered ? '#1677ff' : undefined, marginTop: 4 }}>
-        <TableIcons.date  />
+        <TableIcons.date />
       </div>
     </>
   ),

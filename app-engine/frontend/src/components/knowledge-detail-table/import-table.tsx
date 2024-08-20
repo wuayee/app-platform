@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Modal } from 'antd';
 import LocalUpload from '../select-form/local-upload';
 import { createTableColumns } from '../../shared/http/knowledge';
+import { useTranslation } from "react-i18next";
 
 interface props {
   open: boolean;
@@ -19,7 +20,7 @@ type FieldType = {
 };
 
 const ImportTable = ({ open, setOpen, repositoryId, knowledgeTableId }: props) => {
-
+  const { t } = useTranslation();
   const [formLayout, setFormLayout] = useState<any>('vertical');
   const [form] = Form.useForm();
 
@@ -46,7 +47,7 @@ const ImportTable = ({ open, setOpen, repositoryId, knowledgeTableId }: props) =
   }
   return (<>
     <Modal
-        title='导入数据'
+        title={t('importData')}
         centered
         open={open}
         onOk={handleOk}
@@ -63,15 +64,15 @@ const ImportTable = ({ open, setOpen, repositoryId, knowledgeTableId }: props) =
             initialValues={initialValues}
             style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
           >
-            <Form.Item label='请选择一个文件'  name = 'selectedFile' validateStatus={'error'}
+            <Form.Item label={t('pickOneFile')}  name = 'selectedFile' validateStatus={'error'}
               rules={[
                 {
                   required: true,
-                  message: '文件不能为空',
+                  message: t('fileCannotEmpty'),
                   validator: (_, value) => {
                     return value && value.length
                       ? Promise.resolve()
-                      : Promise.reject(new Error('无文件'));
+                      : Promise.reject(new Error(t('noFile')));
                   },
                 },
               ]}>

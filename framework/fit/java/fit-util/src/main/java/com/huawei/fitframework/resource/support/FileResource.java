@@ -82,6 +82,6 @@ public class FileResource implements Resource {
 
     @Override
     public String toString() {
-        return this.file.getPath();
+        return FileUtils.path(this.file);
     }
 }

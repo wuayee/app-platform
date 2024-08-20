@@ -2,21 +2,23 @@ import React from 'react';
 import { Card, Tooltip, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { Icons, KnowledgeIcons } from '../icons/index';
+import { useTranslation } from "react-i18next";
 
 const DetailCard = ({knowledge, clickMore, currentIndex}: {knowledge: string, currentIndex: number, clickMore: (type: 'delete') => void }) => {
+  const { t } = useTranslation();
   // 路由
   const operatorItems: MenuProps['items'] = [
   {
     key: 'modify',
     label: <div style={{
       width: 150,
-    }}>修改</div>
+    }}>{t('modify')}</div>
   },
   {
     key: 'delete',
     label: <div style={{
       width: 150,
-    }}>删除</div>
+    }}>{t('delete')}</div>
   },
 ]
 const clickItem = (info: any) => {
@@ -26,7 +28,7 @@ const clickItem = (info: any) => {
 return (
   <Card style={{ 
     width: 440, 
-    background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
+    background: 'url(./src/assets/images/knowledge/knowledge-background.png)',
     height: 230,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
@@ -82,7 +84,7 @@ return (
           fontSize: 12,
           color: '#444'
         }}>
-          {`${knowledge.length ?? 0} 字符`}
+          {`${knowledge.length ?? 0} ${t('character')}`}
         </span>
       </div>
       <div >

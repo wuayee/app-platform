@@ -1,21 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form } from 'antd';
-import { Button, Steps } from 'antd';
-import { useHistory, useLocation} from 'react-router-dom';
-import qs from 'qs';
-import BreadcrumbSelf from '../../../../components/breadcrumb';
-import { SelectForm } from '../../../../components/select-form';
-import SegmentPreview from '../../../../components/select-form/segment-preview';
-import './style.scoped.scss';
+import { Button, Steps, Form } from 'antd';
 import { CheckCircleFilled } from '@ant-design/icons';
+import qs from 'qs';
+import { useHistory, useLocation } from 'react-router-dom';
+import BreadcrumbSelf from '@/components/breadcrumb';
+import { SelectForm } from '@/components/select-form';
+import SegmentPreview from '@/components/select-form/segment-preview';
 import {
   deleteLocalFile,
   textSegmentWash,
   getTableColums,
   createTableColumns,
-} from '../../../../shared/http/knowledge';
-
-type LayoutType = Parameters<typeof Form>[0]['layout'];
+} from '@/shared/http/knowledge';
+import { useTranslation } from 'react-i18next';
+import './style.scoped.scss';
 
 // 创建知识库配置
 type FieldType = {
@@ -43,11 +41,9 @@ const segmentData = new Array(4).fill(0).map((_, i) => ({
 }));
 
 const KnowledgeBaseDetailImportData = () => {
+  const { t } = useTranslation();
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
-  const navigate = useHistory().push;
-
   const [currentSteps, setCurrentSteps] = useState(0);
-
   // 知识表id
   const id = searchParams.id || 0;
 
@@ -68,23 +64,23 @@ const KnowledgeBaseDetailImportData = () => {
 
   const steps: any[] = [
     {
-      title: '选择数据源',
+      title: t('dataSource'),
     },
   ];
 
   if (table_type === 'text') {
     steps.push({
-      title: '文本分段与清洗',
+      title: t('textSegmentation'),
     });
     steps.push({
-      title: '完成',
+      title: t('finished'),
     });
   } else {
     steps.push({
-      title: '表格配置',
+      title: t('tableConfig'),
     });
     steps.push({
-      title: '开始导入',
+      title: t('startImport'),
     });
   }
 
@@ -100,10 +96,10 @@ const KnowledgeBaseDetailImportData = () => {
   };
 
   // 创建知识表
-  const createKnowledgeTable = async () => {};
+  const createKnowledgeTable = async () => { };
 
   const onCancle = async () => {
-    navigate(-1);
+    window.history.back();
     const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}_${file.name}`);
     await deleteLocalFile(id, table_id, fileIds);
     formDataSource.setFieldValue('selectedFile', []);
@@ -132,7 +128,7 @@ const KnowledgeBaseDetailImportData = () => {
         }
         formValue.current.dataSource = { ...res };
 
-        if(table_type === 'table') {
+        if (table_type === 'table') {
           // 获取表格列
           const result = await getTableColums({
             repositoryId: id as string,
@@ -140,8 +136,8 @@ const KnowledgeBaseDetailImportData = () => {
             fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || ''
           });
 
-          if(result && result?.length) {
-            formStepSecond.setFieldValue('tableCustom', result.map((item, index)=> ({
+          if (result && result?.length) {
+            formStepSecond.setFieldValue('tableCustom', result.map((item, index) => ({
               description: item.desc,
               dataType: item.dataType,
               colName: item.name,
@@ -169,7 +165,7 @@ const KnowledgeBaseDetailImportData = () => {
         }
 
         // 表格创建逻辑
-        if(table_type === 'table') {
+        if (table_type === 'table') {
           const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || '';
 
           const data = (res?.tableCustom || []).map(item => ({
@@ -182,13 +178,13 @@ const KnowledgeBaseDetailImportData = () => {
             repositoryId: id as string,
             knowledgeTableId: table_id as string,
             fileName,
-            columns:data
+            columns: data
           })
         }
 
         setCurrentSteps(currentSteps + 1);
       }
-    } catch (error) {}
+    } catch (error) { }
     setLoading(false);
   };
 
@@ -196,7 +192,7 @@ const KnowledgeBaseDetailImportData = () => {
   }, []);
 
   const handleSubmit = async () => {
-    navigate(-1);
+    window.history.back();
   };
 
   return (
@@ -205,7 +201,7 @@ const KnowledgeBaseDetailImportData = () => {
         <div className='aui-header-1'>
           <div className='aui-title-1'>
             <BreadcrumbSelf
-              currentLabel={table_id ? '导入数据' : '导入数据'}
+              currentLabel={t('importingData')}
               searchFlag={true}
             ></BreadcrumbSelf>
           </div>
@@ -240,7 +236,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  取消
+                  {t('cancel')}
                 </Button>
               )}
 
@@ -251,7 +247,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  上一步
+                  {t('previousStep')}
                 </Button>
               )}
 
@@ -264,7 +260,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  下一步
+                  {t('nextStep')}
                 </Button>
               )}
 
@@ -276,7 +272,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  确定
+                  {t('ok')}
                 </Button>
               )}
             </div>

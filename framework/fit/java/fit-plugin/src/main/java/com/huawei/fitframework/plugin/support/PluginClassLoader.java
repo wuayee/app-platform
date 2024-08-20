@@ -40,6 +40,11 @@ public class PluginClassLoader extends URLClassLoader {
     private final UrlClassPath ucp;
     private final AccessControlContext acc;
 
+    /**
+     * 向插件类加载器中添加一个 URL。
+     *
+     * @param parent 表示父类加载器的 {@link ClassLoader}。
+     */
     public PluginClassLoader(ClassLoader parent) {
         super(new URL[0], parent);
         this.ucp = new UrlClassPath();

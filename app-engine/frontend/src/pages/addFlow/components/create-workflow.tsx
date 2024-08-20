@@ -1,5 +1,5 @@
-import { Button, Form, Input, Modal, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, Modal, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { ToTopOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
@@ -8,8 +8,10 @@ import { Message } from '@/shared/utils/message';
 import { useAppSelector } from '@/store/hook';
 import { httpUrlMap } from '@/shared/http/httpConfig';
 import { fileValidate } from '@/shared/utils/common';
+import { useTranslation } from 'react-i18next';
 
 const CreateWorkflow = (props) => {
+  const { t } = useTranslation();
   const [openWorkFlow, setOpenWorkFlow] = useState(false);
   const { AIPP_URL } =
     process.env.NODE_ENV === 'development'
@@ -36,7 +38,7 @@ const CreateWorkflow = (props) => {
         setFilePath(res.data.file_path);
       }
     } catch (err) {
-      Message({ type: 'error', content: err.message || '上传图片失败' });
+      Message({ type: 'error', content: err.message || t('uploadImageFail') });
     }
   }
 
@@ -53,7 +55,7 @@ const CreateWorkflow = (props) => {
   }, [props?.createWorkflowSignal]);
   return (
     <Modal
-      title='创建工具流'
+      title={t('createWorkflow')}
       centered
       open={openWorkFlow}
       onCancel={() => {
@@ -75,7 +77,7 @@ const CreateWorkflow = (props) => {
       }}
     >
       <Form form={form} layout='vertical' autoComplete='off' className='edit-form-content'>
-        <Form.Item label='头像' name='icon'>
+        <Form.Item label={t('icon')} name='icon'>
           <div className='avatar'>
             {filePath ? (
               <img
@@ -91,25 +93,25 @@ const CreateWorkflow = (props) => {
               showUploadList={false}
               accept='.jpg,.png,.gif,.jpeg'
             >
-              <Button icon={<ToTopOutlined />}>手动上传</Button>
+              <Button icon={<ToTopOutlined />}>{t('uploadManually')}</Button>
             </Upload>
           </div>
         </Form.Item>
         <Form.Item
-          label='名称'
+          label={t('name')}
           name='name'
           rules={[
-            { required: true, message: '请输入名称' },
+            { required: true, message: t('plsEnterName') },
             {
               type: 'string',
               max: 64,
-              message: '输入字符长度范围：1 - 64',
+              message: t('enterNameRule'),
             },
           ]}
         >
           <Input showCount maxLength={64} />
         </Form.Item>
-        <Form.Item label='描述' name='description' style={{ marginBottom: '30px' }}>
+        <Form.Item label={t('description')} name='description' style={{ marginBottom: '30px' }}>
           <TextArea rows={3} showCount maxLength={300} />
         </Form.Item>
       </Form>

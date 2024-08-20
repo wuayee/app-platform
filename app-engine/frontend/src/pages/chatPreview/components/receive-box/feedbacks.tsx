@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
 import { LikeIcon, UnlikeIcon, LikeSelectIcon, UnlikeSelectIcon } from '@/assets/icon';
 import { feedbacksRq, updateFeedback, deleteFeedback } from '@shared/http/chat';
+import { useTranslation } from 'react-i18next';
 import './styles/feedbacks.scss';
 const { TextArea } = Input;
 
 const Feedbacks = ({ instanceId, feedbackStatus, refreshFeedbackStatus }) => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [textValue, setTextValue] = useState('');
   const handleOk = async () => {
@@ -64,8 +66,8 @@ const Feedbacks = ({ instanceId, feedbackStatus, refreshFeedbackStatus }) => {
         {feedbackStatus !== 1 && <UnlikeIcon onClick={unLikeClick} />}
         {feedbackStatus === 1 && <UnlikeSelectIcon onClick={unLikeClick} />} */}
       </div>
-      <Modal title='问题反馈' open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered>
-        <TextArea rows={4} placeholder='请输入' value={textValue} onChange={onChange} />
+      <Modal title={t('feedback')} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered>
+        <TextArea rows={4} placeholder={t('plsEnter')} value={textValue} onChange={onChange} />
       </Modal>
     </div>
   )}</>

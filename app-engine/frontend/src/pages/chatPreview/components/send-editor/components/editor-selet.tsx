@@ -1,10 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Checkbox } from 'antd';
+import { useTranslation } from 'react-i18next';
 import $ from 'jquery';
 
 // 灵感大全下拉
 const EditorSelect = (props) => {
+  const { t } = useTranslation();
   const { chatSelectItem, chatSelectDom, positionConfig, clearMove } = props;
   const [selectStyle, setSelectStyle] = useState({});
   const [checkedList, setCheckedList] = useState([]);
@@ -54,8 +56,8 @@ const EditorSelect = (props) => {
     setCheckedNameList(nameArr);
     arr.forEach((item) => {
       str += `<div class='select-html'>
-                <div>问题：${item.question}</div>
-                <div>回答：${item.answer}</div>
+                <div>${t('question')}：${item.question}</div>
+                <div>${t('answers')}：${item.answer}</div>
               </div>`;
     });
     $('#ctrl-promet').children('.select-html').remove();
@@ -89,10 +91,10 @@ const EditorSelect = (props) => {
                     </span>
                   </Checkbox>
                 ) : (
-                  <span className='normal-span' title={item}>
-                    {item}
-                  </span>
-                )}
+                    <span className='normal-span' title={item}>
+                      {item}
+                    </span>
+                  )}
               </div>
             );
           })}

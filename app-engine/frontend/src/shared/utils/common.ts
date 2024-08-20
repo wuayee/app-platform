@@ -4,6 +4,7 @@ import DOMPurify from 'dompurify';
 import { Message } from '@shared/utils/message';
 import { DEMISSIONAPPID } from './configvar';
 import { storage } from "../storage";
+import i18n from '@/locale/i18n';
 
 /**
  * 获取url中status的类型
@@ -138,7 +139,7 @@ export function getUiD() {
 export const toClipboard = (val) => {
   if (navigator.clipboard && navigator.permissions && window.self === window.top) {
     navigator.clipboard.writeText(val);
-    Message({ type: 'success', content: '复制成功' });
+    Message({ type: 'success', content: i18n.t('copySucceeded') });
   } else {
     let textArea = document.createElement('textArea');
     textArea.value = val;
@@ -151,7 +152,7 @@ export const toClipboard = (val) => {
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
-    Message({ type: 'success', content: '复制成功' })
+    Message({ type: 'success', content: i18n.t('copySucceeded') })
   }
 }
 /**
@@ -271,15 +272,42 @@ export const isBusinessMagicCube = function (appId) {
  * @return {boolean} 如果文件符合要求，返回true，否则返回false
  */
 export const fileValidate = (file, fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gif'], size = 1) => {
-  const fileEnd = file.name.split('.')[1];
+  const nameArr = file.name.split('.');
+  const fileEnd = nameArr[nameArr.length - 1];
   const fileSize = file.size / (1024 * size);
   if (fileSize > 1024) {
-    Message({ type: 'warning', content: `文件${file.name}大小不能超过${size}M` });
+    Message({ type: 'warning', content: `${file.name}${i18n.t('cannotExceed')}${size}M` });
     return false
   }
   if (!fileTypes.includes(fileEnd)) {
-    Message({ type: 'warning', content: `只支持 ${fileTypes.join(',')} 类型的文件` });
+    Message({ type: 'warning', content: `${i18n.t('onlySupported')} ${fileTypes.join(',')} ${i18n.t('filesOfType')}` });
     return false
   }
   return true
+}
+
+/**
+ * 获取cookie中cname字段的值
+ * @param {String} cname 需要获取的字段
+ * @return {String} 字段的值
+ */
+export const getCookie = (cname) => {
+  const name = `${cname}=`;
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    const c = ca[i].trim();
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
+/**
+ * 设置cookie中cname字段的值
+ * @param {String} cname 需要设置的字段
+ * @param {String} cvalue 需要设置的字段值
+ */
+export const setCookie = (cname, cvalue) => {
+  document.cookie = `${cname}=${cvalue};`;
 }

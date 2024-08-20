@@ -39,6 +39,11 @@ public class ReflectibleWebSocketHandler extends AbstractWebSocketHandler {
     private final Method closeMethod;
     private final List<PropertyValueMapper> closeMappers;
 
+    /**
+     * 创建一个新的 WebSocket 处理器信息。
+     *
+     * @param info 表示处理器信息的 {@link Info}。
+     */
     public ReflectibleWebSocketHandler(Info info) {
         super(info);
         this.target = notNull(info.target(), "The specified target of websocket handler cannot be null.");

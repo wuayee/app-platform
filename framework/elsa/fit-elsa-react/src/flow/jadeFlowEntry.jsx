@@ -132,8 +132,7 @@ const jadeFlowAgent = (graph) => {
     self.createNode = (type, e, metaData) => {
         console.log("call createNode...");
         const position = graph.activePage.calculatePosition(e);
-        const shape = graph.activePage.createNew(type, position.x, position.y);
-        shape.processMetaData(metaData);
+        graph.activePage.createNew({shapeType: type, x: position.x, y: position.y, metaData: metaData});
     };
 
     /**
@@ -156,8 +155,7 @@ const jadeFlowAgent = (graph) => {
      */
     self.createNodeByPosition = (type, position, metaData) => {
         console.log("call createNodeByPosition...");
-        const shape = graph.activePage.createNew(type, position.x, position.y);
-        shape.processMetaData(metaData);
+        graph.activePage.createNew({shapeType: type, x: position.x, y: position.y, metaData: metaData});
     };
 
     /**
@@ -167,8 +165,7 @@ const jadeFlowAgent = (graph) => {
      * @param schemaData schema元数据
      */
     self.createToolByPosition = (position, schemaData) => {
-        const shape = graph.activePage.createNew("toolInvokeNodeState", position.x, position.y);
-        shape.processMetaData(schemaData);
+        graph.activePage.createNew({shapeType: "toolInvokeNodeState", x: position.x, y: position.y, metaData: schemaData});
     };
 
     /**
@@ -284,7 +281,7 @@ export const JadeFlow = (() => {
         // 新建的默认创建出start、end和一个连线
         const start = page.createShape("startNodeStart", 100, 100);
         const end = page.createShape("endNodeEnd", start.x + start.width + 200, 100);
-        const jadeEvent = page.createNew("jadeEvent", 0, 0);
+        const jadeEvent = page.createNew({shapeType: "jadeEvent", x: 0, y: 0});
         page.reset();
 
         // reset完成之后进行connect操作.
@@ -301,11 +298,12 @@ export const JadeFlow = (() => {
      * @param tenant 租户.
      * @param flowConfigData 流程元数据.
      * @param configs 传入的其他参数列表.
+     * @param i18n 传入的多语言翻译组件.
      * @param importStatements 传入的需要加载的语句.
      */
-    self.edit = async (div, tenant, flowConfigData, configs, importStatements = []) => {
+    self.edit = async (div, tenant, flowConfigData, configs, i18n, importStatements = []) => {
         const graphDom = getGraphDom(div);
-        const g = await createGraph(graphDom, tenant, flowConfigData, configs, importStatements);
+        const g = await createGraph(graphDom, tenant, flowConfigData, configs, i18n, importStatements);
         const pageData = g.getPageData(0);
         await g.edit(0, graphDom, pageData.id);
         await g.activePage.awaitShapesRendered();
@@ -331,10 +329,11 @@ export const JadeFlow = (() => {
         return jadeFlowAgent(g);
     };
 
-    const createGraph = async (div, tenant, flowConfigData, configs, importStatements) => {
+    const createGraph = async (div, tenant, flowConfigData, configs, i18n, importStatements) => {
         const g = jadeFlowGraph(div, "jadeFlow");
         g.collaboration.mute = true;
         g.configs = configs;
+        g.i18n = i18n;
         for (let i = 0; i < importStatements.length; i++) {
             await g.dynamicImportStatement(importStatements[i]);
         }

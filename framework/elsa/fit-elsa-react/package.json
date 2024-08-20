@@ -1,7 +1,7 @@
 {
   "name": "@fit-elsa/elsa-react",
   "private": false,
-  "version": "1.0.0-alpha.93",
+  "version": "1.0.0-alpha.97",
   "type": "module",
   "main": "./build/elsa-react.js",
   "module": "./build/elsa-react.js",
@@ -41,7 +41,8 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "vite": "^5.2.0",
     "vite-plugin-libcss": "^1.1.1",
-    "vite-plugin-svgr": "^4.2.0"
+    "vite-plugin-svgr": "^4.2.0",
+    "react-i18next": "^11.18.3"
   },
   "publishConfig": {
     "registry": "https://cmc.centralrepo.rnd.huawei.com/artifactory/api/npm/product_npm/",

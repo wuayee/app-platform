@@ -1,6 +1,7 @@
-import { FormInstance, Radio, Form, Checkbox, Card, Input } from 'antd';
 import React from 'react';
+import { FormInstance, Radio, Form, Checkbox, Input } from 'antd';
 import { KnowledgeIcons } from '../icons';
+import { useTranslation } from 'react-i18next';
 import './text-split.scoped.scss';
 import './style.scoped.scss';
 
@@ -25,64 +26,62 @@ type FieldType = {
 };
 
 const TextSplitClear = ({ form }: props) => {
+  const { t } = useTranslation();
   const initialValues: FieldType = {
     splitType: 'PARAGRAPH',
   };
-
   // 监听文本清洗算子
   const textCleanOperatorChange = Form.useWatch('operatorIds', form);
-
   // 监听文本分段
   const textSplit = Form.useWatch('splitType', form);
-
   const operatorOptions = [
     {
-      label: '文档目录去除',
+      label: t('documentDirectoryRemoval'),
       value: 'com.huawei.eDataMate.operators.content_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '文档表情去除',
+      label: t('documentEmoticonRemoval'),
       value: 'com.huawei.eDataMate.operators.emoji_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '多余空格去除',
+      label: t('redundantSpaceRemoval'),
       value: 'com.huawei.eDataMate.operators.extra_space_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '全角转半角',
+      label: t('fullToHalf'),
       value: 'com.huawei.eDataMate.operators.full_width_characters_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '文档乱码去除',
+      label: t('documentGarbleRemoval'),
       value: 'com.huawei.eDataMate.operators.garble_characters_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: 'HTML标签去除',
+      label: t('htmlTagRemoval'),
       value: 'com.huawei.eDataMate.operators.html_tag_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '不可见字符去除',
+      label: t('invisibleCharactersRemoval'),
       value: 'com.huawei.eDataMate.operators.invisible_characters_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '图注表注去除',
+      label: t('figureTableRemoval'),
       value: 'com.huawei.eDataMate.operators.legend_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '繁体转简体',
+      label: t('traditionalToSimplified'),
       value: 'com.huawei.eDataMate.operators.traditional_chinese_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '空格标准化插件',
+      label: t('spaceNormalizationPlug'),
       value: 'com.huawei.eDataMate.operators.unicode_space_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
@@ -90,12 +89,12 @@ const TextSplitClear = ({ form }: props) => {
 
   const docSegmentOptions = [
     {
-      label: '段落',
+      label: t('paragraphed'),
       value: 'PARAGRAPH',
       icon: <KnowledgeIcons.local />,
     },
     {
-      label: '句子',
+      label: t('sentences'),
       value: 'SENTENCE',
       icon: <KnowledgeIcons.nas />,
     },
@@ -115,7 +114,7 @@ const TextSplitClear = ({ form }: props) => {
         style={{ maxWidth: 800 }}
       >
         <Form.Item
-          label='选择文本分段'
+          label={t('selectTextSegment')}
           name='splitType'
           style={{
             marginTop: 16,
@@ -139,56 +138,55 @@ const TextSplitClear = ({ form }: props) => {
         {textSplit === 'TOKEN' ? (
           <>
             <Form.Item
-              label='设置分片长度'
-              rules={[{ required: true, message: '输入不能为空' }]}
+              label={t('setsFragmentlength')}
+              rules={[{ required: true, message: t('plsEnterRequiredItem') }]}
               name='chunkSize'
               style={{
                 marginTop: 16,
               }}
             >
-              <Input placeholder='请输入分段数' />
+              <Input placeholder={t('plsEnter')} />
             </Form.Item>
             <Form.Item
-              label='重叠度'
-              rules={[{ required: true, message: '输入不能为空' }]}
+              label={t('degreeOfOverlap')}
+              rules={[{ required: true, message: t('plsEnterRequiredItem') }]}
               name='chunkOverlap'
               style={{
                 marginTop: 16,
               }}
             >
-              <Input placeholder='请输入重叠度' />
+              <Input placeholder={t('plsEnter')} />
             </Form.Item>
           </>
         ) : (
-          <>
-            <Form.Item
-              label='选择清洗算子'
-              
-              name='operatorIds'
-              style={{
-                marginTop: 16,
-              }}
-            >
-              <Checkbox.Group className='radio-card-group'>
-                {operatorOptions.map((operator) => (
-                  <Checkbox
-                    value={operator.value}
-                    style={{
-                      borderColor: (textCleanOperatorChange || []).includes(operator.value)
-                        ? '#1677ff'
-                        : '',
-                    }}
-                  >
-                    <div className='radio-card-item'>
-                      {operator.icon}
-                      <span>{operator.label}</span>
-                    </div>
-                  </Checkbox>
-                ))}
-              </Checkbox.Group>
-            </Form.Item>
-          </>
-        )}
+            <>
+              <Form.Item
+                label={t('selectingCleansing')}
+                name='operatorIds'
+                style={{
+                  marginTop: 16,
+                }}
+              >
+                <Checkbox.Group className='radio-card-group'>
+                  {operatorOptions.map((operator) => (
+                    <Checkbox
+                      value={operator.value}
+                      style={{
+                        borderColor: (textCleanOperatorChange || []).includes(operator.value)
+                          ? '#1677ff'
+                          : '',
+                      }}
+                    >
+                      <div className='radio-card-item'>
+                        {operator.icon}
+                        <span>{operator.label}</span>
+                      </div>
+                    </Checkbox>
+                  ))}
+                </Checkbox.Group>
+              </Form.Item>
+            </>
+          )}
       </Form>
     </div>
   );

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import {Form} from "antd";
 import {JadeObservableInput} from "../common/JadeObservableInput.jsx";
+import { useTranslation } from "react-i18next";
 
 Name.propTypes = {
     itemId: PropTypes.string.isRequired, // 确保 itemId 是一个必需的字符串
@@ -21,12 +22,13 @@ Name.propTypes = {
  * @returns {JSX.Element} 开始节点关于入参名称的Dom
  */
 export default function Name({itemId, propValue, type, disableModifiable, onChange}) {
+    const { t } = useTranslation();
     return (<Form.Item
         className="jade-form-item"
-        label="字段名称"
+        label={t('fieldName')}
         name={`name-${itemId}`}
-        rules={[{required: true, message: "参数名称不能为空"},
-            {pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'}]}
+        rules={[{required: true, message: t('paramNameCannotBeEmpty')},
+            {pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: t('fieldNameRule')}]}
         validateTrigger="onBlur"
         initialValue={propValue}
     >
@@ -36,7 +38,7 @@ export default function Name({itemId, propValue, type, disableModifiable, onChan
             value={propValue}
             type={type}
             disabled={disableModifiable}
-            placeholder="请输入字段名称"
+            placeholder={t('pleaseInsertFieldName')}
             showCount
             maxLength={20}
             onChange={e => onChange && onChange("name", e.target.value)} // 当输入框的值发生变化时调用父组件传递的回调函数

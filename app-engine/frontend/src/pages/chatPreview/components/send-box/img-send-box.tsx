@@ -13,7 +13,7 @@ const ImgSendBox = (props) => {
   function setFileDom(type) {
     switch (type) {
       case 'image':
-        return <img className='img-send-item' src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`}/>
+        return <img className='img-send-item' src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} />
         break;
       case 'audio':
         return <audio src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} controls></audio>
@@ -22,15 +22,15 @@ const ImgSendBox = (props) => {
         return <video src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} controls></video>
         break;
       default:
-        return  (<div className='file-div-item'>
-                  <img className='file-item' src={fileImg}/>
-                  <span className='file-text' title={file_name}>{file_name}</span>
-                </div>)
+        return (<div className='file-div-item'>
+          <img className='file-item' src={fileImg} />
+          <span className='file-text' title={file_name}>{file_name}</span>
+        </div>)
     }
   }
   return <>{(
     <div className='img-send-box'>
-      { setFileDom(sendType) }
+      { setFileDom(sendType)}
     </div>
   )}</>
 }

@@ -10,9 +10,11 @@ import CheckFilter from './condition-checkbox-form';
 import OpratorFilter from './condition-operator';
 import { belongsMap, casecadeMap, conditionMap } from '../common/condition';
 import { getOptionsLabel } from '../utils/chart-condition';
+import { useTranslation } from 'react-i18next';
 import '../styles/condition-item.scss';
 
 const ConditionItems = (props: any) => {
+  const { t } = useTranslation();
   const { filterItem, disabled, formData, save, remove, conditions } = props;
   const [filterCurrent, setFilterCurrent] = useState<any>({});
   const [getFormData, setGetFormData] = useState('');
@@ -56,7 +58,7 @@ const ConditionItems = (props: any) => {
   };
   const handleConfirm = () => {
     if (filterCurrent.value.length === 0) {
-      Message({ type: 'warning', content: '选择结果不能为空' });
+      Message({ type: 'warning', content: t('selectionEmpty') });
       return;
     }
     save(filterCurrent);
@@ -103,18 +105,18 @@ const ConditionItems = (props: any) => {
         onOpenChange={onOpenChange}
         content={
           <div>
-          { filterItem.operator &&  <OpratorFilter filterCurrent={filterCurrent} setFilterCurrent={setFilterCurrent}/>}
-          { setFormDom(filterItem.filterType) }
+            {filterItem.operator && <OpratorFilter filterCurrent={filterCurrent} setFilterCurrent={setFilterCurrent} />}
+            {setFormDom(filterItem.filterType)}
             <div className='action-menu'>
-            <Button size='small' onClick={() => handleCancel()}>取消</Button>
-            <Button size='small' type='primary' onClick={handleConfirm}>确定</Button>
+              <Button size='small' onClick={() => handleCancel()}>{t('cancel')}</Button>
+              <Button size='small' type='primary' onClick={handleConfirm}>{t('ok')}</Button>
+            </div>
           </div>
-        </div>
-      }>
+        }>
         <div className='tag-item' onClick={tagClick}>
           <div className='filter-title'>
-          {filterItem.label }
-          { filterItem.operator === 'nin' ? '不包含 :' : ' : ' } 
+            {filterItem.label}
+            {filterItem.operator === 'nin' ? `${t('notContain')} :` : ' : '}
           </div>
           <div className='filter-data'>{formatterLabel(filterItem)}</div>
           {!['会计期', '币种', '口径'].includes(filterItem.label) ? (
@@ -125,8 +127,8 @@ const ConditionItems = (props: any) => {
               />
             </div>
           ) : (
-            ''
-          )}
+              ''
+            )}
         </div>
       </Popover>
     </>

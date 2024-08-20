@@ -86,7 +86,6 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.Tuple;
@@ -129,6 +128,7 @@ public class AippRunTimeServiceImpl
     private static final String NAME_KEY = "name";
     private static final String VALUE_KEY = "value";
     private static final String TYPE_KEY = "type";
+    private static final String PARENT_CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
 
     private final MetaService metaService;
     private final DynamicFormService dynamicFormService;
@@ -296,14 +296,25 @@ public class AippRunTimeServiceImpl
     }
 
     @Override
-    public String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext,
+    public Choir<Object> startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext,
             OperationContext context) {
         String versionId = this.metaInstanceService.getMetaVersionId(metaInstId);
         Meta meta = this.metaService.retrieve(versionId, context);
-        Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
-        String flowDefinitionId = ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
-        this.startFlow(versionId, flowDefinitionId, metaInstId, businessData, context);
-        return metaInstId;
+        Map<String, Object> businessData = ObjectUtils.cast(initContext.get(AippConst.BS_INIT_CONTEXT_KEY));
+        businessData.put("startNodeInputParams", JSONObject.parse(JSONObject.toJSONString(businessData)));
+        String flowDefinitionId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
+        setExtraBusinessData(context, businessData, meta, metaInstId);
+        String path = this.logService.getParentPath(metaInstId);
+        String parentInstanceId =
+                (StringUtils.isNotEmpty(path)) ? path.split(AippLogUtils.PATH_DELIMITER)[1] : metaInstId;
+        businessData.putIfAbsent(AippConst.PARENT_INSTANCE_ID, parentInstanceId);
+        businessData.putIfAbsent(AippConst.PARENT_CALLBACK_ID, PARENT_CALLBACK_ID);
+        businessData.putIfAbsent(AippConst.CONTEXT_USER_ID, context.getOperator());
+        return Choir.create(emitter -> {
+            this.appChatSSEService.addEmitter(parentInstanceId, emitter, new CountDownLatch(1));
+            this.startFlow(versionId, flowDefinitionId, metaInstId, businessData, context);
+            this.appChatSSEService.latchAwait(parentInstanceId);
+        });
     }
 
     /**
@@ -359,25 +370,7 @@ public class AippRunTimeServiceImpl
         this.recordContext(context, meta, businessData, metaInst);
 
         // 添加memory
-        String flowDefinitionId = ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
-        List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
-        String memoryType = this.getMemoryType(memoryConfigs);
-        boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
-        if (!isMemorySwitch) {
-            this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
-            return metaInstId;
-        }
-        if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
-            String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
-            String aippType = ObjectUtils.cast(meta.getAttributes()
-                    .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
-            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
-                    this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, businessData, context));
-            this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
-        } else {
-            this.aippStreamService.sendToAncestor(metaInstId,
-                    this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
-        }
+        this.startFlowWithMemoryOrNot(businessData, meta, context, metaInst);
         return metaInstId;
     }
 
@@ -410,45 +403,41 @@ public class AippRunTimeServiceImpl
         // 记录上下文
         this.recordContext(context, meta, businessData, metaInst);
         return Tuple.duet(metaInst.getId(),
-                Choir.create(emitter -> this.startFlowWithMemoryOrNot(businessData, meta, context, metaInst, emitter)));
+                Choir.create(emitter -> {
+                    this.appChatSSEService.addEmitter(metaInst.getId(), emitter, new CountDownLatch(1));
+                    this.startFlowWithMemoryOrNot(businessData, meta, context, metaInst);
+                    this.appChatSSEService.latchAwait(metaInst.getId());
+                }));
     }
 
     private void startFlowWithMemoryOrNot(Map<String, Object> businessData, Meta meta, OperationContext context,
-            Instance metaInst, Emitter<Object> emitter) {
+            Instance metaInst) {
+        this.appChatSSEService.send(metaInst.getId(), AppChatRsp.builder()
+                .instanceId(metaInst.getId()).status(FlowTraceStatus.READY.name())
+                .atChatId(ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID)))
+                .chatId(ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID))).build());
         String flowDefinitionId = cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
-        this.appChatSSEService.addEmitter(metaInst.getId(), emitter, new CountDownLatch(1));
-        this.appChatSSEService.send(metaInst.getId(), AppChatRsp.builder()
-                .instanceId(metaInst.getId())
-                .atChatId(ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID)))
-                .chatId(ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID)))
-                .status(FlowTraceStatus.READY.name())
-                .build());
         boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
+        String memoryType = this.getMemoryType(memoryConfigs);
+        if (!isMemorySwitch && !StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
+            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
+        }
         if (!isMemorySwitch) {
             this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
-            this.appChatSSEService.latchAwait(metaInst.getId());
             return;
         }
-        String memoryType = this.getMemoryType(memoryConfigs);
         if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
-            String memoryChatId = ObjectUtils.cast(businessData.get("chatId"));
+            String memoryChatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
             String aippType = ObjectUtils.cast(meta.getAttributes()
                     .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
             businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
-                    this.getMemories(meta.getId(), memoryType, memoryChatId, memoryConfigs, aippType,
-                            businessData,
+                    this.getMemories(meta.getId(), memoryType, memoryChatId, memoryConfigs, aippType, businessData,
                             context));
             this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
-            this.appChatSSEService.latchAwait(metaInst.getId());
         } else {
-            String processedInstanceId = metaInst.getId();
-            String path = this.logService.getParentPath(processedInstanceId);
-            if (StringUtils.isNotEmpty(path)) {
-                processedInstanceId = path.split(AippLogUtils.PATH_DELIMITER)[1];
-            }
-            this.appChatSSEService.sendLastData(processedInstanceId,
-                    this.buildMemoryConfigDto(businessData, metaInst.getId(), "UserSelect"));
+            MemoryConfigDto dto = this.buildMemoryConfigDto(businessData, metaInst.getId(), "UserSelect");
+            this.appChatSSEService.sendToAncestorLastData(metaInst.getId(), dto);
         }
     }
 
@@ -456,7 +445,6 @@ public class AippRunTimeServiceImpl
             Instance metaInst) {
         businessData.put(AippConst.CONTEXT_APP_ID, meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
-        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
         businessData.put(AippConst.CONTEXT_USER_ID, context.getOperator());
         if (businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
             Map<String, String> fileDescription = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY));
@@ -1054,9 +1042,10 @@ public class AippRunTimeServiceImpl
      * @param context 操作上下文
      * @param instanceId 实例id
      * @param msgArgs 用于终止时返回的信息
+     * @return 终止对话后返回的信息
      */
     @Override
-    public void terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context) {
+    public String terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context) {
         String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
         Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
@@ -1094,6 +1083,7 @@ public class AippRunTimeServiceImpl
                 .createUserAccount(context.getW3Account())
                 .path(this.aippLogService.buildPath(instanceId, null)) // 这块在子流程调用时，得考虑下
                 .build());
+        return message;
     }
 
     /**
@@ -1138,9 +1128,10 @@ public class AippRunTimeServiceImpl
         HttpClassicClientRequest postRequest = httpClientFactory.create()
                 .createRequest(HttpRequestMethod.POST, this.sharedUrl);
         postRequest.entity(ObjectEntity.create(postRequest, JsonUtils.toJsonString(chats)));
-        try {
-            String respContent = HttpUtils.sendHttpRequest(postRequest);
-            return JsonUtils.parseObject(respContent);
+        try(HttpClassicClientResponse<Object> response = HttpUtils.execute(postRequest)) {
+            this.handleResponse(response, postRequest);
+            return ObjectUtils.cast(response.objectEntity()
+                    .orElseThrow(() -> new IOException("Response is empty.")).object());
         } catch (IOException e) {
             log.error("Failed to share:", e.getMessage());
             throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
@@ -1152,10 +1143,25 @@ public class AippRunTimeServiceImpl
         HttpClassicClientRequest getRequest = this.httpClientFactory.create().createRequest(
                 HttpRequestMethod.GET,
                 this.sharedUrl + "?shareId=" + shareId);
-        try {
-            String respContent = HttpUtils.sendHttpRequest(getRequest);
-            return JsonUtils.parseObject(respContent);
+        try(HttpClassicClientResponse<Object> response = HttpUtils.execute(getRequest)) {
+            this.handleResponse(response, getRequest);
+            return ObjectUtils.cast(response.objectEntity()
+                    .orElseThrow(() -> new AippException(AippErrCode.UNKNOWN)).object());
         } catch (IOException e) {
+            log.error("Get shared data failed.", e);
+            throw new AippException(AippErrCode.UNKNOWN);
+        }
+    }
+
+    private void handleResponse(HttpClassicClientResponse<Object> response, HttpClassicClientRequest postRequest)
+            throws IOException {
+        if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
+            log.error(StringUtils.format("send http fail. url={0} result={1}",
+                    postRequest.requestUri(), response.statusCode()));
+            throw new AippException(AippErrCode.UNKNOWN);
+        }
+        if (!response.objectEntity().isPresent()) {
+            log.error(StringUtils.format("get empty response entity, url={0}", postRequest.requestUri()));
             throw new AippException(AippErrCode.UNKNOWN);
         }
     }

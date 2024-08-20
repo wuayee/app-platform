@@ -31,11 +31,11 @@ public class EvalTaskCreateDto {
     @NotEmpty(message = "Status cannot be empty.")
     private String status;
 
-    @Property(description = "应用编号", required = true)
+    @Property(description = "应用唯一标识", required = true)
     @NotBlank(message = "The application id cannot be empty.")
     private String appId;
 
-    @Property(description = "评估工作流编号", required = true)
+    @Property(description = "评估工作流唯一标识", required = true)
     @NotBlank(message = "The workflow id cannot be empty.")
     private String workflowId;
 }

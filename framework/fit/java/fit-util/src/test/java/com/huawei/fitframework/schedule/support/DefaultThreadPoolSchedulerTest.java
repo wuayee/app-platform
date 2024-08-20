@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DefaultThreadPoolSchedulerTest {
     private ThreadPoolScheduler threadPoolScheduler;
     private Task task;
-    private AtomicReference<String> Message;
+    private AtomicReference<String> message;
 
     private final String expected = "final";
 
@@ -49,10 +49,10 @@ public class DefaultThreadPoolSchedulerTest {
                 .isDaemonThread(false)
                 .rejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy())
                 .build();
-        this.Message = new AtomicReference<>("original");
+        this.message = new AtomicReference<>("original");
         Callable<String> callable = () -> {
-            this.Message.set(this.expected);
-            return this.Message.get();
+            this.message.set(this.expected);
+            return this.message.get();
         };
         this.task = Task.builder().callable(callable).build();
     }
@@ -113,7 +113,7 @@ public class DefaultThreadPoolSchedulerTest {
                     catchThrowableOfType(() -> DefaultThreadPoolSchedulerTest.this.threadPoolScheduler.schedule(
                             DefaultThreadPoolSchedulerTest.this.task), RejectedExecutionException.class);
             assertThat(rejectedExecutionException).isNotNull();
-            assertThat(DefaultThreadPoolSchedulerTest.this.Message.get()).isNotEqualTo(this.expected());
+            assertThat(DefaultThreadPoolSchedulerTest.this.message.get()).isNotEqualTo(this.expected());
         }
     }
 }

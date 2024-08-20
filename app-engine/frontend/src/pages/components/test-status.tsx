@@ -1,9 +1,11 @@
 import React from 'react';
-import {CheckCircleFilled, CloseCircleFilled, LoadingOutlined} from '@ant-design/icons';
+import { CheckCircleFilled, CloseCircleFilled, LoadingOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import './styles/test-status.scss';
-const TestStatus = (props) => {
-  const { testStatus, testTime} = props;
 
+const TestStatus = (props) => {
+  const { t } = useTranslation();
+  const { testStatus, testTime } = props;
   return <>
     { testStatus && <span className={[
       'header-time',
@@ -11,10 +13,10 @@ const TestStatus = (props) => {
       testStatus === 'Finished' ? 'finished' : '',
       testStatus === 'Error' ? 'error' : '',
     ].join(' ').trim()}>
-      {testStatus === 'Running' && <div><LoadingOutlined className='test-icon'/><span>试运行中 {testTime}s</span></div>}
-      {testStatus === 'Finished' && <div><CheckCircleFilled className='test-icon'/><span>运行成功</span></div>}
-      {testStatus === 'Error' && <div><CloseCircleFilled className='test-icon'/><span>运行失败 {testTime}s</span></div>}
-       </span>}
+      {testStatus === 'Running' && <div><LoadingOutlined className='test-icon' /><span>{t('runningTip')} {testTime}s</span></div>}
+      {testStatus === 'Finished' && <div><CheckCircleFilled className='test-icon' /><span>{t('runningTip2')}</span></div>}
+      {testStatus === 'Error' && <div><CloseCircleFilled className='test-icon' /><span>{t('runningTip3')} {testTime}s</span></div>}
+    </span>}
   </>
 };
 

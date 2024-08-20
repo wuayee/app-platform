@@ -102,7 +102,7 @@ public abstract class AbstractExecutor {
             return false;
         } catch (IOException e) {
             throw new MojoExecutionException(StringUtils.format("Failed to read depended JAR. [file={0}]",
-                    artifact.getFile().getPath()), e);
+                    FileUtils.path(artifact.getFile())), e);
         }
     }
 

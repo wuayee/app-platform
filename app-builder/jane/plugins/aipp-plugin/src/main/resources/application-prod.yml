@@ -5,7 +5,7 @@ fit:
       - 'com.huawei.jade.fel'
       - 'com.huawei.jade.voice.to.text'
   messages:
-    basename: i18n/messages
+    basename: i18n/messages, i18n/ui
   datasource:
     primary: 'app-engine'
     instances:
@@ -41,7 +41,7 @@ elsa:
   elsaKey:
 xiaohai:
   upload_chat_history_url:
-  share_url:
+  share_url: http://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/share
 model:
   xiaohai:
     knowledge:

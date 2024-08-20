@@ -33,6 +33,12 @@ public class AtWithinParser extends BaseParser {
     private final PointcutParameter[] parameters;
     private final ClassLoader classLoader;
 
+    /**
+     * 表示初始化参数和类加载器的构造函数。
+     *
+     * @param parameters 表示参数数组的 {@link PointcutParameter}。
+     * @param classLoader 表示类加载器的 {@link ClassLoader}。
+     */
     public AtWithinParser(PointcutParameter[] parameters, ClassLoader classLoader) {
         this.parameters = nullIf(parameters, new PointcutParameter[0]);
         this.classLoader = classLoader;

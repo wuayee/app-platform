@@ -4,26 +4,14 @@
 
 package com.huawei.fit.jober.aipp.util;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fit.jober.common.ErrorCodes;
-import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Locale;
 
 /**
  * 文件操作工具
@@ -77,46 +65,6 @@ public class AippFileUtils {
         } catch (IllegalStateException e) {
             log.warn("delete file {} failed, error = {}", file.getName(), e.getMessage());
         }
-    }
-
-    /**
-     * 从s3获取文件到本地临时目录 {@link AippFileUtils#NAS_SHARE_DIR}。
-     * <p><b>注意：</b>使用结束需要手动删除临时文件。</p>
-     *
-     * @param instId 表示实例唯一标识的 {@link String}, 作为子目录名称。
-     * @param s3Url 表示s3的访问地址的 {@link String}。
-     * @param fileType 表示文件类型的 {@link String}。
-     * @param httpClient 表示发送http请求的客户端的{@link HttpClassicClient}
-     * @return 表示下载下来的临时文件的 {@link File}。
-     * @throws JobberException 下载文件异常时抛出
-     */
-    public static File getFileFromS3(String instId, String s3Url, String fileType, HttpClassicClient httpClient)
-            throws JobberException {
-        HttpClassicClientRequest request = httpClient.createRequest(HttpRequestMethod.GET, s3Url);
-        File tmpFile;
-        try (HttpClassicClientResponse<Object> response = HttpUtils.execute(request)) {
-            if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
-                throw new IOException(String.format(Locale.ROOT,
-                        "bad result code=%d",
-                        response.statusCode()));
-            }
-            tmpFile = createFile(instId, fileType + "_" + UUIDUtil.uuid());
-            try (InputStream inStream = new ByteArrayInputStream(response.entityBytes());
-                 OutputStream outStream = Files.newOutputStream(tmpFile.toPath())) {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = inStream.read(buffer)) != -1) {
-                    outStream.write(buffer, 0, bytesRead);
-                }
-            }
-        } catch (IOException e) {
-            throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
-                    StringUtils.format("Fail to get file from s3. [fileType={0}, url={1}, error={2}]",
-                            fileType,
-                            s3Url,
-                            e.getMessage()));
-        }
-        return tmpFile;
     }
 
     /**

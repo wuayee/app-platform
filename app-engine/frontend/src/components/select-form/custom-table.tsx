@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { TableProps } from 'antd';
 import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './style.scoped.scss';
-import { Recoverable } from 'repl';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../locale/i18n';
 
 interface Item {
   key: string;
@@ -12,14 +13,14 @@ interface Item {
   indexType: string;
 }
 
-const options=[
-  { value: 'other', label: '其他索引' },
-  { value: 'vector', label: '向量索引' },
+const options = [
+  { value: 'other', label: i18n.t('otherIndex') },
+  { value: 'vector', label: i18n.t('vectorIndex') },
 ];
 
-const dataOptions=[
-  { value: 'VARCHAR', label: '字符' },
-  { value: 'NUMBER', label: '数字' },
+const dataOptions = [
+  { value: 'VARCHAR', label: i18n.t('character') },
+  { value: 'NUMBER', label: i18n.t('number') },
 ];
 
 
@@ -63,14 +64,15 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   children,
   ...restProps
 }) => {
+  const { t } = useTranslation();
   const inputNode =
     inputType === 'select' ? (
       <Select
-        options={dataIndex === 'dataType' ? dataOptions: options}
+        options={dataIndex === 'dataType' ? dataOptions : options}
       />
     ) : (
-      <Input />
-    );
+        <Input />
+      );
 
   return (
     <td {...restProps}>
@@ -81,15 +83,15 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
           rules={[
             {
               required: true,
-              message: `请输入 ${title}!`,
+              message: `${t('plsEnter')} ${title}!`,
             },
           ]}
         >
           {inputNode}
         </Form.Item>
       ) : (
-        children
-      )}
+          children
+        )}
     </td>
   );
 };
@@ -101,6 +103,7 @@ interface PriceInputProps {
 }
 
 const CustomTable: React.FC<PriceInputProps> = (props) => {
+  const { t } = useTranslation();
   const { id, value = [], onChange } = props;
   const [form] = Form.useForm();
   const [data, setData] = useState(value);
@@ -120,8 +123,8 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
 
   // 移除数据
   const removeData = (record: Partial<Item> & { key: React.Key }) => {
-    const index = data.findIndex(item=> record.key === item.key);
-    if(index !== -1) {
+    const index = data.findIndex(item => record.key === item.key);
+    if (index !== -1) {
       const newData = [...data]
       newData.splice(index, 1);
       setData([...newData]);
@@ -161,35 +164,35 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
 
   const columns = [
     {
-      title: '列名',
+      title: t('colName'),
       dataIndex: 'colName',
       width: '30%',
       editable: true,
     },
     {
-      title: '数据类型',
+      title: t('dataType'),
       dataIndex: 'dataType',
       width: '30%',
       editable: true,
       render: (_: any, record: Item) => {
         return (<>
-          {dataOptions.find(item=> item.value === _)?.label || ''}
+          {dataOptions.find(item => item.value === _)?.label || ''}
         </>)
       }
     },
     {
-      title: '索引类型',
+      title: t('indexType'),
       dataIndex: 'indexType',
       width: '30%',
       editable: true,
       render: (_: any, record: Item) => {
         return (<>
-          {options.find(item=> item.value === _)?.label || ''}
+          {options.find(item => item.value === _)?.label || ''}
         </>)
       }
     },
     {
-      title: '操作',
+      title: t('operate'),
       dataIndex: 'operation',
       width: '10%',
       render: (_: any, record: Item) => {
@@ -197,17 +200,17 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
         return editable ? (
           <Space>
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-              保存
+              {t('save')}
             </Typography.Link>
           </Space>
         ) : (
-          <Space>
-            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-              编辑
-            </Typography.Link>
-            <a onClick={()=> {removeData(record)}}>删除</a>
-          </Space>
-        );
+            <Space>
+              <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                {t('edit')}
+              </Typography.Link>
+              <a onClick={() => { removeData(record) }}>{t('delete')}</a>
+            </Space>
+          );
       },
     },
   ];
@@ -239,8 +242,8 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
   return (
     <Form<FieldType> form={form} component={false}>
       <div className='custom-table-header'>
-        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={ editingKey ? true : false }>
-          添加列
+        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={editingKey ? true : false}>
+          {t('addCol')}
         </Button>
       </div>
       <Table

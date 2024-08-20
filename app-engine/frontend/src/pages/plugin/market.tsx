@@ -8,8 +8,10 @@ import { Icons } from '../../components/icons';
 import EmptyItem from '../../components/empty/empty-item';
 import { PluginCardTypeE, sourceTabs } from './helper';
 import UploadToolDrawer from './upload/uploadTool';
+import { useTranslation } from 'react-i18next';
 
-const MarketItems = () => {
+const MarketItems = ({ reload }) => {
+  const { t } = useTranslation();
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -19,27 +21,24 @@ const MarketItems = () => {
   const [isOpenPlugin, setIsOpenPlugin] = useState(0);
 
   useEffect(() => {
-    console.log(pluginData);
-  }, [pluginData]);
-  useEffect(() => {
     getPluginList();
-  }, [selectedSource, name, pageNum, pageSize]);
+  }, [selectedSource, name, pageNum, pageSize, reload]);
   const getPluginList = async () => {
     let params;
     params =
       selectedSource === 'APP'
         ? {
-            name: '',
-            pageNum: pageNum,
-            pageSize,
-            excludeTags: selectedSource,
-          }
+          name,
+          pageNum: pageNum,
+          pageSize,
+          excludeTags: selectedSource,
+        }
         : {
-            name: '',
-            pageNum: pageNum,
-            pageSize,
-            includeTags: selectedSource,
-          };
+          name,
+          pageNum: pageNum,
+          pageSize,
+          includeTags: selectedSource,
+        };
     getPlugins(params).then(({ data, total }) => {
       setTotal(total);
       setPluginData(data);
@@ -105,7 +104,7 @@ const MarketItems = () => {
             setIsOpenPlugin(e.timeStamp);
           }}
         >
-          上传
+          {t('upload')}
         </Button>
         <UploadToolDrawer openSignal={isOpenPlugin} refreshPluginList={getPluginList} />
       </div>
@@ -115,9 +114,9 @@ const MarketItems = () => {
         onChange={(key: string) => setSelectedSource(key)}
         style={{ width: '100%', textAlign: 'center' }}
         centered={true}
-        // tabBarExtraContent={tabSearch}
+      // tabBarExtraContent={tabSearch}
       />
-      {pluginData.length > 0 ? (
+      {pluginData && pluginData.length > 0 ? (
         <>
           <div
             style={{
@@ -131,7 +130,7 @@ const MarketItems = () => {
           >
             {pluginData.map((card: any) => (
               <PluginCard
-                key={card.uniqueName}
+                key={card.pluginId}
                 getPluginList={getPluginList}
                 pluginData={card}
                 cardType={PluginCardTypeE.MARKET}
@@ -144,10 +143,10 @@ const MarketItems = () => {
           </div>
         </>
       ) : (
-        <div style={{ paddingTop: 100, height: '100%' }}>
-          <EmptyItem />
-        </div>
-      )}
+          <div style={{ paddingTop: 100, height: '100%' }}>
+            <EmptyItem />
+          </div>
+        )}
     </div>
   );
 };

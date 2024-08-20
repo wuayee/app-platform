@@ -12,10 +12,11 @@ import { useAppDispatch } from '@/store/hook';
 import { setCollectionValue } from '@/store/collection/collection';
 import { Message } from '@/shared/utils/message';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
+import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
-import { read } from 'fs';
 
 const AppDev: React.FC = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const tenantId = TENANT_ID;
@@ -52,7 +53,7 @@ const AppDev: React.FC = () => {
   }
   // 分页
   const pageNo = useRef(1);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const [search, setSearch] = useState('');
@@ -76,7 +77,7 @@ const AppDev: React.FC = () => {
           description: '',
           greeting: '',
           icon: '',
-          app_type: '编程开发',
+          app_type: t('programmingDevelopment'),
         },
       };
     });
@@ -112,13 +113,13 @@ const AppDev: React.FC = () => {
       if (res.code === 0) {
         queryApps();
         setOpen(false);
-        Message({ type: 'success', content: '已删除所选应用' });
+        Message({ type: 'success', content: t('deleteAppSuccess') });
         if (appData.length === 1) {
           setPage(1);
           return;
         }
       } else {
-        Message({ type: 'error', content: res.msg || '删除失败' });
+        Message({ type: 'error', content: res.msg || t('deleteFail') });
       }
     } finally {
       setLoading(false);
@@ -145,7 +146,7 @@ const AppDev: React.FC = () => {
   return (
     <div className='apps_root'>
       <div className='apps_header'>
-        <div className='apps_title'>应用开发</div>
+        <div className='apps_title'>{t('appDevelopment')}</div>
       </div>
       <div className='apps_main'>
         <div className='tabs'>
@@ -154,12 +155,12 @@ const AppDev: React.FC = () => {
             defaultActiveKey={activkey}
             items={[
               {
-                label: '我的应用',
+                label: t('mineApp'),
                 key: '1',
                 children: '',
               },
               {
-                label: '团队应用',
+                label: t('teamApp'),
                 key: '2',
                 children: '',
                 disabled: true,
@@ -169,12 +170,12 @@ const AppDev: React.FC = () => {
         </div>
         <div className='operatorArea'>
           <Button type='primary' onClick={create}>
-            创建
+            {t('create')}
           </Button>
           <Input
             showCount
             maxLength={64}
-            placeholder='搜索'
+            placeholder={t('search')}
             style={{ width: '200px', height: '35px', marginLeft: '16px' }}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
             onChange={(e) => handleSearch(e.target.value)}
@@ -212,17 +213,17 @@ const AppDev: React.FC = () => {
       />
       {/* 删除弹窗 */}
       <Modal
-        title='确定删除该应用'
+        title={t('deleteAppModalTitle')}
         width='380px'
         open={open}
         centered
         onOk={() => deleteApp()}
         onCancel={() => setOpen(false)}
         okButtonProps={{ loading }}
-        okText='确认'
-        cancelText='取消'
+        okText={t('ok')}
+        cancelText={t('cancel')}
       >
-        <p>删除后无法恢复，请重新创建应用</p>
+        <p>{t('deleteAppModalAlert')}</p>
       </Modal>
     </div>
   );

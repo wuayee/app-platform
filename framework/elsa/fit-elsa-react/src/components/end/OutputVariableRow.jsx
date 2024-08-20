@@ -4,6 +4,7 @@ import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSele
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 _OutputVariableRow.propTypes = {
     item: PropTypes.object.isRequired,
@@ -23,6 +24,7 @@ _OutputVariableRow.propTypes = {
 function _OutputVariableRow({item, handleItemChange, disabled}) {
     const inputName = `value-${item.id}`;
     const form = useFormContext();
+    const { t } = useTranslation();
 
     const _onReferencedValueChange = (value) => {
         handleItemChange(item.id, [{key: "referenceKey", value: value}]);
@@ -64,14 +66,14 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
                             onReferencedValueChange={_onReferencedValueChange}
                             onReferencedKeyChange={_onReferencedKeyChange}
                             style={{fontSize: "12px"}}
-                            placeholder="请选择"
+                            placeholder={t('pleaseSelect')}
                             showSearch
                             className="value-custom jade-select"
                             dropdownStyle={{
                                 maxHeight: 400, overflow: 'auto'
                             }}
                             value={item.value}
-                            rules={[{required: true, message: "字段值不能为空"}]}
+                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                     />
                 </>);
             case 'Input':
@@ -80,7 +82,7 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
                             style={{marginBottom: '8px'}}
                             id={`value-${item.id}`}
                             name={`value-${item.id}`}
-                            rules={[{required: true, message: '字段值不能为空'}]}
+                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                             validateTrigger="onBlur"
                             initialValue={item.value}
                     >
@@ -125,7 +127,7 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
                                 }
                                 handleItemChange(item.id, changes);
                             }}
-                            options={[{value: 'Reference', label: '引用'}, {value: 'Input', label: '输入'}]}
+                            options={[{value: 'Reference', label: t('reference')}, {value: 'Input', label: t('input')}]}
                             value={item.from}
                     />
                 </Form.Item>

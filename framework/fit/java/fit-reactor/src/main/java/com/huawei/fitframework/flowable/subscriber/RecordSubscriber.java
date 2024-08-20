@@ -8,6 +8,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.flowable.FlowableException;
 import com.huawei.fitframework.flowable.Subscription;
+import com.huawei.fitframework.inspection.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +142,7 @@ public class RecordSubscriber<T> extends EmptySubscriber<T> {
     }
 
     @Override
-    protected void complete(Subscription subscription) {
+    protected void complete(@Nonnull Subscription subscription) {
         this.completeRecords.add(new Record<>(false, this.index));
         this.index++;
     }

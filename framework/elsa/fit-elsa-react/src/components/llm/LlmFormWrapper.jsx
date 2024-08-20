@@ -7,6 +7,7 @@ import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useState} from "react";
 import httpUtil from "../util/httpUtil.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 LlmFormWrapper.propTypes = {
     data: PropTypes.object.isRequired,
@@ -23,6 +24,7 @@ LlmFormWrapper.propTypes = {
 export default function LlmFormWrapper({data, disabled}) {
     const dispatch = useDispatch();
     const shape = useShapeContext();
+    const { t } = useTranslation();
     let config;
     if (!shape || !shape.graph || !shape.graph.configs) {
         console.error('Cannot get shape.graph.configs.');
@@ -63,7 +65,7 @@ export default function LlmFormWrapper({data, disabled}) {
 
     const content = (<>
         <div>
-            <p>输入需要添加到提示词模板中的信息，可被提示词模板引用</p>
+            <p>{t('llmInputPopover')}</p>
         </div>
     </>);
 

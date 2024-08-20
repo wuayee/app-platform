@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { Radio, Input } from 'antd';
 import { compareMap } from '../common/condition';
+import { useTranslation } from 'react-i18next';
 
 const CompareForm = (props) => {
+  const { t } = useTranslation();
   const { filterCurrent, setFilterCurrent } = props;
   const [logicValue, setLogicValue] = useState('');
   const [logicType, setLogicType] = useState('lt');
@@ -27,15 +29,16 @@ const CompareForm = (props) => {
   return <>
     <div className='filter-compare-content'>
       <Radio.Group onChange={handleMagicChange} value={logicType}>
-        { Object.keys(compareMap).map((item, index) => {
+        {Object.keys(compareMap).map((item, index) => {
           return <Radio value={item} key={index} >{compareMap[item]}</Radio>
         })}
       </Radio.Group>
       <div style={{ margin: '10px 0' }}>
-        <Input value={logicValue} placeholder='请输入' onChange={inputChange} />
+        <Input value={logicValue} placeholder={t('plsEnter')} onChange={inputChange} />
       </div>
     </div>
   </>
+
 };
 
 

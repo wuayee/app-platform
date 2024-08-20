@@ -1,14 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Input, Spin } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Input, Spin } from 'antd';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import { useAppSelector } from '@/store/hook';
 import { SearchOutlined } from '@ant-design/icons';
 import { queryAppsApi } from '@/shared/http/apps';
 import { FINANCE_APP_ID } from '../common/config';
-import '../styles/referencing-app.scss'
+import { useTranslation } from 'react-i18next';
+import '../styles/referencing-app.scss';
 
 
 const ReferencingApp = (props) => {
+  const { t } = useTranslation();
   const { atItemClick, atClick, searchKey, setSearchKey } = props;
   const [appArr, setAppArr] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
@@ -59,10 +61,10 @@ const ReferencingApp = (props) => {
             value={searchKey}
             prefix={<SearchOutlined />}
             allowClear
-            placeholder='搜索'
+            placeholder={t('search')}
             maxLength={20}
             showCount
-            onChange={(e) => {setSearchKey(e.target.value)}}
+            onChange={(e) => { setSearchKey(e.target.value) }}
           />
         </div>
         {/*<span className='left'>收藏的应用</span>*/}

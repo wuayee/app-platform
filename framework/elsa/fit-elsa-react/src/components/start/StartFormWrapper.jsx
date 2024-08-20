@@ -7,6 +7,7 @@ import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import MultiConversation from "@/components/start/MultiConversation.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -23,6 +24,7 @@ StartFormWrapper.propTypes = {
  * @returns {JSX.Element} 开始表单Wrapper的DOM
  */
 export default function StartFormWrapper({data, disabled}) {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const shape = useShapeContext();
     const config = shape.graph.configs.find(node => node.node === "startNodeStart");
@@ -84,9 +86,7 @@ export default function StartFormWrapper({data, disabled}) {
     };
 
     const content = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-        <p>定义启动工作流所需的输入参数，这些内容将由</p>
-        <p>大模型在机器人对话过程中读取，允许大模型</p>
-        <p>在适当的时间启动工作流并填写正确的信息。</p>
+        <Trans i18nKey="startNodeInputPopover" components={{ p: <p /> }} />
     </div>);
 
     // 处理内部组件值变化的回调函数
@@ -122,7 +122,7 @@ export default function StartFormWrapper({data, disabled}) {
                 paddingRight: "4px",
                 height: "32px"
             }}>
-                <div className="jade-panel-header-font">输入</div>
+                <div className="jade-panel-header-font">{t('input')}</div>
                 <Popover content={content}>
                     <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                 </Popover>

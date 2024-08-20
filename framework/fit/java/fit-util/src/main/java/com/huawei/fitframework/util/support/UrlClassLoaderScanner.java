@@ -8,6 +8,7 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.jvm.classfile.ClassFile;
 import com.huawei.fitframework.resource.UrlUtils;
 import com.huawei.fitframework.util.ClassScanner;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.FunctionUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
@@ -164,10 +165,10 @@ public class UrlClassLoaderScanner implements ClassScanner {
             Path root = directory.toPath();
             try (Stream<Path> walk = Files.walk(root, Integer.MAX_VALUE)) {
                 walk.filter(path -> path.toFile().getName().endsWith(ClassFile.FILE_EXTENSION))
-                        .forEach(path -> this.scanner.onClassDetected(root.relativize(path).toFile().getPath()));
+                        .forEach(path -> this.scanner.onClassDetected(FileUtils.path(root.relativize(path).toFile())));
             } catch (IOException e) {
                 throw new IllegalStateException(StringUtils.format("Failed to scan class directory. [directory={0}]",
-                        directory.getPath()), e);
+                        FileUtils.path(directory)), e);
             }
         }
     }

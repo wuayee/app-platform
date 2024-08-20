@@ -27,6 +27,7 @@ import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.support.AbstractHttpClassicRequest;
 import com.huawei.fitframework.exception.ClientException;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.model.MultiValueMap;
 
 import java.io.IOException;
@@ -141,7 +142,19 @@ public class DefaultHttpClassicClientRequest extends AbstractHttpClassicRequest 
                     this.config);
         } catch (IOException e) {
             throw new ClientException("Failed to exchange response.", e);
+        } finally {
+            this.close();
         }
+    }
+
+    @Override
+    public Choir<Object> exchangeStream() {
+        return this.exchangeStream(Object.class);
+    }
+
+    @Override
+    public <T> Choir<T> exchangeStream(Type responseType) {
+        return new TextStreamChoir<>(this, responseType);
     }
 
     @Override
@@ -153,12 +166,15 @@ public class DefaultHttpClassicClientRequest extends AbstractHttpClassicRequest 
         super.commit();
     }
 
-    @Override
-    public void close() throws IOException {
-        this.clientRequest.close();
-        if (this.entity != null) {
-            this.entity.close();
-            this.entity = null;
+    private void close() {
+        try {
+            this.clientRequest.close();
+            if (this.entity != null) {
+                this.entity.close();
+                this.entity = null;
+            }
+        } catch (IOException e) {
+            // Ignore
         }
     }
 }

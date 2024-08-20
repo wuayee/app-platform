@@ -13,26 +13,27 @@ import { getDaysAndHours } from '@/common/dataUtil';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList, setChatRunning, setChatId, setOpenStar } from '@/store/chatStore/chatStore';
 import { updateChatId } from "@/shared/utils/common";
+import { historyChatProcess } from '../../utils/chat-process';
+import { useTranslation } from 'react-i18next';
 import './style.scoped.scss';
-import { historyChatProcess } from "../../utils/chat-process";
+
 interface HistoryChatProps {
   openHistorySignal: number;
 }
 
 const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) => {
+  const { t } = useTranslation();
   const currentChat = useRef(null);
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
-  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
-  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const dimension = useAppSelector((state) => state.commonStore.dimension);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [isClearOpen,setClearOpen]=useState(false);
+  const [isClearOpen, setClearOpen] = useState(false);
   const [requestInfo, setRequestInfo] = useState({
     aipp_id: '', aipp_version: '', offset: 0, limit: 100
   });
@@ -67,7 +68,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         }
         refreshList();
         // 删除成功提示
-      }}>删除</div>,
+      }}>{t('delete')}</div>,
     },
   ];
 
@@ -87,8 +88,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     }
   }, [appInfo.id])
 
-  const onClearList = async()=>{
-    await clearChatHistory(tenantId,appId);
+  const onClearList = async () => {
+    await clearChatHistory(tenantId, appId);
     refreshList();
     dispatch(setChatList([]));
     dispatch(setChatId(null));
@@ -118,10 +119,10 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
       title={
         <div className='history-title'>
           <div className='history-title-left'>
-            <span>历史聊天</span>
+            <span>{t('historyChat')}</span>
             <div className='history-clear-btn' onClick={() => setClearOpen(true)}>
               <ClearOutlined style={{ fontSize: 14, marginLeft: 8 }} />
-              <span className='history-clear-btn-text' >清空</span>
+              <span className='history-clear-btn-text' >{t('clear')}</span>
             </div>
           </div>
           <CloseOutlined
@@ -136,21 +137,21 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
       bodyStyle={{ padding: 0 }}
     >
       <div style={{ padding: 24 }}>
-        <Input placeholder='搜索...' prefix={<SearchOutlined />} disabled />
+        <Input placeholder={`${t('search')}...`} prefix={<SearchOutlined />} disabled />
       </div>
       <div className='history-wrapper'>
         {data?.slice(0, 30).map((item) => (
           <div className='history-item' key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
             <div className='history-item-content'>
               <div className='history-item-header'>
-              <Tooltip placement='top' title={<span style={{color:'#4d4d4d'}}>{item?.chat_name}</span>} color='#ffffff'>
-              <div className='history-item-title'>{item?.chat_name?.length>10?item?.chat_name?.substring(0,10)+'...':item?.chat_name}</div>
-              </Tooltip>
+                <Tooltip placement='top' title={<span style={{ color: '#4d4d4d' }}>{item?.chat_name}</span>} color='#ffffff'>
+                  <div className='history-item-title'>{item?.chat_name?.length > 10 ? item?.chat_name?.substring(0, 10) + '...' : item?.chat_name}</div>
+                </Tooltip>
                 <span
                   style={{ cursor: "pointer", color: "#1677ff" }}
-                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id);}}
+                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id); }}
                 >
-                  继续聊天
+                  {t('continueChat')}
                 </span>
               </div>
               <div className='history-item-desc'>{item?.msg_list?.[0]}</div>
@@ -164,8 +165,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
           </div>
         ))}
       </div>
-      <Modal title='警告' open={isClearOpen} onOk={onClearList} onCancel={()=>setClearOpen(false)}>
-        <p>确认要清空所有聊天记录？删除后该数据无法恢复。</p>
+      <Modal title={t('alert')} open={isClearOpen} onOk={onClearList} onCancel={() => setClearOpen(false)}>
+        <p>{t('clearHistoryChatContent')}</p>
       </Modal>
     </Drawer>
   );

@@ -12,8 +12,10 @@ import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -68,18 +70,39 @@ public interface HttpClassicClient extends HttpResource {
      * @return 表示 Http 响应的数据内容的 {@link T}。
      */
     default <T> T exchangeForEntity(HttpClassicClientRequest request, Type responseType) {
-        HttpClassicClientResponse<T> response = this.exchange(request, responseType);
-        if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            if (responseType == String.class) {
-                return cast(response.textEntity().map(TextEntity::content).orElse(StringUtils.EMPTY));
+        try (HttpClassicClientResponse<T> response = this.exchange(request, responseType)) {
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                if (responseType == String.class) {
+                    return cast(response.textEntity().map(TextEntity::content).orElse(StringUtils.EMPTY));
+                }
+                return cast(response.objectEntity().map(ObjectEntity::object).orElse(null));
+            } else if (response.statusCode() >= 400 && response.statusCode() < 500) {
+                throw new HttpClientErrorException(response);
+            } else if (response.statusCode() >= 500 && response.statusCode() < 600) {
+                throw new HttpServerErrorException(response);
+            } else {
+                throw new HttpClientResponseException(response);
             }
-            return cast(response.objectEntity().map(ObjectEntity::object).orElse(null));
-        } else if (response.statusCode() >= 400 && response.statusCode() < 500) {
-            throw new HttpClientErrorException(response);
-        } else if (response.statusCode() >= 500 && response.statusCode() < 600) {
-            throw new HttpServerErrorException(response);
-        } else {
-            throw new HttpClientResponseException(response);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to close http classic client response.", e);
         }
     }
+
+    /**
+     * 发送 Http 请求，获取 Http 响应的流式数据内容。
+     *
+     * @param request 表示 Http 请求的 {@link HttpClassicClientRequest}。
+     * @return 表示 Http 响应的流式数据内容的 {@link Choir}{@code <}{@link Object}{@code >}。
+     */
+    Choir<Object> exchangeStream(HttpClassicClientRequest request);
+
+    /**
+     * 发送 Http 请求，获取 Http 响应的流式数据内容。
+     *
+     * @param request 表示 Http 请求的 {@link HttpClassicClientRequest}。
+     * @param responseType 表示期待的流式返回值类型的 {@link Type}。
+     * @param <T> 表示期待的流式返回值类型的 {@link T}。
+     * @return 表示 Http 响应的流式数据内容的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    <T> Choir<T> exchangeStream(HttpClassicClientRequest request, Type responseType);
 }

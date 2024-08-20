@@ -48,7 +48,9 @@ export const codeNodeState = (id, x, y, width, height, parent, drawer) => {
     /**
      * @override
      */
+    const processMetaData = self.processMetaData;
     self.processMetaData = (metaData) => {
+        processMetaData.apply(self, [metaData]);
         self.flowMeta.jober.entity = toolEntity;
         self.flowMeta.jober.entity.uniqueName = metaData.uniqueName;
     };
@@ -62,7 +64,7 @@ export const codeNodeState = (id, x, y, width, height, parent, drawer) => {
             no: "1",
             name: "输入",
             type: SECTION_TYPE.DEFAULT,
-            data: self.input ? self.input.args : {}
+            data: self.input ? (self.input.args ? self.input.args : {}) : {}
         }, {
             no: "2",
             name: "输出",

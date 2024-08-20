@@ -15,7 +15,7 @@
     <properties>
         <bytebuddy.version>1.14.12</bytebuddy.version>
         <maven.version>3.8.8</maven.version>
-        <maven.plugin.version>3.13.1</maven.plugin.version>
+        <maven.plugin.version>3.8.2</maven.plugin.version>
     </properties>
 
     <dependencies>

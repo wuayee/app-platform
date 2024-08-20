@@ -9,7 +9,7 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 
 /**
  * Parallel Activity 平行节点，分all，either两种模式
- * 这个节点后面之哟啊没有遇到join节点，分支都属于平行分支
+ * 这个节点后面遇到join节点之前的分支都属于平行分支
  * all模式下，所有分支走完餐能触发join节点
  * either模式下，只要有一个分支到达join就会触发join节点，并作废其他任务
  *

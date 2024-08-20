@@ -14,15 +14,6 @@ export const historyChatProcess = (res) => {
     item.question.logType !== 'HIDDEN_QUESTION' && chatArr.push(questionObj);
     if (item.instanceLogBodies.length) {
       item.instanceLogBodies.forEach((aItem) => {
-        const regex = /```markdown(.*?)```/g;
-        const replacedArr = aItem.logData.match(regex);
-        let markdowned = aItem.logData.indexOf('```');
-        if (replacedArr && replacedArr.length) {
-          replacedArr.forEach((item) => {
-            let str = item.substring(11, item.length - 3);
-            aItem.logData = aItem.logData.replace(item, str);
-          });
-        }
         let { msg } = JSON.parse(aItem.logData);
         let answerObj = {
           content: msg,
@@ -30,7 +21,6 @@ export const historyChatProcess = (res) => {
           openLoading: false,
           checked: false,
           logId: aItem.logId,
-          markdownSyntax: markdowned !== -1,
           type: 'receive',
           instanceId: item.instanceId,
           finished: true,
@@ -43,11 +33,11 @@ export const historyChatProcess = (res) => {
           answerObj.isAt = true;
         }
         if (aItem.logType === 'FORM') {
-          let data  = JSON.parse(aItem.logData);
+          let data = JSON.parse(aItem.logData);
           let formAppearance = JSON.parse(data.formAppearance);
           let formData = JSON.parse(data.formData);
           answerObj.recieveType = 'form';
-          answerObj.formConfig =  {
+          answerObj.formConfig = {
             instanceId: item.instanceId,
             version: '',
             aippId: '',
@@ -89,19 +79,17 @@ export const inspirationProcess = (tenantId, data, prompItem, appInfo) => {
     let selectStr = '';
     if (selectItem.sourceType === 'fitable') {
       let params = { appId: appInfo.id, appType: appInfo.state === 'active' ? 'NORMAL' : 'PREVIEW' };
-      const res = await queryInspirationSelect( tenantId, 'GetQAFromLog', params);
+      const res = await queryInspirationSelect(tenantId, 'GetQAFromLog', params);
       if (res.code === 0) {
         options = res.data || [];
       }
-      selectStr = `<div class='chat-focus' contenteditable='false' data-type='${item}' style='min-width: 40px;'>${
-        selectItem.var || ''
-      }</div>`;
+      selectStr = `<div class='chat-focus' contenteditable='false' data-type='${item}' style='min-width: 40px;'>${selectItem.var || ''
+        }</div>`;
     } else {
       options = selectItem ? selectItem.sourceInfo.split(';') : [];
       options = options.filter((item) => item.length > 0);
-      selectStr = `<div class='chat-focus' contenteditable='false' data-type='${item}' style='min-width: 40px;'>${
-        options[0] || ''
-      }</div>`;
+      selectStr = `<div class='chat-focus' contenteditable='false' data-type='${item}' style='min-width: 40px;'>${options[0] || ''
+        }</div>`;
     }
     selectItem.options = options;
     promptArr.push(selectItem);
@@ -192,7 +180,7 @@ export const messageProcess = (instanceId, messageData, atAppInfo) => {
     recieveType: 'form',
     finished: true,
     checked: false,
-    msgType: 'form',
+    messageType: 'form',
     logId,
     formConfig: {
       instanceId,
@@ -213,7 +201,7 @@ export const messageProcess = (instanceId, messageData, atAppInfo) => {
 };
 // 流式接收消息数据处理
 export const messageProcessNormal = (log, atAppInfo) => {
-  let msg  = log.content || '';
+  let msg = log.content || '';
   const regex = /```markdown(.*?)```/g;
   const replacedArr = msg.match(regex);
   let markdowned = msg.indexOf('```');
@@ -231,7 +219,6 @@ export const messageProcessNormal = (log, atAppInfo) => {
     logId: log.msgId || uuidv4(),
     markdownSyntax: markdowned !== -1,
     type: 'receive',
-    msgType: 'msg',
     feedbackStatus: -1,
   };
   if (atAppInfo) {
@@ -239,8 +226,8 @@ export const messageProcessNormal = (log, atAppInfo) => {
     recieveChatItem.appIcon = atAppInfo.attributes.icon;
     recieveChatItem.isAt = true;
   }
-  return { 
-    msg, 
+  return {
+    msg,
     recieveChatItem
   };
 };

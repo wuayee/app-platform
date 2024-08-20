@@ -4,13 +4,14 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getToolsList } from '@shared/http/plugin';
+import { useTranslation } from 'react-i18next';
 import AddSkill from '../../../addFlow/components/tool-modal';
 
 const Skill = (props) => {
+  const { t } = useTranslation();
   const { pluginData, updateData } = props;
-  const [ skillList, setSkillList] = useState([]);
-  const [ showModal, setShowModal ] = useState(false);
-  const navigate = useHistory().push;
+  const [skillList, setSkillList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const { tenantId } = useParams();
   const pluginMap = useRef([]);
 
@@ -43,7 +44,7 @@ const Skill = (props) => {
     confirmCallBack(workFlowId, fitId);
   }
   // 获取插件列表
-  const getPluginList = ()=> {
+  const getPluginList = () => {
     getToolsList({ pageNum: 1, pageSize: 1000, excludeTags: 'App', })
       .then(({ data }) => {
         setSkillArr(data);
@@ -53,7 +54,7 @@ const Skill = (props) => {
   const setSkillArr = (data) => {
     pluginMap.current = [];
     data.forEach(item => {
-      if (pluginData.includes(item.uniqueName) ) {
+      if (pluginData.includes(item.uniqueName)) {
         let obj = {
           uniqueName: item.uniqueName,
           name: item.name,
@@ -89,7 +90,7 @@ const Skill = (props) => {
         <div className='control'>
           <div className='control-header'>
             <div className='control-title'>
-              <Button onClick={addPlugin}>添加</Button>
+              <Button onClick={addPlugin}>{t('additions')}</Button>
             </div>
           </div>
           <div className='control-inner'>
@@ -98,14 +99,14 @@ const Skill = (props) => {
                 return (
                   <div className='item' key={index} >
                     <span className='item-left'>
-                      { item.type === 'tool' ? 
-                       <img src='/src/assets/images/ai/tool.png' alt='' />: 
-                       <img src='/src/assets/images/ai/workflow.png' alt='' />
+                      {item.type === 'tool' ?
+                        <img src='./src/assets/images/ai/tool.png' alt='' /> :
+                        <img src='./src/assets/images/ai/workflow.png' alt='' />
                       }
-                      <span className='text'>{item.name || item }</span>
+                      <span className='text'>{item.name || item}</span>
                     </span>
                     <span>
-                      { <EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)}/> }
+                      {<EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)} />}
                       <CloseOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }} onClick={() => deleteItem(item)} />
                     </span>
                   </div>
@@ -113,9 +114,9 @@ const Skill = (props) => {
               })
             }
           </div>
-          <AddSkill 
+          <AddSkill
             type='addSkill'
-            showModal={showModal} 
+            showModal={showModal}
             setShowModal={setShowModal}
             checkData={skillList}
             confirmCallBack={confirmCallBack}

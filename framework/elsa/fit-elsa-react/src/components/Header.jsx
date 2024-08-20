@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Button, Dropdown, Form, Input, Tooltip} from "antd";
 import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
+import { useTranslation } from "react-i18next";
 
 /**
  * 头部.
@@ -12,6 +13,7 @@ import "./headerStyle.css";
  * @constructor
  */
 export const Header = ({shape, disabled}) => {
+    const { t } = useTranslation();
     const [edit, setEdit] = useState(false);
     const inputRef = useRef(null);
     const [, setEndNodeCount] = useState(0);
@@ -57,11 +59,11 @@ export const Header = ({shape, disabled}) => {
     const getTitle = () => {
         if (edit) {
             return (<>
-                <Form.Item name="title" rules={[{required: true, message: "请输入名称"}]} initialValue={shape.text}>
+                <Form.Item name="title" rules={[{required: true, message: t('pleaseInsertName')}]} initialValue={shape.text}>
                     <Input onBlur={(e) => onInputBlur(e)}
                            ref={inputRef}
                            onMouseDown={(e) => e.stopPropagation()}
-                           placeholder="请输入名称"
+                           placeholder={t('pleaseInsertName')}
                            style={{height: "24px", borderColor: shape.focusBorderColor}}/>
                 </Form.Item>
             </>);

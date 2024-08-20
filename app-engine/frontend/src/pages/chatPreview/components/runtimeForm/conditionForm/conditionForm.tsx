@@ -6,8 +6,10 @@ import { Message } from '@shared/utils/message';
 import { ChatContext } from '@/pages/aippIndex/context';
 import ChartCondition from '../../chart-message/chart-condition'
 import ChartMessage from '../../chart-message/chart-message';
+import { useTranslation } from 'react-i18next';
 
 const ConditionForm = (props) => {
+  const { t } = useTranslation();
   const { data, confirmCallBack, tenantId } = props;
   const [filters, setFilters] = useState();
   const [chartConfig, setChartConfig] = useState();
@@ -34,11 +36,14 @@ const ConditionForm = (props) => {
         dimension: data.formData.dimension,
         rewriteQuery: data.formData.rewriteQuery,
         restartMode: 'increment',
-        sourceTrace: JSON.stringify(filter)
+        sourceTrace: JSON.stringify({
+          queryType: data.formData.queryType,
+          dsl: JSON.stringify(filter)
+        })
       };
       const res = await saveChart(tenantId, data.formData.instanceId, params);
       if (res.status !== 200) {
-        Message({ type: 'warning', content: res.msg || '保存失败' });
+        Message({ type: 'warning', content: res.msg || t('savingFailed') });
         return;
       }
       confirmCallBack ? confirmCallBack() : conditionConfirm(res);
@@ -47,7 +52,7 @@ const ConditionForm = (props) => {
     }
   }
   return <>
-    { !data && <div className="title">溯源表单</div>}
+    { !data && <div className="title">{t('sourceTracingForm')}</div>}
     { filters && (<Spin spinning={loading}>  <ChartCondition data={filters} confirm={formConfirm} /> </Spin>)}
     { chartConfig && <ChartMessage chartConfig={chartConfig} />}
   </>

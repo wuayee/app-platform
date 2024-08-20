@@ -121,14 +121,14 @@ public class DynamicPluginScanner
 
     @Override
     public void onFileChanged(File file) throws IOException {
-        log.info("Dynamic plugin changed. [plugin={}]", file.getPath());
+        log.info("Dynamic plugin changed. [plugin={}]", FileUtils.path(file));
         this.clearCopiedFiles(file);
         File copied = this.copyFile(file);
         this.toStartPluginFiles.put(file, copied);
         URL url = FileUtils.urlOf(copied);
         Plugin toStopPlugin = this.runtime.root().unloadPlugin(url);
         this.toStopPlugins.add(toStopPlugin);
-        log.info("Dynamic plugin unloaded. [plugin={}]", file.getPath());
+        log.info("Dynamic plugin unloaded. [plugin={}]", FileUtils.path(file));
         Plugin toStartPlugin = this.runtime.root().loadPlugin(url);
         this.toStartPlugins.add(toStartPlugin);
         log.info("Dynamic plugin loaded. [name={}]", toStartPlugin.metadata().name());
@@ -136,7 +136,7 @@ public class DynamicPluginScanner
 
     @Override
     public void onFileCreated(File file) throws IOException {
-        log.info("Dynamic plugin detected. [plugin={}]", file.getPath());
+        log.info("Dynamic plugin detected. [plugin={}]", FileUtils.path(file));
         this.clearCopiedFiles(file);
         File copied = this.copyFile(file);
         this.toStartPluginFiles.put(file, copied);
@@ -197,16 +197,16 @@ public class DynamicPluginScanner
 
     @Override
     public void onFileDeleted(File file) {
-        log.info("Dynamic plugin missed. [plugin={}]", file.getPath());
+        log.info("Dynamic plugin missed. [plugin={}]", FileUtils.path(file));
         Plugin plugin = this.runtime.root().unloadPlugin(FileUtils.urlOf(file));
         this.toStopPlugins.add(plugin);
-        log.info("Dynamic plugin unloaded. [plugin={}]", file.getPath());
+        log.info("Dynamic plugin unloaded. [plugin={}]", FileUtils.path(file));
         this.clearCopiedFiles(file);
     }
 
     @Override
     public void onFileVisitedFailed(File file, IOException exception) {
-        log.warn("Failed to load plugin. [plugin={}, cause={}]", file.getPath(), exception.getMessage());
+        log.warn("Failed to load plugin. [plugin={}, cause={}]", FileUtils.path(file), exception.getMessage());
     }
 
     @Override

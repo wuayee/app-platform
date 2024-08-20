@@ -1,5 +1,6 @@
 
 import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
+import { Button, Alert } from 'antd';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import AddKnowledge from '../../configForm/configUi/components/add-knowledge';
@@ -9,13 +10,15 @@ import { debounce } from '@shared/utils/common';
 import { updateFlowInfo } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
-import { useAppDispatch } from '../../../store/hook';
-import { setAppInfo } from '../../../store/appInfo/appInfo';
+import { useAppDispatch } from '@/store/hook';
+import { setAppInfo } from '@/store/appInfo/appInfo';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
-import { Button, Alert } from "antd";
+import { useTranslation } from 'react-i18next';
+import i18n from '../../../locale/i18n';
 
 const Stage = (props) => {
+  const { t } = useTranslation();
   const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [showModal, setShowModal] = useState(false);
   const [showTools, setShowTools] = useState(false);
@@ -32,7 +35,6 @@ const Stage = (props) => {
   const render = useRef(false);
   const modalRef = useRef();
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     if (appInfo.name && !render.current) {
       currentApp.current = JSON.parse(JSON.stringify(appInfo));
@@ -56,7 +58,7 @@ const Stage = (props) => {
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
     ];
-    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, i18n, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
       render.current = true;
       agent.onChange((dirtyAction) => {
@@ -86,7 +88,7 @@ const Stage = (props) => {
         pluginCallback.current = onSelect;
         setShowTools(true);
       });
-    });
+    })
     getAddFlowConfig(tenantId, { pageNum: 1, pageSize: 20, tag: 'Builtin', version: '' }).then(res => {
       if (res.code === 0) {
         setDragData(res.data);
@@ -130,7 +132,7 @@ const Stage = (props) => {
     window.agent.validate().then(() => {
       updateAppRunningFlow();
     }).catch((err) => {
-      let str = typeof (err) === 'string' ? err : '请输入流程必填项';
+      let str = typeof (err) === 'string' ? err : t('plsEnterFlowRequiredItem');
       Message({ type: 'warning', content: str });
     });
   }
@@ -144,7 +146,7 @@ const Stage = (props) => {
         setFlowInfo(currentApp.current);
       }
       setShowTime(true);
-      Message({ type: 'success', content: type ? '高级配置更新成功' : '工具流更新成功' });
+      Message({ type: 'success', content: type ? t('graphUpdateSuccess') : t('flowUpdateSuccess') });
     }
   }
   // 拖拽完成回调
@@ -154,7 +156,7 @@ const Stage = (props) => {
     let nodeMetaData = JSON.parse(e.dataTransfer.getData('itemMetaData'));
     switch (nodeTab) {
       case 'basic':
-        window.agent.createNode(nodeType, e, { uniqueName: nodeMetaData?.uniqueName });
+        window.agent.createNode(nodeType, e, nodeMetaData);
         break;
       case 'tool':
         window.agent.createNode(nodeType, e, nodeMetaData);
@@ -204,14 +206,14 @@ const Stage = (props) => {
     />
     {showFlowChangeWarning && <Alert
       className='flow-change-warning-content'
-      message=""
-      description="你已经修改了工作流，需要重新调试成功才可以发布。"
-      type="info"
+      message=''
+      description={t('flowChangeWarningContent')}
+      type='info'
       onClose={handleCloseFlowChangeWarningAlert}
       action={
-        <Button size="small" type="link" onClick={handleClickNoMoreTips}>
-          不再提示
-          </Button>
+        <Button size='small' type='link' onClick={handleClickNoMoreTips}>
+          {t('noMoreTips')}
+        </Button>
       }
       closable
     />}

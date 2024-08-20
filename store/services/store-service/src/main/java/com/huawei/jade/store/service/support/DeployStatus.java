@@ -24,7 +24,10 @@ public enum DeployStatus {
     DEPLOYING,
 
     /** 表示插件未部署。 */
-    UNDEPLOYED;
+    UNDEPLOYED,
+
+    /** 表示部署失败。 */
+    DEPLOYMENT_FAILED;
 
     /**
      * 将字符串转换成枚举类。
@@ -34,7 +37,7 @@ public enum DeployStatus {
      */
     public static DeployStatus from(String value) {
         Predicate<Enum> predicate = enumConstant -> StringUtils.equalsIgnoreCase(enumConstant.toString(), value);
-        return ObjectUtils.<DeployStatus>cast(EnumUtils.firstOrDefault(ObjectUtils.cast(DeployStatus.class),
-                predicate));
+        return ObjectUtils.<DeployStatus>cast(
+            EnumUtils.firstOrDefault(ObjectUtils.cast(DeployStatus.class), predicate));
     }
 }

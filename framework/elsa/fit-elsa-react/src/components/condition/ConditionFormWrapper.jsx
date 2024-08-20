@@ -4,6 +4,7 @@ import {useDispatch} from "@/components/DefaultRoot.jsx";
 import {Button} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import {ConnectorProvider} from "@/components/common/ConnectorProvider.jsx";
+import { useTranslation, Trans } from "react-i18next";
 
 /**
  * 条件节点表单Wrapper
@@ -12,6 +13,8 @@ import {ConnectorProvider} from "@/components/common/ConnectorProvider.jsx";
  */
 export default function ConditionFormWrapper({disabled, data}) {
     const dispatch = useDispatch();
+
+    const { t } = useTranslation();
 
     const branches = data.branches;
 
@@ -48,13 +51,13 @@ export default function ConditionFormWrapper({disabled, data}) {
         <div style={{
             display: "flex", alignItems: "center", marginBottom: "8px", paddingLeft: "8px", paddingRight: "4px"
         }}>
-            <div className="jade-panel-header-font">条件分支</div>
+            <div className="jade-panel-header-font">{t('conditionBranch')}</div>
             <Button type="link" className="icon-button"
                     onClick={addBranch}
                     disabled={disabled}
                     style={{"height": "32px", marginLeft: "auto"}}>
                 <PlusOutlined/>
-                <span>添加分支</span>
+                <span>{t('addBranch')}</span>
             </Button>
         </div>
         {branches.filter(branch => branch.type === "if").map((branch, index) => (

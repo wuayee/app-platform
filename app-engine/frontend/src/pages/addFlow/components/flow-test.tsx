@@ -1,10 +1,9 @@
 
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Drawer, Form, Alert, Spin } from 'antd';
 import { StartIcon, CloseIcon, RunIcon } from '@assets/icon';
 import { Message } from '@shared/utils/message';
-import { FlowContext } from '../../aippIndex/context';
 import { reTestInstance } from '@shared/http/aipp';
 import { messageProcess } from '../../chatPreview/utils/chat-process';
 import { workflowDebug, getTestVersion } from '@shared/http/sse';
@@ -15,6 +14,7 @@ import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
 import { useAppDispatch } from '@/store/hook';
 import { setDimension } from '@/store/common/common';
 import { pduTypeMap } from '@/pages/chatPreview/common/config';
+import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
   const {
@@ -26,11 +26,11 @@ const Index = (props) => {
     elsaRunningCtl,
     setShowFlowChangeWarning
   } = props;
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [formConfig, setFormConfig] = useState({});
   const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const { tenantId, appId } = useParams();
   const [form] = Form.useForm();
   const timerRef = useRef(null);
@@ -50,7 +50,7 @@ const Index = (props) => {
     form.validateFields().then((values) => {
       runningStart(values);
     }).catch((errorInfo) => {
-      Message({ type: 'warning', content: '请输入必填项' });
+      Message({ type: 'warning', content: t('plsEnterRequiredItem') });
     });
   }
   // 请求参数拼接
@@ -75,7 +75,7 @@ const Index = (props) => {
     setLoading(true);
     const res = await workflowDebug(tenantId, params);
     if (res.status !== 200) {
-      Message({ type: 'error', content: '启动调试失败' });
+      Message({ type: 'error', content: t('startDebugFail') });
       setLoading(false);
       return;
     }
@@ -103,7 +103,7 @@ const Index = (props) => {
             } else {
               setLoading(false);
               elsaRunningCtl.current && elsaRunningCtl.current.reset();
-              Message({ type: 'error', content: '启动运行失败' });
+              Message({ type: 'error', content: t('startRunFail') });
               break;
             }
           } else {
@@ -144,7 +144,7 @@ const Index = (props) => {
     timerRef.current = setInterval(async () => {
       const res = await reTestInstance(tenantId, aippId, instanceId, version);
       if (res.code !== 0) {
-        onStop(res.msg || '测试失败');
+        onStop(res.msg || t('debugFail'));
       }
       const runtimeData = res.data;
       if (runtimeData) {
@@ -179,12 +179,12 @@ const Index = (props) => {
   }
   return <>{(
     <div>
-      <Drawer title={<h5>测试运行</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
+      <Drawer title={<h5>{t('debugRun')}</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
         footer={
           <Spin spinning={loading}>
             <div style={{ textAlign: 'right' }}>
               <span onClick={handleRunTest} className='run-btn'>
-                <RunIcon className='run-icon' />运行
+                <RunIcon className='run-icon' />{t('run')}
               </span>
             </div>
           </Spin>
@@ -194,10 +194,10 @@ const Index = (props) => {
         }
       >
         <div className='debug'>
-          <Alert message='工具流暂不支持调试历史记录' type='info' />
+          <Alert message={t('debugAlert')} type='info' />
           <div className='debug-header'>
             <StartIcon className='header-icon' />
-            <span className='header-title'>开始节点</span>
+            <span className='header-title'>{t('startNode')}</span>
           </div>
           <Form
             form={form}
@@ -217,7 +217,7 @@ const Index = (props) => {
         </div>
       </Drawer>
       {/* 表单抽屉 */}
-      <Drawer title={<h5>人工干预表单</h5>} open={open} onClose={() => setOpen(false)} width={800}>
+      <Drawer title={<h5>{t('manualForm')}</h5>} open={open} onClose={() => setOpen(false)} width={800}>
         <div>
           <RuntimeForm formConfig={formConfig} confirmCallBack={() => setOpen(false)} />
         </div>

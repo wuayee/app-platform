@@ -1,17 +1,19 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Input, Pagination, Empty, Spin, Select } from "antd";
+import { Input, Empty, Spin, Select } from 'antd';
 import { handleClickAddToolNode, handleDragToolNode } from '../utils';
-import { getToolList } from "@shared/http/aipp";
 import ToolModal from './tool-modal';
-import '../styles/tool-item.scss';
 import { PluginTypeE } from './model';
-import { getMyPlugin, getPluginTools } from '../../../shared/http/plugin';
-import { useAppSelector } from '../../../store/hook';
+import { getMyPlugin, getPluginTools } from '@/shared/http/plugin';
+import { useAppSelector } from '@/store/hook';
+import { useTranslation } from 'react-i18next';
+import '../styles/tool-item.scss';
+
 const { Search } = Input;
 const { Option } = Select;
 
 const ToolItem = () => {
+  const { t } = useTranslation();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const [toolKey, setToolKey] = useState('Builtin');
   const [loading, setLoading] = useState(false);
@@ -34,9 +36,9 @@ const ToolItem = () => {
     getPluginList();
   };
   const selectBefore = (
-    <Select defaultValue="市场" onChange={handleChange}>
-      <Option value="owner">个人</Option>
-      <Option value="market">市场</Option>
+    <Select defaultValue={t('market')} onChange={handleChange}>
+      <Option value='owner'>{t('owner')}</Option>
+      <Option value='market'>{t('market')}</Option>
     </Select>
   );
   // 获取插件列表
@@ -89,12 +91,12 @@ const ToolItem = () => {
   return <>
     <Search
       disabled
-      size="large"
+      size='large'
       addonBefore={selectBefore}
       onSearch={filterByName}
-      // size="small"
-      placeholder="请输入" />
-    <div className="tool-tab">
+      // size='small'
+      placeholder={t('plsEnter')} />
+    <div className='tool-tab'>
       {listType.current === PluginTypeE.MARKET && tab?.map(item => {
         return (
           <span className={toolKey === item.key ? 'active' : null}
@@ -105,11 +107,11 @@ const ToolItem = () => {
         )
       })
       }
-      <span className="more" onClick={() => setShowModal(true)}>更多</span>
+      <span className='more' onClick={() => setShowModal(true)}>{t('more')}</span>
     </div>
     <Spin spinning={loading}>
       {
-        pluginData.length > 0 && <div className="drag-list">
+        pluginData.length > 0 && <div className='drag-list'>
           {pluginData.map((item, index) => {
             return (
               <div
@@ -136,7 +138,7 @@ const ToolItem = () => {
           }
         </div>
       }
-      {pluginData.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div>}
+      {pluginData.length === 0 && <div className='tool-empty'><Empty description={t('noData')} /></div>}
     </Spin>
     <ToolModal showModal={showModal} setShowModal={setShowModal} modalType='mashup' />
   </>

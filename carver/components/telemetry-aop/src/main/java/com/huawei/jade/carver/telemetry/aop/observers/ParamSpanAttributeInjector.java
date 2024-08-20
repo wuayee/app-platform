@@ -8,6 +8,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParserRepository;
+import com.huawei.jade.carver.telemetry.aop.SpanAttributesObserver;
 import com.huawei.jade.carver.telemetry.aop.SpanEndObserver;
 
 import io.opentelemetry.api.trace.Span;
@@ -26,8 +27,8 @@ import java.util.Map;
  * @author 方誉州
  * @since 2024-08-06
  */
-@Component
-public class ParamSpanAttributeInjector implements SpanEndObserver {
+@Component(name = "ParamSpanAttributeInjector")
+public class ParamSpanAttributeInjector implements SpanEndObserver, SpanAttributesObserver {
     private final SpanAttributeParserRepository repository;
 
     public ParamSpanAttributeInjector(SpanAttributeParserRepository repository) {
@@ -36,6 +37,21 @@ public class ParamSpanAttributeInjector implements SpanEndObserver {
 
     @Override
     public void onSpanEnd(Span span, Method method, Object[] args, Object result) {
+        onAddingSpanAttribute(span, method, args, result);
+    }
+
+    private void setAttribute(Span span, String expression, Object paramValue) {
+        List<SpanAttributeParser> parsers = this.repository.get();
+        Map<String, String> attributeMap = parsers.stream()
+                .filter(parser -> parser.match(expression))
+                .findFirst()
+                .map(parser -> parser.parse(expression, paramValue))
+                .orElseGet(Collections::emptyMap);
+        attributeMap.forEach(span::setAttribute);
+    }
+
+    @Override
+    public void onAddingSpanAttribute(Span span, Method method, Object[] args, Object result) {
         if (span == null) {
             return;
         }
@@ -45,18 +61,7 @@ public class ParamSpanAttributeInjector implements SpanEndObserver {
             Arrays.stream(parameterAnnotations[index])
                     .filter(annotation -> annotation.annotationType() == SpanAttribute.class)
                     .map(ObjectUtils::<SpanAttribute>cast)
-                    .forEach(annotation -> this.setAttribute(span,
-                            annotation.value(),
-                            args[currentIndex]));
+                    .forEach(annotation -> this.setAttribute(span, annotation.value(), args[currentIndex]));
         }
-    }
-    private void setAttribute(Span span, String expression, Object paramValue) {
-        List<SpanAttributeParser> parsers = this.repository.get();
-        Map<String, String> attributeMap = parsers.stream()
-                .filter(parser -> parser.match(expression))
-                .findFirst()
-                .map(parser -> parser.parse(expression, paramValue))
-                .orElseGet(Collections::emptyMap);
-        attributeMap.forEach(span::setAttribute);
     }
 }
