@@ -20,7 +20,6 @@ const Deploy = ({ pluginRef }) => {
   const [name, setName] = useState('');
   const [rightName, setRightName] = useState('');
   const pluginList = useRef([]);
-
   // 获取所有列表
   const getData = async () => {
     const response = await getPlugins({ pageNum, pageSize, excludeTags: 'APP', name });
