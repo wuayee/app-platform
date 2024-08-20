@@ -39,7 +39,7 @@ import {
 import { storage } from '@shared/storage';
 import { EventSourceParserStream } from '@shared/event-source/stream';
 import { isBusinessMagicCube } from '@shared/utils/common';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const ChatPreview = (props) => {
   const { t } = useTranslation();
@@ -160,14 +160,14 @@ const ChatPreview = (props) => {
         .then(async () => {
           const res = await updateFlowInfo(tenantId, appId, params);
           if (res.code !== 0) {
-            onStop('更新grpha数据失败');
+            onStop(t('updateFailCintent'));
           } else {
             chatMissionStart(value, type);
           }
         })
         .catch((err) => {
-          Message({ type: 'warning', content: '请输入必填项' });
-          onStop('对话失败');
+          Message({ type: 'warning', content: t('plsEnterRequiredItem') });
+          onStop(t('conversationFailed'));
         });
     } else {
       chatMissionStart(value, type);
@@ -177,7 +177,7 @@ const ChatPreview = (props) => {
   const chatMissionStart = async (value, type) => {
     let chatParams = {
       'app_id': appId,
-      'question': type ? '请解析以下文件' : value,
+      'question': type ? t('parseFile') : value,
       'context': {
         'use_memory': useMemory,
         dimension: dimension.value,
@@ -205,7 +205,7 @@ const ChatPreview = (props) => {
       response = await sseChat(tenantId, params, chatType);
     }
     if (response.status !== 200) {
-      onStop('启动会话失败');
+      onStop(t('conversationFailed'));
       return;
     };
     chatStreaming(response);
@@ -223,7 +223,7 @@ const ChatPreview = (props) => {
           const receiveData = JSON.parse(msgStr);
           if (receiveData.code) {
             closeConnected();
-            onStop(val.msg || '会话失败');
+            onStop(val.msg || t('conversationFailed'));
             break;
           } else {
             sseReceiveProcess(receiveData);
@@ -304,7 +304,7 @@ const ChatPreview = (props) => {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
     dispatch(setChatList(deepClone(listRef.current)));
-    onStop('请勾选对话');
+    onStop(t('selectConversation'));
     setCheckedList([]);
     feedRef.current.setCheckStatus();
     setEditorShow(true, 'report');
@@ -326,10 +326,10 @@ const ChatPreview = (props) => {
         listRef.current[listRef.current.length - 1].loading = true;
         dispatch(setChatList(deepClone(listRef.current)));
       } else {
-        onStop('启动任务失败');
+        onStop(t('conversationFailed'));
       }
     } catch {
-      onStop('启动任务失败');
+      onStop(t('conversationFailed'));
     } finally {
       setEditorShow(false);
     }
@@ -392,16 +392,16 @@ const ChatPreview = (props) => {
   }
   // 终止进行中的对话
   async function chatRunningStop(params) {
-    let str = params.content ? params.content : '已终止对话';
+    let str = params.content ? params.content : t('conversationTerminated');
     if (!runningInstanceId.current) return;
     const res = await stopInstance(tenantId, runningInstanceId.current, { content: str });
     if (res.code === 0) {
       onStop(res.data || str);
-      Message({ type: 'success', content: '已终止对话' });
+      Message({ type: 'success', content: t('conversationTerminated') });
       closeConnected();
       return res.code;
     } else {
-      Message({ type: 'error', content: '终止对话失败' });
+      Message({ type: 'error', content: t('terminateFailed') });
     }
   }
   // 澄清表单重新对话

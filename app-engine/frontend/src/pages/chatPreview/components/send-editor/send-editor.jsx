@@ -17,7 +17,7 @@ import '@shared/utils/rendos';
 import '../../styles/send-editor.scss';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setUseMemory } from '@/store/common/common';
-import {uploadChatFile,voiceToText} from '@shared/http/aipp';
+import { uploadChatFile, voiceToText } from '@shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 
 const AudioBtn = forwardRef((props, ref) => {
@@ -30,7 +30,7 @@ const AudioBtn = forwardRef((props, ref) => {
   })
 
   return <>
-    {active ? <AudioActiveIcon className='active-audio-btn' />: <AudioIcon />}
+    {active ? <AudioActiveIcon className='active-audio-btn' /> : <AudioIcon />}
   </>
 })
 
@@ -44,12 +44,12 @@ const SendEditor = (props) => {
   } = props;
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const [ selectItem, setSelectItem ] = useState({});
-  const [ selectDom, setSelectDom ] = useState();
-  const [ showSelect, setShowSelect ] = useState(false);
-  const [ showClear, setShowClear ] = useState(false);
-  const [ openHistory, setOpenHistory ] = useState(false);
-  const [ positionConfig, setPositionConfig ] = useState({});
+  const [selectItem, setSelectItem] = useState({});
+  const [selectDom, setSelectDom] = useState();
+  const [showSelect, setShowSelect] = useState(false);
+  const [showClear, setShowClear] = useState(false);
+  const [openHistory, setOpenHistory] = useState(false);
+  const [positionConfig, setPositionConfig] = useState({});
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const editorRef = useRef(null);
@@ -82,7 +82,7 @@ const SendEditor = (props) => {
   // 发送消息
   function sendMessage() {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     let chatContent = document.getElementById('ctrl-promet').innerText;
@@ -100,7 +100,7 @@ const SendEditor = (props) => {
   function bindEvents(promptMap) {
     $('body').on('click', '.chat-focus', ($event) => {
       let filterType = $($event.target).attr('data-type');
-      let selectItem =  promptMap.filter(item => item.var === filterType)[0];
+      let selectItem = promptMap.filter(item => item.var === filterType)[0];
       setPositionConfig($event.target.getBoundingClientRect());
       setSelectItem(selectItem);
       setSelectDom($event.target);
@@ -129,9 +129,9 @@ const SendEditor = (props) => {
   let recorderHome = null;
   let intervalData = null;
   // 点击语音按钮
-  const onRecord = async() => {
+  const onRecord = async () => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     if (!recording.current) {
@@ -139,49 +139,49 @@ const SendEditor = (props) => {
         recorderHome = rec;
         recorderHome.start();
       })
-      if(!recorderHome) return
+      if (!recorderHome) return
       recording.current = true;
       // 麦克风变为active样式
       audioBtnRef.current.setActive(true);
-        // 开启定时器，每2秒发一次请求
-        intervalData = setInterval(async() => {
-          let newBlob = recorderHome?.getBlob()
-          const fileOfBlob = new File([newBlob], new Date().getTime() + '.wav', {
-            type:'audio/wav',
-          })
-          const formData = new FormData();
-          formData.append('file', fileOfBlob);
-          let headers = {
-            'attachment-filename': encodeURI(fileOfBlob.name || ''),
-          };
-          if(fileOfBlob.size){
-            const result = await uploadChatFile(tenantId, appId, formData, headers);
-            if(result.data){
-              let res = await voiceToText(tenantId,result.data.file_path,fileOfBlob.name)
-              // 将data数据放入输入框中
-              let inputedDate = document.getElementById('ctrl-promet').innerHTML;
-              if (res.data.trim().length) {
-                const editorDom = document.getElementById('ctrl-promet');
-                editorDom.innerHTML = inputedDate + res.data.trim();
-              }
+      // 开启定时器，每2秒发一次请求
+      intervalData = setInterval(async () => {
+        let newBlob = recorderHome?.getBlob()
+        const fileOfBlob = new File([newBlob], new Date().getTime() + '.wav', {
+          type: 'audio/wav',
+        })
+        const formData = new FormData();
+        formData.append('file', fileOfBlob);
+        let headers = {
+          'attachment-filename': encodeURI(fileOfBlob.name || ''),
+        };
+        if (fileOfBlob.size) {
+          const result = await uploadChatFile(tenantId, appId, formData, headers);
+          if (result.data) {
+            let res = await voiceToText(tenantId, result.data.file_path, fileOfBlob.name)
+            // 将data数据放入输入框中
+            let inputedDate = document.getElementById('ctrl-promet').innerHTML;
+            if (res.data.trim().length) {
+              const editorDom = document.getElementById('ctrl-promet');
+              editorDom.innerHTML = inputedDate + res.data.trim();
             }
           }
-        }, 2000);
+        }
+      }, 2000);
     } else {
-      recording.current=false
+      recording.current = false
       recorderHome.stop();
       audioBtnRef.current.setActive(false);
       clearInterval(intervalData);
     }
   }
   // 停止录音
-  function cancelRecord(e){
-      if(recording.current&&recorderHome){
-        recording.current=false
-        recorderHome.stop();
-        audioBtnRef.current.setActive(false);
-        clearInterval(intervalData);
-      }
+  function cancelRecord(e) {
+    if (recording.current && recorderHome) {
+      recording.current = false
+      recorderHome.stop();
+      audioBtnRef.current.setActive(false);
+      clearInterval(intervalData);
+    }
   }
   function handleEditorClick(e) {
     if (!audioDomRef.current?.contains(e.target)) {
@@ -195,56 +195,56 @@ const SendEditor = (props) => {
       dispatch(setUseMemory(false));
     }
   }, [showMulti])
-  function plays(){
-    let audio =document.querySelector('#audio')
+  function plays() {
+    let audio = document.querySelector('#audio')
     audio.play()
   }
-  function pause(){
-    let audio =document.querySelector('#audio')
+  function pause() {
+    let audio = document.querySelector('#audio')
     audio.pause()
   }
   return <>{(
     <div className='send-editor-container' onClick={handleEditorClick}>
-      <Recommends onSend={onSend}/>
+      <Recommends onSend={onSend} />
       <div className='editor-inner'>
-        <EditorBtnHome 
+        <EditorBtnHome
           setOpenHistory={setOpenHistory}
           clear={onClear}
           fileCallBack={fileSend}
           editorRef={editorRef}
           chatType={chatType}
         />
-        { chatRunning && 
+        {chatRunning &&
           <div className='editor-stop' onClick={onStop}>
             <img src='/src/assets/images/ai/stop.png' alt='' />
-            <span>停止响应</span>
+            <span>{t('stopResponding')}</span>
           </div>
         }
         <div className='editor-input' id='drop'>
           <div
             className='chat-promet-editor'
             id='ctrl-promet'
-            ref={ editorRef }
-            contentEditable={ true }
+            ref={editorRef}
+            contentEditable={true}
             onInput={messageChange}
             onKeyDown={messageKeyDown}
             onPaste={messagePaste}
           />
-          <div className='send-icon' onClick={ sendMessage }>
-           { showClear ? <img src='./src/assets/images/ai/send-active.png' alt='' /> : <img src='./src/assets/images/ai/send.png' alt='' /> } 
+          <div className='send-icon' onClick={sendMessage}>
+            {showClear ? <img src='./src/assets/images/ai/send-active.png' alt='' /> : <img src='./src/assets/images/ai/send.png' alt='' />}
           </div>
           <div className='audio-icon' ref={audioDomRef} tabIndex='1' onBlur={cancelRecord} onClick={onRecord}><AudioBtn ref={audioBtnRef} /></div>
-          { showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div> }
+          {showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div>}
         </div>
       </div>
       <div className='chat-tips'>{t('accuracyNotice')}</div>
-     { showSelect &&  (
-      <EditorSelect
-        chatSelectDom={selectDom}
-        chatSelectItem={selectItem}
-        positionConfig={positionConfig}
-        clearMove={() => setShowSelect(false)} />
-     )}
+      { showSelect && (
+        <EditorSelect
+          chatSelectDom={selectDom}
+          chatSelectItem={selectItem}
+          positionConfig={positionConfig}
+          clearMove={() => setShowSelect(false)} />
+      )}
     </div>
   )}</>
 };
