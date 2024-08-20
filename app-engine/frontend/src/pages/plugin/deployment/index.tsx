@@ -65,7 +65,7 @@ const DeployMent = ({ cancle, confirm }) => {
   return <>
     <div className='engine-deployment'>
       <div className='upload-info-head'>
-        <img src='/src/assets/images/ai/info-upload.png' />
+        <img src='./src/assets/images/ai/info-upload.png' />
         <span>部署可能需要一定时长，请关注部署状态，部署成功后插件内的工具将可以被使用</span>
       </div>
       <DeployTable pluginRef={pluginRef} />
