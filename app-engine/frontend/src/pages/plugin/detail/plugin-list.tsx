@@ -18,9 +18,6 @@ const PliginList = (props) => {
       setData(data);
     });
   };
-  const previousClick = () => {
-    window.history.back();
-  };
   useEffect(() => {
     getPluginList();
   }, []);
@@ -35,7 +32,7 @@ const PliginList = (props) => {
           <div className='plugin-detail-list'>
             <div className='list-head'>
               <div className='list-back-icon flex'>
-                <img src='./src/assets/images/ai/left-arrow.png' onClick={previousClick} />
+                <img src='./src/assets/images/ai/left-arrow.png' onClick={() => window.history.back()} />
               </div>
               <div className='list-detail-img flex'>
                 <img src='./src/assets/images/knowledge/knowledge-base.png' />
