@@ -19,9 +19,11 @@ import { useTranslation } from 'react-i18next';
 const Stage = (props) => {
   const { t } = useTranslation();
   const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
-  const [showModal, setShowModal] = useState(false);
-  const [taskName, setTaskName] = useState('');
-  const [selectModal, setSelectModal] = useState('');
+  const [ showTools, setShowTools ] = useState(false);
+  const [ showModal, setShowModal ] = useState(false);
+  const [ taskName, setTaskName ] = useState('');
+  const [ selectModal, setSelectModal ] = useState('');
+  const [ skillList, setSkillList ] = useState([]);
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo, setShowTime } = useContext(FlowContext);
   const { tenantId, appId } = useParams();

@@ -5,6 +5,7 @@ import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Text} = Typography;
 
@@ -51,6 +52,7 @@ const LEVEL_DISTANCE = 24;
  */
 export default function JadeInputTree({data, updateItem, disabled, getOptions = defaultGetOptions}) {
     const form = useFormContext();
+    const { t } = useTranslation();
     const treeData = data.map(d => convert(d, 0));
 
     /**
@@ -127,7 +129,7 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
             return <Form.Item
                 id={`value-${node.id}`}
                 name={`value-${node.id}`}
-                rules={node.isRequired ? [{required: true, message: "字段值不能为空"}] : []}
+                rules={node.isRequired ? [{required: true, message: t('fieldValueCannotBeEmpty')}] : []}
                 initialValue={node.value}
                 validateTrigger="onBlur"
             >
@@ -143,7 +145,7 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
                                             disabled={disabled}
-                                            rules={node.isRequired ? [{required: true, message: "字段值不能为空"}] : []}
+                                            rules={node.isRequired ? [{required: true, message: t('fieldValueCannotBeEmpty')}] : []}
                                             reference={node}
                                             onReferencedKeyChange={(e) => onReferenceKeyChange(node.id, e)}
                                             onReferencedValueChange={(v) => onReferenceValueChange(node.id, v)}
@@ -222,10 +224,10 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
         <div style={{paddingLeft: "15px"}}>
             <Row wrap={false}>
                 <Col flex={"0 0 " + (INPUT_WIDTH + 15) + "px"}>
-                    <span className={"jade-second-title-text"}>字段名称</span>
+                    <span className={"jade-second-title-text"}>{t('fieldName')}</span>
                 </Col>
                 <Col>
-                    <span className={"jade-second-title-text"}>字段值</span>
+                    <span className={"jade-second-title-text"}>{t('fieldValue')}</span>
                 </Col>
             </Row>
         </div>
@@ -298,7 +300,7 @@ const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
         <JadeStopPropagationSelect
                 style={{background: "#f7f7f7", width: "100%"}}
                 disabled={disabled}
-                placeholder={"请选择"}
+                placeholder={t('pleaseSelect')}
                 defaultValue={node.from}
                 className={"jade-input-tree-title-select jade-select"}
                 onChange={handleItemChange}

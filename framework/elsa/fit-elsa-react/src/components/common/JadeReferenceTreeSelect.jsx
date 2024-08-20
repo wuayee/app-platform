@@ -3,6 +3,7 @@ import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useRef, useState} from "react";
 import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {InfoCircleOutlined} from '@ant-design/icons';
+import { useTranslation, Trans } from "react-i18next";
 
 /**
  * jade的带引用功能的级联选择框.
@@ -14,6 +15,7 @@ import {InfoCircleOutlined} from '@ant-design/icons';
 export const JadeReferenceTreeSelect = (props) => {
     const {reference, onReferencedValueChange, onReferencedKeyChange, rules, className, ...rest} = props;
     const shape = useShapeContext();
+    const { t } = useTranslation();
     const form = useFormContext();
     const stopObserve = useRef(null);
     const [treeData, setTreeData] = useState([]);
@@ -164,7 +166,7 @@ export const JadeReferenceTreeSelect = (props) => {
                     className={combinedClassName}
                     treeDataSimpleMode
                     dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
-                    placeholder="请选择"
+                    placeholder={t('pleaseSelect')}
                     onChange={onChange}
                     treeData={treeData}
                     onDropdownVisibleChange={onDropdownVisibleChange}

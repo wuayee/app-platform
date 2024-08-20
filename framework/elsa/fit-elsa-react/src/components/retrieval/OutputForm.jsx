@@ -4,6 +4,7 @@ import React from "react";
 import "./style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -18,8 +19,10 @@ _OutputForm.propTypes = {
  * @constructor
  */
 function _OutputForm({outputParams}) {
+    const { t } = useTranslation();
+
     const tips = <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-        <p>输出列表是与输入参数最匹配的信息，从所有选定的知识库中调用</p>
+        <p>{t('knowledgeBaseOutputPopover')}</p>
     </div>;
 
     return (
@@ -31,7 +34,7 @@ function _OutputForm({outputParams}) {
                 header={
                     <div
                         style={{display: 'flex', alignItems: 'center', paddingLeft: '-16px'}}>
-                        <span className="jade-panel-header-font">输出</span>
+                        <span className="jade-panel-header-font">{t('output')}</span>
                         <Popover content={tips}>
                             <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>

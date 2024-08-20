@@ -4,6 +4,7 @@ import {QuestionCircleOutlined} from '@ant-design/icons';
 import "../common/style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -41,10 +42,11 @@ function _LlmOutput({outputItems}) {
     // const handleSelectClick = (event) => {
     //     event.stopPropagation(); // 阻止事件冒泡
     // };
+    const { t } = useTranslation();
 
     const content = (
         <div className={"jade-font-size"}>
-            <p>大模型运行完成后生成的内容。</p>
+            <p>{t('llmOutputPopover')}</p>
         </div>
     );
 
@@ -56,7 +58,7 @@ function _LlmOutput({outputItems}) {
                     header={
                         <div className="panel-header"
                              style={{display: 'flex', alignItems: 'center', justifyContent: "flex-start"}}>
-                            <span className="jade-panel-header-font">输出</span>
+                            <span className="jade-panel-header-font">{t('output')}</span>
                             <Popover content={content}>
                                 <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
