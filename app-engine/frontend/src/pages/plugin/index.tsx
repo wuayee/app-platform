@@ -3,8 +3,10 @@ import { Drawer, Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import MarketItems from './market';
 import DeployMent from './deployment';
+import { useTranslation } from 'react-i18next';
 
 const Plugin = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const onClose = () => {
     setOpen(false);
@@ -12,14 +14,14 @@ const Plugin = () => {
   return (
     <div className='aui-fullpage' style={{ display: 'flex', flexDirection: 'column' }}>
       <div className='aui-header-1 '>
-        <div className='aui-title-1'>插件管理</div>
-        {/* <Button size='small' onClick={() => setOpen(true)}>部署</Button> */}
+        <div className='aui-title-1'>{t('pluginManagement')}</div>
+        {/* <Button size='small' onClick={() => setOpen(true)}>{t('deploying')}</Button> */}
       </div>
       <div>
         <MarketItems />
       </div>
       <Drawer
-        title='部署插件'
+        title={t('pluginDeploying')}
         width={900}
         onClose={onClose}
         closeIcon={false}
@@ -29,7 +31,7 @@ const Plugin = () => {
         }
         footer={[
           <Button key="back" onClick={() => setOpen(false)}>
-            关闭
+            {t('close')}
           </Button>
         ]}
       >

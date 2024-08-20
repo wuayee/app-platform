@@ -1,14 +1,13 @@
 import React, { useImperativeHandle, useState } from 'react';
-import { Modal, Upload  } from 'antd';
+import { Modal, Upload } from 'antd';
 import { uploadChatFile } from '@shared/http/aipp';
 import { Message } from '@shared/utils/message';
 import { fileTypeSet } from '../../../utils/chat-process';
 import exportImg from '@assets/images/ai/export.png'
 import { useAppSelector } from '@/store/hook';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const { Dragger } = Upload;
-
 const UploadFile = ({ openUploadRef, fileSend }) => {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
@@ -58,28 +57,28 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
     }
   };
   return <>{(
-    <Modal 
+    <Modal
       title={t('uploadFile')}
       open={modalOpen}
       onCancel={() => setModalOpen(false)}
       footer={null}
       centered>
-      <div style={{margin: '12px 0'}}>{t('uploadFileContent')}</div>
+      <div style={{ margin: '12px 0' }}>{t('uploadFileContent')}</div>
       <div className='dragger-modal'>
-      <Dragger
-        beforeUpload={beforeUpload}
-        onChange={onChange}
-        fileList={[]}
-        maxCount={1}
-      >
-        <p className='ant-upload-drag-icon'>
-          <img src={exportImg} alt='' />
-        </p>
-        <p className='ant-upload-text'>{t('dragFile')}</p>
-        <p className='ant-upload-hint'>
-          {t('fileType')}
-        </p>
-      </Dragger>
+        <Dragger
+          beforeUpload={beforeUpload}
+          onChange={onChange}
+          fileList={[]}
+          maxCount={1}
+        >
+          <p className='ant-upload-drag-icon'>
+            <img src={exportImg} alt='' />
+          </p>
+          <p className='ant-upload-text'>{t('dragFile')}</p>
+          <p className='ant-upload-hint'>
+            {t('fileType')}
+          </p>
+        </Dragger>
       </div>
     </Modal>
   )}</>

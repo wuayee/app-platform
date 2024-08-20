@@ -9,11 +9,13 @@ import { httpUrlMap } from '@/shared/http/httpConfig';
 import { fileValidate } from '@/shared/utils/common';
 import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
+import { useTranslation } from 'react-i18next';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
 const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
+  const { t } = useTranslation();
   const { modalRef, appInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [form] = Form.useForm();
   const { appId } = useParams();
@@ -23,9 +25,9 @@ const EditModal = (props) => {
   const [filePath, setFilePath] = useState('');
   const [fileName, setFileName] = useState('');
   const tagOptions = [
-    { value: '编程开发', label: '编程开发' },
-    { value: '决策分析', label: '决策分析' },
-    { value: '写作助手', label: '写作助手' },
+    { value: t('development'), label: t('development') },
+    { value: t('decisionAnalysis'), label: t('decisionAnalysis') },
+    { value: t('writingAssistant'), label: t('writingAssistant') },
   ];
   const showModal = () => {
     setIsModalOpen(true);
@@ -63,7 +65,7 @@ const EditModal = (props) => {
       if (res.code === 0) {
         let { id } = res.data;
         handleCancel();
-        Message({ type: 'success', content: '添加成功' });
+        Message({ type: 'success', content: t('addedSuccessfully') });
         addAippCallBack(id);
       }
     } finally {
@@ -87,7 +89,7 @@ const EditModal = (props) => {
       if (res.code === 0) {
         updateAippCallBack(res.data);
         handleCancel();
-        Message({ type: 'success', content: '操作成功' });
+        Message({ type: 'success', content: t('operationSucceeded') });
       }
     } finally {
       setLoading(false);
@@ -117,7 +119,7 @@ const EditModal = (props) => {
         setFilePath(res.data.file_path);
       }
     } catch (err) {
-      Message({ type: 'error', content: err.message || '上传图片失败' })
+      Message({ type: 'error', content: err.message || t('uploadImageFail') })
     }
   }
   useImperativeHandle(modalRef, () => {
@@ -128,7 +130,7 @@ const EditModal = (props) => {
   return <>
     {(
       <Modal
-        title={type ? '添加应用' : '修改基础信息'}
+        title={type ? t('addApp') : t('modifyingBasicInfo')}
         width='600px'
         keyboard={false}
         maskClosable={false}
@@ -137,10 +139,10 @@ const EditModal = (props) => {
         onCancel={handleCancel}
         footer={[
           <Button key='back' onClick={handleCancel}>
-            取消
+            {t('cancel')}
           </Button>,
           <Button key='submit' type='primary' loading={loading} onClick={confrimClick}>
-            确定
+            {t('ok')}
           </Button>
         ]}>
         <div>
@@ -151,37 +153,37 @@ const EditModal = (props) => {
             className='edit-form-content'
           >
             <Form.Item
-              label='名称'
+              label={t('name')}
               name='name'
-              rules={[{ required: true, message: '请输入名称' }, {
+              rules={[{ required: true, message: t('plsEnter') }, {
                 type: 'string',
                 max: 64,
-                message: '输入字符长度范围：1 - 64'
+                message: `${t('characterLength')}：1 - 64`
               }]}
             >
               <Input showCount maxLength={64} />
             </Form.Item>
             <Form.Item
-              label='简介'
+              label={t('description')}
               name='description'
             >
               <TextArea rows={3} showCount maxLength={300} />
             </Form.Item>
             <Form.Item
-              label='开场白'
+              label={t('openingRemarks')}
               name='greeting'
             >
               <TextArea rows={3} showCount maxLength={300} />
             </Form.Item>
             <Form.Item
-              label='分类'
+              label={t('classify')}
               name='app_type'
-              rules={[{ required: true, message: '不能为空' }]}
+              rules={[{ required: true, message: t('cannotBeEmpty') }]}
             >
               <Select options={tagOptions} />
             </Form.Item>
             <Form.Item
-              label='头像'
+              label={t('icon')}
               name='icon'
             >
               <div className='avatar'>
@@ -193,7 +195,7 @@ const EditModal = (props) => {
                   onChange={onChange}
                   showUploadList={false}
                   accept='.jpg,.png,.gif,.jpeg'>
-                  <Button icon={<ToTopOutlined />}>手动上传</Button>
+                  <Button icon={<ToTopOutlined />}>{t('uploadManually')}</Button>
                 </Upload>
               </div>
             </Form.Item>

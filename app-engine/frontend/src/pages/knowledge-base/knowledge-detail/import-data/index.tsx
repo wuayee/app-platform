@@ -1,21 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form } from 'antd';
-import { Button, Steps } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
-import qs from 'qs';
-import BreadcrumbSelf from '../../../../components/breadcrumb';
-import { SelectForm } from '../../../../components/select-form';
-import SegmentPreview from '../../../../components/select-form/segment-preview';
-import './style.scoped.scss';
+import { Button, Steps, Form } from 'antd';
 import { CheckCircleFilled } from '@ant-design/icons';
+import qs from 'qs';
+import { useHistory, useLocation } from 'react-router-dom';
+import BreadcrumbSelf from '@/components/breadcrumb';
+import { SelectForm } from '@/components/select-form';
+import SegmentPreview from '@/components/select-form/segment-preview';
 import {
   deleteLocalFile,
   textSegmentWash,
   getTableColums,
   createTableColumns,
-} from '../../../../shared/http/knowledge';
-
-type LayoutType = Parameters<typeof Form>[0]['layout'];
+} from '@/shared/http/knowledge';
+import './style.scoped.scss';
 
 // 创建知识库配置
 type FieldType = {
