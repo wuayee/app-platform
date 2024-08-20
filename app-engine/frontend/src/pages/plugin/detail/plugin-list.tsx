@@ -40,16 +40,10 @@ const PliginList = (props) => {
               <div className='list-detail-desc'>
                 <div className='desc-top'>
                   <span className='name'>{data?.pluginName}</span>
-                  {/* <span className='icon'>达摩知识插件</span> */}
-                  {/* <span className='tag'>已部署</span> */}
                 </div>
                 <div className='desc-middle'>
                   <span className='user'>创建人： {data?.creator}</span>
-                  {/* <span className='plugin-time'>创建于 2024-01-31 17:46:41</span> */}
                 </div>
-                {/* <div className='desc-bottom'>
-              包含XXX，可以帮助用户整理和记录灵感和想法，提高工作和学习效率。这些插件可以根据用户的需求和工作习惯进行选择，提高办公效率。
-            </div> */}
               </div>
             </div>
             {pluginData.length > 0 ? (
