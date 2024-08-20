@@ -26,13 +26,13 @@ const MarketItems = ({ reload }) => {
     params =
       selectedSource === 'APP'
         ? {
-          name: '',
+          name,
           pageNum: pageNum,
           pageSize,
           excludeTags: selectedSource,
         }
         : {
-          name: '',
+          name,
           pageNum: pageNum,
           pageSize,
           includeTags: selectedSource,
