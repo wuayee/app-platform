@@ -18,7 +18,14 @@ public interface LocaleMessageHandler {
      * @param code 表示错误码 {@link String}。
      * @param defaultMsg 表示默认错误信息 {@link String}，当无法找到对应的国际化信息时使用。
      * @param params 表示用于动态替换消息中的占位符 {@link Object}{@code []}。
-     * @return 国际化信息，如果没有找到对应的国际化信息，则返回默认错误信息。
+     * @return 国际化信息，如果没有找到对应的国际化信息，则返回系统默认错误信息。
      */
     String getLocaleMessage(String code, String defaultMsg, Object... params);
+
+    /**
+     * 用于获取系统默认的异常信息
+     *
+     * @return 返回系统默认的错误信息。
+     */
+    String getDefaultMessage();
 }

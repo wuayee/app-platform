@@ -28,6 +28,8 @@ import java.util.Locale;
 public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
     private static final Logger log = Logger.get(LocaleMessageHandlerImpl.class);
 
+    private static final String DEFAULT_SYSTEM_ERROR_MESSAGE_KEY = "000001";
+
     /**
      * 默认支持语言。
      */
@@ -47,6 +49,22 @@ public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
 
     @Override
     public String getLocaleMessage(String code, String defaultMsg, Object... params) {
+        Locale locale = getLocale();
+        try {
+            return this.plugin.sr().getMessage(locale, code, defaultMsg, params);
+        } catch (Exception e) {
+            log.warn("Failed to get locale message. [code={}]", code, e);
+            return getDefaultMessage();
+        }
+    }
+
+    @Override
+    public String getDefaultMessage() {
+        Locale locale = getLocale();
+        return plugin.sr().getMessage(locale, DEFAULT_SYSTEM_ERROR_MESSAGE_KEY);
+    }
+
+    private Locale getLocale() {
         UserContext userContext = UserContextHolder.get();
         Locale locale;
         if (userContext == null || StringUtils.isEmpty(userContext.getLanguage())) {
@@ -55,11 +73,6 @@ public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
             List<Locale.LanguageRange> list = Locale.LanguageRange.parse(userContext.getLanguage());
             locale = CollectionUtils.isEmpty(list) ? Locale.getDefault() : Locale.lookup(list, LOCALES);
         }
-        try {
-            return this.plugin.sr().getMessage(locale, code, defaultMsg, params);
-        } catch (Exception e) {
-            log.warn("Failed to get locale message. [code={}]", code, e);
-            return defaultMsg;
-        }
+        return locale;
     }
 }

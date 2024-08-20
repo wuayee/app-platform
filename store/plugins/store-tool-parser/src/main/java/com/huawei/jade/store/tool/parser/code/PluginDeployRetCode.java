@@ -54,7 +54,12 @@ public enum PluginDeployRetCode implements RetCode, ModelInfo {
     /**
      * 插件完整性校验失败。
      */
-    PLUGIN_COMPLETENESS_CHECK_ERROR(8, "Failed to verify the file completeness.");
+    PLUGIN_COMPLETENESS_CHECK_ERROR(8, "Failed to verify the file completeness."),
+
+    /**
+     * schema解析失败
+     */
+    FIELD_ERROR_IN_SCHEMA(9, "Failed to obtain the data in schema. [field={0}]");
 
     private final int code;
 

@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 public class LocaleMessageHandlerImplTest {
+    private final String defaultSystemErrorMessageKey = "000001";
+
     @Mock
     private Plugin plugin;
 
@@ -45,10 +47,12 @@ public class LocaleMessageHandlerImplTest {
     @DisplayName("测试获取默认信息")
     void shouldSuccessHandleLocaleMessageWhenNoResource() {
         Mockito.when(plugin.sr()).thenReturn(stringResource);
+        Mockito.when(stringResource.getMessage(Mockito.any(), Mockito.eq(defaultSystemErrorMessageKey)))
+            .thenReturn("system default message");
         Mockito.doThrow(new NullPointerException())
             .when(stringResource)
-            .getMessage(Mockito.any(), Mockito.anyString(), Mockito.any(), Mockito.any());
+            .getMessage(Mockito.any(), Mockito.eq("1"), Mockito.any(), Mockito.any());
         String localeMessage = localeMessageHandler.getLocaleMessage("1", "default message");
-        Assertions.assertEquals("default message", localeMessage);
+        Assertions.assertEquals("system default message", localeMessage);
     }
 }
