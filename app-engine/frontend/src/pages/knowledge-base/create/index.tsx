@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
-import { useHistory,useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import BreadcrumbSelf from '../../../components/breadcrumb';
 import { Icons } from '../../../components/icons';
 import { createKnowledgeBase, getKnowledgeBaseById, modifyKnowledgeBase } from '@/shared/http/knowledge';
+import { useTranslation } from 'react-i18next';
 import '../styles/create.scoped.scss'
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
@@ -20,31 +21,22 @@ type FieldType = {
 };
 
 const KnowledgeBaseCreate = () => {
-
+  const { t } = useTranslation();
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
   const id = searchParams.id;
-
   const [form] = Form.useForm();
-
   const initialValues = {
     knowledgeType: 'user',
     knowledgeName: '',
     knowledgeDesc: '',
   };
   const [formLayout, setFormLayout] = useState<LayoutType>('vertical');
-
   // 监听类型变化
   const knowledgeType = Form.useWatch('knowledgeType', form);
-
   // 是否在提交中
   const [loading, setLoading] = useState(false);
-
-  // 团队列表
-  const groupList = [{ value: 'storage', label: '存储团队' }]
-
   const formItemLayout =
     formLayout === 'horizontal' ? { labelCol: { span: 4 }, wrapperCol: { span: 14 } } : null;
-
   const submit = () => {
     form.submit();
   }
@@ -53,7 +45,6 @@ const KnowledgeBaseCreate = () => {
     if (loading) return;
     await modifyData(value);
   }
-
   // 知识库创建修改
   const modifyData = async (value: FieldType) => {
     setLoading(true)
@@ -105,8 +96,8 @@ const KnowledgeBaseCreate = () => {
       <div className='knowledge-base-create-aui-fullpage'>
         <div className='aui-header-1'>
           <div className='aui-title-1'>
-            <img src='/src/assets/images/left.png' onClick={() => navigate(-1)} />
-            <BreadcrumbSelf searchFlag currentLabel={id ? '修改知识库' : '创建知识库'}></BreadcrumbSelf>
+            <img src='./src/assets/images/left.png' onClick={() => window.history.back()} />
+            <BreadcrumbSelf searchFlag currentLabel={id ? t('modify') : t('create')}></BreadcrumbSelf>
           </div>
         </div>
         <div className='aui-block knowledge-base-create-aui-block'>
@@ -119,7 +110,7 @@ const KnowledgeBaseCreate = () => {
               onFinish={onFinish}
               style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
             >
-              <Form.Item label='个人/团队' name='knowledgeType'>
+              <Form.Item label={`${t('owner')}/${t('team')}`} name='knowledgeType'>
                 <Radio.Group size='large' style={{
                   display: 'flex',
                   justifyContent: 'space-between'
@@ -128,42 +119,42 @@ const KnowledgeBaseCreate = () => {
                     width: 391,
                     height: 40,
                     borderRadius: 4,
-                  }} value='user'> {<Icons.user></Icons.user>}  个人</Radio.Button>
+                  }} value='user'> {<Icons.user></Icons.user>}  {t('owner')}</Radio.Button>
                   <Radio.Button className='userGroup' value='userGroup' style={{
                     width: 391,
                     height: 40,
                     borderRadius: 4,
                   }}
                     disabled={true}
-                  >{<Icons.userGroup></Icons.userGroup>}  团队</Radio.Button>
+                  >{<Icons.userGroup></Icons.userGroup>}  {t('team')}</Radio.Button>
                 </Radio.Group>
               </Form.Item>
               {knowledgeType === 'userGroup' ? (
                 <>
-                  <Form.Item label='知识库团队' rules={[{ required: true, message: '选择不能为空' }]} name='knowledgeGroup'>
-                    <Select options={groupList} allowClear />
+                  <Form.Item label={t('knowledgeBaseTeam')} rules={[{ required: true, message: t('cannotBeEmpty') }]} name='knowledgeGroup'>
+                    <Select options={[]} allowClear />
                   </Form.Item>
                 </>
               ) : ''}
 
               <Form.Item
-                label='知识库名称'
+                label={t('knowledgeBaseName')}
                 rules={[
                   { required: true },
-                  {type:'string',max:20}
+                  { type: 'string', max: 20 }
                 ]}
                 name='knowledgeName'
               >
-                <Input placeholder='请输入' maxLength={20} showCount/>
+                <Input placeholder={t('plsEnter')} maxLength={20} showCount />
               </Form.Item>
-              <Form.Item label='知识库描述' rules={[{ required: true},{type:'string',max:256}]} name='knowledgeDesc'>
-                <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} maxLength={256} showCount placeholder='请输入' />
+              <Form.Item label={t('knowledgeBaseDesc')} rules={[{ required: true }, { type: 'string', max: 256 }]} name='knowledgeDesc'>
+                <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} maxLength={256} showCount placeholder={t('plsEnter')} />
               </Form.Item>
             </Form>
           </div>
           <div className='form-btn'>
-            <Button onClick={onCancle}>取消</Button>
-            <Button type='primary' loading={loading} onClick={submit}>确定</Button>
+            <Button onClick={onCancle}>{t('cancel')}</Button>
+            <Button type='primary' loading={loading} onClick={submit}>{t('ok')}</Button>
           </div>
           <div />
         </div>

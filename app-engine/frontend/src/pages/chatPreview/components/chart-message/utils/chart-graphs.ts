@@ -104,11 +104,11 @@ export const getOptions = (props, seriesData, type, chartRef) => {
       feature: {
         saveAsImage: {
           pixelRatio: 2,
-          title: '保存'
+          title: i18n.t('save')
         },
         myFull: { // 全屏
           show: true,
-          title: '全屏',
+          title: i18n.t('fullscreen'),
           icon: 'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAANVJREFUWEdjZBhgwDjA9jPAHaBiaCjK8fu/NiEHXbly4QA+NTo6Bg6EzPjBynj1zvnzr0Hq4A7Q0dEPY2JmXElI86WLF/CGmp6+wX9CZvz/xxB2+fKF1YPLAbq6BqGMTAyrwK7/z9Dw7x/DQWw+ITcKmJgYHBgYGeoh5v8LvXTp0hqcIYAcRISCk1h55CgmGAWjDhgNgQEJAWJTM7XVDZ66gNo+I9a80RAYDYHBEwK4aitiUzMhdaO14WgIDP4QGFSNUnxZavj2Cwa8a0aoJKOV/IDXBQDgZwww+OlbrwAAAABJRU5ErkJggg==',
           onclick: (e) => {
             fullScreenTable(chartRef)

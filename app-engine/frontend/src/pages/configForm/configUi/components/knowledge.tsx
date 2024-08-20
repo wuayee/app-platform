@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import AddKnowledge from './add-knowledge';
+import { useTranslation } from 'react-i18next';
 
 const Knowledge = (props) => {
+  const { t } = useTranslation();
   const { knowledge, updateData } = props;
   const [knows, setKnows] = useState([]);
   const { tenantId } = useParams();
@@ -37,7 +39,7 @@ const Knowledge = (props) => {
         <div className='control'>
           <div className='control-header'>
             <div className='control-title'>
-              <Button onClick={() => modalRef.current.showModal(knows)}>添加</Button>
+              <Button onClick={() => modalRef.current.showModal(knows)}>{t('additions')}</Button>
             </div>
           </div>
           <div className='control-inner'>

@@ -7,9 +7,11 @@ import { KnowledgeIcons } from '@/components/icons';
 import { getKnowledgeTableById } from '@/shared/http/knowledge';
 import KnowLedgeTable from '@/components/knowledge-detail-table/table-table';
 import { ImportTable } from '@/components/knowledge-detail-table/import-table';
+import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
 
 const IndustryTerminology = () => {
+  const { t } = useTranslation();
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
   const id = searchParams.id;
   const navigate = useHistory().push;
@@ -118,7 +120,7 @@ const IndustryTerminology = () => {
                     <span style={{
                       marginLeft: '4px'
                     }}>
-                      {`${rowInfo?.status}个导入任务正在进行中`}
+                      {`${rowInfo?.status}${t('importTasks')}`}
                     </span>
 
                   </div> : ''}
@@ -133,7 +135,7 @@ const IndustryTerminology = () => {
                 backgroundColor: '#2673E5',
                 display: 'flex',
                 alignItems: 'center'
-              }} disabled={rowInfo ? false : true}>{<KnowledgeIcons.import />} 导入</Button>
+              }} disabled={rowInfo ? false : true}>{<KnowledgeIcons.import />} {t('import')}</Button>
             </div>
           </div>
           <div className='knowledge-table' style={{ height: '100%' }}>
