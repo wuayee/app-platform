@@ -9,6 +9,7 @@ import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import React from "react";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
+import { useTranslation } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -50,6 +51,8 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
      */
 
     const form = useFormContext();
+
+    const { t } = useTranslation();
 
     const handleAdd = () => {
         addItem(uuidv4());
@@ -111,7 +114,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                 return (<>
                     <JadeReferenceTreeSelect
                             disabled={disabled}
-                            rules={[{required: true, message: "字段值不能为空"}]}
+                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                             className="value-custom jade-select"
                             reference={item}
                             onReferencedValueChange={(e) => handleReferenceValueChange(item, e)}
@@ -122,7 +125,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                 return <Form.Item
                     id={`value-${item.id}`}
                     name={`value-${item.id}`}
-                    rules={[{required: true, message: "字段值不能为空"}, {pattern: /^[^\s]*$/, message: "禁止输入空格"}]}
+                    rules={[{required: true, message: t('fieldValueCannotBeEmpty')}, {pattern: /^[^\s]*$/, message: t('spacesAreNotAllowed')}]}
                     initialValue={item.value}
                     validateTrigger="onBlur"
                 >
@@ -141,7 +144,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["inputPanel"]}>
             {<Panel key={"inputPanel"}
                     header={<div className="panel-header">
-                        <span className="jade-panel-header-font">输入</span>
+                        <span className="jade-panel-header-font">{t('input')}</span>
                         <Popover content={content}>
                             <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
@@ -160,12 +163,12 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                     <Row gutter={16}>
                         <Col span={8}>
                             <Form.Item>
-                                <span className="jade-font-size jade-font-color">字段名称</span>
+                                <span className="jade-font-size jade-font-color">{t('fieldName')}</span>
                             </Form.Item>
                         </Col>
                         <Col span={16}>
                             <Form.Item>
-                                <span className="jade-font-size jade-font-color">字段值</span>
+                                <span className="jade-font-size jade-font-color">{t('fieldValue')}</span>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -174,15 +177,15 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                             <Col span={8}>
                                 <Form.Item id={`name-${item.id}`}
                                            name={`name-${item.id}`}
-                                           rules={[{required: true, message: "字段值不能为空"}, {
+                                           rules={[{required: true, message: t('fieldValueCannotBeEmpty')}, {
                                                pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/,
-                                               message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'
+                                               message: t('fieldNameRule')
                                            }]}
                                            initialValue={item.name}
                                 >
                                     <JadeInput disabled={disabled}
                                                className="jade-input"
-                                               placeholder="请输入字段名称"
+                                               placeholder={t('pleaseInsertFieldName')}
                                                style={{paddingRight: "12px"}}
                                                value={item.name}
                                                onChange={(e) => handleItemChange('name', e.target.value, item.id)}
@@ -197,8 +200,8 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                                             className="value-source-custom jade-select"
                                             style={{width: "100%"}}
                                             onChange={(value) => handleItemChange('from', value, item.id)}
-                                            options={[{value: 'Reference', label: '引用'},
-                                                {value: 'Input', label: '输入'}]}
+                                            options={[{value: 'Reference', label: t('reference')},
+                                                {value: 'Input', label: t('input')}]}
                                             value={item.from}
                                     />
                                 </Form.Item>

@@ -1,6 +1,7 @@
 import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
+import { useTranslation, Trans } from "react-i18next";
 
 /**
  * 选择模式的组件
@@ -12,6 +13,7 @@ import {v4 as uuidv4} from "uuid";
  */
 export default function SelectMode({mode, disabled}) {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     /**
      * 模式切换后的回调
@@ -54,7 +56,7 @@ export default function SelectMode({mode, disabled}) {
 
     return (<>
         <div style={{display: 'flex', alignItems: 'center'}}>
-            <div className="mode-select-title jade-panel-header-font">模式选择</div>
+            <div className="mode-select-title jade-panel-header-font">{t('modeSelect')}</div>
             <JadeStopPropagationSelect
                     disabled={disabled}
                     showSearch
@@ -63,7 +65,7 @@ export default function SelectMode({mode, disabled}) {
                     defaultValue='mode-variables'
                     value={mode}
                     options={[
-                        {value: 'variables', label: "直接输出结果"},
+                        {value: 'variables', label: t('directlyOutputTheResult')},
                         {value: 'manualCheck', label: "智能表单展示结果"},
                     ]}
                     style={{width: '70%', marginLeft: 'auto'}}

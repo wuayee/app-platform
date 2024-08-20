@@ -9,6 +9,7 @@ import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -27,6 +28,7 @@ _EvaluationOutput.propTypes = {
  */
 function _EvaluationOutput({disabled, output}) {
     const shape = useShapeContext();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const [outputTreeData, setOutputTreeData] = useState(() => [convertToTreeData(output, 1, null)]);
 
@@ -77,7 +79,7 @@ function _EvaluationOutput({disabled, output}) {
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["evaluationOutputPanel"]}>
             {<Panel key={"evaluationOutputPanel"}
                     header={<div className="panel-header">
-                        <span className="jade-panel-header-font">输出</span>
+                        <span className="jade-panel-header-font">{t('output')}</span>
                         <Popover content={content}>
                             <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
@@ -195,10 +197,10 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
      */
     const getReferenceSelect = () => level > 1 &&
         <Form.Item style={{marginBottom: '8px'}}
-                   rules={[{required: true, message: "字段值不能为空"}]}
+                   rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                    name={`value-select-${shape.id}-${key}`}
                    id={`type-${node.id}-${key}`}
-                   initialValue={"引用"}
+                   initialValue={t('reference')}
         >
             <JadeStopPropagationSelect
                 className={"value-source-custom jade-select"}
@@ -228,7 +230,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
                 maxHeight: 400, overflow: 'auto'
             }}
             value={item.value}
-            rules={[{required: true, message: "字段值不能为空"}]}
+            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
         /> </Form.Item>;
 
     return (<>
@@ -236,9 +238,9 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
             <Col span={7} style={{marginRight: '8px'}}>
                 <Form.Item name={`property-${shape.id}-${key}`}
                            id={`property-${node.id}-${key}`}
-                           rules={[{required: true, message: "字段值不能为空"}, {
+                           rules={[{required: true, message: t('fieldValueCannotBeEmpty')}, {
                                pattern: /^[^\s]*$/,
-                               message: "禁止输入空格"
+                               message: t('spacesAreNotAllowed')
                            }]}
                            initialValue={title}
                 >

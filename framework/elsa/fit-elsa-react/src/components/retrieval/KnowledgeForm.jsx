@@ -4,6 +4,7 @@ import {MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined} from "@ant-de
 import {KnowledgeConfig} from "@/components/retrieval/KnowledgeConfig.jsx";
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -25,6 +26,7 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
     // 保存下拉框选项
     const dispatch = useDispatch();
     const shape = useShapeContext();
+    const { t } = useTranslation();
 
     /**
      * 删除知识库
@@ -87,7 +89,7 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
         <Panel style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
                header={<div
                        style={{display: 'flex', alignItems: 'center'}}>
-                   <span className="jade-panel-header-font">知识库</span>
+                   <span className="jade-panel-header-font">{t('knowledgeBase')}</span>
                    <Popover content={tips}>
                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                    </Popover>
