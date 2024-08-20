@@ -25,6 +25,13 @@ public final class AttributeList implements Iterable<AttributeInfo> {
 
     private final ClassFile file;
 
+    /**
+     * 获取属性列表所属的类文件。
+     *
+     * @param file 表示属性列表所属类文件的 {@link ClassFile}。
+     * @param in 表示用于读取属性的输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public AttributeList(ClassFile file, InputStream in) throws IOException {
         this.file = Validation.notNull(file, "The owning class file of an attribute list cannot be null.");
         Validation.notNull(in, "The input stream to read attributes cannot be null.");

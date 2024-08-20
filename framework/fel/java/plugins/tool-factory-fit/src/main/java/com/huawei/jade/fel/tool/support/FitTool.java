@@ -8,6 +8,7 @@ import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
+import com.huawei.fitframework.broker.CommunicationType;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
@@ -59,6 +60,6 @@ public class FitTool extends AbstractTool {
         if (StringUtils.isNotBlank(fitableId)) {
             filter = new FitableIdFilter(fitableId);
         }
-        return router.route(filter).invoke(args);
+        return router.route(filter).communicationType(CommunicationType.ASYNC).invoke(args);
     }
 }

@@ -31,6 +31,13 @@ public final class DynamicInfo extends Constant {
     private final U2 bootstrapMethodAttrIndex;
     private final U2 nameAndTypeIndex;
 
+    /**
+     * 构造一个新的 {@link DynamicInfo} 实例。
+     *
+     * @param pool 表示常量池的 {@link ConstantPool}
+     * @param in 表示输入流的 {@link InputStream}。
+     * @throws IOException 如果读取常量数据时发生 I/O 错误。
+     */
     public DynamicInfo(ConstantPool pool, InputStream in) throws IOException {
         super(pool, TAG);
         Validation.notNull(in, "The input stream to read constant data cannot be null.");

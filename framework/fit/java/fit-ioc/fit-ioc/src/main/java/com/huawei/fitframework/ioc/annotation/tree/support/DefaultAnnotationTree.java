@@ -43,6 +43,9 @@ public class DefaultAnnotationTree extends AbstractAnnotationTreeNodeContainer i
 
     private final Map<Class<? extends Converter>, Converter> converters;
 
+    /**
+     * 创建一个新的注解树节点。
+     */
     public DefaultAnnotationTree() {
         this.converters = new HashMap<>();
         this.converters.put(Converter.class, EMPTY_CONVERTER);

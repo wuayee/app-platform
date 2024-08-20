@@ -31,6 +31,13 @@ public final class PackageInfo extends Constant {
 
     private final U2 nameIndex;
 
+    /**
+     * 构造一个新的包信息。
+     *
+     * @param pool 表示常量池的 {@link ConstantPool}。
+     * @param in 表示输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public PackageInfo(ConstantPool pool, InputStream in) throws IOException {
         super(pool, TAG);
         Validation.notNull(in, "The input stream to read constant data cannot be null.");

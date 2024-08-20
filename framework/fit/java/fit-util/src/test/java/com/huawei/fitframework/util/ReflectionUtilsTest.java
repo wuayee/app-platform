@@ -1069,9 +1069,9 @@ public class ReflectionUtilsTest {
         }
 
         /**
-         * 用于测试静态方法。
+         * 用于测试的静态方法。
          *
-         * @return 表示返回值。
+         * @return 表示返回值的 {@code long}。
          */
         public static long getF2() {
             return f2;
@@ -1088,7 +1088,7 @@ public class ReflectionUtilsTest {
         /**
          * 用于测试异常返回的方法。
          *
-         * @return 表示返回值。
+         * @return 表示返回值的 {@code long}。
          */
         public long exceptionMethod() {
             throw new IllegalStateException();
@@ -1097,8 +1097,8 @@ public class ReflectionUtilsTest {
         /**
          * 用于测试 1 个参数的方法。
          *
-         * @param str 表示第一个参数。
-         * @return 表示返回值。
+         * @param str 表示第一个参数 {@link String}。
+         * @return 表示返回值的 {@link String}。
          */
         public String getString(String str) {
             return str;
@@ -1107,8 +1107,8 @@ public class ReflectionUtilsTest {
         /**
          * 用于测试数组为参数的方法。
          *
-         * @param str 表示参数数组。
-         * @return 表示返回值。
+         * @param str 表示参数数组的 {@link String}{@code []}。
+         * @return 表示返回值的 {@link String}。
          */
         public String getArray(String[] str) {
             return "";
@@ -1117,14 +1117,19 @@ public class ReflectionUtilsTest {
         /**
          * 用于测试 2 个参数的方法。
          *
-         * @param str1 表示第一个参数。
-         * @param str2 表示第二个参数。
-         * @return 表示返回值。
+         * @param str1 表示第一个参数的 {@link String}。
+         * @param str2 表示第二个参数的 {@link String}。
+         * @return 表示返回值的 {@link String}。
          */
         public String getString(String str1, String str2) {
             return str1 + str2;
         }
 
+        /**
+         * 用于测试方法调用异常的方法。
+         *
+         * @throws InvocationTargetException 表示方法调用异常。
+         */
         public void invokeExceptionMethod() throws InvocationTargetException {
             throw new InvocationTargetException(new IllegalArgumentException());
         }
@@ -1136,6 +1141,9 @@ public class ReflectionUtilsTest {
     }
 
     static class DefaultConstructorError {
+        /**
+         * 用于测试默认构造函数抛出异常的情况。
+         */
         public DefaultConstructorError() {
             throw new IllegalStateException();
         }
@@ -1143,6 +1151,11 @@ public class ReflectionUtilsTest {
 
     @SuppressWarnings("unused")
     static class MoDefaultConstructorError {
+        /**
+         * 用于测试异常构造方法的方法。
+         *
+         * @param i1 表示第一个参数的 {@code int}。
+         */
         public MoDefaultConstructorError(int i1) {
             throw new IllegalStateException();
         }
@@ -1168,7 +1181,7 @@ public class ReflectionUtilsTest {
         void m1();
     }
 
-    static abstract class TestAbstractClass implements TestInterface {}
+    abstract static class TestAbstractClass implements TestInterface {}
 
     static class TestClass1 implements TestInterface {
         @Override

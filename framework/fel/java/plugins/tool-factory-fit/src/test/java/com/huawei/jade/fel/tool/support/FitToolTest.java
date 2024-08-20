@@ -44,7 +44,10 @@ public class FitToolTest {
     @BeforeEach
     void setUp() throws IOException {
         BrokerClient client = mock(BrokerClient.class, RETURNS_DEEP_STUBS);
-        when(client.getRouter(eq("test")).route(any()).invoke(any())).thenAnswer(invocation -> {
+        when(client.getRouter(eq("test"))
+                .route(any())
+                .communicationType(any())
+                .invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
             }

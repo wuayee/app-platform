@@ -110,23 +110,25 @@ public interface FlowContextRepo<T> {
      *
      * @param streamId 流程版本ID
      * @param subscriptions from事件的事件ID
+     * @param excludeTraceIds 排除的traceIds
      * @param filter 默认过滤器，map的场景永远使用默认过滤器过滤批次数据
      * @param validator block校验器
      * @return 待处理的上下文
      */
-    List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions, Operators.Filter<T> filter,
-            Operators.Validator<T> validator);
+    List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions, Set<String> excludeTraceIds,
+            Operators.Filter<T> filter, Operators.Validator<T> validator);
 
     /**
      * 查找produce节点所有from事件上待处理的上下文
      *
      * @param streamId 流程版本ID
      * @param subscriptions from事件的事件ID
+     * @param excludeTraceIds 排除的traceIds
      * @param filter filter校验器
      * @return 待处理的上下文
      */
     List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
-            Operators.Filter<T> filter);
+            Set<String> excludeTraceIds, Operators.Filter<T> filter);
 
     /**
      * 查找流程对应版本所有上下文

@@ -28,7 +28,6 @@
         <module>fit-test</module>
         <module>fit-util</module>
         <module>integration</module>
-        <module>jacoco-aggregator</module>
     </modules>
 
     <properties>

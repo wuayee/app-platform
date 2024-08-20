@@ -25,6 +25,13 @@ public final class AttributeInfo {
     private final U4 attributeLength;
     private final byte[] content;
 
+    /**
+     * 构造一个表示属性的信息的新实例。
+     *
+     * @param list 表示属性所属的属性列表的 {@link AttributeList}。
+     * @param in 表示用于读取属性的输入流的 {@link InputStream}。
+     * @throws IOException 当读取过程中发生 I/O 异常时。
+     */
     public AttributeInfo(AttributeList list, InputStream in) throws IOException {
         this.list = Validation.notNull(list, "The owning list of an attribute cannot be null.");
         Validation.notNull(in, "The input stream to read attribute cannot be null.");
@@ -73,7 +80,7 @@ public final class AttributeInfo {
      * 获取包含属性内容的输入流。
      *
      * @return 表示包含属性内容的输入流的 {@link InputStream}。
-     * @throws IOException 当读取过程中发生 IO 异常时。
+     * @throws IOException 当读取过程中发生 I/O 异常时。
      */
     public final InputStream read() throws IOException {
         return new ByteArrayInputStream(this.content);

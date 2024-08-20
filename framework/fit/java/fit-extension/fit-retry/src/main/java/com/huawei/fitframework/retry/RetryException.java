@@ -13,6 +13,12 @@ package com.huawei.fitframework.retry;
 public class RetryException extends RuntimeException {
     private final int attemptTimes;
 
+    /**
+     * 创建一个 {@link RetryException} 实例。
+     *
+     * @param attemptTimes 表示重试次数的 {@code int}。
+     * @param cause 表示导致重试的原因的 {@link Throwable}。
+     */
     public RetryException(int attemptTimes, Throwable cause) {
         super(cause);
         this.attemptTimes = attemptTimes;

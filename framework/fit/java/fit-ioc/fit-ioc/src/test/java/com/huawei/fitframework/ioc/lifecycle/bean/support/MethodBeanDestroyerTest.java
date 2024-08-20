@@ -24,7 +24,9 @@ import java.lang.reflect.Method;
 class MethodBeanDestroyerTest {
     interface Bean {
         void destroy();
+
         void destroyWithArguments(Object argument);
+
         static void staticDestroy() {}
     }
 

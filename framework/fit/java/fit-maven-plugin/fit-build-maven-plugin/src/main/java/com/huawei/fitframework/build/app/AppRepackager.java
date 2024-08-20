@@ -79,6 +79,15 @@ public final class AppRepackager extends AbstractRepackager {
     private final ArtifactDownloader downloader;
     private final DependencyNode rootDependency;
 
+    /**
+     * 重新打包应用。
+     *
+     * @param project 表示 Maven 项目的 {@link MavenProject}。
+     * @param log 表示 Maven 日志的 {@link Log}。
+     * @param downloader 表示下载器的 {@link ArtifactDownloader}。
+     * @param rootDependency 表示根依赖的 {@link DependencyNode}。
+     * @param sharedDependencies 表示共享依赖的 {@link List}{@code <}{@link SharedDependency}{@code >}。
+     */
     public AppRepackager(MavenProject project, Log log, ArtifactDownloader downloader, DependencyNode rootDependency,
             List<SharedDependency> sharedDependencies) {
         super(project, log, sharedDependencies);
