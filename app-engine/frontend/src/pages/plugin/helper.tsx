@@ -1,5 +1,7 @@
 import React from 'react';
 import { PluginIcons } from '../../components/icons/plugin';
+import i18n from '@/locale/i18n';
+
 export const IconMap = {
   HUGGINGFACE: {
     icon: <PluginIcons.HuggingFaceIcon />,
@@ -19,35 +21,35 @@ export const IconMap = {
   },
   FAVOURITE: {
     icon: null,
-    name: '我的收藏',
+    name: i18n.t('myFavorites'),
   },
 };
 
 export const sourceTabs = [
-  { key: 'APP', label: '全部' },
-  { key: 'WATERFLOW', label: '流程' },
+  { key: 'APP', label: i18n.t('all') },
+  { key: 'WATERFLOW', label: i18n.t('waterFlow') },
   { key: 'CODENODESTATE', label: 'code' },
   { key: 'API', label: 'API' },
   // { key: 'BUILTIN', label: 'Builtin' },
   { key: 'HUGGINGFACE', label: 'Huggingface' },
   { key: 'LANGCHAIN', label: 'Langchain' },
   { key: 'LLAMAINDEX', label: 'Llamaindex' },
-  { key: 'FAVOURITE', label: '我的收藏' },
+  { key: 'FAVOURITE', label: i18n.t('myFavorites') },
 ];
 
 export const paramsColumns = [
   {
-    title: '参数名',
+    title: i18n.t('paramName'),
     dataIndex: 'key',
     key: 'key',
   },
   {
-    title: '参数类型',
+    title: i18n.t('paramType'),
     dataIndex: 'type',
     key: 'type',
   },
   {
-    title: '参数说明',
+    title: i18n.t('paramDescription'),
     dataIndex: 'description',
     key: 'description',
     ellipsis: true,
@@ -56,12 +58,12 @@ export const paramsColumns = [
 
 export const outputColumns = [
   {
-    title: '参数类型',
+    title: i18n.t('paramType'),
     dataIndex: 'type',
     key: 'type',
   },
   {
-    title: '参数说明',
+    title: i18n.t('paramDescription'),
     dataIndex: 'description',
     key: 'description',
     ellipsis: true,
@@ -80,8 +82,8 @@ export enum PluginStatusTypeE {
   DEPLOYMENT_FAILED = 'deployment_failed'
 }
 export enum PluginCnType {
-  DEPLOYED = '已部署',
-  DEPLOYING = '部署中',
-  UNDEPLOYED = '未部署',
-  DEPLOYMENT_FAILED = '部署失败'
+  DEPLOYED = i18n.t('deployed'),
+  DEPLOYING = i18n.t('deployment'),
+  UNDEPLOYED = i18n.t('notDeployed'),
+  DEPLOYMENT_FAILED = i18n.t('deploymentFailed'),
 }

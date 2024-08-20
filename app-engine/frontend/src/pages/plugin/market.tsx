@@ -8,8 +8,10 @@ import { Icons } from '../../components/icons';
 import EmptyItem from '../../components/empty/empty-item';
 import { PluginCardTypeE, sourceTabs } from './helper';
 import UploadToolDrawer from './upload/uploadTool';
+import { useTranslation } from 'react-i18next';
 
 const MarketItems = ({ reload }) => {
+  const { t } = useTranslation();
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -102,7 +104,7 @@ const MarketItems = ({ reload }) => {
             setIsOpenPlugin(e.timeStamp);
           }}
         >
-          上传
+          {t('upload')}
         </Button>
         <UploadToolDrawer openSignal={isOpenPlugin} refreshPluginList={getPluginList} />
       </div>

@@ -4,9 +4,11 @@ import { Modal, Button } from 'antd';
 import DeployTable from './deploy-table';
 import { getDeployTool, setDeployTool } from '@shared/http/plugin';
 import { Message } from '@/shared/utils/message';
+import { useTranslation } from 'react-i18next';
 import '../styles/deployment.scss';
 
 const DeployMent = ({ cancle, confirm }) => {
+  const { t } = useTranslation();
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -33,7 +35,7 @@ const DeployMent = ({ cancle, confirm }) => {
     setPluginNum(list.length);
     setDeployedNum(uninstallNum);
     if (list.length === 0) {
-      Message({ type: 'warning', content: '未选择部署插件' });
+      Message({ type: 'warning', content: t('noSelectedPlugin') });
       return;
     }
     setLoading(false);
@@ -47,7 +49,7 @@ const DeployMent = ({ cancle, confirm }) => {
       setLoading(true);
       const res = await setDeployTool({ pluginIds: idList });
       if (res.code === 0) {
-        Message({ type: 'success', content: '操作成功' });
+        Message({ type: 'success', content: t('operationSucceeded') });
         setOpen(false);
         confirm();
       }
@@ -66,30 +68,30 @@ const DeployMent = ({ cancle, confirm }) => {
     <div className='engine-deployment'>
       <div className='upload-info-head'>
         <img src='./src/assets/images/ai/info-upload.png' />
-        <span>部署可能需要一定时长，请关注部署状态，部署成功后插件内的工具将可以被使用</span>
+        <span>{t('pluginTips2')}</span>
       </div>
       <DeployTable pluginRef={pluginRef} />
       <div className='deploy-info-btn'>
-        <Button onClick={() => cancle()}>取消</Button>
-        <Button type='primary' onClick={confirmSunmit} disabled={disabled}>确定</Button>
+        <Button onClick={() => cancle()}>{t('cancel')}</Button>
+        <Button type='primary' onClick={confirmSunmit} disabled={disabled}>{t('ok')}</Button>
       </div>
     </div>
     <Modal
       open={open}
-      title='确认部署？'
+      title={t('confirmDeployment')}
       centered
       onCancel={handleCancel}
       footer={[
         <Button onClick={handleCancel}>
-          取消
+          {t('cancel')}
         </Button>,
         <Button type='primary' loading={loading} onClick={handleOk}>
-          确定
+          {t('ok')}
         </Button>
       ]}
     >
-      <p>你将部署 <b>{pluginNum}个</b> 插件</p>
-      {deployedNum > 0 && <p>你取消了 <b>{deployedNum}个</b> 已部署的插件，会导致正在运行的应用不可用</p>}
+      <p>{t('deployTip')} <b>{pluginNum}个</b> {t('plugin')}</p>
+      {deployedNum > 0 && <p>{t('deployCanceled')} <b>{deployedNum}{t('num')}</b> {t('deployCanceledTips')}</p>}
     </Modal>
   </>
 };

@@ -6,32 +6,35 @@ import { v4 as uuidv4 } from 'uuid';
 import DraggerUpload from '@/components/draggerUpload';
 import { uploadPlugin } from '@shared/http/plugin';
 import { Message } from '@shared/utils/message';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/locale/i18n';
 import '../style.scoped.scss';
 
 const uploadSpaceOptions = [
-  { value: 'user', label: '个人空间' },
-  { value: 'team', label: '某个团队' },
+  { value: 'user', label: i18n.t('personalSpace') },
+  { value: 'team', label: i18n.t('aTeam') },
 ];
 
 const columns = [
   {
-    title: '参数名',
+    title: i18n.t('paramName'),
     dataIndex: 'name',
     key: 'name',
   },
   {
-    title: '参数类型',
+    title: i18n.t('paramType'),
     dataIndex: 'type',
     key: 'type',
   },
   {
-    title: '参数说明',
+    title: i18n.t('paramDescription'),
     dataIndex: 'description',
     key: 'description',
   },
 ];
 
 const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
@@ -39,7 +42,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const [loading, setLoading] = useState(false);
   const pluginList = useRef([]);
   const fileData = useRef([]);
-  const tipsStr = '每个zip包最多取20个插件，插件名称长度不能超过64位，描述长度不能超过256位'
+  const tipsStr = t('zipDescription');
   const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
     pluginList.current.forEach(pItem => {
       pItem.checkedNum = 0;
@@ -107,7 +110,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   // 确定
   const confirm = () => {
     if (!checkedList.length) {
-      Message({ type: 'warning', content: '未选择插件' })
+      Message({ type: 'warning', content: t('noPluginSelected') });
       return
     }
     let nameArr = [];
@@ -130,7 +133,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     uploadPlugin(formData, nameArr.join(',')).then(res => {
       if (res.code === 0) {
         setOpen(false);
-        Message({ type: 'success', content: '添加插件成功' });
+        Message({ type: 'success', content: t('addPluginSuccess') });
         refreshPluginList();
       } else {
         setLoading(false);
@@ -173,7 +176,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
 
   return (
     <Drawer
-      title='上传工具'
+      title={t('uploadTool')}
       placement='right'
       closeIcon={false}
       width={650}
@@ -194,25 +197,25 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
               setOpen(false);
             }}
           >
-            取消
+            {t('cancel')}
           </Button>
           <Button
             style={{ width: 90, backgroundColor: '#2673e5', color: '#ffffff' }}
             onClick={confirm}
             loading={loading}
           >
-            确定
+            {t('ok')}
           </Button>
         </div>
       }
     >
       <div className='upload-info-head'>
         <img src='./src/assets/images/ai/info-upload.png' />
-        <span>建议用户在本地调试插件，避免部署失败；相同工具将会覆盖。</span>
+        <span>{t('uploadTip')}</span>
       </div>
-      <Spin tip='上传插件中' size='small' spinning={loading}>
+      <Spin tip={t('uploadingPlugin')} size='small' spinning={loading}>
         <div>
-          上传至：
+          {t('uploadTo')}
           <Select
             disabled={true}
             defaultValue='user'
@@ -247,12 +250,12 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                     </div>
                     <div className='head-right'>
                       {item.list.length > 0 && <img src='./src/assets/images/ai/complate.png' />}
-                      <span className='text'>{item.list.length > 0 ? '解析成功' : '解析失败'}</span>
+                      <span className='text'>{item.list.length > 0 ? t('parsedSuccessfully') : t('parsingFailed')}</span>
                       <span>{item.list.length}/{item.checkedNum}</span>
                     </div>
                   </div>
                   <div className='collapse-plugin-content'>
-                    {item.list.length === 0 && <Empty description="暂无数据" />}
+                    {item.list.length === 0 && <Empty description={t('noData')} />}
                     {item.list?.map((lItem, index) => (
                       <div className='param-card' key={index}>
                         <div style={{ float: 'right' }}>
@@ -268,7 +271,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                                   {tag}
                                 </Tag>
                               ))}
-                              <span className='card-detail-btn' onClick={() => pluginDetailClick(item, lItem)}>查看参数</span>
+                              <span className='card-detail-btn' onClick={() => pluginDetailClick(item, lItem)}>{t('viewParam')}</span>
                             </div>
                           </div>
                         </div>
