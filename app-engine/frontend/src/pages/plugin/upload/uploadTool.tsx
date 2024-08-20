@@ -121,7 +121,6 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     })
     let fileConfirmList = fileData.current.filter(item => uidArr.includes(item.uid));
     customRequest(fileConfirmList, nameArr);
-    setOpen(false);
   }
   // 上传文件
   const customRequest = (fileArr, nameArr) => {

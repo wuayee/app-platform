@@ -442,6 +442,7 @@
   "knowledgeBaseDetail": "知识库详情",
   "addingKnowledgeTable": "添加知识表",
   "deleteKnowledgeBase": "删除知识库",
+  "deletePlugin": "删除插件",
   "deleteKnowledgeTips": "删除后无法恢复，是否确定删除",
   "typeSelection": "类型选择",
   "backendService": "后端服务",
