@@ -3,8 +3,6 @@ import { throttle } from 'lodash';
 import { Message } from '@shared/utils/message';
 import { Button, DatePicker, Select, TreeSelect } from 'antd';
 import {
-  aidProducts,
-  calcProducts,
   FinanceGroupType,
   groupTypeOption,
   typeMap,
@@ -77,7 +75,7 @@ const QuestionClar = (props) => {
   }, [proType, dataDimension, questionInfo]);
   // 指标和产品调后端接口
   function initOptions() {
-    const name = dataDimension === 'ICT P&S' ? 'IRB' : dataDimension;
+    const name = dataDimension.name === 'ICT P&S' ? 'IRB' : dataDimension.name;
     const data = { name, type: '' };
     if (isShow('needProduct')) {
       getProOptions(data);
@@ -90,13 +88,13 @@ const QuestionClar = (props) => {
   async function getProOptions(params) {
     let res;
     if (proType === '主产品') {
-      if (dataDimension === 'ICT P&S') {
+      if (dataDimension.name === 'ICT P&S') {
         params.level = 6;
         params.type = '主产品';
         delete params.name;
         res = await getFuClarifyOptions(params);
       } else {
-        params.type = typeMap[dataDimension];
+        params.type = typeMap[dataDimension.name];
         res = await getClarifyOptions(params);
       }
     } else {
@@ -109,23 +107,23 @@ const QuestionClar = (props) => {
       const originData = res.data;
       initSelections(originData);
       let options = originData;
-      if (proType === '辅产品') {
-        options = aidProducts;
-      }
-      if (dataDimension === 'CPL') {
+      if (dataDimension.value === 'CPL') {
         options = calcProducts;
       }
       // 如果是“预算预测”产品选项则只取前两层
       if (whetherShowTheFirstTwoFloors()) {
         getFirstTwoLevels(options, 2);
       }
-      setProductOptions(options);
+      let currentType = localStorage.getItem('proType');
+      if (!currentType || currentType === proType) {
+        setProductOptions(options);
+      }
     }
   }
   const [indicatorOptions, setIndicatorOptions] = useState(null);
   // 指标
   async function getIndicatorOptions(params) {
-    params.type = belongsMap[dataDimension];
+    params.type = belongsMap[dataDimension.value];
     delete params.name;
     const res = await getClarifyOptions(params);
     // 过滤出报表项一级的数据
@@ -218,8 +216,10 @@ const QuestionClar = (props) => {
 
   //产品类型修改回调
   const onProTypeChange = (value) => {
+    localStorage.setItem('proType', value);
     setProType(value);
     updateFormData('product', []);
+    setProductOptions(null);
   };
 
   //产品修改回调
@@ -246,16 +246,12 @@ const QuestionClar = (props) => {
 
   // 构造歧义词列表
   const initAmbList = (obj) => {
-    const keys = Object.keys(obj);
-    let result = keys.map((k) => {
+    let result = Object.keys(obj).map((k) => {
       let item = obj[k];
-      const itemKeys = Object.keys(item);
       return {
         label: k,
-        value: item[itemKeys[0]],
-        options: itemKeys.map((itemKey) => {
-          return { label: itemKey, value: item[itemKey] };
-        }),
+        value: item[0].value,
+        options: item,
       };
     });
     return result;
@@ -478,7 +474,7 @@ const QuestionClar = (props) => {
           <div className='amb_title'>歧义字段处理：</div>
           {ambiguousList.map((item, index) => {
             return (
-              <div className='ambiguous' key={item.label}>
+              <div className='ambiguous' key={index}>
                 <span className='label'>{item.label}：</span>
                 <Select
                   className='select_box mr10'
@@ -491,7 +487,7 @@ const QuestionClar = (props) => {
             );
           })}
       </div>
-      { mode !== 'history' &&
+      { mode !== 'history' && confirmCallBack &&
         <div className='footer'>
           <Button className='mr10' type='primary' onClick={confirmClar}>确定</Button>
           <Button onClick={rejectClar}>拒绝澄清</Button>

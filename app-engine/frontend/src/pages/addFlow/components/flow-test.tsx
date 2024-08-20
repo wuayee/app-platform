@@ -12,6 +12,9 @@ import { useAppSelector } from '@/store/hook';
 import { EventSourceParserStream } from '@shared/event-source/stream';
 import RenderFormItem from './render-form-item';
 import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
+import { useAppDispatch } from '@/store/hook';
+import { setDimension } from '@/store/common/common';
+import { pduTypeMap } from '@/pages/chatPreview/common/config';
 
 const Index = (props) => {
   const {
@@ -32,6 +35,8 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   const runningInstanceId = useRef('');
+  const dispatch = useAppDispatch();
+
   // 关闭测试抽屉
   const handleCloseDebug = () => {
     setLoading(false);
@@ -50,6 +55,7 @@ const Index = (props) => {
   }
   // 请求参数拼接
   const runningStart = (values) => {
+    dispatch(setDimension({ id: '', name: pduTypeMap[values.dimension], value: values.dimension }));
     let chatParams: any = {
       'app_id': appId,
       'question': values.Question,

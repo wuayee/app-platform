@@ -16,7 +16,7 @@ const RuntimeForm = (props) => {
   const dispatch = useAppDispatch();
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
+  const dataDimension = useAppSelector((state) => state.commonStore.dimension);
   const questions = []
   const saveCallBack = (response) => {
     dispatch(setFormReceived(true));
