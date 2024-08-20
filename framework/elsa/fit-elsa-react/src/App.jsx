@@ -42,6 +42,11 @@ function App() {
         });
         configs.push({
             node: "evaluationAlgorithmsNodeState", urls: {
+                evaluationAlgorithmsUrl: "http://localhost:8080/api/jober/store/tools/search",
+            }
+        });
+        configs.push({
+            node: "evaluationTestSetNodeState", urls: {
                 datasetUrlPrefix: "http://10.245.113.7:8080/eval/",
             }
         });

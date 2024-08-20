@@ -5,6 +5,12 @@ import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
 import {EvaluationInput} from "@/components/evaluation/evaluationAlgorithms/EvaluationInput.jsx";
 import httpUtil from "@/components/util/httpUtil.jsx";
+import PropTypes from "prop-types";
+
+EvaluationAlgorithmsWrapper.propTypes = {
+    data: PropTypes.object,
+    disabled: PropTypes.bool,
+};
 
 /**
  * 获取评估算法节点配置数据
@@ -30,7 +36,7 @@ const getEvaluationAlgorithmsConfig = shape => {
  */
 export default function EvaluationAlgorithmsWrapper({data, disabled}) {
     const shape = useShapeContext();
-    const selectedAlgorithm = data.algorithm.value.find(item => item.name === "uniqueName").value;
+    const selectedAlgorithm = data && (data.algorithm.value.find(item => item.name === "uniqueName")?.value ?? '');
     const score = data.score.value;
     const config = getEvaluationAlgorithmsConfig(shape);
     const [algorithms, setAlgorithms] = useState([]);
@@ -40,7 +46,7 @@ export default function EvaluationAlgorithmsWrapper({data, disabled}) {
             console.error('Cannot get config.urls.evaluationAlgorithmsUrl.');
             throw new Error('Cannot get config.urls.evaluationAlgorithmsUrl.');
         } else {
-            httpUtil.get(config.urls.evaluationAlgorithmsUrl + '/tools?pageNum=1&pageSize=10&includeTags=FIT&excludeTags=Config',
+            httpUtil.get(config.urls.evaluationAlgorithmsUrl + '?includeTags=ALGORITHM&pageNum=1&pageSize=10',
                 {},
                 (jsonData) => setAlgorithms(jsonData),
                 (error) => {

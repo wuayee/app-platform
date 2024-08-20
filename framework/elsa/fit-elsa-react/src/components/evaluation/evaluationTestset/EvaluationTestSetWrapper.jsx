@@ -2,9 +2,14 @@ import React, {useEffect, useState} from "react";
 import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
 import {EvaluationTestSetSelect} from "@/components/evaluation/evaluationTestset/EvaluationTestSetSelect.jsx";
-import {TestQuantity} from "@/components/evaluation/evaluationTestset/TestQuantity.jsx";
 import httpUtil from "@/components/util/httpUtil.jsx";
 import {message} from "antd";
+import PropTypes from "prop-types";
+
+EvaluationTestSetWrapper.propTypes = {
+    data: PropTypes.object,
+    disabled: PropTypes.bool,
+};
 
 /**
  * 获取测试集节点配置数据
@@ -17,7 +22,7 @@ const getEvaluationTestSetConfig = shape => {
         console.error('Cannot get shape.graph.configs.');
         throw new Error('Cannot get shape.graph.configs.');
     } else {
-        return shape.graph.configs.find(node => node.node === "evaluationAlgorithmsNodeState");
+        return shape.graph.configs.find(node => node.node === "evaluationTestSetNodeState");
     }
 };
 
@@ -30,8 +35,8 @@ const getEvaluationTestSetConfig = shape => {
  */
 export default function EvaluationTestSetWrapper({data, disabled}) {
     const shape = useShapeContext();
-    const selectedTestSet = data && (data.testSet.value.find(item => item.name === "name")?.value ?? '');
-    // const testQuantity = data && (data.testSet.value.find(item => item.name === "quantity")?.value ?? 0); 暂时注释，后续放开
+    const selectedTestSet = data && (data.inputParams[0].value.find(item => item.name === "name")?.value ?? '');
+    // const testQuantity = data && (data.inputParams[0].value.find(item => item.name === "quantity")?.value ?? 0); 暂时注释，后续放开
     const config = getEvaluationTestSetConfig(shape);
     const [testSets, setTestSets] = useState([]);
 

@@ -5,6 +5,14 @@ import ArrayUtil from "@/components/util/ArrayUtil.js";
 import React from "react";
 import {PlusCircleOutlined} from "@ant-design/icons";
 import httpUtil from "@/components/util/httpUtil.jsx";
+import PropTypes from "prop-types";
+
+_EvaluationTestSetSelect.propTypes = {
+    testSets: PropTypes.array,
+    disabled: PropTypes.bool,
+    selectedTestSet: PropTypes.object,
+    config: PropTypes.object
+};
 
 /**
  * 测试集选择组件
