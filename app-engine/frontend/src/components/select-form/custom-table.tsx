@@ -3,7 +3,7 @@ import type { TableProps } from 'antd';
 import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './style.scoped.scss';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 import i18n from '../../locale/i18n';
 
 interface Item {
@@ -13,12 +13,12 @@ interface Item {
   indexType: string;
 }
 
-const options=[
+const options = [
   { value: 'other', label: i18n.t('otherIndex') },
   { value: 'vector', label: i18n.t('vectorIndex') },
 ];
 
-const dataOptions=[
+const dataOptions = [
   { value: 'VARCHAR', label: i18n.t('character') },
   { value: 'NUMBER', label: i18n.t('number') },
 ];
@@ -68,11 +68,11 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   const inputNode =
     inputType === 'select' ? (
       <Select
-        options={dataIndex === 'dataType' ? dataOptions: options}
+        options={dataIndex === 'dataType' ? dataOptions : options}
       />
     ) : (
-      <Input />
-    );
+        <Input />
+      );
 
   return (
     <td {...restProps}>
@@ -90,8 +90,8 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
           {inputNode}
         </Form.Item>
       ) : (
-        children
-      )}
+          children
+        )}
     </td>
   );
 };
@@ -123,8 +123,8 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
 
   // 移除数据
   const removeData = (record: Partial<Item> & { key: React.Key }) => {
-    const index = data.findIndex(item=> record.key === item.key);
-    if(index !== -1) {
+    const index = data.findIndex(item => record.key === item.key);
+    if (index !== -1) {
       const newData = [...data]
       newData.splice(index, 1);
       setData([...newData]);
@@ -176,7 +176,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
       editable: true,
       render: (_: any, record: Item) => {
         return (<>
-          {dataOptions.find(item=> item.value === _)?.label || ''}
+          {dataOptions.find(item => item.value === _)?.label || ''}
         </>)
       }
     },
@@ -187,7 +187,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
       editable: true,
       render: (_: any, record: Item) => {
         return (<>
-          {options.find(item=> item.value === _)?.label || ''}
+          {options.find(item => item.value === _)?.label || ''}
         </>)
       }
     },
@@ -204,13 +204,13 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
             </Typography.Link>
           </Space>
         ) : (
-          <Space>
-            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-              {t('edit')}
-            </Typography.Link>
-            <a onClick={()=> {removeData(record)}}>删除</a>
-          </Space>
-        );
+            <Space>
+              <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                {t('edit')}
+              </Typography.Link>
+              <a onClick={() => { removeData(record) }}>{t('delete')}</a>
+            </Space>
+          );
       },
     },
   ];
@@ -242,7 +242,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
   return (
     <Form<FieldType> form={form} component={false}>
       <div className='custom-table-header'>
-        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={ editingKey ? true : false }>
+        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={editingKey ? true : false}>
           {t('addCol')}
         </Button>
       </div>

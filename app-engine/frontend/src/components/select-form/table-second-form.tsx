@@ -1,7 +1,7 @@
-import { FormInstance, Input, Radio, Form, Upload, Table, TableColumnsType } from 'antd';
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { FormInstance, Form } from 'antd';
 import CustomTable from './table-config';
-
+import { useTranslation } from 'react-i18next';
 interface props {
   form: FormInstance,
 }
@@ -13,29 +13,25 @@ type FieldType = {
 
 
 const TableSecondForm = ({ form }: props) => {
+  const { t } = useTranslation();
   const initialValues: FieldType = {
     tableCustom: [],
   };
-
   // 监听类型变化
-
   const checkTableRead = (_: any, value: any[]) => {
-
+    const { t } = useTranslation();
     if (value.length) {
       for (let index = 0; index < value.length; index++) {
         const item = value[index];
-
         const keys = Object.keys(item);
-
         for (let j = 0; j < keys.length; j++) {
           const key = keys[index];
-          if(!item[key] &&key !=='description' && key !=='indexType') {
-            return Promise.reject(new Error('值不能为空'));
+          if (!item[key] && key !== 'description' && key !== 'indexType') {
+            return Promise.reject(new Error(t('cannotBeEmpty')));
           }
         }
       }
     }
-
     return Promise.resolve();
   };
 
@@ -47,16 +43,19 @@ const TableSecondForm = ({ form }: props) => {
           form={form}
           initialValues={initialValues}
         >
-        <Form.Item
-          label='表结构'
-          rules={[{ required: true, message: '输入不能为空' }, {validator: checkTableRead, message: '输入的值不能为空'}]}
-          name='tableCustom'
-          style={{
-            marginTop: 16,
-          }}
-        >
-          <CustomTable />
-        </Form.Item>
+          <Form.Item
+            label={t('tableStructure')}
+            rules={[
+              { required: true, message: t('plsEnterRequiredItem') },
+              { validator: checkTableRead, message: t('plsEnterRequiredItem') }
+            ]}
+            name='tableCustom'
+            style={{
+              marginTop: 16,
+            }}
+          >
+            <CustomTable />
+          </Form.Item>
         </Form>
       </div>
     </>

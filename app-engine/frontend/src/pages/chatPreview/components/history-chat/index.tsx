@@ -13,9 +13,10 @@ import { getDaysAndHours } from '@/common/dataUtil';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList, setChatRunning, setChatId, setOpenStar } from '@/store/chatStore/chatStore';
 import { updateChatId } from "@/shared/utils/common";
-import './style.scoped.scss';
 import { historyChatProcess } from '../../utils/chat-process';
 import { useTranslation } from 'react-i18next';
+import './style.scoped.scss';
+
 interface HistoryChatProps {
   openHistorySignal: number;
 }
@@ -32,7 +33,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const dimension = useAppSelector((state) => state.commonStore.dimension);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [isClearOpen,setClearOpen]=useState(false);
+  const [isClearOpen, setClearOpen] = useState(false);
   const [requestInfo, setRequestInfo] = useState({
     aipp_id: '', aipp_version: '', offset: 0, limit: 100
   });
@@ -87,8 +88,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     }
   }, [appInfo.id])
 
-  const onClearList = async()=>{
-    await clearChatHistory(tenantId,appId);
+  const onClearList = async () => {
+    await clearChatHistory(tenantId, appId);
     refreshList();
     dispatch(setChatList([]));
     dispatch(setChatId(null));
@@ -143,12 +144,12 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
           <div className='history-item' key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
             <div className='history-item-content'>
               <div className='history-item-header'>
-              <Tooltip placement='top' title={<span style={{color:'#4d4d4d'}}>{item?.chat_name}</span>} color='#ffffff'>
-              <div className='history-item-title'>{item?.chat_name?.length>10?item?.chat_name?.substring(0,10)+'...':item?.chat_name}</div>
-              </Tooltip>
+                <Tooltip placement='top' title={<span style={{ color: '#4d4d4d' }}>{item?.chat_name}</span>} color='#ffffff'>
+                  <div className='history-item-title'>{item?.chat_name?.length > 10 ? item?.chat_name?.substring(0, 10) + '...' : item?.chat_name}</div>
+                </Tooltip>
                 <span
                   style={{ cursor: "pointer", color: "#1677ff" }}
-                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id);}}
+                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id); }}
                 >
                   {t('continueChat')}
                 </span>
@@ -164,7 +165,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
           </div>
         ))}
       </div>
-      <Modal title={t('alert')} open={isClearOpen} onOk={onClearList} onCancel={()=>setClearOpen(false)}>
+      <Modal title={t('alert')} open={isClearOpen} onOk={onClearList} onCancel={() => setClearOpen(false)}>
         <p>{t('clearHistoryChatContent')}</p>
       </Modal>
     </Drawer>

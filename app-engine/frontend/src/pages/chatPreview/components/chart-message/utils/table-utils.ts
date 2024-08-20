@@ -1,26 +1,28 @@
+import i18n from '@/locale/i18n';
+
 // 设置表格宽度
 export const getChartWidth = (headers, tableData) => {
   const messageDiv = document.querySelector('.receive-box');
-    if (messageDiv) {
-      const width = messageDiv?.clientWidth - 80;
-      let tableWidth = 0;
-      headers.forEach((a, b) => {
-        tableWidth += a.width;
+  if (messageDiv) {
+    const width = messageDiv?.clientWidth - 80;
+    let tableWidth = 0;
+    headers.forEach((a, b) => {
+      tableWidth += a.width;
+    });
+    let reg = /^\d+$/;
+    const isPureNumber = tableData.every((element) => {
+      return reg.test(parseInt(element[headers[0].key]));
+    });
+    if (tableWidth > width) {
+      !isPureNumber && (headers[0].fixed = 'left');
+    } else {
+      headers.forEach((a) => {
+        if (a.width < (width - 10) / headers.length) {
+          delete a.width;
+        }
       });
-      let reg = /^\d+$/;
-      const isPureNumber = tableData.every((element) => {
-        return reg.test(parseInt(element[headers[0].key]));
-      });
-      if (tableWidth > width) {
-        !isPureNumber && (headers[0].fixed = 'left');
-      } else {
-        headers.forEach((a) => {
-          if (a.width < (width - 10) / headers.length) {
-            delete a.width;
-          }
-        });
-      }
     }
+  }
 }
 // 下载表格数据
 export const exportTableData = (headers, tableData, chartTitle) => {
@@ -34,7 +36,7 @@ export const exportTableData = (headers, tableData, chartTitle) => {
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${chartTitle || '下载'}.csv`;
+  link.download = `${chartTitle || i18n.t('download')}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

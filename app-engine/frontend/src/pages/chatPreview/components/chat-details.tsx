@@ -7,8 +7,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setOpenStar } from '@/store/chatStore/chatStore';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import robot2 from '@assets/images/ai/xiaohai.png';
-import '../styles/chat-details.scss';
 import { useTranslation } from 'react-i18next';
+import '../styles/chat-details.scss';
 
 const ChatDetail = () => {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ const ChatDetail = () => {
           description: '',
           greeting: '',
           icon: '',
-          app_type: '编程开发',
+          app_type: t('programmingDevelopment'),
         }
       }
     })
@@ -91,7 +91,7 @@ const ChatDetail = () => {
                 <Img icon={appInfo.attributes?.icon} />
               </div>
               <div className='right'>
-                {appInfo.attributes?.greeting || '你好'}
+                {appInfo.attributes?.greeting || t('hello')}
               </div>
             </div>
           </div>

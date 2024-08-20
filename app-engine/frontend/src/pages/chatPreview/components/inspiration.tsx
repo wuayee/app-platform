@@ -20,9 +20,9 @@ import { queryDepartMent, queryInspiration } from '@/shared/http/aipp';
 import { storage } from '@/shared/storage';
 import { pduMap } from '../common/config';
 import { HOME_APP_ID, FINANCE_APP_ID, TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
-import '../styles/inspiration.scss';
 import { isBusinessMagicCube } from '@shared/utils/common';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
+import '../styles/inspiration.scss';
 
 const Inspiration = (props) => {
   const { t } = useTranslation();
@@ -159,7 +159,7 @@ const Inspiration = (props) => {
   // 灵感大全点击
   function handleClickPrompt(item) {
     if (messageChecked) {
-      Message.warning('问答组勾选中, 请取消后再试');
+      Message.warning(t('selectedWarning'));
       return;
     }
     if (chatRunning) {
@@ -189,12 +189,12 @@ const Inspiration = (props) => {
   // 分类点击回调
   function nodeClick(id, name, parentId) {
     if (FINANCE_APP_ID === appId) {
-      storage.set('dimension', { id, name, value: pduMap[name]});
+      storage.set('dimension', { id, name, value: pduMap[name] });
     }
-    dispatch(setDimension({ id, name, value: pduMap[name]}));
+    dispatch(setDimension({ id, name, value: pduMap[name] }));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
-    let arr = [{ title: '全部', id: parentId }];
+    let arr = [{ title: t('all'), id: parentId }];
     let arr1 = treeChildData.current.length
       ? arr.concat(treeChildData.current)
       : [];
@@ -223,35 +223,35 @@ const Inspiration = (props) => {
           <div className='right-content'>
             <div className={showDrop ? 'has-drop title' : 'title'}>
               <span className='title-icon'>
-                <span className='inspiration-text'>创意灵感</span>
+                <span className='inspiration-text'>{t('creativeInspiration')}</span>
               </span>
-              { showDrop &&  (
-                <Popover 
+              {showDrop && (
+                <Popover
                   content={
-                    <DropMenu 
-                      treeList={dropList} 
+                    <DropMenu
+                      treeList={dropList}
                       hide={hide}
                       nodeId={currentNodeId}
                       nodeClick={nodeClick} />
-                    } 
-                  open={popoverOpen} 
+                  }
+                  open={popoverOpen}
                   onOpenChange={handleOpenChange}
-                  arrow={false} 
+                  arrow={false}
                   trigger='click'
                   placement='bottomRight'
                 >
                   <Button size='small' icon={<SwapOutlined />} >
-                    <span className='btn-text' title={currentPromptName}>{ currentPromptName }</span>
+                    <span className='btn-text' title={currentPromptName}>{currentPromptName}</span>
                   </Button>
                 </Popover>
               )}
             </div>
             <div className='prompt-search'>
               <Input
-              disabled
+                disabled
                 prefix={<SearchOutlined />}
                 allowClear
-                placeholder='搜索'
+                placeholder={t('search')}
               />
             </div>
             <div className='prompt-container'>
@@ -271,7 +271,7 @@ const Inspiration = (props) => {
                       <span className='text'> {item.title}</span>
                       <span className='line'></span>
                     </span>
-                    
+
                   );
                 })}
               </div>
@@ -296,10 +296,10 @@ const Inspiration = (props) => {
                   })}
                 </div>
               ) : (
-                <div className='prompt-empty'>
-                  <Empty description='暂无灵感大全数据' />
-                </div>
-              )}
+                  <div className='prompt-empty'>
+                    <Empty description={t('noData')} />
+                  </div>
+                )}
             </div>
           </div>
         </div>

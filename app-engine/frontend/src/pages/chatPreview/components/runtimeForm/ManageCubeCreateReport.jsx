@@ -6,9 +6,11 @@ import { saveContent } from '@shared/http/sse';
 import chartImg from '@/assets/images/chart.png';
 import tableImg from '@/assets/images/table.png';
 import { Message } from '@shared/utils/message';
+import { useTranslation } from 'react-i18next';
 import './styles/manage-cube-create-report.scoped.scss';
 
 const ManageCubeCreateReport = (props) => {
+  const { t } = useTranslation();
   const id = 'reportResult';
   const { data, mode, saveCallBack, tenantId, confirmCallBack } = props;
   const [chartData, setChartData] = useState(null);
@@ -35,7 +37,7 @@ const ManageCubeCreateReport = (props) => {
       setLoading(true);
       const res = await saveContent(tenantId, data.instanceId, params);
       if (res.status !== 200) {
-        Message({ type: 'warning', content: res.msg || '保存失败' });
+        Message({ type: 'warning', content: res.msg || t('savingFailed') });
         return;
       };
       confirmCallBack ? confirmCallBack() : saveCallBack(res);
@@ -98,8 +100,8 @@ const ManageCubeCreateReport = (props) => {
         </div>
         {!chartData &&
           <>
-            <img src={chartImg} alt='图表示例图片' style={{ width: '100%' }} />
-            <img src={tableImg} alt='表格示例图片' style={{ width: '100%' }} />
+            <img src={chartImg} style={{ width: '100%' }} />
+            <img src={tableImg} style={{ width: '100%' }} />
           </>
         }
         {chartData && chartData.map((item, index) => (

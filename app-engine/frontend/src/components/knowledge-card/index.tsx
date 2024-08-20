@@ -5,7 +5,7 @@ import type { MenuProps } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { Icons } from '../icons/index';
 import './index.scoped.scss';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 export interface knowledgeBase {
   name: string;
@@ -56,13 +56,13 @@ const App = ({
     return `${y}.${m}.${d}`;
   };
   return (
-    <div className='knowledge-card' onClick={() => {jumpDetail(knowledge.id)}}>
+    <div className='knowledge-card' onClick={() => { jumpDetail(knowledge.id) }}>
       <div className='card-head'>
         <span className='card-icon'>
-          <knowledge.icon/>
+          <knowledge.icon />
         </span>
         <div className='card-title'>
-          <div className='card-name'>{knowledge.name}</div> 
+          <div className='card-name'>{knowledge.name}</div>
           <div className='card-create'>
             {`${knowledge.ownerName} ${t('createAt')}${formateTime(knowledge.createdAt as any as Date)}`}
           </div>

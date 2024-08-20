@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // 单选列表类型dom
 const ListFilter = (props) => {
@@ -14,16 +14,16 @@ const ListFilter = (props) => {
   }
   return <>
     <div className='filter-list-content'>
-      { filterCurrent.options?.map(item => {
-          return (
-            <div key={item.value} className={ 
-              setClassName(item) ? 'active list-filter-item' : 'list-filter-item'} 
-              onClick={() => handleCLick(item)}
-            >
-              { item.label }
-            </div>
-          )
-        }) 
+      {filterCurrent.options?.map(item => {
+        return (
+          <div key={item.value} className={
+            setClassName(item) ? 'active list-filter-item' : 'list-filter-item'}
+            onClick={() => handleCLick(item)}
+          >
+            { item.label}
+          </div>
+        )
+      })
       }
     </div>
   </>

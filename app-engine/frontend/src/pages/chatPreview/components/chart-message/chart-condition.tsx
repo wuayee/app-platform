@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { Button, Popover } from 'antd';
+import { Button } from 'antd';
 import { ChatContext } from '@/pages/aippIndex/context';
-import { conditionList, compareMap, casecadeMap } from './common/condition';
-import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { conditionList, casecadeMap } from './common/condition';
+import { useAppSelector } from '@/store/hook';
 import ConditionItems from './components/codition-item';
 import AddCondition from './components/add-condition';
+import { useTranslation } from 'react-i18next';
 import './styles/chart-condition.scss';
 
 const ChartCondition = (props) => {
+  const { t } = useTranslation();
   const { data, confirm } = props;
   const dimension = useAppSelector((state) => state.commonStore.dimension.name);
   const { showCheck } = useContext(ChatContext);
@@ -143,7 +145,7 @@ const ChartCondition = (props) => {
 
   // 根据产品线设置下拉
   useEffect(() => {
-    if (dimension && dimension !== '其他') {
+    if (dimension && dimension !== t('others')) {
       !hasLv1.current && (formData.current.lv1_prod_rd_team_cn_name = [dimension]);
       formSetValue();
     }
@@ -151,7 +153,7 @@ const ChartCondition = (props) => {
   return (
     <>
       <div className='condition-ctn'>
-        <div className='cdt-title'>条件和维度</div>
+        <div className='cdt-title'>{t('conditionsAndDimensions')}</div>
         <div className='cdt-filters'>
           {filter1.length > 0 &&
             filter1.map((item: any) => {
@@ -197,9 +199,9 @@ const ChartCondition = (props) => {
         </div>
         {!showCheck && (
           <div className='cdt-toolbar'>
-            <Button onClick={handleReset}>重置</Button>
+            <Button onClick={handleReset}>{t('reset')}</Button>
             <Button type='primary' onClick={handleConfirm}>
-              确定
+              {t('ok')}
             </Button>
           </div>
         )}

@@ -11,7 +11,7 @@ import { useAppSelector } from '@/store/hook';
 import { EventSourceParserStream } from '@shared/event-source/stream';
 import RenderFormItem from './render-form-item';
 import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
   const {

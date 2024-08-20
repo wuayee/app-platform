@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Checkbox, Input, Button } from 'antd';
 import { getFinanceOptions } from '@shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 const { Search } = Input;
 
 const CheckBoxForm = (props: any) => {
-  const { filterCurrent, setFilterCurrent, formData } = props;
+  const { t } = useTranslation();
+  const { filterCurrent, setFilterCurrent } = props;
   const [datasetOptions, setDatasetOptions] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [checkedList, setCheckedList] = useState<any>([]);
@@ -78,8 +80,6 @@ const CheckBoxForm = (props: any) => {
     });
     setDatasetOptions(options);
   };
-  // 后端搜索
-  // const requestSearch = (arr) => {};
   // 全选
   const handleChoseAll = () => {
     let arr: any = [];
@@ -101,10 +101,10 @@ const CheckBoxForm = (props: any) => {
     <>
       <div className='check-box-form'>
         <div className='check-search'>
-          <Search onSearch={onSearch} placeholder='请输入关键字' allowClear />
+          <Search onSearch={onSearch} placeholder={t('plsEnter')} allowClear />
           {datasetOptions.length > 0 && (
             <Button type='primary' onClick={handleChoseAll}>
-              {checkedList.length === datasetOptions.length ? '取消全选' : '全选'}
+              {checkedList.length === datasetOptions.length ? t('unselectAll') : t('selectAll')}
             </Button>
           )}
         </div>

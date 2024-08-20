@@ -1,3 +1,5 @@
+import i18n from '@/locale/i18n';
+
 // 图表数据拼装
 export const initChartData = (chartData, chartAnswer, chartType, chartTitle = '') => {
   const chartItem = {
@@ -158,7 +160,7 @@ export const initChartData = (chartData, chartAnswer, chartType, chartTitle = ''
           type: 'bar',
           name: item.title,
           data: item.data,
-          stack: '总量',
+          stack: i18n.t('totalAmount'),
           barMaxWidth: 15,
           barMinWidth: 10,
           label: {
@@ -190,13 +192,13 @@ export const initChartData = (chartData, chartAnswer, chartType, chartTitle = ''
       chartItem.legendData = legend;
       chartItem.chartData = data;
       break;
-      default:
+    default:
   }
   return chartItem;
 }
 const getColumnWidthFromField = (field, index, chartData) => {
   const is2KResolution = window.innerWidth >= 2048 && window.innerHeight >= 1080;
-  const lengthList = chartData.map(item => item[index].replace(/[^\x00-\xff]/g,'01').length);
+  const lengthList = chartData.map(item => item[index].replace(/[^\x00-\xff]/g, '01').length);
   const dataFiled = chartData[lengthList.indexOf(Math.max(...lengthList))][index];
   const aimFiled = dataFiled.replace(/[^\x00-\xff]/g, '01').length > field.replace(/[^\x00-\xff]/g, '01').length ? dataFiled : field;
   let canvas = document.createElement('canvas');

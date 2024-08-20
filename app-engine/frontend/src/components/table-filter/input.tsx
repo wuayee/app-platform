@@ -1,9 +1,8 @@
-import { Button, Input } from 'antd';
 import React from 'react';
+import { Space, Button, Input } from 'antd';
 import type { TableColumnType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { Space } from 'antd';
-import { TFunction } from "react-i18next";
+import { TFunction } from 'react-i18next';
 
 // 自定义搜索面板
 const getColumnSearchProps = (dataIndex: string, onChange?: any, t?: TFunction): TableColumnType<string> => ({
@@ -20,12 +19,12 @@ const getColumnSearchProps = (dataIndex: string, onChange?: any, t?: TFunction):
       />
       <Space>
         <Button
-          type="primary"
+          type='primary'
           onClick={() => {
             onChange(selectedKeys as string[], confirm, dataIndex)
           }}
           icon={<SearchOutlined />}
-          size="small"
+          size='small'
           style={{ width: 90 }}
         >
           {t('search')}
@@ -37,7 +36,7 @@ const getColumnSearchProps = (dataIndex: string, onChange?: any, t?: TFunction):
               onChange([], confirm, dataIndex);
             }
           }
-          size="small"
+          size='small'
           style={{ width: 90 }}
         >
           {t('reset')}

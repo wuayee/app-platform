@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
 import { useParams, useHistory } from 'react-router-dom';
-import { createAipp } from "@shared/http/aipp";
+import { createAipp } from '@shared/http/aipp';
 import { CloseOutlined } from '@ant-design/icons';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const AddWaterFlow = (props) => {
   const { t } = useTranslation();
@@ -42,10 +42,10 @@ const AddWaterFlow = (props) => {
       onClose={() => setOpen(false)}
       open={open}
       footer={[
-        <Button key="back" onClick={() => setOpen(false)}>
+        <Button key='back' onClick={() => setOpen(false)}>
           {t('cancel')}
         </Button>,
-        <Button key="submit" type="primary" loading={loading} onClick={confrimClick}>
+        <Button key='submit' type='primary' loading={loading} onClick={confrimClick}>
           {t('ok')}
         </Button>
       ]}
@@ -55,13 +55,13 @@ const AddWaterFlow = (props) => {
       <div style={{ marginBottom: '30px' }}>
         <Form
           form={form}
-          layout="vertical"
-          autoComplete="off"
+          layout='vertical'
+          autoComplete='off'
           className='edit-form-content'
         >
           <Form.Item
             label={t('name')}
-            name="name"
+            name='name'
             rules={[{ required: true, message: t('plsEnterName') }, {
               type: 'string',
               max: 64,
@@ -71,8 +71,8 @@ const AddWaterFlow = (props) => {
             <Input maxLength={64} showCount />
           </Form.Item>
           <Form.Item
-            label="简介"
-            name={t('description')}
+            label={t('description')}
+            name='description'
           >
             <Input.TextArea rows={3} showCount maxLength={300} />
           </Form.Item>

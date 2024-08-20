@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
+import { Tooltip } from 'antd';
 import { useParams } from 'react-router-dom'
-import { Tooltip } from "antd";
 import { getAppInfo } from '@shared/http/aipp';
 import { ConfigFlowIcon } from '@assets/icon';
 import { Message } from '@shared/utils/message';
@@ -8,9 +8,9 @@ import { FlowContext } from '../aippIndex/context';
 import LeftMenu from './components/left-menu';
 import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
+import FlowTest from './components/flow-test';
+import { useTranslation } from 'react-i18next';
 import './styles/index.scss';
-import FlowTest from "./components/flow-test";
-import { useTranslation } from "react-i18next";
 
 const AddFlow = (props) => {
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ const AddFlow = (props) => {
       setShowDebug(true);
     }).catch(err => {
       let str = typeof (err) === 'string' ? err : t('plsEnterFlowRequiredItem');
-      Message({ type: "warning", content: str });
+      Message({ type: 'warning', content: str });
     })
   }
   // 给父组件的测试回调
@@ -106,8 +106,8 @@ const AddFlow = (props) => {
                 setDragData={setDragData}
               />
             ) : (
-                <Tooltip placement="rightTop" title={t('expandArrange')}>
-                  <div className="menu-icon" onClick={menuClick}>
+                <Tooltip placement='rightTop' title={t('expandArrange')}>
+                  <div className='menu-icon' onClick={menuClick}>
                     <ConfigFlowIcon />
                   </div>
                 </Tooltip>

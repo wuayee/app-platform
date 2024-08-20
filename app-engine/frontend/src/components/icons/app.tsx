@@ -50,18 +50,12 @@ export const AppIcons = {
   ),
   StarIcon: (props: IconProps) => (
     <svg width="14.000000" height="14.000000" viewBox="0 0 14 14" fill="none">
-      <desc>
-        Created with Pixso.
-      </desc>
       <defs />
       <path id="path" d="M13.83 6.2C12.84 7.41 11.08 9.4 11.08 9.4C11.08 9.4 11.37 11.6 11.53 13.09C11.6 13.85 11.05 14.18 10.43 13.89C9.24 13.29 7.44 12.37 7.03 12.16C6.62 12.37 4.8 13.27 3.6 13.87C2.97 14.16 2.42 13.83 2.49 13.07C2.65 11.58 2.94 9.39 2.94 9.39C2.94 9.39 1.16 7.4 0.16 6.19C-0.19 5.75 0.03 5.13 0.73 5.02C2.16 4.75 4.37 4.32 4.37 4.32C4.37 4.32 5.58 2.09 6.35 0.72C6.77 -0.11 7.06 -0.01 7.11 0.01C7.24 0.06 7.45 0.22 7.71 0.72C8.47 2.09 9.67 4.32 9.67 4.32C9.67 4.32 11.85 4.75 13.27 5.02C13.96 5.14 14.18 5.76 13.83 6.2Z" fill="#FFC000" fillOpacity="1.000000" fillRule="nonzero" />
     </svg>
   ),
   AppLikeIcon: (props: IconProps) => (
     <svg width="18.000000" height="18.000000" viewBox="0 0 18 18" fill="none">
-      <desc>
-        Created with Pixso.
-      </desc>
       <defs>
         <clipPath id="clip671_227123">
           <rect id="bg-like" width="12.000000" height="13.000000" transform="translate(3.000000 2.000000)" fill="white" fillOpacity="0" />

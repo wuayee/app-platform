@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import BasicItems from './basic-item';
 import ToolItems from './tool-item';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const LeftMenu = (props) => {
   const { t } = useTranslation();

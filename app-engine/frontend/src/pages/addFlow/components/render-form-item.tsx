@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { Input, Form, InputNumber, Switch } from 'antd';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const RenderFormItem = (props) => {
   const { t } = useTranslation();
@@ -13,7 +13,7 @@ const RenderFormItem = (props) => {
     if (value && isNaN(value) && (type === 'Number' || type === 'Integer')) {
       form.setFieldValue(name, null);
     }
-  }, [])
+  }, []);
 
   const customLabel = (
     <span className='debug-form-label'>
