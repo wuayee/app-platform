@@ -59,6 +59,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     /**
      * @override
      */
+    const processMetaData = self.processMetaData;
     self.processMetaData = (metaData) => {
         const _generateOutput = () => {
             newConfig.outputParams.push(convertReturnFormat(metaData.schema.return));
@@ -77,6 +78,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
             });
         };
 
+        processMetaData.apply(self, [metaData]);
         const newConfig = {...template};
         _generateInput();
         _generateOutput();

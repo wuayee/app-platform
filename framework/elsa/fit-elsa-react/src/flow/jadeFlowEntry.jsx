@@ -132,8 +132,7 @@ const jadeFlowAgent = (graph) => {
     self.createNode = (type, e, metaData) => {
         console.log("call createNode...");
         const position = graph.activePage.calculatePosition(e);
-        const shape = graph.activePage.createNew(type, position.x, position.y);
-        shape.processMetaData(metaData);
+        graph.activePage.createNew({shapeType: type, x: position.x, y: position.y, metaData: metaData});
     };
 
     /**
@@ -156,8 +155,7 @@ const jadeFlowAgent = (graph) => {
      */
     self.createNodeByPosition = (type, position, metaData) => {
         console.log("call createNodeByPosition...");
-        const shape = graph.activePage.createNew(type, position.x, position.y);
-        shape.processMetaData(metaData);
+        graph.activePage.createNew({shapeType: type, x: position.x, y: position.y, metaData: metaData});
     };
 
     /**
@@ -167,8 +165,7 @@ const jadeFlowAgent = (graph) => {
      * @param schemaData schema元数据
      */
     self.createToolByPosition = (position, schemaData) => {
-        const shape = graph.activePage.createNew("toolInvokeNodeState", position.x, position.y);
-        shape.processMetaData(schemaData);
+        graph.activePage.createNew({shapeType: "toolInvokeNodeState", x: position.x, y: position.y, metaData: schemaData});
     };
 
     /**
@@ -284,7 +281,7 @@ export const JadeFlow = (() => {
         // 新建的默认创建出start、end和一个连线
         const start = page.createShape("startNodeStart", 100, 100);
         const end = page.createShape("endNodeEnd", start.x + start.width + 200, 100);
-        const jadeEvent = page.createNew("jadeEvent", 0, 0);
+        const jadeEvent = page.createNew({shapeType: "jadeEvent", x: 0, y: 0});
         page.reset();
 
         // reset完成之后进行connect操作.

@@ -109,6 +109,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      * @param metaData 元数据信息
      */
     self.processMetaData = (metaData) => {
+        if (metaData && metaData.name) {
+            self.text = metaData.name;
+        }
     };
 
     /**
