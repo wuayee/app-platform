@@ -1,9 +1,9 @@
-import screenfull from 'screenfull';
+import screenfull from '@/shared/screenfull/screenfull';
 
 // 初始化echarts图表
 export const getOptions = (props, seriesData, type, chartRef) => {
-  const { chartPieData, chartData, chartTitle, chartType, xAxisData, yAxisData, legendData} = props.chatItem;
-  const gridMap:any = {
+  const { chartPieData, chartData, chartTitle, chartType, xAxisData, yAxisData, legendData } = props.chatItem;
+  const gridMap: any = {
     pie: {
       right: legendData && 140,
     },
@@ -20,7 +20,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
       bottom: getEndPosition(legendData) < 100 ? 50 : 20,
     },
   };
-  const legendConfig:any = {
+  const legendConfig: any = {
     type: 'scroll',
     textStyle: {
       width: 120,
@@ -33,7 +33,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
     },
     data: legendData,
   };
-  const seriesMap:any = {
+  const seriesMap: any = {
     pie: chartPieData,
     circlepie: chartPieData,
     line: chartData,
@@ -79,7 +79,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
     yAxis: yAxisData,
     dataZoom: [
       {
-        show:  !type.includes('pie') && getEndPosition(xAxisData) < 100,
+        show: !type.includes('pie') && getEndPosition(xAxisData) < 100,
         start: 0,
         end: getEndPosition(xAxisData),
         type: 'slider',
@@ -138,7 +138,7 @@ export const fullScreenTable = (chartRef) => {
   }
   screenfull.request(chartRef.current);
 }
-export const chartTypeMap:any = {
+export const chartTypeMap: any = {
   TABLE: 'table',
   BAR: 'bar',
   LINE: 'line',
@@ -147,7 +147,7 @@ export const chartTypeMap:any = {
   FORECAST: 'line',
   BAR_STACK: 'bar'
 }
-export const items:any = [
+export const items: any = [
   {
     label: '推荐',
     key: 'normal',

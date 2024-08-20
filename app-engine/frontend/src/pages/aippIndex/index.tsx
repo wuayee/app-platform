@@ -17,14 +17,14 @@ import { useTranslation } from "react-i18next";
 const AippIndex = () => {
   const { t } = useTranslation();
   const { appId, tenantId } = useParams();
-  const [ showElsa, setShowElsa ] = useState(false);
-  const [ spinning, setSpinning] = useState(false);
-  const [ reloadInspiration, setReloadInspiration ] = useState('');
-  const [ showChat, setShowChat ] = useState(false);
-  const [ messageChecked, setMessageCheck ] = useState(false);
-  const [ testStatus, setTestStatus ] = useState(null);
-  const [ testTime, setTestTime ] = useState(null);
-  const [ showFlowChangeWarning, setShowFlowChangeWarning ] = useState(false);
+  const [showElsa, setShowElsa] = useState(false);
+  const [spinning, setSpinning] = useState(false);
+  const [reloadInspiration, setReloadInspiration] = useState('');
+  const [showChat, setShowChat] = useState(false);
+  const [messageChecked, setMessageCheck] = useState(false);
+  const [testStatus, setTestStatus] = useState(null);
+  const [testTime, setTestTime] = useState(null);
+  const [showFlowChangeWarning, setShowFlowChangeWarning] = useState(false);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
   const dispatch = useAppDispatch();
@@ -57,7 +57,7 @@ const AippIndex = () => {
   }
   // 修改aipp更新回调
   const updateAippCallBack = (data) => {
-    if(data){
+    if (data) {
       aippRef.current = data;
       dispatch(setAppInfo(aippRef.current));
     }
@@ -66,7 +66,7 @@ const AippIndex = () => {
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
       if (res.code === 0) {
-        Message({type: 'success', content: t('saveConfigSuccess')});
+        Message({ type: 'success', content: t('saveConfigSuccess') });
         getAippDetails();
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;
@@ -110,7 +110,7 @@ const AippIndex = () => {
   return (
     <>
       {
-        <div 
+        <div
           className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
           <ChoreographyHead
             appInfo={appInfo}
@@ -125,7 +125,7 @@ const AippIndex = () => {
           <div className='layout-content'>
             {showElsa ?
               (
-                <AddFlow 
+                <AddFlow
                   type='edit'
                   addFlowRef={addFlowRef}
                   setFlowTestStatus={handleTestStatus}
@@ -144,15 +144,15 @@ const AippIndex = () => {
                   showElsa={showElsa}
                 />
               )}
-            <CommonChat 
+            <CommonChat
               chatType={appInfo.state}
-              contextProvider={contextProvider} 
-              previewBack={changeChat} 
+              contextProvider={contextProvider}
+              previewBack={changeChat}
             />
           </div>
         </div>
       }
-       <Spin spinning={spinning} fullscreen />
+      <Spin spinning={spinning} />
     </>
   );
 };
