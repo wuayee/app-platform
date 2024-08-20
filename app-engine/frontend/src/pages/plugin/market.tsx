@@ -128,7 +128,7 @@ const MarketItems = () => {
           >
             {pluginData.map((card: any) => (
               <PluginCard
-                key={card.uniqueName}
+                key={card.pluginId}
                 getPluginList={getPluginList}
                 pluginData={card}
                 cardType={PluginCardTypeE.MARKET}
