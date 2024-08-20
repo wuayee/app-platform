@@ -173,6 +173,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
                       disabled={disabled}
                       onClick={() => handleDelete(key)}/>
             : <Button type="text"
+                      style={{marginLeft:'4px'}}
                       icon={<AddSubItem/>}
                       disabled={disabled}
                       onClick={() => handleAddSubItem(key)}/>;

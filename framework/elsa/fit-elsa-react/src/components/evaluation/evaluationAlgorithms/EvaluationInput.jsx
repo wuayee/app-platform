@@ -8,7 +8,7 @@ import JadeInputTreeCollapse from "@/components/common/JadeInputTreeCollapse.jsx
 _EvaluationInvokeInput.propTypes = {
     inputData: PropTypes.array,
     disabled: PropTypes.bool
-}
+};
 
 /**
  * 评估节点入参展示和入参赋值
