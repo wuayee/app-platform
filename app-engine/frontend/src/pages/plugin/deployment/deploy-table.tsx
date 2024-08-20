@@ -161,8 +161,7 @@ const Deploy = ({ pluginRef }) => {
                 placeholder='搜索'
                 style={{ width: '140px', height: '25px', marginLeft: '16px' }}
                 prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
+                onChange={(e) => handleSearch(e.target.value)} />
             </div>
             <div className='right'>插件详情</div>
           </div>
