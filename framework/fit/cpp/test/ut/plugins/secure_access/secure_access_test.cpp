@@ -15,6 +15,9 @@
 
 using namespace Fit;
 using namespace testing;
+constexpr const uint64_t ACCESS_TOKEN_CURRENT_TIME_S = 600;
+constexpr const uint64_t FRESH_TOKEN_CURRENT_TIME_S = 700;
+constexpr const uint64_t TOKEN_ROLE_SIZE = 2;
 class SecureAccessTest : public ::testing::Test {
 public:
     void SetUp() override
@@ -41,11 +44,10 @@ public:
         accessTokenTimeout_ = DEFAULT_ACCESS_TOKEN_EXPIRED_TIME_SECONDS;
         freshTokenTimeout_ = DEFAULT_FRESH_TOKEN_EXPIRED_TIME_SECONDS;
 
-
         accessTokenRole_ = AuthTokenRole("accessToken", ACCESS_TOKEN_TYPE, accessTokenTimeout_,
-            600 + accessTokenTimeout_ * SECOND_TO_MILLION_SECOND, role_);
+            ACCESS_TOKEN_CURRENT_TIME_S + accessTokenTimeout_ * SECOND_TO_MILLION_SECOND, role_);
         freshTokenRole_ = AuthTokenRole("freshToken", FRESH_TOKEN_TYPE, freshTokenTimeout_,
-            600 + freshTokenTimeout_ * SECOND_TO_MILLION_SECOND, role_);
+            ACCESS_TOKEN_CURRENT_TIME_S + freshTokenTimeout_ * SECOND_TO_MILLION_SECOND, role_);
 
         fit::hakuna::kernel::shared::Fitable fitableIn;
         fitableIn.genericableId = "test_gid";
@@ -147,8 +149,8 @@ TEST_F(SecureAccessTest, should_return_auth_token_role_when_get_token_role_given
     EXPECT_CALL(*tokenRoleRepo_, Save(testing::_))
         .Times(testing::AtLeast(1))
         .WillRepeatedly(testing::Return(FIT_OK));
-    uint64_t accTokenCurTime = 600;
-    uint64_t freshTokenCurTime = 700;
+    uint64_t accTokenCurTime = ACCESS_TOKEN_CURRENT_TIME_S;
+    uint64_t freshTokenCurTime = FRESH_TOKEN_CURRENT_TIME_S;
     EXPECT_CALL(*timeUtilByRepoMock_, GetCurrentTimeMs(testing::_))
         .Times(testing::AtLeast(1))
         .WillOnce(testing::DoAll(testing::SetArgReferee<0>(freshTokenCurTime), testing::Return(FIT_OK)))
@@ -159,15 +161,15 @@ TEST_F(SecureAccessTest, should_return_auth_token_role_when_get_token_role_given
 
     // then
     EXPECT_EQ(authTokenRoles.empty(), false);
-    EXPECT_EQ(authTokenRoles.size(), 2);
+    EXPECT_EQ(authTokenRoles.size(), TOKEN_ROLE_SIZE);
     EXPECT_EQ(authTokenRoles[0].token.empty(), false);
     EXPECT_EQ(authTokenRoles[0].type, freshTokenType_);
     EXPECT_EQ(authTokenRoles[0].timeout, freshTokenTimeout_);
-    EXPECT_EQ(authTokenRoles[0].endTime, freshTokenTimeout_ * SECOND_TO_MILLION_SECOND + 700);
+    EXPECT_EQ(authTokenRoles[0].endTime, freshTokenTimeout_ * SECOND_TO_MILLION_SECOND + FRESH_TOKEN_CURRENT_TIME_S);
     EXPECT_EQ(authTokenRoles[1].token.empty(), false);
     EXPECT_EQ(authTokenRoles[1].type, accessTokenType_);
     EXPECT_EQ(authTokenRoles[1].timeout, accessTokenTimeout_);
-    EXPECT_EQ(authTokenRoles[1].endTime, accessTokenTimeout_ * SECOND_TO_MILLION_SECOND + 600);
+    EXPECT_EQ(authTokenRoles[1].endTime, accessTokenTimeout_ * SECOND_TO_MILLION_SECOND + ACCESS_TOKEN_CURRENT_TIME_S);
 }
 
 TEST_F(SecureAccessTest, should_return_false_when_call_is_authorized_given_mock_query_empty)
@@ -252,7 +254,7 @@ TEST_F(SecureAccessTest, should_return_auth_tokens_when_call_refresh_access_toke
 
     EXPECT_CALL(*timeUtilByRepoMock_, GetCurrentTimeMs(testing::_))
         .Times(testing::AtLeast(1))
-        .WillOnce(testing::DoAll(testing::SetArgReferee<0>(600), testing::Return(FIT_OK)));
+        .WillOnce(testing::DoAll(testing::SetArgReferee<0>(ACCESS_TOKEN_CURRENT_TIME_S), testing::Return(FIT_OK)));
 
     // when
     vector<AuthTokenRole> authTokenRoles {};
@@ -264,7 +266,7 @@ TEST_F(SecureAccessTest, should_return_auth_tokens_when_call_refresh_access_toke
     EXPECT_EQ(authTokenRoles[0].token.empty(), false);
     EXPECT_EQ(authTokenRoles[0].type, accessTokenType_);
     EXPECT_EQ(authTokenRoles[0].timeout, accessTokenTimeout_);
-    EXPECT_EQ(authTokenRoles[0].endTime, accessTokenTimeout_ * SECOND_TO_MILLION_SECOND + 600);
+    EXPECT_EQ(authTokenRoles[0].endTime, accessTokenTimeout_ * SECOND_TO_MILLION_SECOND + ACCESS_TOKEN_CURRENT_TIME_S);
 }
 
 TEST_F(SecureAccessTest, should_return_empty_when_call_refresh_access_token_given_mock_query_token_role_empty)

@@ -11,8 +11,8 @@
 namespace Fit {
 std::once_flag initFlag;
 SecureAccess::SecureAccess(SignaturePtr signature, TokenRoleRepoPtr tokenRoleRepo,
-    RolePermissionsRepoPtr rolePermissionsRepo, AuthKeyRepoPtr authKeyRepo, UtilByRepo* timeUtilByRepo) :
-    signature_(std::move(signature)), tokenRoleRepo_(std::move(tokenRoleRepo)),
+    RolePermissionsRepoPtr rolePermissionsRepo, AuthKeyRepoPtr authKeyRepo, UtilByRepo* timeUtilByRepo)
+    : signature_(std::move(signature)), tokenRoleRepo_(std::move(tokenRoleRepo)),
     rolePermissionsRepo_(std::move(rolePermissionsRepo)), authKeyRepo_(std::move(authKeyRepo)),
     timeUtilByRepo_(timeUtilByRepo)
 {

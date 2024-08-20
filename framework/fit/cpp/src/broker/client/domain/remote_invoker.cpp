@@ -27,7 +27,7 @@ using namespace Fit::Util;
 using RequestParam = ::fit::hakuna::kernel::broker::client::RequestParam;
 using RequestResponseV5 = ::fit::hakuna::kernel::broker::client::requestResponseV5;
 namespace {
-static std::atomic<bool> isEnableAccessToken {false};
+static std::atomic<bool> g_isEnableAccessToken {false};
 }
 
 namespace Fit {
@@ -166,7 +166,6 @@ FitCode RemoteInvoker::InvokeRemoteFitable(ContextObj context, const RequestMeta
     requestParam.application.nameVersion = appRef.version;
     requestParam.application.extensions = appRef.extensions;
 
-
     ::fit::hakuna::kernel::broker::shared::FitResponseV2* result {nullptr};
     RequestResponseV5 proxy;
     proxy.SetAlias("protocol=" + Fit::to_string(GetEndpoint()->GetProtocol()));
@@ -187,8 +186,8 @@ FitCode RemoteInvoker::InvokeRemoteFitable(ContextObj context, const RequestMeta
     }
 }
 
-FitCode RemoteInvoker::ParseResult(ContextObj context, ::fit::hakuna::kernel::broker::shared::FitResponseV2* fitResponse,
-    vector<any>& out) const
+FitCode RemoteInvoker::ParseResult(ContextObj context,
+    ::fit::hakuna::kernel::broker::shared::FitResponseV2* fitResponse, vector<any>& out) const
 {
     if (!fitResponse) {
         FIT_LOG_ERROR("The response returned from remote fitable is nullptr. [genericable=%s, fitable=%s]",
@@ -265,8 +264,8 @@ FitCode RemoteInvoker::DisableAddress() const
 
 AuthenticationForRemoteInvoker::AuthenticationForRemoteInvoker(
     const ::Fit::FitableInvokerFactory* factory, ::Fit::FitableCoordinatePtr coordinate,
-    ::Fit::Framework::Annotation::FitableType fitableType, ::Fit::FitableEndpointPtr endpoint, FitConfigPtr config) :
-        RemoteInvoker(factory, move(coordinate), fitableType, move(endpoint), move(config))
+    ::Fit::Framework::Annotation::FitableType fitableType, ::Fit::FitableEndpointPtr endpoint, FitConfigPtr config)
+    : RemoteInvoker(factory, move(coordinate), fitableType, move(endpoint), move(config))
 {
 }
 
@@ -317,12 +316,11 @@ FitCode AuthenticationForRemoteInvoker::Invoke(ContextObj context, ::Fit::Framew
 
 void AuthenticationForRemoteInvoker::SetIsEnableAccessToken(bool isEnableAccessTokenIn)
 {
-    isEnableAccessToken.store(isEnableAccessTokenIn);
+    g_isEnableAccessToken.store(isEnableAccessTokenIn);
 }
 bool AuthenticationForRemoteInvoker::GetIsEnableAccessToken()
 {
-
-    return isEnableAccessToken.load();
+    return g_isEnableAccessToken.load();
 }
 
 RemoteInvokerBuilder& RemoteInvokerBuilder::SetFactory(const FitableInvokerFactory* factory)

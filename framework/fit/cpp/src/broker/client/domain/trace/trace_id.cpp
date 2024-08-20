@@ -42,7 +42,7 @@ namespace {
     Fit::string GetSamplingNum()
     {
         Fit::string pre = Fit::to_string(Fit::TimeUtil::GetCurrentLocalTimestampMs());
-        Fit::string samplingNum = Fit::to_string(( Fit::FitRandom<size_t>()) % MAX_TRACE_NUM);
+        Fit::string samplingNum = Fit::to_string((Fit::FitRandom<size_t>()) % MAX_TRACE_NUM);
         for (size_t i = samplingNum.length(); i < TRACE_ID_LAST_NUM; ++i) {
             samplingNum = "0" + samplingNum;
         }

@@ -10,7 +10,8 @@
 namespace Fit {
 class BrokerServerConfig {
 public:
-    static BrokerServerConfig* Instance() {
+    static BrokerServerConfig* Instance()
+    {
         static BrokerServerConfig* config = new BrokerServerConfig();
         return config;
     }

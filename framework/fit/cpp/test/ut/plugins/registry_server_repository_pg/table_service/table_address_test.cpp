@@ -124,7 +124,7 @@ TEST_F(TableAddressTest, should_success_when_save_address_vector_success)
         EXPECT_CALL(*sqlExecResultMock, CountAffected()).Times(1).WillOnce(Return(1));
         return sqlExecResultMock;
     };
-    auto connectionCreator = [&](const char*) {
+    auto connectionCreator = [sqlCmdStr, sqlParams, dummyAddresses, sqlExecResultGenerator](const char*) {
         auto connectionMock = Fit::make_unique<SqlConnectionMock>();
 
         using namespace ::testing;

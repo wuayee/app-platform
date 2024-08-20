@@ -14,6 +14,7 @@
 
 using namespace Fit;
 using namespace testing;
+constexpr const uint64_t ACCESS_TOKEN_CURRENT_TIME_S = 600;
 class TokenLifeCycleObserverTest : public ::testing::Test {
 public:
     void SetUp() override
@@ -23,7 +24,7 @@ public:
         timeUtilByRepoMock_ = make_shared<TimeUtilByRepoMock>();
         uint64_t timeoutIn = 100;
         accessTokenRole_ = AuthTokenRole("accessToken", ACCESS_TOKEN_TYPE, timeoutIn,
-            600 + timeoutIn, "provider");
+            ACCESS_TOKEN_CURRENT_TIME_S + timeoutIn, "provider");
     }
 
     void TearDown() override
@@ -44,7 +45,7 @@ TEST_F(TokenLifeCycleObserverTest, should_return_error_when_init_given_null_secu
     TokenLifeCycleObserver tokenLifeCycleObserver(nullptr);
 
     // when
-     int32_t ret = tokenLifeCycleObserver.Init();
+    int32_t ret = tokenLifeCycleObserver.Init();
 
     // then
     EXPECT_EQ(ret, FIT_ERR_FAIL);

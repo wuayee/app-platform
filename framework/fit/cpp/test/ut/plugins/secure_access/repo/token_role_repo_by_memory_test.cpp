@@ -11,6 +11,8 @@
 
 using namespace Fit;
 using namespace testing;
+constexpr const uint64_t ACCESS_TOKEN_CURRENT_TIME_S = 600;
+constexpr const uint64_t FRESH_TOKEN_CURRENT_TIME_S = 700;
 class TokenRoleRepoByMemoryTest : public ::testing::Test {
 public:
     void SetUp() override
@@ -18,9 +20,9 @@ public:
         tokenRoleRepoByMemory_ = make_shared<TokenRoleRepoByMemory>();
         role_ = "provider";
         accessTokenRole_ = AuthTokenRole("accessToken", ACCESS_TOKEN_TYPE, DEFAULT_ACCESS_TOKEN_EXPIRED_TIME_SECONDS,
-            600 + DEFAULT_ACCESS_TOKEN_EXPIRED_TIME_SECONDS, role_);
+            ACCESS_TOKEN_CURRENT_TIME_S + DEFAULT_ACCESS_TOKEN_EXPIRED_TIME_SECONDS, role_);
         accessTokenRole2_ = AuthTokenRole("accessToken", FRESH_TOKEN_TYPE, DEFAULT_FRESH_TOKEN_EXPIRED_TIME_SECONDS,
-            700 + DEFAULT_FRESH_TOKEN_EXPIRED_TIME_SECONDS, role_);
+            FRESH_TOKEN_CURRENT_TIME_S + DEFAULT_FRESH_TOKEN_EXPIRED_TIME_SECONDS, role_);
     }
 
     void TearDown() override

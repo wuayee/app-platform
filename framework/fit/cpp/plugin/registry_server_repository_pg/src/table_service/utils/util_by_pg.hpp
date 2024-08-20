@@ -15,7 +15,6 @@ class UtilByPg : public UtilByRepo {
 public:
     UtilByPg(ConnectionPool* connectionPool);
     FitCode GetCurrentTimeMs(uint64_t& result) override;
-    FitCode GetUUid(Fit::string& uuid) override;
 private:
     ConnectionPool* connectionPool_ {};
 };

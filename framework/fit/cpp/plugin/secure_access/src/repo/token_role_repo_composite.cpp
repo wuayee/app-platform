@@ -71,15 +71,16 @@ vector<AuthTokenRole> TokenRoleRepoComposite::QueryAll()
     if (memoryRepo_ != nullptr) {
         result = memoryRepo_->QueryAll();
     }
-    if (dbRepo_ != nullptr) {
-        vector<AuthTokenRole> tokenRoles = dbRepo_->QueryAll();
-        if (result.empty()) {
-            result = tokenRoles;
-        } else {
-            for (const auto& tokenRole : tokenRoles) {
-                if (std::find(result.begin(), result.end(), tokenRole) == result.end()) {
-                    result.insert(result.end(), tokenRole);
-                }
+    if (dbRepo_ == nullptr) {
+        return result;
+    }
+    vector<AuthTokenRole> tokenRoles = dbRepo_->QueryAll();
+    if (result.empty()) {
+        result = tokenRoles;
+    } else {
+        for (const auto& tokenRole : tokenRoles) {
+            if (std::find(result.begin(), result.end(), tokenRole) == result.end()) {
+                result.insert(result.end(), tokenRole);
             }
         }
     }

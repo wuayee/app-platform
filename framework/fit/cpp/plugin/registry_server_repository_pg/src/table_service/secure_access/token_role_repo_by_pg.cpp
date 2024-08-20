@@ -68,7 +68,6 @@ int32_t TokenRoleRepoByPg::Save(const vector<AuthTokenRole>& authTokenRoles)
         auto sqlCmd = SqlBuilderT::BuildInsertOrUpdate(TABLE_NAME, GetAllColumns(), Column::CONSTRAINT_INDEX,
             GetAllColumns(), authTokenRole);
         auto result = ConnectionPool::Instance().Submit(sqlCmd);
-
         if (result == nullptr || !result->IsOk()) {
             FIT_LOG_ERROR("Save failed, error message: %s.",
                 result ? result->GetErrorMessage() : "result is nullptr");
@@ -127,7 +126,7 @@ vector<TokenRoleRepoByPg::SqlBuilderT::ColumnDescT> TokenRoleRepoByPg::GetAllCol
     return columns;
 }
 vector<AuthTokenRole> TokenRoleRepoByPg::Parse(const vector<SqlBuilderT::ColumnDescT>& columns,
-                                                AbstractSqlExecResult& recordSet)
+    AbstractSqlExecResult& recordSet)
 {
     vector<AuthTokenRole> result;
     if (columns.size() != static_cast<uint32_t>(recordSet.CountCol())) {

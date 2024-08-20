@@ -32,7 +32,7 @@ public:
 
 private:
     int32_t IsAuthorized(const Fit::string& accessToken, const fit::registry::Fitable& fitableIn);
-
+    fit::registry::Fitable GetFitableFromMeta(const fit_meta_data &meta);
     FitCode GetFitableType(
         const fit_meta_data &meta,
         Fit::Framework::Annotation::FitableType &fitableType);

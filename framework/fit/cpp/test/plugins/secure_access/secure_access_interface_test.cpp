@@ -16,6 +16,7 @@
 
 using namespace Fit;
 using namespace testing;
+constexpr const uint64_t TOKEN_INFO_SIZE = 2;
 class SecureAccessInterfaceTest : public ::testing::Test {
 public:
     void SetUp() override
@@ -28,7 +29,7 @@ public:
 
     fit::secure::access::TokenInfo GetToken(Fit::vector<fit::secure::access::TokenInfo>& tokenInfoRet, string type)
     {
-        EXPECT_EQ(tokenInfoRet.size(), 2);
+        EXPECT_EQ(tokenInfoRet.size(), TOKEN_INFO_SIZE);
         if (tokenInfoRet[0].type == type) {
             return tokenInfoRet[0];
         }
@@ -74,7 +75,7 @@ TEST_F(SecureAccessInterfaceTest, should_return_true_when_apply_token_and_check_
     EXPECT_EQ(*signatureOut, signature);
     EXPECT_EQ(applyTokenRet, FIT_OK);
     EXPECT_NE(tokenInfoRet, nullptr);
-    EXPECT_EQ(tokenInfoRet->size(), 2);
+    EXPECT_EQ(tokenInfoRet->size(), TOKEN_INFO_SIZE);
     EXPECT_EQ(accessToken.token.empty(), false);
     EXPECT_EQ(accessToken.type, ACCESS_TOKEN_TYPE);
     EXPECT_EQ(accessToken.status, TOKEN_STATUS_NORMAL);

@@ -18,6 +18,20 @@
 using namespace fit_meta_defines;
 
 namespace Fit {
+namespace {
+void SetHeaders(const Network::Response& handlerRes, httplib::Response& res)
+{
+    res.set_content(handlerRes.payload.data(), handlerRes.payload.size(), HTTP_CONTENT_TYPE_JSON);
+    res.set_header(HEADER_FIT_META, to_std_string(Base64Encode(handlerRes.metadata)));
+    // 兼容新结构
+    res.set_header(HEADER_FIT_DATA_FORMAT, std::to_string(handlerRes.meta.get_payload_format()));
+    res.set_header(HEADER_FIT_CODE, std::to_string(handlerRes.meta.get_code()));
+    res.set_header(HEADER_FIT_MESSAGE, to_std_string(handlerRes.meta.get_message()));
+    string tlv;
+    handlerRes.meta.Serialize(tlv);
+    res.set_header(HEADER_FIT_TLV, tlv);
+}
+}
 HttpServer::HttpServer(string host, int32_t port, const HttpConfig* config, unique_ptr<httplib::Server> svr)
     : host_(move(host)), port_(port), config_(config), svr_(std::move(svr))
 {
@@ -78,16 +92,7 @@ FitCode HttpServer::Start(Handler handler)
             res.set_header(HEADER_FIT_MESSAGE, to_std_string(messageStr));
             return;
         }
-
-        res.set_content(handlerRes.payload.data(), handlerRes.payload.size(), HTTP_CONTENT_TYPE_JSON);
-        res.set_header(HEADER_FIT_META, to_std_string(Base64Encode(handlerRes.metadata)));
-        // 兼容新结构
-        res.set_header(HEADER_FIT_DATA_FORMAT, std::to_string(handlerRes.meta.get_payload_format()));
-        res.set_header(HEADER_FIT_CODE, std::to_string(handlerRes.meta.get_code()));
-        res.set_header(HEADER_FIT_MESSAGE, to_std_string(handlerRes.meta.get_message()));
-        string tlv;
-        handlerRes.meta.Serialize(tlv);
-        res.set_header(HEADER_FIT_TLV, tlv);
+        SetHeaders(handlerRes, res);
     });
     svr_->Get(config_->GetServerPath() + "/health", [this](const httplib::Request& req, httplib::Response& res) {
         res.status = HTTP_STATUS_OK;

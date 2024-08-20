@@ -147,7 +147,3 @@ CREATE TABLE IF NOT EXISTS "registry_token_role"
     "ctime" timestamp(6) DEFAULT CURRENT_TIMESTAMP,
     constraint registry_token_role_index unique (token, type, role)
 );
-
---
--- Install extension for generate uuid
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

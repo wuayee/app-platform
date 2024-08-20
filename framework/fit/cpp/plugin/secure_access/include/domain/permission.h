@@ -12,7 +12,7 @@ struct Permission {
 public:
     Permission() = default;
     Permission(const fit::hakuna::kernel::shared::Fitable& fitableIn) : fitable(fitableIn) {}
-    Permission(const Permission& permission) : fitable(permission.fitable){}
+    Permission(const Permission& permission) : fitable(permission.fitable) {}
     Permission& operator=(const Permission& permission)
     {
         if (this == &permission) {

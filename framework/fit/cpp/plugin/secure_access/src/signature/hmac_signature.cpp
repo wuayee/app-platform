@@ -10,7 +10,10 @@
 #include <openssl/evp.h>
 #include <include/secure_access_config.h>
 #include <fit/internal/runtime/crypto/crypto_manager.hpp>
+#include <iomanip>
+#include <sstream>
 namespace Fit {
+constexpr const uint64_t HASH_VALUE_WIDTH = 2;
 HmacSignature::HmacSignature(AuthKeyRepoPtr authKeyRepo) : authKeyRepo_(std::move(authKeyRepo))
 {
 }
@@ -49,14 +52,11 @@ string HmacSignature::Sign(const string& ak, const string& timestamp)
     HMAC_CTX_free(ctx);
 
     // 将二进制哈希值转换为十六进制字符串
-    std::string hmac;
-    char hexChar[3];
+    std::stringstream ss;
     for (unsigned int i = 0; i < hashLen; ++i) {
-        sprintf(hexChar, "%02x", hash[i]);
-        hmac.append(hexChar);
+        ss << std::hex << std::setw(HASH_VALUE_WIDTH) << std::setfill('0') << static_cast<int>(hash[i]);
     }
-
-    return Fit::to_fit_string(hmac);
+    return Fit::to_fit_string(ss.str());
 }
 
 bool HmacSignature::Verify(const string& ak, const string& timestamp, const string& signature)

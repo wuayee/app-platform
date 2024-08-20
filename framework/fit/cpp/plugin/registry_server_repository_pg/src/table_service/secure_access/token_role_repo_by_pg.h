@@ -17,7 +17,7 @@ using namespace Repository::Pg;
 class TokenRoleRepoByPg : public TokenRoleRepo {
 public:
     using SqlBuilderT = SqlBuilder<AuthTokenRole>;
-    TokenRoleRepoByPg(ConnectionPool* connectionPool);
+    explicit TokenRoleRepoByPg(ConnectionPool* connectionPool);
     int32_t Save(const vector<AuthTokenRole>& authTokenRoles) override;
     int32_t Remove(const vector<string>& tokens) override;
     vector<AuthTokenRole> Query(const vector<string>& tokens) override;

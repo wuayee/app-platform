@@ -22,34 +22,20 @@ inline void ConvertTimeout(int64_t ms, time_t& second, time_t& us)
     second = ms / MS_PER_SECOND;
     us = (ms % MS_PER_SECOND) * US_PER_MS;
 }
-typedef struct MemoryStruct {
-    char *memory;
-    size_t size;
+struct MemoryStruct {
+    Fit::string value;
+};
 
-    static void Init(MemoryStruct& data)
-    {
-        data.memory = (char*)malloc(1);
-        data.size = 0;
-    }
-} MemoryStruct;
-
-static size_t MemoryCallback(void *contents, size_t size, size_t nmemb, void *user) {
+static size_t MemoryCallback(void *contents, size_t size, size_t nmemb, void *user)
+{
     size_t realSize = size * nmemb;
     struct MemoryStruct *mem = (struct MemoryStruct *)user;
-
-    mem->memory = (char*)realloc(mem->memory, mem->size + realSize + 1);
-    if(mem->memory == NULL) {
-        FIT_LOG_ERROR("Not enough memory.");
-        return 0;
-    }
-
-    memcpy(&(mem->memory[mem->size]), contents, realSize);
-    mem->size += realSize;
-    mem->memory[mem->size] = 0;
+    mem->value += Fit::string((char *)contents, realSize);
     return realSize;
 }
 
-std::string removeSpecialChars(const std::string& str) {
+std::string removeSpecialChars(const std::string& str)
+{
     std::string result;
     for (char c : str) {
         if (std::isspace(c) || c == '\r') {
@@ -148,37 +134,30 @@ FitCode CurlHttpClient::Call(CURL* curl, Response& result)
 {
     FitCode ret = FIT_OK;
     MemoryStruct data;
-    MemoryStruct::Init(data);
     MemoryStruct headerData;
-    MemoryStruct::Init(headerData);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, MemoryCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&data);
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, MemoryCallback);
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, (void*)&headerData);
     CURLcode res = curl_easy_perform(curl);
-    if(res != CURLE_OK) {
+    if (res != CURLE_OK) {
         FIT_LOG_ERROR("Perform error : %s.", curl_easy_strerror(res));
         ret = FIT_ERR_FAIL;
     } else {
-        string dataStr = string(headerData.memory, headerData.size);
-        string headerStr = string(headerData.memory, headerData.size);
-        *result.metadata = Base64Decode(GetMetaData(headerStr));
+        *result.metadata = Base64Decode(GetMetaData(headerData.value));
         // 兼容新接口
         if (result.metadata->empty()) {
             // 获取状态码
-            string codeStr = GetCode(headerStr);
-            FIT_LOG_CORE("CodeStr is :%s.", codeStr.c_str());
+            string codeStr = GetCode(headerData.value);
             if (!codeStr.empty()) {
                 result.code = atoi(codeStr.c_str());
             } else {
                 curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &result.code);
             }
-            result.message = GetMessage(headerStr);
+            result.message = GetMessage(headerData.value);
         }
-        *result.data = bytes(data.memory, data.size);
+        *result.data = bytes(data.value);
     }
-    free(data.memory);
-    free(headerData.memory);
     return ret;
 }
 

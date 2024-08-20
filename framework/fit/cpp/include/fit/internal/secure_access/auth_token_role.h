@@ -9,9 +9,9 @@
 #include <fit/stl/string.hpp>
 #include <fit/internal/fit_time_utils.h>
 #include <fit/internal/util/fit_uuid.hpp>
-#include <fit/internal/registry/repository/util_by_repo.h>
 #include <fit/fit_log.h>
 namespace Fit {
+constexpr const char *INVALID_TOKEN = "invalid_token";
 constexpr const char *FRESH_TOKEN_TYPE = "refresh_token";
 constexpr const char *ACCESS_TOKEN_TYPE = "access_token";
 constexpr const char *TOKEN_STATUS_NORMAL = "normal";
@@ -54,20 +54,14 @@ public:
 public:
     string token;
     string type;
-    uint64_t timeout;
-    time_t endTime;
+    uint64_t timeout; // 超时时间
+    time_t endTime; // 截止的时间点
     string role;
 };
 
 static AuthTokenRole CreateTokenRole(const string& typeIn, const string& role, uint64_t expire, time_t curTime)
 {
-    Fit::string uuid;
-    int32_t ret = UtilByRepo::Instance().GetUUid(uuid);
-    if (ret != FIT_OK) {
-        FIT_LOG_WARN("Generate uuid from pg failed, error: %d.", ret);
-        uuid = GenerateUuid();
-    }
-    return AuthTokenRole(uuid, typeIn, expire, curTime + expire * SECOND_TO_MILLION_SECOND, role);
+    return AuthTokenRole(GenerateUuid(), typeIn, expire, curTime + expire * SECOND_TO_MILLION_SECOND, role);
 }
 }
 #endif

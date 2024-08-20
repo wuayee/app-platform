@@ -13,8 +13,8 @@
 namespace Fit {
 constexpr const size_t THREAD_POOL_NUM = 2;
 constexpr const size_t CHECKOUT_INTERVAL = 60 * 1000; // 60秒
-TokenLifeCycleObserver::TokenLifeCycleObserver(SecureAccess* secureAccess) :
-    secureAccess_(secureAccess)
+TokenLifeCycleObserver::TokenLifeCycleObserver(SecureAccess* secureAccess)
+    : secureAccess_(secureAccess)
 {
     timer_ = std::make_shared<timer>(std::make_shared<Fit::Thread::thread_pool>(THREAD_POOL_NUM));
 }

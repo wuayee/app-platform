@@ -180,30 +180,8 @@ int32_t BrokerServer::IsAuthorized(const Fit::string& accessToken, const fit::re
     return ret;
 }
 
-FitCode BrokerServer::RequestResponse(ContextObj ctx,
-    const fit_meta_data &meta,
-    const Fit::string &data,
-    const Fit::Framework::Annotation::FitableType &fitableType,
-    ::fit::hakuna::kernel::broker::shared::FitResponse &rsp)
+fit::registry::Fitable BrokerServer::GetFitableFromMeta(const fit_meta_data &meta)
 {
-    Framework::Arguments in;
-    Fit::Framework::Formatter::BaseSerialization baseSerialization = {
-        .genericId = meta.get_generic_id(),
-        .formats = {meta.get_payload_format()},
-        .fitableType = fitableType
-    };
-    auto ret = formatter_->DeserializeRequest(ctx, baseSerialization, data, in);
-    if (ret != FIT_OK) {
-        FIT_LOG_ERROR("BrokerServer DeserializeRequest failed: genericId = %s, fitableId = %s, format = %d.",
-            meta.get_generic_id().c_str(), meta.get_fit_id().c_str(), meta.get_payload_format());
-        rsp.metadata = fit_response_meta_data(fit_meta_defines::META_VERSION_HAS_RESPONSE_META,
-            meta.get_payload_format(), 1,
-            ret, "DeserializeRequest fail").to_bytes();
-        return FIT_OK;
-    }
-
-    Framework::Arguments out = formatter_->CreateArgOut(ctx, baseSerialization);
-
     fit::registry::Fitable fitable;
     fitable.genericId = meta.get_generic_id();
     fitable.genericVersion = meta.get_generic_version().to_string();
@@ -215,6 +193,27 @@ FitCode BrokerServer::RequestResponse(ContextObj ctx,
         fitable.fitId = "DBC9E2F7C0E443F1AC986BBC3D58C27B";
     }
     fitable.fitVersion = Fit::to_string(meta.get_version());
+    return fitable;
+}
+
+FitCode BrokerServer::RequestResponse(ContextObj ctx, const fit_meta_data &meta, const Fit::string &data,
+    const Fit::Framework::Annotation::FitableType &fitableType,
+    ::fit::hakuna::kernel::broker::shared::FitResponse &rsp)
+{
+    Framework::Arguments in;
+    Fit::Framework::Formatter::BaseSerialization baseSerialization = {
+        .genericId = meta.get_generic_id(), .formats = {meta.get_payload_format()}, .fitableType = fitableType};
+    auto ret = formatter_->DeserializeRequest(ctx, baseSerialization, data, in);
+    if (ret != FIT_OK) {
+        FIT_LOG_ERROR("BrokerServer DeserializeRequest failed: genericId = %s, fitableId = %s, format = %d.",
+            meta.get_generic_id().c_str(), meta.get_fit_id().c_str(), meta.get_payload_format());
+        rsp.metadata = fit_response_meta_data(fit_meta_defines::META_VERSION_HAS_RESPONSE_META,
+            meta.get_payload_format(), 1, ret, "DeserializeRequest fail").to_bytes();
+        return FIT_OK;
+    }
+
+    Framework::Arguments out = formatter_->CreateArgOut(ctx, baseSerialization);
+    fit::registry::Fitable fitable = GetFitableFromMeta(meta);
 
     // 认证鉴权可配置
     if (Fit::BrokerServerConfig::Instance()->IsEnableAccessToken()) {
@@ -233,8 +232,7 @@ FitCode BrokerServer::RequestResponse(ContextObj ctx,
         FIT_LOG_ERROR("BrokerServer LocalInvoke failed: genericId = %s, fitableId = %s, format = %d, ret = %x.",
             meta.get_generic_id().c_str(), meta.get_fit_id().c_str(), meta.get_payload_format(), ret);
         fit_response_meta_data metadata(fit_meta_defines::META_VERSION_HAS_RESPONSE_META,
-            meta.get_payload_format(), 0,
-            ret, "Local invoke fail");
+            meta.get_payload_format(), 0, ret, "Local invoke fail");
         FillResponseMetadata(ctx, metadata);
         rsp.metadata = metadata.to_bytes();
         return FIT_OK;

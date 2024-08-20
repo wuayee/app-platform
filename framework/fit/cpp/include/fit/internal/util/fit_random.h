@@ -12,7 +12,8 @@
 namespace Fit {
 // 通用模板函数 FitRandom
 template<typename T>
-inline T FitRandom() {
+inline T FitRandom()
+{
     static_assert(std::is_integral<T>::value, "FitRandom only supports integer types");
     T r = 0;
     int fd = open("/dev/random", O_RDONLY);

@@ -13,7 +13,7 @@
 
 using namespace Fit;
 
-class FitBrokerHttplibUtilTest : public ::testing::Test {
+class HttplibUtilTest : public ::testing::Test {
 public:
     void SetUp() override
     {
@@ -27,7 +27,7 @@ public:
     string accessToken_ {};
 };
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_ok_when_GetRequest_given_correct_request)
+TEST_F(HttplibUtilTest, should_return_ok_when_GetRequest_given_correct_request)
 {
     auto meta = fit_meta_data(3, 1, fit_version(1, 0, 1), "9289a2a4322d47d38f33fc32c47f04d2", "fitableId",
         accessToken_);
@@ -50,7 +50,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_ok_when_GetRequest_given_correct_
     EXPECT_EQ(req.payload, expectPayloadBytes);
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_illegal_fit_path_when_GetRequest_given_large_path_layer)
+TEST_F(HttplibUtilTest, should_return_illegal_fit_path_when_GetRequest_given_large_path_layer)
 {
     httplib::Request httpReq;
     std::regex reg(R"(/fit/(.*))");
@@ -64,7 +64,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_illegal_fit_path_when_GetRequest_
     ASSERT_EQ(ret.msg, "Illegal fit path");
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_illegal_fit_path_when_GetRequest_given_empty_match_size)
+TEST_F(HttplibUtilTest, should_return_illegal_fit_path_when_GetRequest_given_empty_match_size)
 {
     httplib::Request httpReq;
     Network::Request req {};
@@ -74,7 +74,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_illegal_fit_path_when_GetRequest_
     ASSERT_EQ(ret.msg, "Illegal fit path");
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_no_format_header_when_GetRequest_given_no_format_header)
+TEST_F(HttplibUtilTest, should_return_no_format_header_when_GetRequest_given_no_format_header)
 {
     httplib::Request httpReq;
     Network::Request req {};
@@ -88,7 +88,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_no_format_header_when_GetRequest_
     ASSERT_EQ(ret.msg, "No specified FIT-Data-Format");
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_ok_when_GetRequest_given_no_version_header)
+TEST_F(HttplibUtilTest, should_return_ok_when_GetRequest_given_no_version_header)
 {
     httplib::Request httpReq;
     Network::Request req {};
@@ -104,7 +104,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_ok_when_GetRequest_given_no_versi
     ASSERT_EQ(ret.status, HTTP_STATUS_OK);
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_ok_when_GetRequest_given_no_genericable_version_header)
+TEST_F(HttplibUtilTest, should_return_ok_when_GetRequest_given_no_genericable_version_header)
 {
     httplib::Request httpReq;
     Network::Request req {};
@@ -120,7 +120,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_ok_when_GetRequest_given_no_gener
     ASSERT_EQ(ret.status, HTTP_STATUS_OK);
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_msg_when_BuildExceptionResponse_given_params)
+TEST_F(HttplibUtilTest, should_return_msg_when_BuildExceptionResponse_given_params)
 {
     httplib::Request httpReq;
     httpReq.path = "/fit/xx/xx";
@@ -131,7 +131,7 @@ TEST_F(FitBrokerHttplibUtilTest, should_return_msg_when_BuildExceptionResponse_g
     ASSERT_EQ(ret, expectMsg);
 }
 
-TEST_F(FitBrokerHttplibUtilTest, should_return_correct_headers_when_BuildRequestHeaders_given_req_meta)
+TEST_F(HttplibUtilTest, should_return_correct_headers_when_BuildRequestHeaders_given_req_meta)
 {
     auto meta = fit_meta_data(3, 1, fit_version(1, 0, 1), "9289a2a4322d47d38f33fc32c47f04d2", "fitableId",
         "925a55c673f3487b9e7117243d1ec223");

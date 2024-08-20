@@ -12,7 +12,6 @@ namespace Fit {
 class UtilByRepo {
 public:
     virtual FitCode GetCurrentTimeMs(uint64_t& result) = 0;
-    virtual FitCode GetUUid(Fit::string& uuid) = 0;
     static UtilByRepo& Instance();
 };
 }

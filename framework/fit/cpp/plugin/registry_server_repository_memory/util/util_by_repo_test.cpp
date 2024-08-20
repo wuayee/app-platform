@@ -10,17 +10,12 @@
 #include <fit/stl/string.hpp>
 #include <fit/fit_log.h>
 namespace Fit {
+constexpr const uint64_t CURRENT_TIME_MS = 666;
 class UtilByRepoTest : public UtilByRepo {
 public:
 FitCode GetCurrentTimeMs(uint64_t& result)
 {
-    result = 666;
-    return FIT_OK;
-}
-
-FitCode GetUUid(Fit::string& uuid)
-{
-    uuid = GenerateUuid();
+    result = CURRENT_TIME_MS;
     return FIT_OK;
 }
 };

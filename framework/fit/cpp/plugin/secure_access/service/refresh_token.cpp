@@ -13,7 +13,18 @@
 #include <fit/stl/vector.hpp>
 namespace {
 using namespace Fit;
-int32_t RefreshToken(ContextObj ctx, const Fit::string* refreshToken, vector<fit::secure::access::TokenInfo>** tokenInfos)
+void InsertTokenInfo(vector<fit::secure::access::TokenInfo>& tokenInfos,
+    Fit::string token, int64_t timeout, Fit::string type, Fit::string status)
+{
+    fit::secure::access::TokenInfo tokenInfo {};
+    tokenInfo.token = token;
+    tokenInfo.timeout = timeout;
+    tokenInfo.type = type;
+    tokenInfo.status = status;
+    tokenInfos.emplace_back(tokenInfo);
+}
+int32_t RefreshToken(ContextObj ctx, const Fit::string* refreshToken,
+    vector<fit::secure::access::TokenInfo>** tokenInfos)
 {
     if (refreshToken == nullptr) {
         FIT_LOG_ERROR("Refresh token is null.");
@@ -28,21 +39,12 @@ int32_t RefreshToken(ContextObj ctx, const Fit::string* refreshToken, vector<fit
     int32_t result = SecureAccess::Instance().RefreshAccessToken(*refreshToken, authTokenRoles);
     if (result != FIT_OK) {
         FIT_LOG_ERROR("Refresh token is invalid.");
-        fit::secure::access::TokenInfo tokenInfo {};
-        tokenInfo.token = *refreshToken;
-        tokenInfo.type = FRESH_TOKEN_TYPE;
-        tokenInfo.status = TOKEN_STATUS_INVALID;
-        (**tokenInfos).emplace_back(tokenInfo);
+        InsertTokenInfo(**tokenInfos, *refreshToken, 0, FRESH_TOKEN_TYPE, TOKEN_STATUS_INVALID);
+        InsertTokenInfo(**tokenInfos, INVALID_TOKEN, 0, ACCESS_TOKEN_TYPE, TOKEN_STATUS_INVALID);
         return FIT_OK;
     }
-
     for (const auto& tokenRole : authTokenRoles) {
-        fit::secure::access::TokenInfo tokenInfo {};
-        tokenInfo.token = tokenRole.token;
-        tokenInfo.timeout = tokenRole.timeout;
-        tokenInfo.type = tokenRole.type;
-        tokenInfo.status = TOKEN_STATUS_NORMAL;
-        (**tokenInfos).emplace_back(tokenInfo);
+        InsertTokenInfo(**tokenInfos, tokenRole.token, tokenRole.timeout, tokenRole.type, TOKEN_STATUS_NORMAL);
     }
     return FIT_OK;
 }

@@ -9,9 +9,9 @@
 namespace Fit {
 using namespace Fit::Config;
 namespace {
-constexpr const char * CRYPTO_TYPE = "secure-access.crypto-type";
-constexpr const char * ACCESS_KEY_TYPE = "secure-access.local-ak";
-constexpr const char * ROLE_INFO_TYPE = "secure-access.role-info";
+constexpr const char* CRYPTO_TYPE = "secure-access.crypto-type";
+constexpr const char* ACCESS_KEY_TYPE = "secure-access.local-ak";
+constexpr const char* ROLE_INFO_TYPE = "secure-access.role-info";
 
 int32_t ParsePermissions(Value& permissions, vector<Permission>& permissionsIn)
 {
