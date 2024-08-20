@@ -2,3 +2,16 @@ fit:
   beans:
     packages:
     - 'com.huawei.jade.store.tool.parser'
+
+store:
+  plugin:
+    deploy:
+      query:
+        timeout: 600
+        interval: 10
+  registry:
+    query:
+      pool:
+        corePoolSize: 20
+        maximumPoolSize: 20
+        workQueueCapacity: 10

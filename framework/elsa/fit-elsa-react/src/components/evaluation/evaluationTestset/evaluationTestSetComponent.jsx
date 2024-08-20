@@ -1,13 +1,6 @@
 import {v4 as uuidv4} from "uuid";
 import {convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import EvaluationTestSetWrapper from "@/components/evaluation/evaluationTestset/EvaluationTestSetWrapper.jsx";
-import {filterChain} from "@/components/evaluation/evaluationTestset/Interceptor.js";
-
-const chain = filterChain();
-chain.createFilter("array");
-chain.createFilter("object");
-chain.createFilter("string");
-chain.createFilter("number");
 
 /**
  * 评估测试集节点组件
@@ -22,14 +15,15 @@ export const evaluationTestSetComponent = (jadeConfig) => {
      */
     self.getJadeConfig = () => {
         return jadeConfig ? jadeConfig : {
-            inputParams: [],
-            testSet: {
+            inputParams: [{
                 id: "testSet_" + uuidv4(),
                 name: "testSet",
                 type: "Object",
                 from: "Expand",
                 value: [
                     {id: uuidv4(), name: 'name', type: 'String', from: 'Input', value: ""},
+                    {id: uuidv4(), name: 'id', type: 'String', from: 'Input', value: ""},
+                    {id: uuidv4(), name: 'version', type: 'Integer', from: 'Input', value: ""},
                     {
                         id: "quantity_" + uuidv4(),
                         name: "quantity",
@@ -37,7 +31,7 @@ export const evaluationTestSetComponent = (jadeConfig) => {
                         from: "Input",
                         value: ""
                     }]
-            },
+            }],
             outputParams: []
         };
     };
@@ -56,6 +50,13 @@ export const evaluationTestSetComponent = (jadeConfig) => {
      */
     self.reducers = (config, action) => {
         /**
+         * 获取testSet值
+         *
+         * @private
+         */
+        const _getTestSetValue = () => newConfig.inputParams[0].value;
+
+        /**
          * 切换测试集
          *
          * @private
@@ -63,8 +64,9 @@ export const evaluationTestSetComponent = (jadeConfig) => {
         const _changeTestSet = () => {
             // 这里action包含了整个接口返回的数据
             if (action.value) {
-                newConfig.testSet.value.find(item => item.name === "name").value = action.value.name;
-                newConfig.inputParams = action.value.data;
+                _getTestSetValue().find(item => item.name === "id").value = action.value.name;
+                _getTestSetValue().find(item => item.name === "name").value = action.value.name;
+                _getTestSetValue().find(item => item.name === "version").value = Math.max(action.value.versions.map(item => item.version));
             }
         };
 
@@ -74,7 +76,7 @@ export const evaluationTestSetComponent = (jadeConfig) => {
          * @private
          */
         const _clearTestSet = () => {
-            newConfig.testSet.value.forEach(item => item.value = "");
+            _getTestSetValue().forEach(item => item.value = "");
         };
 
         /**
@@ -89,40 +91,6 @@ export const evaluationTestSetComponent = (jadeConfig) => {
             const inputJson = action.value;
             const newOutputParams = convertReturnFormat(JSON.parse(inputJson.schema));
             newConfig.outputParams = [newOutputParams];
-        };
-
-        /**
-         * 将测试集数据转换成jadeConfig格式
-         *
-         * @private
-         */
-        const _parseDataset = () => {
-            if (!action.value) {
-                return;
-            }
-            // 更新数据集数量
-            newConfig.testSet.value.find(item => item.name === "quantity").value = action.value.total;
-            const input = parseData(action.value.items);
-            delete newConfig.inputParams;
-            newConfig.inputParams = input;
-        };
-
-        /**
-         * 批量处理json列表数据，转换为jadeConfig格式
-         *
-         * @param data json对象列表
-         * @return {*} json对象的jadeConfig格式描述
-         */
-        const parseData = (data) => {
-            return data.map((item) => {
-                return ({
-                    id: uuidv4(),
-                    name: item.id,
-                    type: 'Object',
-                    from: 'Expand',
-                    value: chain.doFilter(JSON.parse(item.content))
-                });
-            });
         };
 
         /**
@@ -143,9 +111,6 @@ export const evaluationTestSetComponent = (jadeConfig) => {
             case 'clearTestSet':
                 _clearSchema();
                 _clearTestSet();
-                return newConfig;
-            case 'parseDataset':
-                _parseDataset();
                 return newConfig;
             default: {
                 throw Error('Unknown action: ' + action.type);

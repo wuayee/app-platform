@@ -39,16 +39,25 @@ public class DefaultPathPattern extends DefaultPattern<String> implements PathPa
 
     private final char pathSeparator;
 
+    /**
+     * 构造一个新的 {@link DefaultPathPattern} 实例。
+     *
+     * @param pattern 表示路径模式的 {@link String}。
+     * @param pathSeparator 表示路径分隔符的 {@code char}。
+     */
     public DefaultPathPattern(String pattern, char pathSeparator) {
-        super(SymbolSequence.fromList(
-                        StringUtils.split(pattern, pathSeparator, ArrayList::new, StringUtils::isNotBlank)),
-                DEFAULT_PATH_CLASSIFIER, DEFAULT_PATH_MATCHER);
+        super(SymbolSequence.fromList(StringUtils.split(pattern,
+                pathSeparator,
+                ArrayList::new,
+                StringUtils::isNotBlank)), DEFAULT_PATH_CLASSIFIER, DEFAULT_PATH_MATCHER);
         this.pathSeparator = pathSeparator;
     }
 
     @Override
     public boolean matches(String path) {
-        return this.matches(SymbolSequence.fromList(
-                StringUtils.split(path, this.pathSeparator, ArrayList::new, StringUtils::isNotBlank)));
+        return this.matches(SymbolSequence.fromList(StringUtils.split(path,
+                this.pathSeparator,
+                ArrayList::new,
+                StringUtils::isNotBlank)));
     }
 }

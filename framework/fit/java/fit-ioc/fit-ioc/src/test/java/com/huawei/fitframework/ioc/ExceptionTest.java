@@ -17,13 +17,12 @@ import java.util.function.Function;
 
 @DisplayName("测试异常类")
 class ExceptionTest {
-    private static abstract class AbstractTest<T extends IocException> {
+    private abstract static class AbstractTest<T extends IocException> {
         private final Function<String, T> creatorWithMessage;
         private final Function<Throwable, T> creatorWithCause;
         private final BiFunction<String, Throwable, T> creatorWithMessageAndCause;
 
-        private AbstractTest(Function<String, T> creatorWithMessage,
-                Function<Throwable, T> creatorWithCause,
+        private AbstractTest(Function<String, T> creatorWithMessage, Function<Throwable, T> creatorWithCause,
                 BiFunction<String, Throwable, T> creatorWithMessageAndCause) {
             this.creatorWithMessage = creatorWithMessage;
             this.creatorWithCause = creatorWithCause;
@@ -93,9 +92,7 @@ class ExceptionTest {
     @DisplayName("测试 DependencyNotFoundException 类")
     class DependencyNotFoundExceptionTest extends AbstractTest<DependencyNotFoundException> {
         private DependencyNotFoundExceptionTest() {
-            super(DependencyNotFoundException::new,
-                    DependencyNotFoundException::new,
-                    DependencyNotFoundException::new);
+            super(DependencyNotFoundException::new, DependencyNotFoundException::new, DependencyNotFoundException::new);
         }
     }
 
@@ -103,9 +100,7 @@ class ExceptionTest {
     @DisplayName("测试 CircularDependencyException 类")
     class CircularDependencyExceptionTest extends AbstractTest<CircularDependencyException> {
         private CircularDependencyExceptionTest() {
-            super(CircularDependencyException::new,
-                    CircularDependencyException::new,
-                    CircularDependencyException::new);
+            super(CircularDependencyException::new, CircularDependencyException::new, CircularDependencyException::new);
         }
     }
 

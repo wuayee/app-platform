@@ -53,7 +53,7 @@ const AppDev: React.FC = () => {
   }
   // 分页
   const pageNo = useRef(1);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const [search, setSearch] = useState('');

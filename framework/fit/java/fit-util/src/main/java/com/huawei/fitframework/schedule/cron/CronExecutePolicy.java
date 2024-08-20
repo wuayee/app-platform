@@ -37,6 +37,12 @@ public class CronExecutePolicy extends AbstractExecutePolicy {
         this(expression, notNull(timeZone, "The time zone cannot be null.").toZoneId());
     }
 
+    /**
+     * 构造一个 Cron 表达式的执行策略。
+     *
+     * @param expression 表示 Cron 表达式的 {@link String}。
+     * @param zoneId 表示时区唯一标识的 {@link ZoneId}。
+     */
     public CronExecutePolicy(String expression, ZoneId zoneId) {
         CronExpressionParser parser = CronExpressionParser.create();
         this.expression = parser.parse(expression);

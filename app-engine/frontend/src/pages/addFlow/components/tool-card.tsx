@@ -54,18 +54,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
         {pluginData.description === 'null' ? t('noDescription') : pluginData.description}
       </div>
       {/* 卡片底部 */}
-      <div className='card-footer'>
-        {/* <Flex gap={16}>
-        <span>
-          <UserOutlined style={{ marginRight: 8 }} />
-          {pluginData.downloadCount}
-        </span>
-        <span>
-          <StarOutlined style={{ marginRight: 8 }} />
-          {pluginData.likeCount}
-        </span>
-      </Flex> */}
-      </div>
+      <div className='card-footer'></div>
       <div className='card-detail' onClick={detailClick}>
         {t('checkMore')}
       </div>

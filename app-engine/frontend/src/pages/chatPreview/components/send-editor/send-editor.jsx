@@ -40,7 +40,8 @@ const SendEditor = (props) => {
     onStop,
     onClear,
     chatType,
-    filterRef
+    filterRef,
+    setEditorShow
   } = props;
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -205,21 +206,22 @@ const SendEditor = (props) => {
   }
   return <>{(
     <div className='send-editor-container' onClick={handleEditorClick}>
+      { chatRunning &&
+        <div className='editor-stop' onClick={onStop}>
+          <img src='./src/assets/images/ai/stop.png' alt='' />
+          <span>{t('stopResponding')}</span>
+        </div>
+      }
       <Recommends onSend={onSend} />
-      <div className='editor-inner'>
+      <div className='editor-inner' >
         <EditorBtnHome
           setOpenHistory={setOpenHistory}
           clear={onClear}
           fileCallBack={fileSend}
           editorRef={editorRef}
           chatType={chatType}
+          setEditorShow={setEditorShow}
         />
-        {chatRunning &&
-          <div className='editor-stop' onClick={onStop}>
-            <img src='/src/assets/images/ai/stop.png' alt='' />
-            <span>{t('stopResponding')}</span>
-          </div>
-        }
         <div className='editor-input' id='drop'>
           <div
             className='chat-promet-editor'

@@ -13,10 +13,9 @@ import { AippContext } from '../aippIndex/context';
 import {
   updateFlowInfo,
   stopInstance,
-  getReportInstance,
   getChatRecentLog,
 } from '@shared/http/aipp';
-import { sseChat, saveContent } from '@shared/http/sse';
+import { sseChat, saveContent, getReportInstance } from '@shared/http/sse';
 import {
   historyChatProcess,
   inspirationProcess,
@@ -246,7 +245,7 @@ const ChatPreview = (props) => {
       }
       // 用户自勾选
       if (messageData.memory === 'UserSelect') {
-        selfSelect(runningInstanceId.current, messageData.initContext);
+        selfSelect(messageData.instanceId, messageData.initContext);
         return;
       }
       // 智能表单
@@ -321,15 +320,13 @@ const ChatPreview = (props) => {
     };
     try {
       const startes = await getReportInstance(tenantId, reportInstance.current, params);
-      if (startes.code === 0 && startes.data) {
-        let instanceId = startes.data;
-        listRef.current[listRef.current.length - 1].loading = true;
-        dispatch(setChatList(deepClone(listRef.current)));
-      } else {
+      if (startes.status !== 200) {
         onStop(t('conversationFailed'));
-      }
-    } catch {
-      onStop(t('conversationFailed'));
+        return;
+      };
+      listRef.current[listRef.current.length - 1].loading = true;
+      dispatch(setChatList(deepClone(listRef.current)));
+      chatStreaming(startes);
     } finally {
       setEditorShow(false);
     }
@@ -462,6 +459,7 @@ const ChatPreview = (props) => {
                 onStop={chatRunningStop}
                 filterRef={editorRef}
                 chatType={chatType}
+                setEditorShow={setEditorShow}
                 inspirationOpen={inspirationOpen}
               />
             }

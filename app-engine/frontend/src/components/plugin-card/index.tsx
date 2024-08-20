@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex, Tag, Button, message, Drawer } from 'antd';
+import { Tag, Button, message, Drawer } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
@@ -53,7 +53,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
       {/* 卡片底部 */}
       <div className='card-footer' style={{ position: 'relative' }}>
         <div hidden>
-          <Flex gap={14}>
+          <div className='card-footer-content'>
             <span hidden={cardType === PluginCardTypeE.MARKET}>
               <Tag className='footer-type'>Tag 1</Tag>
             </span>
@@ -65,15 +65,15 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
               <StarOutlined style={{ marginRight: 8 }} />
               {pluginData?.likeCount}
             </span>
-          </Flex>
+          </div>
         </div>
         <div hidden={cardType !== PluginCardTypeE.MARKET}>
-          <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
+          <div className='card-footer-right'>
             {IconMap[pluginData?.source?.toUpperCase()]?.icon}
-            <span style={{ fontSize: 12, fontWeight: 700 }}>
+            <span>
               {IconMap[pluginData?.source?.toUpperCase()]?.name}
             </span>
-          </Flex>
+          </div>
         </div>
         <div
           hidden={pluginData?.pluginToolDataList !== null}
@@ -83,9 +83,9 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
           }}
           style={{ width: 60 }}
         >
-          <Flex justify='flex-end'>
+          <div className='footer-icon'>
             <EllipsisOutlined className='footer-more' />
-          </Flex>
+          </div>
         </div>
         {isOpen && (
           <div style={{ position: 'absolute', right: '-20px', top: '-20px' }}>

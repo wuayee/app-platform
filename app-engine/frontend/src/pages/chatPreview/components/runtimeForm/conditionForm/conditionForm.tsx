@@ -36,7 +36,10 @@ const ConditionForm = (props) => {
         dimension: data.formData.dimension,
         rewriteQuery: data.formData.rewriteQuery,
         restartMode: 'increment',
-        sourceTrace: JSON.stringify(filter)
+        sourceTrace: JSON.stringify({
+          queryType: data.formData.queryType,
+          dsl: JSON.stringify(filter)
+        })
       };
       const res = await saveChart(tenantId, data.formData.instanceId, params);
       if (res.status !== 200) {

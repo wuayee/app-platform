@@ -51,10 +51,9 @@ public class FileParserTest {
         Map<String, Object> schema = ObjectUtils.cast(tool.get("schema"));
         assertThat(schema.get("name")).isEqualTo("add list");
         assertThat(schema.get("description")).isEqualTo("This method adds two list");
-        Map<String, Object> extensions = ObjectUtils.cast(tool.get("extensions"));
-        List<String> tags = ObjectUtils.cast(extensions.get("tags"));
-        assertThat(tags).hasSize(2);
-        assertThat(tags).containsExactlyInAnyOrder("FIT", "BUILTIN");
+        List<String> tags = ObjectUtils.cast(tool.get("tags"));
+        assertThat(tags).hasSize(3);
+        assertThat(tags).containsExactlyInAnyOrder("FIT", "BUILTIN", "HUGGINGFACE");
 
         tool = ObjectUtils.cast(this.toolList.get(1));
         schema = ObjectUtils.cast(tool.get("schema"));

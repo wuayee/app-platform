@@ -76,11 +76,10 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
     const handleSelect = (value) => {
         // 点击同一个选项，只会调用这里
         // 如果切换选项，会先调用onChange，再调用到这里
-        const version = Math.max(testSets.find(item => item.id === value).version);
-        const url = config.datasetUrlPrefix + 'data?datasetId' + value + '&pageIndex=1&pageSize=10&version=' + version;
+        const url = config.datasetUrlPrefix + 'dataset/' + value;
         httpUtil.get(url, undefined, (response) => {
             // 将数据集的content内容设置到jadeConfig中
-            dispatch({type: "parseDataset", value: response});
+            dispatch({type: "parseDataset", value: response.data});
         }, (error) => {
             message.error("数据集详细信息获取失败，请联系系统管理员");
         });

@@ -19,7 +19,7 @@ const Apps: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useHistory().push;
   const [appData, setAppData] = useState<any[]>([]);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const [search, setSearch] = useState('');
@@ -99,10 +99,6 @@ const Apps: React.FC = () => {
     }, {})
     dispatch(setCollectionValue(collectMap))
   }
-
-  // useEffect(()=> {
-  //   getUserCollectionList()
-  // }, [])
 
   useEffect(() => {
     queryApps();

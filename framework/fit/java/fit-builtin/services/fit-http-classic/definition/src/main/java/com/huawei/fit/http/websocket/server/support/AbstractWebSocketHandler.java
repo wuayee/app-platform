@@ -21,6 +21,11 @@ public abstract class AbstractWebSocketHandler implements WebSocketHandler {
     private final HttpClassicServer httpServer;
     private final String pathPattern;
 
+    /**
+     * 构造一个新的 {@link AbstractWebSocketHandler} 实例。
+     *
+     * @param info 表示包含 {@link WebSocketHandler} 信息的 {@link Info}。
+     */
     public AbstractWebSocketHandler(Info info) {
         notNull(info, "The websocket handler info cannot be null.");
         this.httpServer = notNull(info.httpServer(), "The http server cannot be null.");

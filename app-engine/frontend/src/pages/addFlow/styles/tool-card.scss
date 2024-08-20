@@ -1,4 +1,4 @@
-.plugin-card{
+.plugin-card {
   padding: 16px 18px 0;
   width: 335px;
   height: 210px;
@@ -6,42 +6,42 @@
   background-position: center;
   display: flex;
   flex-direction: column;
-  gap:16px;
+  gap: 16px;
   border: 1px solid #ebebeb;
   border-radius: 8px;
   position: relative;
-  .plugin-card-header{
-   display: flex;
-   gap:16px;
-   align-items: center;
-   .tool-name {
+  .plugin-card-header {
     display: flex;
+    gap: 16px;
     align-items: center;
-    margin-bottom: 8px;
+    .tool-name {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      img {
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+      }
+      .text {
+        display: inline-block;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
     img {
-      width: 16px;
-      height: 16px;
-      margin-left: 8px;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
     }
-    .text {
-      display: inline-block;
-      max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-   }
-   img {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-   }
   }
-  .plugin-card-user{
-   display: flex;
-   gap:4px;
-   align-items: center;
-   flex-wrap: wrap;
+  .plugin-card-user {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-wrap: wrap;
   }
   &:hover {
     .card-detail {
@@ -50,23 +50,27 @@
   }
 }
 
-.card-content{
-   word-break: break-all;
-   text-align: justify;
-   height: 100%;
-   overflow-y: auto;
-   font-size: 12px;
-   color: rgb(77, 77, 77);
+.card-content {
+  word-break: break-all;
+  text-align: justify;
+  height: 100%;
+  overflow-y: auto;
+  font-size: 12px;
+  color: rgb(77, 77, 77);
 }
-.card-footer{
-   padding: 16px 0;
-   padding-right: 26px;
-   display: flex;
-   justify-content: space-between;
-   gap:32px;
-   border-top: 1px solid #ebebeb;
-   color: #808080;
-   align-items: center;
+.card-footer {
+  padding: 16px 0;
+  padding-right: 26px;
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  border-top: 1px solid #ebebeb;
+  color: #808080;
+  align-items: center;
+  .card-footer-content {
+    display: flex;
+    gap: 16px;
+  }
 }
 .card-detail {
   position: absolute;
@@ -78,7 +82,7 @@
   display: none;
 }
 
-.version{
+.version {
   border-radius: 10px;
   margin-left: 8px;
 }

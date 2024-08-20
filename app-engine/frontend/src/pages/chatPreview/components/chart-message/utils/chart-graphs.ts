@@ -1,4 +1,4 @@
-import screenfull from 'screenfull';
+import screenfull from '@/shared/screenfull/screenfull';
 import i18n from '@/locale/i18n';
 
 // 初始化echarts图表

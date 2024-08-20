@@ -1,6 +1,5 @@
-import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
+import { Button, Divider } from 'antd';
 import React, { useEffect, useState } from 'react';
-import './style.scoped.scss';
 import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useHistory, useParams } from 'react-router';
@@ -8,6 +7,7 @@ import { AppIcons } from '../../../components/icons/app';
 import { useAppDispatch } from '../../../store/hook';
 import { setAppInfo } from "../../../store/appInfo/appInfo";
 import { useTranslation } from "react-i18next";
+import './style.scoped.scss';
 
 const AppOverview: React.FC = () => {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ const AppOverview: React.FC = () => {
         Message({ type: 'error', content: res.message || t('getDetailFail') });
       }
     });
-  }, [])
+  }, []);
 
   const gotoArrange = () => {
     getAppInfoByVersion(tenantId, appId).then(res => {
@@ -42,16 +42,16 @@ const AppOverview: React.FC = () => {
 
   return (
     <div className='tab-content'>
-      <Flex vertical gap={20}>
-        <Flex justify={'space-between'}>
-          <Flex className='details-content' gap='middle'>
+      <div className='content-inner'>
+        <div className='inner-box'>
+          <div className='details-content'>
             {appIcon ?
               <img width={100} height={100} src={appIcon} />
               :
               <img width={100} height={100} src='./src/assets/images/knowledge/knowledge-base.png' />
             }
 
-            <Flex className='details-content' vertical gap='middle'>
+            <div className='details-content' style={{ flexDirection: 'column' }}>
               <div className='detail-name'>
                 <span className='text'>{detail?.name || ''}</span>
                 {
@@ -70,25 +70,25 @@ const AppOverview: React.FC = () => {
                     )
                 }
               </div>
-              <Flex gap={20}>
-                <Flex gap='small' align='center'>
+              <div className='detail-footer'>
+                <div className='icon'>
                   <AppIcons.UserIcon />
                   <span>{detail?.createBy || 'Admin'}</span>
-                </Flex>
-                <Flex gap='small'>
+                </div>
+                <div className='create'>
                   <span>{t('createAt')}</span>
                   <span>{detail?.createAt}</span>
-                </Flex>
-              </Flex>
-              <Flex gap={20}>
-                <Flex gap={4} align='center'>
+                </div>
+              </div>
+              <div className='detail-footer'>
+                <div className='app-id'>
                   <span>{t('app')}ID：</span>
                   <span>{detail?.id}</span>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Flex>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className='app-desc' title={detail?.attributes?.description}>
           {detail?.attributes?.description}
         </div>
@@ -98,14 +98,14 @@ const AppOverview: React.FC = () => {
         }}>{t('toArrange')}</Button>
         <Divider style={{ margin: 0, backgroundColor: '#D7D8DA' }} />
         <div>
-          <Flex gap='large'>
+          <div className='remarks-content'>
             <div className='remarks'>
               <span className='left'>{t('prologue')}：</span>
               <span className='right'>{detail?.attributes?.greeting || '-'}</span>
             </div>
-          </Flex>
+          </div>
         </div>
-      </Flex>
+      </div>
     </div>
   )
 }

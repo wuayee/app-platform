@@ -19,6 +19,11 @@ const CheckGroup = (props) => {
   const [shareUrl, setShareUrl] = useState('');
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const textMap = {
+    'share': '分享',
+    'delete': '删除',
+    'report': '',
+  }
 
   // 取消
   function cancle() {
@@ -35,8 +40,14 @@ const CheckGroup = (props) => {
     const result = [];
     checkedList.map((item, index) => {
       result.push({ query: JSON.stringify(item) });
-    })
-    type === 'share' ? shareConfirm(result) : reportClick(result);
+    });
+    if (type === 'share') {
+      shareConfirm(result);
+    } else if (type === 'delete') {
+      console.log(result);
+    } else {
+      reportClick(result);
+    }
   }
   // 分享
   function shareConfirm(result) {

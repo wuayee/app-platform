@@ -60,10 +60,10 @@ const ChatMessaga = (props) => {
   const setCheckStatus = () => {
     list.forEach(item => item.checked = false);
   }
-  // 分享问答
-  function setShareClass() {
+  // 分享删除问答
+  function setShareClass(type) {
     setCheckStatus();
-    setEditorShow(true);
+    setEditorShow(true, type);
   }
 
   // 选中回调

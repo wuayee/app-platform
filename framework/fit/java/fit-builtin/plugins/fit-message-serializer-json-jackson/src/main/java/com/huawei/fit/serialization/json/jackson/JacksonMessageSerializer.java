@@ -36,6 +36,11 @@ public class JacksonMessageSerializer implements MessageSerializer {
     private final ObjectSerializer serializer;
     private final ObjectMapper mapper;
 
+    /**
+     * 构造一个新的 {@link JacksonMessageSerializer} 实例。
+     *
+     * @param serializer 表示用于序列化和反序列化实例的 {@link ObjectSerializer}。
+     */
     public JacksonMessageSerializer(@Fit(alias = "jackson") ObjectSerializer serializer) {
         this.serializer = notNull(serializer, "The Jackson serializer cannot be null.");
         JacksonObjectSerializer jacksonObjectSerializer = cast(this.serializer);

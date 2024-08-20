@@ -47,7 +47,12 @@
           "FIT",
           "BUILTIN"
         ]
-      }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN",
+        "HUGGINGFACE"
+      ]
     },
     {
       "schema": {

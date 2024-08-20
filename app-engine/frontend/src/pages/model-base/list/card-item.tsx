@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Dropdown, Flex, Tag } from 'antd';
+import { Card, Dropdown, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
@@ -7,7 +7,7 @@ import { deleteModel } from './delete';
 import { AppIcons } from '../../../components/icons/app';
 
 const CardItem = ({ data, deleteCallback }: any) => {
-  
+
   const navigate = useHistory().push;
   const operatorItems: MenuProps['items'] = [
     {
@@ -60,7 +60,7 @@ const CardItem = ({ data, deleteCallback }: any) => {
         flexWrap: 'wrap',
         marginTop: 16,
       }}>
-        <Flex gap='small' align='center'>
+        <div>
           <AppIcons.UserIcon />
           <span
             title={data.author}
@@ -70,7 +70,7 @@ const CardItem = ({ data, deleteCallback }: any) => {
               overflow: 'hidden',
               maxWidth: 80,
             }}>{data.author}</span>
-        </Flex>
+        </div>
         <Tag
           title={data.model_type}
           style={{

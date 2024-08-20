@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Flex, MenuProps, Tag } from 'antd';
+import { Dropdown, MenuProps, Tag } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
@@ -60,7 +60,7 @@ const WorkflowCard = ({ pluginData }: any) => {
       {/* 卡片底部 */}
       <div className='card-footer'>
         <div>
-          <Flex gap={14}>
+          <div className='card-footer-content'>
             <span>
               {
                 (pluginData?.attributes?.latest_version || pluginData.state === 'active') ?
@@ -76,7 +76,7 @@ const WorkflowCard = ({ pluginData }: any) => {
               <StarOutlined style={{ marginRight: 8 }} />
               {pluginData?.likeCount}
             </span>
-          </Flex>
+          </div>
         </div>
         <div onClick={(e) => { e.stopPropagation(); }}>
           <Dropdown menu={{ items: operatItems }} trigger={['click']}>

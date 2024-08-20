@@ -24,6 +24,13 @@ public final class FieldList implements Iterable<FieldInfo> {
     private final ClassFile file;
     private final List<FieldInfo> fields;
 
+    /**
+     * 构造一个字段列表。
+     *
+     * @param file 表示字段列表所属的类文件的 {@link ClassFile}。
+     * @param in 表示字段列表输入流的 {@link InputStream}。
+     * @throws IOException 如果发生 I/O 错误。
+     */
     public FieldList(ClassFile file, InputStream in) throws IOException {
         this.file = Validation.notNull(file, "The owning class file of the field list cannot be null.");
         U2 count = U2.read(in);

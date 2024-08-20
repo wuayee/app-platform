@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import {Form} from "antd";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
+import {useTranslation} from "react-i18next";
 
 Type.propTypes = {
     itemId: PropTypes.string.isRequired, // 确保 itemId 是一个必需的字符串
@@ -19,6 +20,7 @@ Type.propTypes = {
  * @returns {JSX.Element} 开始节点关于入参类型的Dom
  */
 export default function Type({itemId, propValue, disableModifiable, onChange}) {
+    const { t } = useTranslation();
     const handleSelectClick = (event) => {
         event.stopPropagation(); // 阻止事件冒泡
     };
@@ -30,7 +32,7 @@ export default function Type({itemId, propValue, disableModifiable, onChange}) {
 
     return (<Form.Item
         className="jade-form-item"
-        label="字段类型"
+        label={t('fieldType')}
         name={`type-${itemId}`}
         initialValue={propValue}
     >

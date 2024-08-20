@@ -20,6 +20,14 @@ import java.lang.reflect.Parameter;
 public class ValidationParameter extends AbstractValidationMetadata {
     private final Parameter parameter;
 
+    /**
+     * 构造校验参数元数据。
+     *
+     * @param parameter 表示参数的 {@lnk Parameter}。
+     * @param groups 表示分组的 {@link Class}{@code <?>}。
+     * @param value 表示值的 {@link Object}。
+     * @param validationMethod 表示校验方法的 {@link Method}。
+     */
     public ValidationParameter(Parameter parameter, Class<?>[] groups, Object value, Method validationMethod) {
         super(groups, value, validationMethod);
         this.parameter =

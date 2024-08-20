@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown } from 'antd';
-import screenfull from 'screenfull';
+import screenfull from '@/shared/screenfull/screenfull';
 import { chartTypeMap, items, getOptions } from '../utils/chart-graphs';
 import { DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';

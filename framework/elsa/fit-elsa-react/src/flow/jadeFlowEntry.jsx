@@ -301,11 +301,12 @@ export const JadeFlow = (() => {
      * @param tenant 租户.
      * @param flowConfigData 流程元数据.
      * @param configs 传入的其他参数列表.
+     * @param i18n 传入的多语言翻译组件.
      * @param importStatements 传入的需要加载的语句.
      */
-    self.edit = async (div, tenant, flowConfigData, configs, importStatements = []) => {
+    self.edit = async (div, tenant, flowConfigData, configs, i18n, importStatements = []) => {
         const graphDom = getGraphDom(div);
-        const g = await createGraph(graphDom, tenant, flowConfigData, configs, importStatements);
+        const g = await createGraph(graphDom, tenant, flowConfigData, configs, i18n, importStatements);
         const pageData = g.getPageData(0);
         await g.edit(0, graphDom, pageData.id);
         await g.activePage.awaitShapesRendered();
@@ -331,10 +332,11 @@ export const JadeFlow = (() => {
         return jadeFlowAgent(g);
     };
 
-    const createGraph = async (div, tenant, flowConfigData, configs, importStatements) => {
+    const createGraph = async (div, tenant, flowConfigData, configs, i18n, importStatements) => {
         const g = jadeFlowGraph(div, "jadeFlow");
         g.collaboration.mute = true;
         g.configs = configs;
+        g.i18n = i18n;
         for (let i = 0; i < importStatements.length; i++) {
             await g.dynamicImportStatement(importStatements[i]);
         }

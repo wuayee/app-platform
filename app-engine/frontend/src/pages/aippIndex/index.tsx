@@ -152,7 +152,7 @@ const AippIndex = () => {
           </div>
         </div>
       }
-      <Spin spinning={spinning} fullscreen />
+      <Spin spinning={spinning} />
     </>
   );
 };

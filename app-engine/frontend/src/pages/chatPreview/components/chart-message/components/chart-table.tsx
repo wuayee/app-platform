@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Table } from 'antd';
-import screenfull from 'screenfull';
+import screenfull from '@/shared/screenfull/screenfull';
 import { getChartWidth, exportTableData } from '../utils/table-utils';
 import { DownLoadIcon, FullScreenIcon } from '@assets/icon';
 

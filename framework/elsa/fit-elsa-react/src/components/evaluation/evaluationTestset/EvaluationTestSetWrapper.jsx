@@ -31,7 +31,7 @@ const getEvaluationTestSetConfig = shape => {
 export default function EvaluationTestSetWrapper({data, disabled}) {
     const shape = useShapeContext();
     const selectedTestSet = data && (data.testSet.value.find(item => item.name === "name")?.value ?? '');
-    const testQuantity = data && (data.testSet.value.find(item => item.name === "quantity")?.value ?? 0);
+    // const testQuantity = data && (data.testSet.value.find(item => item.name === "quantity")?.value ?? 0); 暂时注释，后续放开
     const config = getEvaluationTestSetConfig(shape);
     const [testSets, setTestSets] = useState([]);
 
@@ -42,7 +42,7 @@ export default function EvaluationTestSetWrapper({data, disabled}) {
         } else {
             httpUtil.get(config.urls.datasetUrlPrefix + 'dataset?appId=1&pageIndex=1&pageSize=10', // 此接口查询多个版本数据，取最大版本
                 {},
-                (jsonData) => setTestSets(jsonData),
+                (jsonData) => setTestSets(jsonData.data),
                 (error) => {
                     message.error("数据集查寻失败，请联系系统管理员");
                     throw new Error("get evaluation test sets failed: " + error);
@@ -53,7 +53,7 @@ export default function EvaluationTestSetWrapper({data, disabled}) {
     return (<>
         <EvaluationTestSetSelect disabled={disabled} testSets={testSets} selectedTestSet={selectedTestSet}
                                  config={config}/>
-        <TestQuantity disabled={disabled} quantity={testQuantity}/>
+        {/*<TestQuantity disabled={disabled} quantity={testQuantity}/>*/}
         <InvokeOutput outputData={data.outputParams}/>
     </>);
 }

@@ -1,4 +1,4 @@
-import { Col, Flex, message, Modal, Row, Space, Table } from 'antd';
+import { Col, message, Modal, Row, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import GoBack from '../../../components/go-back/GoBack';
 import type { PaginationProps, TableColumnsType } from 'antd';
@@ -52,9 +52,9 @@ const ModelBaseDetail: React.FC = () => {
     if (name) {
       queryModelDetail(name).then(res => {
         if (res) {
-          setData(res?.modelInfo);          
-          let obj =  ( Function( "return " + res?.config ) )()
-          setConfig(JSON.stringify((obj),null,2));  // 格式化返回值
+          setData(res?.modelInfo);
+          let obj = (Function("return " + res?.config))()
+          setConfig(JSON.stringify((obj), null, 2));  // 格式化返回值
           setVersionData(res?.versionInfo);
         }
       });
@@ -163,13 +163,13 @@ const ModelBaseDetail: React.FC = () => {
         </div>
       </div>
       <div className='aui-block'>
-        <Flex gap={16} vertical>
+        <div>
           {/* 模型名称头部 */}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Flex gap={16} style={{ alignItems: 'center' }}>
+            <div style={{ alignItems: 'center' }}>
               <h2 style={{ fontSize: 20, fontWeight: 400 }}>{data?.model_name}</h2>
               <span>版本数：{data?.version_num}</span>
-            </Flex>
+            </div>
             <a onClick={() => { setConfigOpen(true) }}>配置详情</a>
           </div>
           {/* 模型描述 */}
@@ -188,10 +188,10 @@ const ModelBaseDetail: React.FC = () => {
             <Row>
               {baseInfoKey.map(item => (
                 <Col span={4}>
-                  <Flex vertical>
+                  <div>
                     <span style={{ fontSize: 12, color: '#4D4D4D' }}>{item.label}</span>
                     <span style={{ fontSize: 14, color: '#1A1A1A' }}>{data?.[item.key]}</span>
-                  </Flex>
+                  </div>
                 </Col>
               ))}
             </Row>
@@ -209,7 +209,7 @@ const ModelBaseDetail: React.FC = () => {
               }}
             />
           </div>
-        </Flex>
+        </div>
       </div>
       <ModelConfig visible={configOpen} callback={configCallback} configData={config} />
     </div>
