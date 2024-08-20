@@ -15,13 +15,16 @@ import { setAppInfo } from '@/store/appInfo/appInfo';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../../locale/i18n';
 
 const Stage = (props) => {
   const { t } = useTranslation();
   const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [showModal, setShowModal] = useState(false);
+  const [showTools, setShowTools] = useState(false);
   const [taskName, setTaskName] = useState('');
   const [selectModal, setSelectModal] = useState('');
+  const [skillList, setSkillList] = useState([]);
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo, setShowTime } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
@@ -71,7 +74,20 @@ const Stage = (props) => {
         setTaskName(taskName.trim());
         modelCallback.current = onSelect;
         setShowModal(true);
-      })
+      });
+      // 知识库模态框
+      agent.onKnowledgeBaseSelect((args) => {
+        let { selectedKnowledgeBases, onSelect } = args;
+        knowledgeCallback.current = onSelect;
+        modalRef.current.showModal(selectedKnowledgeBases);
+      });
+      // 插件模态框
+      agent.onPluginSelect((args) => {
+        let { selectedPluginUniqueNames, onSelect } = args;
+        setSkillList(selectedPluginUniqueNames);
+        pluginCallback.current = onSelect;
+        setShowTools(true);
+      });
     })
     getAddFlowConfig(tenantId, { pageNum: 1, pageSize: 20, tag: 'Builtin', version: '' }).then(res => {
       if (res.code === 0) {
