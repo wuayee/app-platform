@@ -1,10 +1,9 @@
-import { Button, DatePicker } from 'antd';
 import React from 'react';
+import { Space, Button, DatePicker } from 'antd';
 import type { TableColumnType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { Space } from 'antd';
 import { TableIcons } from '../icons/table';
-import { TFunction } from "react-i18next";
+import { TFunction } from 'react-i18next';
 
 // 自定义搜索面板
 const getColumnTimePickerProps = (dataIndex: string, onChange?: any, t?: TFunction): TableColumnType<string> => ({
@@ -15,17 +14,17 @@ const getColumnTimePickerProps = (dataIndex: string, onChange?: any, t?: TFuncti
         value={selectedKeys as any}
         format='YYYY-MM-DD'
         onChange={(date, dateString) => {
-          setSelectedKeys((date? date : []) as any)
+          setSelectedKeys((date ? date : []) as any)
         }}
       />
       <Space>
         <Button
-          type="primary"
+          type='primary'
           onClick={() => {
             onChange(selectedKeys as string[], confirm, dataIndex);
           }}
           icon={<SearchOutlined />}
-          size="small"
+          size='small'
           style={{ width: 90 }}
         >
           {t('search')}
@@ -37,7 +36,7 @@ const getColumnTimePickerProps = (dataIndex: string, onChange?: any, t?: TFuncti
               onChange([], confirm, dataIndex);
             }
           }
-          size="small"
+          size='small'
           style={{ width: 90 }}
         >
           {t('reset')}
@@ -48,7 +47,7 @@ const getColumnTimePickerProps = (dataIndex: string, onChange?: any, t?: TFuncti
   filterIcon: (filtered: boolean) => (
     <>
       <div style={{ color: filtered ? '#1677ff' : undefined, marginTop: 4 }}>
-        <TableIcons.date  />
+        <TableIcons.date />
       </div>
     </>
   ),

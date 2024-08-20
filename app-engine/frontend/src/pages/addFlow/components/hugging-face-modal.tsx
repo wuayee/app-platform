@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import { Modal, Input, Button } from 'antd';
+import { useParams } from 'react-router-dom';
 import { getHuggingFaceList } from '@shared/http/appBuilder';
-import EmptyItem from '../../../components/empty/empty-item';
+import EmptyItem from '@/components/empty/empty-item';
+import { useTranslation } from 'react-i18next';
 const { Search } = Input;
-import { useTranslation } from "react-i18next";
 
 const HuggingFaceModal = (props) => {
   const { t } = useTranslation();
@@ -108,6 +108,5 @@ const HuggingFaceModal = (props) => {
     </Modal>
   </>
 };
-
 
 export default HuggingFaceModal;

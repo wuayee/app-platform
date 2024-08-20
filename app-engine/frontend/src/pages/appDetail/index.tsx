@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import GoBack from '../../components/go-back/GoBack';
 import { Tabs } from 'antd';
-import AppAnalyse from './analyse';
+import GoBack from '../../components/go-back/GoBack';
 import AppOverview from './overview';
-import AppEvaluate from './evalute';
-import FeedBack from './feedback';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const onChange = (key: string) => {
   console.log(key);

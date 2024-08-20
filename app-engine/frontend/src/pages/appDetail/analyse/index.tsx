@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import * as echarts from 'echarts';
-import './style.scoped.scss';
 import { Card, Select } from 'antd';
-import { getAnalysisData } from '../../../shared/http/apps';
+import { getAnalysisData } from '@/shared/http/apps';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { timeOption, top5UserOption, tradeOption, speedOption, top5DepartmentOption } from './common';
+import { timeOption, top5UserOption, tradeOption, speedOption } from './common';
+import './style.scoped.scss';
 
 const AnalyseCard = ({ info }) => (
   <Card className='card'>

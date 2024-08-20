@@ -5,8 +5,8 @@ import JSZip from 'jszip';
 import { bytesToSize } from '@/common/utils';
 import { Message } from '@/shared/utils/message';
 import { fileValidate } from '@/shared/utils/common';
+import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
-import { useTranslation } from "react-i18next";
 
 const DraggerUpload = (props) => {
   const { t } = useTranslation();

@@ -1,10 +1,8 @@
 import React from 'react';
+import { DatePicker, TableColumnType, Button, Space } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
-import { DatePicker, TableColumnType } from 'antd';
-import { Button, Space } from 'antd';
-import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { GetProps } from 'antd';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -20,10 +18,10 @@ const TableCalendarSearch = (searchKeyName: string, async: boolean = true): Tabl
   return ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, close }) => (
       <div style={{ padding: 8, width: 360 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Space direction="vertical" size={12}>
+        <Space direction='vertical' size={12}>
           <RangePicker
             showTime={{ format: 'HH:mm:ss' }}
-            format="YYYY-MM-DD HH:mm:ss"
+            format='YYYY-MM-DD HH:mm:ss'
             onChange={(_, dateString) => {
               setSelectedKeys(dateString);
             }}

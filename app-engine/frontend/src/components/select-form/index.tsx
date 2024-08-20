@@ -1,11 +1,10 @@
-import { Button, Empty, FormInstance, Progress } from 'antd';
 import React from 'react';
+import { Button, Empty, FormInstance, Progress } from 'antd';
 import SelectDataSource from './select-data-source';
-import Preview from './preview';
 import { TextSplitClear } from './text-split-clear';
 import TableSecondForm from './table-second-form';
 import { useHistory } from 'react-router-dom';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 interface inputProps {
   currentSteps: number;

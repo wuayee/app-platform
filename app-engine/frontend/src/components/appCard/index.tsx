@@ -5,8 +5,9 @@ import { Icons } from '../icons';
 import { cancelUserCollection, collectionApp } from '@/shared/http/appDev';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { addCollectionApp, removeCollectionApp } from '@/store/collection/collection';
+import { useTranslation } from 'react-i18next';
 import './style.scoped.scss';
-import { useTranslation } from "react-i18next";
+
 
 export interface CardInfoType {
   name: string;

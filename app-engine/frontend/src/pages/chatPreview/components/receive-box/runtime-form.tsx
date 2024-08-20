@@ -8,9 +8,11 @@ import ConditionForm from '../runtimeForm/conditionForm/conditionForm';
 import { setFormReceived } from "@/store/chatStore/chatStore";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { ChatContext } from '@/pages/aippIndex/context';
+import { useTranslation } from 'react-i18next';
 
 // runtime表单渲染
 const RuntimeForm = (props) => {
+  const { t } = useTranslation();
   const { formName, formMap } = props.formConfig;
   const { chatStreaming } = useContext(ChatContext);
   const dispatch = useAppDispatch();
@@ -49,7 +51,7 @@ const RuntimeForm = (props) => {
         />
         break;
       default:
-        return <div>未找到对应的表单类型</div>
+        return <div>{t('formTypeFail')}</div>
     }
   }
   return <>{(

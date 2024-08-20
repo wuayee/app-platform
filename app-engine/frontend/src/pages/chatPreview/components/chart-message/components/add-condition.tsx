@@ -4,13 +4,15 @@ import { Popover, Button } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { Message } from '@shared/utils/message';
 import AddConditionForm from './add-condition-form';
+import { useTranslation } from 'react-i18next';
 
 const AddCondition = (props) => {
+  const { t } = useTranslation();
   const { conditions, getFormData, save } = props;
   const [popoverShow, setPopoverShow] = useState(false);
   const [formData, setFormData] = useState('');
   const addRef = useRef();
-  
+
   const onOpenChange = async (open) => {
     let data = JSON.stringify(getFormData());
     await setFormData(data);
@@ -19,14 +21,14 @@ const AddCondition = (props) => {
   const handleConfirm = () => {
     let filterItem = addRef.current.getFilterData();
     if (filterItem.value.length === 0) {
-      Message({ type: 'warning', content: '选择结果不能为空' });
+      Message({ type: 'warning', content: t('selectionEmpty') });
       return
     }
     save(filterItem);
     setPopoverShow(false);
   }
   return <>
-    <Popover 
+    <Popover
       trigger='click'
       placement='bottomLeft'
       arrow={false}
@@ -35,20 +37,20 @@ const AddCondition = (props) => {
       destroyTooltipOnHide={true}
       content={
         <div>
-          <AddConditionForm 
-            formData={formData} 
-            popoverShow={popoverShow} 
-            conditions={conditions} 
+          <AddConditionForm
+            formData={formData}
+            popoverShow={popoverShow}
+            conditions={conditions}
             addRef={addRef}
           />
           <div className='action-menu'>
-            <Button size='small' onClick={() => setPopoverShow(false)}>取消</Button>
-            <Button size='small' type='primary' onClick={handleConfirm}>确定</Button>
+            <Button size='small' onClick={() => setPopoverShow(false)}>{t('cancel')}</Button>
+            <Button size='small' type='primary' onClick={handleConfirm}>{t('ok')}</Button>
           </div>
         </div>
       }>
-      <PlusSquareOutlined style={{ cursor: 'pointer', fontSize: '20px', color: '#2673e5' }}/>
-    </Popover> 
+      <PlusSquareOutlined style={{ cursor: 'pointer', fontSize: '20px', color: '#2673e5' }} />
+    </Popover>
   </>
 };
 
