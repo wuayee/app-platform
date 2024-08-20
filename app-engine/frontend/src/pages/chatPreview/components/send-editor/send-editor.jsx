@@ -49,12 +49,13 @@ const SendEditor = (props) => {
   const [selectDom, setSelectDom] = useState();
   const [showSelect, setShowSelect] = useState(false);
   const [showClear, setShowClear] = useState(false);
-  const [editorHeight, setEditorHeight] = useState(250);
+  const [editorHeight, setEditorHeight] = useState(290);
   const [openHistory, setOpenHistory] = useState(false);
   const [positionConfig, setPositionConfig] = useState({});
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const editorRef = useRef(null);
+  const recommondRef = useRef(null);
   const recording = useRef(false);
   const audioBtnRef = useRef(null);
   const audioDomRef = useRef(null);
@@ -200,18 +201,21 @@ const SendEditor = (props) => {
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        if (entry.target === editorRef.current) {
-          const height = entry.contentRect.height;
-          setEditorHeight(height + 225);
+        let height = 0;
+        if (entry.target === editorRef.current || entry.target === recommondRef.current) {
+          height += entry.contentRect.height;
         }
+        setEditorHeight(height + 200);
       }
     });
     if (editorRef.current) {
       resizeObserver.observe(editorRef.current);
+      resizeObserver.observe(recommondRef.current);
     }
     return () => {
       if (editorRef.current) {
         resizeObserver.unobserve(editorRef.current);
+        resizeObserver.unobserve(recommondRef.current);
       }
     }
   }, []);
@@ -231,7 +235,9 @@ const SendEditor = (props) => {
           <span>{t('stopResponding')}</span>
         </div>
       }
-      <Recommends onSend={onSend} />
+      <div ref={recommondRef}>
+        <Recommends onSend={onSend} />
+      </div>
       <div className='editor-inner' >
         <EditorBtnHome
           setOpenHistory={setOpenHistory}
