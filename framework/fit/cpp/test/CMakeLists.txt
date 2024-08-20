@@ -80,6 +80,7 @@ target_link_libraries(PluginsTest PRIVATE
     FitFramework FitUtil FitBrokerClient FitRuntime
     pthread
     gmock
+    FitRegistryServerRepositoryMemory
 )
 
 add_library(FitRuntimeMocker SHARED mock/runtime_mock.cpp)

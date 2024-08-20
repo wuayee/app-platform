@@ -205,4 +205,22 @@ FitablePolicy ContextGetPolicy(ContextObj ctx)
     }
     return static_cast<FitablePolicy>(wrapper->context.GetPolicy());
 }
+
+void ContextSetAccessToken(ContextObj ctx,  const char* accessToken)
+{
+    auto wrapper = ContextWrapperCast(ctx);
+    if (wrapper == nullptr) {
+        return;
+    }
+    wrapper->context.SetAccessToken(accessToken);
+}
+
+const char* ContextGetAccessToken(ContextObj ctx)
+{
+    auto wrapper = ContextWrapperCast(ctx);
+    if (wrapper == nullptr) {
+        return "";
+    }
+    return wrapper->context.GetAccessToken().data();
+}
 }

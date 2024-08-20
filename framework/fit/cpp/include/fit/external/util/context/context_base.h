@@ -89,6 +89,9 @@ void ContextSetPolicy(ContextObj ctx, FitablePolicy policy);
  */
 FitablePolicy ContextGetPolicy(ContextObj ctx);
 
+void ContextSetAccessToken(ContextObj ctx,  const char* accessToken);
+const char* ContextGetAccessToken(ContextObj ctx);
+
 // 该组为老接口，适配老版本，不建议使用
 // 可以使用 ContextMallocNoManage / ContextFreeNoManage
 void *ContextMallocWithOutCache(ContextObj ctx, size_t size);

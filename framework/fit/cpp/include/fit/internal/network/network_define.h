@@ -10,15 +10,21 @@
 #include <fit/stl/string.hpp>
 #include <functional>
 #include <fit/fit_code.h>
+#include <fit/internal/util/protocol/fit_meta_data.h>
+#include <fit/internal/util/protocol/fit_response_meta_data.h>
 
 namespace Fit {
 namespace Network {
 struct Request {
-    Fit::string metadata;
+    fit_meta_data meta;
     Fit::string payload;
 };
 
-using Response = Request;
+struct Response {
+    fit_response_meta_data meta;
+    Fit::string metadata;
+    Fit::string payload;
+};
 
 using RequestResponseHandle = std::function<FitCode(const Request &, Response &)>;
 }

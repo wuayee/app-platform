@@ -163,3 +163,17 @@ bool StringUtils::IsBlank(char ch)
 {
     return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r';
 }
+
+bool StringUtils::IsEqualIgnoreCase(const Fit::string& str1, const Fit::string& str2)
+{
+    if (str1.length() != str2.length()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < str1.length(); ++i) {
+        if (std::tolower(str1[i]) != std::tolower(str2[i])) {
+            return false;
+        }
+    }
+    return true;
+}

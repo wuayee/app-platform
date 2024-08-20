@@ -11,6 +11,7 @@
 #include <fit/external/framework/proxy_client.hpp>
 
 #include <component/com_huawei_fit_hakuna_kernel_broker_shared_fit_response/1.0.0/cplusplus/fitResponse.hpp>
+#include <component/com_huawei_fit_hakuna_kernel_broker_shared_fit_metadata/1.0.0/cplusplus/fitMetaData.hpp>
 #include <fit/stl/string.hpp>
 
 namespace fit {
@@ -19,7 +20,7 @@ namespace kernel {
 namespace broker {
 namespace server {
 struct __processV3 {
-    using InType = ::Fit::Framework::ArgumentsIn<const Fit::bytes *, const Fit::bytes *>;
+    using InType = ::Fit::Framework::ArgumentsIn<const fit::hakuna::kernel::broker::shared::MetaData *, const Fit::bytes *>;
     using OutType = ::Fit::Framework::ArgumentsOut<::fit::hakuna::kernel::broker::shared::FitResponse **>;
 };
 

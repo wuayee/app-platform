@@ -14,6 +14,8 @@ set(SRCS
     src/table_service/registry_server/table_fitable.cpp
     src/table_service/registry_server/table_fitable_subscribe.cpp
     src/table_service/registry_server/table_worker.cpp
+    src/table_service/secure_access/token_role_repo_by_pg.cpp
+    src/table_service/utils/util_by_pg.cpp
 )
 add_library(${PLUGIN_NAME} SHARED ${SRCS})
 target_compile_features(${PLUGIN_NAME} PRIVATE cxx_std_11)

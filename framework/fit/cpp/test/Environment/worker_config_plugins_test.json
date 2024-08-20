@@ -54,6 +54,9 @@
         },
         {
             "location": "lib/libFitPlugin_registry_server.so"
+        },
+        {
+            "location": "lib/libFitPlugin_SecureAccess.so"
         }
       ],
       "user-plugins": [

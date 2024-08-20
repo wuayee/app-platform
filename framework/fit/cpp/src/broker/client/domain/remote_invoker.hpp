@@ -11,14 +11,16 @@
 #include <utility>
 #include <fit/internal/framework/formatter_service.hpp>
 #include <fit/external/util/context/context_api.hpp>
-#include <component/com_huawei_fit_hakuna_kernel_broker_shared_fit_response/1.0.0/cplusplus/fitResponse.hpp>
+#include <component/com_huawei_fit_hakuna_kernel_broker_shared_fit_metadata/1.0.0/cplusplus/fitMetaData.hpp>
+#include <component/com_huawei_fit_hakuna_kernel_broker_shared_fit_response_v2/1.0.0/cplusplus/fitResponseV2.hpp>
 #include "decorator/fitable_invoker_trace_decorator.hpp"
 #include "fitable_endpoint.hpp"
 namespace Fit {
+using RequestMetaData = fit::hakuna::kernel::broker::shared::MetaData;
 /**
  * 为服务实现提供远程调用程序。
  */
-class RemoteInvoker : public FitableInvokerBase, public virtual TraceAbleFitableInvoker {
+class RemoteInvoker : public FitableInvokerBase, public TraceAbleFitableInvoker {
 public:
     explicit RemoteInvoker(const ::Fit::FitableInvokerFactory* factory,
         ::Fit::FitableCoordinatePtr coordinate, ::Fit::Framework::Annotation::FitableType fitableType,
@@ -42,15 +44,33 @@ protected:
     const ::Fit::Framework::Formatter::BaseSerialization& GetSerialization() const;
 private:
     FitCode DisableAddress() const;
-    FitCode BuildMetadataBytes(ContextObj context, ::Fit::bytes& result) const;
+    FitCode BuildMetadataBytes(ContextObj context, RequestMetaData& metaData) const;
     FitCode SerializeRequest(ContextObj context, const ::Fit::vector<::Fit::any>& in, ::Fit::bytes& result) const;
-    FitCode InvokeRemoteFitable(ContextObj context, const ::Fit::bytes& metadata, const ::Fit::bytes& request,
+    FitCode InvokeRemoteFitable(ContextObj context, const RequestMetaData& metaData, const ::Fit::bytes& request,
         ::Fit::vector<::Fit::any>& out) const;
-    FitCode ParseResult(ContextObj context, ::fit::hakuna::kernel::broker::shared::FitResponse* fitResponse,
+    FitCode ParseResult(ContextObj context, ::fit::hakuna::kernel::broker::shared::FitResponseV2* fitResponse,
         ::Fit::vector<::Fit::any>& out) const;
 private:
     FitableEndpointPtr endpoint_;
     ::Fit::Framework::Formatter::BaseSerialization serialization_ {};
+};
+
+/**
+ * 为服务实现的调用程序提供认证鉴权相关的处理。
+ */
+class AuthenticationForRemoteInvoker : public RemoteInvoker {
+public:
+    explicit AuthenticationForRemoteInvoker(const ::Fit::FitableInvokerFactory* factory,
+        ::Fit::FitableCoordinatePtr coordinate, ::Fit::Framework::Annotation::FitableType fitableType,
+        ::Fit::FitableEndpointPtr endpoint, FitConfigPtr config);
+    ~AuthenticationForRemoteInvoker() override = default;
+    FitCode Invoke(ContextObj context, ::Fit::Framework::Arguments& in,
+        ::Fit::Framework::Arguments& out) const override;
+
+    static void SetIsEnableAccessToken(bool isEnableAccessTokenIn);
+    static bool GetIsEnableAccessToken();
+private:
+    int32_t GetToken(bool isForceUpdate, Fit::string& token) const;
 };
 
 /**

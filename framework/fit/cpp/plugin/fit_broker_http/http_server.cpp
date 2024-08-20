@@ -12,7 +12,6 @@
 #include <fit/external/util/base64.h>
 #include <fit/fit_log.h>
 #include <fit/internal/util/protocol/fit_response_meta_data.h>
-
 #include "http_util.hpp"
 #include "httplib_util.hpp"
 
@@ -22,21 +21,17 @@ namespace Fit {
 namespace {
 void SetHeaders(const Network::Response& handlerRes, httplib::Response& res)
 {
-    fit_response_meta_data metadata;
-    if (!metadata.from_bytes(handlerRes.metadata)) {
-        return;
-    }
-    res.set_header(HEADER_FIT_DATA_FORMAT, std::to_string(metadata.get_payload_format()));
-    res.set_header(HEADER_FIT_CODE, std::to_string(metadata.get_code()));
-    res.set_header(HEADER_FIT_MESSAGE, to_std_string(metadata.get_message()));
-    string tlv;
-    metadata.Serialize(tlv);
-    res.set_header(HEADER_FIT_TLV, tlv);
-    res.set_header(HEADER_FIT_META, to_std_string(Base64Encode(handlerRes.metadata)));
     res.set_content(handlerRes.payload.data(), handlerRes.payload.size(), HTTP_CONTENT_TYPE_JSON);
+    res.set_header(HEADER_FIT_META, to_std_string(Base64Encode(handlerRes.metadata)));
+    // 兼容新结构
+    res.set_header(HEADER_FIT_DATA_FORMAT, std::to_string(handlerRes.meta.get_payload_format()));
+    res.set_header(HEADER_FIT_CODE, std::to_string(handlerRes.meta.get_code()));
+    res.set_header(HEADER_FIT_MESSAGE, to_std_string(handlerRes.meta.get_message()));
+    string tlv;
+    handlerRes.meta.Serialize(tlv);
+    res.set_header(HEADER_FIT_TLV, tlv);
 }
 }
-
 HttpServer::HttpServer(string host, int32_t port, const HttpConfig* config, unique_ptr<httplib::Server> svr)
     : host_(move(host)), port_(port), config_(config), svr_(std::move(svr))
 {
@@ -76,8 +71,8 @@ FitCode HttpServer::Start(Handler handler)
     if (svr_->is_running()) {
         return FIT_ERR_EXIST;
     }
-    svr_->Post(GetPattern().c_str(), [handler](const httplib::Request& req, httplib::Response& res) {
-        FIT_LOG_DEBUG("Request: path=%s, bodySize=%lu.", req.path.c_str(), req.body.size());
+    svr_->Post(GetPattern().c_str(), [handler, this](const httplib::Request& req, httplib::Response& res) {
+        FIT_LOG_INFO("Request: path=%s, bodySize=%lu.", req.path.c_str(), req.body.size());
         Network::Response handlerRes {};
         Network::Request handlerReq {};
         auto getRet = HttplibUtil::GetRequest(req, handlerReq);
@@ -87,11 +82,14 @@ FitCode HttpServer::Start(Handler handler)
                 HTTP_CONTENT_TYPE_JSON);
             return;
         }
-        auto ret = handler(handlerReq, handlerRes);
+
+        int32_t ret = handler(handlerReq, handlerRes);
         if (ret != FIT_OK) {
             res.status = HTTP_STATUS_INTERNAL_ERROR;
-            res.set_content(to_std_string(HttplibUtil::BuildExceptionResponse(res.status, "Internal error", req)),
-                HTTP_CONTENT_TYPE_JSON);
+            string messageStr = HttplibUtil::BuildExceptionResponse(res.status, "Internal error", req);
+            res.set_content(to_std_string(messageStr), HTTP_CONTENT_TYPE_JSON);
+            res.set_header(HEADER_FIT_CODE, std::to_string(ret));
+            res.set_header(HEADER_FIT_MESSAGE, to_std_string(messageStr));
             return;
         }
         SetHeaders(handlerRes, res);

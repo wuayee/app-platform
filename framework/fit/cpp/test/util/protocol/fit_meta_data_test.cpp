@@ -28,10 +28,11 @@ TEST_F(fit_meta_data_test, should_return_correct_value_when_construct_given_valu
     fit_version expected_generic_version(1, 2, 3);
     Fit::string expected_generic_id = "test";
     Fit::string expected_fit_id = "ffff";
+    Fit::string expected_access_token = "test_token";
 
     // when
     fit_meta_data meta_data(expected_version, expected_payload_format, expected_generic_version, expected_generic_id,
-        expected_fit_id);
+        expected_fit_id, expected_access_token);
 
     // then
     EXPECT_THAT(meta_data.get_version(), ::testing::Eq(expected_version));
@@ -39,6 +40,7 @@ TEST_F(fit_meta_data_test, should_return_correct_value_when_construct_given_valu
     EXPECT_THAT(meta_data.get_generic_version(), ::testing::Eq(expected_generic_version));
     EXPECT_THAT(meta_data.get_generic_id(), ::testing::Eq(expected_generic_id));
     EXPECT_THAT(meta_data.get_fit_id(), ::testing::Eq(expected_fit_id));
+    EXPECT_THAT(meta_data.get_access_token(), ::testing::Eq(expected_access_token));
 }
 
 TEST_F(fit_meta_data_test, should_move_when_call_move_value)
@@ -49,18 +51,23 @@ TEST_F(fit_meta_data_test, should_move_when_call_move_value)
     fit_version expected_generic_version(1, 2, 3);
     Fit::string expected_generic_id = "test";
     Fit::string expected_fit_id = "ffff";
+    Fit::string expected_access_token = "test_token";
     Fit::string expected_fit_id_after_move = "";
     Fit::string expected_generic_id_after_move = "";
+    Fit::string expected_access_token_after_move = "";
 
     // when
     fit_meta_data meta_data(expected_version, expected_payload_format, expected_generic_version, expected_generic_id,
-        expected_fit_id);
+        expected_fit_id, expected_access_token);
     auto generic_id = meta_data.move_generic_id();
     auto fit_id = meta_data.move_fit_id();
+    auto access_token = meta_data.move_access_token();
 
     // then
     EXPECT_THAT(generic_id, ::testing::Eq(expected_generic_id));
     EXPECT_THAT(fit_id, ::testing::Eq(expected_fit_id));
+    EXPECT_THAT(access_token, ::testing::Eq(expected_access_token));
     EXPECT_THAT(meta_data.get_generic_id(), ::testing::Eq(expected_fit_id_after_move));
     EXPECT_THAT(meta_data.get_fit_id(), ::testing::Eq(expected_generic_id_after_move));
+    EXPECT_THAT(meta_data.get_access_token(), ::testing::Eq(expected_access_token_after_move));
 }
