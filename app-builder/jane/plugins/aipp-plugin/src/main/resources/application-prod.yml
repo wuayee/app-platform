@@ -41,7 +41,7 @@ elsa:
   elsaKey:
 xiaohai:
   upload_chat_history_url:
-  share_url:
+  share_url: http://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/share
 model:
   xiaohai:
     knowledge:

@@ -13,12 +13,13 @@ import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.TextEntity;
+import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.service.impl.AippRunTimeServiceImpl;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
@@ -69,16 +70,14 @@ public class AippShareTest {
         HttpClassicClientRequest requestMock = mock(HttpClassicClientRequest.class);
         HttpClassicClientResponse<Object> responseMock = mock(HttpClassicClientResponse.class);
         when(httpClientFactoryMock.create().createRequest(any(), any())).thenReturn(requestMock);
-        TextEntity textEntityMock = mock(TextEntity.class);
+        ObjectEntity objectEntityMock = mock(ObjectEntity.class);
         when(requestMock.exchange()).thenReturn(responseMock);
         when(responseMock.statusCode()).thenReturn(200);
-        when(responseMock.textEntity()).thenReturn(Optional.of(textEntityMock));
-        when(textEntityMock.content())
-                .thenReturn("{\"result\":\"result\", \"matched\": true, \"complete_query\":\"query\"}");
+        when(responseMock.objectEntity()).thenReturn(Optional.of(objectEntityMock));
+        Map<String, Object> mockMap = MapBuilder.<String, Object>get().put("result", 123).build();
+        when(objectEntityMock.object()).thenReturn(mockMap);
         Map<String, Object> res = runTimeService.getShareData(null);
-        Assertions.assertEquals("result", ObjectUtils.cast(res.get("result")));
-        Assertions.assertTrue(ObjectUtils.<Boolean>cast(res.get("matched")));
-        Assertions.assertEquals("query", ObjectUtils.cast(res.get("complete_query")));
+        Assertions.assertEquals(123, ObjectUtils.<Integer>cast(res.get("result")));
     }
 
     @Test
@@ -97,16 +96,14 @@ public class AippShareTest {
         HttpClassicClientRequest requestMock = mock(HttpClassicClientRequest.class);
         HttpClassicClientResponse<Object> responseMock = mock(HttpClassicClientResponse.class);
         when(httpClientFactoryMock.create().createRequest(any(), any())).thenReturn(requestMock);
-        TextEntity textEntityMock = mock(TextEntity.class);
+        ObjectEntity objectEntityMock = mock(ObjectEntity.class);
         when(requestMock.exchange()).thenReturn(responseMock);
         when(responseMock.statusCode()).thenReturn(200);
-        when(responseMock.textEntity()).thenReturn(Optional.of(textEntityMock));
-        when(textEntityMock.content())
-                .thenReturn("{\"result\":\"result\", \"matched\": true, \"complete_query\":\"query\"}");
+        when(responseMock.objectEntity()).thenReturn(Optional.of(objectEntityMock));
+        Map<String, Object> mockMap = MapBuilder.<String, Object>get().put("result", 123).build();
+        when(objectEntityMock.object()).thenReturn(mockMap);
         Map<String, Object> res = runTimeService.shared(chats);
-        Assertions.assertEquals("result", ObjectUtils.cast(res.get("result")));
-        Assertions.assertTrue(ObjectUtils.<Boolean>cast(res.get("matched")));
-        Assertions.assertEquals("query", ObjectUtils.cast(res.get("complete_query")));
+        Assertions.assertEquals(123, ObjectUtils.<Integer>cast(res.get("result")));
     }
 
     @Test

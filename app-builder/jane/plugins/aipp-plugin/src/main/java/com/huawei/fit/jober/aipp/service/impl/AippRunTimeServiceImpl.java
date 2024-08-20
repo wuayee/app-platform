@@ -1128,9 +1128,10 @@ public class AippRunTimeServiceImpl
         HttpClassicClientRequest postRequest = httpClientFactory.create()
                 .createRequest(HttpRequestMethod.POST, this.sharedUrl);
         postRequest.entity(ObjectEntity.create(postRequest, JsonUtils.toJsonString(chats)));
-        try {
-            String respContent = HttpUtils.sendHttpRequest(postRequest);
-            return JsonUtils.parseObject(respContent);
+        try(HttpClassicClientResponse<Object> response = HttpUtils.execute(postRequest)) {
+            this.handleResponse(response, postRequest);
+            return ObjectUtils.cast(response.objectEntity()
+                    .orElseThrow(() -> new IOException("Response is empty.")).object());
         } catch (IOException e) {
             log.error("Failed to share:", e.getMessage());
             throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
@@ -1142,10 +1143,25 @@ public class AippRunTimeServiceImpl
         HttpClassicClientRequest getRequest = this.httpClientFactory.create().createRequest(
                 HttpRequestMethod.GET,
                 this.sharedUrl + "?shareId=" + shareId);
-        try {
-            String respContent = HttpUtils.sendHttpRequest(getRequest);
-            return JsonUtils.parseObject(respContent);
+        try(HttpClassicClientResponse<Object> response = HttpUtils.execute(getRequest)) {
+            this.handleResponse(response, getRequest);
+            return ObjectUtils.cast(response.objectEntity()
+                    .orElseThrow(() -> new AippException(AippErrCode.UNKNOWN)).object());
         } catch (IOException e) {
+            log.error("Get shared data failed.", e);
+            throw new AippException(AippErrCode.UNKNOWN);
+        }
+    }
+
+    private void handleResponse(HttpClassicClientResponse<Object> response, HttpClassicClientRequest postRequest)
+            throws IOException {
+        if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
+            log.error(StringUtils.format("send http fail. url={0} result={1}",
+                    postRequest.requestUri(), response.statusCode()));
+            throw new AippException(AippErrCode.UNKNOWN);
+        }
+        if (!response.objectEntity().isPresent()) {
+            log.error(StringUtils.format("get empty response entity, url={0}", postRequest.requestUri()));
             throw new AippException(AippErrCode.UNKNOWN);
         }
     }
