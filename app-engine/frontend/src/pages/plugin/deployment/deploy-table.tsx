@@ -140,8 +140,7 @@ const Deploy = ({ pluginRef }) => {
           </div>)}
           {tableData.length === 0 && <Empty
             imageStyle={{ height: 60 }}
-            description={<span>暂无数据</span>}
-          ></Empty>}
+            description={<span>暂无数据</span>} />}
         </div>
         <div style={{ paddingTop: 16 }}>
           <Pagination total={total} current={pageNum} onChange={selectPage} pageSize={pageSize} />
@@ -191,8 +190,7 @@ const Deploy = ({ pluginRef }) => {
           </div>)}
           {pluginData.length === 0 && <Empty
             imageStyle={{ height: 60 }}
-            description={<span>暂无数据</span>}
-          ></Empty>}
+            description={<span>暂无数据</span>} />}
         </div>
       </div>
     </div>
