@@ -138,4 +138,14 @@
         and status != 1
         order by update_at desc
     </select>
+
+    <select id="selectChatListByInstId" resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp">
+        select
+        <include refid="Base_Column_List"/>
+        from t_chat_session
+        where attributes ->> 'instId' = #{instId}
+        and status != 1
+        order by update_at asc
+    </select>
 </mapper>

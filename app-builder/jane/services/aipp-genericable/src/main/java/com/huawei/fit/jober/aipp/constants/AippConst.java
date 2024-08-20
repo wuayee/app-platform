@@ -672,7 +672,7 @@ public class AippConst {
     /**
      * business中的会话的id的key
      */
-    public static final String BS_CHAT_ID = "chat_id";
+    public static final String BS_CHAT_ID = "chatId";
 
     /**
      * app的attributes的key：is_update

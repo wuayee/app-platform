@@ -23,6 +23,7 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
@@ -43,6 +44,7 @@ import com.huawei.fit.jober.common.RangedResultSet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -54,6 +56,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -455,5 +458,13 @@ public class AippLogServiceTest {
                 eq(OperationContextDummy.DUMMY_W3_ACCOUNT));
         verify(dynamicFormServiceMock, never()).queryFormDetailByPrimaryKey(any(), any(), any());
         verify(metaInstanceServiceMock, times(1)).list(any(), any(), anyLong(), anyInt(), any());
+    }
+
+    @Test
+    @DisplayName("测试queryLogsByInstanceIdAndLogTypes方法")
+    void testQueryLogsByInstanceIdAndLogTypes() {
+        AippParamException exception = Assertions.assertThrows(AippParamException.class,
+                () -> this.aippLogService.queryLogsByInstanceIdAndLogTypes("", new ArrayList<>()));
+        Assertions.assertEquals(AippErrCode.INPUT_PARAM_IS_INVALID.getErrorCode(), exception.getCode());
     }
 }
