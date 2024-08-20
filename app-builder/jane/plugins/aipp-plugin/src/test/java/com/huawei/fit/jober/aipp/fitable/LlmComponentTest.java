@@ -24,6 +24,7 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.common.ui.globalization.LocaleUiWord;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
@@ -87,6 +88,7 @@ public class LlmComponentTest {
     @Mock
     private BrokerClient client;
     private final ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
+    private LocaleUiWord localeUiWord;
 
     @BeforeEach
     void setUp() {
@@ -185,7 +187,7 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         // mock
         Mockito.doNothing().when(aippLogStreamService).send(any());
@@ -214,7 +216,7 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
@@ -236,7 +238,7 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         AtomicInteger resCnt = new AtomicInteger(0);
 
@@ -283,7 +285,7 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -308,7 +310,7 @@ public class LlmComponentTest {
                 aippLogService,
                 null,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
@@ -334,7 +336,7 @@ public class LlmComponentTest {
                 this.aippLogService,
                 null,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -386,7 +388,7 @@ public class LlmComponentTest {
                 this.aippLogService,
                 null,
                 client,
-                serializer);
+                serializer, localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

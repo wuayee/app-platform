@@ -15,5 +15,6 @@
 
     <modules>
         <module>mybatis-audit</module>
+        <module>ui-word-globalizer</module>
     </modules>
 </project>
