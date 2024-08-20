@@ -4,28 +4,24 @@
 
 package com.huawei.fit.jober.aipp.po;
 
-import com.huawei.fit.jober.aipp.aop.LocaleField;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * AppBuilder表单属性结构体
+ * i18n国际化资源的结构体
  *
- * @author 邬涨财
- * @since 2024-04-16
+ * @author 陈潇文
+ * @since 2024-08-20
  */
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AppBuilderFormPropertyPo {
+public class I18nPo {
     private String id;
-    private String formId;
-    private String name;
-    private String dataType;
-    @LocaleField
-    private String defaultValue;
+    private String key;
+    private String language;
+    private String value;
 }

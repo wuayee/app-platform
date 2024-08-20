@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.mapper;
 
+import com.huawei.fit.jober.aipp.aop.Locale;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 
@@ -22,6 +23,7 @@ public interface AppBuilderAppMapper {
      * @param id 表示 app 的唯一标识的 {@link String}。
      * @return 表示 App 数据对象的 {@link AppBuilderAppPo}。
      */
+    @Locale
     AppBuilderAppPo selectWithId(String id);
 
     /**
@@ -30,6 +32,7 @@ public interface AppBuilderAppMapper {
      * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
      * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPo}{@code >}。
      */
+    @Locale
     List<AppBuilderAppPo> selectWithTenantId(String tenantId);
 
     /**

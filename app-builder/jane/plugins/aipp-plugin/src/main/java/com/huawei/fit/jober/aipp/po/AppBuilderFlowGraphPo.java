@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.po;
 
+import com.huawei.fit.jober.aipp.aop.LocaleField;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 public class AppBuilderFlowGraphPo {
     private String id;
     private String name;
+    @LocaleField
     private String appearance;
     private String createBy;
     private String updateBy;
