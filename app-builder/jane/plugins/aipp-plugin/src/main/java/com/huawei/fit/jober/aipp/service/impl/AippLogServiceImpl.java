@@ -556,4 +556,13 @@ public class AippLogServiceImpl implements AippLogService {
                 .filter(log -> !filterLogTypes.contains(log.getLogType()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AippInstLog> queryLogsByInstanceIdAndLogTypes(String instanceId, List<String> logTypes) {
+        if (StringUtils.isEmpty(instanceId)) {
+            log.error("When queryLogsByInstanceIdAndLogTypes input instance id is empty.");
+            throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
+        }
+        return this.aippLogMapper.getLogsByInstanceIdAndLogTypes(instanceId, logTypes);
+    }
 }

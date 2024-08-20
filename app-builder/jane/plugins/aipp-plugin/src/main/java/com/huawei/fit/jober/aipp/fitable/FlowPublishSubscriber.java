@@ -135,7 +135,7 @@ public class FlowPublishSubscriber implements FlowPublishService {
             }
             if (Objects.isNull(tmp)) {
                 throw new IllegalArgumentException(
-                        StringUtils.format("No keys in businessData.keys: []", String.join(",", keys)));
+                        StringUtils.format("No keys in businessData.keys: [{0}]", String.join(",", keys)));
             }
         }
         return Optional.ofNullable(ObjectUtils.as(tmp.get(keys.get(keys.size() - 1)), clz));

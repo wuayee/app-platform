@@ -23,6 +23,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
+
 /**
  * 为 {@link AppChatController} 提供测试
  *
@@ -104,5 +106,14 @@ public class AppChatControllerTest {
         Mockito.when(request.cookies()).thenReturn(new DefaultCookieCollection());
         Mockito.when(request.remoteAddress()).thenReturn(Address.builder().hostAddress("127.0.0.1").port(6666).build());
         Assertions.assertDoesNotThrow(() -> this.controller.waterFlowChatDebug(request, "123", body));
+    }
+
+    @Test
+    @DisplayName("测试restartChat接口")
+    void testRestartChat() {
+        Mockito.when(request.headers()).thenReturn(new DefaultMessageHeaders());
+        Mockito.when(request.cookies()).thenReturn(new DefaultCookieCollection());
+        Mockito.when(request.remoteAddress()).thenReturn(Address.builder().hostAddress("127.0.0.1").port(6666).build());
+        Assertions.assertDoesNotThrow(() -> this.controller.restartChat(request, "123", "123", new HashMap<>()));
     }
 }

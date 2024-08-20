@@ -21,6 +21,8 @@ import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.util.Map;
+
 /**
  * app对话管理接口
  *
@@ -104,6 +106,24 @@ public class AppChatController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @RequestBody CreateAppChatRequest body) {
         this.validateChatBody(body);
         return this.appChatService.chat(body, this.contextOf(httpRequest, tenantId), true);
+    }
+
+    /**
+     * 重新发起会话。
+     *
+     * @param httpRequest Http 请求体。
+     * @param currentInstanceId 需要重新发起会话的实例 ID。
+     * @param tenantId 租户 ID。
+     * @param additionalContext 重新会话需要的信息，如是否使用多轮对话等等。
+     * @return 表示会话相应体的 sse流。
+     */
+    @PostMapping(path = "/instances/{current_instance_id}", description = "重新发起会话接口")
+    public Choir<Object> restartChat(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("current_instance_id") String currentInstanceId,
+            @RequestBody Map<String, Object> additionalContext) {
+        return this.appChatService.restartChat(currentInstanceId, additionalContext,
+                this.contextOf(httpRequest, tenantId));
     }
 
     private void validateChatBody(CreateAppChatRequest body) {
