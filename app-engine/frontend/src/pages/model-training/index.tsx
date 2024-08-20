@@ -1,4 +1,4 @@
-import { Button, Flex, Progress, Space, Table } from 'antd';
+import { Button, Progress, Space, Table } from 'antd';
 import type { PaginationProps, TableColumnsType } from 'antd';
 import React, { useEffect, useState } from 'react';
 import TableTextSearch from '../../components/table-text-search';
@@ -80,24 +80,24 @@ const ModelTraining = () => {
     switch (status.toUpperCase()) {
       case 'FINISHED':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.NormalIcon />
             成功
-          </Flex>
+          </div>
         );
       case 'FAILED':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.AbnormalIcon />
             失败
-          </Flex>
+          </div>
         );
       case 'PROCESSING':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.RunningIcon />
             训练中
-          </Flex>
+          </div>
         );
       default:
         return <>未知</>;
@@ -108,31 +108,31 @@ const ModelTraining = () => {
     switch (status.toUpperCase()) {
       case 'ARCHIVED':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.NormalIcon />
             已归档
-          </Flex>
+          </div>
         );
       case 'NOT_ARCHIVED':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.UndoIcon />
             未归档
-          </Flex>
+          </div>
         );
       case 'ARCHIVING':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.RunningIcon />
             归档中
-          </Flex>
+          </div>
         );
       case 'FAILED':
         return (
-          <Flex gap={4} align='center'>
+          <div>
             <AppIcons.AbnormalIcon />
             归档失败
-          </Flex>
+          </div>
         );
       default:
         return <>未知</>;
@@ -200,12 +200,12 @@ const ModelTraining = () => {
           return '--';
         }
         return (
-          <Flex gap={4}>
+          <div>
             <Progress style={{ width: 80 }} showInfo={false} percent={val} size='small' />
             <span>
               {val}%({record?.curIter}/{record?.totalIter})
             </span>
-          </Flex>
+          </div>
         );
       },
     },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Flex, Table, Tag } from 'antd';
+import { Divider, Table, Tag } from 'antd';
 import { PluginIcons } from '@/components/icons/plugin';
 import { Icons } from '@/components/icons';
 import { IconMap, outputColumns, paramsColumns } from '../helper';
@@ -25,7 +25,7 @@ const PlugeDetail: React.FC = ({ pluginData }) => {
   return (
     <div className='engine-plugin-detail'>
       <div className='detail-header'>
-        <img src='/src/assets/images/knowledge/knowledge-base.png' />
+        <img src='./src/assets/images/knowledge/knowledge-base.png' />
         <div>
           <div style={{ display: 'flex' }}>
             <div className='detail-header-name'>{data?.name}</div>
@@ -35,12 +35,12 @@ const PlugeDetail: React.FC = ({ pluginData }) => {
             <div className='icon-display'>
               <PluginIcons.ToolIcon />
             </div>
-            <Flex className='icon-display' gap={4}>
+            <div className='icon-display' style={{ gap: '4px' }}>
               {IconMap[data?.tags?.[0]]?.icon}
               <span style={{ fontSize: 12, fontWeight: 700 }}>
                 {IconMap[data?.tags?.[0]]?.name}
               </span>
-            </Flex>
+            </div>
             <div className='header-tag'>
               {data?.tags?.map((tag: string, index: number) => <Tag key={index}>{tag}</Tag>)}
             </div>

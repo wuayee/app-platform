@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Tag } from 'antd';
+import { Tag } from 'antd';
 import { Icons } from '../../../components/icons';
 import { useHistory } from 'react-router';
 import '../styles/tool-card.scss';
@@ -54,21 +54,10 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
         {pluginData.description === 'null' ? t('noDescription') : pluginData.description}
       </div>
       {/* 卡片底部 */}
-      <div className='card-footer'>
-        {/* <Flex gap={16}>
-        <span>
-          <UserOutlined style={{ marginRight: 8 }} />
-          {pluginData.downloadCount}
-        </span>
-        <span>
-          <StarOutlined style={{ marginRight: 8 }} />
-          {pluginData.likeCount}
-        </span>
-      </Flex> */}
-      </div>
+      <div className='card-footer'></div>
       <div className='card-detail' onClick={detailClick}>
         {t('checkMore')}
-    </div>
+      </div>
     </div >
   )
 }
