@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  var document = typeof window !== 'undefined' && typeof window.document !== 'undefined' ? window.document : {};
-  var isCommonjs = typeof module !== 'undefined' && module.exports;
+  let document = typeof window !== 'undefined' && typeof window.document !== 'undefined' ? window.document : {};
+  let isCommonjs = typeof module !== 'undefined' && module.exports;
 
-  var fn = (function () {
-    var val;
+  let fn = (function () {
+    let val;
 
-    var fnMap = [
+    let fnMap = [
       [
         'requestFullscreen',
         'exitFullscreen',
@@ -53,33 +53,28 @@
         'MSFullscreenError'
       ]
     ];
-
-    var i = 0;
-    var l = fnMap.length;
-    var ret = {};
-
-    for (; i < l; i++) {
+    let ret = {};
+    for (let i = 0; i < fnMap.length; i++) {
       val = fnMap[i];
       if (val && val[1] in document) {
-        for (i = 0; i < val.length; i++) {
-          ret[fnMap[0][i]] = val[i];
+        for (let j = 0; j < val.length; j++) {
+          ret[fnMap[0][j]] = val[j];
         }
         return ret;
       }
     }
-
     return false;
   })();
 
-  var eventNameMap = {
+  let eventNameMap = {
     change: fn.fullscreenchange,
     error: fn.fullscreenerror
   };
 
-  var screenfull = {
+  let screenfull = {
     request: function (element, options) {
       return new Promise(function (resolve, reject) {
-        var onFullScreenEntered = function () {
+        let onFullScreenEntered = function () {
           this.off('change', onFullScreenEntered);
           resolve();
         }.bind(this);
@@ -88,7 +83,7 @@
 
         element = element || document.documentElement;
 
-        var returnPromise = element[fn.requestFullscreen](options);
+        let returnPromise = element[fn.requestFullscreen](options);
 
         if (returnPromise instanceof Promise) {
           returnPromise.then(onFullScreenEntered).catch(reject);
@@ -102,14 +97,14 @@
           return;
         }
 
-        var onFullScreenExit = function () {
+        let onFullScreenExit = function () {
           this.off('change', onFullScreenExit);
           resolve();
         }.bind(this);
 
         this.on('change', onFullScreenExit);
 
-        var returnPromise = document[fn.exitFullscreen]();
+        let returnPromise = document[fn.exitFullscreen]();
 
         if (returnPromise instanceof Promise) {
           returnPromise.then(onFullScreenExit).catch(reject);
@@ -126,13 +121,13 @@
       this.on('error', callback);
     },
     on: function (event, callback) {
-      var eventName = eventNameMap[event];
+      let eventName = eventNameMap[event];
       if (eventName) {
         document.addEventListener(eventName, callback, false);
       }
     },
     off: function (event, callback) {
-      var eventName = eventNameMap[event];
+      let eventName = eventNameMap[event];
       if (eventName) {
         document.removeEventListener(eventName, callback, false);
       }

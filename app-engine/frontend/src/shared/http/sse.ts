@@ -99,7 +99,7 @@ export function saveChart(tenantId: string, instanceId: string, params: any) {
   });
 }
 
-// 请求对话接口（溯源）
+// 用户自勾选请求接口
 /**
  * @param {string} tenantId - 租户ID
  * @param {string} instanceId - 实例ID

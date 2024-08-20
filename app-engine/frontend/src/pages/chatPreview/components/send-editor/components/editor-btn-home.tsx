@@ -223,8 +223,6 @@ const EditorBtnHome = (props) => {
             ) :
             (
               <div className='inner-item'>
-                {/* <NotificationIcon onClick={historyChatClick} /> */}
-                <ShareIcon onClick={() => setEditorShow(true, 'share')} />
                 { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
                 {showMulti && <div className='multi-conversation-title'>
                   <span>{t('multiTurnConversation')}</span>
