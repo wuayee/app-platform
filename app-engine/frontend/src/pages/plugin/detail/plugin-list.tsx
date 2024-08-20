@@ -6,9 +6,11 @@ import EmptyItem from '@/components/empty/empty-item';
 import DeployMent from '../deployment';
 import { getPluginDetail } from '@/shared/http/plugin';
 import { PluginCardTypeE } from '../helper';
+import { useTranslation } from 'react-i18next';
 import '../styles/plugin.scss';
 
 const PliginList = (props) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [pluginData, setPluginData] = useState([]);
   const [data, setData] = useState([]);
@@ -26,8 +28,8 @@ const PliginList = (props) => {
       {
         <div className='plugin-detail'>
           <div className='aui-header-1 '>
-            <div className='aui-title-1'>插件管理</div>
-            <Button size='small' onClick={() => setOpen(true)}>部署</Button>
+            <div className='aui-title-1'>{t('pluginManagement')}</div>
+            <Button size='small' onClick={() => setOpen(true)}>{t('deploying')}</Button>
           </div>
           <div className='plugin-detail-list'>
             <div className='list-head'>
@@ -42,7 +44,7 @@ const PliginList = (props) => {
                   <span className='name'>{data?.pluginName}</span>
                 </div>
                 <div className='desc-middle'>
-                  <span className='user'>创建人： {data?.creator}</span>
+                  <span className='user'>{t('creator')}{data?.creator}</span>
                 </div>
               </div>
             </div>
@@ -63,7 +65,7 @@ const PliginList = (props) => {
               )}
           </div>
           <Drawer
-            title='部署插件'
+            title={t('deployPlugin')}
             width={1000}
             onClose={() => setOpen(false)}
             closeIcon={false}
