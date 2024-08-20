@@ -1,8 +1,7 @@
 import { get, post, del } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
-
+const { PLUGIN_URL, AIPP_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 // 获取插件工具列表，应用于流程编排页面
 export function getPluginTools(data: {
   pageNum: number;
@@ -13,7 +12,6 @@ export function getPluginTools(data: {
   const url = `${PLUGIN_URL}/store/plugins/tools/search?${excludeTags}`;
   return get(url, { ...data });
 }
-
 // 获取插件列表，应用于插件市场
 export function getPlugins(data: {
   pageNum: number;
@@ -24,13 +22,11 @@ export function getPlugins(data: {
   const url = `${PLUGIN_URL}/store/plugins/search?${excludeTags}`;
   return get(url, { ...data });
 }
-
 // 删除插件
 export function deletePluginAPI(plugin_id: string) {
   const url = `${PLUGIN_URL}/plugins/delete/${plugin_id}`;
   return del(url);
 }
-
 export function getPluginDetail(pluginId) {
   const url = `${PLUGIN_URL}/store/plugins/${pluginId}`;
   return get(url);
@@ -44,13 +40,11 @@ export function getToolsList(params) {
   const url = `${PLUGIN_URL}/tools/search`;
   return get(url, params);
 }
-
 // 我的-工具
 export function getPluginTool(tenantId, data: { pageNum: number; pageSize: number; }) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins?excludeTags=APP&excludeTags=WATERFLOW`;
+  const url = `${AIPP_URL}/${tenantId}/store/plugins?excludeTags=APP&excludeTags=WATERFLOW`;
   return get(url, data);
 }
-
 // 我的-工具流
 export function getPluginWaterFlow(
   tenantId,
@@ -59,11 +53,10 @@ export function getPluginWaterFlow(
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/app`;
   return get(url, data);
 }
-
 // 我的-已发布（工具+工具流)
 export function getMyPlugin(tenantId, data, type = '') {
   let str = type !== 'modal' ? 'excludeTags=APP' : 'excludeTags=APP&excludeTags=WATERFLOW';
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins?${str}`;
+  const url = `${AIPP_URL}/${tenantId}/store/plugins?${str}`;
   return get(url, data);
 }
 // 解析工具插件包内容
@@ -78,7 +71,6 @@ export function getPluginPackageInfo(file) {
     },
   });
 }
-
 // 确认上传插件
 export function uploadPlugin(param, toolsName) {
   const url = `${PLUGIN_URL}/plugins/save?toolNames=${toolsName}`;
@@ -88,4 +80,14 @@ export function uploadPlugin(param, toolsName) {
     },
   });
 }
+// 获取部署插件列表
+export function getDeployTool(status) {
+  const url = `${PLUGIN_URL}/plugins/by-status/${status}`;
+  return get(url);
+}
 
+// 部署部署插件列表
+export function setDeployTool(data) {
+  const url = `${PLUGIN_URL}/plugins/deploy`;
+  return post(url, data);
+}
