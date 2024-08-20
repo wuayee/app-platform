@@ -72,3 +72,16 @@ export enum PluginCardTypeE {
   MARKET = 'market',
   MY = 'my',
 }
+
+export enum PluginStatusTypeE {
+  DEPLOYED = 'deployed',
+  DEPLOYING = 'deploying',
+  UNDEPLOYED = 'undeployed',
+  DEPLOYMENT_FAILED = 'deployment_failed'
+}
+export enum PluginCnType {
+  DEPLOYED = '已部署',
+  DEPLOYING = '部署中',
+  UNDEPLOYED = '未部署',
+  DEPLOYMENT_FAILED = '部署失败'
+}

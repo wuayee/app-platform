@@ -3,14 +3,13 @@ import { Tag, Button, message, Drawer } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
-import { IconMap, PluginCardTypeE } from '@/pages/plugin/helper';
+import { IconMap, PluginCardTypeE, PluginStatusTypeE, PluginCnType } from '@/pages/plugin/helper';
 import { deletePluginAPI } from '../../shared/http/plugin';
 import Detail from '../../pages/plugin/detail/detail';
 import { useTranslation } from 'react-i18next';
 import './style.scss';
 
-const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
-  const { t } = useTranslation();
+const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isShow, setIsShow] = useState(false);
   const navigate = useHistory().push;
@@ -28,9 +27,9 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
     <div className='page-plugin-card' onClick={pluginCardClick}>
       <div className='plugin-card-header'>
         <img src='./src/assets/images/knowledge/knowledge-base.png' />
-        <div>
-          <div style={{ display: 'flex' }}>
-            <div style={{ fontSize: 20, marginBottom: 8 }}>
+        <div className='header-content'>
+          <div className='header-name'>
+            <div className='text' title={pluginData?.pluginToolDataList === null ? pluginData.pluginName : pluginData?.name}>
               {pluginData?.pluginToolDataList === null ? pluginData.pluginName : pluginData?.name}
             </div>
           </div>
@@ -111,6 +110,10 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
           </div>
         )}
       </div>
+      {/* 卡片状态 */}
+      { pluginData.deployStatus && <span className={['plugin-tag', PluginStatusTypeE[pluginData.deployStatus]].join(' ')}>
+        {PluginCnType[pluginData.deployStatus]}
+      </span>}
       <Drawer
         width={800}
         open={isShow}
