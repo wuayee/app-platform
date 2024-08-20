@@ -160,7 +160,11 @@ const AddKnowledge = (props) => {
   }
   // 创建知识库
   const createClick = ({ key }) => {
-    navigate(`/knowledge-base/create`);
+    if (window.self !== window.top) {
+      window.parent.location.href = `${window.parent.location.origin}/#/model-knowledge/create`;
+    } else {
+      navigate(`/knowledge-base/create`);
+    }
   }
   const rowSelection = {
     selectedRowKeys,
@@ -234,7 +238,7 @@ const AddKnowledge = (props) => {
             onSearch={onSearch}
           />
           <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
-            <Button type='primary' icon={<DownOutlined />}>{t('create')}}</Button>
+            <Button type='primary' icon={<DownOutlined />}>{t('create')}</Button>
           </Dropdown>
         </div>
         <div className='knowledge-check-info'>
