@@ -23,7 +23,10 @@ public class PluginDeployRetCodeTest {
         "NO_PLUGIN_FOUND_ERROR, 130901003",
         "FILE_MISSING_ERROR, 130901004",
         "PLUGIN_UNIQUE_CHECK_ERROR, 130901005",
-        "JSON_PARSE_ERROR, 130901006"
+        "JSON_PARSE_ERROR, 130901006",
+        "PLUGIN_NOT_EXISTS", "130901007",
+        "PLUGIN_COMPLETENESS_CHECK_ERROR", "130901008",
+        "FIELD_ERROR_IN_SCHEMA", "130901009"
     })
     @DisplayName("测试插件部署错误码")
     void testPluginDeployRetCode(PluginDeployRetCode code, int expectCode) {
