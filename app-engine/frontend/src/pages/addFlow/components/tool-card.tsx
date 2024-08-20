@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tag } from 'antd';
-import { Icons } from '../../../components/icons';
+import { Icons } from '@/components/icons';
 import { useHistory } from 'react-router';
+import { useAppSelector } from '@/store/hook';
+import { getAppInfoByVersion } from '@/shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 import '../styles/tool-card.scss';
-import { useAppSelector } from '../../../store/hook';
-import { getAppInfoByVersion } from '../../../shared/http/aipp';
-import { useTranslation } from "react-i18next";
 
 const ToolCard = ({ pluginData, tenantId }: any) => {
   const { t } = useTranslation();

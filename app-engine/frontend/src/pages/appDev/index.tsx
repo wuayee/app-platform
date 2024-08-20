@@ -12,9 +12,8 @@ import { useAppDispatch } from '@/store/hook';
 import { setCollectionValue } from '@/store/collection/collection';
 import { Message } from '@/shared/utils/message';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
+import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
-import { read } from 'fs';
-import { useTranslation } from "react-i18next";
 
 const AppDev: React.FC = () => {
   const { t } = useTranslation();

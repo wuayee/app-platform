@@ -1,4 +1,5 @@
 import screenfull from '@/shared/screenfull/screenfull';
+import i18n from '@/locale/i18n';
 
 // 初始化echarts图表
 export const getOptions = (props, seriesData, type, chartRef) => {
@@ -149,15 +150,15 @@ export const chartTypeMap: any = {
 }
 export const items: any = [
   {
-    label: '推荐',
+    label: i18n.t('recommends'),
     key: 'normal',
   },
   {
-    label: '柱状图',
+    label: i18n.t('barchart'),
     key: 'BAR',
   },
   {
-    label: '折线图',
+    label: i18n.t('lineChart'),
     key: 'LINE',
   },
 ]

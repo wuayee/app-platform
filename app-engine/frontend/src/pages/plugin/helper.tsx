@@ -68,7 +68,7 @@ export const outputColumns = [
   },
 ];
 
-export enum PluginCardTypeE{
-  MARKET='market',
-  MY='my',
+export enum PluginCardTypeE {
+  MARKET = 'market',
+  MY = 'my',
 }

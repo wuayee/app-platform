@@ -2,15 +2,17 @@
 import React, { useEffect, useState, useImperativeHandle, useRef } from 'react';
 import { Input, Modal, Tooltip, Button, Empty } from 'antd';
 import { UndoOutlined, PlusOutlined } from '@ant-design/icons';
-import './styles/flow-modal.scss';
 import { listData } from './common/mock';
+import { useTranslation } from 'react-i18next';
+import './styles/flow-modal.scss';
 
 const { Search } = Input;
 const FlowModal = (props) => {
+  const { t } = useTranslation();
   const { modalRef } = props;
-  const [ isModalOpen, setIsModalOpen] = useState(false);
-  const [ searchList, setSearchList] = useState([]);
-  const [ selectedNodes, setSelectedNodes] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchList, setSearchList] = useState([]);
+  const [selectedNodes, setSelectedNodes] = useState([]);
   const listRef = useRef(null);
   useEffect(() => {
     setSearchList(listData);
@@ -48,47 +50,47 @@ const FlowModal = (props) => {
     };
   }
   // 刷新
-  const refreshList = () => {}
+  const refreshList = () => { }
 
   // 新建工作流
-  const addFlow = () => {}
+  const addFlow = () => { }
 
   return <>{(
-    <Modal 
-      title='工具流配置'
-      width='880px' 
+    <Modal
+      title={t('toolFlowConfiguration')}
+      width='880px'
       maskClosable={false}
-      centered 
-      open={isModalOpen} 
-      onOk={handleOk} 
+      centered
+      open={isModalOpen}
+      onOk={handleOk}
       onCancel={handleCancel}>
       <div className='search-box'>
-        <Search 
-          placeholder='输入名称搜索' 
-          allowClear={false} 
-          onSearch={onSearch} 
-          onChange={ e => { onSearch(e.target.value) }}/>
-          <Button type='primary' shape='circle' size='small' icon={ <UndoOutlined />} onClick={refreshList} className='add-btn'/>
-          <Button type='primary' size='small' icon={ <PlusOutlined /> } onClick={addFlow} className='add-btn'>
-            <span className='add-text'>新建</span>
-          </Button>
+        <Search
+          placeholder={t('plsEnter')}
+          allowClear={false}
+          onSearch={onSearch}
+          onChange={e => { onSearch(e.target.value) }} />
+        <Button type='primary' shape='circle' size='small' icon={<UndoOutlined />} onClick={refreshList} className='add-btn' />
+        <Button type='primary' size='small' icon={<PlusOutlined />} onClick={addFlow} className='add-btn'>
+          <span className='add-text'>{t('greenfield')}</span>
+        </Button>
       </div>
       <div className='search-list'>
         {
           searchList.length ? searchList.map((item, index) => {
             return (
-              <div 
-                className={['node', selectedNodes.includes(item.name) ? 'selected-node' : null ].join(' ')} 
+              <div
+                className={['node', selectedNodes.includes(item.name) ? 'selected-node' : null].join(' ')}
                 key={index}
                 onClick={() => changeSelect(item)}
-                >
-                <p className='node-name'>{ item.name }</p>
-                <Tooltip title={item.description} destroyTooltipOnHide={ true }>
-                  <p className='node-description'>{ item.description }</p>
+              >
+                <p className='node-name'>{item.name}</p>
+                <Tooltip title={item.description} destroyTooltipOnHide={true}>
+                  <p className='node-description'>{item.description}</p>
                 </Tooltip>
               </div>
             )
-          }) : <Empty description='暂无数据' />
+          }) : <Empty description={t('noData')} />
         }
       </div>
     </Modal>

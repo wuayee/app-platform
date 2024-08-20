@@ -4,14 +4,16 @@ import { Dropdown } from 'antd';
 import screenfull from '@/shared/screenfull/screenfull';
 import { chartTypeMap, items, getOptions } from '../utils/chart-graphs';
 import { DownOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import * as echarts from 'echarts';
 
 // 图表组件
 const ChartGraphs = (props) => {
+  const { t } = useTranslation();
   const { chartPieData, chartData, chartType } = props.chatItem;
   const chartRef = useRef(null);
   const myChart = useRef(null);
-  const [chartTypeName, setChartTypeName] = useState('推荐');
+  const [chartTypeName, setChartTypeName] = useState(t('recommends'));
   useEffect(() => {
     initChart();
     screenfull.on('change', () => {

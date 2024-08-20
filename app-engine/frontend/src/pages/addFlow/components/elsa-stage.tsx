@@ -1,5 +1,6 @@
 
 import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
+import { Button, Alert } from 'antd';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import AddKnowledge from '../../configForm/configUi/components/add-knowledge';
@@ -9,20 +10,18 @@ import { debounce } from '@shared/utils/common';
 import { updateFlowInfo } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
-import { useAppDispatch } from '../../../store/hook';
-import { setAppInfo } from '../../../store/appInfo/appInfo';
+import { useAppDispatch } from '@/store/hook';
+import { setAppInfo } from '@/store/appInfo/appInfo';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
-import { Button, Alert } from "antd";
-import i18n from '../../../locale/i18n';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const Stage = (props) => {
   const { t } = useTranslation();
   const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
-  const [ showModal, setShowModal ] = useState(false);
-  const [ taskName, setTaskName ] = useState('');
-  const [ selectModal, setSelectModal ] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [taskName, setTaskName] = useState('');
+  const [selectModal, setSelectModal] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo, setShowTime } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
@@ -74,7 +73,7 @@ const Stage = (props) => {
         setShowModal(true);
       })
     })
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin',version:''}).then(res => {
+    getAddFlowConfig(tenantId, { pageNum: 1, pageSize: 20, tag: 'Builtin', version: '' }).then(res => {
       if (res.code === 0) {
         setDragData(res.data);
       }
@@ -191,14 +190,14 @@ const Stage = (props) => {
     />
     {showFlowChangeWarning && <Alert
       className='flow-change-warning-content'
-      message=""
+      message=''
       description={t('flowChangeWarningContent')}
-      type="info"
+      type='info'
       onClose={handleCloseFlowChangeWarningAlert}
       action={
-        <Button size="small" type="link" onClick={handleClickNoMoreTips}>
+        <Button size='small' type='link' onClick={handleClickNoMoreTips}>
           {t('noMoreTips')}
-          </Button>
+        </Button>
       }
       closable
     />}

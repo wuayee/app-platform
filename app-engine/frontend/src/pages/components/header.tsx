@@ -6,13 +6,14 @@ import PublishModal from './publish-modal';
 import EditModal from './edit-modal';
 import TestStatus from './test-status';
 import TestModal from './test-modal';
+import { useAppDispatch } from '@/store/hook';
+import { updateChatId } from '@/shared/utils/common';
+import { setChatId, setChatList } from '@/store/chatStore/chatStore';
+import { useTranslation } from 'react-i18next';
 import './styles/header.scss'
-import { Message } from "@/shared/utils/message";
-import { useAppDispatch } from "@/store/hook";
-import { updateChatId } from "../../shared/utils/common";
-import { setChatId, setChatList } from "@/store/chatStore/chatStore";
 
 const ChoreographyHead = (props) => {
+  const { t } = useTranslation();
   const {
     showElsa, appInfo,
     updateAippCallBack,
@@ -76,26 +77,26 @@ const ChoreographyHead = (props) => {
         <LeftArrowIcon className='back-icon' onClick={backClick} />
         {appInfo?.attributes?.icon ?
           <img src={appInfo.attributes?.icon} onClick={backClick} /> :
-          <img src='/src/assets/images/knowledge/knowledge-base.png' onClick={backClick} />
+          <img src='./src/assets/images/knowledge/knowledge-base.png' onClick={backClick} />
         }
         <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
-        <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={handleEditClick} />
+        <img className='edit-icon' src='./src/assets/images/ai/edit.png' onClick={handleEditClick} />
         {
           (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
             (
               <div className='status-tag'>
                 <img src='./src/assets/images/ai/complate.png' />
-                <span>已发布</span>
+                <span>{t('published')}</span>
               </div>
             ) :
             (
               <div className='status-tag'>
                 <img src='./src/assets/images/ai/publish.png' />
-                <span>未发布</span>
+                <span>{t('unPublished')}</span>
               </div>
             )
         }
-        {showTime && <span>自动保存：{currentTime}</span>}
+        {showTime && <span>{t('autoSave')}：{currentTime}</span>}
         {showElsa && <TestStatus testTime={testTime} testStatus={testStatus} />}
       </div>
       <div className='header-grid'>
@@ -103,16 +104,16 @@ const ChoreographyHead = (props) => {
           (appInfo.attributes?.latest_version || appInfo.state === 'active') &&
           <div className='header-grid-btn'>
             <span className='history' onClick={versionDetail}>
-              <img src='/src/assets/images/ai/time.png' />
+              <img src='./src/assets/images/ai/time.png' />
             </span>
             <span className='history robot' onClick={chatClick}>
-              <img src='/src/assets/images/ai/robot.png' />
-              <span>去聊天</span>
+              <img src='./src/assets/images/ai/robot.png' />
+              <span>{t('toTalk')}</span>
             </span>
           </div>
         }
-        {showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>调试</span>}
-        <span className='header-btn' onClick={handleUploadApp}><UploadIcon />发布</span>
+        {showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>{t('debug')}</span>}
+        <span className='header-btn' onClick={handleUploadApp}><UploadIcon />{t('publish')}</span>
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType='app' />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack} />

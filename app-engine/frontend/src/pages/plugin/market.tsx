@@ -19,9 +19,6 @@ const MarketItems = () => {
   const [isOpenPlugin, setIsOpenPlugin] = useState(0);
 
   useEffect(() => {
-    console.log(pluginData);
-  }, [pluginData]);
-  useEffect(() => {
     getPluginList();
   }, [selectedSource, name, pageNum, pageSize]);
   const getPluginList = async () => {
@@ -29,17 +26,17 @@ const MarketItems = () => {
     params =
       selectedSource === 'APP'
         ? {
-            name: '',
-            pageNum: pageNum,
-            pageSize,
-            excludeTags: selectedSource,
-          }
+          name,
+          pageNum: pageNum,
+          pageSize,
+          excludeTags: selectedSource,
+        }
         : {
-            name: '',
-            pageNum: pageNum,
-            pageSize,
-            includeTags: selectedSource,
-          };
+          name,
+          pageNum: pageNum,
+          pageSize,
+          includeTags: selectedSource,
+        };
     getPlugins(params).then(({ data, total }) => {
       setTotal(total);
       setPluginData(data);
@@ -115,9 +112,9 @@ const MarketItems = () => {
         onChange={(key: string) => setSelectedSource(key)}
         style={{ width: '100%', textAlign: 'center' }}
         centered={true}
-        // tabBarExtraContent={tabSearch}
+      // tabBarExtraContent={tabSearch}
       />
-      {pluginData.length > 0 ? (
+      {pluginData && pluginData.length > 0 ? (
         <>
           <div
             style={{
@@ -144,10 +141,10 @@ const MarketItems = () => {
           </div>
         </>
       ) : (
-        <div style={{ paddingTop: 100, height: '100%' }}>
-          <EmptyItem />
-        </div>
-      )}
+          <div style={{ paddingTop: 100, height: '100%' }}>
+            <EmptyItem />
+          </div>
+        )}
     </div>
   );
 };

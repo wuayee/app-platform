@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
+import { useParams } from 'react-router-dom';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
@@ -12,7 +12,7 @@ import { Message } from '@shared/utils/message';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { getUser } from '../helper';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 const AippIndex = () => {
   const { t } = useTranslation();

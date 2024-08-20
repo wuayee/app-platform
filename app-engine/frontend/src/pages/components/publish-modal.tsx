@@ -10,10 +10,12 @@ import { versionStringCompare } from '@shared/utils/common';
 import { updateChatId } from '@/shared/utils/common';
 import { useAppDispatch } from '@/store/hook';
 import { setChatId, setChatList } from '@/store/chatStore/chatStore';
+import { useTranslation } from 'react-i18next';
 import './styles/publish-modal.scss';
 
 const { TextArea } = Input;
 const PublishModal = (props) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
@@ -24,9 +26,9 @@ const PublishModal = (props) => {
   const navigate = useHistory().push;
 
   const tagOptions = [
-    { value: '编程开发', label: '编程开发' },
-    { value: '决策分析', label: '决策分析' },
-    { value: '写作助手', label: '写作助手' },
+    { value: t('development'), label: t('development') },
+    { value: t('decisionAnalysis'), label: t('decisionAnalysis') },
+    { value: t('writingAssistant'), label: t('writingAssistant') }
   ];
   const showModal = () => {
     form.setFieldsValue({
@@ -47,7 +49,7 @@ const PublishModal = (props) => {
   async function publishApp() {
     const formParams = await form.validateFields();
     if (versionStringCompare(formParams.version, appInfo.version) === -1) {
-      Message({ type: 'warning', content: `当前版本为${appInfo.version} 发布版本不能低于当前版本` });
+      Message({ type: 'warning', content: `${t('currentVersion')}${appInfo.version} ${t('cannotBeEarlier')}` });
       return
     }
     setLoading(true);
@@ -59,7 +61,7 @@ const PublishModal = (props) => {
       params.publishedUpdateLog = editorRef.current.handleChange();
       const res = await appPublish(tenantId, appId, params);
       if (res.code === 0) {
-        Message({ type: 'success', content: `发布应用成功` });
+        Message({ type: 'success', content: t('successReleased') });
         setIsModalOpen(false);
         updateChatId(null, appId);
         dispatch(setChatId(null));
@@ -74,7 +76,7 @@ const PublishModal = (props) => {
   async function publishWaterFlow() {
     const formParams = await form.validateFields();
     if (versionStringCompare(formParams.version, appInfo.version) === -1) {
-      Message({ type: 'warning', content: `当前版本为${appInfo.version} 发布版本不能低于当前版本` });
+      Message({ type: 'warning', content: `${t('currentVersion')}${appInfo.version} ${t('cannotBeEarlier')}` });
       setLoading(false);
       return
     }
@@ -84,7 +86,7 @@ const PublishModal = (props) => {
     try {
       const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
-        Message({ type: 'success', content: `发布工具流成功` });
+        Message({ type: 'success', content: t('successReleased2') });
         sessionStorage.setItem('uniqueName', res.data.tool_unique_name);
         const appEngineId = sessionStorage.getItem('appId');
         if (appEngineId) {
@@ -119,7 +121,7 @@ const PublishModal = (props) => {
   })
   return <>{(
     <Modal
-      title={publishType === 'app' ? '发布应用' : '发布工具流'}
+      title={publishType === 'app' ? t('releaseApplication') : t('releaseToolFlow')}
       width={700}
       maskClosable={false}
       destroyOnClose
@@ -129,10 +131,10 @@ const PublishModal = (props) => {
       onCancel={handleCancel}
       footer={[
         <Button key='back' onClick={handleCancel}>
-          取消
+          {t('cancel')}
         </Button>,
         <Button key='submit' type='primary' loading={loading} onClick={publishClick}>
-          确定
+          {t('ok')}
         </Button>
       ]}>
       <div className='search-list'>
@@ -141,13 +143,13 @@ const PublishModal = (props) => {
             (
               <div className="publish-tag">
                 <img src='./src/assets/images/ai/info.png' />
-                <span>新版本将覆盖历史版本，并不可回退</span>
+                <span>{t('releaseTip')}</span>
               </div>
             ) :
             (
               <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none' }}>
                 <img src='./src/assets/images/ai/info.png' />
-                <span>请调试应用，确认无误后发布</span>
+                <span>{t('releaseTip2')}</span>
               </div>
             )
         }
@@ -159,33 +161,33 @@ const PublishModal = (props) => {
         > {
             publishType === 'app' &&
             <Form.Item
-              label='分类'
+              label={t('classify')}
               name='app_type'
-              rules={[{ required: true, message: '不能为空' }]}
+              rules={[{ required: true, message: t('cannotBeEmpty') }]}
             >
               <Select options={tagOptions} />
             </Form.Item>
           }
 
           <Form.Item
-            label='版本名称'
+            label={t('versionName')}
             name='version'
             rules={[
-              { required: true, message: '请输入版本名称' },
-              { pattern: /^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }
+              { required: true, message: t('plsEnter') },
+              { pattern: /^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: t('versionTip') }
             ]}
           >
             <Input showCount maxLength={8} />
           </Form.Item>
           <Form.Item
-            label='版本描述'
+            label={t('description')}
             name='description'
           >
-            <TextArea rows={4} placeholder='请输入版本描述' showCount maxLength={300} />
+            <TextArea rows={4} placeholder={t('plsEnter')} showCount maxLength={300} />
           </Form.Item>
           {
             <Form.Item
-              label='版本公告'
+              label={t('announcements')}
               name='updateLog'
             >
               <TextEditor ref={editorRef} />

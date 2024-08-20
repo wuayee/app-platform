@@ -83,7 +83,7 @@ const SendEditor = (props) => {
   // 发送消息
   function sendMessage() {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     let chatContent = document.getElementById('ctrl-promet').innerText;
@@ -132,7 +132,7 @@ const SendEditor = (props) => {
   // 点击语音按钮
   const onRecord = async () => {
     if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      Message({ type: 'warning', content: t('tryLater') });
       return;
     }
     if (!recording.current) {
@@ -208,8 +208,8 @@ const SendEditor = (props) => {
     <div className='send-editor-container' onClick={handleEditorClick}>
       { chatRunning &&
         <div className='editor-stop' onClick={onStop}>
-          <img src='/src/assets/images/ai/stop.png' alt='' />
-          <span>停止响应</span>
+          <img src='./src/assets/images/ai/stop.png' alt='' />
+          <span>{t('stopResponding')}</span>
         </div>
       }
       <Recommends onSend={onSend} />

@@ -6,8 +6,8 @@ import { Icons } from '../icons';
 import { IconMap, PluginCardTypeE } from '@/pages/plugin/helper';
 import { deletePluginAPI } from '../../shared/http/plugin';
 import Detail from '../../pages/plugin/detail/detail';
+import { useTranslation } from 'react-i18next';
 import './style.scss';
-import { useTranslation } from "react-i18next";
 
 const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
   const { t } = useTranslation();
@@ -98,11 +98,11 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId }: any) => {
                   .then((res) => {
                     if (res.code === 0) {
                       getPluginList();
-                      message.success(`${t('deleteSuccess')}！`);
+                      message.success(t('deleteSuccess'));
                     }
                   })
                   .catch(() => {
-                    message.error(`${t('deleteFail')}！`);
+                    message.error(t('deleteFail'));
                   });
               }}
             >

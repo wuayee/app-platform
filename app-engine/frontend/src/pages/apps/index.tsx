@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Input, Tabs } from 'antd';
-import { Icons } from '../../components/icons';
-import { queryAppsApi } from '../../shared/http/apps.js';
-import AppCard from '../../components/appCard';
-import './index.scoped.scss';
-import { debounce } from '../../shared/utils/common';
-import { HashRouter, Route, useHistory } from 'react-router-dom';
-import { deleteAppApi, getUserCollection, getUserCollectionNoDesc } from '../../shared/http/appDev';
-import { setCollectionValue } from '../../store/collection/collection';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
+import React, { useState, useEffect } from 'react';
+import { Input } from 'antd';
+import { Icons } from '@/components/icons';
+import { queryAppsApi } from '@/shared/http/apps.js';
+import AppCard from '@/components/appCard';
+import { debounce } from '@/shared/utils/common';
+import { useHistory } from 'react-router-dom';
+import { deleteAppApi, getUserCollectionNoDesc } from '@/shared/http/appDev';
+import { setCollectionValue } from '@/store/collection/collection';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
+import './index.scoped.scss';
 
 const Apps: React.FC = () => {
   const tenantId = TENANT_ID;

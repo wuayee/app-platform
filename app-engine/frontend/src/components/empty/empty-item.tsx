@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icons } from '../icons';
-import i18n from "../../locale/i18n";
+import i18n from '../../locale/i18n';
 
 const EmptyItem = ({ text = i18n.t('noData') }) => {
   return (

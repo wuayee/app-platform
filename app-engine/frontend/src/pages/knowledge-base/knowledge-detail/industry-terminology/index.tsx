@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from 'antd';
-import { Button, Table } from 'antd';
-import type { TableProps } from 'antd';
+import { Button } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
-import BreadcrumbSelf from '../../../../components/breadcrumb';
-import { KnowledgeIcons } from '../../../../components/icons';
-import { getKnowledgeTableById } from '../../../../shared/http/knowledge';
+import BreadcrumbSelf from '@/components/breadcrumb';
+import { KnowledgeIcons } from '@/components/icons';
+import { getKnowledgeTableById } from '@/shared/http/knowledge';
+import KnowLedgeTable from '@/components/knowledge-detail-table/table-table';
+import { ImportTable } from '@/components/knowledge-detail-table/import-table';
 import './index.scoped.scss';
-import KnowLedgeTable from '../../../../components/knowledge-detail-table/table-table';
-import { ImportTable } from '../../../../components/knowledge-detail-table/import-table';
-
 
 const IndustryTerminology = () => {
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
