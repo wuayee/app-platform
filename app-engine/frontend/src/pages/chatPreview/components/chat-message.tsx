@@ -8,9 +8,11 @@ import { queryFeedback } from '@shared/http/chat';
 import { deepClone, scrollBottom } from '../utils/chat-process';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList } from '@/store/chatStore/chatStore';
+import { useTranslation } from 'react-i18next';
 import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
@@ -72,7 +74,7 @@ const ChatMessaga = (props) => {
 
   // 澄清表单拒绝澄清回调
   async function handleRejectClar() {
-    const params = { content: '不好意思，请明确条件后重新提问' };
+    const params = { content: t('clarifyingConditions') };
     chatRunningStop(params);
   }
   return (

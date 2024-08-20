@@ -5,8 +5,8 @@ import { useHistory } from 'react-router';
 import { Icons } from '../icons';
 import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 import './style.scss';
-import { useTranslation } from "react-i18next";
 
 const WorkflowCard = ({ pluginData }: any) => {
   const { t } = useTranslation();
@@ -64,7 +64,7 @@ const WorkflowCard = ({ pluginData }: any) => {
             <span>
               {
                 (pluginData?.attributes?.latest_version || pluginData.state === 'active') ?
-                  <Tag bordered={false} color="processing" className='footer-type'>{t('published')}</Tag> :
+                  <Tag bordered={false} color='processing' className='footer-type'>{t('published')}</Tag> :
                   <Tag bordered={false} className='footer-type'>{t('draft')}</Tag>
               }
             </span>
