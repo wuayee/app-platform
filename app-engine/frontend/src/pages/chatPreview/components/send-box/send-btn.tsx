@@ -4,10 +4,12 @@ import { toClipboard } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
 import { CopyIcon, PlayIcon, StopIcon } from '@/assets/icon';
 import { textToVoice } from '@shared/http/aipp';
+import { useTranslation } from 'react-i18next';
 import './styles/send-btn.scss'
 
 
 const SoundBtn = forwardRef((props, ref) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(props.active || false);
   const [url, setUrl] = useState(props.url || '');
   useImperativeHandle(ref, () => {
@@ -22,7 +24,7 @@ const SoundBtn = forwardRef((props, ref) => {
     setActive(!active)
   }
   return <>
-    <Tooltip title={active ? '停止' : '播放'} color='white' overlayInnerStyle={{ color: '#212121' }}>
+    <Tooltip title={active ? t('stopped') : t('playback')} color='white' overlayInnerStyle={{ color: '#212121' }}>
       <div onClick={props.handleClick || defaultHandleClick}>
         {active ? <StopIcon /> : <PlayIcon className='hover-blue-icon' />}
       </div>
@@ -33,6 +35,7 @@ const SoundBtn = forwardRef((props, ref) => {
 
 
 const SendBtn = (props) => {
+  const { t } = useTranslation();
   const { content, sendType, isRecieve } = props;
   const { setShareClass } = useContext(ChatContext);
   const soundBtnRef = useRef(null);
@@ -54,7 +57,6 @@ const SendBtn = (props) => {
   let audioIndex = 0
   // 一段音频数据播放结束时调用
   function audioEnded() {
-    console.log('结束了');
     if (audioIndex < base64Arr.current.length) {
       audioElement.src = `data:audio/wav;base64,${base64Arr.current[audioIndex]}`
       audioElement.play()
@@ -168,7 +170,7 @@ const SendBtn = (props) => {
           </div>
         </Tooltip> */}
         {sendType === 'text' &&
-          <Tooltip title='复制' color='white' overlayInnerStyle={{ color: '#212121' }}>
+          <Tooltip title={t('copy')} color='white' overlayInnerStyle={{ color: '#212121' }}>
             <div onClick={handleCopyQuestion}>
               <CopyIcon className='hover-blue-icon' />
             </div>
