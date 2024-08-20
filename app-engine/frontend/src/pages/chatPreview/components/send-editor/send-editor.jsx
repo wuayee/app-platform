@@ -49,6 +49,7 @@ const SendEditor = (props) => {
   const [selectDom, setSelectDom] = useState();
   const [showSelect, setShowSelect] = useState(false);
   const [showClear, setShowClear] = useState(false);
+  const [editorHeight, setEditorHeight] = useState(250);
   const [openHistory, setOpenHistory] = useState(false);
   const [positionConfig, setPositionConfig] = useState({});
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
@@ -195,7 +196,25 @@ const SendEditor = (props) => {
     } else {
       dispatch(setUseMemory(false));
     }
-  }, [showMulti])
+  }, [showMulti]);
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.target === editorRef.current) {
+          const height = entry.contentRect.height;
+          setEditorHeight(height + 225);
+        }
+      }
+    });
+    if (editorRef.current) {
+      resizeObserver.observe(editorRef.current);
+    }
+    return () => {
+      if (editorRef.current) {
+        resizeObserver.unobserve(editorRef.current);
+      }
+    }
+  }, []);
   function plays() {
     let audio = document.querySelector('#audio')
     audio.play()
@@ -205,7 +224,7 @@ const SendEditor = (props) => {
     audio.pause()
   }
   return <>{(
-    <div className='send-editor-container' onClick={handleEditorClick}>
+    <div className='send-editor-container' style={{ height: `${editorHeight}px` }} onClick={handleEditorClick}>
       { chatRunning &&
         <div className='editor-stop' onClick={onStop}>
           <img src='./src/assets/images/ai/stop.png' alt='' />

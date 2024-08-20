@@ -156,7 +156,7 @@ const Stage = (props) => {
     let nodeMetaData = JSON.parse(e.dataTransfer.getData('itemMetaData'));
     switch (nodeTab) {
       case 'basic':
-        window.agent.createNode(nodeType, e, { uniqueName: nodeMetaData?.uniqueName });
+        window.agent.createNode(nodeType, e, nodeMetaData);
         break;
       case 'tool':
         window.agent.createNode(nodeType, e, nodeMetaData);
