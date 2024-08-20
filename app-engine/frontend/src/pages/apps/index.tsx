@@ -19,14 +19,14 @@ const Apps: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useHistory().push;
   const [appData, setAppData] = useState<any[]>([]);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
   const [search, setSearch] = useState('');
 
   async function queryApps() {
     const params = {
-      pageNum:page,
+      pageNum: page,
       pageSize,
       includeTags: 'APP',
       name: search
@@ -40,17 +40,17 @@ const Apps: React.FC = () => {
   }
 
   const paginationChange = (curPage: number, curPageSize: number) => {
-    if(page!==curPage) {
+    if (page !== curPage) {
       setPage(curPage);
     }
-    if(pageSize!=curPageSize) {
+    if (pageSize != curPageSize) {
       setPageSize(curPageSize);
     }
   }
 
   // 搜索
   function onSearchValueChange(newSearchVal: string) {
-    if(newSearchVal !== search) {
+    if (newSearchVal !== search) {
       setPage(1);
       setSearch(newSearchVal);
     }
@@ -59,7 +59,7 @@ const Apps: React.FC = () => {
 
   // 点击卡片
   function clickCard(item: any, e: any) {
-    let id = item.runnables?.APP?.appId ||  '';
+    let id = item.runnables?.APP?.appId || '';
     navigate(`/app/${tenantId}/chat/${id}`);
   }
 
@@ -93,16 +93,12 @@ const Apps: React.FC = () => {
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
     const res = await getUserCollectionNoDesc(getLoaclUser());
-    const collectMap = (res?.data ?? []).reduce((prev: any, next: any)=> {
-        prev[next.appId] = true;
+    const collectMap = (res?.data ?? []).reduce((prev: any, next: any) => {
+      prev[next.appId] = true;
       return prev
     }, {})
     dispatch(setCollectionValue(collectMap))
   }
-
-  // useEffect(()=> {
-  //   getUserCollectionList()
-  // }, [])
 
   useEffect(() => {
     queryApps();
@@ -123,7 +119,7 @@ const Apps: React.FC = () => {
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        { appData.length > 0 ? 
+        {appData.length > 0 ?
           <div className='card_list'>
             {appData.map((item: any) => (
               <div
@@ -134,17 +130,17 @@ const Apps: React.FC = () => {
                 <AppCard cardInfo={item} clickMore={clickMore} showOptions={false} />
               </div>
             ))}
-          </div> : 
+          </div> :
           <div className='empty-box'>
             <Empty />
           </div>
         }
-        
+
         <div className='page_box'>
           <Pagination
             current={page}
             onChange={paginationChange}
-            pageSizeOptions={[8,16,32,60]}
+            pageSizeOptions={[8, 16, 32, 60]}
             total={total}
             pageSize={pageSize}
           />

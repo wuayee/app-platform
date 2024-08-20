@@ -13,17 +13,17 @@ const IfIcon = (props) => <Icon component={() => (<BaseIcons.If />)} {...props} 
 const FitIcon = (props) => <Icon component={() => (<BaseIcons.Fit />)} {...props} />;
 const DataRetrievalIcon = (props) => <Icon component={() => (<BaseIcons.DataRetrieval />)} {...props} />;
 const UploadIcon = (props) => <UploadOutlined {...props} />;
-const ConfigFlowIcon = (props) => <Icon component={() => (<BaseIcons.ConfigFlow/>)} {...props} />;
-const DownLoadIcon = (props) => <Icon component={() => (<BaseIcons.DownLoad/>)} {...props} />;
-const FullScreenIcon = (props) => <Icon component={() => (<BaseIcons.FullScreen/>)} {...props} />;
-const LinkIcon = (props) => <Icon component={() => (<BaseIcons.Link/>)} {...props} />;
-const AtIcon = (props) => <Icon component={() => (<BaseIcons.At/>)} {...props} />;
-const PanleIcon = (props) => <Icon component={() => (<BaseIcons.Panle/>)} {...props} />;
-const PanleCloseIcon = (props) => <Icon component={() => (<BaseIcons.PanleClose/>)} {...props} />;
-const AppBoxIcon = (props) => <Icon component={() => (<BaseIcons.AppBox/>)} {...props} />;
-const CreateAppIcon = (props) => <Icon component={() => (<BaseIcons.CreateApp/>)} {...props} />;
-const AudioIcon = (props) => <Icon component={() => (<BaseIcons.Audio/>)} {...props} />;
-const AudioActiveIcon = (props) => <Icon component={() => (<BaseIcons.AudioActive/>)} {...props} />;
+const ConfigFlowIcon = (props) => <Icon component={() => (<BaseIcons.ConfigFlow />)} {...props} />;
+const DownLoadIcon = (props) => <Icon component={() => (<BaseIcons.DownLoad />)} {...props} />;
+const FullScreenIcon = (props) => <Icon component={() => (<BaseIcons.FullScreen />)} {...props} />;
+const LinkIcon = (props) => <Icon component={() => (<BaseIcons.Link />)} {...props} />;
+const AtIcon = (props) => <Icon component={() => (<BaseIcons.At />)} {...props} />;
+const PanleIcon = (props) => <Icon component={() => (<BaseIcons.Panle />)} {...props} />;
+const PanleCloseIcon = (props) => <Icon component={() => (<BaseIcons.PanleClose />)} {...props} />;
+const AppBoxIcon = (props) => <Icon component={() => (<BaseIcons.AppBox />)} {...props} />;
+const CreateAppIcon = (props) => <Icon component={() => (<BaseIcons.CreateApp />)} {...props} />;
+const AudioIcon = (props) => <Icon component={() => (<BaseIcons.Audio />)} {...props} />;
+const AudioActiveIcon = (props) => <Icon component={() => (<BaseIcons.AudioActive />)} {...props} />;
 const CloseIcon = (props) => <Icon component={() => (<BaseIcons.Close />)} {...props} />;
 const RunIcon = (props) => <Icon component={() => (<BaseIcons.Run />)} {...props} />;
 const HistoryIcon = (props) => <Icon component={() => (<BaseIcons.History />)} {...props} />;
@@ -44,6 +44,7 @@ const CodeIcon = (props) => <Icon component={() => (<BaseIcons.Code />)} {...pro
 const ChatUserIcon = (props) => <Icon component={() => (<BaseIcons.ChatUser />)} {...props} />;
 const PlayIcon = (props) => <Icon component={() => (<BaseIcons.Play />)} {...props} />;
 const StopIcon = (props) => <Icon component={() => (<BaseIcons.Stop />)} {...props} />;
+const NotificationIcon = (props) => <Icon component={() => (<BaseIcons.Notification />)} {...props} />;
 
 export {
   LeftArrowIcon,
@@ -86,5 +87,6 @@ export {
   ChatUserIcon,
   PlayIcon,
   StopIcon,
+  NotificationIcon
 }
 
