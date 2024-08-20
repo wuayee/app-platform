@@ -3,6 +3,7 @@ import {CaretRightOutlined} from "@ant-design/icons";
 import CodeEditor from "@/components/common/code/CodeEditor.jsx";
 import {JsonViewer} from "@/components/common/JsonViewer.jsx";
 import {useRef, useState} from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * 测试组件.
@@ -80,11 +81,12 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
         return output;
     };
 
+    const { t } = useTranslation();
     return (<>
         {contextHolder}
         <div className={"jade-code-test-input jade-code-parent"}>
             <div className={"jade-code-test-input-title"}>
-                <span>输入</span>
+                <span>{t('input')}</span>
             </div>
             <div className={"jade-code-test-input-content"}>
                 <CodeEditor language={"json"}
@@ -106,7 +108,7 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
         </div>
         <div className={"jade-code-test-output jade-code-parent"}>
             <div className={"jade-code-test-output-title"}>
-                <span>输出</span>
+                <span>{t('output')}</span>
             </div>
             <div className={"jade-code-test-output-content"}>
                 {typeof output === "object" ?
@@ -122,7 +124,7 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
                 <Button className={"jade-code-button"}
                         style={{marginLeft: 0}}
                         onClick={onCopyClick}>
-                    复制
+                    {t('copy')}
                 </Button>
             </div>
         </div>

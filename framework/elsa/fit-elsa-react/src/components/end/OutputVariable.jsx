@@ -6,6 +6,7 @@ import {OutputVariableRow} from "@/components/end/OutputVariableRow.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -24,6 +25,7 @@ _OutputVariable.propTypes = {
  */
 function _OutputVariable({inputParams, disabled}) {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     /**
      * 处理输入发生变化的动作
@@ -37,9 +39,9 @@ function _OutputVariable({inputParams, disabled}) {
 
 
     const tips =
-        <div className={"jade-font-size"} style={{lineHeight: "1.2"}}><p>这些变量将在机器人完成工作流调用后输出。</p>
-            <p>在“返回变量”模式下，这些变量将由机器人汇总并回复给用户；</p>
-            <p>在“直接回答”模式下，机器人将只回复配置卡时可以使用的变量</p></div>;
+        <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
+            <Trans i18nKey="endOutputPopover" components={{ p: <p /> }} />
+        </div>;
 
     return (
         <div>
@@ -51,7 +53,7 @@ function _OutputVariable({inputParams, disabled}) {
                     header={
                         <div
                             style={{display: 'flex', alignItems: 'center', justifyContent: "flex-start"}}>
-                            <span className="jade-panel-header-font">输出</span>
+                            <span className="jade-panel-header-font">{t('output')}</span>
                             <Popover content={tips}>
                                 <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
@@ -64,12 +66,12 @@ function _OutputVariable({inputParams, disabled}) {
                         <Row gutter={16}>
                             <Col span={8}>
                                 <Form.Item style={{marginBottom: "8px"}}>
-                                    <span className="jade-font-size jade-font-color">字段名称</span>
+                                    <span className="jade-font-size jade-font-color">{t('fieldName')}</span>
                                 </Form.Item>
                             </Col>
                             <Col span={16}>
                                 <Form.Item style={{marginBottom: "8px"}}>
-                                    <span className="jade-font-size jade-font-color">字段值</span>
+                                    <span className="jade-font-size jade-font-color">{t('fieldValue')}</span>
                                 </Form.Item>
                             </Col>
                         </Row>

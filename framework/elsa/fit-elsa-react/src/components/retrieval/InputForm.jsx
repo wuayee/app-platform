@@ -6,6 +6,7 @@ import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSele
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -91,7 +92,7 @@ function _InputForm({queryData, disabled}) {
                             onReferencedValueChange={(v) => _onReferencedValueChange(item, v)}
                             onReferencedKeyChange={(e) => _onReferencedKeyChange(item, e)}
                             style={{fontSize: "12px"}}
-                            placeholder="请选择"
+                            placeholder={t('pleaseSelect')}
                             onMouseDown={(e) => e.stopPropagation()}
                             showSearch
                             className="value-custom jade-select"
@@ -99,16 +100,16 @@ function _InputForm({queryData, disabled}) {
                                 maxHeight: 400,
                                 overflow: 'auto',
                             }}
-                            rules={[{required: true, message: "字段值不能为空"}]}
+                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                     />
                 </>);
             case 'Input':
                 return (<>
                     <Form.Item id={`input-${item.id}`}
                                name={`input-${item.id}`}
-                               rules={[{required: true, message: "字段值不能为空"}, {
+                               rules={[{required: true, message: t('fieldValueCannotBeEmpty')}, {
                                    pattern: /^[^\s]*$/,
-                                   message: "禁止输入空格"
+                                   message: t('spacesAreNotAllowed')
                                }]}
                                initialValue={item.value}
                                validateTrigger="onBlur"
@@ -126,13 +127,14 @@ function _InputForm({queryData, disabled}) {
         }
     };
 
-    const tips = <div className={"jade-font-size"}><p>输入需要从知识库中匹配的关键信息</p></div>;
+    const { t } = useTranslation();
+    const tips = <div className={"jade-font-size"}><p>{t('knowledgeBaseInputPopover')}</p></div>;
 
     return (<div>
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={['Input']}>
             <Panel header={
                         <div className="panel-header">
-                            <span className="jade-panel-header-font">输入</span>
+                            <span className="jade-panel-header-font">{t('input')}</span>
                             <Popover content={tips}>
                                 <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
@@ -145,12 +147,12 @@ function _InputForm({queryData, disabled}) {
                     <Row>
                         <Col span={8}>
                             <Form.Item style={{marginBottom: "8px"}}>
-                                <span className="jade-font-size jade-font-color">字段名称</span>
+                                <span className="jade-font-size jade-font-color">{t('fieldName')}</span>
                             </Form.Item>
                         </Col>
                         <Col span={16}>
                             <Form.Item style={{marginBottom: "8px"}}>
-                                <span className="jade-font-size jade-font-color">字段值</span>
+                                <span className="jade-font-size jade-font-color">{t('fieldValue')}</span>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -177,7 +179,7 @@ function _InputForm({queryData, disabled}) {
                                         handleItemChange(queryData.id, changes);
                                         form.resetFields([`reference-${queryData.id}`, name]);
                                     }}
-                                    options={[{value: 'Reference', label: '引用'}, {value: 'Input', label: '输入'}]}
+                                    options={[{value: 'Reference', label: t('reference')}, {value: 'Input', label: '输入'}]}
                                     value={queryData.from}
                                 />
                             </Form.Item>

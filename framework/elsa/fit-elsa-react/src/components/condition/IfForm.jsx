@@ -8,6 +8,7 @@ import {BINARY_OPERATOR, UNARY_OPERATOR} from "@/common/Consts.js";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import React from "react";
 import PropTypes from "prop-types";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -41,6 +42,7 @@ export default function IfForm({
                                    deleteCondition,
                                    changeConditionConfig
                                }) {
+    const { t } = useTranslation();
     const form = useFormContext();
     const unaryOperators = Object.values(UNARY_OPERATOR);
 
@@ -235,7 +237,7 @@ export default function IfForm({
 
     // 根据 condition 设置 rules
     const selectedRightSideValueRules = (condition, rule) => {
-        return unaryOperators.includes(condition) ? [{}] : (rule || [{required: true, message: '字段值不能为空'}]);
+        return unaryOperators.includes(condition) ? [{}] : (rule || [{required: true, message: t('fieldValueCannotBeEmpty')}]);
     };
 
     // 根据不同的值渲染不同的组件
@@ -309,10 +311,10 @@ export default function IfForm({
                             name={`value-${item.id}`}
                             rules={selectedRightSideValueRules(condition, [{
                                 required: true,
-                                message: "字段值不能为空"
+                                message: t('fieldValueCannotBeEmpty')
                             }, {
                                 pattern: /^[^\s]*$/,
-                                message: "禁止输入空格"
+                                message: t('spacesAreNotAllowed')
                             },])}
                             initialValue={item.value}
                         >
@@ -389,7 +391,7 @@ export default function IfForm({
                 <JadeReferenceTreeSelect
                     disabled={disabled}
                     className="jade-select"
-                    rules={[{required: true, message: "字段值不能为空"}]}
+                    rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                     reference={condition.getLeft()}
                     onReferencedValueChange={(v, t) => {
                         onLeftReferenceTreeSelectReferencedValueChange(condition, v, t);
@@ -406,7 +408,7 @@ export default function IfForm({
             <Col span={6}>
                 <Form.Item
                     name={`condition-${condition.id}`}
-                    rules={[{required: true, message: "字段值不能为空"}]}
+                    rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                     initialValue={condition.condition}
                 >
                     <JadeStopPropagationSelect
@@ -414,7 +416,7 @@ export default function IfForm({
                         className="jade-select"
                         style={{width: "100%"}}
                         dropdownStyle={{width: '150px'}} // 设置下拉框宽度
-                        placeholder="请选择条件"
+                        placeholder={t('pleaseSelectCondition')}
                         options={getConditionOptionsByReferenceType(condition.getLeft().type)}
                         value={condition.condition}
                         onChange={(e) => handleConditionChange(condition, e, condition.getLeft().type)}
@@ -430,8 +432,8 @@ export default function IfForm({
                         style={{width: "100%"}}
                         onChange={(value) => onRightFromSelectChange(condition, value)}
                         options={[
-                            {value: 'Reference', label: '引用'},
-                            {value: 'Input', label: '输入'},
+                            {value: 'Reference', label: t('reference')},
+                            {value: 'Input', label: t('input')},
                         ]}
                         value={condition.getRight().from}
                     />
@@ -461,7 +463,7 @@ export default function IfForm({
                 <Row gutter={16}>
                     <Col span={6}>
                         <Form.Item>
-                            <span className="jade-font-size jade-font-color">变量</span>
+                            <span className="jade-font-size jade-font-color">{t('variable')}</span>
                         </Form.Item>
                     </Col>
                     <Col span={6}>
@@ -471,7 +473,7 @@ export default function IfForm({
                     </Col>
                     <Col span={12}>
                         <Form.Item>
-                            <span className="jade-font-size jade-font-color">比较对象</span>
+                            <span className="jade-font-size jade-font-color">{t('compareObject')}</span>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -481,7 +483,7 @@ export default function IfForm({
                             disabled={disabled}
                             style={{height: "32px", paddingLeft: "8px"}}>
                         <PlusOutlined/>
-                        <span>添加条件</span>
+                        <span>{t('addCondition')}</span>
                     </Button>
                 </Row>
             </div>

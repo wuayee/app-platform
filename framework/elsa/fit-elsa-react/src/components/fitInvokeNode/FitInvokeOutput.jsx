@@ -2,6 +2,7 @@ import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import {useDataContext} from "@/components/DefaultRoot.jsx";
 import React from "react";
 import {Collapse} from "antd";
+import { useTranslation, Trans } from "react-i18next";
 
 const {Panel} = Collapse;
 /**
@@ -11,6 +12,7 @@ const {Panel} = Collapse;
  */
 export default function FitInvokeOutput() {
     const data = useDataContext();
+    const { t } = useTranslation();
     const outputData = data && data.outputParams;
 
     return (<Collapse bordered={false} className="jade-custom-collapse"
@@ -18,7 +20,7 @@ export default function FitInvokeOutput() {
         <Panel
             className="jade-panel"
             header={<div style={{display: 'flex', alignItems: 'center'}}>
-                <span className={'title'}>输出</span>
+                <span className={'title'}>{t('output')}</span>
             </div>}
             key='FitInvokeOutput'>
             <div className={"jade-custom-panel-content"}>

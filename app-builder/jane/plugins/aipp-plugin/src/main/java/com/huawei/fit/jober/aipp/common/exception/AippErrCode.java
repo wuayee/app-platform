@@ -295,6 +295,16 @@ public enum AippErrCode implements ErrorCode {
     APP_CHAT_QUESTION_IS_NULL(90002927, "请输入您的问题。"),
 
     /**
+     * 实例Id无法匹配任意父实例id
+     */
+    PARENT_INSTANCE_ID_NOT_FOUND(90002928, "实例id“{0}”无法匹配任意父实例id。"),
+
+    /**
+     * 实例Id无法匹配任意对话
+     */
+    CHAT_NOT_FOUND_BY_INSTANCE_ID(90002929, "实例id“{0}”无法匹配任意对话。"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

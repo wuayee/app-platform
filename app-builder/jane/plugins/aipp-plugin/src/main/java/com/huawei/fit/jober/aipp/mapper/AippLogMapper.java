@@ -8,6 +8,8 @@ import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogQueryCondition;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -151,6 +153,15 @@ public interface AippLogMapper {
      * @return 表示 aipp 实例历史记录的 {@link List}{@code <}{@link AippInstLog}{@code >}。
      */
     List<AippInstLog> getLogsByInstanceId(String instanceId);
+
+    /**
+     * 根据 instanceId 和 logTypes 查询指定实例的历史记录。
+     *
+     * @param instanceId 表示指定实例 id 的 {@link String}。
+     * @param logTypes 表示指定日志类型列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示 aipp 实例历史记录的 {@link List}{@code <}{@link AippInstLog}{@code >}。
+     */
+    List<AippInstLog> getLogsByInstanceIdAndLogTypes(String instanceId, @Param("logTypes")List<String> logTypes);
 
     /**
      * 删除指定实例的历史记录。

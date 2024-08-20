@@ -201,6 +201,20 @@
         where instance_id= #{instanceId}
     </select>
 
+    <select id="getLogsByInstanceIdAndLogTypes" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aipp_instance_log
+        where instance_id= #{instanceId} and is_deleted = 0
+        <if test="logTypes != null and logTypes.size > 0">
+            and log_type in
+            <foreach collection="logTypes" index="index" item="item" open="(" separator=", " close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by create_at desc
+    </select>
+
     <update id="deleteByInstanceIds" parameterType="java.util.List">
         UPDATE aipp_instance_log
         set is_deleted = 1
