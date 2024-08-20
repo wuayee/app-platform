@@ -56,7 +56,7 @@ public class MemoryVectorStore implements VectorStore {
 
     @Override
     public void persistent(List<Document> documents) {
-        List<? extends Embedding> embeddings = this.embedModel.embed(documents);
+        List<Embedding> embeddings = this.embedModel.embed(documents);
         for (int i = 0; i < documents.size(); ++i) {
             DocumentWithEmbedding document =
                     DocumentWithEmbedding.from(documents.get(i), embeddings.get(i).embedding());
@@ -105,9 +105,6 @@ public class MemoryVectorStore implements VectorStore {
 
     /**
      * 表示携带嵌入向量的 {@link Document}。
-     *
-     * @author 易文渊
-     * @since 2024-08-06
      */
     private static class DocumentWithEmbedding implements Document {
         private String id;

@@ -119,42 +119,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
         return ",";
     }
 
-    /**
-     * 移除字符串两端的外层引号。
-     * <p>具体步骤如下：
-     * <ul>
-     *     <li>首先，对字符串进行去空格处理；</li>
-     *     <li>然后，检查字符串是否含有外层引号，如果有，则去除字符串两端的引号，并再次进行去空格处理；</li>
-     *     <li>重复上述步骤，直到字符串两端无外层引号。</li>
-     * </ul>
-     * </p>
-     *
-     * @param source 表示指定字符串的 {@link String}。
-     * @return 表示去除两端外层引号后的字符串的 {@link String}。
-     */
-    private static String removeOuterQuotes(String source) {
-        if (StringUtils.isBlank(source)) {
-            return source;
-        }
-        String dst = source.trim();
-        while (hasOuterQuotes(dst)) {
-            dst = dst.substring(1, dst.length() - 1).trim();
-        }
-        return dst;
-    }
-
-    /**
-     * 检查指定字符串是否含有外层引号。
-     *
-     * @param source 表示待检查的字符串的 {@link String}。
-     * @return 如果指定字符串含有外层引号，则返回 {@code true}，否则，返回 {@code false}。
-     */
-    private static boolean hasOuterQuotes(String source) {
-        return (source.startsWith("\"") && source.endsWith("\"")) || (source.startsWith("'") && source.endsWith("'"));
-    }
-
     private void parseKey(Operand.Key key, StringBuilder buf) {
-        String standard = removeOuterQuotes(key.key());
-        buf.append(this.parseKey(standard));
+        buf.append(this.parseKey(key.key()));
     }
 }

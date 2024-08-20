@@ -17,6 +17,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.resource.UrlUtils;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.community.model.openai.api.OpenAiApi;
@@ -39,7 +40,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 表示 {@link EmbedModel} 的 openai 实现。
+ * 表示 openai 模型服务。
  *
  * @author 易文渊
  * @since 2024-08-07
@@ -50,21 +51,24 @@ public class OpenAiModel implements EmbedModel, ChatModel {
     private final HttpClassicClientFactory.Config config;
     private final String baseUrl;
     private final String defaultApiKey;
+    private final ObjectSerializer serializer;
 
     /**
      * 创建 openai 嵌入模型服务的实例。
      *
      * @param httpClientFactory 表示 http 客户端工厂的 {@link HttpClassicClientFactory}。
      * @param config 表示 openai http 配置的 {@link OpenAiConfig}。
+     * @param serializer 表示对象序列化器的 {@link ObjectSerializer}。
      * @throws IllegalArgumentException 当 {@code httpClientFactory}、{@code config} 为 {@code null} 时。
      */
-    public OpenAiModel(HttpClassicClientFactory httpClientFactory, OpenAiConfig config) {
+    public OpenAiModel(HttpClassicClientFactory httpClientFactory, OpenAiConfig config, ObjectSerializer serializer) {
         notNull(config, "The config cannot be null.");
         this.httpClientFactory = notNull(httpClientFactory, "The http client factory cannot be null.");
         this.config = HttpClassicClientFactory.Config.builder()
                 .connectTimeout(config.getConnectTimeout())
                 .socketTimeout(config.getReadTimeout())
                 .build();
+        this.serializer = notNull(serializer, "The serializer cannot be null.");
         this.baseUrl = config.getApiBase();
         this.defaultApiKey = config.getApiKey();
     }
@@ -100,7 +104,10 @@ public class OpenAiModel implements EmbedModel, ChatModel {
     }
 
     private Choir<ChatMessage> createChatStream(HttpClassicClientRequest request) {
-        return request.<OpenAiChatCompletionResponse>exchangeStream(OpenAiChatCompletionResponse.class)
+        return request.<String>exchangeStream(String.class)
+                .filter(str -> !StringUtils.equals(str, "[DONE]"))
+                .map(str -> this.serializer.<OpenAiChatCompletionResponse>deserialize(str,
+                        OpenAiChatCompletionResponse.class))
                 .map(OpenAiChatCompletionResponse::message);
     }
 

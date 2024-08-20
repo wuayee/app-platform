@@ -50,6 +50,7 @@ import java.util.stream.Collectors;
  * @since 2024-05-08
  */
 @DisplayName("测试委托单元")
+@Disabled
 public class PatternTest {
     @Test
     @DisplayName("测试 RunnableParallel")

@@ -26,7 +26,7 @@ public interface EmbedModel {
      */
     default Embedding generate(String input, EmbedOption option) {
         notBlank(input, "The input cannot be blank.");
-        List<? extends Embedding> embeddings = this.generate(Collections.singletonList(input), option);
+        List<Embedding> embeddings = this.generate(Collections.singletonList(input), option);
         notEmpty(embeddings, "The embedding cannot be empty.");
         return embeddings.get(0);
     }

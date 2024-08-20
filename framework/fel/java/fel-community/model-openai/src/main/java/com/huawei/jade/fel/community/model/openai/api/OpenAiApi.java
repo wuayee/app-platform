@@ -15,7 +15,7 @@ public interface OpenAiApi {
     /**
      * 会话补全请求的端点。
      */
-    String CHAT_ENDPOINT = "/v1/chat/completions";
+    String CHAT_ENDPOINT = "/chat/completions";
 
     /**
      * 嵌入请求的端点。

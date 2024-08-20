@@ -20,8 +20,8 @@ public final class MathUtils {
     /**
      * 计算两个向量的余弦相似度。
      *
-     * @param x 表示第一个向量的 {@link List}{@code <}{@link Double}{@code >}。
-     * @param y 表示第二个向量的 {@link List}{@code <}{@link Double}{@code >}。
+     * @param x 表示第一个向量的 {@link List}{@code <}{@link Float}{@code >}。
+     * @param y 表示第二个向量的 {@link List}{@code <}{@link Float}{@code >}。
      * @return 表示两个向量余弦相似度的 {@code double}。
      */
     public static double cosineSimilarity(List<Float> x, List<Float> y) {

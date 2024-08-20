@@ -21,7 +21,7 @@ public interface DocumentEmbedModel {
      * @param documents 表示输入文档列表的 {@link List}{@code <}{@link Document}{@code >}。
      * @return 表示生成嵌入向量的 {@link List}{@code <}{@link Embedding}{@code >}。
      */
-    List<? extends Embedding> embed(List<Document> documents);
+    List<Embedding> embed(List<Document> documents);
 
     /**
      * 调用嵌入模型生成嵌入向量。

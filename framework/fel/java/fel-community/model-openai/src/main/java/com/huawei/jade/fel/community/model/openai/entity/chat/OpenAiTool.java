@@ -17,7 +17,6 @@ import java.util.Map;
  */
 public class OpenAiTool {
     private final String type = "function";
-
     private final Function function;
 
     private OpenAiTool(String name, String description, Map<String, Object> parameters) {
@@ -39,9 +38,7 @@ public class OpenAiTool {
      */
     private static class Function {
         private final String name;
-
         private final String description;
-
         private final Map<String, Object> parameters;
 
         private Function(String name, String description, Map<String, Object> parameters) {

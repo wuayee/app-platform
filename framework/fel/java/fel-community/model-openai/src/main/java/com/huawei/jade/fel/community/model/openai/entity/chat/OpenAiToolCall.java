@@ -59,4 +59,10 @@ public class OpenAiToolCall implements ToolCall {
         private String name;
         private String arguments;
     }
+
+    @Override
+    public String toString() {
+        return "ToolCall{" + "id='" + id + '\'' + ", name='" + this.function.name + '\'' + ", arguments='"
+                + this.function.arguments + '\'' + '}';
+    }
 }

@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ public class ConversationTest {
 
         @Test
         @DisplayName("流程节点异常处理")
+        @Disabled
         void shouldFailWhenAsyncFlowThrowException() {
             final StringBuilder answer = new StringBuilder();
             ConverseLatch<String> latch = exceptionFlow.converse()

@@ -38,11 +38,11 @@ public class DefaultDocumentEmbedModel implements DocumentEmbedModel {
     }
 
     @Override
-    public List<? extends Embedding> embed(List<Document> documents) {
+    public List<Embedding> embed(List<Document> documents) {
         return documents.stream()
                 .map(Document::text)
                 .collect(Collectors.collectingAndThen(Collectors.toList(),
-                        inputs -> this.service.generate(inputs, embedOption)));
+                        inputs -> this.service.generate(inputs, this.embedOption)));
     }
 
     @Override

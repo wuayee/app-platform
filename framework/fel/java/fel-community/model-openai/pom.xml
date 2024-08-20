@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.huawei.fit.jade.community</groupId>
-    <artifactId>fel-model-openai</artifactId>
+    <artifactId>fel-model-openai-plugin</artifactId>
 
     <dependencies>
         <!-- FIT -->
@@ -55,4 +55,51 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-build-maven-plugin</artifactId>
+                <version>${fit.version}</version>
+                <configuration>
+                    <category>user</category>
+                    <level>1</level>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-plugin</id>
+                        <goals>
+                            <goal>build-plugin</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>package-plugin</id>
+                        <goals>
+                            <goal>package-plugin</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven.antrun.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                      todir="../../../../fit/java/target/plugins"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

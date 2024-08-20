@@ -37,7 +37,7 @@ public class ChatMessages implements Prompt {
      * @param messages 表示聊天消息的 {@link List}{@code <? extends }{@link ChatMessage}{@code >}。
      * @return 表示创建成功的 {@link ChatMessages}。
      */
-    public static ChatMessages from(List<? extends ChatMessage> messages) {
+    public static ChatMessages from(List<ChatMessage> messages) {
         ChatMessages chatMessages = new ChatMessages();
         chatMessages.messages().addAll(messages);
         return chatMessages;
@@ -57,7 +57,7 @@ public class ChatMessages implements Prompt {
      *
      * @param messages 表示聊天消息数组的 {@link List}{@code <}{@link ChatMessage}{@code >}。
      */
-    public void addAll(List<? extends ChatMessage> messages) {
+    public void addAll(List<ChatMessage> messages) {
         this.messages.addAll(messages);
     }
 

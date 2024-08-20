@@ -20,6 +20,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface SerializeStrategy {
+    /**
+     * 获取序列化策略。
+     *
+     * @return 表示序列化测量的 {@link Include}。
+     */
     Include include() default Include.DEFAULT;
 
     /**

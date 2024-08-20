@@ -22,7 +22,7 @@ public interface Prompt {
      *
      * @return 表示聊天消息列表的 {@link List}{@code <}{@link ChatMessage}{@code >}。
      */
-    List<? extends ChatMessage> messages();
+    List<ChatMessage> messages();
 
     /**
      * 获取文本内容。
