@@ -26,6 +26,8 @@ import com.huawei.fitframework.parameterization.StringFormatException;
 import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.FileUtils;
+import com.huawei.jade.carver.ListResult;
+import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
@@ -326,11 +328,16 @@ class PluginDeployServiceImplTest {
             "add list,add itself")).isInstanceOf(InvocationTargetException.class);
     }
 
+    private ListResult<PluginData> mockPluginDataResult() {
+        return new ListResult<>(Collections.singletonList(mockPluginData()), 1);
+    }
+
     @Test
     @DisplayName("测试初始化插件状态功能正常")
     void testInitDeployStatus() {
-        when(mockPluginService.getPlugins(DeployStatus.DEPLOYING)).thenReturn(
+        when(mockPluginService.getPlugins(Mockito.any(DeployStatus.class))).thenReturn(
             Collections.singletonList(mockPluginData()));
+        when(mockPluginService.getPlugins(Mockito.any(PluginQuery.class))).thenReturn(mockPluginDataResult());
         when(mockPluginService.getPlugin(Mockito.anyString())).thenReturn(mockPluginData());
         pluginDeployServiceImplUnderTest.onRuntimeStarted(fitRuntime);
         verify(mockPluginService).updateDeployStatus(Mockito.anyList(), eq(DeployStatus.UNDEPLOYED));
