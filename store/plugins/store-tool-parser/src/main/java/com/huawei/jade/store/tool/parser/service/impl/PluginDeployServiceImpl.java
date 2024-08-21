@@ -16,6 +16,8 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.runtime.FitRuntime;
+import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
 import com.huawei.fitframework.schedule.Task;
 import com.huawei.fitframework.schedule.ThreadPoolExecutor;
 import com.huawei.fitframework.serialization.ObjectSerializer;
@@ -66,7 +68,7 @@ import java.util.stream.Collectors;
  * @since 2024-8-13
  */
 @Component
-public class PluginDeployServiceImpl implements PluginDeployService {
+public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeStartedObserver {
     private static final Logger log = Logger.get(PluginDeployServiceImpl.class);
     private static final String TEMPORARY_TOOL_PATH = "/var/temporary/tools";
     private static final String PERSISTENT_PATH = "/opt/fit/tools";
@@ -140,7 +142,6 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             .exceptionHandler((thread, throwable) -> {})
             .rejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy())
             .build();
-        this.initDeployStatus();
     }
 
     private void initDeployStatus() {
@@ -715,5 +716,10 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
                 "plugin.json type can only contain python and java.");
         }
+    }
+
+    @Override
+    public void onRuntimeStarted(FitRuntime runtime) {
+        this.initDeployStatus();
     }
 }
