@@ -50,7 +50,7 @@ public class DefaultHttpExceptionAdviceTest {
 
     @Test
     @DisplayName("测试拦截 FitException")
-    public void shouldOkWhenInterceptException() {
+    public void shouldOkWhenInterceptFitException() {
         Mockito.when(messageHandler.getLocaleMessage(Mockito.any(), Mockito.any(), Mockito.any()))
             .thenReturn("test error");
         String url = "/nonsupport/exception";
@@ -61,5 +61,15 @@ public class DefaultHttpExceptionAdviceTest {
                 .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code", 404)
                         .hasFieldOrPropertyWithValue("msg", "test error")
                         .hasFieldOrPropertyWithValue("data", null));
+    }
+
+    @Test
+    @DisplayName("测试拦截 Exception")
+    void shouldOkWhenInterceptException() {
+        String systemDefaultMessage = "system default message";
+        Mockito.when(messageHandler.getDefaultMessage()).thenReturn(systemDefaultMessage);
+        DefaultHttpExceptionAdvice mockedDefaultHttpExceptionAdvice = new DefaultHttpExceptionAdvice(messageHandler);
+        HttpResult<Void> voidHttpResult = mockedDefaultHttpExceptionAdvice.handleException(new Throwable());
+        assertThat(voidHttpResult.getMsg()).isEqualTo(systemDefaultMessage);
     }
 }

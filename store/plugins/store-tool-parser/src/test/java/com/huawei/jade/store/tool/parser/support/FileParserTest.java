@@ -108,7 +108,7 @@ public class FileParserTest {
         String validToolNames = "add list,add itself";
         assertThat(toolList.size()).isEqualTo(3);
         Map<String, Object> toolMap = ObjectUtils.cast(toolList.get(0));
-        Assertions.assertThatCode(() ->FileParser.getPluginData(toolMap, validToolNames)).hasMessage(
-            new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, "name").getMessage());
+        Assertions.assertThatCode(() -> FileParser.getPluginData(toolMap, validToolNames))
+            .hasMessage(new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, "name").getMessage());
     }
 }
