@@ -1,10 +1,10 @@
 name: '文档目录去除插件'
 language: 'Python'
-vendor: 'Huawei'
+vendor: 'ModelEngine'
 operators:
 - operator:
     name: '文档目录去除'
-    fitableId: 'com.huawei.eDataMate.operators.content_cleaner_plugin'
+    fitableId: 'ModelEngine.operators.content_cleaner_plugin'
     version: '1.0.0'
     description: '去除文档中目录'
     types:
@@ -16,4 +16,3 @@ operators:
       after: ''
     labels:
     - '文本'
-    - '医疗'
