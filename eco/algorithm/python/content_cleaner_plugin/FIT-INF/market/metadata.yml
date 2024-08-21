@@ -4,7 +4,7 @@ vendor: 'ModelEngine'
 operators:
 - operator:
     name: '文档目录去除'
-    fitableId: 'ModelEngine.operators.content_cleaner_plugin'
+    fitableId: 'modelengine.operators.content_cleaner_plugin'
     version: '1.0.0'
     description: '去除文档中目录'
     types:
