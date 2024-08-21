@@ -29,7 +29,10 @@ export const DefaultRoot = forwardRef(function ({shape, component, disabled}, re
     useImperativeHandle(ref, () => {
         return {
             getData: () => {
-                return JSON.parse(JSON.stringify(data));
+                return data;
+            },
+            dispatch: (action) => {
+                dispatch(action);
             }
         }
     });

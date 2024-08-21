@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import {evaluationNodeDrawer} from "@/components/evaluation/evaluationNodeDrawer.jsx";
 
 /**

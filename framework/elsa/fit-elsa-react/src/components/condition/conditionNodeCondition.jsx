@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import {DIRECTION} from "@fit-elsa/elsa-core";
 import {SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {conditionNodeDrawer} from "@/components/condition/conditionNodeDrawer.jsx";
@@ -31,12 +31,12 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
      * 通过分支id获取线.
      *
      * @param branchId 分支id.
-     * @return {*} 线.
+     * @return {*} 符合条件的线的集合.
      */
-    self.getEventByBranchId = (branchId) => {
+    self.getEventsByBranchId = (branchId) => {
         return self.page.shapes.filter(s => s.isTypeof("jadeEvent"))
             .filter(e => e.fromShape === self.id)
-            .find(e => e.definedFromConnector.split("|")[1] === branchId);
+            .filter(e => e.definedFromConnector.split("|")[1] === branchId);
     };
 
     /**
@@ -120,6 +120,41 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
             const name = "条件 " + no;
             return {no: no, name: name, type: SECTION_TYPE.CONDITION, data: branch}
         });
+    };
+
+    /**
+     * @override
+     */
+    self.setFlowMeta = (flowMeta) => {
+        self.drawer.dispatch({
+            type: "system_update",
+            changes: [{key: "branches", value: flowMeta?.conditionParams?.branches}]
+        });
+    };
+
+    /**
+     * @override
+     */
+    self.getEntity = () => {
+        return self.flowMeta.conditionParams.branches;
+    };
+
+    /**
+     * @override
+     */
+    self.isReferenceAvailable = (preNodesInfo, observerProxy) => {
+        // 确定proxy所在的branch.
+        const o = observerProxy;
+        const branches = self.drawer.getLatestJadeConfig().branches;
+        const branch = branches.find(b => {
+            return b.conditions.some(c => {
+                return c.value.filter(v => v.from === "Reference").some(v => v.id === o.id);
+            });
+        });
+        if (!branch) {
+            return false;
+        }
+        return preNodesInfo.some(p => p.id === observerProxy.nodeId && p.runnable === branch.runnable);
     };
 
     return self;

@@ -1,6 +1,7 @@
 import {v4 as uuidv4} from "uuid";
 import HuggingFaceFormWrapper from "@/components/huggingFace/HuggingFaceFormWrapper.jsx";
 import {updateInput} from "@/components/util/JadeConfigUtils.js";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * huggingFace调用节点组件
@@ -8,7 +9,7 @@ import {updateInput} from "@/components/util/JadeConfigUtils.js";
  * @param jadeConfig
  */
 export const huggingFaceComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必填
@@ -36,6 +37,7 @@ export const huggingFaceComponent = (jadeConfig) => {
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         let newConfig = {...config};
 
@@ -69,7 +71,7 @@ export const huggingFaceComponent = (jadeConfig) => {
                 return newConfig;
             }
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

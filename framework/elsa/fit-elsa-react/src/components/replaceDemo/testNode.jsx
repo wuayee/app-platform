@@ -1,5 +1,5 @@
 import {CloudSyncOutlined} from "@ant-design/icons";
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 
 export const testNode = (id, x, y, width, height, parent, drawer) => {
     const self = jadeNode(id, x, y, width, height, parent, drawer);

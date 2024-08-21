@@ -63,3 +63,8 @@ export const DATA_TYPES = {
     OBJECT: 'Object',
     ARRAY: 'Array'
 };
+
+export const OBSERVER_STATUS = {
+    ENABLE: "enable",
+    DISABLE: "disable"
+};

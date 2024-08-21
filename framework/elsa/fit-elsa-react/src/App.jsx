@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {JadeFlow} from "./flow/jadeFlowEntry.jsx";
-import {graphData} from "./testFlowData.js";
+import {evaluationTestData, graphData} from "./testFlowData.js";
 import {Button} from "antd";
 import {CodeDrawer} from "@/components/common/code/CodeDrawer.jsx";
 
@@ -51,13 +51,13 @@ function App() {
             }
         });
 
-        JadeFlow.edit(stage, "1111", graphData, configs).then(agent => {
+        JadeFlow.evaluate(stage, "1111", evaluationTestData, false, configs).then(agent => {
             window.agent = agent;
             agent.onModelSelect((onModelSelectedCallback) => {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
             });
             agent.onChange((dirtyAction) => {
-                console.log("dirty action: ", dirtyAction);
+                console.log("=======================dirty action: ", dirtyAction);
             });
         });
     });

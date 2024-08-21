@@ -1,7 +1,8 @@
 import ManualCheckFormWrapper from "@/components/manualCheck/ManualCheckFormWrapper.jsx";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 export const manualCheckComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
@@ -31,6 +32,7 @@ export const manualCheckComponent = (jadeConfig) => {
     /**
      * 必须.
      */
+    const reducers = self.reducers;
     self.reducers = (data, action) => {
         function changeFormAndSetOutput() {
             return {
@@ -49,7 +51,7 @@ export const manualCheckComponent = (jadeConfig) => {
                 return changeFormAndSetOutput();
             }
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [data, action]);
             }
         }
     };
