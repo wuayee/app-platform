@@ -184,18 +184,18 @@ export function reSendChat(tenant_id, current_instance_id, data) {
 
 // 获取澄清字段下拉
 export function getClarifyOptions(data) {
-  return post(`${TT_URL}/hisp/api/v1/platform/finance/option-nodes-name`,data);
+  return post(`${TT_URL}/java-magiccube/magiccube/finance/option-nodes-name`,data);
 }
 // 澄清-辅产品
 export function getFuClarifyOptions(params) {
-  return get(`${TT_URL}/hisp/api/v1/platform/finance/option-nodes`, params);
+  return get(`${TT_URL}/java-magiccube/magiccube/finance/option-nodes`, params);
 }
 
 // 获取溯源字段下拉接口
 export function getOptionNodes(data) {
-  return post(`${TT_URL}/hisp/api/v1/platform/finance/option-nodes`, data);
+  return post(`${TT_URL}/java-magiccube/magiccube/finance/option-nodes`, data);
 }
 // 获取溯源字段下拉接口
 export function getFinanceOptions(params) {
-  return get(`${TT_URL}/hisp/api/v1/platform/finance/fieldValues`, params);
+  return get(`${TT_URL}/java-magiccube/magiccube/finance/fieldValues`, params);
 }
