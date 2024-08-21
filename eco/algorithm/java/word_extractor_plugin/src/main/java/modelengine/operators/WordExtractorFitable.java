@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.edatamate.operators;
+package modelengine.operators;
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fitframework.annotation.Component;
@@ -21,7 +21,7 @@ import org.apache.poi.hwpf.usermodel.PictureType;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.jsoup.Jsoup;
+import org.jsoup.J
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -76,7 +76,7 @@ public class WordExtractorFitable implements FlowableService {
      * @return response 回参
      */
     @Override
-    @Fitable(id = "com.huawei.eDataMate.operators.word_extractor_plugin")
+    @Fitable(id = "ModelEngine.operators.word_extractor_plugin")
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
         List<Map<String, Object>> response = new ArrayList<>(flowData.size());
         for (Map<String, Object> flowDatum : flowData) {

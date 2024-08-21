@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-      - 'com.huawei.edatamate.operators'
+      - 'modelengine.operators'

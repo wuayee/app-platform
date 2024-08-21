@@ -1,10 +1,10 @@
 name: '文档字重复率检查插件'
 language: 'Python'
-vendor: 'Huawei'
+vendor: 'ModelEngine'
 operators:
 - operator:
     name: '文档字重复率检查'
-    fitableId: 'com.huawei.eDataMate.operators.file_with_high_repeat_word_rate_filter_plugin'
+    fitableId: 'modelengine.operators.file_with_high_repeat_word_rate_filter_plugin'
     version: '1.0.0'
     description: '删除字重复率过高的文档'
     types:
@@ -16,7 +16,6 @@ operators:
       after: ''
     labels:
     - '文本'
-    - '医疗'
     settings:
       repeatWordRatio:
         description: 文档字重复率检查
