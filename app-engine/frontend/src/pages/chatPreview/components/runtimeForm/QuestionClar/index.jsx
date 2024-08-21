@@ -3,8 +3,6 @@ import { throttle } from 'lodash';
 import { Message } from '@shared/utils/message';
 import { Button, DatePicker, Select, TreeSelect } from 'antd';
 import {
-  aidProducts,
-  calcProducts,
   FinanceGroupType,
   groupTypeOption,
   typeMap,
@@ -13,18 +11,20 @@ import {
 import { formatYYYYMM } from './question-util.js';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { resumeInstance, getClarifyOptions, getFuClarifyOptions } from '@shared/http/aipp';
+import { resumeInstance, getClarifyOptions, getFuClarifyOptions, stopInstance } from '@shared/http/aipp';
 import { ChatContext } from '../../../../aippIndex/context';
 import './index.scoped.scss';
+import { saveContent } from '@shared/http/sse';
 
 dayjs.extend(customParseFormat);
 
 const QuestionClar = (props) => {
   const id = 'questionClarResult';
-  const { dataDimension, data, mode } = props;
+  const { dataDimension, data, mode, confirmCallBack, tenantId } = props;
   const [questionInfo, setQuestionInfo] = useState(null);
   const { RangePicker } = DatePicker;
-  const { handleRejectClar, tenantId, questionClarConfirm } = useContext(ChatContext);
+  const { handleRejectClar, conditionConfirm } = useContext(ChatContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!data?.formData) return;
@@ -76,7 +76,7 @@ const QuestionClar = (props) => {
   }, [proType, dataDimension, questionInfo]);
   // 指标和产品调后端接口
   function initOptions() {
-    const name = dataDimension === 'ICT P&S' ? 'IRB' : dataDimension;
+    const name = dataDimension.name === 'ICT P&S' ? 'IRB' : dataDimension.name;
     const data = { name, type: '' };
     if (isShow('needProduct')) {
       getProOptions(data);
@@ -89,13 +89,13 @@ const QuestionClar = (props) => {
   async function getProOptions(params) {
     let res;
     if (proType === '主产品') {
-      if (dataDimension === 'ICT P&S') {
+      if (dataDimension.name === 'ICT P&S') {
         params.level = 6;
         params.type = '主产品';
         delete params.name;
         res = await getFuClarifyOptions(params);
       } else {
-        params.type = typeMap[dataDimension];
+        params.type = typeMap[dataDimension.name];
         res = await getClarifyOptions(params);
       }
     } else {
@@ -108,23 +108,23 @@ const QuestionClar = (props) => {
       const originData = res.data;
       initSelections(originData);
       let options = originData;
-      if (proType === '辅产品') {
-        options = aidProducts;
-      }
-      if (dataDimension === 'CPL') {
+      if (dataDimension.value === 'CPL') {
         options = calcProducts;
       }
       // 如果是“预算预测”产品选项则只取前两层
       if (whetherShowTheFirstTwoFloors()) {
         getFirstTwoLevels(options, 2);
       }
-      setProductOptions(options);
+      let currentType = localStorage.getItem('proType');
+      if (!currentType || currentType === proType) {
+        setProductOptions(options);
+      }
     }
   }
   const [indicatorOptions, setIndicatorOptions] = useState(null);
   // 指标
   async function getIndicatorOptions(params) {
-    params.type = belongsMap[dataDimension];
+    params.type = belongsMap[dataDimension.value];
     delete params.name;
     const res = await getClarifyOptions(params);
     // 过滤出报表项一级的数据
@@ -156,7 +156,7 @@ const QuestionClar = (props) => {
   const getTypeOptions = useMemo(() => {
     if (!questionInfo) return;
     const { groupBy } = questionInfo;
-    let groupByType = groupBy.type;
+    let groupByType = groupBy?.type || '';
     // 辅产品 前端自己定义枚举
     if (groupByType === 'PRODUCT' && groupProType === '辅产品') {
       groupByType = 'AID_PRODUCT';
@@ -187,7 +187,7 @@ const QuestionClar = (props) => {
     const obj = questionInfo;
     if (!obj) return false;
     if (type === 'groupBy') {
-      const groupByType = obj['groupBy'].type;
+      const groupByType = obj['groupBy']?.type || '';
       return FinanceGroupType[groupByType];
     }
     return obj[type];
@@ -217,8 +217,10 @@ const QuestionClar = (props) => {
 
   //产品类型修改回调
   const onProTypeChange = (value) => {
+    localStorage.setItem('proType', value);
     setProType(value);
     updateFormData('product', []);
+    setProductOptions(null);
   };
 
   //产品修改回调
@@ -245,16 +247,12 @@ const QuestionClar = (props) => {
 
   // 构造歧义词列表
   const initAmbList = (obj) => {
-    const keys = Object.keys(obj);
-    let result = keys.map((k) => {
+    let result = Object.keys(obj).map((k) => {
       let item = obj[k];
-      const itemKeys = Object.keys(item);
       return {
         label: k,
-        value: item[itemKeys[0]],
-        options: itemKeys.map((itemKey) => {
-          return { label: itemKey, value: item[itemKey] };
-        }),
+        value: item[0].value,
+        options: item,
       };
     });
     return result;
@@ -279,7 +277,12 @@ const QuestionClar = (props) => {
   };
 
   // 拒绝
-  const rejectClar = throttle(() => handleRejectClar(), 500, { trailing: false });
+  const rejectClar = throttle(() => confirmCallBack ? rejectQuestion() : handleRejectClar(), 500, { trailing: false });
+  const rejectQuestion = () => {
+    stopInstance(tenantId, data?.formData?.instanceId, { content: '不好意思，请明确条件后重新提问' }).then(()=>{
+      confirmCallBack();
+    });
+  }
   // 出参使用，处理数据格式
   const processData = (indicator) => {
     let data = {};
@@ -348,7 +351,14 @@ const QuestionClar = (props) => {
         [id]: JSON.stringify(info),
       },
     };
-    questionClarConfirm(params, data?.formData?.instanceId)
+    setLoading(true);
+    const res = await saveContent(tenantId, data?.formData?.instanceId, params);
+    if (res.status !== 200) {
+      Message({ type: 'warning', content: res.msg || '对话失败' });
+      return;
+    }
+    setLoading(false);
+    confirmCallBack ? confirmCallBack(res) : conditionConfirm(res);
   }
 
   return (<>
@@ -467,7 +477,7 @@ const QuestionClar = (props) => {
           <div className='amb_title'>歧义字段处理：</div>
           {ambiguousList.map((item, index) => {
             return (
-              <div className='ambiguous' key={item.label}>
+              <div className='ambiguous' key={index}>
                 <span className='label'>{item.label}：</span>
                 <Select
                   className='select_box mr10'
@@ -480,9 +490,9 @@ const QuestionClar = (props) => {
             );
           })}
       </div>
-      { mode !== 'history' &&
+      { mode !== 'history' && confirmCallBack &&
         <div className='footer'>
-          <Button className='mr10' type='primary' onClick={confirmClar}>确定</Button>
+          <Button className='mr10' type='primary' loading={loading} onClick={confirmClar}>确定</Button>
           <Button onClick={rejectClar}>拒绝澄清</Button>
         </div> }
 </div>
