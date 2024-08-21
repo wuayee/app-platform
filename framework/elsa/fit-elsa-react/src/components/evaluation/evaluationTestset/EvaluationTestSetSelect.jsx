@@ -67,7 +67,7 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
      *
      * @param e 点击事件
      */
-    const triggerSelect = (e) => {
+    const clickCreateButton = (e) => {
         e.preventDefault();
         shape.page.triggerEvent({
             type: "CREATE_TEST_SET",
@@ -122,7 +122,7 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
                 type="link"
                 className={"button-create"}
                 disabled={disabled}
-                onClick={e => triggerSelect(e)}>
+                onClick={e => clickCreateButton(e)}>
                 <div className={"button-create-wrapper"}><PlusCircleOutlined/>
                     <div className={"create-button-text"}>新建测试集</div>
                 </div>
