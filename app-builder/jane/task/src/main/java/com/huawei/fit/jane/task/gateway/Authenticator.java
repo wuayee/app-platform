@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.task.gateway;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 
 /**
  * 为系统提供认证器。

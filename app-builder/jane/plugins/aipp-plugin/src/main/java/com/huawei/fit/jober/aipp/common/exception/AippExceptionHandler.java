@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.aipp.common.exception;
 
-import com.huawei.fit.http.annotation.ExceptionHandler;
-import com.huawei.fit.http.annotation.ResponseStatus;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.http.annotation.ExceptionHandler;
+import modelengine.fit.http.annotation.ResponseStatus;
+import modelengine.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
 import modelengine.fitframework.annotation.Component;

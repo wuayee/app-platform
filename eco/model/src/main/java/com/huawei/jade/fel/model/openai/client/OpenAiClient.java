@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.model.openai.client;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.okhttp.OkHttpClientBuilderFactory;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.okhttp.OkHttpClientBuilderFactory;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.conf.Config;

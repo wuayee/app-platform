@@ -9,7 +9,7 @@ import static com.huawei.jade.app.engine.schema.code.SchemaGeneratorRetCode.JSON
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.TypeUtils;

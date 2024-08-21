@@ -4,7 +4,7 @@
 
 package com.huawei.fit.ohscript.external;
 
-import com.huawei.fit.http.server.HttpClassicServer;
+import modelengine.fit.http.server.HttpClassicServer;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;

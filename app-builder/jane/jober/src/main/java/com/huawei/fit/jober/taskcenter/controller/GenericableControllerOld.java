@@ -4,15 +4,15 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
-import com.huawei.fit.http.annotation.DocumentIgnored;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.DocumentIgnored;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
 import com.huawei.fit.jober.common.model.JoberResponse;
 import com.huawei.fit.jober.common.model.TextStringValue;
-import com.huawei.fit.service.RegistryService;
-import com.huawei.fit.service.entity.FitableMetaInstance;
-import com.huawei.fit.service.entity.GenericableInfo;
+import modelengine.fit.service.RegistryService;
+import modelengine.fit.service.entity.FitableMetaInstance;
+import modelengine.fit.service.entity.GenericableInfo;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.GenericableMetadata;
 

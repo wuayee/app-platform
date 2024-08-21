@@ -6,7 +6,7 @@ package com.huawei.jade.carver.tool.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.Tool;

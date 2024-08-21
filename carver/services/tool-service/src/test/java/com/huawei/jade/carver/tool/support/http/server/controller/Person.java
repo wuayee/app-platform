@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.tool.support.http.server.controller;
 
-import com.huawei.fit.http.annotation.RequestCookie;
-import com.huawei.fit.http.annotation.RequestHeader;
+import modelengine.fit.http.annotation.RequestCookie;
+import modelengine.fit.http.annotation.RequestHeader;
 import modelengine.fitframework.annotation.Property;
 
 /**

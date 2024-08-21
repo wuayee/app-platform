@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.task.gateway;
 
-import com.huawei.fit.security.Decryptor;
+import modelengine.fit.security.Decryptor;
 import modelengine.fitframework.conf.ConfigDecryptor;
 
 import java.util.Locale;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import com.huawei.fit.http.websocket.Session;
+import modelengine.fit.http.websocket.Session;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.util.AippLogUtils;

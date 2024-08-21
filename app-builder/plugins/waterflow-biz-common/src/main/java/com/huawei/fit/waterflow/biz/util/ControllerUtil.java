@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.biz.util;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.util.OperationContext;
 import modelengine.fitframework.util.MapBuilder;

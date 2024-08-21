@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes;
 
-import com.huawei.fit.data.repository.exception.CapacityOverflowException;
+import modelengine.fit.data.repository.exception.CapacityOverflowException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.To;

@@ -6,7 +6,7 @@ package com.huawei.jade.store.repository.pgsql.entity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.MapBuilder;
 

@@ -4,16 +4,16 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.PutMapping;
-import com.huawei.fit.http.annotation.RequestBean;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.PutMapping;
+import modelengine.fit.http.annotation.RequestBean;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;

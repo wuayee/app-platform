@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.tool.support.http.server;
 
-import com.huawei.fit.http.server.HttpClassicServer;
+import modelengine.fit.http.server.HttpClassicServer;
 import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.runtime.FitRuntime;
 import modelengine.fitframework.runtime.FitStarter;

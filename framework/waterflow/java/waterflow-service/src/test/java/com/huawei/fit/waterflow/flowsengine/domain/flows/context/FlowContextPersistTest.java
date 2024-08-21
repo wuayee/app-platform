@@ -28,7 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.data.repository.exception.CapacityOverflowException;
+import modelengine.fit.data.repository.exception.CapacityOverflowException;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;

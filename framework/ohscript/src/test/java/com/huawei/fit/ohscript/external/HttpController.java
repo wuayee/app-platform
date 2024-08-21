@@ -4,17 +4,17 @@
 
 package com.huawei.fit.ohscript.external;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PatchMapping;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.PutMapping;
-import com.huawei.fit.http.annotation.RequestHeader;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.entity.MultiValueEntity;
-import com.huawei.fit.http.entity.ObjectEntity;
-import com.huawei.fit.http.entity.TextEntity;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PatchMapping;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.PutMapping;
+import modelengine.fit.http.annotation.RequestHeader;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.entity.MultiValueEntity;
+import modelengine.fit.http.entity.ObjectEntity;
+import modelengine.fit.http.entity.TextEntity;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;

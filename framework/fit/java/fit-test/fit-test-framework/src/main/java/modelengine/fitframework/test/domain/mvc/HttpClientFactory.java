@@ -4,11 +4,11 @@
 
 package modelengine.fitframework.test.domain.mvc;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.okhttp.OkHttpClassicClientFactory;
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fit.value.fastjson.FastJsonValueHandler;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.okhttp.OkHttpClassicClientFactory;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.value.fastjson.FastJsonValueHandler;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.value.ValueFetcher;

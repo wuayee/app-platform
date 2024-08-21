@@ -6,7 +6,7 @@ package modelengine.fitframework.broker.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.client.Client;
+import modelengine.fit.client.Client;
 import modelengine.fitframework.broker.Fitable;
 import modelengine.fitframework.broker.InvocationContext;
 import modelengine.fitframework.broker.LoadBalancer;

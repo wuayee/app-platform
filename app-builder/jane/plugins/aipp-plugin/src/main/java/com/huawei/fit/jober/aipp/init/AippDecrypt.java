@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.init;
 
-import com.huawei.fit.security.Decryptor;
+import modelengine.fit.security.Decryptor;
 import modelengine.fitframework.conf.ConfigDecryptor;
 import modelengine.fitframework.inspection.Validation;
 

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.ohscript.external;
 
-import com.huawei.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClient;
 import com.huawei.fit.ohscript.external.support.DefaultHttpExecutor;
 import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
 

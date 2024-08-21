@@ -4,8 +4,8 @@
 
 package com.huawei.jade.authentication;
 
-import com.huawei.fit.http.Cookie;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.Cookie;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 
 /**

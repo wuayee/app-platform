@@ -4,11 +4,11 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
-import com.huawei.fit.http.annotation.DocumentIgnored;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.annotation.DocumentIgnored;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.gateway.EmployeeVO;
 import com.huawei.fit.jane.task.gateway.PersonService;

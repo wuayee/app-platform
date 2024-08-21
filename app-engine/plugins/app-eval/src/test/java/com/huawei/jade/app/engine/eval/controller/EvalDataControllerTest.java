@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.Mock;
 import modelengine.fitframework.test.annotation.MvcTest;

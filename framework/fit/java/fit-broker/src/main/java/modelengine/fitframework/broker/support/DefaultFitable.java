@@ -7,7 +7,7 @@ package modelengine.fitframework.broker.support;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.serialization.MessageSerializer;
+import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fitframework.broker.Aliases;
 import modelengine.fitframework.broker.ConfigurableFitable;
 import modelengine.fitframework.broker.Fitable;

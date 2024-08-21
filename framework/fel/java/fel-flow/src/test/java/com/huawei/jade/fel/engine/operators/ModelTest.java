@@ -10,7 +10,7 @@ import static com.huawei.jade.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.flowable.Choir;

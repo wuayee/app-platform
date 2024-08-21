@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.common.filters;
 
-import com.huawei.fit.http.annotation.DocumentIgnored;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.annotation.DocumentIgnored;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.jober.common.model.JoberResponse;
 import modelengine.fitframework.annotation.Component;
 

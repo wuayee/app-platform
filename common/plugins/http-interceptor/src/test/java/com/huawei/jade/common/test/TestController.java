@@ -4,7 +4,7 @@
 
 package com.huawei.jade.common.test;
 
-import com.huawei.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.exception.FitException;
 import modelengine.fitframework.flowable.Choir;

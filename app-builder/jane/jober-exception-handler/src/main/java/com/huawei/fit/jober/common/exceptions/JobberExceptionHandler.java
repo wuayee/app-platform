@@ -7,9 +7,9 @@ package com.huawei.fit.jober.common.exceptions;
 import static com.huawei.fit.jober.common.ErrorCodes.SERVER_INTERNAL_ERROR;
 import static com.huawei.fit.jober.common.ErrorCodes.UN_EXCEPTED_ERROR;
 
-import com.huawei.fit.http.annotation.ExceptionHandler;
-import com.huawei.fit.http.annotation.ResponseStatus;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.http.annotation.ExceptionHandler;
+import modelengine.fit.http.annotation.ResponseStatus;
+import modelengine.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.model.JoberResponse;
 import com.huawei.fit.jober.common.util.ParamUtils;

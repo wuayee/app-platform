@@ -4,13 +4,13 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.websocket.Session;
-import com.huawei.fit.http.websocket.annotation.OnClose;
-import com.huawei.fit.http.websocket.annotation.OnMessage;
-import com.huawei.fit.http.websocket.annotation.OnOpen;
-import com.huawei.fit.http.websocket.annotation.TextMessage;
-import com.huawei.fit.http.websocket.annotation.WebSocketEndpoint;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.websocket.Session;
+import modelengine.fit.http.websocket.annotation.OnClose;
+import modelengine.fit.http.websocket.annotation.OnMessage;
+import modelengine.fit.http.websocket.annotation.OnOpen;
+import modelengine.fit.http.websocket.annotation.TextMessage;
+import modelengine.fit.http.websocket.annotation.WebSocketEndpoint;
 import com.huawei.fit.jober.aipp.entity.StreamLogParam;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;

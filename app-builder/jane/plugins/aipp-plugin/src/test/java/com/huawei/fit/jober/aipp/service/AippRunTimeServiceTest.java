@@ -16,7 +16,7 @@ import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaItem;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;

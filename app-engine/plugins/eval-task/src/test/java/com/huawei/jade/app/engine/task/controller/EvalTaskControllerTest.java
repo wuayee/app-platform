@@ -9,7 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.Mock;
 import modelengine.fitframework.test.annotation.MvcTest;

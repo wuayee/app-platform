@@ -4,12 +4,12 @@
 
 package com.huawei.fit.jober.taskcenter.tianzhou;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.ResponseStatus;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.ResponseStatus;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jober.taskcenter.controller.GenericableController;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.plugin.Plugin;

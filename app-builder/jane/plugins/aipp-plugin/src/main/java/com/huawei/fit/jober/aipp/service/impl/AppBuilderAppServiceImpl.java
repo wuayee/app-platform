@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.service.impl;
 import static com.huawei.fit.jober.aipp.common.exception.AippErrCode.TASK_NOT_FOUND;
 import static com.huawei.fit.jober.aipp.constants.AippConst.ATTR_UNIQUE_NAME;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.Undefinable;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;

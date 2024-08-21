@@ -4,9 +4,9 @@
 
 package com.huawei.jade.app.engine.base.controller;
 
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
 import com.huawei.fit.jane.common.response.Rsp;
 import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.base.dto.AppBuilderRecommendDto;

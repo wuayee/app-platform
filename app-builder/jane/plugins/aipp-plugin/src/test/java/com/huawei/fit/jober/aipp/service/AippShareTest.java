@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.dynamicform.DynamicFormMetaService;
 import com.huawei.fit.dynamicform.DynamicFormService;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.ObjectEntity;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.ObjectEntity;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.FlowInstanceService;

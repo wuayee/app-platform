@@ -6,13 +6,13 @@ package com.huawei.fit.jober.common.filters;
 
 import static modelengine.fitframework.annotation.Order.HIGHEST;
 
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fit.http.server.DoHttpServerFilterException;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.http.server.HttpServerFilter;
-import com.huawei.fit.http.server.HttpServerFilterChain;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.http.server.DoHttpServerFilterException;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.HttpServerFilter;
+import modelengine.fit.http.server.HttpServerFilterChain;
 import com.huawei.fit.jober.common.Constant;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Scope;

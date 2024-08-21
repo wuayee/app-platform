@@ -4,7 +4,7 @@
 
 package modelengine.fitframework.broker;
 
-import com.huawei.fit.serialization.MessageSerializer;
+import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Method;

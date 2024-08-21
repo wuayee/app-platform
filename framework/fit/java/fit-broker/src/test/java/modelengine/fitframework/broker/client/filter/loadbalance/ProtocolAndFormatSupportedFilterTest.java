@@ -9,7 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.client.Client;
+import modelengine.fit.client.Client;
 import modelengine.fitframework.broker.Endpoint;
 import modelengine.fitframework.broker.FitableMetadata;
 import modelengine.fitframework.broker.Format;

@@ -11,10 +11,10 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.TextEntity;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.TextEntity;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.impl.LLMServiceImpl;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;

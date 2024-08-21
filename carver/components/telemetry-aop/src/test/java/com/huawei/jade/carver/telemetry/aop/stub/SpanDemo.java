@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.telemetry.aop.stub;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.RequestParam;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 

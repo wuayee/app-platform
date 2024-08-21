@@ -4,8 +4,8 @@
 
 package modelengine.fitframework.test.domain.mvc;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import modelengine.fitframework.test.domain.mvc.request.RequestParam;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;

@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.protocol.Address;
-import com.huawei.fit.http.protocol.support.DefaultMessageHeaders;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.http.support.DefaultCookieCollection;
+import modelengine.fit.http.protocol.Address;
+import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.support.DefaultCookieCollection;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;

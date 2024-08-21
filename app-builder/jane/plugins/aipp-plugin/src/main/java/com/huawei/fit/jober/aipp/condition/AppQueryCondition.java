@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.condition;
 
-import com.huawei.fit.http.annotation.RequestParam;
+import modelengine.fit.http.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

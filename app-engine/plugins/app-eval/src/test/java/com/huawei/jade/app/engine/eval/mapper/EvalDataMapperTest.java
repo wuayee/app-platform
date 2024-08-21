@@ -7,7 +7,7 @@ package com.huawei.jade.app.engine.eval.mapper;
 import static modelengine.fitframework.util.IoUtils.content;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.test.annotation.MybatisTest;

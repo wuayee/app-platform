@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.controller;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.task.domain.Authorization;
 import com.huawei.fit.jane.task.domain.DomainObject;

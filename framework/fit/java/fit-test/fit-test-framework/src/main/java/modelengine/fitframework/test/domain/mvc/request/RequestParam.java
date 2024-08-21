@@ -4,7 +4,7 @@
 
 package modelengine.fitframework.test.domain.mvc.request;
 
-import com.huawei.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientRequest;
 
 import java.lang.reflect.Type;
 

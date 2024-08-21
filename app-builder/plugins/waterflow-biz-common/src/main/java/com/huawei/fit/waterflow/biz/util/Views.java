@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.biz.util;
 
 import static com.huawei.fit.waterflow.biz.common.Constant.STREAM_ID_SEPARATOR;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.task.domain.Authorization;

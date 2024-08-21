@@ -12,10 +12,10 @@ import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;

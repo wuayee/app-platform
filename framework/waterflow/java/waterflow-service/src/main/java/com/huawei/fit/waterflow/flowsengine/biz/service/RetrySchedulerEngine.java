@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.biz.service;
 
-import com.huawei.fit.service.FitablesRegisteredObserver;
+import modelengine.fit.service.FitablesRegisteredObserver;
 import com.huawei.fit.waterflow.common.utils.GlobalExecutorUtil;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
 import modelengine.fitframework.annotation.Component;

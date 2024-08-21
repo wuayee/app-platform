@@ -6,7 +6,7 @@ package modelengine.fitframework.broker.serialization;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.serialization.MessageSerializer;
+import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fitframework.broker.SerializationService;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;

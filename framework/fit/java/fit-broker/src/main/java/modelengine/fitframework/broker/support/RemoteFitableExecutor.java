@@ -7,11 +7,11 @@ package modelengine.fitframework.broker.support;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notEmpty;
 
-import com.huawei.fit.client.Address;
-import com.huawei.fit.client.Client;
-import com.huawei.fit.client.Request;
-import com.huawei.fit.client.RequestContext;
-import com.huawei.fit.client.Response;
+import modelengine.fit.client.Address;
+import modelengine.fit.client.Client;
+import modelengine.fit.client.Request;
+import modelengine.fit.client.RequestContext;
+import modelengine.fit.client.Response;
 import com.huawei.fit.service.RegisterAuthService;
 import com.huawei.fit.service.exception.AuthenticationException;
 import modelengine.fitframework.broker.Endpoint;

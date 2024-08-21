@@ -6,9 +6,9 @@ package modelengine.fitframework.broker.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.server.FitServer;
-import com.huawei.fit.service.Registry;
-import com.huawei.fit.service.RegistryLocator;
+import modelengine.fit.server.FitServer;
+import modelengine.fit.service.Registry;
+import modelengine.fit.service.RegistryLocator;
 import modelengine.fitframework.broker.Endpoint;
 import modelengine.fitframework.broker.Format;
 import modelengine.fitframework.broker.LocalExecutorFactory;

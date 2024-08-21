@@ -5,9 +5,8 @@
 package modelengine.fitframework.broker.client.filter.loadbalance;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fit.client.Client;
+import modelengine.fit.client.Client;
 import modelengine.fitframework.broker.Endpoint;
 import modelengine.fitframework.broker.FitableMetadata;
 import modelengine.fitframework.broker.Format;

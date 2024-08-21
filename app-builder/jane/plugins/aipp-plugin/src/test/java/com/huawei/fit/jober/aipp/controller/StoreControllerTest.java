@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.ToolDto;

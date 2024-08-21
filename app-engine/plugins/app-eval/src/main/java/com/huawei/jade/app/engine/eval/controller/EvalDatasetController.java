@@ -4,14 +4,14 @@
 
 package com.huawei.jade.app.engine.eval.controller;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.PutMapping;
-import com.huawei.fit.http.annotation.RequestBean;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.PutMapping;
+import modelengine.fit.http.annotation.RequestBean;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.transaction.DataAccessException;
 import modelengine.fitframework.validation.Validated;

@@ -6,7 +6,7 @@ package com.huawei.jade.fel.core.formatters.json;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.TypeUtils;

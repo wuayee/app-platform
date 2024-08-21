@@ -7,10 +7,10 @@ package com.huawei.jade.carver.tool.support;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.okhttp.OkHttpClassicClientFactory;
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fit.value.fastjson.FastJsonValueHandler;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.okhttp.OkHttpClassicClientFactory;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.value.fastjson.FastJsonValueHandler;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.IoUtils;
 import modelengine.fitframework.util.MapBuilder;

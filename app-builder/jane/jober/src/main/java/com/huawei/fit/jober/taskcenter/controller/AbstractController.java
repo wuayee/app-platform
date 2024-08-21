@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.controller;
 import static com.huawei.fit.jober.taskcenter.controller.Views.viewOf;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jane.task.util.PagedResultSet;

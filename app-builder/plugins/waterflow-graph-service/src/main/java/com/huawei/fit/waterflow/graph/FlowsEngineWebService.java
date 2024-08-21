@@ -12,7 +12,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.UN_EXCEPTED_ERROR;
 import static com.huawei.fit.waterflow.biz.common.Constant.STREAM_ID_SEPARATOR;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import com.huawei.fit.jane.flow.graph.entity.FlowGraphQueryParam;

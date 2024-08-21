@@ -6,8 +6,8 @@ package com.huawei.jade.common.filter.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.TextEntity;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.TextEntity;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.test.annotation.MvcTest;

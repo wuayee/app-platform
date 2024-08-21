@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.annotation.Genericable;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.broker.client.BrokerClient;

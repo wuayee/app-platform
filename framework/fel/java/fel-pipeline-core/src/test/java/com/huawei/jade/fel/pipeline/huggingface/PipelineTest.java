@@ -7,7 +7,7 @@ package com.huawei.jade.fel.pipeline.huggingface;
 import static modelengine.fitframework.util.IoUtils.content;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.TypeUtils;

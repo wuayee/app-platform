@@ -9,8 +9,8 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.Assertions;

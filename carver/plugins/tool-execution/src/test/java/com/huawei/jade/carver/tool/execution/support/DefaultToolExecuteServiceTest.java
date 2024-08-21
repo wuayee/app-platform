@@ -10,7 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;

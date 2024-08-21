@@ -4,10 +4,10 @@
 
 package modelengine.fitframework.test.domain.mvc.request;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.entity.Entity;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.entity.Entity;
+import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.model.MultiValueMap;
 import modelengine.fitframework.test.domain.mvc.MockMvc;

@@ -10,13 +10,13 @@ import static modelengine.fitframework.inspection.Validation.notNull;
 import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
 import static com.huawei.jade.common.Result.calculateOffset;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestQuery;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestQuery;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 

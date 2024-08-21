@@ -6,10 +6,10 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import static com.huawei.fit.jober.aipp.util.HttpUtils.sendHttpRequest;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.entity.ObjectEntity;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.entity.ObjectEntity;
+import modelengine.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;

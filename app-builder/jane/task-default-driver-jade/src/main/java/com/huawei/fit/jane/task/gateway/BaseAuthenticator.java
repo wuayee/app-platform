@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.task.gateway;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.authentication.context.UserContext;

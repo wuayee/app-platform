@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;

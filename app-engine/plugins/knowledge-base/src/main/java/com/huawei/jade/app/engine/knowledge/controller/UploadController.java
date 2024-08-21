@@ -4,13 +4,13 @@
 
 package com.huawei.jade.app.engine.knowledge.controller;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestHeader;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.entity.ReadableBinaryEntity;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestHeader;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.entity.ReadableBinaryEntity;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.knowledge.dto.FileUploadRequest;

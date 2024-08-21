@@ -7,7 +7,7 @@ package com.huawei.jade.carver.tool.repository.pgsql.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;

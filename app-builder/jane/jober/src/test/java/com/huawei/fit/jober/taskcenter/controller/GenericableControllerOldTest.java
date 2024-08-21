@@ -9,10 +9,10 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.common.model.JoberResponse;
 import com.huawei.fit.jober.common.model.TextStringValue;
-import com.huawei.fit.service.RegistryService;
-import com.huawei.fit.service.entity.FitableInfo;
-import com.huawei.fit.service.entity.FitableMeta;
-import com.huawei.fit.service.entity.FitableMetaInstance;
+import modelengine.fit.service.RegistryService;
+import modelengine.fit.service.entity.FitableInfo;
+import modelengine.fit.service.entity.FitableMeta;
+import modelengine.fit.service.entity.FitableMetaInstance;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

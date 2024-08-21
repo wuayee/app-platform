@@ -6,7 +6,7 @@ package com.huawei.fit.ohscript.script.interpreter;
 
 import static com.huawei.fit.ohscript.util.Constants.EXTERNAL_VALUE;
 
-import com.huawei.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClient;
 import com.huawei.fit.ohscript.external.FitExecutionException;
 import com.huawei.fit.ohscript.external.FitExecutor;
 import com.huawei.fit.ohscript.external.HttpExecutionException;

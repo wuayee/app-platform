@@ -6,10 +6,10 @@ package com.huawei.jade.carver.tool.execution.controller;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestParam;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.carver.tool.service.ToolExecuteService;
 
