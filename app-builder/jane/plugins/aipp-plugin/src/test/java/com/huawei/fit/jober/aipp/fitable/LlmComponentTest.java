@@ -187,7 +187,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         Mockito.doNothing().when(aippLogStreamService).send(any());
@@ -216,7 +217,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
@@ -238,7 +240,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         AtomicInteger resCnt = new AtomicInteger(0);
 
@@ -285,7 +288,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -310,7 +314,8 @@ public class LlmComponentTest {
                 aippLogService,
                 null,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
@@ -336,7 +341,8 @@ public class LlmComponentTest {
                 this.aippLogService,
                 null,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -388,7 +394,8 @@ public class LlmComponentTest {
                 this.aippLogService,
                 null,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

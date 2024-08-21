@@ -48,16 +48,16 @@ public class AippComponentInitiator {
     /**
      * 根据语言获取国际化对象。
      *
-     * @param zhKey 表示中文键值的 {@link String}。
      * @param enKey 表示英文键值的 {@link String}。
+     * @param zhKey 表示中文键值的 {@link String}。
      * @param targetClass 表示类的 {@link Class}{@code <}{@link T}{@code >}。
      * @param <T> 表示泛型的 {@code <}{@link T}{@code >}。
      * @return 表示泛型实例的 {@link T}。
      */
-    public static <T> T getLocaleObject(String zhKey, String enKey, Class<T> targetClass) {
+    public static <T> T getLocaleObject(String enKey, String zhKey, Class<T> targetClass) {
         return JsonUtils.parseObject(LocaleUiWord.getLocale().getLanguage().equals(Locale.ENGLISH.getLanguage())
-                ? COMPONENT_DATA.get(zhKey)
-                : COMPONENT_DATA.get(enKey), targetClass);
+                ? COMPONENT_DATA.get(enKey)
+                : COMPONENT_DATA.get(zhKey), targetClass);
     }
 
     @Initialize
