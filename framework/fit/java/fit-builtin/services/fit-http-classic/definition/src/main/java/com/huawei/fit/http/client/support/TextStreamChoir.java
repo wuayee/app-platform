@@ -67,11 +67,11 @@ public class TextStreamChoir<T> extends AbstractChoir<T> implements Choir<T> {
 
         @Override
         protected void request0(long count) {
+            long num = this.counter.addAndGet(count);
             if (this.requested.compareAndSet(false, true)) {
                 this.exchange();
             }
             synchronized (this.lock) {
-                long num = this.counter.addAndGet(count);
                 for (int i = 0; i < num; i++) {
                     if (this.buffer.isEmpty()) {
                         this.handleBufferIsEmpty();
