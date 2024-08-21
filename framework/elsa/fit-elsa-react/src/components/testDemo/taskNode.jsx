@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import TaskList from "@/components/testDemo/TaskList.jsx";
 import AddTask from "@/components/testDemo/AddTask.jsx";
 import {CloudSyncOutlined} from "@ant-design/icons";

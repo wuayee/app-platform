@@ -4,8 +4,8 @@ import React, {useRef, useState} from "react";
 import {NODE_STATUS} from "@";
 import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
-import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "./asserts/svgIcons.jsx?react";
-import ToolIcon from "./asserts/icon-tool.svg?react";
+import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "../asserts/svgIcons.jsx?react";
+import ToolIcon from "../asserts/icon-tool.svg?react";
 import {Header} from "@/components/Header.jsx";
 import {Footer} from "@/components/Footer.jsx";
 import {Tooltip} from "antd";
@@ -73,11 +73,16 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
         return self.rootRef && self.rootRef.current && self.rootRef.current.getData();
     };
 
+    // 修改入参.
+    self.dispatch = (action) => {
+        self.rootRef.current.dispatch(action);
+    };
+
     const JadeWrapper = () => {
         self.panelRef = useRef();
         self.rootRef = useRef();
         const [runStatus, setRunStatus] = useState(shape.runStatus);
-        const [disabled, setDisabled] = useState(false);
+        const [disabled, setDisabled] = useState(shape.disabled);
 
         // 设置运行状态.
         self.setRunStatus = status => {

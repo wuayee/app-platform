@@ -1,5 +1,6 @@
 import {v4 as uuidv4} from "uuid";
 import RetrievalWrapper from "@/components/retrieval/RetrievalWrapper.jsx";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * retrieval节点组件
@@ -7,7 +8,7 @@ import RetrievalWrapper from "@/components/retrieval/RetrievalWrapper.jsx";
  * @param jadeConfig
  */
 export const retrievalComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必填
@@ -71,6 +72,7 @@ export const retrievalComponent = (jadeConfig) => {
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         const _editInput = () => {
             const query = newConfig.inputParams.find(item => item.name === "query");
@@ -180,7 +182,7 @@ export const retrievalComponent = (jadeConfig) => {
                 _changeMaximum();
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

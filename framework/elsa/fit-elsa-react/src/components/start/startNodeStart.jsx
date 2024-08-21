@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import {DIRECTION} from "@fit-elsa/elsa-core";
 import "./style.css";
 import {SECTION_TYPE} from "@/common/Consts.js";
@@ -62,6 +62,13 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
             type: SECTION_TYPE.DEFAULT,
             data: self.getOutputData(self.input)
         }];
+    };
+
+    /**
+     * @override
+     */
+    self.getEntity = () => {
+        return self.flowMeta;
     };
 
     return self;

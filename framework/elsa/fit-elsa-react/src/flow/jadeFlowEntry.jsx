@@ -316,15 +316,17 @@ export const JadeFlow = (() => {
      * @param div 待渲染的dom元素.
      * @param tenant 租户.
      * @param flowConfigData 流程元数据.
+     * @param isPublished 是否已发布.
      * @param configs 传入的其他参数列表.
+     * @param i18n 传入的多语言翻译组件.
      * @param importStatements 传入的需要加载的语句.
      * @return {Promise<{}>} JadeFlowAgent代理.
      */
-    self.evaluate = async (div, tenant, flowConfigData, configs, importStatements = []) => {
+    self.evaluate = async (div, tenant, flowConfigData, isPublished, configs, i18n, importStatements = []) => {
         const graphDom = getGraphDom(div);
-        const g = await createGraph(graphDom, tenant, flowConfigData, configs, importStatements);
+        const g = await createGraph(graphDom, tenant, flowConfigData, configs, i18n, importStatements);
         g.pageType = "jadeEvaluationPage";
-        await g.evaluate();
+        await g.evaluate(flowConfigData, isPublished);
         await g.activePage.awaitShapesRendered();
         return jadeFlowAgent(g);
     };

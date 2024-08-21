@@ -255,6 +255,7 @@ export default function IfForm({
                     />
                 </>
             case 'Input':
+                form.setFieldsValue({[`value-${item.id}`]: item.value});
                 switch (referenceType) {
                     case 'String':
                     case 'Array<String>':
@@ -386,6 +387,10 @@ export default function IfForm({
     };
 
     const renderCondition = (condition, index) => {
+        // 初始化时，如果condition的值，存在，需要通过form进行设置才会生效.
+        if (condition.condition) {
+            form.setFieldsValue({[`condition-${condition.id}`]: condition.condition});
+        }
         return <Row gutter={16} key={"row-" + index} style={{marginBottom: "6px", marginRight: 0}}>
             <Col span={6}>
                 <JadeReferenceTreeSelect

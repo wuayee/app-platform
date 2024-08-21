@@ -1,4 +1,4 @@
-import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
+import {jadeNodeDrawer} from "@/components/base/jadeNodeDrawer.jsx";
 import ApiInvokeIcon from "../asserts/icon-fit-invoke.svg?react"; // 导入背景图片
 
 /**

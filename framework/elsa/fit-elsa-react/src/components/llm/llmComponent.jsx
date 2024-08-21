@@ -1,8 +1,9 @@
 import LlmFormWrapper from "./LlmFormWrapper.jsx";
 import {v4 as uuidv4} from "uuid";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 export const llmComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
     const PLUGINS = "plugins"
 
     /**
@@ -71,6 +72,7 @@ export const llmComponent = (jadeConfig) => {
     /**
      * 必须.
      */
+    const reducers = self.reducers;
     self.reducers = (data, action) => {
         const addInputParam = () => {
             const newData = {};
@@ -407,7 +409,7 @@ export const llmComponent = (jadeConfig) => {
                 return deletePlugin();
             }
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [data, action]);
             }
         }
     };

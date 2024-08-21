@@ -47,6 +47,14 @@ export default function ConditionFormWrapper({disabled, data}) {
         });
     };
 
+    // 是否需要禁用branch.
+    const isDisabled = (branch) => {
+        if (disabled) {
+            return disabled;
+        }
+        return !branch.runnable;
+    };
+
     return (<div>
         <div style={{
             display: "flex", alignItems: "center", marginBottom: "8px", paddingLeft: "8px", paddingRight: "4px"
@@ -67,7 +75,7 @@ export default function ConditionFormWrapper({disabled, data}) {
                             index={index}
                             name={index === 0 ? "If" : "Else if"}
                             totalItemNum={branches.length + 1}
-                            disabled={disabled}
+                            disabled={isDisabled(branch)}
                             deleteBranch={deleteBranch}
                             changeConditionRelation={changeConditionRelation}
                             addCondition={addCondition}

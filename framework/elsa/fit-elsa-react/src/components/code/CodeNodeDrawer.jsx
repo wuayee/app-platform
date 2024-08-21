@@ -1,4 +1,4 @@
-import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
+import {jadeNodeDrawer} from "@/components/base/jadeNodeDrawer.jsx";
 import CodeIcon from "@/components/asserts/icon-code.svg?react";
 
 /**

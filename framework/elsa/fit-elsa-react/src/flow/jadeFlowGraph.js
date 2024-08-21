@@ -168,12 +168,14 @@ export const jadeFlowGraph = (div, title) => {
     /**
      * 评估.
      *
+     * @param graphData 画布数据.
+     * @param isPublished 是否已发布.
      * @return {Promise<void>} Promise.
      */
-    self.evaluate = async () => {
+    self.evaluate = async (graphData, isPublished) => {
         const pageData = self.getPageData(0);
         await self.edit(0, self.div, pageData.id);
-        self.activePage.normalize();
+        self.activePage.normalize(graphData, isPublished);
     };
 
     return self;

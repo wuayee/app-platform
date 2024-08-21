@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import httpUtil from "@/components/util/httpUtil.jsx";
 import {formatString} from "@/components/util/StringUtil.js";
