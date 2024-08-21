@@ -4,7 +4,7 @@ vendor: 'ModelEngine'
 operators:
 - operator:
     name: '邮件地址匿名化'
-    fitableId: 'ModelEngine.operators.email_cleaner_plugin'
+    fitableId: 'modelengine.operators.email_cleaner_plugin'
     version: '1.0.0'
     description: '邮件地址匿名化'
     types:

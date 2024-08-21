@@ -4,7 +4,7 @@ vendor: 'ModelEngine'
 operators:
 - operator:
     name: 'PDF文本抽取'
-    fitableId: 'ModelEngine.operators.pdf_extractor_cpu_plugin'
+    fitableId: 'modelengine.operators.pdf_extractor_cpu_plugin'
     version: '1.0.0'
     description: 'PDF文本抽取算子'
     types:
