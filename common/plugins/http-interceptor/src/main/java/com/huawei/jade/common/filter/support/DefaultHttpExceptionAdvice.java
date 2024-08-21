@@ -41,7 +41,8 @@ public class DefaultHttpExceptionAdvice {
         if (exception instanceof FitException) {
             return this.handleFitException((FitException) exception);
         }
-        return HttpResult.error(HttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(), exception.getMessage());
+        return HttpResult.error(HttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(),
+            localeMessageHandler.getDefaultMessage());
     }
 
     private HttpResult<Void> handleFitException(FitException exception) {
