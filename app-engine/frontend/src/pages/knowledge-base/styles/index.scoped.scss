@@ -27,5 +27,10 @@
   display: grid;
   justify-content: space-between;
   grid-template-columns: repeat(auto-fill, 24%);
-  
+}
+.knowledge-empty-box {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

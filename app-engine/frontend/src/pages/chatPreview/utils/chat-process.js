@@ -8,10 +8,14 @@ export const historyChatProcess = (res) => {
   let chatArr = [];
   res.data.forEach((item) => {
     let questionObj = { type: 'send', sendType: 'text' };
-    let { msg } = JSON.parse(item.question.logData);
-    questionObj.logId = item.question.logId;
-    questionObj.content = msg;
-    item.question.logType !== 'HIDDEN_QUESTION' && chatArr.push(questionObj);
+    if (item.question) {
+      let { msg } = JSON.parse(item.question.logData);
+      questionObj.logId = item.question.logId;
+      questionObj.content = msg;
+      if (item.question.logType !== 'HIDDEN_QUESTION') {
+        chatArr.push(questionObj);
+      };
+    }
     if (item.instanceLogBodies.length) {
       item.instanceLogBodies.forEach((aItem) => {
         let { msg } = JSON.parse(aItem.logData);
@@ -61,9 +65,6 @@ export const historyChatProcess = (res) => {
         }
         chatArr.push(answerObj);
       });
-    } else {
-      let answerObj = { type: 'receive', content: '未获取回答' };
-      chatArr.push(answerObj);
     }
   });
   return chatArr;
@@ -217,6 +218,7 @@ export const messageProcessNormal = (log, atAppInfo) => {
     openLoading: false,
     checked: false,
     logId: log.msgId || uuidv4(),
+    msgId: log.msgId,
     markdownSyntax: markdowned !== -1,
     type: 'receive',
     feedbackStatus: -1,
