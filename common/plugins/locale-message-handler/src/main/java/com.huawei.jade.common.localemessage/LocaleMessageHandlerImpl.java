@@ -11,6 +11,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
+import com.huawei.jade.common.code.CommonRetCode;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,8 +28,6 @@ import java.util.Locale;
 @Component
 public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
     private static final Logger log = Logger.get(LocaleMessageHandlerImpl.class);
-
-    private static final String DEFAULT_SYSTEM_ERROR_MESSAGE_KEY = "000001";
 
     /**
      * 默认支持语言。
@@ -61,7 +60,7 @@ public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
     @Override
     public String getDefaultMessage() {
         Locale locale = getLocale();
-        return plugin.sr().getMessage(locale, DEFAULT_SYSTEM_ERROR_MESSAGE_KEY);
+        return plugin.sr().getMessage(locale, String.valueOf(CommonRetCode.INTERNAL_ERROR.getCode()));
     }
 
     private Locale getLocale() {

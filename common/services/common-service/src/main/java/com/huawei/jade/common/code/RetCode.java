@@ -33,7 +33,7 @@ public interface RetCode {
      * @return 表示系统返回码的 {@code int}。
      */
     default int convertSubSystemCode(int subSystemId, int subSystemCode) {
-        return (subSystemId << 24) | (subSystemCode & 0xFFFFFF);
+        return subSystemId * 10000000 + subSystemCode;
     }
 
     /**

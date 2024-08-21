@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 public class LocaleMessageHandlerImplTest {
-    private final String defaultSystemErrorMessageKey = "000001";
+    private final String defaultSystemErrorMessageKey = "500";
 
     @Mock
     private Plugin plugin;
