@@ -13,8 +13,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>connector/milvus</module>
-<!--        <module>connector/redis</module>-->
         <module>model</module>
         <module>model-plugin</module>
         <module>huggingface-pipeline</module>

@@ -14,7 +14,6 @@
 
     <modules>
         <module>retrieve/basic-retriever</module>
-        <module>index/vector-index</module>
         <module>index/table-index</module>
         <module>rerank/llm-rerank</module>
         <module>split/token-splitter</module>
