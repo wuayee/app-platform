@@ -46,7 +46,7 @@ const ConditionForm = (props) => {
         Message({ type: 'warning', content: res.msg || t('savingFailed') });
         return;
       }
-      confirmCallBack ? confirmCallBack() : conditionConfirm(res);
+      confirmCallBack ? confirmCallBack(res) : conditionConfirm(res);
     } finally {
       setLoading(false);
     }

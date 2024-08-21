@@ -24,6 +24,7 @@ const QuestionClar = (props) => {
   const [questionInfo, setQuestionInfo] = useState(null);
   const { RangePicker } = DatePicker;
   const { handleRejectClar, conditionConfirm } = useContext(ChatContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!data?.formData) return;
@@ -350,12 +351,14 @@ const QuestionClar = (props) => {
         [id]: JSON.stringify(info),
       },
     };
+    setLoading(true);
     const res = await saveContent(tenantId, data?.formData?.instanceId, params);
     if (res.status !== 200) {
       Message({ type: 'warning', content: res.msg || '对话失败' });
       return;
     }
-    confirmCallBack ? confirmCallBack() : conditionConfirm(res);
+    setLoading(false);
+    confirmCallBack ? confirmCallBack(res) : conditionConfirm(res);
   }
 
   return (<>
@@ -489,7 +492,7 @@ const QuestionClar = (props) => {
       </div>
       { mode !== 'history' && confirmCallBack &&
         <div className='footer'>
-          <Button className='mr10' type='primary' onClick={confirmClar}>确定</Button>
+          <Button className='mr10' type='primary' loading={loading} onClick={confirmClar}>确定</Button>
           <Button onClick={rejectClar}>拒绝澄清</Button>
         </div> }
 </div>
