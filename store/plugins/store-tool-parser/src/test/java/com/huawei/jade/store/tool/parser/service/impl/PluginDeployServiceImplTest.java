@@ -7,6 +7,7 @@ package com.huawei.jade.store.tool.parser.service.impl;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,6 +23,7 @@ import com.huawei.fit.service.entity.ApplicationInstance;
 import com.huawei.fit.service.entity.FitableAddressInstance;
 import com.huawei.fit.service.entity.FitableInfo;
 import com.huawei.fitframework.parameterization.StringFormatException;
+import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.FileUtils;
 import com.huawei.jade.store.entity.transfer.PluginData;
@@ -81,6 +83,9 @@ class PluginDeployServiceImplTest {
     private PluginToolService mockPluginToolService;
 
     private PluginDeployServiceImpl pluginDeployServiceImplUnderTest;
+
+    @Mock
+    private FitRuntime fitRuntime;
 
     @BeforeEach
     void setUp() {
@@ -319,5 +324,15 @@ class PluginDeployServiceImplTest {
         Files.copy(pluginJsonFile, filePath.resolve("plugin.json"), StandardCopyOption.REPLACE_EXISTING);
         assertThatThrownBy(() -> method.invoke(pluginDeployServiceImplUnderTest, filePath.toFile(),
             "add list,add itself")).isInstanceOf(InvocationTargetException.class);
+    }
+
+    @Test
+    @DisplayName("测试初始化插件状态功能正常")
+    void testInitDeployStatus() {
+        when(mockPluginService.getPlugins(DeployStatus.DEPLOYING)).thenReturn(
+            Collections.singletonList(mockPluginData()));
+        when(mockPluginService.getPlugin(Mockito.anyString())).thenReturn(mockPluginData());
+        pluginDeployServiceImplUnderTest.onRuntimeStarted(fitRuntime);
+        verify(mockPluginService).updateDeployStatus(Mockito.anyList(), eq(DeployStatus.UNDEPLOYED));
     }
 }
