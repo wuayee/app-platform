@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.converter;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingFlowDataConverter;

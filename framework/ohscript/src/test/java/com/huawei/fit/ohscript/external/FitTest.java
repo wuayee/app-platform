@@ -4,7 +4,7 @@
 
 package com.huawei.fit.ohscript.external;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,8 +16,8 @@ import com.huawei.fit.ohscript.script.parser.AST;
 import com.huawei.fit.ohscript.script.parser.GrammarBuilder;
 import com.huawei.fit.ohscript.script.parser.ParserBuilder;
 import com.huawei.fit.ohscript.util.OhScriptReader;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

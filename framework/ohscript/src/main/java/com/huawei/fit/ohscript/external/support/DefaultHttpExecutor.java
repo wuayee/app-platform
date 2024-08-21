@@ -4,9 +4,9 @@
 
 package com.huawei.fit.ohscript.external.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
@@ -19,9 +19,9 @@ import com.huawei.fit.ohscript.external.HttpExecutor;
 import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
 import com.huawei.fit.ohscript.util.ValueUtils;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Collections;

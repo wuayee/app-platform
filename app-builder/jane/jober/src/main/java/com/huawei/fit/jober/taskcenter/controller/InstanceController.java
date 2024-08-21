@@ -8,8 +8,8 @@ import static com.huawei.fit.jober.common.ErrorCodes.FILTER_IS_EMPTY;
 import static com.huawei.fit.jober.taskcenter.controller.Views.declareInstance;
 import static com.huawei.fit.jober.taskcenter.controller.Views.filterOfInstances;
 import static com.huawei.fit.jober.taskcenter.controller.Views.viewOf;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -33,7 +33,7 @@ import com.huawei.fit.jober.taskcenter.domain.ViewMode;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

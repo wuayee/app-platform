@@ -9,10 +9,10 @@ import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING
 import com.huawei.fit.http.exception.AsyncTaskExecutionException;
 import com.huawei.fit.http.exception.AsyncTaskNotFoundException;
 import com.huawei.fit.serialization.http.HttpUtils;
-import com.huawei.fitframework.broker.server.Response;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.server.Response;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Map;

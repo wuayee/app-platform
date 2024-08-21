@@ -23,7 +23,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.service.TaskAgendaService;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.Collections;
 import java.util.List;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.service.entity;
 
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import java.util.ArrayList;
 import java.util.List;

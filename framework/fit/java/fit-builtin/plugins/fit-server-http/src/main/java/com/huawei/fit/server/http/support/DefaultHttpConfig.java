@@ -5,9 +5,9 @@
 package com.huawei.fit.server.http.support;
 
 import com.huawei.fit.server.http.HttpConfig;
-import com.huawei.fitframework.annotation.AcceptConfigValues;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.conf.runtime.support.DefaultSecure;
+import modelengine.fitframework.annotation.AcceptConfigValues;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.conf.runtime.support.DefaultSecure;
 
 import java.util.Optional;
 

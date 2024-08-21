@@ -4,14 +4,14 @@
 
 package com.huawei.fit.heartbeat.server;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.heartbeat.HeartbeatService;
 import com.huawei.fit.service.WorkerCache;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

@@ -17,7 +17,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Nod
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import com.huawei.fit.ohscript.util.Pair;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

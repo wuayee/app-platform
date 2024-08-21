@@ -31,9 +31,9 @@ import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.common.RangedResultSet;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.validation.Validated;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.validation.Validated;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

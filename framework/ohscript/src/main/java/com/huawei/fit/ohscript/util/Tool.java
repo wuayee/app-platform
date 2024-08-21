@@ -13,7 +13,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.ArgumentNode;
 import com.huawei.fit.ohscript.script.parser.nodes.BlockNode;
 import com.huawei.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import sun.misc.Unsafe;
 

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.eval.manager.impl;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.eval.entity.EvalVersionEntity;
 import com.huawei.jade.app.engine.eval.manager.EvalDatasetVersionManager;
 import com.huawei.jade.app.engine.eval.mapper.EvalDataMapper;

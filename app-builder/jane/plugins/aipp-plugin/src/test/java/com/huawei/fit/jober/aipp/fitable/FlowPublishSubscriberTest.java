@@ -30,7 +30,7 @@ import com.huawei.fit.jober.entity.FlowNodePublishInfo;
 import com.huawei.fit.jober.entity.FlowPublishContext;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -10,7 +10,7 @@ import com.huawei.fit.jober.aipp.dto.AippDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

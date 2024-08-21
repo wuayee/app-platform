@@ -14,7 +14,7 @@ import com.huawei.fit.jober.aipp.service.CodeExecuteService;
 import com.huawei.fit.jober.aipp.service.impl.CodeExecuteServiceImpl;
 import com.huawei.fit.jober.aipp.tool.impl.CodeNodeExecutorImpl;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

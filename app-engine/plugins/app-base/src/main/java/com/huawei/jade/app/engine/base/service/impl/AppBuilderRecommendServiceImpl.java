@@ -4,9 +4,9 @@
 
 package com.huawei.jade.app.engine.base.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.SerializationException;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.SerializationException;
 import com.huawei.jade.app.engine.base.service.AppBuilderRecommendService;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;

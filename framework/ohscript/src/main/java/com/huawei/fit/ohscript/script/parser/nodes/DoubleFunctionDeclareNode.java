@@ -20,7 +20,7 @@ import com.huawei.fit.ohscript.util.OhFunction;
 import com.huawei.fit.ohscript.util.Pair;
 import com.huawei.fit.ohscript.util.Tool;
 import com.huawei.fit.ohscript.util.Triple;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.Setter;
 

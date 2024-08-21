@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.client.okhttp;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.Serializers;
 import com.huawei.fit.http.client.HttpClassicClient;
@@ -18,8 +18,8 @@ import com.huawei.fit.http.client.support.DefaultHttpClassicClientRequest;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.value.ValueFetcher;
 
 import java.lang.reflect.Type;
 

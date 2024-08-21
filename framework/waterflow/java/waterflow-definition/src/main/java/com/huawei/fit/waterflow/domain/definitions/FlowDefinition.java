@@ -19,7 +19,7 @@ import com.huawei.fit.waterflow.domain.enums.FlowDefinitionStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.WaterFlows;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

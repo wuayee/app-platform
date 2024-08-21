@@ -13,10 +13,10 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.log.support.FitChanger;
 import com.huawei.fit.log.support.Log4j2Changer;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.Map;
 

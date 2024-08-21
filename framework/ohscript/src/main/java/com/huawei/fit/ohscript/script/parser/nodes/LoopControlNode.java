@@ -6,7 +6,7 @@ package com.huawei.fit.ohscript.script.parser.nodes;
 
 import com.huawei.fit.ohscript.script.errors.SyntaxError;
 import com.huawei.fit.ohscript.script.parser.NonTerminal;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 循环条件节点

@@ -6,12 +6,12 @@ package com.huawei.jade.fel.model.openai.client;
 
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.client.okhttp.OkHttpClientBuilderFactory;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.model.openai.api.OpenAiApi;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;

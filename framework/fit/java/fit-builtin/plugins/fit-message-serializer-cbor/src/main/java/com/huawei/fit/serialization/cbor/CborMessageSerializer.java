@@ -4,20 +4,20 @@
 
 package com.huawei.fit.serialization.cbor;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Order;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Order;
 import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ArrayUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

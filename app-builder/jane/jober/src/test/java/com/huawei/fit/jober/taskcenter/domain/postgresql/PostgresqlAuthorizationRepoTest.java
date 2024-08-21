@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.domain.postgresql;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,9 +25,9 @@ import com.huawei.fit.jober.common.ServerInternalException;
 import com.huawei.fit.jober.common.exceptions.NotFoundException;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.AuthorizationValidator;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

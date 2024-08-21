@@ -4,10 +4,10 @@
 
 package com.huawei.fit.serialization.util;
 
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.flowable.Solo;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.flowable.Solo;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 

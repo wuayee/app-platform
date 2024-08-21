@@ -4,8 +4,8 @@
 
 package com.huawei.fit.ohscript.external;
 
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.FitableSuite;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.FitableSuite;
 
 import java.util.List;
 import java.util.Map;

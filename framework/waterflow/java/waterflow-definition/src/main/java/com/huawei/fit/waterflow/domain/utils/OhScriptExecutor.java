@@ -18,8 +18,8 @@ import com.huawei.fit.ohscript.script.parser.ParserBuilder;
 import com.huawei.fit.waterflow.common.ErrorCodes;
 import com.huawei.fit.waterflow.common.exceptions.WaterflowException;
 import com.huawei.fit.waterflow.domain.context.FlowData;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

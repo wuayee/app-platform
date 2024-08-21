@@ -8,8 +8,8 @@ import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.common.Constant;
 import com.huawei.fit.waterflow.domain.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.domain.enums.FlowTaskType;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 任务中心人工任务校验规则

@@ -8,7 +8,7 @@ import com.huawei.fit.ohscript.script.lexer.Terminal;
 import com.huawei.fit.ohscript.script.parser.NonTerminal;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 参数节点

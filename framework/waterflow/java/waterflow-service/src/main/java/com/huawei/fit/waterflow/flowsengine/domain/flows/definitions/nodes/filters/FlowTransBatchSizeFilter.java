@@ -7,8 +7,8 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.filt
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

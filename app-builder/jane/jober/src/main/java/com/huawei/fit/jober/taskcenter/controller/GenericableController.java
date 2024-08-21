@@ -14,8 +14,8 @@ import com.huawei.fit.jober.common.model.TextStringValue;
 import com.huawei.fit.service.RegistryService;
 import com.huawei.fit.service.entity.FitableMetaInstance;
 import com.huawei.fit.service.entity.GenericableInfo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.GenericableMetadata;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.GenericableMetadata;
 
 import java.util.Collections;
 import java.util.List;

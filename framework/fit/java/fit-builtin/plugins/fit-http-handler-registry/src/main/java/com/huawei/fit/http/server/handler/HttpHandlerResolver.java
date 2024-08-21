@@ -6,7 +6,7 @@ package com.huawei.fit.http.server.handler;
 
 import com.huawei.fit.http.server.HttpHandlerGroup;
 import com.huawei.fit.http.server.HttpServerFilter;
-import com.huawei.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.ioc.BeanFactory;
 
 import java.util.List;
 import java.util.Optional;

@@ -19,9 +19,9 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Data;
 

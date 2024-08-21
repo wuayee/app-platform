@@ -13,16 +13,16 @@ import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.serialization.http.HttpUtils;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.conf.runtime.ClientConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.exception.ClientException;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ResponseMetadata;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
-import com.huawei.fitframework.util.UuidUtils;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.conf.runtime.ClientConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.exception.ClientException;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.tlv.TlvUtils;
+import modelengine.fitframework.util.UuidUtils;
 
 import java.io.IOException;
 

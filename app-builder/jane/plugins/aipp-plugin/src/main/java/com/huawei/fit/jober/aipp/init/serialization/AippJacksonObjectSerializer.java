@@ -4,17 +4,17 @@
 
 package com.huawei.fit.jober.aipp.init.serialization;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
 import com.huawei.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactoryBuilder;

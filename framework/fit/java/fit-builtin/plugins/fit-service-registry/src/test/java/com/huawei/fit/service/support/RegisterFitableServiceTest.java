@@ -15,11 +15,11 @@ import com.huawei.fit.heartbeat.HeartbeatMonitor;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.service.RegisterFitableService;
 import com.huawei.fit.service.RegistryService;
-import com.huawei.fitframework.broker.LocalExecutor;
-import com.huawei.fitframework.broker.UniqueFitableId;
-import com.huawei.fitframework.conf.runtime.ApplicationConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.broker.LocalExecutor;
+import modelengine.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.conf.runtime.ApplicationConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

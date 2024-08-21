@@ -12,7 +12,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Typ
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.FunctionTypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.UnknownTypeExpr;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;

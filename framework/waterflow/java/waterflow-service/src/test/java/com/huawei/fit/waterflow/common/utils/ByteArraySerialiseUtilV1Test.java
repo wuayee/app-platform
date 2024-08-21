@@ -4,8 +4,8 @@
 
 package com.huawei.fit.waterflow.common.utils;
 
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

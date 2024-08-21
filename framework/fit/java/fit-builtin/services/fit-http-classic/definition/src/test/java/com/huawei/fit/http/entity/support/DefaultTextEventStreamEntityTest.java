@@ -12,9 +12,9 @@ import static org.mockito.Mockito.when;
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.TextEvent;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.pipeline.huggingface.type;
 
-import com.huawei.fitframework.resource.web.Media;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 import java.util.List;

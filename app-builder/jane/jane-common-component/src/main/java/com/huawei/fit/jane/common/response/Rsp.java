@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.common.response;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.Data;
 

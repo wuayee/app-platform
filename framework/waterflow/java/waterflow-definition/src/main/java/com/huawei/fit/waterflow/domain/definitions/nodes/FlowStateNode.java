@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.domain.stream.nodes.Blocks;
 import com.huawei.fit.waterflow.domain.stream.nodes.Node;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import com.alibaba.fastjson.JSON;
 

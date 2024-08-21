@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.exporter.repository;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 import com.huawei.jade.service.CarverSpanExporter;
 import com.huawei.jade.service.SpanExporterRepository;

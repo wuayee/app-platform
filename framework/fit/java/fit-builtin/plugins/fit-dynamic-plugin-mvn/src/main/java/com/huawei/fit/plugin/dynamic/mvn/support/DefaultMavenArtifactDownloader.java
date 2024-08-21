@@ -4,18 +4,18 @@
 
 package com.huawei.fit.plugin.dynamic.mvn.support;
 
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.plugin.dynamic.mvn.MavenArtifactDownloader;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.protocol.jar.Jar;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.protocol.jar.Jar;
 
 import java.io.File;
 import java.io.IOException;

@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.service;
 
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.IoUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.IoUtils;
 
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.SqlSessionManager;

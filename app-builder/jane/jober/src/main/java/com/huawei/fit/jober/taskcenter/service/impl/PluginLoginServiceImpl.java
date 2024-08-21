@@ -7,8 +7,8 @@ package com.huawei.fit.jober.taskcenter.service.impl;
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.taskcenter.service.PluginLoginService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.transaction.Transactional;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 

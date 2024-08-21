@@ -4,7 +4,7 @@
 
 package com.huawei.fit.service;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
@@ -12,16 +12,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.broker.LocalExecutor;
-import com.huawei.fitframework.broker.LocalExecutorFactory;
-import com.huawei.fitframework.broker.UniqueFitableId;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginMetadata;
-import com.huawei.fitframework.schedule.ThreadPoolScheduler;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.broker.LocalExecutor;
+import modelengine.fitframework.broker.LocalExecutorFactory;
+import modelengine.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginMetadata;
+import modelengine.fitframework.schedule.ThreadPoolScheduler;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

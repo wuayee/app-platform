@@ -39,8 +39,8 @@ import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowRetryPO;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

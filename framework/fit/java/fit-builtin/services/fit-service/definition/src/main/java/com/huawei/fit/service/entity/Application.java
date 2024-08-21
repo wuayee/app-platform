@@ -4,7 +4,7 @@
 
 package com.huawei.fit.service.entity;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import java.util.HashMap;
 import java.util.Map;

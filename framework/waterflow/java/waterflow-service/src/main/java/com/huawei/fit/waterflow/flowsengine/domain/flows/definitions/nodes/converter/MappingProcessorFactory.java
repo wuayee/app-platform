@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.conv
 
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.Map;
 import java.util.Optional;

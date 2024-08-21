@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.rerank;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.core.util.Tip;

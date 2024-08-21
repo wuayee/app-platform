@@ -4,18 +4,18 @@
 
 package com.huawei.fit.service.locator;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.server.FitServer;
 import com.huawei.fit.service.RegistryLocator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.Endpoint;
-import com.huawei.fitframework.broker.Target;
-import com.huawei.fitframework.conf.runtime.MatataConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.Endpoint;
+import modelengine.fitframework.broker.Target;
+import modelengine.fitframework.conf.runtime.MatataConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;

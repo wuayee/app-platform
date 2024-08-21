@@ -4,7 +4,7 @@
 
 package com.huawei.jade.common.filter;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 import com.huawei.jade.common.code.CommonRetCode;
 
 /**

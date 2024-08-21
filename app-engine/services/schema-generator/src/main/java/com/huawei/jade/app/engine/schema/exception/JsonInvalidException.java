@@ -6,8 +6,8 @@ package com.huawei.jade.app.engine.schema.exception;
 
 import static com.huawei.jade.app.engine.schema.code.SchemaGeneratorRetCode.JSON_INVALID_ERROR;
 
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示通过 Json 解析数据约束的相关异常。

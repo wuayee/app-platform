@@ -27,7 +27,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.F
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks.FilterBlock;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks.ValidatorBlock;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

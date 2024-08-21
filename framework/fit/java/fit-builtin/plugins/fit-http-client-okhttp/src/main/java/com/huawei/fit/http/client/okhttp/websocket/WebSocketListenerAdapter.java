@@ -10,9 +10,9 @@ import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.client.support.DefaultHttpClassicClientResponse;
 import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Nullable;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nullable;
+import modelengine.fitframework.model.MultiValueMap;
 
 import okhttp3.Response;
 import okhttp3.WebSocket;

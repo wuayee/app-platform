@@ -4,7 +4,7 @@
 
 package com.huawei.fit.data.repository.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.databus.sdk.api.DataBusClient;
 import com.huawei.databus.sdk.message.ErrorType;
@@ -19,8 +19,8 @@ import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.fit.data.repository.entity.Metadata;
 import com.huawei.fit.data.repository.entity.MetadataType;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

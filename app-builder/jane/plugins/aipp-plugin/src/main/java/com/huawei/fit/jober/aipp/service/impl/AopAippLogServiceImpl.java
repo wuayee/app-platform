@@ -10,8 +10,8 @@ import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AopAippLogService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 
 /**
  * 用于 aop 的 aipp 实例历史记录服务接口实现

@@ -26,9 +26,9 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerResponse;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.exception.MethodInvocationException;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.exception.MethodInvocationException;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

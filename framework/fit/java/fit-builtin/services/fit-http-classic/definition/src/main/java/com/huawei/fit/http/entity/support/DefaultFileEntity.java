@@ -4,17 +4,17 @@
 
 package com.huawei.fit.http.entity.support;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;

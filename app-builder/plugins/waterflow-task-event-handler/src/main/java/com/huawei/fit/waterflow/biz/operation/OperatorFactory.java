@@ -10,7 +10,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.waterflow.biz.operation.operator.Operator;
 import com.huawei.fit.waterflow.biz.operation.operator.SmartFormOperator;
 import com.huawei.fit.waterflow.biz.operation.operator.TaskCenterOperator;
-import com.huawei.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.BrokerClient;
 
 /**
  * 任务处理器工厂类

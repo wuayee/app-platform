@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.core.template.support;
 
-import com.huawei.fitframework.resource.web.Media;
+import modelengine.fitframework.resource.web.Media;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.core.template.StringTemplate;

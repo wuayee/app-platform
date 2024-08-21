@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.core.formatters.support;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.core.formatters.OutputParser;
 
 import java.util.regex.Matcher;

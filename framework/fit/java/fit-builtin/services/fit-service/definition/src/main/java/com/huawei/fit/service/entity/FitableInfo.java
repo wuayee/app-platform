@@ -4,8 +4,8 @@
 
 package com.huawei.fit.service.entity;
 
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Objects;
 

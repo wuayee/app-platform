@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.retrieve;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

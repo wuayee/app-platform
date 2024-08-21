@@ -14,8 +14,8 @@ import com.huawei.fit.http.entity.MultiValueEntity;
 import com.huawei.fit.http.entity.support.DefaultMultiValueEntity;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.MessageHeaderNames;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.model.support.DefaultMultiValueMap;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.support.DefaultMultiValueMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

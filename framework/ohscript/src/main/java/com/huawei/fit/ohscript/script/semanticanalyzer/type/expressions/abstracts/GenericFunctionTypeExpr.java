@@ -9,7 +9,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.SyntaxException;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.FunctionTypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 通用方法类型表达式

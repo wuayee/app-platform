@@ -21,7 +21,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.declaration.SourceDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.service.SourceService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.Collections;
 import java.util.List;

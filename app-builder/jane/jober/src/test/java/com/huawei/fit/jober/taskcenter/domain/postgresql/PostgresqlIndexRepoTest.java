@@ -38,10 +38,10 @@ import com.huawei.fit.jober.taskcenter.event.TaskPropertyIndexedEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskPropertyUnindexedEvent;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.IndexValidator;
-import com.huawei.fitframework.event.EventPublisher;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.event.EventPublisher;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

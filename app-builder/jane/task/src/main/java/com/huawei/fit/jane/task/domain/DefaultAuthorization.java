@@ -5,7 +5,7 @@
 package com.huawei.fit.jane.task.domain;
 
 import com.huawei.fit.jane.task.util.UndefinableValue;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

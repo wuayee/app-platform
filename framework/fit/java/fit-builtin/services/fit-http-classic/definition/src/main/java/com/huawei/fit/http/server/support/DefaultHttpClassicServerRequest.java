@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.AttributeCollection;
 import com.huawei.fit.http.HttpResource;
@@ -19,8 +19,8 @@ import com.huawei.fit.http.server.InternalServerErrorException;
 import com.huawei.fit.http.server.UnsupportedMediaTypeException;
 import com.huawei.fit.http.support.AbstractHttpClassicRequest;
 import com.huawei.fit.http.support.DefaultAttributeCollection;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

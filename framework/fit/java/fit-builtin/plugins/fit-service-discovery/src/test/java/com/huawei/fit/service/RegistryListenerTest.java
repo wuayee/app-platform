@@ -17,11 +17,11 @@ import com.huawei.fit.service.entity.ApplicationInstance;
 import com.huawei.fit.service.entity.FitableAddressInstance;
 import com.huawei.fit.service.entity.FitableInfo;
 import com.huawei.fit.service.entity.Worker;
-import com.huawei.fitframework.broker.Target;
-import com.huawei.fitframework.broker.UniqueFitableId;
-import com.huawei.fitframework.conf.runtime.ApplicationConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.broker.Target;
+import modelengine.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.conf.runtime.ApplicationConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

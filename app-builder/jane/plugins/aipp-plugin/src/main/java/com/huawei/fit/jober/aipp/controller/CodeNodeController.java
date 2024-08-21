@@ -13,7 +13,7 @@ import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.CodeExecuteParamDto;
 import com.huawei.fit.jober.aipp.dto.CodeExecuteResDto;
 import com.huawei.fit.jober.aipp.service.CodeExecuteService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

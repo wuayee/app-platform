@@ -5,7 +5,7 @@
 package com.huawei.fit.http.openapi3.swagger.entity.support;
 
 import com.huawei.fit.http.openapi3.swagger.entity.Schema;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.lang.reflect.Type;
 import java.util.List;

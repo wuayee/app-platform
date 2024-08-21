@@ -13,7 +13,7 @@ import com.huawei.fit.http.header.CookieCollection;
 import com.huawei.fit.http.protocol.HttpVersion;
 import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Optional;

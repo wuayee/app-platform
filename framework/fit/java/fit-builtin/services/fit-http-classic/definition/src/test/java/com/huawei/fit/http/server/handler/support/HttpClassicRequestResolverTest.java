@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.value.PropertyValue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

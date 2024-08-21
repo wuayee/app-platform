@@ -12,7 +12,7 @@ import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.support.FileCountOverflowException;
 import com.huawei.fit.security.http.upload.support.UploadPathValidator;
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.util.FileUtils;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

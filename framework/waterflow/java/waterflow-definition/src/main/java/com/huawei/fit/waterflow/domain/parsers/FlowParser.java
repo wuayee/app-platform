@@ -14,9 +14,9 @@ import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeTypeParser;
 import com.huawei.fit.waterflow.domain.parsers.nodes.NodeParser;
 import com.huawei.fit.waterflow.domain.parsers.nodes.events.EventParser;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.inspection.Validation;
 
 import lombok.RequiredArgsConstructor;
 

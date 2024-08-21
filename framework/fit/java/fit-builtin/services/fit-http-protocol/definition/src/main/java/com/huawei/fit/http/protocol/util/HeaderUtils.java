@@ -7,7 +7,7 @@ package com.huawei.fit.http.protocol.util;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_LENGTH;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.TRANSFER_ENCODING;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.CHUNKED;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.MessageHeaderValues;
 import com.huawei.fit.http.protocol.MessageHeaders;

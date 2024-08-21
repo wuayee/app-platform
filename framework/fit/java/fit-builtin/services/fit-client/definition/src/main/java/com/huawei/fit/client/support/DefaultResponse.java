@@ -4,10 +4,10 @@
 
 package com.huawei.fit.client.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.client.Response;
-import com.huawei.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.ResponseMetadata;
 
 /**
  * 表示 {@link Response} 的默认实现。

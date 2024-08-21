@@ -4,11 +4,11 @@
 
 package com.huawei.fit.serialization.cbor;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.serialization.annotation.BuiltinSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.serialization.annotation.BuiltinSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

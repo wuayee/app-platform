@@ -9,8 +9,8 @@ import static com.huawei.fit.jober.common.ErrorCodes.FLOW_SYSTEM_ERROR;
 import static com.huawei.fit.waterflow.common.Constant.OPERATOR_KEY;
 
 import com.huawei.fit.waterflow.common.utils.ByteArraySerialiseUtilV1;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;

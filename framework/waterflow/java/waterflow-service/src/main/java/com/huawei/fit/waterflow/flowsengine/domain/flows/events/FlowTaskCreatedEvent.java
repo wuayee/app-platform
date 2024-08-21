@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.events;
 
-import com.huawei.fitframework.event.Event;
+import modelengine.fitframework.event.Event;
 
 import java.util.List;
 

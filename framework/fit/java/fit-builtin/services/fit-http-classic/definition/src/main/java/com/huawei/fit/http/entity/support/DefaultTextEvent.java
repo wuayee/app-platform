@@ -5,9 +5,9 @@
 package com.huawei.fit.http.entity.support;
 
 import com.huawei.fit.http.entity.TextEvent;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.Duration;
 

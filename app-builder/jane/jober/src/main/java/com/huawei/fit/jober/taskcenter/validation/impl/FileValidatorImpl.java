@@ -9,8 +9,8 @@ import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.validation.FileValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
 
 /**
  * {@link FileValidator}的默认实现。

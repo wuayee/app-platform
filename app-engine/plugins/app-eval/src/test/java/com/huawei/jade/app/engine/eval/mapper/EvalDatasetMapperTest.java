@@ -7,12 +7,12 @@ package com.huawei.jade.app.engine.eval.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.MybatisTest;
-import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.test.domain.db.DatabaseModel;
-import com.huawei.fitframework.transaction.DataAccessException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.MybatisTest;
+import modelengine.fitframework.test.annotation.Sql;
+import modelengine.fitframework.test.domain.db.DatabaseModel;
+import modelengine.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDatasetPo;

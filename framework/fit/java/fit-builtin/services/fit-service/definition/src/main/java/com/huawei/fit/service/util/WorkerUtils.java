@@ -8,9 +8,9 @@ import com.huawei.fit.server.FitServer;
 import com.huawei.fit.service.entity.Address;
 import com.huawei.fit.service.entity.Endpoint;
 import com.huawei.fit.service.entity.Worker;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
 
 import java.util.Collections;
 import java.util.HashMap;

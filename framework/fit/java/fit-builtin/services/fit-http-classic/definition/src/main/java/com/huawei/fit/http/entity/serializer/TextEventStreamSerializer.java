@@ -4,18 +4,18 @@
 
 package com.huawei.fit.http.entity.serializer;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.EntitySerializer;
 import com.huawei.fit.http.entity.TextEvent;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.entity.support.DefaultTextEventStreamEntity;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.flowable.Emitter;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

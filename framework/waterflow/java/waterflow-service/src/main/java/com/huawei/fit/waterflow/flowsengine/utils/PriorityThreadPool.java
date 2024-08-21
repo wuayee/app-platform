@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.utils;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.huawei.fit.waterflow.flowsengine.biz.service.CustomThreadFactory;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.Data;
 

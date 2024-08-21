@@ -23,7 +23,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.domain.Index;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.Map;

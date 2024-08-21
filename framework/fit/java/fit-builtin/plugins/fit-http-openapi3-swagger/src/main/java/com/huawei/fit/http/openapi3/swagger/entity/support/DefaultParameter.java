@@ -4,12 +4,12 @@
 
 package com.huawei.fit.http.openapi3.swagger.entity.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.http.openapi3.swagger.entity.Parameter;
 import com.huawei.fit.http.openapi3.swagger.entity.Schema;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

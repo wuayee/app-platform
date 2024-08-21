@@ -4,8 +4,8 @@
 
 package com.huawei.fit.service;
 
-import com.huawei.fitframework.broker.Target;
-import com.huawei.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.broker.Target;
+import modelengine.fitframework.broker.UniqueFitableId;
 
 import java.util.List;
 

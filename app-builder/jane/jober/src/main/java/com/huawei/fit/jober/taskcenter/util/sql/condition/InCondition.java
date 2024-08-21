@@ -4,11 +4,11 @@
 
 package com.huawei.fit.jober.taskcenter.util.sql.condition;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;

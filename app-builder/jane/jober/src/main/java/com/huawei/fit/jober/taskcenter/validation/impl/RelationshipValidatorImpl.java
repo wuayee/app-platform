@@ -9,7 +9,7 @@ import com.huawei.fit.jober.common.exceptions.NotFoundException;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.RelationshipValidator;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.AllArgsConstructor;
 

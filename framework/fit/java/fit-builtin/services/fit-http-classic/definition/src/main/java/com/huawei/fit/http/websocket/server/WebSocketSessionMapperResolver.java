@@ -7,7 +7,7 @@ package com.huawei.fit.http.websocket.server;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
 import com.huawei.fit.http.websocket.Session;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.util.Optional;
 

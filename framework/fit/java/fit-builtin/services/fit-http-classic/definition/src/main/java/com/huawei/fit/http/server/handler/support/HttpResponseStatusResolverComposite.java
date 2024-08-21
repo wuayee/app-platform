@@ -6,7 +6,7 @@ package com.huawei.fit.http.server.handler.support;
 
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.handler.HttpResponseStatusResolver;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;

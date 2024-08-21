@@ -17,11 +17,11 @@ import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.File;
 import java.nio.file.Path;

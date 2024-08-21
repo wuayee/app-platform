@@ -4,15 +4,15 @@
 
 package com.huawei.fit.serialization.http.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.serialization.MessageSerializer;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.flowable.Subscription;
-import com.huawei.fitframework.flowable.util.worker.Worker;
-import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
-import com.huawei.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.flowable.Subscription;
+import modelengine.fitframework.flowable.util.worker.Worker;
+import modelengine.fitframework.flowable.util.worker.WorkerObserver;
+import modelengine.fitframework.serialization.TagLengthValues;
 
 import java.lang.reflect.Type;
 import java.util.function.BiConsumer;

@@ -5,7 +5,7 @@
 package com.huawei.fit.http.server.handler.support;
 
 import com.huawei.fit.http.server.handler.GlobalPathPatternPrefixResolver;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;

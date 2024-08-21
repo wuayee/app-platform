@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.biz.service;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -4,10 +4,10 @@
 
 package com.huawei.fit.http.protocol;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.support.DefaultClientResponse;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.MultiValueMap;
 
 import java.io.IOException;
 import java.io.InputStream;

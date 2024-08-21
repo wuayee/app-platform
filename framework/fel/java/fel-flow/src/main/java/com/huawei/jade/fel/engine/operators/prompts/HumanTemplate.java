@@ -7,8 +7,8 @@ package com.huawei.jade.fel.engine.operators.prompts;
 import static com.huawei.jade.fel.engine.util.StateKey.HISTORY_INPUT;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;

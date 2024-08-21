@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.chat;
 
-import com.huawei.fitframework.resource.web.Media;
+import modelengine.fitframework.resource.web.Media;
 import com.huawei.jade.fel.tool.ToolCall;
 
 import java.util.Collections;

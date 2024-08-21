@@ -5,8 +5,8 @@
 package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import com.huawei.fitframework.annotation.Bean;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Bean;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;

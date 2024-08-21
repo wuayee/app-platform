@@ -5,15 +5,15 @@
 package com.huawei.fit.http.server.handler.support;
 
 import static com.huawei.fit.http.HttpClassicRequestAttribute.PATH_PATTERN;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.handler.RequestMappingException;
 import com.huawei.fit.http.server.handler.SourceFetcher;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,7 @@ import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.value.ValueFetcher;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

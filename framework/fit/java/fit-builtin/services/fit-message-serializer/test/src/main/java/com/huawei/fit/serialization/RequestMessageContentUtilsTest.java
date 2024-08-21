@@ -7,8 +7,8 @@ package com.huawei.fit.serialization;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.http.websocket.RequestMessageContentUtils;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.Version;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.Version;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

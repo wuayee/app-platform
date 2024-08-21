@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common.filters;
 
-import static com.huawei.fitframework.annotation.Order.HIGHEST;
+import static modelengine.fitframework.annotation.Order.HIGHEST;
 
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
@@ -14,9 +14,9 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.HttpServerFilter;
 import com.huawei.fit.http.server.HttpServerFilterChain;
 import com.huawei.fit.jober.common.Constant;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.annotation.Value;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.annotation.Value;
 
 import java.util.Collections;
 import java.util.List;

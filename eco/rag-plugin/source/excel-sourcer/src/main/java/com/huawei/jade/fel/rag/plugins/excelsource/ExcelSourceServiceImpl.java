@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.rag.plugins.excelsource;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 import com.huawei.jade.fel.rag.source.ExcelSource;
 import com.huawei.jade.fel.rag.source.ExcelSourceOptions;
 import com.huawei.jade.fel.rag.source.ExcelSourceService;

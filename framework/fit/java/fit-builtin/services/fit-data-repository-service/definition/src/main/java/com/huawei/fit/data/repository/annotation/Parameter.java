@@ -4,7 +4,7 @@
 
 package com.huawei.fit.data.repository.annotation;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

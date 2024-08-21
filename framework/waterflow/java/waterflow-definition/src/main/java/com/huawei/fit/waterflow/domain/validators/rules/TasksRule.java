@@ -10,10 +10,10 @@ import com.huawei.fit.waterflow.domain.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.domain.enums.FlowTaskType;
 import com.huawei.fit.waterflow.domain.validators.rules.tasks.TaskCenterTaskRule;
 import com.huawei.fit.waterflow.domain.validators.rules.tasks.TaskRule;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

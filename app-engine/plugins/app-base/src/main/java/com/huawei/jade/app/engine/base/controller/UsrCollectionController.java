@@ -10,7 +10,7 @@ import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.base.common.resp.Response;
 import com.huawei.jade.app.engine.base.common.resp.ResponseCode;
 import com.huawei.jade.app.engine.base.dto.CollectionAppInfoDto;

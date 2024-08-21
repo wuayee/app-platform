@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.pipeline.huggingface;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.pipeline.Pipeline;
 import com.huawei.jade.fel.pipeline.PipelineInput;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;

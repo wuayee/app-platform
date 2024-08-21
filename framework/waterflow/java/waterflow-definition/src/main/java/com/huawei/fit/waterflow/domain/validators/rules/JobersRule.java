@@ -7,9 +7,9 @@ package com.huawei.fit.waterflow.domain.validators.rules;
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.regex.Pattern;

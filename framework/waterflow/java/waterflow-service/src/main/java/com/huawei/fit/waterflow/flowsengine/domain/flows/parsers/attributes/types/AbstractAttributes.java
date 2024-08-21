@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.typ
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.Attribute;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;

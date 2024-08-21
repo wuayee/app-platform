@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.domain.validators.rules.jobers;
 import static com.huawei.fit.waterflow.domain.enums.FlowJoberProperties.ENTITY;
 
 import com.huawei.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * ohScript脚本规则

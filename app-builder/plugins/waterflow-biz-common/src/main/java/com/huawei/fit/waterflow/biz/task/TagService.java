@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.biz.task;
 
 import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 import java.util.Map;

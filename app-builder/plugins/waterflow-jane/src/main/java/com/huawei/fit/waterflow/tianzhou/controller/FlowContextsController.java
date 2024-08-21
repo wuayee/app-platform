@@ -27,8 +27,8 @@ import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowsErrorInfo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowOfferId;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
 
 import com.alibaba.fastjson.JSON;
 

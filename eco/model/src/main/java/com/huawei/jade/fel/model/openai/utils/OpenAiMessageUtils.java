@@ -4,12 +4,12 @@
 
 package com.huawei.jade.fel.model.openai.utils;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.resource.UrlUtils;
-import com.huawei.fitframework.resource.web.Media;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.resource.UrlUtils;
+import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;

@@ -7,12 +7,12 @@ package com.huawei.jade.common.filter.support;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.localemessage.LocaleMessageHandler;
 import com.huawei.jade.common.test.TestController;

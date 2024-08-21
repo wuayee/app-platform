@@ -15,7 +15,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.util.PrimaryKey;
 import com.huawei.fit.jober.taskcenter.domain.util.PrimaryValue;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.BrokerClient;
 
 import java.util.ArrayList;
 import java.util.Collections;

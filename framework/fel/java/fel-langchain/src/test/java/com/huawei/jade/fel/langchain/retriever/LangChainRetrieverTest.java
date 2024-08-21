@@ -6,7 +6,7 @@ package com.huawei.jade.fel.langchain.retriever;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.fel.retrieve.Document;
 import com.huawei.jade.fel.service.langchain.LangChainRunnableService;
 

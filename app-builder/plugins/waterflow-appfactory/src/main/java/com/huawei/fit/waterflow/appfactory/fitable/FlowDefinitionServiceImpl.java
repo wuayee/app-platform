@@ -15,9 +15,9 @@ import com.huawei.fit.waterflow.flowsengine.biz.service.FlowsService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
 
 import com.alibaba.fastjson.JSONObject;
 

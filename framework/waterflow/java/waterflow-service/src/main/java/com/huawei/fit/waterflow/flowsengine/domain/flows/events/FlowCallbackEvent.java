@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.events;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
-import com.huawei.fitframework.event.Event;
+import modelengine.fitframework.event.Event;
 
 import lombok.Getter;
 

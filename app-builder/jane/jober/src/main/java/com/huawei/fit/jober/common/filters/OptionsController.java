@@ -8,7 +8,7 @@ import com.huawei.fit.http.annotation.DocumentIgnored;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.jober.common.model.JoberResponse;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * Options请求通过，允许跨域的临时规避Controller

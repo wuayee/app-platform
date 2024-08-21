@@ -14,9 +14,9 @@ import com.huawei.fit.http.websocket.annotation.WebSocketEndpoint;
 import com.huawei.fit.jober.aipp.entity.StreamLogParam;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * aipp-websocket流式接口.

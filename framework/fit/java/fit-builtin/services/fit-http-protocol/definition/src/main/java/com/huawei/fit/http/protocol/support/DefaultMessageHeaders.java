@@ -4,14 +4,14 @@
 
 package com.huawei.fit.http.protocol.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.MessageHeaders;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

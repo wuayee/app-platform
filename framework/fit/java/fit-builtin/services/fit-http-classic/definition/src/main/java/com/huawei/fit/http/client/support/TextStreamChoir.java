@@ -4,23 +4,23 @@
 
 package com.huawei.fit.http.client.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.entity.TextEvent;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.flowable.Subscriber;
-import com.huawei.fitframework.flowable.Subscription;
-import com.huawei.fitframework.flowable.choir.AbstractChoir;
-import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
-import com.huawei.fitframework.flowable.util.worker.Worker;
-import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.flowable.Subscriber;
+import modelengine.fitframework.flowable.Subscription;
+import modelengine.fitframework.flowable.choir.AbstractChoir;
+import modelengine.fitframework.flowable.subscription.AbstractSubscription;
+import modelengine.fitframework.flowable.util.worker.Worker;
+import modelengine.fitframework.flowable.util.worker.WorkerObserver;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

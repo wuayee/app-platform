@@ -4,17 +4,17 @@
 
 package com.huawei.fit.http.openapi3.swagger.entity.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.openapi3.swagger.entity.Operation;
 import com.huawei.fit.http.openapi3.swagger.entity.Parameter;
 import com.huawei.fit.http.openapi3.swagger.entity.RequestBody;
 import com.huawei.fit.http.openapi3.swagger.entity.Responses;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -4,14 +4,14 @@
 
 package com.huawei.fit.integration.druid;
 
-import static com.huawei.fitframework.datasource.support.FitDataSourceConfig.INSTANCE_PREFIX;
-import static com.huawei.fitframework.datasource.support.FitDataSourceConfig.PRIMARY_MODE;
-import static com.huawei.fitframework.datasource.support.FitDataSourceConfig.SEPARATOR;
+import static modelengine.fitframework.datasource.support.FitDataSourceConfig.INSTANCE_PREFIX;
+import static modelengine.fitframework.datasource.support.FitDataSourceConfig.PRIMARY_MODE;
+import static modelengine.fitframework.datasource.support.FitDataSourceConfig.SEPARATOR;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.datasource.support.AbstractFitDataSource;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.datasource.support.AbstractFitDataSource;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 

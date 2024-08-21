@@ -19,8 +19,8 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.service.impl.AippRunTimeServiceImpl;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

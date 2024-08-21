@@ -9,12 +9,12 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

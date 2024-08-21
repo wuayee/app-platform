@@ -45,16 +45,16 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.Defaul
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

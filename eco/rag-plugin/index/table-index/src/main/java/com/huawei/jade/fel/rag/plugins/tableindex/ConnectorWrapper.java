@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.plugins.tableindex;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.rag.store.connector.JdbcSqlConnector;
 
 import lombok.Getter;

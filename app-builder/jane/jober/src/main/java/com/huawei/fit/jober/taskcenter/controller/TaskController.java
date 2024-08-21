@@ -20,8 +20,8 @@ import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.taskcenter.declaration.TaskDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.Map;
 

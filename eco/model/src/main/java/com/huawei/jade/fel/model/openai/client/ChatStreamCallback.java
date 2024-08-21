@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.model.openai.client;
 
-import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.flowable.Emitter;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
 import com.huawei.jade.fel.model.openai.utils.OpenAiMessageUtils;

@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontex
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.Getter;
 

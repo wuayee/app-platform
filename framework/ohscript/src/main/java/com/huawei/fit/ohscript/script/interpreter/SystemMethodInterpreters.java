@@ -12,7 +12,7 @@ import com.huawei.fit.ohscript.script.errors.OhPanic;
 import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import com.huawei.fit.ohscript.util.TriFunction;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

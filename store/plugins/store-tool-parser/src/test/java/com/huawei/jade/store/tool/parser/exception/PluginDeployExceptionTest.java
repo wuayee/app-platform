@@ -4,7 +4,8 @@
 
 package com.huawei.jade.store.tool.parser.exception;
 
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.FitException;
+
 import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
 
 import org.assertj.core.api.Assertions;

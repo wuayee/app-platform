@@ -4,12 +4,12 @@
 
 package com.huawei.fit.http.server.handler;
 
-import com.huawei.fitframework.protocol.jar.Jar;
-import com.huawei.fitframework.protocol.jar.JarEntryLocation;
-import com.huawei.fitframework.protocol.jar.JarLocation;
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.fitframework.resource.support.ClassLoaderResourceResolver;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.protocol.jar.Jar;
+import modelengine.fitframework.protocol.jar.JarEntryLocation;
+import modelengine.fitframework.protocol.jar.JarLocation;
+import modelengine.fitframework.resource.Resource;
+import modelengine.fitframework.resource.support.ClassLoaderResourceResolver;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -47,9 +47,9 @@ import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowExecutors;
 import com.huawei.fit.waterflow.flowsengine.utils.PriorityThreadPool;
 import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

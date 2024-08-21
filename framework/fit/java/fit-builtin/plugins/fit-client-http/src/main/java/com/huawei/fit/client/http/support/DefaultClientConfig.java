@@ -4,10 +4,10 @@
 
 package com.huawei.fit.client.http.support;
 
-import com.huawei.fitframework.annotation.AcceptConfigValues;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.conf.runtime.ClientConfig;
-import com.huawei.fitframework.conf.runtime.support.DefaultClientSecure;
+import modelengine.fitframework.annotation.AcceptConfigValues;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.conf.runtime.ClientConfig;
+import modelengine.fitframework.conf.runtime.support.DefaultClientSecure;
 
 import java.util.Optional;
 

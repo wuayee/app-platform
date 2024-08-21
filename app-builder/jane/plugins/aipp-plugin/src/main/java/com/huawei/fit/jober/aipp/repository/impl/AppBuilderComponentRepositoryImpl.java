@@ -8,7 +8,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderComponent;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderComponentMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderComponentRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderComponentSerializer;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 应用组件属性仓库实现类

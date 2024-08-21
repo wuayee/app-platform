@@ -21,8 +21,8 @@ import com.huawei.fit.http.protocol.ServerRequest;
 import com.huawei.fit.http.protocol.support.DefaultMessageHeaders;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.InputStream;
 import java.util.Map;

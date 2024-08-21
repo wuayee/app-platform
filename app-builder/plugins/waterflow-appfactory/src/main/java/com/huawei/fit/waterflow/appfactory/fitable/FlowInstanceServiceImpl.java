@@ -25,10 +25,10 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontex
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

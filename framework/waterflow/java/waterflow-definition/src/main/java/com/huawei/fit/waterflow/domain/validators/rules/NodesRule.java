@@ -11,8 +11,8 @@ import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.domain.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeTypeParser;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Objects;
 import java.util.Optional;

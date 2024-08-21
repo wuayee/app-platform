@@ -12,12 +12,12 @@ import com.huawei.fit.client.http.support.ConnectionBuilderFactory;
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.protocol.Protocol;
 import com.huawei.fit.http.websocket.Session;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.conf.runtime.ClientConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.exception.ClientException;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.conf.runtime.ClientConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.exception.ClientException;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.ioc.BeanContainer;
 
 /**
  * 表示 {@link com.huawei.fit.client.http.InvokeClient} 的 WebSocket 流式实现。

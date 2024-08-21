@@ -27,10 +27,10 @@ import com.huawei.fit.http.client.proxy.support.setter.QueryDestinationSetter;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fit.value.fastjson.FastJsonValueHandler;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.support.http.server.RuntimeForServer;
 
 import org.junit.jupiter.api.AfterAll;

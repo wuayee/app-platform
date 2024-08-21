@@ -6,10 +6,10 @@ package com.huawei.fit.jober.aipp.tool.impl;
 
 import com.huawei.fit.jober.aipp.dto.image.StableDiffusionInput;
 import com.huawei.fit.jober.aipp.tool.StableDiffusionParserTool;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.fel.core.formatters.Parser;
 import com.huawei.jade.fel.core.formatters.json.JsonOutputParser;
 

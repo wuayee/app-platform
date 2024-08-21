@@ -6,8 +6,8 @@ package com.huawei.fit.server.http.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.conf.runtime.ServerConfig;
-import com.huawei.fitframework.conf.runtime.support.DefaultSecure;
+import modelengine.fitframework.conf.runtime.ServerConfig;
+import modelengine.fitframework.conf.runtime.support.DefaultSecure;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

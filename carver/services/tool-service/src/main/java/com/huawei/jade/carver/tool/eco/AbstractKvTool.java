@@ -4,16 +4,16 @@
 
 package com.huawei.jade.carver.tool.eco;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.support.AbstractTool;
 
 import java.util.Arrays;

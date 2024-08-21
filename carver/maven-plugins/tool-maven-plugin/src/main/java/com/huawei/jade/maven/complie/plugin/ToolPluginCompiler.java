@@ -4,10 +4,10 @@
 
 package com.huawei.jade.maven.complie.plugin;
 
-import com.huawei.fitframework.jvm.classfile.ClassFile;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.maven.support.AbstractCompiler;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.jvm.classfile.ClassFile;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.maven.support.AbstractCompiler;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.maven.complie.entity.MethodEntity;
 import com.huawei.jade.maven.complie.parser.ByteBuddyToolParser;
 import com.huawei.jade.maven.complie.util.JsonConvertUtils;

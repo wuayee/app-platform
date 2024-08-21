@@ -4,10 +4,10 @@
 
 package com.huawei.fit.http.client.proxy.support.setter;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.client.proxy.RequestBuilder;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 /**
  * 表示向消息体设置值的目标设置器。

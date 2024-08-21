@@ -25,8 +25,8 @@ import com.huawei.fit.http.protocol.RequestLine;
 import com.huawei.fit.http.protocol.support.DefaultClientResponse;
 import com.huawei.fit.http.protocol.support.DefaultMessageHeaders;
 import com.huawei.fit.http.protocol.support.DefaultRequestLine;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.model.support.DefaultMultiValueMap;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.support.DefaultMultiValueMap;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -19,11 +19,11 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.form.exception.FormErrCode;
 import com.huawei.fit.jober.form.exception.FormParamException;
 import com.huawei.fit.jober.form.mapper.FormMapper;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;

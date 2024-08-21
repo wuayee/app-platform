@@ -4,8 +4,9 @@
 
 package com.huawei.jade.store.repository.pgsql.repository.support;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.transaction.Transactional;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.transaction.Transactional;
+
 import com.huawei.jade.store.entity.query.AppQuery;
 import com.huawei.jade.store.entity.transfer.AppData;
 import com.huawei.jade.store.repository.pgsql.entity.AppDo;

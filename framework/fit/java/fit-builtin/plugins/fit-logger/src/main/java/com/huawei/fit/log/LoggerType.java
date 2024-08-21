@@ -4,7 +4,7 @@
 
 package com.huawei.fit.log;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示日志类型的枚举。

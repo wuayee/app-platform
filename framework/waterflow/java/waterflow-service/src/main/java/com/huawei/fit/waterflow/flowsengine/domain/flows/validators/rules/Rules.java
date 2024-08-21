@@ -7,8 +7,8 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;

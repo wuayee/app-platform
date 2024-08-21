@@ -24,10 +24,10 @@ import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.edatamate.entity.TaskInstanceUpdateInfo;
 import com.huawei.fit.waterflow.edatamate.service.OrchestratorFitService;
 import com.huawei.fit.waterflow.edatamate.service.OrchestratorService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
 
 import java.util.HashMap;
 import java.util.List;

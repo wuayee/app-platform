@@ -9,7 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;

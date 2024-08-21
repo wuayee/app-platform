@@ -14,10 +14,10 @@ import com.huawei.fit.jober.taskcenter.domain.TriggerEntity;
 import com.huawei.fit.jober.taskcenter.filter.TriggerFilter;
 import com.huawei.fit.jober.taskcenter.service.TriggerService;
 import com.huawei.fit.jober.taskcenter.validation.TriggerValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 

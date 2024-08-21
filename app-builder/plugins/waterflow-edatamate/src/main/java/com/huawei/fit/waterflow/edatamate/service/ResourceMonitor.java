@@ -4,9 +4,9 @@
 
 package com.huawei.fit.waterflow.edatamate.service;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.annotation.Scheduled;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;

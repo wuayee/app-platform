@@ -4,9 +4,9 @@
 
 package com.huawei.jade.common.audit;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.common.po.BasePo;

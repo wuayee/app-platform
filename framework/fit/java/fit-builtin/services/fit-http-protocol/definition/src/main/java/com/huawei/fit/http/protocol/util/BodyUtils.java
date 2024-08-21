@@ -6,8 +6,8 @@ package com.huawei.fit.http.protocol.util;
 
 import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.ReadableMessageBody;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

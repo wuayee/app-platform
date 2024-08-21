@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common;
 
-import com.huawei.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.ErrorCode;
 
 /**
  * 请求超出限制异常。

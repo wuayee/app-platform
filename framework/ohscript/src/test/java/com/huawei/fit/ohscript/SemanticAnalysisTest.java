@@ -45,7 +45,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concrete
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.StringTypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.UnitTypeExpr;
 import com.huawei.fit.ohscript.util.Pair;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

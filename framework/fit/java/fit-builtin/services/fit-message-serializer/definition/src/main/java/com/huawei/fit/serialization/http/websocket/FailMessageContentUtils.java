@@ -4,15 +4,15 @@
 
 package com.huawei.fit.serialization.http.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.tlv.TagValuesChecker;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
-import com.huawei.fitframework.serialization.tlv.support.ExceptionPropertiesValueSerializer;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.tlv.TagValuesChecker;
+import modelengine.fitframework.serialization.tlv.TlvUtils;
+import modelengine.fitframework.serialization.tlv.support.ExceptionPropertiesValueSerializer;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

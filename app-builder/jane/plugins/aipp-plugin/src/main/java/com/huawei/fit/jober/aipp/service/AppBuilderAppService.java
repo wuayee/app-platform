@@ -17,7 +17,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
 import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.common.RangedResultSet;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 import java.util.Optional;

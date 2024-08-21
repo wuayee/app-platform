@@ -35,11 +35,11 @@ import com.huawei.fit.waterflow.domain.utils.IdGenerator;
 import com.huawei.fit.waterflow.domain.utils.Identity;
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.Task;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.Task;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 

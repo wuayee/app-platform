@@ -148,6 +148,12 @@
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-http-client-okhttp</artifactId>
+            <version>${fit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -23,9 +23,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDe
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowCallbackType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowCallbackEvent;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

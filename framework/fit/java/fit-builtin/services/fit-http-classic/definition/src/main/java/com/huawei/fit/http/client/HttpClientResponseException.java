@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.client;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 /**
  * 表示携带 Http 响应的异常。

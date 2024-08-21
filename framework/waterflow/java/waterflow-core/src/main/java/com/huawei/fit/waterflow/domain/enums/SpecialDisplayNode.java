@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.domain.enums;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 

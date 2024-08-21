@@ -6,8 +6,8 @@ package com.huawei.fit.http.server.handler.parameter;
 
 import com.huawei.fit.http.server.handler.PropertyValueMetadata;
 import com.huawei.fit.http.server.handler.PropertyValueMetadataResolver;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.util.Collections;
 import java.util.List;

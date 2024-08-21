@@ -7,7 +7,7 @@ package com.huawei.fit.http.entity.support;
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 /**
  * 表示 {@link ObjectEntity} 的默认实现。

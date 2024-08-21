@@ -25,9 +25,9 @@ import com.huawei.fit.jober.taskcenter.event.TaskInstanceDeletedEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceModifiedEvent;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.InstanceConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

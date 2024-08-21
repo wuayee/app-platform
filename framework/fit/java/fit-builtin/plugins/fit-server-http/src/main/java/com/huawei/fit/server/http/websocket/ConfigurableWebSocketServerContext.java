@@ -6,10 +6,10 @@ package com.huawei.fit.server.http.websocket;
 
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.server.http.websocket.support.DefaultWebSocketServerContext;
-import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.flowable.util.worker.Worker;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.Version;
+import modelengine.fitframework.flowable.Publisher;
+import modelengine.fitframework.flowable.util.worker.Worker;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.Version;
 
 /**
  * 表示可配置的处理流式调用请求时的上下文。

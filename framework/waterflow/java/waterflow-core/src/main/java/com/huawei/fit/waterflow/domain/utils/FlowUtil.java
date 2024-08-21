@@ -7,9 +7,9 @@ package com.huawei.fit.waterflow.domain.utils;
 import static com.huawei.fit.waterflow.domain.common.Constant.BUSINESS_DATA_KEY;
 import static com.huawei.fit.waterflow.domain.common.Constant.PASS_DATA;
 
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

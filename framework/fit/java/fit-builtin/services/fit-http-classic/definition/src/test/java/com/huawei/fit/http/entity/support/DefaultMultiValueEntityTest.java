@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.server.handler.MockHttpClassicServerRequest;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.MultiValueMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

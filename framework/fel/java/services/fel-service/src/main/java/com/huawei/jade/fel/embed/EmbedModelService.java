@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.embed;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 表示嵌入模型服务。

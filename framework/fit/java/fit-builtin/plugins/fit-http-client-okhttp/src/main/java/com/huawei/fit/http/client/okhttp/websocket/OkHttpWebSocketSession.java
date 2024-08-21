@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.client.okhttp.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.client.HttpClassicClientResponse;

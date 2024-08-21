@@ -5,11 +5,11 @@
 package com.huawei.fit.service.support;
 
 import static com.huawei.fit.service.server.RegistryServer.MAX_WORKER_NUM;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.service.WorkerCache;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.time.Instant;
 import java.util.ArrayList;

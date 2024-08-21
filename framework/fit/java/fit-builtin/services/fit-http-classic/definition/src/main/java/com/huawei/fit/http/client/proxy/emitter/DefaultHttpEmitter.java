@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.client.proxy.emitter;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
@@ -15,8 +15,8 @@ import com.huawei.fit.http.client.proxy.HttpEmitter;
 import com.huawei.fit.http.client.proxy.PropertyValueApplier;
 import com.huawei.fit.http.client.proxy.RequestBuilder;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 

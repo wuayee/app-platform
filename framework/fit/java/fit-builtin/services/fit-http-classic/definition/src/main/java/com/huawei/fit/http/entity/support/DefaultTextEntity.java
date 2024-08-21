@@ -4,14 +4,14 @@
 
 package com.huawei.fit.http.entity.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * {@link Entity} 的默认实现。

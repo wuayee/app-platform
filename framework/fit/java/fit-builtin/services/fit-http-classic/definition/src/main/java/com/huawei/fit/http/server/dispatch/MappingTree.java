@@ -6,7 +6,7 @@ package com.huawei.fit.http.server.dispatch;
 
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.server.dispatch.support.DefaultMappingTree;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Deque;
 import java.util.List;

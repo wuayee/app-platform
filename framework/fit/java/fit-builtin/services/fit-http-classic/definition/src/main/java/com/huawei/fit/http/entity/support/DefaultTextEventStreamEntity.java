@@ -8,9 +8,9 @@ import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.TextEvent;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 表示 {@link TextEventStreamEntity} 的默认实现。

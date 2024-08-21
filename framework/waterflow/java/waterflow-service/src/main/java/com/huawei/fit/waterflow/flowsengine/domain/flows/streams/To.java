@@ -38,10 +38,10 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Retryable
 import com.huawei.fit.waterflow.flowsengine.utils.FlowExecutors;
 import com.huawei.fit.waterflow.flowsengine.utils.PriorityThreadPool;
 import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 import lombok.Setter;

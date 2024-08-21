@@ -4,7 +4,7 @@
 
 package com.huawei.fit.serialization.test.person;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

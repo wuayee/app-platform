@@ -4,11 +4,12 @@
 
 package com.huawei.jade.fel.core.formatters.json;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.json.schema.JsonSchemaManager;
-import com.huawei.fitframework.json.schema.support.DefaultJsonSchemaManager;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.json.schema.JsonSchema;
+import modelengine.fitframework.json.schema.JsonSchemaManager;
+import modelengine.fitframework.json.schema.support.DefaultJsonSchemaManager;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class AbstractJsonOutputParser<O> implements JsonOutputParser<O> {
     /**
-     * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 序列化形式的 {@link String}。
+     * 表示 {@link JsonSchema} 序列化形式的 {@link String}。
      */
     protected final String jsonSchema;
     private final ObjectSerializer serializer;

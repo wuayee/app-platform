@@ -21,7 +21,7 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
 import com.huawei.fit.waterflow.domain.utils.Identity;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.List;
 import java.util.function.Supplier;

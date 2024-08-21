@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.core.formatters.json;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.fel.core.formatters.OutputParser;
 import com.huawei.jade.fel.core.formatters.support.MarkdownParser;
 

@@ -4,9 +4,9 @@
 
 package com.huawei.fit.http.server.handler;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import java.util.Optional;
 

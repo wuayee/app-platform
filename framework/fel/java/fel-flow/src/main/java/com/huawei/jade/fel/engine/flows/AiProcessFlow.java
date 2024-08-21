@@ -4,15 +4,15 @@
 
 package com.huawei.jade.fel.engine.flows;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * AI 数据处理流程，在 {@link AiFlow} 的基础上增加流程间的数据流转能力，并对外提供对话语义。

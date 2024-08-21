@@ -7,8 +7,8 @@ package com.huawei.fit.jober.taskcenter.tianzhou;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;

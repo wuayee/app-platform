@@ -20,7 +20,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExpr
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.NodeType;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import com.huawei.fit.ohscript.util.Constants;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Objects;

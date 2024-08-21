@@ -5,7 +5,7 @@
 package com.huawei.fit.client;
 
 import com.huawei.fit.client.support.DefaultRequestContext;
-import com.huawei.fitframework.broker.CommunicationType;
+import modelengine.fitframework.broker.CommunicationType;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

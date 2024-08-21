@@ -4,14 +4,14 @@
 
 package com.huawei.fit.http.entity.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.MultiValueEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.model.support.DefaultMultiValueMap;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.support.DefaultMultiValueMap;
 
 import java.util.ArrayList;
 import java.util.Collections;

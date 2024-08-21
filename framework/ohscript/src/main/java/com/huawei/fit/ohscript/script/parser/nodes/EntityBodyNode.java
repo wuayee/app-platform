@@ -10,7 +10,7 @@ import com.huawei.fit.ohscript.script.parser.NonTerminal;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import com.huawei.fit.ohscript.util.Constants;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * Entity的内容节点

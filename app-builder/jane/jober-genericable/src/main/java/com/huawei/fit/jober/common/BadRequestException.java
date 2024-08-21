@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common;
 
-import com.huawei.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.ErrorCode;
 
 /**
  * 错误请求异常类，用于SPI实现时异常抛出与透传。

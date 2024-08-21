@@ -5,8 +5,8 @@
 package com.huawei.fit.server.http;
 
 import static com.huawei.fit.http.header.HttpHeaderKey.FIT_TLV;
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.DoHttpHandlerException;
@@ -18,19 +18,19 @@ import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
 import com.huawei.fit.server.http.support.AsyncTaskExecutor;
 import com.huawei.fit.server.http.util.HttpServerUtils;
-import com.huawei.fitframework.broker.FitableMetadata;
-import com.huawei.fitframework.broker.Genericable;
-import com.huawei.fitframework.broker.LocalGenericableRepository;
-import com.huawei.fitframework.broker.server.Dispatcher;
-import com.huawei.fitframework.broker.server.Response;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.serialization.RequestMetadata;
-import com.huawei.fitframework.serialization.ResponseMetadata;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.Version;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.FitableMetadata;
+import modelengine.fitframework.broker.Genericable;
+import modelengine.fitframework.broker.LocalGenericableRepository;
+import modelengine.fitframework.broker.server.Dispatcher;
+import modelengine.fitframework.broker.server.Response;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.Version;
+import modelengine.fitframework.serialization.tlv.TlvUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

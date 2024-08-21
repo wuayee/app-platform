@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.common.config;
 
-import com.huawei.fitframework.annotation.Bean;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.thread.DefaultThreadFactory;
+import modelengine.fitframework.annotation.Bean;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.thread.DefaultThreadFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;

@@ -4,12 +4,12 @@
 
 package com.huawei.fit.http.header.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.header.ContentType;
 import com.huawei.fit.http.header.HeaderValue;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ExceptionUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ExceptionUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;

@@ -17,8 +17,8 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.waterflow.biz.common.vo.FlowDataVO;
 import com.huawei.fit.waterflow.biz.util.Views;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.plugin.Plugin;
 
 import lombok.RequiredArgsConstructor;
 

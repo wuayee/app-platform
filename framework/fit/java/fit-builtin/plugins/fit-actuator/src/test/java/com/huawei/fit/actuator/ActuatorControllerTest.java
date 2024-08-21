@@ -10,15 +10,15 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.actuator.entity.FitableVo;
 import com.huawei.fit.actuator.entity.PluginVo;
-import com.huawei.fitframework.broker.Aliases;
-import com.huawei.fitframework.broker.Fitable;
-import com.huawei.fitframework.broker.Genericable;
-import com.huawei.fitframework.broker.Tags;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginCategory;
-import com.huawei.fitframework.plugin.PluginMetadata;
-import com.huawei.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.broker.Aliases;
+import modelengine.fitframework.broker.Fitable;
+import modelengine.fitframework.broker.Genericable;
+import modelengine.fitframework.broker.Tags;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginCategory;
+import modelengine.fitframework.plugin.PluginMetadata;
+import modelengine.fitframework.runtime.FitRuntime;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

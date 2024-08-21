@@ -4,18 +4,18 @@
 
 package com.huawei.fit.service;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.broker.ConfigurableFitable;
-import com.huawei.fitframework.broker.ConfigurableGenericable;
-import com.huawei.fitframework.broker.FitableFactory;
-import com.huawei.fitframework.broker.Genericable;
-import com.huawei.fitframework.broker.GenericableFactory;
-import com.huawei.fitframework.broker.GenericableRepository;
-import com.huawei.fitframework.broker.UniqueGenericableId;
-import com.huawei.fitframework.conf.runtime.MatataConfig;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.broker.ConfigurableFitable;
+import modelengine.fitframework.broker.ConfigurableGenericable;
+import modelengine.fitframework.broker.FitableFactory;
+import modelengine.fitframework.broker.Genericable;
+import modelengine.fitframework.broker.GenericableFactory;
+import modelengine.fitframework.broker.GenericableRepository;
+import modelengine.fitframework.broker.UniqueGenericableId;
+import modelengine.fitframework.conf.runtime.MatataConfig;
 
 import java.util.Collections;
 import java.util.List;

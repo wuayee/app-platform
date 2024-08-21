@@ -11,8 +11,8 @@ import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.TriggerValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
 
 /**
  * {@link TriggerValidator} 的默认实现。

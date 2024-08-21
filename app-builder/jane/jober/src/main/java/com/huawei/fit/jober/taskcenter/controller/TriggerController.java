@@ -18,7 +18,7 @@ import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.taskcenter.declaration.SourceTriggersDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.TriggerEntity;
 import com.huawei.fit.jober.taskcenter.service.TriggerService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.Map;

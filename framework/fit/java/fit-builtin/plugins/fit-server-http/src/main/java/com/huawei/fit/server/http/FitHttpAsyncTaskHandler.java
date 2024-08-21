@@ -17,14 +17,14 @@ import com.huawei.fit.http.server.handler.AbstractHttpHandler;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.server.http.support.AsyncTaskExecutor;
 import com.huawei.fit.server.http.util.HttpServerUtils;
-import com.huawei.fitframework.broker.server.Response;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.serialization.RequestMetadata;
-import com.huawei.fitframework.serialization.ResponseMetadata;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.server.Response;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.tlv.TlvUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Optional;
 

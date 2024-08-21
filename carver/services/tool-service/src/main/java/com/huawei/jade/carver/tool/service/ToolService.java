@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.tool.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;

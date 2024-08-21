@@ -4,8 +4,8 @@
 
 package com.huawei.fit.ohscript.script.parser.codereader;
 
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.SneakyThrows;
 

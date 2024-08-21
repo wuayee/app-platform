@@ -8,7 +8,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.ProcessType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Subscriber;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.List;
 

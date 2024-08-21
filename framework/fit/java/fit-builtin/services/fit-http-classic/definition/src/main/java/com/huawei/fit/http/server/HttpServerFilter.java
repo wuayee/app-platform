@@ -4,10 +4,10 @@
 
 package com.huawei.fit.http.server;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Comparator;
 import java.util.List;

@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.taskcenter.service.impl;
 
 import static com.huawei.fit.jober.Tests.matchArguments;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,9 +36,9 @@ import com.huawei.fit.jober.taskcenter.service.SourceService;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.service.TreeService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

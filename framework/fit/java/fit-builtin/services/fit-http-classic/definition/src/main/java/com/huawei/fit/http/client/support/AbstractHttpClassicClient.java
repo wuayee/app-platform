@@ -4,11 +4,11 @@
 
 package com.huawei.fit.http.client.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.Serializers;
 import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.value.ValueFetcher;
 
 /**
  * 表示 {@link HttpClassicClient} 的抽象实现类。

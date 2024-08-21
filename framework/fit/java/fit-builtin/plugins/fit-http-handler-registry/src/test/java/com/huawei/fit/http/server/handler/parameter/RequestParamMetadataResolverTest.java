@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.server.handler.PropertyValueMetadata;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.util.ReflectionUtils;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.value.PropertyValue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

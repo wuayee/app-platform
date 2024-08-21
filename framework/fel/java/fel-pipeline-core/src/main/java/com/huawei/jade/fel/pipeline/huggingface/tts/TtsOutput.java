@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.pipeline.huggingface.tts;
 
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.resource.web.Media;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.resource.web.Media;
 
 import lombok.Data;
 

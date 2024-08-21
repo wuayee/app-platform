@@ -6,10 +6,10 @@ package com.huawei.fit.waterflow.common.config;
 
 import static com.huawei.fit.waterflow.common.Constant.FLOWS_EVENT_HANDLER_EXECUTOR;
 
-import com.huawei.fitframework.annotation.Bean;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.thread.DefaultThreadFactory;
+import modelengine.fitframework.annotation.Bean;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.thread.DefaultThreadFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;

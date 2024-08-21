@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.websocket.server.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.RegisterHttpHandlerException;
@@ -14,8 +14,8 @@ import com.huawei.fit.http.server.dispatch.support.DefaultMappingTree;
 import com.huawei.fit.http.websocket.server.WebSocketDispatcher;
 import com.huawei.fit.http.websocket.server.WebSocketHandler;
 import com.huawei.fit.http.websocket.server.WebSocketHandlerNotFoundException;
-import com.huawei.fitframework.util.OptionalUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.OptionalUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;

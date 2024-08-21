@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.taskcenter.eventhandler;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jane.task.domain.TaskProperty;
@@ -18,11 +18,11 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.ViewMode;
 import com.huawei.fit.jober.taskcenter.domain.util.PrimaryValue;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.event.EventHandler;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.event.EventHandler;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;

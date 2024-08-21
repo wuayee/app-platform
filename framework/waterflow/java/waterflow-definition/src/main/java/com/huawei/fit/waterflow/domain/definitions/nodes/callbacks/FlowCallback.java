@@ -10,8 +10,8 @@ import com.huawei.fit.waterflow.common.exceptions.WaterflowException;
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowData;
 import com.huawei.fit.waterflow.domain.enums.FlowCallbackType;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.log.Logger;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

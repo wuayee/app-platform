@@ -5,8 +5,8 @@
 package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.extractors.ValueExtractor;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.Getter;
 

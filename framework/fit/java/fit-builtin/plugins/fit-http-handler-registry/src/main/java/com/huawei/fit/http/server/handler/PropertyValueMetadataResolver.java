@@ -5,7 +5,7 @@
 package com.huawei.fit.http.server.handler;
 
 import com.huawei.fit.http.server.handler.parameter.PropertyValueMetadataResolverComposite;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.util.List;
 

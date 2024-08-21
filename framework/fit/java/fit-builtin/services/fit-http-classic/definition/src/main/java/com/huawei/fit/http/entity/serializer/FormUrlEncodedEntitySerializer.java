@@ -12,7 +12,7 @@ import com.huawei.fit.http.entity.MultiValueEntity;
 import com.huawei.fit.http.entity.support.DefaultMultiValueEntity;
 import com.huawei.fit.http.protocol.util.BodyUtils;
 import com.huawei.fit.http.util.HttpUtils;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;

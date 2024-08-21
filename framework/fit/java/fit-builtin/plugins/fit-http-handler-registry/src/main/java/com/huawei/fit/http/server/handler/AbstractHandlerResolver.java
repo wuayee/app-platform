@@ -13,10 +13,10 @@ import com.huawei.fit.http.server.handler.parameter.RequestHeaderMapperResolver;
 import com.huawei.fit.http.server.handler.parameter.RequestParamMapperResolver;
 import com.huawei.fit.http.server.handler.parameter.RequestQueryMapperResolver;
 import com.huawei.fit.http.server.handler.support.ErrorMapperResolver;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
 
 /**
  * 表示解析请求处理器的抽象基类。

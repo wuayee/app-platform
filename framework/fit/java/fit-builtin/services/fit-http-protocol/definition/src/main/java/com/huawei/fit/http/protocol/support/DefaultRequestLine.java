@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.protocol.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.protocol.HttpVersion;

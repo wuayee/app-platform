@@ -8,12 +8,12 @@ import com.huawei.fit.service.entity.Address;
 import com.huawei.fit.service.entity.ApplicationInstance;
 import com.huawei.fit.service.entity.FitableAddressInstance;
 import com.huawei.fit.service.entity.Worker;
-import com.huawei.fitframework.broker.Endpoint;
-import com.huawei.fitframework.broker.Format;
-import com.huawei.fitframework.broker.Target;
-import com.huawei.fitframework.conf.runtime.CommunicationProtocol;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.broker.Endpoint;
+import modelengine.fitframework.broker.Format;
+import modelengine.fitframework.broker.Target;
+import modelengine.fitframework.conf.runtime.CommunicationProtocol;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -5,10 +5,10 @@
 package com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock;
 
 import com.huawei.fit.jane.task.gateway.DistributedLockProvider;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import java.util.concurrent.locks.Lock;
 

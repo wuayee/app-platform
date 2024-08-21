@@ -4,8 +4,8 @@
 
 package com.huawei.fit.security.http.zipped;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.zipped.support.AggregatedZippedFileValidator;

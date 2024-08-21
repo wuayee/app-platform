@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
@@ -78,20 +78,20 @@ import com.huawei.fit.jober.entity.FlowInstanceResult;
 import com.huawei.fit.jober.entity.FlowStartParameter;
 import com.huawei.fit.jober.entity.task.TaskProperty;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.Tuple;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.Tuple;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

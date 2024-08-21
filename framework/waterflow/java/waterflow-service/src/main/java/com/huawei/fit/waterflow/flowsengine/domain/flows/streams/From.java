@@ -35,7 +35,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Condition
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.JoinNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.ParallelNode;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;

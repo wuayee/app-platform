@@ -128,7 +128,7 @@ public class MetaMultiVersionFitableTest {
         }
     }
 
-    private com.huawei.fitframework.model.RangedResultSet<TaskEntity> mockListResult() {
+    private modelengine.fitframework.model.RangedResultSet<TaskEntity> mockListResult() {
         TaskEntity entity = new TaskEntity();
         entity.setId("18d31c043ca046f099059b01bfe77d1f");
         entity.setName("fruit|1.0.0");
@@ -147,7 +147,7 @@ public class MetaMultiVersionFitableTest {
         entity.setProperties(new ArrayList<TaskProperty>() {{
             add(property);
         }});
-        return com.huawei.fitframework.model.RangedResultSet.create(new ArrayList<TaskEntity>() {{
+        return modelengine.fitframework.model.RangedResultSet.create(new ArrayList<TaskEntity>() {{
             add(entity);
         }}, 0, 10, 1);
     }
@@ -177,7 +177,7 @@ public class MetaMultiVersionFitableTest {
         @DisplayName("创建成功-创建模板")
         public void test02() {
             when(taskService.listMeta(any(), eq(true), eq(0L), eq(10), any())).thenReturn(
-                    com.huawei.fitframework.model.RangedResultSet.create(Collections.emptyList(), 0, 10, 0));
+                    modelengine.fitframework.model.RangedResultSet.create(Collections.emptyList(), 0, 10, 0));
             when(taskTemplateRepo.create(any(), any())).thenReturn(
                     TaskTemplate.custom().id("25263c043ca04450990597758fe77d1f").build());
             when(taskService.create(any(), any())).thenReturn(createEntity());

@@ -23,8 +23,8 @@ import com.huawei.fit.http.header.ParameterCollection;
 import com.huawei.fit.http.header.support.DefaultContentType;
 import com.huawei.fit.http.header.support.DefaultHeaderValue;
 import com.huawei.fit.http.header.support.DefaultParameterCollection;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

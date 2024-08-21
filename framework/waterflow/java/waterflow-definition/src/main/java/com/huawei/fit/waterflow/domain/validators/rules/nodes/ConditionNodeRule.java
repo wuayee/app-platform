@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.domain.validators.rules.nodes;
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.nodes.FlowNode;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 条件节点校验规则

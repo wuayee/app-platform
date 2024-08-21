@@ -5,7 +5,7 @@
 package com.huawei.fit.ohscript.external;
 
 import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示 FIT 调用的异常。

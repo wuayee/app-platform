@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.server.handler;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
@@ -17,18 +17,18 @@ import com.huawei.fit.http.server.HttpServerFilterSupplier;
 import com.huawei.fit.http.server.handler.parameter.RequestBeanMetadataResolver;
 import com.huawei.fit.http.server.handler.parameter.RequestBodyMetadataResolver;
 import com.huawei.fit.http.server.handler.parameter.RequestParamMetadataResolver;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginStartedObserver;
-import com.huawei.fitframework.plugin.PluginStoppingObserver;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.annotation.BuiltinSerializer;
-import com.huawei.fitframework.util.AnnotationUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginStartedObserver;
+import modelengine.fitframework.plugin.PluginStoppingObserver;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.annotation.BuiltinSerializer;
+import modelengine.fitframework.util.AnnotationUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

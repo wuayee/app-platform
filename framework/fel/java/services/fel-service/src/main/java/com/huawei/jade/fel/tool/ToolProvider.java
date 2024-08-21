@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.tool;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 
 import java.util.List;

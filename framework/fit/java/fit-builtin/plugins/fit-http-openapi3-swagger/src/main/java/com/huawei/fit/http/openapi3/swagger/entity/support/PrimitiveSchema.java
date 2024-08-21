@@ -5,10 +5,10 @@
 package com.huawei.fit.http.openapi3.swagger.entity.support;
 
 import com.huawei.fit.http.openapi3.swagger.entity.Schema;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 import java.util.List;

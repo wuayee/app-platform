@@ -5,8 +5,8 @@
 package com.huawei.fit.jane.task.gateway;
 
 import com.huawei.fit.jane.dlock.jdbc.DistributedLockClient;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.AllArgsConstructor;
 

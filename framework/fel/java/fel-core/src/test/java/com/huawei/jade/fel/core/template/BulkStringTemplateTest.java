@@ -7,7 +7,7 @@ package com.huawei.jade.fel.core.template;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.fel.core.template.support.DefaultBulkStringTemplate;
 
 import org.junit.jupiter.api.DisplayName;

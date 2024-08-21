@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.spi;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 import java.util.Map;

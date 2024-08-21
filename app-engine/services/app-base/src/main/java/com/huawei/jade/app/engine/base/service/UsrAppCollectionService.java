@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.base.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.base.dto.CollectionAppInfoDto;
 import com.huawei.jade.app.engine.base.dto.UsrAppCollectionDto;
 import com.huawei.jade.app.engine.base.po.UsrAppCollectionPo;

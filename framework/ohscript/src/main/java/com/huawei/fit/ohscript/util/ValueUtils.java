@@ -4,7 +4,7 @@
 
 package com.huawei.fit.ohscript.util;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
 

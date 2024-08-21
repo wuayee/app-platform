@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.domain.states;
 
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;

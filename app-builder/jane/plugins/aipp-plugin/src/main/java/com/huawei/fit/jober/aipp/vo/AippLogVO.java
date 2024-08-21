@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.vo;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.util.AippLogUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

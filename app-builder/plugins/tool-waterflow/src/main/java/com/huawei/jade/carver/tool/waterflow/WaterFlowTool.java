@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.tool.waterflow;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.jade.carver.tool.Tool;
 

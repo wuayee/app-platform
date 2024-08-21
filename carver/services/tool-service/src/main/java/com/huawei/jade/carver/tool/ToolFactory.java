@@ -5,10 +5,10 @@
 package com.huawei.jade.carver.tool;
 
 import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.support.FitToolFactory;
 import com.huawei.jade.carver.tool.support.HttpToolFactory;
 

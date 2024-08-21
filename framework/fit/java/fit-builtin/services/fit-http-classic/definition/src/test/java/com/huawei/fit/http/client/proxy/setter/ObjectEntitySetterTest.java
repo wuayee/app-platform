@@ -19,8 +19,8 @@ import com.huawei.fit.http.client.proxy.support.DefaultRequestBuilder;
 import com.huawei.fit.http.client.proxy.support.setter.ObjectEntitySetter;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.value.ValueFetcher;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

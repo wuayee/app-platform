@@ -11,9 +11,9 @@ import com.huawei.fit.jober.taskcenter.domain.SourceType;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.SourceValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 为 {@link SourceValidator} 提供实现。

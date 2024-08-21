@@ -5,7 +5,7 @@
 package com.huawei.fit.http.server.handler;
 
 import static com.huawei.fit.http.protocol.HttpResponseStatus.INTERNAL_SERVER_ERROR;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.EntitySerializer;
@@ -20,10 +20,10 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.HttpServerResponseException;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.HashMap;

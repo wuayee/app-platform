@@ -6,7 +6,7 @@ package com.huawei.jade.carver.tool.support.http.server.controller;
 
 import com.huawei.fit.http.annotation.RequestCookie;
 import com.huawei.fit.http.annotation.RequestHeader;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 测试 Http 提供的人的相关信息。

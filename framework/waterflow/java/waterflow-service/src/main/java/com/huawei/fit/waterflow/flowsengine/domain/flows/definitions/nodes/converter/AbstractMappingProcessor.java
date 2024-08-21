@@ -8,10 +8,10 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static com.huawei.fit.jober.common.ErrorCodes.NOT_SUPPORT;
 import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_INTERNAL_KEY;
 import static com.huawei.fit.waterflow.common.Constant.INTERNAL_OUTPUT_SCOPE_KEY;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.Getter;
 

@@ -7,7 +7,7 @@ package com.huawei.fit.http.server.handler;
 import com.huawei.fit.http.annotation.ExceptionHandler;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fitframework.annotation.Scope;
+import modelengine.fitframework.annotation.Scope;
 
 /**
  * 表示处理 {@link ExceptionHandler} 的处理器。

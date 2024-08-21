@@ -6,7 +6,7 @@ package com.huawei.fit.service.util;
 
 import com.huawei.fit.service.entity.FitableInfo;
 import com.huawei.fit.service.entity.FitableMeta;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;

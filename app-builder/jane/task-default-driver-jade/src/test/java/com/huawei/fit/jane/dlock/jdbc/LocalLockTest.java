@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.dlock.DatabaseBaseTest;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
-import com.huawei.fitframework.transaction.DataAccessException;
-import com.huawei.fitframework.transaction.TransactionException;
+import modelengine.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.transaction.TransactionException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

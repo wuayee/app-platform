@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.tool.support.entity;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 表示地址。

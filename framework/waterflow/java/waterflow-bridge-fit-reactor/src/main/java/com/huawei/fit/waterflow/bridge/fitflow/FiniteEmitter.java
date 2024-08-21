@@ -7,11 +7,11 @@ package com.huawei.fit.waterflow.bridge.fitflow;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
-import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.flowable.Subscriber;
-import com.huawei.fitframework.flowable.Subscription;
-import com.huawei.fitframework.model.Tuple;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.flowable.Publisher;
+import modelengine.fitframework.flowable.Subscriber;
+import modelengine.fitframework.flowable.Subscription;
+import modelengine.fitframework.model.Tuple;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;

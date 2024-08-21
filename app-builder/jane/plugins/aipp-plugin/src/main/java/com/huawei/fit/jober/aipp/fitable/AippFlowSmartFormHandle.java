@@ -18,11 +18,11 @@ import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

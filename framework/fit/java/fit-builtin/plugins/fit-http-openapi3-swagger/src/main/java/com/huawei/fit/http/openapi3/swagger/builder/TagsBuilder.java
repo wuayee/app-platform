@@ -8,7 +8,7 @@ import com.huawei.fit.http.openapi3.swagger.EntityBuilder;
 import com.huawei.fit.http.openapi3.swagger.entity.Tag;
 import com.huawei.fit.http.server.HttpDispatcher;
 import com.huawei.fit.http.server.HttpHandlerGroup;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import java.util.Collection;
 import java.util.Collections;

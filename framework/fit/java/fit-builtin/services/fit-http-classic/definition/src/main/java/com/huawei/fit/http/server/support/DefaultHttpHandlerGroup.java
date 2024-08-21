@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.HttpHandlerGroup;

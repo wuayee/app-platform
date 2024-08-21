@@ -11,7 +11,7 @@ import com.huawei.fit.http.QueryCollection;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

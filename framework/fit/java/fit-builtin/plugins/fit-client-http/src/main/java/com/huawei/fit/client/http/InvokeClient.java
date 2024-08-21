@@ -9,11 +9,11 @@ import com.huawei.fit.client.Response;
 import com.huawei.fit.client.http.async.AsyncInvokeClient;
 import com.huawei.fit.client.http.support.SyncInvokeClient;
 import com.huawei.fit.client.http.websocket.WebSocketInvokeClient;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.conf.runtime.ClientConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.conf.runtime.ClientConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.ioc.BeanContainer;
 
 /**
  * 表示真实调用的客户端。

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.name.FileNameValidateConfig;
 import com.huawei.fit.security.http.support.ZippedFileException;
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.util.FileUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

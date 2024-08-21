@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions;
 import static com.huawei.fit.jober.common.ErrorCodes.ENTITY_NOT_FOUND;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_FIND_TO_NODE_BY_EVENT_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_HAS_NO_START_NODE;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.waterflow.common.Constant;
@@ -22,7 +22,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDefinitionSta
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

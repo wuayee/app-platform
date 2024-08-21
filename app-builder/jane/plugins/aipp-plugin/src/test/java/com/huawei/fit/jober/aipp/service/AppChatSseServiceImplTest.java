@@ -5,8 +5,8 @@
 package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jober.aipp.service.impl.AppChatSseServiceImpl;
-import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.flowable.emitter.DefaultEmitter;
+import modelengine.fitframework.flowable.Emitter;
+import modelengine.fitframework.flowable.emitter.DefaultEmitter;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

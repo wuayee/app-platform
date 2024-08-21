@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobe
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberProperties;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;

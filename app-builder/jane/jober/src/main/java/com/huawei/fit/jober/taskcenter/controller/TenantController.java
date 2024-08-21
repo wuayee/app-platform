@@ -25,9 +25,9 @@ import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jane.task.util.UndefinableValue;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;

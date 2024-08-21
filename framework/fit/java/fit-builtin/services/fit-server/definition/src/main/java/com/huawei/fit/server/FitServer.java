@@ -4,7 +4,7 @@
 
 package com.huawei.fit.server;
 
-import com.huawei.fitframework.broker.Endpoint;
+import modelengine.fitframework.broker.Endpoint;
 
 import java.util.Collections;
 import java.util.List;

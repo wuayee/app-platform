@@ -7,7 +7,7 @@ package com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries;
 import com.huawei.fit.ohscript.script.parser.nodes.TerminalNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.Category;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * Map条目

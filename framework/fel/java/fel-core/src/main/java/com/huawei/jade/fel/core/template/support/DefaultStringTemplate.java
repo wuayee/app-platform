@@ -4,12 +4,12 @@
 
 package com.huawei.jade.fel.core.template.support;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.merge.ConflictResolutionPolicy;
-import com.huawei.fitframework.parameterization.ParameterizedString;
-import com.huawei.fitframework.parameterization.ParameterizedStringResolver;
-import com.huawei.fitframework.parameterization.ResolvedParameter;
-import com.huawei.fitframework.util.MapUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.merge.ConflictResolutionPolicy;
+import modelengine.fitframework.parameterization.ParameterizedString;
+import modelengine.fitframework.parameterization.ParameterizedStringResolver;
+import modelengine.fitframework.parameterization.ResolvedParameter;
+import modelengine.fitframework.util.MapUtils;
 import com.huawei.jade.fel.core.template.StringTemplate;
 
 import java.util.Collections;

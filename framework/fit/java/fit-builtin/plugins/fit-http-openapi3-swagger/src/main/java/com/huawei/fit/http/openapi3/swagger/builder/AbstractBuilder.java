@@ -4,15 +4,15 @@
 
 package com.huawei.fit.http.openapi3.swagger.builder;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.server.HttpClassicServer;
 import com.huawei.fit.http.server.HttpDispatcher;
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.ReflectibleMappingHandler;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
 
 import java.util.Optional;
 

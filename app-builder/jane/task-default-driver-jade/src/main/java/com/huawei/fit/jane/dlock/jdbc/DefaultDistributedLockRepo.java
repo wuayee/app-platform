@@ -8,7 +8,7 @@ import com.huawei.fit.jane.dlock.jdbc.persist.mapper.FlowLockMapper;
 import com.huawei.fit.jane.dlock.jdbc.persist.po.FlowLockPO;
 import com.huawei.fit.jane.dlock.jdbc.utils.DistributedLockStatus;
 import com.huawei.fit.jane.dlock.jdbc.utils.HostUtil;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.RequiredArgsConstructor;
 

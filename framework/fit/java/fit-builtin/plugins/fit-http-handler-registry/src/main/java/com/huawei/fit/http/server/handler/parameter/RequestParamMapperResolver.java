@@ -14,8 +14,8 @@ import com.huawei.fit.http.server.handler.support.HeaderFetcher;
 import com.huawei.fit.http.server.handler.support.ObjectEntityFetcher;
 import com.huawei.fit.http.server.handler.support.PathVariableFetcher;
 import com.huawei.fit.http.server.handler.support.QueryFetcher;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.Map;
 import java.util.function.Function;

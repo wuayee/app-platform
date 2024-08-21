@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules.jober
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberType;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * genericable任务调用的校验规则

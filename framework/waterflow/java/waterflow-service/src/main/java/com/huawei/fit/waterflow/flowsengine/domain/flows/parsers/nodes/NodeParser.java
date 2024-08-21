@@ -24,7 +24,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.callbacks
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.filters.FilterParser;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers.JoberParser;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.tasks.TaskParser;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import com.alibaba.fastjson.JSONObject;
 

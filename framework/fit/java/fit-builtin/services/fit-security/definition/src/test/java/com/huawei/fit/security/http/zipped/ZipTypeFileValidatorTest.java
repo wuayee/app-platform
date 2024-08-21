@@ -13,7 +13,7 @@ import com.huawei.fit.security.http.name.FileNameValidateConfig;
 import com.huawei.fit.security.http.support.ZippedFileException;
 import com.huawei.fit.security.http.util.CreateZipUtils;
 import com.huawei.fit.security.http.zipped.support.ZipOrJarTypeFileValidator;
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.util.FileUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

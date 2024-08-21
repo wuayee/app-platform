@@ -4,13 +4,13 @@
 
 package com.huawei.jade.carver.tool.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import java.lang.reflect.Type;

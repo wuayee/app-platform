@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.aipp.util;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;

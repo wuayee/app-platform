@@ -19,12 +19,12 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontex
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

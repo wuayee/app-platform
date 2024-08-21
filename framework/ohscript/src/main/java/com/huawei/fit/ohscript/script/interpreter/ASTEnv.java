@@ -24,11 +24,11 @@ import com.huawei.fit.ohscript.util.Constants;
 import com.huawei.fit.ohscript.util.ExternalWrapper;
 import com.huawei.fit.ohscript.util.OhUtil;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.util.ArrayUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

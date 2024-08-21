@@ -7,8 +7,8 @@ package com.huawei.jade.fel.engine.flows;
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.engine.activities.FlowCallBack;
 
 import java.util.List;

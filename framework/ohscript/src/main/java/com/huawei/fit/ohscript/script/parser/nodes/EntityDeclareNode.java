@@ -8,7 +8,7 @@ import com.huawei.fit.ohscript.script.lexer.Terminal;
 import com.huawei.fit.ohscript.script.lexer.Token;
 import com.huawei.fit.ohscript.script.parser.NonTerminal;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * Entity声明的node，非终结符node

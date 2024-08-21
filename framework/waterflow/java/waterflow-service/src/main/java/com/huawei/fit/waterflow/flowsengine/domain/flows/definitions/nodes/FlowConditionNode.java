@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
@@ -21,8 +21,8 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.ConditionsNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
 import com.huawei.fit.waterflow.flowsengine.utils.OhScriptExecutor;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 

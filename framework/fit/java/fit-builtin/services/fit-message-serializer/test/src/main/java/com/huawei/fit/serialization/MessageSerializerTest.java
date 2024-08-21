@@ -7,7 +7,7 @@ package com.huawei.fit.serialization;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.entity.Struct;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

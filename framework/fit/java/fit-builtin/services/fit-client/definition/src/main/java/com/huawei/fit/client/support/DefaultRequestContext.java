@@ -4,12 +4,12 @@
 
 package com.huawei.fit.client.support;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.inspection.Validation.greaterThan;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.client.RequestContext;
-import com.huawei.fitframework.broker.CommunicationType;
+import modelengine.fitframework.broker.CommunicationType;
 
 import java.util.Collections;
 import java.util.Locale;

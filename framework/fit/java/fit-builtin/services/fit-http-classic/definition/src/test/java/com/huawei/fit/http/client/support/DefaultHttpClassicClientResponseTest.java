@@ -18,10 +18,10 @@ import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.MessageHeaderNames;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fit.http.protocol.support.DefaultClientResponse;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.model.support.DefaultMultiValueMap;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.support.DefaultMultiValueMap;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

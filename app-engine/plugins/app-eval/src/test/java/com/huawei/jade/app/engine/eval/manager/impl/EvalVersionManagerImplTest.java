@@ -8,8 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mock;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.eval.entity.EvalVersionEntity;
 import com.huawei.jade.app.engine.eval.manager.EvalDatasetVersionManager;
 import com.huawei.jade.app.engine.eval.mapper.EvalDataMapper;

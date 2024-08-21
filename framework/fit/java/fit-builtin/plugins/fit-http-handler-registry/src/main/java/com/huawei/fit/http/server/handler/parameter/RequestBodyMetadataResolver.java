@@ -8,11 +8,11 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.server.handler.PropertyValueMetadata;
 import com.huawei.fit.http.server.handler.PropertyValueMetadataResolver;
 import com.huawei.fit.http.server.handler.Source;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;

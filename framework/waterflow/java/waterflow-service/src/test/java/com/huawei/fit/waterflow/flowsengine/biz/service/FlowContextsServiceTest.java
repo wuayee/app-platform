@@ -37,9 +37,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.To;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

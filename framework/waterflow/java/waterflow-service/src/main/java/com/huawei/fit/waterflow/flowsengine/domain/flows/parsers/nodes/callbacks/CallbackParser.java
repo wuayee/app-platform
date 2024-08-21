@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.callbacks;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDataConverterType;

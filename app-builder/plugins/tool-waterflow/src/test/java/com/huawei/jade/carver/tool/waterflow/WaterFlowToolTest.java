@@ -12,11 +12,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.tool.Tool;
 
 import org.junit.jupiter.api.BeforeEach;

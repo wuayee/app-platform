@@ -4,10 +4,10 @@
 
 package com.huawei.fit.serialization.json.jackson.custom;
 
-import com.huawei.fitframework.annotation.Aliases;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Aliases;
+import modelengine.fitframework.annotation.Property;
 import com.huawei.fitframework.serialization.annotation.SerializeStrategy;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.Version;

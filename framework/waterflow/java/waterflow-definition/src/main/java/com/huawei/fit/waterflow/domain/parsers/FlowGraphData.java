@@ -11,8 +11,8 @@ import static java.util.Locale.ROOT;
 import com.huawei.fit.waterflow.common.exceptions.WaterflowException;
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.common.Constant;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

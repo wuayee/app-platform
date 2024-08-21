@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jane.task.util;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 

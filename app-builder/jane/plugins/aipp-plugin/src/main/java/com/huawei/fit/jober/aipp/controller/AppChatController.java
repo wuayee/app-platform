@@ -16,10 +16,10 @@ import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
 import com.huawei.fit.jober.aipp.service.AppChatService;
 import com.huawei.fit.jober.aipp.service.impl.AppChatServiceImpl;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

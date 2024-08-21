@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.server.dispatch;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.HttpClassicResponse;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
@@ -16,13 +16,13 @@ import com.huawei.fit.http.server.HttpHandlerGroup;
 import com.huawei.fit.http.server.HttpHandlerNotFoundException;
 import com.huawei.fit.http.server.RegisterHttpHandlerException;
 import com.huawei.fit.http.server.dispatch.support.DefaultMappingTree;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.resource.UrlUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.OptionalUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.wildcard.PathPattern;
-import com.huawei.fitframework.util.wildcard.Pattern;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.resource.UrlUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.OptionalUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.wildcard.PathPattern;
+import modelengine.fitframework.util.wildcard.Pattern;
 
 import java.util.ArrayList;
 import java.util.Collections;

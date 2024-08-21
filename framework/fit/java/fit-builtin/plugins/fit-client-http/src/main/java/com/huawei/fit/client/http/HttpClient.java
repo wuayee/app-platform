@@ -4,20 +4,20 @@
 
 package com.huawei.fit.client.http;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.client.Client;
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.Response;
 import com.huawei.fit.client.http.util.HttpClientUtils;
 import com.huawei.fit.http.protocol.Protocol;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.conf.runtime.ClientConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.conf.runtime.ClientConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.lang.reflect.Type;
 import java.util.Map;

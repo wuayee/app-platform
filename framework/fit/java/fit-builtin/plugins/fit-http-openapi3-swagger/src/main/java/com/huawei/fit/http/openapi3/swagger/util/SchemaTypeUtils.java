@@ -4,9 +4,9 @@
 
 package com.huawei.fit.http.openapi3.swagger.util;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

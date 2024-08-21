@@ -4,10 +4,10 @@
 
 package com.huawei.jade.fel.model.openai.entity.chat.message;
 
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.serialization.annotation.SerializeStrategy;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.serialization.annotation.SerializeStrategy;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.model.openai.entity.chat.message.content.UserContent;
 import com.huawei.jade.fel.model.openai.entity.chat.message.tool.OpenAiToolCall;
 import com.huawei.jade.fel.tool.ToolCall;

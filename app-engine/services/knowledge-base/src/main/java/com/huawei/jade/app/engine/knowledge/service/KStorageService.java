@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.knowledge.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.enums.KStorageType;
 

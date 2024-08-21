@@ -4,16 +4,16 @@
 
 package com.huawei.fit.http.server.handler.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.handler.HttpExceptionHandler;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;

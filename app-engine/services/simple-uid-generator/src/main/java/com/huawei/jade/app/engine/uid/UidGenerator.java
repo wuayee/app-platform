@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.uid;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 全局唯一 ID 生成器接口定义。

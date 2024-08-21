@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.huawei.fit.http.Cookie;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.support.DefaultCookieCollection;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

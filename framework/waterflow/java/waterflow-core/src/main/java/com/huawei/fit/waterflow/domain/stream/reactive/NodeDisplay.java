@@ -6,8 +6,8 @@ package com.huawei.fit.waterflow.domain.stream.reactive;
 
 import com.huawei.fit.waterflow.domain.enums.SpecialDisplayNode;
 import com.huawei.fit.waterflow.domain.flow.Flow;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 import lombok.Setter;

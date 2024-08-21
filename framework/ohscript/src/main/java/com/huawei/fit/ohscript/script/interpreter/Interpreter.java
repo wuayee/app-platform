@@ -13,7 +13,7 @@ import static com.huawei.fit.ohscript.util.Constants.THIS;
 import static com.huawei.fit.ohscript.util.Constants.UNKNOWN_ERROR;
 import static com.huawei.fit.ohscript.util.Tool.createInstance;
 import static com.huawei.fit.ohscript.util.Tool.interpretFunction;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.ohscript.script.errors.OhPanic;
 import com.huawei.fit.ohscript.script.errors.RuntimeError;
@@ -58,8 +58,8 @@ import com.huawei.fit.ohscript.util.EmptyValue;
 import com.huawei.fit.ohscript.util.OhFunction;
 import com.huawei.fit.ohscript.util.Pair;
 import com.huawei.fit.ohscript.util.TriFunction;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;

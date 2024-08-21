@@ -4,13 +4,13 @@
 
 package com.huawei.fit.jober.taskcenter.util;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fitframework.parameterization.ParameterizedString;
-import com.huawei.fitframework.parameterization.ParameterizedStringResolver;
-import com.huawei.fitframework.parameterization.ResolvedParameter;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.parameterization.ParameterizedString;
+import modelengine.fitframework.parameterization.ParameterizedStringResolver;
+import modelengine.fitframework.parameterization.ResolvedParameter;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

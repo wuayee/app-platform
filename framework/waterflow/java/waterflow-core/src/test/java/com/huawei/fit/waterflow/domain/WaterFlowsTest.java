@@ -33,7 +33,7 @@ import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.utils.Mermaid;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

@@ -10,11 +10,11 @@ import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.proxy.RequestBuilder;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.model.support.DefaultMultiValueMap;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.support.DefaultMultiValueMap;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

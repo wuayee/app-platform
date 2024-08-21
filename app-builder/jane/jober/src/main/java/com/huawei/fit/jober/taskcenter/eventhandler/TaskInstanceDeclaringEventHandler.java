@@ -10,12 +10,12 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceCreatingEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceDeclaringEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceModifyingEvent;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.event.EventHandler;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.event.EventHandler;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

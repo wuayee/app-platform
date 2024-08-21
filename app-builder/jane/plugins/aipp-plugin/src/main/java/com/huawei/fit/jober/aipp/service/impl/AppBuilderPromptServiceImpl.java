@@ -12,9 +12,9 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptDto;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;

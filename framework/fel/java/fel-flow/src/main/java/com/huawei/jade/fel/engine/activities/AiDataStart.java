@@ -10,7 +10,7 @@ import com.huawei.fit.waterflow.domain.emitters.FlowEmitter;
 import com.huawei.fit.waterflow.domain.flow.Flows;
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.states.DataStart;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 
 /**

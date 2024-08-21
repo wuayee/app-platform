@@ -4,13 +4,13 @@
 
 package com.huawei.jade.fel.pipeline.huggingface;
 
-import static com.huawei.fitframework.util.IoUtils.content;
+import static modelengine.fitframework.util.IoUtils.content;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.fel.pipeline.Pipeline;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 

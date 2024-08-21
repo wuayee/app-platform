@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.domain.context.repo.flowlock;
 
 import com.huawei.fit.waterflow.domain.common.Constant;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;

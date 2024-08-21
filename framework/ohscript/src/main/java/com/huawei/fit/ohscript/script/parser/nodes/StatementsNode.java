@@ -5,7 +5,7 @@
 package com.huawei.fit.ohscript.script.parser.nodes;
 
 import com.huawei.fit.ohscript.script.parser.NonTerminal;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;

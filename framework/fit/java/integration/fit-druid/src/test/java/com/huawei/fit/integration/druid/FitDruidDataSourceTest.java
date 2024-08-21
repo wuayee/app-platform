@@ -9,11 +9,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.conf.support.MapConfig;
-import com.huawei.fitframework.datasource.FitDataSource;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanRegistry;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.conf.support.MapConfig;
+import modelengine.fitframework.datasource.FitDataSource;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanRegistry;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

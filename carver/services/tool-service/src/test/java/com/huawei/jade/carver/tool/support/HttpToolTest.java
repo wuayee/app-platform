@@ -4,18 +4,18 @@
 
 package com.huawei.jade.carver.tool.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.client.okhttp.OkHttpClassicClientFactory;
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fit.value.fastjson.FastJsonValueHandler;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
 import com.huawei.jade.carver.tool.support.entity.Address;

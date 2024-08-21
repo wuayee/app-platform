@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.domain.utils;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.function.Supplier;
 

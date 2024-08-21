@@ -4,7 +4,7 @@
 
 package com.huawei.fit.serialization.json.jackson.custom;
 
-import static com.huawei.fitframework.util.StringUtils.blankIf;
+import static modelengine.fitframework.util.StringUtils.blankIf;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 

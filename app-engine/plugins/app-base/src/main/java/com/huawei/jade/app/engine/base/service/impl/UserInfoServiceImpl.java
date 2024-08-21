@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.base.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.base.dto.UserInfoDto;
 import com.huawei.jade.app.engine.base.mapper.UserInfoMapper;
 import com.huawei.jade.app.engine.base.service.UserInfoService;

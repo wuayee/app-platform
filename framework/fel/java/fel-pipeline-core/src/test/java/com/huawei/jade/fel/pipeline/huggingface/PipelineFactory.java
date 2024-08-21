@@ -4,10 +4,10 @@
 
 package com.huawei.jade.fel.pipeline.huggingface;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 import com.huawei.jade.fel.pipeline.Pipeline;
 import com.huawei.jade.fel.pipeline.huggingface.asr.AsrPipeline;
 import com.huawei.jade.fel.pipeline.huggingface.img2img.Image2ImagePipeline;

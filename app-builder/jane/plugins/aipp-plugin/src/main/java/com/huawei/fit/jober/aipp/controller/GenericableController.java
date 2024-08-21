@@ -16,8 +16,8 @@ import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.FitableInfoDto;
 import com.huawei.fit.jober.aipp.service.GenericableManageService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.ObjectUtils;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

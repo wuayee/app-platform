@@ -6,11 +6,11 @@ package com.huawei.fit.serialization.util;
 
 import com.huawei.fit.serialization.Constants;
 import com.huawei.fit.serialization.MessageSerializer;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;

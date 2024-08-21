@@ -4,18 +4,18 @@
 
 package com.huawei.fit.http.websocket.server.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.handler.support.ErrorMapper;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.server.WebSocketBinaryMessageMapper;
 import com.huawei.fit.http.websocket.server.WebSocketTextMessageMapper;
-import com.huawei.fitframework.exception.MethodInvocationException;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.exception.MethodInvocationException;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;

@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.form.dto;
 
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

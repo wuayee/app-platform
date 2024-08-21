@@ -4,14 +4,14 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowGenericableJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberProperties;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
 

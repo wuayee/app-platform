@@ -4,11 +4,11 @@
 
 package com.huawei.jade.carver.telemetry.aop;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.util.LazyLoader;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.util.LazyLoader;
 
 import java.util.List;
 import java.util.stream.Collectors;

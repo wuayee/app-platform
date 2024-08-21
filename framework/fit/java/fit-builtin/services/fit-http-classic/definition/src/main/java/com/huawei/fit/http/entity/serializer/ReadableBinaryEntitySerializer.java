@@ -9,7 +9,7 @@ import com.huawei.fit.http.entity.EntitySerializer;
 import com.huawei.fit.http.entity.EntityWriteException;
 import com.huawei.fit.http.entity.ReadableBinaryEntity;
 import com.huawei.fit.http.entity.support.DefaultReadableBinaryEntity;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.protocol.util;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;

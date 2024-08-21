@@ -7,8 +7,8 @@ package com.huawei.fit.http.client.proxy.support.setter;
 import com.huawei.fit.http.client.proxy.DestinationSetter;
 import com.huawei.fit.http.client.proxy.RequestBuilder;
 import com.huawei.fit.http.entity.Entity;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 表示向消息体设置值的 {@link DestinationSetter}。

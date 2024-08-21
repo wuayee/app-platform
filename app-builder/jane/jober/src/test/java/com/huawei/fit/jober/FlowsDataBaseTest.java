@@ -34,10 +34,10 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowRetryPO;
 import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.AfterAll;
 

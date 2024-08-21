@@ -16,9 +16,9 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.globalization.StringResource;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.globalization.StringResource;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.carver.operation.support.OperationLogFields;
 

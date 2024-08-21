@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.service.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
@@ -33,10 +33,10 @@ import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Subsc
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Subscription;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors.Map;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors.Whether;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.CollectionUtils;
 
 import lombok.Getter;
 

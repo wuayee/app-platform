@@ -6,10 +6,10 @@ package com.huawei.fit.server.http.websocket.support;
 
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.server.http.websocket.ConfigurableWebSocketServerContext;
-import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.flowable.util.worker.Worker;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.Version;
+import modelengine.fitframework.flowable.Emitter;
+import modelengine.fitframework.flowable.util.worker.Worker;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.Version;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

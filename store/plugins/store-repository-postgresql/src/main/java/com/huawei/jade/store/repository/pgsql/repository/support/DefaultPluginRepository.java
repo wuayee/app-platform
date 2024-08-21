@@ -4,9 +4,10 @@
 
 package com.huawei.jade.store.repository.pgsql.repository.support;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.ObjectSerializer;
+
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.repository.pgsql.entity.PluginDo;

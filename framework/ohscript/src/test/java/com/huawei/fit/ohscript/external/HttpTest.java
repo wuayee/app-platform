@@ -4,12 +4,12 @@
 
 package com.huawei.fit.ohscript.external;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.jdk.JdkHttpClassicClientFactory;
+import com.huawei.fit.http.client.okhttp.OkHttpClassicClientFactory;
 import com.huawei.fit.ohscript.script.errors.OhPanic;
 import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
 import com.huawei.fit.ohscript.script.interpreter.Oh;
@@ -20,10 +20,10 @@ import com.huawei.fit.ohscript.script.parser.ParserBuilder;
 import com.huawei.fit.ohscript.util.OhScriptReader;
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fit.value.fastjson.FastJsonValueHandler;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.value.ValueFetcher;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -64,8 +64,8 @@ public class HttpTest {
                 .put("json", jsonSerializer)
                 .build();
         ValueFetcher valueFetcher = new FastJsonValueHandler();
-        HttpClassicClientFactory jdkFactory = new JdkHttpClassicClientFactory(serializers, valueFetcher);
-        this.httpClient = jdkFactory.create();
+        HttpClassicClientFactory okHttpFactory = new OkHttpClassicClientFactory(serializers, valueFetcher);
+        this.httpClient = okHttpFactory.create();
     }
 
     @AfterEach

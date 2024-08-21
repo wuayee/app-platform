@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.common.Constant;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
@@ -15,7 +15,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.F
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import com.alibaba.fastjson.JSON;
 

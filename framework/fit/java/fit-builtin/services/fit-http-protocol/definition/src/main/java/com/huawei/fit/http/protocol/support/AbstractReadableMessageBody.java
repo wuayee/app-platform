@@ -4,12 +4,12 @@
 
 package com.huawei.fit.http.protocol.support;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.lessThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.lessThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.ReadableMessageBody;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.InputStream;
 

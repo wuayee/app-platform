@@ -4,15 +4,15 @@
 
 package com.huawei.fit.http.server.handler.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.annotation.DefaultValue;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.handler.RequestMappingException;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;

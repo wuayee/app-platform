@@ -4,7 +4,7 @@
 
 package com.huawei.fit.data.repository.entity;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 表示缓存数据键的元数据信息。

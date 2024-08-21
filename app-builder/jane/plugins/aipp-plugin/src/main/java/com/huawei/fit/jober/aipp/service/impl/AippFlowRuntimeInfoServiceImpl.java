@@ -20,9 +20,9 @@ import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
 import com.huawei.fit.runtime.entity.NodeInfo;
 import com.huawei.fit.runtime.entity.RuntimeData;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;

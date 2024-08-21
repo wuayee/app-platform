@@ -12,10 +12,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatOptions;

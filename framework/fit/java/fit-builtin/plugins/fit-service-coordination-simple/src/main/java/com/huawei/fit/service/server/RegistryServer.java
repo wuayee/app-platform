@@ -4,7 +4,7 @@
 
 package com.huawei.fit.service.server;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.service.RegistryService;
 import com.huawei.fit.service.WorkerCache;
@@ -18,12 +18,12 @@ import com.huawei.fit.service.entity.FitableMeta;
 import com.huawei.fit.service.entity.FitableMetaInstance;
 import com.huawei.fit.service.entity.GenericableInfo;
 import com.huawei.fit.service.entity.Worker;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.conf.runtime.CommunicationProtocol;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.conf.runtime.CommunicationProtocol;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

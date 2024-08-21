@@ -4,10 +4,10 @@
 
 package com.huawei.jade.fel.rag.plugins.tableindex;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Destroy;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Destroy;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.schedule.annotation.Scheduled;
 import com.huawei.jade.fel.rag.index.IndexConfig;
 import com.huawei.jade.fel.rag.index.IndexService;
 import com.huawei.jade.fel.rag.index.IndexerOptions;

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.pipeline.huggingface.img2img;
 
-import com.huawei.fitframework.resource.web.Media;
+import modelengine.fitframework.resource.web.Media;
 import com.huawei.jade.fel.pipeline.huggingface.ExplicitPipeline;
 import com.huawei.jade.fel.pipeline.huggingface.PipelineTask;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;

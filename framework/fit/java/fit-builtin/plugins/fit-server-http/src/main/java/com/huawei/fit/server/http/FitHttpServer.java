@@ -4,21 +4,21 @@
 
 package com.huawei.fit.server.http;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.greaterThan;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.HttpClassicServer;
 import com.huawei.fit.http.server.HttpServerStartupException;
 import com.huawei.fit.server.FitServer;
 import com.huawei.fit.server.StartServerException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.Endpoint;
-import com.huawei.fitframework.conf.runtime.ServerConfig;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.Endpoint;
+import modelengine.fitframework.conf.runtime.ServerConfig;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

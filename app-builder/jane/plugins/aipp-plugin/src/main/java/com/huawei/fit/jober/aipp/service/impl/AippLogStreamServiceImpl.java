@@ -17,7 +17,7 @@ import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.Collections;
 import java.util.List;

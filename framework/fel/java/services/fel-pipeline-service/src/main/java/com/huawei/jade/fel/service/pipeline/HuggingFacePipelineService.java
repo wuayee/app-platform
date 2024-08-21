@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.service.pipeline;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.Map;
 

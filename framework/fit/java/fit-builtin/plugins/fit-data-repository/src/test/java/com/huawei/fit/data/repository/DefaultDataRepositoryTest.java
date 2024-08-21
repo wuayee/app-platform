@@ -6,7 +6,7 @@ package com.huawei.fit.data.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

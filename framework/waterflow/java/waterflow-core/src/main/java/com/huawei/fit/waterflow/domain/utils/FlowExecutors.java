@@ -6,8 +6,8 @@ package com.huawei.fit.waterflow.domain.utils;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.ThreadPoolExecutor;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
 
 import java.util.Optional;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;

@@ -4,11 +4,11 @@
 
 package com.huawei.fit.http.client.proxy.support.setter;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.http.client.proxy.RequestBuilder;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;

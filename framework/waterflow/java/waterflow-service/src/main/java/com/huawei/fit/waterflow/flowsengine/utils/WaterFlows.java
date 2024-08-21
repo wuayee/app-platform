@@ -9,7 +9,7 @@ import static java.lang.System.identityHashCode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Publisher;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.HashMap;
 import java.util.List;

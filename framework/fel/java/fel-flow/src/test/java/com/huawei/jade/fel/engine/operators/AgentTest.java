@@ -7,7 +7,7 @@ package com.huawei.jade.fel.engine.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.huawei.fitframework.flowable.Choir;
+import modelengine.fitframework.flowable.Choir;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;

@@ -4,11 +4,11 @@
 
 package com.huawei.fit.serialization.http.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.tlv.TagValuesChecker;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.tlv.TagValuesChecker;
 
 /**
  * 表示 WebSocket 通信过程中通过 TLV 来传输流式调用信息的工具类。

@@ -13,9 +13,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.conve
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowCallbackType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

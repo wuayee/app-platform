@@ -4,8 +4,8 @@
 
 package com.huawei.fit.service;
 
-import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.fitframework.broker.LocalExecutor;
+import modelengine.fitframework.annotation.Genericable;
+import modelengine.fitframework.broker.LocalExecutor;
 
 import java.util.List;
 

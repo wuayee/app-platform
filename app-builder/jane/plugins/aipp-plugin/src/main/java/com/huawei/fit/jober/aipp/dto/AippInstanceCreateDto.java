@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

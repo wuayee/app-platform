@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.meta.multiversion.instance;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.Undefinable;
 

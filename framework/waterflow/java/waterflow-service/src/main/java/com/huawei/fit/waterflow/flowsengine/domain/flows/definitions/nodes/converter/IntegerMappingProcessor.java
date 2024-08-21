@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.conv
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Map;
 

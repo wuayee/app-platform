@@ -6,9 +6,9 @@ package com.huawei.jade.common.filter.support;
 
 import com.huawei.fit.http.annotation.ExceptionHandler;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.exception.FitException;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.localemessage.LocaleMessageHandler;
 

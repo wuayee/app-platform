@@ -7,7 +7,7 @@ package com.huawei.fit.ohscript.script.parser;
 import com.huawei.fit.ohscript.script.errors.GrammarSyntaxException;
 import com.huawei.fit.ohscript.script.lexer.Terminal;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

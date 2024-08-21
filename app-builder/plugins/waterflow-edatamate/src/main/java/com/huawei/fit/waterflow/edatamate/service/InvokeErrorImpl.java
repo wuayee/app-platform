@@ -6,8 +6,8 @@ package com.huawei.fit.waterflow.edatamate.service;
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.common.TypeNotSupportException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 
 import java.util.List;
 import java.util.Map;

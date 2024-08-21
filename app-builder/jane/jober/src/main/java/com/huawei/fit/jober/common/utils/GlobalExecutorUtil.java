@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common.utils;
 
-import com.huawei.fitframework.schedule.ThreadPoolScheduler;
+import modelengine.fitframework.schedule.ThreadPoolScheduler;
 
 import java.util.concurrent.ThreadPoolExecutor;
 

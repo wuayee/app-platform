@@ -8,7 +8,7 @@ import com.huawei.fit.waterflow.common.Constant;
 import com.huawei.fit.waterflow.flowsengine.persist.entity.FlowStreamInfo;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.RequiredArgsConstructor;
 

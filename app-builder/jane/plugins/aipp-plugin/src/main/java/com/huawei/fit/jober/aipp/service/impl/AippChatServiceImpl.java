@@ -33,10 +33,10 @@ import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fit.jober.common.RangedResultSet;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

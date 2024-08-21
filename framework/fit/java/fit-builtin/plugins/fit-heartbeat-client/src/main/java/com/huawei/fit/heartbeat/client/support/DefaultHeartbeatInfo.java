@@ -4,9 +4,9 @@
 
 package com.huawei.fit.heartbeat.client.support;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.greaterThan;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.heartbeat.client.HeartbeatInfo;
 

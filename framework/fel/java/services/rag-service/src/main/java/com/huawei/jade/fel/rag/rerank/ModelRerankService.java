@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.rerank;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.fel.rag.protocol.FlatChunk;
 
 import java.util.List;

@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.rag.plugins.tokensplitter;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 import com.huawei.jade.fel.rag.protocol.FlatChunk;
 import com.huawei.jade.fel.rag.protocol.FlatDocument;
 import com.huawei.jade.fel.rag.split.DocumentSplitterService;

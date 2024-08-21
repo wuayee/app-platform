@@ -6,7 +6,7 @@ package com.huawei.fit.client.http.async;
 
 import com.huawei.fit.client.Response;
 import com.huawei.fit.http.exception.AsyncTaskExecutionException;
-import com.huawei.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.ResponseMetadata;
 
 /**
  * FIT 异步任务执行结果，封装 {@link com.huawei.fit.http.client.HttpClassicClientResponse} 和 {@link ResponseMetadata}。

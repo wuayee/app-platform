@@ -9,8 +9,8 @@ import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_TYPE;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.COOKIE;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.TRANSFER_ENCODING;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.CHUNKED;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.HttpResource;
@@ -28,8 +28,8 @@ import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fit.http.protocol.RequestLine;
 import com.huawei.fit.http.protocol.StartLine;
 import com.huawei.fit.http.util.HttpUtils;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;

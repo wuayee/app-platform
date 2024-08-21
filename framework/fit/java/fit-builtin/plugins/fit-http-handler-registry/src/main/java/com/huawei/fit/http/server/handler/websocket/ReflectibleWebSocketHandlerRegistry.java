@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.handler.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.HttpClassicServer;
 import com.huawei.fit.http.server.handler.GlobalPathPatternPrefixResolver;
@@ -20,12 +20,12 @@ import com.huawei.fit.http.websocket.server.WebSocketBinaryMessageMapperResolver
 import com.huawei.fit.http.websocket.server.WebSocketHandler;
 import com.huawei.fit.http.websocket.server.WebSocketSessionMapperResolver;
 import com.huawei.fit.http.websocket.server.WebSocketTextMessageMapperResolver;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginStartedObserver;
-import com.huawei.fitframework.plugin.PluginStoppingObserver;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginStartedObserver;
+import modelengine.fitframework.plugin.PluginStoppingObserver;
 
 import java.util.List;
 import java.util.Optional;

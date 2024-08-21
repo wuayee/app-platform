@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowRetry;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowRetryPO;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.RequiredArgsConstructor;
 

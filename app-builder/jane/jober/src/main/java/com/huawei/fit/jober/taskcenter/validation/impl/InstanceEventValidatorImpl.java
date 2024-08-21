@@ -10,7 +10,7 @@ import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.taskcenter.domain.InstanceEventType;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.validation.InstanceEventValidator;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 为 {@link InstanceEventValidator} 提供实现。

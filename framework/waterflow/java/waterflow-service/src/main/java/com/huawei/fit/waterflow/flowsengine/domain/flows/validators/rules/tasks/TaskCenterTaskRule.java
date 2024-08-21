@@ -11,8 +11,8 @@ import com.huawei.fit.waterflow.common.Constant;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.flowsengine.manual.operation.operator.TaskCenterOperator;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.List;
 

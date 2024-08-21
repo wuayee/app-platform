@@ -4,16 +4,16 @@
 
 package com.huawei.fit.http.openapi3.swagger.entity.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.openapi3.swagger.entity.Schema;
 import com.huawei.fit.http.openapi3.swagger.util.SchemaTypeUtils;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

@@ -19,11 +19,11 @@ import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.entity.FlowNodePublishInfo;
 import com.huawei.fit.jober.entity.FlowPublishContext;
 import com.huawei.fit.runtime.entity.Parameter;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

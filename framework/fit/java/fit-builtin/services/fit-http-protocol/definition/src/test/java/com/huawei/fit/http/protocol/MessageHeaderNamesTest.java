@@ -6,8 +6,8 @@ package com.huawei.fit.http.protocol;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

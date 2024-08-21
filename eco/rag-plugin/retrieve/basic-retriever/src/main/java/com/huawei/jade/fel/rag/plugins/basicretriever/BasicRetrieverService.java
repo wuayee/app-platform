@@ -4,10 +4,10 @@
 
 package com.huawei.jade.fel.rag.plugins.basicretriever;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.rag.index.IndexService;
 import com.huawei.jade.fel.rag.index.IndexerOptions;
 import com.huawei.jade.fel.rag.protocol.FlatChunk;

@@ -17,7 +17,7 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.domain.TaskType;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.Map;
 

@@ -28,13 +28,13 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowOfferId;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
-import com.huawei.fitframework.model.RangeResult;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.RangeResult;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

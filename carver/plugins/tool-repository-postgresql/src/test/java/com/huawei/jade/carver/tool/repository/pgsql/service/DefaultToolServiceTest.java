@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.repository.pgsql.ToolRepository;

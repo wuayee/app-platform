@@ -16,10 +16,10 @@ import com.huawei.fit.http.entity.EntitySerializer;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

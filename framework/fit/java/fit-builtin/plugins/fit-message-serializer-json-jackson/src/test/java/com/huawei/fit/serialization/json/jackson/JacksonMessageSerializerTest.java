@@ -9,11 +9,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.huawei.fit.serialization.test.box.Box;
 import com.huawei.fit.serialization.test.person.PersonAlias;
 import com.huawei.fit.serialization.test.person.PersonName;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.conf.support.PropertiesConfig;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.conf.support.PropertiesConfig;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

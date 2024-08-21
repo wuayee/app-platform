@@ -7,10 +7,10 @@ package com.huawei.fit.waterflow.edatamate.service;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.waterflow.edatamate.enums.ScanStatus;
 import com.huawei.fit.waterflow.edatamate.enums.TaskStartType;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

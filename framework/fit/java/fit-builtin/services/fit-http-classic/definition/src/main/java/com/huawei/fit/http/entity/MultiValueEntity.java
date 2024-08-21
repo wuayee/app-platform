@@ -6,7 +6,7 @@ package com.huawei.fit.http.entity;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.support.DefaultMultiValueEntity;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.MultiValueMap;
 
 import java.util.List;
 import java.util.Optional;

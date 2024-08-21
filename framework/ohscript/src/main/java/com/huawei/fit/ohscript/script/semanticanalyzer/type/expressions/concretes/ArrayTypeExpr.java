@@ -14,7 +14,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Abs
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.ComplexTypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Projectable;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 数组类型表达式

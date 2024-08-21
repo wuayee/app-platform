@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.engine.flows;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 结束回调接口。

@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPPORT;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.waterflow.common.Constant;
@@ -20,8 +20,8 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.ParallelMode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.JoinNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.ParallelNode;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 

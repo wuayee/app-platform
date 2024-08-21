@@ -5,9 +5,9 @@
 package com.huawei.jade.fel.engine.operators.models;
 
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterData;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.MessageType;
 import com.huawei.jade.fel.tool.ToolCall;

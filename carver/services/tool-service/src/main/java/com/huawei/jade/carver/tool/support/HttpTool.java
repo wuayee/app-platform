@@ -4,10 +4,10 @@
 
 package com.huawei.jade.carver.tool.support;
 
-import static com.huawei.fitframework.inspection.Validation.isInstanceOf;
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.isInstanceOf;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
@@ -29,10 +29,10 @@ import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.Tool;
 
 import java.io.IOException;

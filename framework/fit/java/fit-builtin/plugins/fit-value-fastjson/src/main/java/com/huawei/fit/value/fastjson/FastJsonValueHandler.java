@@ -4,10 +4,10 @@
 
 package com.huawei.fit.value.fastjson;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.value.ValueFetcher;
-import com.huawei.fitframework.value.ValueSetter;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.value.ValueFetcher;
+import modelengine.fitframework.value.ValueSetter;
 
 import com.alibaba.fastjson.JSONPath;
 

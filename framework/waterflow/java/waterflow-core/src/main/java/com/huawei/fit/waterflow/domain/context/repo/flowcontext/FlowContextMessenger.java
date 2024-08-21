@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.domain.context.repo.flowcontext;
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.enums.ProcessType;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.List;
 

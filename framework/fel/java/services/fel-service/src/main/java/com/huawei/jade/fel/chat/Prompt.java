@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.chat;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;

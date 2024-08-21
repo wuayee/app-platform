@@ -12,10 +12,10 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinit
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowCallbackEvent;
-import com.huawei.fitframework.annotation.Asynchronous;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.event.EventHandler;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Asynchronous;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.event.EventHandler;
+import modelengine.fitframework.log.Logger;
 
 import java.util.List;
 

@@ -23,10 +23,10 @@ import com.huawei.fit.jober.entity.task.TaskProperty;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

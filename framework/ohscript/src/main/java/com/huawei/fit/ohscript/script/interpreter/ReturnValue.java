@@ -15,7 +15,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.Typ
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.VainTypeExpr;
 import com.huawei.fit.ohscript.util.Constants;
 import com.huawei.fit.ohscript.util.EmptyValue;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.Map;

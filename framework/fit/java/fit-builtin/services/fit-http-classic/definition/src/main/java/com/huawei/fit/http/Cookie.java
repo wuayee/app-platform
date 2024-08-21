@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http;
 
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 /**
  * 表示 Http 中的 Cookie。

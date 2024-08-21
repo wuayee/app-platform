@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.engine.operators.models;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatOptions;

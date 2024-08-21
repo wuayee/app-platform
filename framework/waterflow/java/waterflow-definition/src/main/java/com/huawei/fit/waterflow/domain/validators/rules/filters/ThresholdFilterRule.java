@@ -8,7 +8,7 @@ import static com.huawei.fit.waterflow.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.nodes.filters.FlowFilter;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Objects;
 

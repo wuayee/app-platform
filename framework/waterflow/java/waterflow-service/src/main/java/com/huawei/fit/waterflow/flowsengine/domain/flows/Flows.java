@@ -17,7 +17,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.Setter;
 

@@ -6,7 +6,7 @@ package com.huawei.fit.http.entity;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.support.DefaultTextEventStreamEntity;
-import com.huawei.fitframework.flowable.Choir;
+import modelengine.fitframework.flowable.Choir;
 
 /**
  * 表示文本事件流的消息体数据。

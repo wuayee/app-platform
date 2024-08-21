@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.engine.operators.models;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static com.huawei.jade.fel.engine.util.StateKey.HISTORY_INPUT;
 import static com.huawei.jade.fel.engine.util.StateKey.STREAMING_CONSUMER;
 import static com.huawei.jade.fel.engine.util.StateKey.STREAMING_FLOW_CONTEXT;
@@ -16,10 +16,10 @@ import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
-import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.flowable.Publisher;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.HumanMessage;

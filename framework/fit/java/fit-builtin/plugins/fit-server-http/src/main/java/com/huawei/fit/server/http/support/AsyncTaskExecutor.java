@@ -5,18 +5,18 @@
 package com.huawei.fit.server.http.support;
 
 import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.exception.AsyncTaskExecutionException;
 import com.huawei.fit.http.exception.AsyncTaskNotAcceptedException;
 import com.huawei.fit.http.exception.AsyncTaskNotFoundException;
 import com.huawei.fit.serialization.http.HttpUtils;
-import com.huawei.fitframework.broker.server.Response;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.RequestMetadata;
-import com.huawei.fitframework.serialization.ResponseMetadata;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.server.Response;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.tlv.TlvUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;

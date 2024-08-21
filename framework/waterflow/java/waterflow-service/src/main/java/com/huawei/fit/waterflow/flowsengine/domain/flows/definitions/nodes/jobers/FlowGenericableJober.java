@@ -4,13 +4,13 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.common.Constant;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.log.Logger;
 
 import com.alibaba.fastjson.JSON;
 

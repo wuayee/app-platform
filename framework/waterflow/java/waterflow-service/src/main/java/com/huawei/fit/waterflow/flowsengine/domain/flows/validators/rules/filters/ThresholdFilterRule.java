@@ -8,7 +8,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.filters.FlowFilter;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Objects;
 

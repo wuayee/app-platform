@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.taskcenter.service;
 
-import com.huawei.fitframework.event.Event;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.event.Event;
+import modelengine.fitframework.plugin.Plugin;
 
 /**
  * 事件推送服务接口。

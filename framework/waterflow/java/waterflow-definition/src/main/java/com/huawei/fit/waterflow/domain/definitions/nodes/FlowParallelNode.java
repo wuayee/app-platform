@@ -21,8 +21,8 @@ import com.huawei.fit.waterflow.domain.stream.nodes.ParallelNode;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
 

@@ -9,7 +9,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.support.FileTypeException;
 import com.huawei.fit.security.http.util.CreateZipUtils;
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.util.FileUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

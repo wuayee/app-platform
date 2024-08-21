@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.utils;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Map;
 import java.util.Set;

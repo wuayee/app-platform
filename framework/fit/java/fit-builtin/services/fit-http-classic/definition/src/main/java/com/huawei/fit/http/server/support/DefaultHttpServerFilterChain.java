@@ -9,8 +9,8 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.HttpServerFilter;
 import com.huawei.fit.http.server.HttpServerFilterChain;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.wildcard.Pattern;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.wildcard.Pattern;
 
 import java.util.List;
 import java.util.Optional;

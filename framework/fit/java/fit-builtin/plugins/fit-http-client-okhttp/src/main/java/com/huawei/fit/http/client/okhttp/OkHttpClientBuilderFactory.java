@@ -6,14 +6,14 @@ package com.huawei.fit.http.client.okhttp;
 
 import static com.huawei.fit.http.protocol.util.SslUtils.getKeyManagers;
 import static com.huawei.fit.http.protocol.util.SslUtils.getTrustManagers;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.client.http.HttpsConstants;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.protocol.util.SslUtils;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import okhttp3.OkHttpClient;
 

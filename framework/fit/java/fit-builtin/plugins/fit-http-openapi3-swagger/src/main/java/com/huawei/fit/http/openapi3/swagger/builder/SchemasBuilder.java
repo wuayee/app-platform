@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.openapi3.swagger.builder;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.openapi3.swagger.EntityBuilder;
 import com.huawei.fit.http.openapi3.swagger.entity.Schema;
@@ -14,8 +14,8 @@ import com.huawei.fit.http.server.HttpDispatcher;
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.ReflectibleMappingHandler;
 import com.huawei.fit.http.server.handler.PropertyValueMetadata;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.util.Collections;

@@ -16,8 +16,8 @@ import com.huawei.fit.jane.task.gateway.User;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.common.model.JoberResponse;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
 
 import lombok.RequiredArgsConstructor;
 

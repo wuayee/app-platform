@@ -4,11 +4,11 @@
 
 package com.huawei.jade.carver.telemetry.aop;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.aop.ProceedingJoinPoint;
-import com.huawei.fitframework.aop.annotation.Around;
-import com.huawei.fitframework.aop.annotation.Aspect;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.aop.ProceedingJoinPoint;
+import modelengine.fitframework.aop.annotation.Around;
+import modelengine.fitframework.aop.annotation.Aspect;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 
 import io.opentelemetry.api.trace.Span;

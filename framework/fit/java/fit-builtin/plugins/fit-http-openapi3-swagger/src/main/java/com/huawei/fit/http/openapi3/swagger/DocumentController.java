@@ -4,13 +4,13 @@
 
 package com.huawei.fit.http.openapi3.swagger;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.annotation.DocumentIgnored;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.openapi3.swagger.builder.OpenApiBuilder;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import java.util.Map;
 

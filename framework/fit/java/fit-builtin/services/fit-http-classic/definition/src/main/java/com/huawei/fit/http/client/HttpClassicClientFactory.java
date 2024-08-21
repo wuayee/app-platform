@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.client;
 
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 import java.util.HashMap;
 import java.util.Map;

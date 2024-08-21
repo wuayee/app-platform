@@ -7,7 +7,7 @@ package com.huawei.fit.jober;
 import com.huawei.fit.jober.entity.File;
 import com.huawei.fit.jober.entity.FileDeclaration;
 import com.huawei.fit.jober.entity.OperationContext;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 文件存储服务Genericable。

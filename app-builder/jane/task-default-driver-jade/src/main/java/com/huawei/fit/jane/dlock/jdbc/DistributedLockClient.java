@@ -6,8 +6,8 @@ package com.huawei.fit.jane.dlock.jdbc;
 
 import com.huawei.fit.jane.dlock.ExpirableDistributedLockHandler;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

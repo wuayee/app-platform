@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.core.examples.support;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.core.examples.Example;
 
 /**

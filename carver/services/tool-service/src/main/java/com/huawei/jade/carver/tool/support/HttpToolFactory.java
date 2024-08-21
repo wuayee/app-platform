@@ -4,11 +4,11 @@
 
 package com.huawei.jade.carver.tool.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
 

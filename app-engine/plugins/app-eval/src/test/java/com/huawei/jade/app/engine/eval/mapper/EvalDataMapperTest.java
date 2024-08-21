@@ -4,16 +4,16 @@
 
 package com.huawei.jade.app.engine.eval.mapper;
 
-import static com.huawei.fitframework.util.IoUtils.content;
+import static modelengine.fitframework.util.IoUtils.content;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.test.annotation.MybatisTest;
-import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.test.domain.db.DatabaseModel;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.test.annotation.MybatisTest;
+import modelengine.fitframework.test.annotation.Sql;
+import modelengine.fitframework.test.domain.db.DatabaseModel;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.entity.EvalVersionEntity;

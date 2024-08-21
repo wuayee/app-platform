@@ -16,11 +16,11 @@ import com.huawei.fit.jane.flow.graph.entity.elsa.response.SaveFlowsResponse;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.transaction.DataAccessException;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;

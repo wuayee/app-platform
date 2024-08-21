@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server;
 
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import java.util.List;
 

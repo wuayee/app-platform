@@ -9,9 +9,9 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

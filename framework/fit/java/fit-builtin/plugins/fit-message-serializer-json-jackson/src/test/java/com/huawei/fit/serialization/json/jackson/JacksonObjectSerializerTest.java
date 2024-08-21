@@ -7,8 +7,8 @@ package com.huawei.fit.serialization.json.jackson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.test.person.PersonAlias;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -11,7 +11,7 @@ import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
 import com.huawei.jade.app.engine.base.service.UsrFeedbackService;
 

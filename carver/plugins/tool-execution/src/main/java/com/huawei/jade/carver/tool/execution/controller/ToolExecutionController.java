@@ -4,13 +4,13 @@
 
 package com.huawei.jade.carver.tool.execution.controller;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.carver.tool.service.ToolExecuteService;
 
 /**

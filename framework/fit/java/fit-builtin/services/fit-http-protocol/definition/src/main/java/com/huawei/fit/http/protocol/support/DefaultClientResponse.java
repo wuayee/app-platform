@@ -11,8 +11,8 @@ import com.huawei.fit.http.protocol.HttpVersion;
 import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.ReadableMessageBody;
 import com.huawei.fit.http.protocol.StatusLine;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

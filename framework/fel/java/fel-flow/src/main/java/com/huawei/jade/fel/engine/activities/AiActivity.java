@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.engine.activities;
 
 import com.huawei.fit.waterflow.domain.flow.Flow;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 
 import lombok.Getter;

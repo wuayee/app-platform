@@ -33,10 +33,10 @@ import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.validation.PropertyValidator;
 import com.huawei.fit.jober.taskcenter.validation.impl.PropertyValidatorImpl;
-import com.huawei.fitframework.event.EventPublisher;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.event.EventPublisher;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
 
 import com.alibaba.fastjson.TypeReference;
 

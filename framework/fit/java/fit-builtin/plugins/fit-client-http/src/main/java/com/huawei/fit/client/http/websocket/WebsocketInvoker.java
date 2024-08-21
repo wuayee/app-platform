@@ -4,7 +4,7 @@
 
 package com.huawei.fit.client.http.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.Response;
@@ -20,25 +20,25 @@ import com.huawei.fit.serialization.http.websocket.WebSocketUtils;
 import com.huawei.fit.serialization.http.websocket.WebSocketWorkerObserver;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
 import com.huawei.fit.serialization.util.PublisherCategory;
-import com.huawei.fitframework.broker.ExceptionInfo;
-import com.huawei.fitframework.broker.FitExceptionCreator;
-import com.huawei.fitframework.exception.ClientException;
-import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.flowable.choir.FlexibleEmitterChoir;
-import com.huawei.fitframework.flowable.solo.FlexibleEmitterSolo;
-import com.huawei.fitframework.flowable.util.worker.Worker;
-import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ResponseMetadata;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.ExceptionInfo;
+import modelengine.fitframework.broker.FitExceptionCreator;
+import modelengine.fitframework.exception.ClientException;
+import modelengine.fitframework.flowable.Emitter;
+import modelengine.fitframework.flowable.Publisher;
+import modelengine.fitframework.flowable.choir.FlexibleEmitterChoir;
+import modelengine.fitframework.flowable.solo.FlexibleEmitterSolo;
+import modelengine.fitframework.flowable.util.worker.Worker;
+import modelengine.fitframework.flowable.util.worker.WorkerObserver;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

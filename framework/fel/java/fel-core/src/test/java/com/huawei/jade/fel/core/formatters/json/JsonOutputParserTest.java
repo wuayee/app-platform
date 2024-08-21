@@ -7,9 +7,9 @@ package com.huawei.jade.fel.core.formatters.json;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.fel.core.formatters.OutputParser;
 import com.huawei.jade.fel.core.formatters.Parser;
 import com.huawei.jade.fel.core.formatters.support.MarkdownParser;

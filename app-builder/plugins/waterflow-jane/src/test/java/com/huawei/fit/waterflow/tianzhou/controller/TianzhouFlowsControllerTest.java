@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

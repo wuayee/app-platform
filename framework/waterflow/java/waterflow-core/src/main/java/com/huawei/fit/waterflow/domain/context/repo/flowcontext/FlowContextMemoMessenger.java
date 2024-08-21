@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.domain.context.repo.flowcontext;
 
 import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.List;
 

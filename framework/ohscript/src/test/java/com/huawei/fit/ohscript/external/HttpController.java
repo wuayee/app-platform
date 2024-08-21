@@ -15,9 +15,9 @@ import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.entity.MultiValueEntity;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;

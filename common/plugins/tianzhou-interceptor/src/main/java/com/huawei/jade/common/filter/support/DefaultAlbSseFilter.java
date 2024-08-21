@@ -10,9 +10,9 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.HttpServerFilter;
 import com.huawei.fit.http.server.HttpServerFilterChain;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.annotation.Scope;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.annotation.Scope;
 
 import java.util.Collections;
 import java.util.List;

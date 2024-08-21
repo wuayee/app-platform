@@ -28,13 +28,13 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors.Vali
 import com.huawei.fit.waterflow.flowsengine.persist.entity.FlowContextUpdateInfo;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

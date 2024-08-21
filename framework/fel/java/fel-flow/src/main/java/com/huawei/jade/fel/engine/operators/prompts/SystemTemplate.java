@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.engine.operators.prompts;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.core.template.StringTemplate;

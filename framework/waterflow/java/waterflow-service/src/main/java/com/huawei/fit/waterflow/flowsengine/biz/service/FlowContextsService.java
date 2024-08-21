@@ -19,7 +19,7 @@ import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDefini
 import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.READY;
 import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.RETRYABLE;
 import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.ProcessType.PROCESS;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.exceptions.JobberException;
@@ -63,16 +63,16 @@ import com.huawei.fit.waterflow.flowsengine.fitable.TraceServiceImpl;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
 import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.annotation.Scheduled;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

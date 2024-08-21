@@ -22,7 +22,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowS
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowStateNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.model.RangedResultSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

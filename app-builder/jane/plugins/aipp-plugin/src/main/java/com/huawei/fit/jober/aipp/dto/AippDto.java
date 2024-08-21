@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.dto;
 
 import com.huawei.fit.jane.common.validation.Size;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

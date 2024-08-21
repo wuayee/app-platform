@@ -11,8 +11,8 @@ import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
 import com.huawei.fit.ohscript.script.parser.AST;
 import com.huawei.fit.ohscript.script.parser.nodes.ScriptNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

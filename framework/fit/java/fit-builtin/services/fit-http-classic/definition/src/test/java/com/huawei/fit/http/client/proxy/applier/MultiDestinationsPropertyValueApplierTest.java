@@ -20,8 +20,8 @@ import com.huawei.fit.http.client.proxy.support.DefaultRequestBuilder;
 import com.huawei.fit.http.client.proxy.support.applier.MultiDestinationsPropertyValueApplier;
 import com.huawei.fit.http.client.proxy.support.setter.DestinationSetterInfo;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.value.ValueFetcher;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

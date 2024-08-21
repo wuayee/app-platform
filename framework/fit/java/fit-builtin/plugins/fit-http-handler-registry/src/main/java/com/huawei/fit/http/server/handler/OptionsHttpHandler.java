@@ -7,7 +7,7 @@ package com.huawei.fit.http.server.handler;
 import com.huawei.fit.http.annotation.DocumentIgnored;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 表示全局默认的 {@link HttpRequestMethod#OPTIONS} 处理方法。

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.split;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.fel.rag.protocol.FlatChunk;
 import com.huawei.jade.fel.rag.protocol.FlatDocument;
 

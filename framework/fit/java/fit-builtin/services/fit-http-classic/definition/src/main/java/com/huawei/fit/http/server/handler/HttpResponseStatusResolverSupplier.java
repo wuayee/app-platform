@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.handler;
 
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanContainer;
 
 /**
  * 表示 {@link HttpResponseStatusResolver} 的提供者。

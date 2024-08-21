@@ -8,8 +8,8 @@ import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.RequestContext;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.serialization.RequestMetadata;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;

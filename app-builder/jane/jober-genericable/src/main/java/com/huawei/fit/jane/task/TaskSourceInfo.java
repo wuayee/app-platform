@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.task;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Map;

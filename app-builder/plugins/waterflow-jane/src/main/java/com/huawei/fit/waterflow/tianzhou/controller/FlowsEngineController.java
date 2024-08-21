@@ -8,7 +8,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static com.huawei.fit.waterflow.common.Constant.OPERATOR_KEY;
 import static com.huawei.fit.waterflow.tianzhou.Constant.BASE_URI_PREFIX;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -32,9 +32,9 @@ import com.huawei.fit.waterflow.biz.util.ControllerUtil;
 import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.graph.FlowsEngineWebService;
 import com.huawei.fit.waterflow.graph.FlowsEngineWebServiceForDbGraph;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
 

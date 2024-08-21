@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.entity.serializer;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.EntityReadException;
@@ -14,9 +14,9 @@ import com.huawei.fit.http.entity.EntityWriteException;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.support.DefaultObjectEntity;
 import com.huawei.fit.http.protocol.MessageHeaderNames;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.SerializationException;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.SerializationException;
 
 import java.io.InputStream;
 import java.io.OutputStream;

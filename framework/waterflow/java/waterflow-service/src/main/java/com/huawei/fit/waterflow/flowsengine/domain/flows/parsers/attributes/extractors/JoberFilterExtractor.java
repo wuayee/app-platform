@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.ext
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.types.Attributes;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

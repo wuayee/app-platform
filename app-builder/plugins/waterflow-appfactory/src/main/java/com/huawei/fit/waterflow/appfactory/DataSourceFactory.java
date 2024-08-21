@@ -5,8 +5,8 @@
 package com.huawei.fit.waterflow.appfactory;
 
 import com.huawei.fit.jane.task.gateway.DataSourceProvider;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.ioc.BeanSupplier;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.ioc.BeanSupplier;
 
 import javax.sql.DataSource;
 

@@ -18,7 +18,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.ScriptNode;
 import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
 import com.huawei.fit.ohscript.script.parser.nodes.TerminalNode;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,12 +4,12 @@
 
 package com.huawei.fit.http.entity.serializer;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.util.Convert;
-import com.huawei.fitframework.util.IoUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.util.Convert;
+import modelengine.fitframework.util.IoUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

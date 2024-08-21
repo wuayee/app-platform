@@ -30,15 +30,15 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowN
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.DefaultFlowDefinitionRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.annotation.Scheduled;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.waterflow.edatamate.TaskInstanceService;
 
 import com.alibaba.fastjson.JSONObject;

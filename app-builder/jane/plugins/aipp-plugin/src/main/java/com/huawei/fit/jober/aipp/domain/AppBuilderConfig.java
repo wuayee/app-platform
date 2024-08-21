@@ -8,7 +8,7 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

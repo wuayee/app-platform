@@ -15,7 +15,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExpr
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.abstracts.GenericTypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.ArrayTypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.Map;

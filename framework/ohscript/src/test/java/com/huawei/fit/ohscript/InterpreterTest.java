@@ -26,7 +26,7 @@ import com.huawei.fit.ohscript.script.parser.GrammarBuilder;
 import com.huawei.fit.ohscript.script.parser.ParserBuilder;
 import com.huawei.fit.ohscript.util.EmptyValue;
 import com.huawei.fit.ohscript.util.TestResource;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

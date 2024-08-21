@@ -4,11 +4,11 @@
 
 package com.huawei.fit.http.server.handler.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.util.Optional;
 

@@ -8,7 +8,7 @@ import com.huawei.fit.jober.dataengine.biz.converter.TaskInstanceMetaDataConvert
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.rest.response.TaskInstanceMetaData;
 import com.huawei.fit.jober.entity.TaskEntity;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * {@link TaskInstanceMetaDataConverter} 实现类

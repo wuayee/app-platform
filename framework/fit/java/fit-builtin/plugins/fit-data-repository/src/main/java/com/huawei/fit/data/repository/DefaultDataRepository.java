@@ -4,18 +4,18 @@
 
 package com.huawei.fit.data.repository;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.data.repository.entity.Metadata;
 import com.huawei.fit.data.repository.entity.MetadataType;
 import com.huawei.fit.data.repository.support.CachedDataNotFoundException;
 import com.huawei.fit.data.repository.support.DataBusRepository;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;

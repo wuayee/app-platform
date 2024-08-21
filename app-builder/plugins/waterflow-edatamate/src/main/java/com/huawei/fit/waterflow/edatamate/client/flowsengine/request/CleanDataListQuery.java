@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.edatamate.client.flowsengine.request;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.Getter;
 import lombok.Setter;

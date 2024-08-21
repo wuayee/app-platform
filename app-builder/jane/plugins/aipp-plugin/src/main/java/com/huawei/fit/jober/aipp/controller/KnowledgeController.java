@@ -16,7 +16,7 @@ import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.common.PageResponse;
 import com.huawei.fit.jober.aipp.condition.KnowledgeQueryCondition;
 import com.huawei.fit.jober.aipp.service.KnowledgeService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 

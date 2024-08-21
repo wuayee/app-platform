@@ -5,7 +5,7 @@
 package com.huawei.fit.client;
 
 import com.huawei.fit.client.support.DefaultResponse;
-import com.huawei.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.ResponseMetadata;
 
 /**
  * 表示响应。

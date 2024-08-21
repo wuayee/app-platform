@@ -5,7 +5,7 @@
 package com.huawei.fit.client;
 
 import com.huawei.fit.client.support.DefaultRequest;
-import com.huawei.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.serialization.RequestMetadata;
 
 import java.lang.reflect.Type;
 

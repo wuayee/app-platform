@@ -13,10 +13,10 @@ import com.huawei.fit.jober.entity.TaskFilter;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -51,7 +51,7 @@ public class TaskFitable implements TaskService {
         taskFilter.setCategories(valueOf(filter.getCategories(), CollectionUtils::isEmpty));
         taskFilter.setCreators(valueOf(filter.getCreators(), CollectionUtils::isEmpty));
         taskFilter.setOrderBys(valueOf(filter.getOrderBys(), CollectionUtils::isEmpty));
-        com.huawei.fitframework.model.RangedResultSet<com.huawei.fit.jober.taskcenter.domain.TaskEntity>
+        modelengine.fitframework.model.RangedResultSet<TaskEntity>
                 taskEntityRangedResultSet = taskService.list(taskFilter, offset, limit,
                 ParamUtils.convertOperationContext(context));
         return RangedResultSet.create(this.convert(taskEntityRangedResultSet.getResults(), context),

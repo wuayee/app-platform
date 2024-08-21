@@ -7,11 +7,11 @@ package com.huawei.fit.waterflow.flowsengine.biz.service;
 import com.huawei.fit.service.FitablesRegisteredObserver;
 import com.huawei.fit.waterflow.common.utils.GlobalExecutorUtil;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.ExecutePolicy;
-import com.huawei.fitframework.schedule.Task;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.ExecutePolicy;
+import modelengine.fitframework.schedule.Task;
 
 import java.time.Instant;
 

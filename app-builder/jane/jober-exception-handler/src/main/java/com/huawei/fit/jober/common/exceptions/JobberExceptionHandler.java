@@ -13,13 +13,13 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.model.JoberResponse;
 import com.huawei.fit.jober.common.util.ParamUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.transaction.DataAccessException;
-import com.huawei.fitframework.transaction.TransactionPreparationException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.transaction.TransactionPreparationException;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 

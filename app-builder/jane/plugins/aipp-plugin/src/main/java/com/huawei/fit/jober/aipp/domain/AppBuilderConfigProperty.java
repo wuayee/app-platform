@@ -9,7 +9,7 @@ import static com.huawei.fit.jober.aipp.domain.BaseDomain.lazyGet;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

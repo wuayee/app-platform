@@ -23,8 +23,8 @@
 ## 示例
 
 ```java
-import com.huawei.fitframework.model.tree.Tree;
-import com.huawei.fitframework.model.tree.TreeNode;
+import modelengine.fitframework.model.tree.Tree;
+import modelengine.fitframework.model.tree.TreeNode;
 
 public class Demo {
     public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class Demo {
         //     fitframework=null
         //       demo=true
     }
-    
+
     private static void print(Tree<?> tree) {
         tree.dfs(node -> {
             TreeNode<?> parent = node.parent();
@@ -237,8 +237,8 @@ DefaultClassScanner *-down-> ClassPath
 - **字符串模式匹配**
 
 ```java
-import com.huawei.fitframework.util.wildcard.CharSequencePattern;
-import com.huawei.fitframework.util.wildcard.Pattern;
+import modelengine.fitframework.util.wildcard.CharSequencePattern;
+import modelengine.fitframework.util.wildcard.Pattern;
 
 public class Main {
     public static void main(String[] args) {
@@ -253,10 +253,10 @@ public class Main {
 - **路径模式匹配**
 
 ```java
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.wildcard.Pattern;
-import com.huawei.fitframework.util.wildcard.SymbolSequence;
-import com.huawei.fitframework.util.wildcard.SymbolType;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.wildcard.Pattern;
+import modelengine.fitframework.util.wildcard.SymbolSequence;
+import modelengine.fitframework.util.wildcard.SymbolType;
 
 public class Main {
     public static void main(String[] args) {
@@ -283,9 +283,9 @@ public class Main {
 - **树形结构匹配**
 
 ```java
-import com.huawei.fitframework.util.wildcard.Pattern;
-import com.huawei.fitframework.util.wildcard.SymbolSequence;
-import com.huawei.fitframework.util.wildcard.SymbolType;
+import modelengine.fitframework.util.wildcard.Pattern;
+import modelengine.fitframework.util.wildcard.SymbolSequence;
+import modelengine.fitframework.util.wildcard.SymbolType;
 
 import java.io.File;
 import java.io.IOException;
@@ -298,20 +298,21 @@ import java.util.function.Function;
 public class Main {
     public static void main(String[] args) throws IOException {
         Pattern<String> pattern = Pattern.custom()
-                .pattern(SymbolSequence.fromArray(new String[]{"opt", "**", "fit.yaml"}))
-                .symbol().classifier(symbol -> {
+                .pattern(SymbolSequence.fromArray(new String[] {"opt", "**", "fit.yaml"}))
+                .symbol()
+                .classifier(symbol -> {
                     if ("**".equals(symbol)) {
                         return SymbolType.MULTIPLE_WILDCARD;
                     } else {
                         return SymbolType.NORMAL;
                     }
                 }) // 当为 ** 时，匹配任意数量的路径
-                .symbol().matcher(StringUtils::equalsIgnoreCase) // 忽略大小写匹配
+                .symbol()
+                .matcher(StringUtils::equalsIgnoreCase) // 忽略大小写匹配
                 .build();
         List<File> roots = Collections.singletonList(new File("/opt").getCanonicalFile());
-        Function<File, List<File>> childrenMapper = file -> Optional.ofNullable(file.listFiles())
-                .map(Arrays::asList)
-                .orElse(Collections.emptyList());
+        Function<File, List<File>> childrenMapper =
+                file -> Optional.ofNullable(file.listFiles()).map(Arrays::asList).orElse(Collections.emptyList());
         Function<File, String> symbolMapper = File::getName;
         List<File> matched = pattern.match(roots, childrenMapper, symbolMapper);
         for (File file : matched) {

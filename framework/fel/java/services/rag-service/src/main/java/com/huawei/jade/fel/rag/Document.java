@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag;
 
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.Getter;
 import lombok.Setter;

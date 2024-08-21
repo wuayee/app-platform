@@ -5,7 +5,7 @@
 package com.huawei.fit.http.entity;
 
 import com.huawei.fit.http.entity.support.DefaultTextEvent;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import java.time.Duration;
 

@@ -4,13 +4,13 @@
 
 package com.huawei.fit.security.http.type;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.support.FileTypeException;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;

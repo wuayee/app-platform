@@ -12,7 +12,7 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

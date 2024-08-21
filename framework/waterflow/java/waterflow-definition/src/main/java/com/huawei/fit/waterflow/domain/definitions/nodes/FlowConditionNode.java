@@ -15,7 +15,7 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.utils.OhScriptExecutor;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.Getter;
 

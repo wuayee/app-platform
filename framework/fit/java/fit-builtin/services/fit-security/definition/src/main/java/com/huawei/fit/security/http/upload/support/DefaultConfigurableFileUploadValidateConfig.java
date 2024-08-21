@@ -4,7 +4,7 @@
 
 package com.huawei.fit.security.http.upload.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.security.http.name.FileNameValidateConfig;
 import com.huawei.fit.security.http.name.support.DefaultConfigurableFileNameValidateConfig;

@@ -8,7 +8,7 @@ import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.announcement.dto.AnnouncementInfoDto;
 import com.huawei.jade.app.engine.announcement.service.AnnouncementInfoService;
 import com.huawei.jade.app.engine.announcement.vo.AnnouncementInfoDisplayDataVo;

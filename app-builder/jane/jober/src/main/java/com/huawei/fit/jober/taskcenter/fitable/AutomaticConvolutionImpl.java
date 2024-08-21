@@ -16,10 +16,10 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.ViewMode;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Collections;
 import java.util.List;

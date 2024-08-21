@@ -27,9 +27,9 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
 import com.huawei.fit.waterflow.domain.stream.reactive.When;
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

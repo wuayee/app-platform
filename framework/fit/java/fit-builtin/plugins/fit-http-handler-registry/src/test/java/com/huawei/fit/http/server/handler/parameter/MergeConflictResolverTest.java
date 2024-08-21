@@ -6,7 +6,7 @@ package com.huawei.fit.http.server.handler.parameter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.merge.ConflictResolver;
+import modelengine.fitframework.merge.ConflictResolver;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

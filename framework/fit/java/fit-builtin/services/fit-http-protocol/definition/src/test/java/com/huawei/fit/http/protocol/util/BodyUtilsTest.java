@@ -11,7 +11,7 @@ import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.ReadableMessageBody;
 import com.huawei.fit.http.protocol.support.InputStreamReadableMessageBody;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

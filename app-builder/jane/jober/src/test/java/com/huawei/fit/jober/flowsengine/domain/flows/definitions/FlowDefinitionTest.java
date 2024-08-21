@@ -54,10 +54,10 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
+import modelengine.fitframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

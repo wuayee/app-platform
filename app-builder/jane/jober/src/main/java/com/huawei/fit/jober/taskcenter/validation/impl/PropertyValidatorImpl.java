@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.validation.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jane.task.domain.PropertyScope;
@@ -16,9 +16,9 @@ import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.PropertyValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * {@link PropertyValidator}的默认实现。

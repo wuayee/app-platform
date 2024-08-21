@@ -9,8 +9,8 @@ import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.util.AippLogUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

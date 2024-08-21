@@ -4,14 +4,14 @@
 
 package com.huawei.fit.jober.taskcenter.domain.util.filter;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jober.taskcenter.domain.util.Filter;
 import com.huawei.fit.jober.taskcenter.domain.util.FilterParser;
-import com.huawei.fitframework.jvm.scan.PackageScanner;
-import com.huawei.fitframework.util.ParsingResult;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.jvm.scan.PackageScanner;
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

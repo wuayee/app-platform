@@ -4,12 +4,12 @@
 
 package com.huawei.fit.http.header.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.header.HeaderValue;
 import com.huawei.fit.http.header.ParameterCollection;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示 {@link HeaderValue} 的默认实现。

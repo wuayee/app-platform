@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.client.proxy.support.setter;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.client.proxy.DestinationSetter;
 

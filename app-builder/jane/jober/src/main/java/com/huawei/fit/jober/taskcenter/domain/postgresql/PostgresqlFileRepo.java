@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.taskcenter.domain.postgresql;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jane.task.domain.File;
 import com.huawei.fit.jane.task.util.Dates;
@@ -18,11 +18,11 @@ import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 

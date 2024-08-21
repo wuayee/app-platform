@@ -6,7 +6,7 @@ package com.huawei.fit.http.openapi3.swagger.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

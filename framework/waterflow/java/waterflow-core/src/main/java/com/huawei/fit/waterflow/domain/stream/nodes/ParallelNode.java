@@ -11,7 +11,7 @@ import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.handler;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.DoHttpHandlerException;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
@@ -12,8 +12,8 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fit.http.server.ReflectibleMappingHandler;
-import com.huawei.fitframework.exception.MethodInvocationException;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.exception.MethodInvocationException;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;

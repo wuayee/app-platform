@@ -11,9 +11,9 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestForm;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.List;
 import java.util.Map;

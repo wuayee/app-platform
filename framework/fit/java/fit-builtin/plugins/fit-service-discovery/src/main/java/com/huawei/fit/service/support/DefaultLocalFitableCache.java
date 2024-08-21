@@ -4,21 +4,21 @@
 
 package com.huawei.fit.service.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.service.LocalFitableCache;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.LocalExecutor;
-import com.huawei.fitframework.broker.LocalExecutorFactory;
-import com.huawei.fitframework.broker.UniqueFitableId;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginStartedObserver;
-import com.huawei.fitframework.plugin.PluginStoppingObserver;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
-import com.huawei.fitframework.util.LockUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.LocalExecutor;
+import modelengine.fitframework.broker.LocalExecutorFactory;
+import modelengine.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginStartedObserver;
+import modelengine.fitframework.plugin.PluginStoppingObserver;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.util.LockUtils;
 
 import java.util.Collections;
 import java.util.List;

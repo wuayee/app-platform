@@ -4,13 +4,13 @@
 
 package com.huawei.fit.http.websocket.server;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
 import com.huawei.fit.http.websocket.annotation.BinaryMessage;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.util.Optional;
 

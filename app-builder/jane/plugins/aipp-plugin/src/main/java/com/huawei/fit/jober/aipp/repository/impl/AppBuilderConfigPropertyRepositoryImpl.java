@@ -9,8 +9,8 @@ import com.huawei.fit.jober.aipp.mapper.AppBuilderConfigPropertyMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderConfigPropertyPo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderConfigPropertySerializer;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;

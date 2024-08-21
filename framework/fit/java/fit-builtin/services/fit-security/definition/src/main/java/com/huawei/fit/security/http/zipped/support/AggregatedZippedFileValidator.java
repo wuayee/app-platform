@@ -4,16 +4,16 @@
 
 package com.huawei.fit.security.http.zipped.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.support.ZippedFileException;
 import com.huawei.fit.security.http.zipped.ZippedFileValidateConfig;
 import com.huawei.fit.security.http.zipped.ZippedFileValidator;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

@@ -34,7 +34,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowCallbackType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDefinitionStatus;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.events.EventParser;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

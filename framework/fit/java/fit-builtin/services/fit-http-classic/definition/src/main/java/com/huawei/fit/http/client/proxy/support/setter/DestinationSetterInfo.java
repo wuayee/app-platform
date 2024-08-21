@@ -4,11 +4,11 @@
 
 package com.huawei.fit.http.client.proxy.support.setter;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.client.proxy.DestinationSetter;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示数据设置器的相关信息。

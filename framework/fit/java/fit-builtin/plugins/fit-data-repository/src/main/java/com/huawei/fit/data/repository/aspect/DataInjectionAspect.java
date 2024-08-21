@@ -4,10 +4,10 @@
 
 package com.huawei.fit.data.repository.aspect;
 
-import static com.huawei.fitframework.inspection.Validation.between;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.between;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.data.repository.DataRepository;
 import com.huawei.fit.data.repository.ValidationService;
@@ -20,24 +20,24 @@ import com.huawei.fit.data.repository.entity.MetadataType;
 import com.huawei.fit.data.repository.exception.CapacityOverflowException;
 import com.huawei.fit.data.repository.support.CachedDataNotFoundException;
 import com.huawei.fit.data.repository.support.DataBusRepository;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.aop.ProceedingJoinPoint;
-import com.huawei.fitframework.aop.annotation.Around;
-import com.huawei.fitframework.aop.annotation.Aspect;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.loadbalance.WorkerFilter;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ArrayUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.UuidUtils;
-import com.huawei.fitframework.value.ValueFetcher;
-import com.huawei.fitframework.value.ValueSetter;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.aop.ProceedingJoinPoint;
+import modelengine.fitframework.aop.annotation.Around;
+import modelengine.fitframework.aop.annotation.Aspect;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.loadbalance.WorkerFilter;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.UuidUtils;
+import modelengine.fitframework.value.ValueFetcher;
+import modelengine.fitframework.value.ValueSetter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

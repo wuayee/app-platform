@@ -7,7 +7,7 @@ package com.huawei.fit.jane.task;
 import com.huawei.fit.jane.RangeInfo;
 import com.huawei.fit.jane.RangedResultSetInfo;
 import com.huawei.fit.jober.entity.OperationContext;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.Map;
 

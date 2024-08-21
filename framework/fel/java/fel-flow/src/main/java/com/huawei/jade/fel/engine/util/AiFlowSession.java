@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.engine.util;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.core.Pattern;
 
 import java.util.Collections;

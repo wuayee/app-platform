@@ -6,8 +6,8 @@ package com.huawei.fit.http.entity;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.model.MultiValueMap;
 
 import java.io.Closeable;
 import java.io.InputStream;

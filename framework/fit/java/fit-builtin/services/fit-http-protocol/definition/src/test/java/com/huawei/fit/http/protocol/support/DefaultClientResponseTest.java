@@ -11,8 +11,8 @@ import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.ReadableMessageBody;
 import com.huawei.fit.http.protocol.StatusLine;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.model.support.DefaultMultiValueMap;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.model.support.DefaultMultiValueMap;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

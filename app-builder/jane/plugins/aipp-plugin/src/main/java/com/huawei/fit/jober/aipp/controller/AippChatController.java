@@ -18,7 +18,7 @@ import com.huawei.fit.jober.aipp.dto.chat.CreateChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
 import com.huawei.fit.jober.aipp.service.AippChatService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

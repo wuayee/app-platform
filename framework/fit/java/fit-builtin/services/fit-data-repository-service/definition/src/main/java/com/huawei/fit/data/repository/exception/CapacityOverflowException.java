@@ -4,8 +4,8 @@
 
 package com.huawei.fit.data.repository.exception;
 
-import com.huawei.fitframework.exception.ErrorCode;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.FitException;
 
 /**
  * 表示容量溢出发生的异常。

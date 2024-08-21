@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.engine.activities;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.flows.Action;
 
 import lombok.Getter;

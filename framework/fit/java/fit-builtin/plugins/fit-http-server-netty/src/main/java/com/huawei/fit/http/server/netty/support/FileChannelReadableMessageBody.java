@@ -4,11 +4,11 @@
 
 package com.huawei.fit.http.server.netty.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.server.netty.NettyReadableMessageBody;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.FileUtils;
 
 import io.netty.buffer.ByteBuf;
 

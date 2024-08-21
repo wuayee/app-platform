@@ -4,11 +4,12 @@
 
 package com.huawei.jade.common.localemessage;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.common.code.CommonRetCode;

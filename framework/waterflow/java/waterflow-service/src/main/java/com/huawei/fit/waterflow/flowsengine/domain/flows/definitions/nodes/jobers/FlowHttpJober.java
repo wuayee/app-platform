@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.List;
 import java.util.Map;

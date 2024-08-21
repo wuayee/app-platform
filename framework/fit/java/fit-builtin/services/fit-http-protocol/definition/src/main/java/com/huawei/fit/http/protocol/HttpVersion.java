@@ -4,10 +4,10 @@
 
 package com.huawei.fit.http.protocol;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
-import com.huawei.fitframework.inspection.Nullable;
+import modelengine.fitframework.inspection.Nullable;
 
 import java.util.Objects;
 

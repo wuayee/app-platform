@@ -9,7 +9,7 @@ import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_KEY;
 import static com.huawei.fit.waterflow.common.Constant.CONTEXT_DATA;
 import static com.huawei.fit.waterflow.common.Constant.NODE_ID_KEY;
 import static com.huawei.fit.waterflow.common.Constant.TRACE_ID_KEY;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.FlowCallbackService;
@@ -22,11 +22,11 @@ import com.huawei.fit.jober.entity.FlowPublishContext;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowsService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;

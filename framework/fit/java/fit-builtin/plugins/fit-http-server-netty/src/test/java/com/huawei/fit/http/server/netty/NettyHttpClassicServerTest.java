@@ -14,12 +14,12 @@ import com.huawei.fit.http.Serializers;
 import com.huawei.fit.http.server.HttpDispatcher;
 import com.huawei.fit.http.server.netty.support.DefaultNettyServerConfig;
 import com.huawei.fit.server.http.HttpConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ThreadUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ThreadUtils;
+import modelengine.fitframework.value.ValueFetcher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

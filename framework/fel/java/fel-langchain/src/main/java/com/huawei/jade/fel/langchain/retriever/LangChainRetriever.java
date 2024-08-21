@@ -4,9 +4,9 @@
 
 package com.huawei.jade.fel.langchain.retriever;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.core.retriever.Retriever;
 import com.huawei.jade.fel.langchain.runnable.LangChainRunnable;
 import com.huawei.jade.fel.retrieve.Document;

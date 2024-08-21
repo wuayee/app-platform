@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.core.util;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.core.template.MessageContent;
 
 import java.util.Arrays;

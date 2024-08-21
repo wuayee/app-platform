@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.taskcenter.util;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;

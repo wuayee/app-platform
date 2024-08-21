@@ -35,8 +35,8 @@ import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fit.http.server.handler.support.DefaultHttpExceptionHandler;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerResponse;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

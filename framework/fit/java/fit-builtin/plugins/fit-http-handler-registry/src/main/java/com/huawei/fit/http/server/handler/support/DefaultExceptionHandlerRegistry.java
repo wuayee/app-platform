@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.handler.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.annotation.ExceptionHandler;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
@@ -12,17 +12,17 @@ import com.huawei.fit.http.server.handler.AbstractHandlerResolver;
 import com.huawei.fit.http.server.handler.ExceptionHandlerRegistry;
 import com.huawei.fit.http.server.handler.HttpExceptionHandler;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.AnnotationUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.TypeUtils;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.AnnotationUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.TypeUtils;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.utils;
 
 import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_INTERNAL_KEY;
 import static com.huawei.fit.waterflow.common.Constant.INTERNAL_EXECUTE_INFO_KEY;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 

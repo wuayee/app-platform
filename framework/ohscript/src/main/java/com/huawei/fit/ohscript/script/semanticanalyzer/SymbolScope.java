@@ -22,7 +22,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries.SymbolEntry
 import com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.abstracts.GenericTypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;

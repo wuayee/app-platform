@@ -4,8 +4,8 @@
 
 package com.huawei.fit.serialization.http.websocket;
 
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示流式调用中通信消息体的类型。

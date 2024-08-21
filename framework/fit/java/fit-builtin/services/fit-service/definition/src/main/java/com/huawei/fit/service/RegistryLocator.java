@@ -4,7 +4,7 @@
 
 package com.huawei.fit.service;
 
-import com.huawei.fitframework.broker.Target;
+import modelengine.fitframework.broker.Target;
 
 import java.util.List;
 

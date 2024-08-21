@@ -4,7 +4,7 @@
 
 package com.huawei.fit.server.http;
 
-import com.huawei.fitframework.conf.runtime.ServerConfig;
+import modelengine.fitframework.conf.runtime.ServerConfig;
 
 /**
  * 表示运行时 {@code 'server.http.'} 前缀的配置项。

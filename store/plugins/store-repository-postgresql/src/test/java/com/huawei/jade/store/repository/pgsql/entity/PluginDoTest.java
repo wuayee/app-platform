@@ -7,8 +7,9 @@ package com.huawei.jade.store.repository.pgsql.entity;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.support.DeployStatus;
 

@@ -24,7 +24,7 @@ import com.huawei.fit.jober.taskcenter.service.OperationRecordService;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.TaskValidator;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.model.RangedResultSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.service.langchain;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * LangChain Runnable 算子服务。

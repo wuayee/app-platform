@@ -13,8 +13,8 @@ import static com.huawei.fit.http.protocol.MessageHeaderNames.TRANSFER_ENCODING;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.CHUNKED;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.KEEP_ALIVE;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.NO_CACHE;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.entity.Entity;
@@ -33,10 +33,10 @@ import com.huawei.fit.http.protocol.ServerResponse;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.InternalServerErrorException;
 import com.huawei.fit.http.support.AbstractHttpClassicResponse;
-import com.huawei.fitframework.resource.UrlUtils;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.resource.UrlUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

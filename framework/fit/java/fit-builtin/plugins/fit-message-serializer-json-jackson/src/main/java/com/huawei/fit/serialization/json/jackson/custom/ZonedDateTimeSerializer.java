@@ -4,10 +4,10 @@
 
 package com.huawei.fit.serialization.json.jackson.custom;
 
-import static com.huawei.fitframework.util.StringUtils.blankIf;
+import static modelengine.fitframework.util.StringUtils.blankIf;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

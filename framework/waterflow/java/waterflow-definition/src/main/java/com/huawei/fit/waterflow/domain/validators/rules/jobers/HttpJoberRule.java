@@ -9,7 +9,7 @@ import static com.huawei.fit.waterflow.domain.enums.FlowJoberType.HTTP_JOBER;
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * http调用任务的规则

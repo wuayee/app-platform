@@ -6,9 +6,9 @@ package com.huawei.fit.waterflow.domain.definitions.nodes.jobers;
 
 import com.huawei.fit.waterflow.domain.context.FlowData;
 import com.huawei.fit.waterflow.spi.WaterflowTaskHandler;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.log.Logger;
 
 import java.util.List;
 import java.util.Map;

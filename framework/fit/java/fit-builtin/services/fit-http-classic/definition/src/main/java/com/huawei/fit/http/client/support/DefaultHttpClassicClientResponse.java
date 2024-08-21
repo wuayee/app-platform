@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.client.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
@@ -20,10 +20,10 @@ import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.util.BodyUtils;
 import com.huawei.fit.http.server.UnsupportedMediaTypeException;
 import com.huawei.fit.http.support.AbstractHttpClassicResponse;
-import com.huawei.fitframework.exception.ClientException;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.exception.ClientException;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

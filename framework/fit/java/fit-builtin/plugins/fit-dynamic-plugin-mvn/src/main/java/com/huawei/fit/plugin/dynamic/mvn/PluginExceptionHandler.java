@@ -7,8 +7,8 @@ package com.huawei.fit.plugin.dynamic.mvn;
 import com.huawei.fit.http.annotation.ExceptionHandler;
 import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.Map;
 

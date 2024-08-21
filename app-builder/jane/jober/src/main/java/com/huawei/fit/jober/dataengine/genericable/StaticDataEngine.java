@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.dataengine.genericable;
 
 import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 静态数据引擎操作类

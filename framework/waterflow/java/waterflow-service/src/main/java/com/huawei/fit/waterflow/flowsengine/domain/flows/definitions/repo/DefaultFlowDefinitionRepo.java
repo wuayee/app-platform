@@ -16,10 +16,10 @@ import com.huawei.fit.waterflow.flowsengine.persist.entity.FlowStreamInfo;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

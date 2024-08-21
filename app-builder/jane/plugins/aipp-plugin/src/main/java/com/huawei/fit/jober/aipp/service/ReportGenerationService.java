@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 生成报告接口类。

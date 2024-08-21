@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.server.handler;
 
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.http.annotation.DocumentIgnored;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -14,15 +14,15 @@ import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.ResourceNotFoundException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginStartedObserver;
-import com.huawei.fitframework.plugin.PluginStoppingObserver;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginStartedObserver;
+import modelengine.fitframework.plugin.PluginStoppingObserver;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 import java.util.Collections;

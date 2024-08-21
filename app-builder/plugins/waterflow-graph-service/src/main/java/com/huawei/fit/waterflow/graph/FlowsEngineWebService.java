@@ -10,7 +10,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.NOT_SUPPORT;
 import static com.huawei.fit.jober.common.ErrorCodes.UN_EXCEPTED_ERROR;
 import static com.huawei.fit.waterflow.biz.common.Constant.STREAM_ID_SEPARATOR;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
@@ -40,13 +40,13 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowN
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;

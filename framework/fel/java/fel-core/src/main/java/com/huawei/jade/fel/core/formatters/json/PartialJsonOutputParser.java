@@ -4,10 +4,10 @@
 
 package com.huawei.jade.fel.core.formatters.json;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.Map;
 

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service;
 
-import com.huawei.fitframework.flowable.Emitter;
+import modelengine.fitframework.flowable.Emitter;
 
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;

@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.huawei.fit.waterflow.domain.flow.Flows;
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.flowable.Publisher;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.flowable.Publisher;
 
 import org.junit.jupiter.api.Test;
 

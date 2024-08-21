@@ -4,14 +4,14 @@
 
 package com.huawei.fit.http.websocket.support;
 
-import static com.huawei.fitframework.inspection.Validation.between;
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.between;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.websocket.CloseReason;
 import com.huawei.fit.http.websocket.Session;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.UuidUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.UuidUtils;
 
 import java.nio.charset.StandardCharsets;
 

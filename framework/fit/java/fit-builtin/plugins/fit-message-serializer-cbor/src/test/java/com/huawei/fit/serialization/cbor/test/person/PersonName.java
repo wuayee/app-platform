@@ -4,7 +4,7 @@
 
 package com.huawei.fit.serialization.cbor.test.person;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.Data;
 

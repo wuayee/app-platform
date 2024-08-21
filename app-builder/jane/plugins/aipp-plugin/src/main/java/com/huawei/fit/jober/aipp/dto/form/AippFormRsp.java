@@ -6,7 +6,7 @@ package com.huawei.fit.jober.aipp.dto.form;
 
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.DynamicFormEntity;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

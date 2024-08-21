@@ -4,16 +4,16 @@
 
 package com.huawei.fit.http.entity.support;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.lessThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.lessThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.ReadableBinaryEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

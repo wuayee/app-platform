@@ -8,7 +8,7 @@ import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.handler.SourceFetcher;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 表示从 {@link ObjectEntity} 中获取值的 {@link SourceFetcher}。

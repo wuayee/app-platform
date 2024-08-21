@@ -4,9 +4,9 @@
 
 package com.huawei.jade.app.engine.base.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.transaction.Transactional;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.transaction.Transactional;
 import com.huawei.jade.app.engine.base.dto.CollectionAppInfoDto;
 import com.huawei.jade.app.engine.base.dto.UserInfoDto;
 import com.huawei.jade.app.engine.base.dto.UsrAppCollectionDto;

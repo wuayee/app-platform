@@ -4,13 +4,13 @@
 
 package com.huawei.fit.serialization.cbor;
 
-import static com.huawei.fitframework.inspection.Validation.between;
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.between;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.Convert;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.Convert;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

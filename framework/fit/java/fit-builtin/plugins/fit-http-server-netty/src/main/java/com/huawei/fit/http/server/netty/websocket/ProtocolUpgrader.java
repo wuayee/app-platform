@@ -6,7 +6,7 @@ package com.huawei.fit.http.server.netty.websocket;
 
 import static com.huawei.fit.http.HttpClassicRequestAttribute.PATH_PATTERN;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.WEBSOCKET;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.MessageHeaderNames;
 import com.huawei.fit.http.protocol.MessageHeaderValues;
@@ -15,7 +15,7 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.netty.NettyHttpServerRequest;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
 import com.huawei.fit.http.websocket.server.WebSocketHandler;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

@@ -4,14 +4,14 @@
 
 package com.huawei.fit.client.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.client.Address;
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.RequestContext;
-import com.huawei.fitframework.serialization.RequestMetadata;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 

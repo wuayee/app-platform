@@ -5,9 +5,9 @@
 package com.huawei.fit.log.support;
 
 import com.huawei.fit.log.LoggerLevelChanger;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.log.Loggers;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.log.Loggers;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示 {@link LoggerLevelChanger} 的 FIT 框架的默认实现。

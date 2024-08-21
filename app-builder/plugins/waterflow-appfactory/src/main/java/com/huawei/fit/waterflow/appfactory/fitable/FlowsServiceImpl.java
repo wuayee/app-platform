@@ -13,10 +13,10 @@ import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.waterflow.graph.FlowsEngineWebServiceForDbGraph;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 

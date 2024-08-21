@@ -12,8 +12,8 @@ import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fit.http.support.DefaultSerializers;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 import java.util.Map;

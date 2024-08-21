@@ -8,7 +8,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
 import com.huawei.fit.ohscript.script.parser.nodes.TerminalNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.Category;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 函数条目

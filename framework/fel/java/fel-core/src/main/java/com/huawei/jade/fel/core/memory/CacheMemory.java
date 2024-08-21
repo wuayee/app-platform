@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.core.memory;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.core.template.BulkStringTemplate;
 import com.huawei.jade.fel.core.template.support.DefaultBulkStringTemplate;

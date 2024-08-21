@@ -26,8 +26,8 @@ import com.huawei.fit.jober.form.dto.FormDetailDto;
 import com.huawei.fit.jober.form.dto.FormDto;
 import com.huawei.fit.jober.form.exception.FormErrCode;
 import com.huawei.fit.jober.form.service.impl.DynamicFormServiceImpl;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 
 import java.util.stream.Collectors;
 

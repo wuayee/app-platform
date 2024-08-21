@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 /**
  * 表示 Http 请求携带的特殊属性的名字。

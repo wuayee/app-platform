@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.pipeline.huggingface.asr;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 import com.huawei.jade.fel.pipeline.PipelineInput;
 
 import lombok.Data;

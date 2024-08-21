@@ -6,7 +6,7 @@ package com.huawei.jade.app.engine.announcement.dto;
 
 import com.huawei.fit.jane.common.validation.Pattern;
 import com.huawei.fit.jane.common.validation.Size;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -12,7 +12,7 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries.SymbolEntry
 import com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;
 import com.huawei.fit.ohscript.util.Constants;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -5,8 +5,8 @@
 package com.huawei.fit.http.server.netty.support;
 
 import com.huawei.fit.http.server.netty.NettyHttpServerConfig;
-import com.huawei.fitframework.annotation.AcceptConfigValues;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.AcceptConfigValues;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * {@link NettyHttpServerConfig} 的默认实现。

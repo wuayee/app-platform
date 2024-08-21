@@ -10,8 +10,8 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AppLogService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 
 import java.util.List;
 import java.util.Map;

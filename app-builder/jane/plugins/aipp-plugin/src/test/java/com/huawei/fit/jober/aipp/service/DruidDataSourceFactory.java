@@ -6,7 +6,7 @@ package com.huawei.fit.jober.aipp.service;
 
 import static com.alibaba.druid.pool.DruidDataSourceFactory.createDataSource;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import org.apache.ibatis.datasource.DataSourceFactory;
 

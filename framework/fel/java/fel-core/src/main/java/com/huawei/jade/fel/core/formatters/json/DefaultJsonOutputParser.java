@@ -4,9 +4,9 @@
 
 package com.huawei.jade.fel.core.formatters.json;
 
-import com.huawei.fitframework.json.schema.JsonSchemaManager;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.json.schema.JsonSchemaManager;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 

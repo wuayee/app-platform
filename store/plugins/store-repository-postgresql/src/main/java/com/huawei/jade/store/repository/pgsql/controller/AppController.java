@@ -4,9 +4,9 @@
 
 package com.huawei.jade.store.repository.pgsql.controller;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNegative;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNegative;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
 import static com.huawei.jade.common.Result.calculateOffset;
 
@@ -17,8 +17,9 @@ import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.common.Result;
 import com.huawei.jade.store.entity.query.AppQuery;

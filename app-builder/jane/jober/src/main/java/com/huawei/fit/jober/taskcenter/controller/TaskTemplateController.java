@@ -18,8 +18,8 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.taskcenter.domain.TaskTemplate;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.Map;
 

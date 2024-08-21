@@ -22,11 +22,11 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaPropertyConverter;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.transaction.Transactional;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.transaction.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,7 +101,7 @@ public class MetaFitable implements MetaService {
     public RangedResultSet<Meta> list(MetaFilter filter, long offset, int limit, OperationContext context) {
         com.huawei.fit.jane.task.util.OperationContext operationContext = ParamUtils.convertToInternalOperationContext(
                 context);
-        com.huawei.fitframework.model.RangedResultSet<com.huawei.fit.jober.taskcenter.domain.TaskEntity>
+        modelengine.fitframework.model.RangedResultSet<TaskEntity>
                 taskEntityRangedResultSet = taskService.list(metaConverter.convert(filter), offset, limit,
                 operationContext);
         return RangedResultSet.create(this.convert(taskEntityRangedResultSet.getResults(), operationContext),

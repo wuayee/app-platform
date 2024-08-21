@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.eventhandler.converter.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.Undefinable;
 import com.huawei.fit.jane.meta.definition.Meta;
@@ -20,8 +20,8 @@ import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaPropertyConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
 import com.huawei.fit.jober.taskcenter.filter.TaskFilter;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;

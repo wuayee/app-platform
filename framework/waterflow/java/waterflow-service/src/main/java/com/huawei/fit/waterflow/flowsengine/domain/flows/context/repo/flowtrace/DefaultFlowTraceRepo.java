@@ -10,8 +10,8 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowTrace;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowTracePO;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 

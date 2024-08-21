@@ -10,7 +10,7 @@ import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jane.task.util.UndefinableValue;
 import com.huawei.fit.jober.taskcenter.domain.TaskTemplateProperty;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 

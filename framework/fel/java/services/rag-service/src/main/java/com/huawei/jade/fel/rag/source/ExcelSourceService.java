@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.source;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * Excel数据源处理服务

@@ -26,9 +26,9 @@ import com.huawei.fit.jober.aipp.dto.AippDto;
 import com.huawei.fit.jober.aipp.dto.AippOverviewRspDto;
 import com.huawei.fit.jober.aipp.dto.AippVersionDto;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.validation.Validated;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.validation.Validated;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.server.handler;
 
-import com.huawei.fitframework.inspection.Nullable;
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.inspection.Nullable;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Type;

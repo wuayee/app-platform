@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.handler.parameter;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.RequestBean;
@@ -26,13 +26,13 @@ import com.huawei.fit.http.server.handler.support.PathVariableFetcher;
 import com.huawei.fit.http.server.handler.support.QueryFetcher;
 import com.huawei.fit.http.server.handler.support.SourceFetcherInfo;
 import com.huawei.fit.http.server.handler.support.TypeTransformationPropertyValueMapper;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.json.schema.util.SchemaTypeUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ReflectionUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.json.schema.util.SchemaTypeUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;

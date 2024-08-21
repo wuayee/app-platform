@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.store.connector.schema;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.Getter;
 

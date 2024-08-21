@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.exception;
 
-import com.huawei.fitframework.exception.ErrorCode;
-import com.huawei.fitframework.exception.RetryableException;
+import modelengine.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.RetryableException;
 
 /**
  * 表示当异步任务未执行完成时引发的异常。

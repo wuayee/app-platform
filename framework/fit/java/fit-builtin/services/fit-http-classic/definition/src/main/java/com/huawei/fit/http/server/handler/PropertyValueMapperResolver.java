@@ -8,7 +8,7 @@ import com.huawei.fit.http.server.handler.support.EntityResolver;
 import com.huawei.fit.http.server.handler.support.HttpClassicRequestResolver;
 import com.huawei.fit.http.server.handler.support.HttpClassicResponseResolver;
 import com.huawei.fit.http.server.handler.support.PropertyValueResolverComposite;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.util.Optional;
 

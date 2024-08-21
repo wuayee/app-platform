@@ -20,15 +20,15 @@ import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.serialization.ResponseMetadata;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.flowable.Publisher;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.ResponseMetadata;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.tlv.TlvUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 

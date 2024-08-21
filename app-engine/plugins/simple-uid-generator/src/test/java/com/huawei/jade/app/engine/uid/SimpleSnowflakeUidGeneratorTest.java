@@ -10,10 +10,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

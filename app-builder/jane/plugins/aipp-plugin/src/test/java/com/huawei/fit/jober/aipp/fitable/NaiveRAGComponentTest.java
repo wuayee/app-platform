@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.aipp.TestUtils;
 import com.huawei.fit.jober.aipp.util.DataUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 
 import org.jetbrains.annotations.NotNull;

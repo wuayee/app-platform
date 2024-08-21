@@ -4,14 +4,14 @@
 
 package com.huawei.fit.security.http.name.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.name.FileNameValidateConfig;
 import com.huawei.fit.security.http.name.FileNameValidator;
 import com.huawei.fit.security.http.support.FileNameException;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 

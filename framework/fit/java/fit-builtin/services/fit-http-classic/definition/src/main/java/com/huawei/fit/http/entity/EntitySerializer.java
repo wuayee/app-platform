@@ -11,8 +11,8 @@ import com.huawei.fit.http.entity.serializer.MultiPartEntitySerializer;
 import com.huawei.fit.http.entity.serializer.ReadableBinaryEntitySerializer;
 import com.huawei.fit.http.entity.serializer.TextEntitySerializer;
 import com.huawei.fit.http.entity.serializer.TextEventStreamSerializer;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

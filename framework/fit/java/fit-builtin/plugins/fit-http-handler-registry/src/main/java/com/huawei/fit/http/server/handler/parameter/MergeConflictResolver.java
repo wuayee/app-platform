@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.server.handler.parameter;
 
-import com.huawei.fitframework.merge.Conflict;
-import com.huawei.fitframework.merge.ConflictResolver;
+import modelengine.fitframework.merge.Conflict;
+import modelengine.fitframework.merge.ConflictResolver;
 
 /**
  * 表示对 {@link String} 类型的冲突处理器。

@@ -6,7 +6,7 @@ package com.huawei.jade.fel.engine.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.resource.web.Media;
+import modelengine.fitframework.resource.web.Media;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;

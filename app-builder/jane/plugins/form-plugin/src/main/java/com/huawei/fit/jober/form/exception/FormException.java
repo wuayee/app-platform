@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.form.exception;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.FitException;
 
 import lombok.Getter;
 

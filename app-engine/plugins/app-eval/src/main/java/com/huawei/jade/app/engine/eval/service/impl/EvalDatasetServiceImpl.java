@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.eval.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.transaction.Transactional;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.transaction.Transactional;
 import com.huawei.jade.app.engine.eval.convertor.EvalDatasetConvertor;
 import com.huawei.jade.app.engine.eval.dto.EvalDatasetQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDatasetEntity;

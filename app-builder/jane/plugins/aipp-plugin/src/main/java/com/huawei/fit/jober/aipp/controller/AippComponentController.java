@@ -12,7 +12,7 @@ import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippFlowComponentDto;
 import com.huawei.fit.jober.aipp.dto.AippFormComponentDto;
 import com.huawei.fit.jober.aipp.init.AippComponentInitiator;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 组件查询接口

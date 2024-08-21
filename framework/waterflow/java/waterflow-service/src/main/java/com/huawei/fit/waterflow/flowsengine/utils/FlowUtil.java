@@ -9,12 +9,12 @@ import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_INTERNAL_KE
 import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_KEY;
 import static com.huawei.fit.waterflow.common.Constant.INTERNAL_OUTPUT_SCOPE_KEY;
 import static com.huawei.fit.waterflow.common.Constant.PASS_DATA;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

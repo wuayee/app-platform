@@ -8,7 +8,7 @@ import static com.huawei.fit.waterflow.common.Constant.STREAM_ID_SEPARATOR;
 
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.RequiredArgsConstructor;
 

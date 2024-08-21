@@ -6,7 +6,7 @@ package com.huawei.fit.ohscript.script.parser.nodes;
 
 import com.huawei.fit.ohscript.script.lexer.Terminal;
 import com.huawei.fit.ohscript.script.parser.NonTerminal;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * 初始化赋值节点

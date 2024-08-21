@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.header;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import com.huawei.fit.http.HttpClassicRequestAttribute;
 

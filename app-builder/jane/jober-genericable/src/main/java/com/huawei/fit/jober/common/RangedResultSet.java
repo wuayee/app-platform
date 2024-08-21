@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.common;
 
-import com.huawei.fitframework.model.Range;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.Range;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;

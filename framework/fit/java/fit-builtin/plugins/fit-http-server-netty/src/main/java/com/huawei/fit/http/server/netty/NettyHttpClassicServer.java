@@ -4,10 +4,10 @@
 
 package com.huawei.fit.http.server.netty;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.lessThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.greaterThan;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.lessThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.Serializers;
 import com.huawei.fit.http.protocol.util.SslUtils;
@@ -19,17 +19,17 @@ import com.huawei.fit.http.server.netty.websocket.ProtocolUpgrader;
 import com.huawei.fit.http.websocket.server.WebSocketDispatcher;
 import com.huawei.fit.security.Decryptor;
 import com.huawei.fit.server.http.HttpConfig;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.conf.runtime.ServerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.thread.DefaultThreadFactory;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.ThreadUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.conf.runtime.ServerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.thread.DefaultThreadFactory;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ThreadUtils;
+import modelengine.fitframework.value.ValueFetcher;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

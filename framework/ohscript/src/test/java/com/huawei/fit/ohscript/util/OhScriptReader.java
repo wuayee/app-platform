@@ -4,8 +4,8 @@
 
 package com.huawei.fit.ohscript.util;
 
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

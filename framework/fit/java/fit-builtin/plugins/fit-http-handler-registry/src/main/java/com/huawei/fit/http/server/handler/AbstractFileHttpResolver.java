@@ -6,7 +6,7 @@ package com.huawei.fit.http.server.handler;
 
 import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

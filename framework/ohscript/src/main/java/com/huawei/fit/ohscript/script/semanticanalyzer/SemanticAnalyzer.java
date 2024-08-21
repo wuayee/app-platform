@@ -48,8 +48,8 @@ import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concrete
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.UnknownTypeExpr;
 import com.huawei.fit.ohscript.util.Constants;
 import com.huawei.fit.ohscript.util.Pair;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

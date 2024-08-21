@@ -13,7 +13,7 @@ import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMesse
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.CollectionUtils;
 
 import lombok.Getter;
 

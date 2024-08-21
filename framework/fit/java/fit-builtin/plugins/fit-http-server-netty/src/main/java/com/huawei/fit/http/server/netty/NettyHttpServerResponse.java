@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.netty;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.ConfigurableStatusLine;
@@ -12,7 +12,7 @@ import com.huawei.fit.http.protocol.HttpVersion;
 import com.huawei.fit.http.protocol.ServerResponse;
 import com.huawei.fit.http.protocol.WritableMessageBody;
 import com.huawei.fit.http.protocol.support.ServerResponseBody;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;

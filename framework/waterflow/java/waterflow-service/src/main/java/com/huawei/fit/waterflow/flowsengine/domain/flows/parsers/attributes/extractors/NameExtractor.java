@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.extractors;
 
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

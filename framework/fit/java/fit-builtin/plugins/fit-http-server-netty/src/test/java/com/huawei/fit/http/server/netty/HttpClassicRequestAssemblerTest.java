@@ -13,10 +13,10 @@ import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.netty.support.DefaultNettyServerConfig;
 import com.huawei.fit.server.http.HttpConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.value.ValueFetcher;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

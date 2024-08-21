@@ -4,9 +4,9 @@
 
 package com.huawei.jade.fel.core.template;
 
-import com.huawei.fitframework.resource.web.Media;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;

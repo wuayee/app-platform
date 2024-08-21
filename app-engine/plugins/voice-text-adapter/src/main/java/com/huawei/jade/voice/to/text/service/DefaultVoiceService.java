@@ -4,8 +4,8 @@
 
 package com.huawei.jade.voice.to.text.service;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 import com.huawei.jade.voice.service.VoiceService;
 

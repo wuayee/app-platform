@@ -4,14 +4,14 @@
 
 package com.huawei.fit.security.http.upload.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.security.http.FitSecurityException;
 import com.huawei.fit.security.http.support.FileSizeException;
 import com.huawei.fit.security.http.upload.FileUploadValidateConfig;
 import com.huawei.fit.security.http.upload.FileUploadValidator;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示 {@link FileUploadValidator} 的文件大小校验功能实现。

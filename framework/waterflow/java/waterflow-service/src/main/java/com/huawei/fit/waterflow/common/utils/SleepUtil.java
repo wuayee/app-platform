@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.common.utils;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 /**
  * SleepUtil 用于睡眠或延迟操作的工具类

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.heartbeat.client;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -16,11 +16,11 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.heartbeat.HeartbeatMonitor;
 import com.huawei.fit.heartbeat.HeartbeatService;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
-import com.huawei.fitframework.schedule.ThreadPoolScheduler;
-import com.huawei.fitframework.util.ReflectionUtils;
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.schedule.ThreadPoolScheduler;
+import modelengine.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

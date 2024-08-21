@@ -5,10 +5,10 @@
 package com.huawei.jade.carver.tool.support.http.server;
 
 import com.huawei.fit.http.server.HttpClassicServer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitStarter;
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitStarter;
+import modelengine.fitframework.util.ThreadUtils;
 
 /**
  * 为测试 Http 提供的服务运行时。

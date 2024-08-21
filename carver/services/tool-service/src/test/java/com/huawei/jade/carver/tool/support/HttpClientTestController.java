@@ -12,9 +12,9 @@ import com.huawei.fit.http.annotation.RequestForm;
 import com.huawei.fit.http.annotation.RequestHeader;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.tool.support.entity.Address;
 import com.huawei.jade.carver.tool.support.entity.Education;
 

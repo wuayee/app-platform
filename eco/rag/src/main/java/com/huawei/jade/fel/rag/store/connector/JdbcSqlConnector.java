@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.store.connector;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 import com.huawei.jade.fel.rag.store.connector.schema.RdbColumn;
 import com.huawei.jade.fel.rag.store.query.Expression;
 

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.core.template.support;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.core.template.BulkStringTemplate;
 import com.huawei.jade.fel.core.template.StringTemplate;
 

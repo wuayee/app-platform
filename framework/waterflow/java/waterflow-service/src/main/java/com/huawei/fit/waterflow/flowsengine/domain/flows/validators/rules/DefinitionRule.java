@@ -8,8 +8,8 @@ import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDefinitionStatus;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.regex.Pattern;
 

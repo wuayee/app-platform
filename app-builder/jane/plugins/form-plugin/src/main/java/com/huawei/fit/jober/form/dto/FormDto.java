@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.form.dto;
 
 import com.huawei.fit.dynamicform.entity.DynamicFormEntity;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;

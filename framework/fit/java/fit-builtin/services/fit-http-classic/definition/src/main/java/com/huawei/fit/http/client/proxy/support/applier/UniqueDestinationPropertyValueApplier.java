@@ -8,8 +8,8 @@ import com.huawei.fit.http.client.proxy.DestinationSetter;
 import com.huawei.fit.http.client.proxy.PropertyValueApplier;
 import com.huawei.fit.http.client.proxy.RequestBuilder;
 import com.huawei.fit.http.client.proxy.support.setter.DestinationSetterInfo;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.value.ValueFetcher;
 
 import java.util.Collections;
 

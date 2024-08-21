@@ -4,29 +4,29 @@
 
 package com.huawei.fit.plugin.dynamic.directory;
 
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.conf.runtime.ApplicationConfig;
-import com.huawei.fitframework.filesystem.DirectoryMonitor;
-import com.huawei.fitframework.filesystem.FileChangedObserver;
-import com.huawei.fitframework.filesystem.FileCreatedObserver;
-import com.huawei.fitframework.filesystem.FileDeletedObserver;
-import com.huawei.fitframework.filesystem.FileObservers;
-import com.huawei.fitframework.filesystem.FileTreeVisitedObserver;
-import com.huawei.fitframework.filesystem.FileTreeVisitingObserver;
-import com.huawei.fitframework.filesystem.FileVisitedFailedObserver;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginComparators;
-import com.huawei.fitframework.protocol.jar.Jar;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
-import com.huawei.fitframework.schedule.ExecutePolicy;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.conf.runtime.ApplicationConfig;
+import modelengine.fitframework.filesystem.DirectoryMonitor;
+import modelengine.fitframework.filesystem.FileChangedObserver;
+import modelengine.fitframework.filesystem.FileCreatedObserver;
+import modelengine.fitframework.filesystem.FileDeletedObserver;
+import modelengine.fitframework.filesystem.FileObservers;
+import modelengine.fitframework.filesystem.FileTreeVisitedObserver;
+import modelengine.fitframework.filesystem.FileTreeVisitingObserver;
+import modelengine.fitframework.filesystem.FileVisitedFailedObserver;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginComparators;
+import modelengine.fitframework.protocol.jar.Jar;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.schedule.ExecutePolicy;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;

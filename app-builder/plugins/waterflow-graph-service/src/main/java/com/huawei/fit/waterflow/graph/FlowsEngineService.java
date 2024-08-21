@@ -9,7 +9,7 @@ import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jober.entity.FlowInfo;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;
 

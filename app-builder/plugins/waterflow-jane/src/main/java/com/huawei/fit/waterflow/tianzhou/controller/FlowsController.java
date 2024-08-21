@@ -42,9 +42,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.filte
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
 
 import com.alibaba.fastjson.JSON;
 

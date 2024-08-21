@@ -5,7 +5,7 @@
 package com.huawei.fit.http.annotation;
 
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Forward;
+import modelengine.fitframework.annotation.Forward;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

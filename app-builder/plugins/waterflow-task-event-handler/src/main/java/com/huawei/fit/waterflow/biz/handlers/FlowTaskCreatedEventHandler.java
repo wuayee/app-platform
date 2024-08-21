@@ -23,13 +23,13 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDe
 import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
-import com.huawei.fitframework.annotation.Asynchronous;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.event.EventHandler;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Asynchronous;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.event.EventHandler;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
 
 import java.util.HashMap;
 import java.util.List;

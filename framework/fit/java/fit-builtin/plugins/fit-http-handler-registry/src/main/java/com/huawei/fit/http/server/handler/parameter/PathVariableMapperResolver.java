@@ -9,8 +9,8 @@ import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
 import com.huawei.fit.http.server.handler.SourceFetcher;
 import com.huawei.fit.http.server.handler.support.PathVariableFetcher;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
-import com.huawei.fitframework.value.PropertyValue;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.value.PropertyValue;
 
 import java.lang.annotation.Annotation;
 

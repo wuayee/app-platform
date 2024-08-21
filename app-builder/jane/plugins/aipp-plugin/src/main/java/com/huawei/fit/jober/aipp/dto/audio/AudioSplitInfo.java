@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.dto.audio;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

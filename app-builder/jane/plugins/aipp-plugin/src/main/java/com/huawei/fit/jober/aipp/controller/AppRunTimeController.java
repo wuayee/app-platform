@@ -29,10 +29,10 @@ import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.jober.aipp.vo.MetaVo;
 import com.huawei.fit.runtime.entity.RuntimeData;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.validation.Validated;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.validation.Validated;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

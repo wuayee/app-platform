@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.meta.multiversion.instance;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import java.util.Collections;
 import java.util.HashMap;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.client;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.entity.ObjectEntity;
@@ -12,8 +12,8 @@ import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

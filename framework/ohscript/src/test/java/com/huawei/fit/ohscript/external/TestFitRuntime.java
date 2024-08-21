@@ -5,12 +5,12 @@
 package com.huawei.fit.ohscript.external;
 
 import com.huawei.fit.http.server.HttpClassicServer;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitStarter;
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitStarter;
+import modelengine.fitframework.util.ThreadUtils;
 
 /**
  * 用于测试的统一 FIT 运行时。

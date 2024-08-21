@@ -9,7 +9,7 @@ import static com.huawei.fit.jober.common.Constant.REQUIREMENT_ID;
 import static com.huawei.fit.jober.common.Constant.STATE;
 
 import com.huawei.fit.jober.entity.TaskEntity;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

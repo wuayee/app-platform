@@ -9,7 +9,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.declaration.TaskDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.filter.TaskFilter;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;
 

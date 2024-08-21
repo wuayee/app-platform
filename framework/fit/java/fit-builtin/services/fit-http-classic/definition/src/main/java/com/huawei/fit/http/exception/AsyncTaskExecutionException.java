@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.exception;
 
-import com.huawei.fitframework.exception.ErrorCode;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.FitException;
 
 /**
  * 表示异步任务执行异常。

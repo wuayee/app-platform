@@ -8,7 +8,7 @@ import static java.lang.System.identityHashCode;
 
 import com.huawei.fit.waterflow.domain.context.FlowData;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Map;
 import java.util.Optional;

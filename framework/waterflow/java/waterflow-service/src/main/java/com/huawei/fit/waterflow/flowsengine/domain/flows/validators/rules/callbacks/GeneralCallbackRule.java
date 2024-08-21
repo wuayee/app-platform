@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules.callb
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowCallbackType;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 节点通用型回调函数校验规则

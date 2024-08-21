@@ -28,7 +28,7 @@ import com.huawei.fit.waterflow.domain.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.domain.enums.FlowDefinitionStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.parsers.nodes.events.EventParser;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

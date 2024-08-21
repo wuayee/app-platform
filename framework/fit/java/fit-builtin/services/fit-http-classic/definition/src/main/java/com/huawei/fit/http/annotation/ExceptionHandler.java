@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.annotation;
 
-import com.huawei.fitframework.annotation.Scope;
+import modelengine.fitframework.annotation.Scope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

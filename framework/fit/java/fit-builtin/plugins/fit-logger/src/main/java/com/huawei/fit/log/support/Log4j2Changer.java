@@ -4,13 +4,13 @@
 
 package com.huawei.fit.log.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.log.LoggerLevelChanger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;

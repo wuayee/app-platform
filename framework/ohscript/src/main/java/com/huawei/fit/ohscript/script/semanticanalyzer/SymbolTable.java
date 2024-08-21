@@ -7,7 +7,7 @@ package com.huawei.fit.ohscript.script.semanticanalyzer;
 import com.huawei.fit.ohscript.script.semanticanalyzer.symbolentries.SymbolEntry;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.UnknownTypeExpr;
 import com.huawei.fit.ohscript.util.Constants;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.io.Serializable;
 import java.util.HashMap;

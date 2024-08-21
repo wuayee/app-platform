@@ -20,7 +20,7 @@ import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.ToolDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
 import java.util.HashSet;

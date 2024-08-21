@@ -20,7 +20,7 @@ import com.huawei.fit.http.client.proxy.support.DefaultRequestBuilder;
 import com.huawei.fit.http.client.proxy.support.setter.FormUrlEncodedEntitySetter;
 import com.huawei.fit.http.entity.MultiValueEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

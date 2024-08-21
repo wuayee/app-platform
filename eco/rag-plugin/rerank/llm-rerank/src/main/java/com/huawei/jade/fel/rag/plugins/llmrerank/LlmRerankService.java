@@ -4,9 +4,9 @@
 
 package com.huawei.jade.fel.rag.plugins.llmrerank;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.rag.Chunks;
 import com.huawei.jade.fel.rag.protocol.FlatChunk;

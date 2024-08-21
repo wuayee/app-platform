@@ -4,8 +4,8 @@
 
 package com.huawei.fit.http.websocket;
 
-import static com.huawei.fitframework.inspection.Validation.between;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.between;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 /**
  * 表示 WebSocket 关闭时的状态码和原因。

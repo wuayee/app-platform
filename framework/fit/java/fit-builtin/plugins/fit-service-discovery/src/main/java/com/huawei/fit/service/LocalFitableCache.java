@@ -4,7 +4,7 @@
 
 package com.huawei.fit.service;
 
-import com.huawei.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.broker.UniqueFitableId;
 
 /**
  * 本地进程的所有服务信息的缓存。

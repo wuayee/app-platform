@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.chat;
 
-import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.fitframework.flowable.Choir;
+import modelengine.fitframework.annotation.Genericable;
+import modelengine.fitframework.flowable.Choir;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 

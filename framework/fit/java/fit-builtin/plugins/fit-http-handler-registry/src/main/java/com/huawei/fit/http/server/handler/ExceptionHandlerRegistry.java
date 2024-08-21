@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.server.handler;
 
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.Plugin;
 
 import java.util.Map;
 

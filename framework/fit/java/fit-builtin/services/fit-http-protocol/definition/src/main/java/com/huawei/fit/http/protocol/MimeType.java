@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.protocol;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Objects;
 

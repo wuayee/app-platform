@@ -5,7 +5,7 @@
 package com.huawei.fit.data.repository;
 
 import com.huawei.fit.data.repository.entity.Metadata;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 表示数据仓库数据的服务。

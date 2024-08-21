@@ -6,10 +6,10 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobe
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.log.Logger;
 
 import java.util.List;
 import java.util.Map;

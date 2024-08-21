@@ -4,7 +4,7 @@
 
 package com.huawei.fit.serialization.json.jackson;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.serialization.json.jackson.custom.FitAnnotationIntrospector;
 import com.huawei.fit.serialization.json.jackson.custom.LocalDateDeserializer;
@@ -13,15 +13,15 @@ import com.huawei.fit.serialization.json.jackson.custom.LocalDateTimeDeserialize
 import com.huawei.fit.serialization.json.jackson.custom.LocalDateTimeSerializer;
 import com.huawei.fit.serialization.json.jackson.custom.ZonedDateTimeDeserializer;
 import com.huawei.fit.serialization.json.jackson.custom.ZonedDateTimeSerializer;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.serialization.annotation.BuiltinSerializer;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.serialization.annotation.BuiltinSerializer;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonEncoding;

@@ -34,10 +34,10 @@ import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.aipp.util.AippFileUtils;
 import com.huawei.fit.jober.aipp.util.AippStringUtils;
 import com.huawei.fit.jober.aipp.util.HttpUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

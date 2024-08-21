@@ -4,34 +4,34 @@
 
 package com.huawei.fit.service;
 
-import static com.huawei.fitframework.inspection.Validation.notNegative;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNegative;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.service.entity.FitableInfo;
 import com.huawei.fit.service.entity.FitableMetaInstance;
 import com.huawei.fit.service.entity.GenericableInfo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.broker.ConfigurableFitable;
-import com.huawei.fitframework.broker.ConfigurableGenericable;
-import com.huawei.fitframework.broker.Fitable;
-import com.huawei.fitframework.broker.FitableFactory;
-import com.huawei.fitframework.broker.FitableMetadata;
-import com.huawei.fitframework.broker.Genericable;
-import com.huawei.fitframework.broker.GenericableFactory;
-import com.huawei.fitframework.broker.GenericableMetadata;
-import com.huawei.fitframework.broker.GenericableRepository;
-import com.huawei.fitframework.broker.LocalGenericableRepository;
-import com.huawei.fitframework.broker.UniqueGenericableId;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.ExecutePolicy;
-import com.huawei.fitframework.schedule.Task;
-import com.huawei.fitframework.schedule.ThreadPoolScheduler;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.broker.ConfigurableFitable;
+import modelengine.fitframework.broker.ConfigurableGenericable;
+import modelengine.fitframework.broker.Fitable;
+import modelengine.fitframework.broker.FitableFactory;
+import modelengine.fitframework.broker.FitableMetadata;
+import modelengine.fitframework.broker.Genericable;
+import modelengine.fitframework.broker.GenericableFactory;
+import modelengine.fitframework.broker.GenericableMetadata;
+import modelengine.fitframework.broker.GenericableRepository;
+import modelengine.fitframework.broker.LocalGenericableRepository;
+import modelengine.fitframework.broker.UniqueGenericableId;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.ExecutePolicy;
+import modelengine.fitframework.schedule.Task;
+import modelengine.fitframework.schedule.ThreadPoolScheduler;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

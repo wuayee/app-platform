@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http;
 
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.value.ValueFetcher;
 
 /**
  * 表示 Http 的资源。

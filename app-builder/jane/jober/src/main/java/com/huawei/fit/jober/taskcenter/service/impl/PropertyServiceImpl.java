@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.service.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.DomainObject;
 import com.huawei.fit.jane.task.domain.PropertyCategory;
@@ -33,16 +33,16 @@ import com.huawei.fit.jober.taskcenter.util.ExecutableSql;
 import com.huawei.fit.jober.taskcenter.util.Maps;
 import com.huawei.fit.jober.taskcenter.util.SequenceUtils;
 import com.huawei.fit.jober.taskcenter.validation.PropertyValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;

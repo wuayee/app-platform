@@ -6,7 +6,7 @@ package com.huawei.fit.http.client.proxy.support.setter;
 
 import com.huawei.fit.http.client.proxy.DestinationSetter;
 import com.huawei.fit.http.client.proxy.RequestBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;

@@ -4,10 +4,11 @@
 
 package com.huawei.jade.store.repository.pgsql.repository.support;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.store.repository.pgsql.entity.TagDo;
 import com.huawei.jade.store.repository.pgsql.mapper.TagMapper;
 import com.huawei.jade.store.repository.pgsql.repository.TagRepository;

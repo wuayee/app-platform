@@ -4,13 +4,13 @@
 
 package com.huawei.fit.http.entity.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.PartitionedEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;
 import java.util.Collections;

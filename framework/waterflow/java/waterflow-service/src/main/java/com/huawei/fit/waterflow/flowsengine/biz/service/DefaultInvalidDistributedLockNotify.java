@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.flowsengine.biz.service;
 
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.concurrent.locks.Lock;
 import java.util.function.Consumer;

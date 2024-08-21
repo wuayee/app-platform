@@ -4,23 +4,23 @@
 
 package com.huawei.fit.heartbeat.client;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.inspection.Validation.greaterThan;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.heartbeat.HeartbeatMonitor;
 import com.huawei.fit.heartbeat.HeartbeatService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
-import com.huawei.fitframework.schedule.ExecutePolicy;
-import com.huawei.fitframework.schedule.Task;
-import com.huawei.fitframework.schedule.ThreadPoolScheduler;
-import com.huawei.fitframework.util.LockUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.schedule.ExecutePolicy;
+import modelengine.fitframework.schedule.Task;
+import modelengine.fitframework.schedule.ThreadPoolScheduler;
+import modelengine.fitframework.util.LockUtils;
 
 import java.util.Collections;
 import java.util.HashMap;

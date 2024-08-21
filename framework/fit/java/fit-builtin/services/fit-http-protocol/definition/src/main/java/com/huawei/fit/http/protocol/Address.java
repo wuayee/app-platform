@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.protocol;
 
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 import java.net.InetSocketAddress;
 

@@ -8,16 +8,16 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static com.huawei.fit.jober.common.ErrorCodes.INVALID_EVENT_SIZE;
 import static com.huawei.fit.waterflow.common.Constant.CONDITION_RULE_PROPERTY_KEY;
 import static com.huawei.fit.waterflow.common.Constant.PRIORITY_PROPERTY_KEY;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static java.util.Locale.ROOT;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.util.ConvertConditionToRuleUtils;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

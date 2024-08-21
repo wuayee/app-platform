@@ -4,13 +4,13 @@
 
 package com.huawei.fit.http.openapi3.swagger.builder;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.openapi3.swagger.EntityBuilder;
 import com.huawei.fit.http.openapi3.swagger.entity.Info;
-import com.huawei.fitframework.conf.runtime.ApplicationConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.conf.runtime.ApplicationConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
 
 /**
  * 表示 {@link Info} 的构建器。

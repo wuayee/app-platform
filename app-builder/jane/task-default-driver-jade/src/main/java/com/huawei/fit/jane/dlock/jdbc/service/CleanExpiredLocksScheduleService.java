@@ -5,10 +5,10 @@
 package com.huawei.fit.jane.dlock.jdbc.service;
 
 import com.huawei.fit.jane.dlock.jdbc.DistributedLockClient;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.annotation.Scheduled;
 
 /**
  * 分布式锁定时清理服务

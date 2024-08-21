@@ -12,8 +12,8 @@ import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.support.DefaultObjectEntity;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

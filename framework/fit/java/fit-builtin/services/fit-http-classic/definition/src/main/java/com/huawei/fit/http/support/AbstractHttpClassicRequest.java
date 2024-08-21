@@ -5,7 +5,7 @@
 package com.huawei.fit.http.support;
 
 import static com.huawei.fit.http.protocol.MessageHeaderNames.HOST;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.HttpClassicRequest;
 import com.huawei.fit.http.HttpResource;
@@ -14,7 +14,7 @@ import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.protocol.MessageHeaderNames;
 import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.RequestLine;
-import com.huawei.fitframework.resource.UrlUtils;
+import modelengine.fitframework.resource.UrlUtils;
 
 /**
  * 表示 {@link HttpClassicRequest} 的抽象实现类。

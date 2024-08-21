@@ -4,8 +4,8 @@
 
 package com.huawei.fit.actuator;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.actuator.entity.AddressVo;
 import com.huawei.fit.actuator.entity.EndpointVo;
@@ -16,20 +16,20 @@ import com.huawei.fit.http.annotation.DocumentIgnored;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.Endpoint;
-import com.huawei.fitframework.broker.Fitable;
-import com.huawei.fitframework.broker.Format;
-import com.huawei.fitframework.broker.Genericable;
-import com.huawei.fitframework.broker.Target;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.conf.ConfigValueSupplier;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginComparators;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.Endpoint;
+import modelengine.fitframework.broker.Fitable;
+import modelengine.fitframework.broker.Format;
+import modelengine.fitframework.broker.Genericable;
+import modelengine.fitframework.broker.Target;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.conf.ConfigValueSupplier;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginComparators;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;

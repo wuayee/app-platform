@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.common.exceptions;
 
 import com.huawei.fit.waterflow.common.ErrorCodes;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.FitException;
 
 import java.text.MessageFormat;
 

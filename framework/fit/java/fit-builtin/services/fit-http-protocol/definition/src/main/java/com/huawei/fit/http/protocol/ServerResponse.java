@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.protocol;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import java.io.IOException;
 import java.io.OutputStream;

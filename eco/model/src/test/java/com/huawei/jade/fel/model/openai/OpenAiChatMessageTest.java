@@ -7,7 +7,7 @@ package com.huawei.jade.fel.model.openai;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.huawei.fitframework.resource.web.Media;
+import modelengine.fitframework.resource.web.Media;
 import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.chat.character.SystemMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;

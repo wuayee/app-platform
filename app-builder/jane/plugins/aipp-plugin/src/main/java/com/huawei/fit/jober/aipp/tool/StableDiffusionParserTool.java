@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.tool;
 
 import com.huawei.fit.jober.aipp.dto.image.StableDiffusionInput;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * StableDiffusion模型json入参解析

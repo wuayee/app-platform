@@ -14,7 +14,7 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jober.taskcenter.service.PluginLoginService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import lombok.RequiredArgsConstructor;
 

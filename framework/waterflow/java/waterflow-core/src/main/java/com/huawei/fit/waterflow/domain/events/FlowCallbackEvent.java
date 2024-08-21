@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.domain.events;
 
 import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fitframework.event.Event;
+import modelengine.fitframework.event.Event;
 
 import lombok.Getter;
 

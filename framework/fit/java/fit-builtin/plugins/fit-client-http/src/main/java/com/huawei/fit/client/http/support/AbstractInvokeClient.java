@@ -4,7 +4,7 @@
 
 package com.huawei.fit.client.http.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.http.HttpsConstants;
@@ -22,12 +22,12 @@ import com.huawei.fit.http.protocol.Protocol;
 import com.huawei.fit.security.Decryptor;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.conf.runtime.ClientConfig;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.conf.runtime.ClientConfig;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;

@@ -6,8 +6,8 @@ package com.huawei.fit.ohscript.external;
 
 import com.huawei.fit.ohscript.external.support.DefaultFitExecutor;
 import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.ioc.BeanContainer;
 
 /**
  * 表示 FIT 调用的执行器。

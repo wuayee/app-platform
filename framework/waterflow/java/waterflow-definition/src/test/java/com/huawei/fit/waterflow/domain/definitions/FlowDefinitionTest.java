@@ -34,11 +34,11 @@ import com.huawei.fit.waterflow.domain.stream.nodes.Node;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

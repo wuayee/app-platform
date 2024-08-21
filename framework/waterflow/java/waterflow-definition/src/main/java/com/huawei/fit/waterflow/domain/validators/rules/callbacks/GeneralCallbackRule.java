@@ -8,7 +8,7 @@ import static com.huawei.fit.waterflow.domain.enums.FlowCallbackType.GENERAL_CAL
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.nodes.callbacks.FlowCallback;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 节点通用型回调函数校验规则

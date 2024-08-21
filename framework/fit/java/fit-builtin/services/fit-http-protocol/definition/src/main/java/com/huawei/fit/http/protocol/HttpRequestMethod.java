@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.protocol;
 
-import com.huawei.fitframework.inspection.Nullable;
+import modelengine.fitframework.inspection.Nullable;
 
 /**
  * 表示 Http 请求的方法。

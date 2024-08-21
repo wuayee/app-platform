@@ -9,9 +9,9 @@ import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.domain.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.domain.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.regex.Pattern;

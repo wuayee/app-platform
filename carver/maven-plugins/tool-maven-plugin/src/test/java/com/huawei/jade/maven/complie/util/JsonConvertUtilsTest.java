@@ -6,7 +6,7 @@ package com.huawei.jade.maven.complie.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.maven.complie.entity.MethodEntity;
 
 import org.junit.jupiter.api.DisplayName;

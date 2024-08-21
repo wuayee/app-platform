@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.biz.util;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;

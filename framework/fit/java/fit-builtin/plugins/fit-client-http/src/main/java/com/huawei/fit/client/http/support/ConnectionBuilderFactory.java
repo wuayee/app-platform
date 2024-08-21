@@ -4,12 +4,12 @@
 
 package com.huawei.fit.client.http.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.client.http.websocket.SecureWebSocketConnectionBuilder;
 import com.huawei.fit.client.http.websocket.WebSocketConnectionBuilder;
 import com.huawei.fit.http.protocol.Protocol;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 
 import java.util.Map;
 

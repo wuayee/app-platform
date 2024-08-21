@@ -4,7 +4,8 @@
 
 package com.huawei.jade.store.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
+
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.query.TaskQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;

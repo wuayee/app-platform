@@ -8,7 +8,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDataConverterType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Optional;
 

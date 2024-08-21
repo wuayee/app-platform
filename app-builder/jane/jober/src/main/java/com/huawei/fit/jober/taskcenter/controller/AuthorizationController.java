@@ -22,8 +22,8 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.domain.Authorization;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.Map;
 

@@ -4,14 +4,14 @@
 
 package com.huawei.fit.http.server.netty;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.support.AbstractReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.CompositeByteBufReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.FileChannelReadableMessageBody;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.ThreadUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import io.netty.buffer.ByteBuf;
 

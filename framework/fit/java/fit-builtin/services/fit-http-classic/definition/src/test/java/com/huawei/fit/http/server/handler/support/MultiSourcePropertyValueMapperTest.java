@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.huawei.fit.http.server.handler.MockHttpClassicServerRequest;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.support.DefaultHttpClassicServerRequest;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

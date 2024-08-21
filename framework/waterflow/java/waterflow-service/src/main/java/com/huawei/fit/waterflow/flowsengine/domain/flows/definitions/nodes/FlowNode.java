@@ -9,7 +9,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.CONTEXT_TYPE_NOT_SUPPORT;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_ENGINE_EXECUTOR_ERROR;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPPORT;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_OHSCRIPT_INVOKE_FITABLE_ERROR;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.FlowExceptionService;
 import com.huawei.fit.jober.common.OhscriptExecuteException;
@@ -35,9 +35,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Retryable;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

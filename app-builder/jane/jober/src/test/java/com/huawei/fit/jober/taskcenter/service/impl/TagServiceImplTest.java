@@ -9,7 +9,7 @@ import com.huawei.fit.jober.taskcenter.service.TagService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.TagValidator;
 import com.huawei.fit.jober.taskcenter.validation.impl.TagValidatorImpl;
-import com.huawei.fitframework.transaction.TransactionManager;
+import modelengine.fitframework.transaction.TransactionManager;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

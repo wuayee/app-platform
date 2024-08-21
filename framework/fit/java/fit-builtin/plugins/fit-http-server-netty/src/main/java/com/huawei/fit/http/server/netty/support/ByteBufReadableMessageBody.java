@@ -5,7 +5,7 @@
 package com.huawei.fit.http.server.netty.support;
 
 import com.huawei.fit.http.server.netty.NettyReadableMessageBody;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 import io.netty.buffer.ByteBuf;
 

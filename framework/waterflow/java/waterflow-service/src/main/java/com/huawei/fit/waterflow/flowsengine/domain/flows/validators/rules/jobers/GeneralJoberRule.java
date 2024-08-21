@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules.jober
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberType;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 节点自动任务校验规则

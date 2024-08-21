@@ -4,11 +4,11 @@
 
 package com.huawei.jade.fel.model.openai.service;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.fel.embed.EmbedModelService;
 import com.huawei.jade.fel.embed.EmbedRequest;
 import com.huawei.jade.fel.embed.EmbedResponse;

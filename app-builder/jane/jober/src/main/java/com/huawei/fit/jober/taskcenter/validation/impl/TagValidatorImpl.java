@@ -8,9 +8,9 @@ import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.taskcenter.validation.TagValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 为 {@link TagValidator} 提供实现。

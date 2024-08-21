@@ -4,20 +4,20 @@
 
 package com.huawei.fit.serialization.json.jackson;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.serialization.SerializationException;
-import com.huawei.fitframework.util.ArrayUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.SerializationException;
+import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

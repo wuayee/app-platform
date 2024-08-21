@@ -16,10 +16,10 @@ import com.huawei.fit.jober.aipp.init.ElsaPptInitiator;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

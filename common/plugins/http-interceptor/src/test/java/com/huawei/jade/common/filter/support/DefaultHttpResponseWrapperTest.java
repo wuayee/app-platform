@@ -8,12 +8,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.entity.TextEntity;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.filter.config.DefaultHttpResponseWrapperConfig;

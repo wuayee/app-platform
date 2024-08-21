@@ -4,12 +4,12 @@
 
 package com.huawei.jade.fel.plugin.langchain;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.service.langchain.LangChainRunnableService;
 
 import java.util.concurrent.TimeUnit;

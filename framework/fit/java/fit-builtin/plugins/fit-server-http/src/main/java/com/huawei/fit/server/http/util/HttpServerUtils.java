@@ -22,12 +22,12 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.broker.GenericableMetadata;
-import com.huawei.fitframework.broker.server.Response;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.broker.GenericableMetadata;
+import modelengine.fitframework.broker.server.Response;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Type;

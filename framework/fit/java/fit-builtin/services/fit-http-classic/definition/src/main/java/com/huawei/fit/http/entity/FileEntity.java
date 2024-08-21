@@ -6,7 +6,7 @@ package com.huawei.fit.http.entity;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.support.DefaultFileEntity;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.InputStream;

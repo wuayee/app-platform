@@ -9,8 +9,8 @@ import com.huawei.fit.waterflow.common.exceptions.BadRequestException;
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.domain.validators.rules.FlowRule;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 
 import lombok.RequiredArgsConstructor;
 

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.serialization.http;
 
-import com.huawei.fitframework.serialization.tlv.Tags;
+import modelengine.fitframework.serialization.tlv.Tags;
 
 /**
  * 表示 Http 通道中 {@link com.huawei.fitframework.serialization.TagLengthValues} 的标签常量值。

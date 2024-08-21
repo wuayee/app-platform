@@ -9,13 +9,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
+import modelengine.fitframework.util.TypeUtils;
+
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.common.Result;

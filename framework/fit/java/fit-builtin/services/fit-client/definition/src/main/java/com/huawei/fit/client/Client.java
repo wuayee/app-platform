@@ -4,7 +4,7 @@
 
 package com.huawei.fit.client;
 
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 import java.util.Set;
 

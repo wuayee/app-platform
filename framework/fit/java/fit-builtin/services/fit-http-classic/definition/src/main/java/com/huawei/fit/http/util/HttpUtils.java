@@ -4,14 +4,14 @@
 
 package com.huawei.fit.http.util;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.header.HeaderValue;
 import com.huawei.fit.http.header.ParameterCollection;
 import com.huawei.fit.http.header.support.DefaultHeaderValue;
 import com.huawei.fit.http.header.support.DefaultParameterCollection;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URI;

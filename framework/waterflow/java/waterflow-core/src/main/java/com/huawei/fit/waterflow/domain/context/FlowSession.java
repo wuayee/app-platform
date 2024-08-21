@@ -6,8 +6,8 @@ package com.huawei.fit.waterflow.domain.context;
 
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.Setter;
 

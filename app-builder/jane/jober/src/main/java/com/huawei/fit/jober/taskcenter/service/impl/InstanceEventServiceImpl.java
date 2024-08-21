@@ -18,10 +18,10 @@ import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.validation.InstanceEventValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 

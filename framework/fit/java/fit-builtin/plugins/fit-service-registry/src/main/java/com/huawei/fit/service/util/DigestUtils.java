@@ -4,8 +4,8 @@
 
 package com.huawei.fit.service.util;
 
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.IoUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.IoUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

@@ -38,9 +38,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
 
 import com.alibaba.fastjson.JSON;
 

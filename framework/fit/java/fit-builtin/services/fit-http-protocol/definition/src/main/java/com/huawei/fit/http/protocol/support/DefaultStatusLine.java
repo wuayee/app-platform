@@ -6,8 +6,8 @@ package com.huawei.fit.http.protocol.support;
 
 import com.huawei.fit.http.protocol.ConfigurableStatusLine;
 import com.huawei.fit.http.protocol.HttpVersion;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示 {@link ConfigurableStatusLine} 的默认实现。

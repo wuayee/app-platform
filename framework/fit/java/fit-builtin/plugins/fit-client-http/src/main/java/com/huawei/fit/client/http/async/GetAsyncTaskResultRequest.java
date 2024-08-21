@@ -6,9 +6,9 @@ package com.huawei.fit.client.http.async;
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 /**
  * 表示获取异步任务结果方法的参数集合。

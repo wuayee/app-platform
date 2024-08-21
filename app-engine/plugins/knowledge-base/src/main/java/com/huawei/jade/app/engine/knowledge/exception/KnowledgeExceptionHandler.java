@@ -7,8 +7,8 @@ package com.huawei.jade.app.engine.knowledge.exception;
 import com.huawei.fit.http.annotation.ExceptionHandler;
 import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 import com.huawei.jade.app.engine.knowledge.common.KnowledgeRsp;
 import com.huawei.jade.app.engine.knowledge.service.exception.ServiceException;
 

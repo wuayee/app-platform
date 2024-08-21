@@ -6,18 +6,18 @@ package com.huawei.fit.server.http;
 
 import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_TASK_PATH_PATTERN;
 import static com.huawei.fit.serialization.http.Constants.FIT_PATH_PATTERN;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.server.HttpClassicServer;
 import com.huawei.fit.http.server.HttpHandler;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.broker.LocalGenericableRepository;
-import com.huawei.fitframework.broker.server.Dispatcher;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.broker.LocalGenericableRepository;
+import modelengine.fitframework.broker.server.Dispatcher;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * FIT 通信方式的处理器的注册器。

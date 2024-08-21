@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.pipeline.huggingface;
 
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.fel.pipeline.Pipeline;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 

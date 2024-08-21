@@ -8,7 +8,7 @@ import static com.huawei.fit.serialization.http.Constants.FIT_PATH_PATTERN;
 
 import com.huawei.fit.client.Address;
 import com.huawei.fit.client.Request;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

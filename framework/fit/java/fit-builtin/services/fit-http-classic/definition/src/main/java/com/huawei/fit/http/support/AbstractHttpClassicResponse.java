@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.HttpClassicResponse;
 import com.huawei.fit.http.HttpResource;

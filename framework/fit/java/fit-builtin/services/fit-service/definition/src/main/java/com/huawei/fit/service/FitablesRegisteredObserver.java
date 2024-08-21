@@ -4,9 +4,9 @@
 
 package com.huawei.fit.service;
 
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.ioc.BeanFactoryOrderComparator;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.ioc.BeanFactoryOrderComparator;
 
 /**
  * 表示全部的服务实现都已经注册完毕的事件。

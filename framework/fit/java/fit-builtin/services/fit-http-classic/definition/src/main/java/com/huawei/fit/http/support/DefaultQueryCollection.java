@@ -6,8 +6,8 @@ package com.huawei.fit.http.support;
 
 import com.huawei.fit.http.QueryCollection;
 import com.huawei.fit.http.util.HttpUtils;
-import com.huawei.fitframework.model.MultiValueMap;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

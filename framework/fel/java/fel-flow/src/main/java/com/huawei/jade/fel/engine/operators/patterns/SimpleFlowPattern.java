@@ -7,8 +7,8 @@ package com.huawei.jade.fel.engine.operators.patterns;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.engine.util.AiFlowSession;
 

@@ -8,10 +8,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import com.huawei.fit.serialization.MessageSerializerTest;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.conf.support.PropertiesConfig;
-import com.huawei.fitframework.test.genericable.GenericableTestUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.conf.support.PropertiesConfig;
+import modelengine.fitframework.test.genericable.GenericableTestUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

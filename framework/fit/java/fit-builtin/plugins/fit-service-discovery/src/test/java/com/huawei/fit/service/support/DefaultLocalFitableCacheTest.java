@@ -8,12 +8,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.broker.LocalExecutor;
-import com.huawei.fitframework.broker.LocalExecutorFactory;
-import com.huawei.fitframework.broker.UniqueFitableId;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginMetadata;
-import com.huawei.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.broker.LocalExecutor;
+import modelengine.fitframework.broker.LocalExecutorFactory;
+import modelengine.fitframework.broker.UniqueFitableId;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginMetadata;
+import modelengine.fitframework.runtime.FitRuntime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

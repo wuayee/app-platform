@@ -24,9 +24,9 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.annotation.Scheduled;
 
 import java.util.ArrayList;
 import java.util.List;

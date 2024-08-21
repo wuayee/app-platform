@@ -5,8 +5,8 @@
 package com.huawei.fit.data.repository;
 
 import com.huawei.fit.data.repository.exception.CapacityOverflowException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 缓存数据校验服务的默认实现。

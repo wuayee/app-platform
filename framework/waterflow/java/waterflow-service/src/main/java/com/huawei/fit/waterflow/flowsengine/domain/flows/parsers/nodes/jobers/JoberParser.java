@@ -7,7 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDataConverterType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;

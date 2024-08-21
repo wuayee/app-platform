@@ -17,7 +17,7 @@ import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeS
 import com.huawei.fit.jober.dataengine.rest.response.TaskInstanceMetaData;
 import com.huawei.fit.jober.entity.Filter;
 import com.huawei.fit.jober.entity.TaskEntity;
-import com.huawei.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.BrokerClient;
 
 import com.alibaba.fastjson.JSON;
 

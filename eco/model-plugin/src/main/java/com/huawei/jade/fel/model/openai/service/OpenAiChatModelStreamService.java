@@ -4,9 +4,9 @@
 
 package com.huawei.jade.fel.model.openai.service;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.flowable.Choir;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.flowable.Choir;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;

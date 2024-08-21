@@ -6,7 +6,7 @@ package com.huawei.fit.http.entity.serializer;
 
 import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_DISPOSITION;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_TYPE;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.Entity;
@@ -23,11 +23,11 @@ import com.huawei.fit.http.header.ContentDisposition;
 import com.huawei.fit.http.header.ContentType;
 import com.huawei.fit.http.header.HeaderValue;
 import com.huawei.fit.http.util.HttpUtils;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.LineSeparator;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.LineSeparator;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.entity.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.HttpMessage;
 import com.huawei.fit.http.entity.Entity;
@@ -12,9 +12,9 @@ import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 

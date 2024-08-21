@@ -16,8 +16,8 @@ import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
 import com.huawei.fit.ohscript.script.parser.nodes.TerminalNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

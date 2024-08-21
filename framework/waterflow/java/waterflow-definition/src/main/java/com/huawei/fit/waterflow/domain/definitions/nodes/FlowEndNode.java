@@ -11,7 +11,7 @@ import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.domain.stream.nodes.To;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.Getter;
 

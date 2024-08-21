@@ -4,9 +4,9 @@
 
 package com.huawei.fit.service.support;
 
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.inspection.Validation.greaterThanOrEquals;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.greaterThan;
+import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.heartbeat.HeartbeatMonitor;
 import com.huawei.fit.serialization.MessageSerializer;
@@ -18,14 +18,14 @@ import com.huawei.fit.service.entity.FitableMeta;
 import com.huawei.fit.service.entity.Worker;
 import com.huawei.fit.service.util.AppNameVersionUtils;
 import com.huawei.fit.service.util.WorkerUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.broker.LocalExecutor;
-import com.huawei.fitframework.conf.runtime.ApplicationConfig;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.broker.LocalExecutor;
+import modelengine.fitframework.conf.runtime.ApplicationConfig;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

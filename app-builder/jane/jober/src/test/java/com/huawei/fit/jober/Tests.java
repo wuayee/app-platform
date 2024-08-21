@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.task.util.Dates;
 import com.huawei.fit.jane.task.util.Entities;

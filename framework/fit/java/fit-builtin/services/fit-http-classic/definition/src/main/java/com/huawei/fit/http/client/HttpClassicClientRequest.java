@@ -8,8 +8,8 @@ import com.huawei.fit.http.HttpClassicRequest;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.header.ConfigurableCookieCollection;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.model.MultiValueMap;
 
 import java.lang.reflect.Type;
 

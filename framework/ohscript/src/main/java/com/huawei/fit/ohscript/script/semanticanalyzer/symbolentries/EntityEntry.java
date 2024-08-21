@@ -8,7 +8,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.EntityDeclareNode;
 import com.huawei.fit.ohscript.script.parser.nodes.TerminalNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.Category;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.EntityTypeExpr;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 /**
  * Entity对象条目

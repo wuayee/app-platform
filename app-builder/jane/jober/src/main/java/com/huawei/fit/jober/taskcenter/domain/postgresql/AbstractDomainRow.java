@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.domain.postgresql;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

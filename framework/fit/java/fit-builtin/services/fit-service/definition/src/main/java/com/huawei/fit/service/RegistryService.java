@@ -11,7 +11,7 @@ import com.huawei.fit.service.entity.FitableMeta;
 import com.huawei.fit.service.entity.FitableMetaInstance;
 import com.huawei.fit.service.entity.GenericableInfo;
 import com.huawei.fit.service.entity.Worker;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 

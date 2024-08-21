@@ -6,7 +6,7 @@ package com.huawei.fit.ohscript.script.parser;
 
 import static com.huawei.fit.ohscript.util.Constants.EXTERNAL_VALUE;
 import static com.huawei.fit.ohscript.util.Tool.createInstance;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.ohscript.script.errors.OhPanic;
 import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
@@ -37,8 +37,8 @@ import com.huawei.fit.ohscript.util.OhFrom;
 import com.huawei.fit.ohscript.util.OhFunction;
 import com.huawei.fit.ohscript.util.Pair;
 import com.huawei.fit.ohscript.util.Tool;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.SneakyThrows;
 

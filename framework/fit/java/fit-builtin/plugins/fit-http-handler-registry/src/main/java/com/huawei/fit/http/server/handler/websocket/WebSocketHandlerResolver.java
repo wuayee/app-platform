@@ -7,7 +7,7 @@ package com.huawei.fit.http.server.handler.websocket;
 import com.huawei.fit.http.server.handler.GlobalPathPatternPrefixResolver;
 import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
 import com.huawei.fit.http.websocket.server.WebSocketHandler;
-import com.huawei.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.ioc.BeanFactory;
 
 import java.util.Optional;
 

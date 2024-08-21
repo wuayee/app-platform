@@ -4,11 +4,11 @@
 
 package com.huawei.fit.serialization.http;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.huawei.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.serialization.TagLengthValues;
 
 import java.util.Base64;
 

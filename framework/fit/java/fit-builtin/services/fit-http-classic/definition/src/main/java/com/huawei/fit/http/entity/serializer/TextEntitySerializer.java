@@ -11,7 +11,7 @@ import com.huawei.fit.http.entity.EntityWriteException;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.entity.support.DefaultTextEntity;
 import com.huawei.fit.http.protocol.util.BodyUtils;
-import com.huawei.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -4,13 +4,13 @@
 
 package com.huawei.fit.http.server.handler;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
 
 import java.lang.reflect.Method;
 import java.util.Optional;

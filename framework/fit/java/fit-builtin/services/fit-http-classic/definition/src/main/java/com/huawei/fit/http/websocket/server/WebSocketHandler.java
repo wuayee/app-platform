@@ -8,7 +8,7 @@ import com.huawei.fit.http.HttpResourceSupplier;
 import com.huawei.fit.http.server.HttpClassicServer;
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.websocket.Session;
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;

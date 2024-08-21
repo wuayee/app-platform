@@ -10,7 +10,7 @@ import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeSchedu
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
 import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fit.jober.entity.Filter;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import com.alibaba.fastjson.JSON;
 

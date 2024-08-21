@@ -4,8 +4,8 @@
 
 package com.huawei.jade.fel.chat.character;
 
-import com.huawei.fitframework.resource.web.Media;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.MessageType;
 
 import java.util.Collections;

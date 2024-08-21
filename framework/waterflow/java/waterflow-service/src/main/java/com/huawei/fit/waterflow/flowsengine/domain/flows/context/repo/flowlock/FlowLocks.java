@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock;
 
 import static com.huawei.fit.waterflow.common.Constant.STREAM_ID_SEPARATOR;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;

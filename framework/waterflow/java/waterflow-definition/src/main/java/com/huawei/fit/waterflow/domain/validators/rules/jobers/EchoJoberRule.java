@@ -8,7 +8,7 @@ import static com.huawei.fit.waterflow.domain.enums.FlowJoberType.ECHO_JOBER;
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 节点自动任务校验规则

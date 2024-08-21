@@ -14,7 +14,7 @@ import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptDto;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

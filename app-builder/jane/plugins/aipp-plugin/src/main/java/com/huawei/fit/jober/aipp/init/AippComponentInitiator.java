@@ -7,11 +7,11 @@ package com.huawei.fit.jober.aipp.init;
 import com.huawei.fit.jober.aipp.common.ResourceLoader;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Initialize;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Initialize;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
 
 import java.io.IOException;
 import java.util.HashMap;

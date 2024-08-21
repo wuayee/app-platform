@@ -19,11 +19,11 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDefinitionSta
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.validators.FlowValidator;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 

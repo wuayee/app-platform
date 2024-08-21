@@ -6,7 +6,7 @@ package com.huawei.fit.serialization.cbor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.DigitUtils;
+import modelengine.fitframework.util.DigitUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

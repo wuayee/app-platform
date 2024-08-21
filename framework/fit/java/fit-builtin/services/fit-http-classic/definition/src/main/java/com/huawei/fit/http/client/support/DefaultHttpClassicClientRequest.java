@@ -8,9 +8,9 @@ import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_LENGTH;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.COOKIE;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.TRANSFER_ENCODING;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.CHUNKED;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
@@ -26,9 +26,9 @@ import com.huawei.fit.http.protocol.ClientRequest;
 import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.support.AbstractHttpClassicRequest;
-import com.huawei.fitframework.exception.ClientException;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.model.MultiValueMap;
+import modelengine.fitframework.exception.ClientException;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.model.MultiValueMap;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

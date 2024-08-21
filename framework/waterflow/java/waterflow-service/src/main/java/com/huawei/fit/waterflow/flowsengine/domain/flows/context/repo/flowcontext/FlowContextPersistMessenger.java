@@ -9,11 +9,11 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callb
 import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowCallbackEvent;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;

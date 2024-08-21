@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.engine.flows;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

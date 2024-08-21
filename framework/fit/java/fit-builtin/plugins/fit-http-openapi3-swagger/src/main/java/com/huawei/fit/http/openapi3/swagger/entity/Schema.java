@@ -11,7 +11,7 @@ import com.huawei.fit.http.openapi3.swagger.entity.support.ObjectSchema;
 import com.huawei.fit.http.openapi3.swagger.entity.support.PrimitiveSchema;
 import com.huawei.fit.http.openapi3.swagger.entity.support.ReferenceSchema;
 import com.huawei.fit.http.openapi3.swagger.util.SchemaTypeUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;

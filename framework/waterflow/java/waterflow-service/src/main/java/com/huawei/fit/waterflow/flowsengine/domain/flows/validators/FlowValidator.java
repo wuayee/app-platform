@@ -9,8 +9,8 @@ import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.validators.rules.FlowRule;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 
 import lombok.RequiredArgsConstructor;
 

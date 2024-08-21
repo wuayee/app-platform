@@ -4,10 +4,10 @@
 
 package com.huawei.fit.plugin.dynamic.mvn;
 
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
@@ -18,10 +18,10 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.protocol.jar.Jar;
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.protocol.jar.Jar;
+import modelengine.fitframework.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

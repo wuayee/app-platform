@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.schema.generator;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 生成数据约束接口。

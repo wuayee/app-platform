@@ -14,8 +14,8 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Identity;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

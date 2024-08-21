@@ -5,8 +5,8 @@
 package com.huawei.fit.http.annotation;
 
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Forward;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Forward;
+import modelengine.fitframework.util.StringUtils;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
