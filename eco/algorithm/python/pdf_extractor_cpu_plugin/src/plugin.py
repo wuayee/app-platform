@@ -1,6 +1,6 @@
 #!/user/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+# Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
 """
 Description: PDF抽取
 Create: 2024/4/25 10:43

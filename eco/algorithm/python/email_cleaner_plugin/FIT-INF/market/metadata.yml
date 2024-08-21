@@ -1,10 +1,10 @@
 name: '邮件地址匿名化插件'
 language: 'Python'
-vendor: 'Huawei'
+vendor: 'ModelEngine'
 operators:
 - operator:
     name: '邮件地址匿名化'
-    fitableId: 'com.huawei.eDataMate.operators.email_cleaner_plugin'
+    fitableId: 'ModelEngine.operators.email_cleaner_plugin'
     version: '1.0.0'
     description: '邮件地址匿名化'
     types:
@@ -16,4 +16,3 @@ operators:
       after: '这个是邮箱号：<email>'
     labels:
     - '文本'
-    - '医疗'

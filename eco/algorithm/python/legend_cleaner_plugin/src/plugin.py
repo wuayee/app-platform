@@ -1,6 +1,6 @@
 #!/user/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+# Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
 """
 Description: 图注表注去除
 Create: 2023/12/7 15:43
