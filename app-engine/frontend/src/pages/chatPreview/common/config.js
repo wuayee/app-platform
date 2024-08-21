@@ -59,3 +59,22 @@ export const pduMap = {
   '北部非洲': 'NAR',
   '南部非洲': 'SAR'
 }
+export const pduTypeMap = {
+  'ICTPS': 'ICT P&S',
+  'WNPL': '无线',
+  'CCNPL': '云核心网',
+  'OBPL': '光',
+  'DSPL': '数据存储',
+  'DCPL': '数据通信',
+  'CPL': '计算',
+  'CNBG': '运营商',
+  'EBG': '政企',
+  'CBG': '终端',
+  'CR': '中国区',
+  'ER': '欧洲',
+  'LAR': '拉美',
+  'MECAR': '中东中亚',
+  'APR': '亚太',
+  'NAR': '北部非洲',
+  'SAR': '南部非洲'
+}

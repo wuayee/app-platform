@@ -14,6 +14,7 @@ import {
   updateFlowInfo,
   stopInstance,
   getChatRecentLog,
+  clearChat
 } from '@shared/http/aipp';
 import { sseChat, saveContent, getReportInstance } from '@shared/http/sse';
 import {
@@ -262,12 +263,16 @@ const ChatPreview = (props) => {
           chatForm(obj);
           saveLocalChatId(messageData);
         }
+        if (log.type === 'QUESTION') {
+          listRef.current[listRef.current.length - 2]['logId'] = Number(messageData.log_id);
+          dispatch(setChatList(deepClone(listRef.current)));
+        }
         if (messageType.includes(log.type)) {
           let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
           if (log.msgId !== null) {
             chatSplicing(log, msg, recieveChatItem, messageData.status);
           } else {
-            chatStrInit(msg, recieveChatItem, messageData.status);
+            chatStrInit(msg, recieveChatItem, messageData.status, messageData.log_id);
           }
         }
       });
@@ -332,7 +337,7 @@ const ChatPreview = (props) => {
     }
   }
   // 流式输出
-  function chatStrInit(msg, initObj, status) {
+  function chatStrInit(msg, initObj, status, logId) {
     let idx = 0;
     if (isJsonString(msg)) {
       let msgObj = JSON.parse(msg);
@@ -341,7 +346,9 @@ const ChatPreview = (props) => {
       }
     }
     initObj.loading = false;
-    initObj.finished = status === 'ARCHIVED';
+    if (status === 'ARCHIVED') {
+      initObj.finished = true;
+    } 
     idx = listRef.current.length - 1;
     if (testRef.current) {
       initObj.messageType = 'form';
@@ -350,14 +357,15 @@ const ChatPreview = (props) => {
     } else {
       listRef.current.splice(idx, 1, initObj);
     }
+    listRef.current[listRef.current.length - 1]['logId'] = Number(logId);
     dispatch(setChatList(deepClone(listRef.current)));
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
     let msgId = log.msgId;
-    let currentChatItem = listRef.current.filter((item) => item.logId === msgId)[0];
+    let currentChatItem = listRef.current.filter((item) => item.msgId === msgId)[0];
     if (currentChatItem) {
-      let index = listRef.current.findIndex((item) => item.logId === log.msgId);
+      let index = listRef.current.findIndex((item) => item.msgId === log.msgId);
       let item = listRef.current[index];
       let str = '';
       let { content } = currentChatItem;
@@ -415,6 +423,16 @@ const ChatPreview = (props) => {
     scrollToBottom();
     chatStreaming(response);
   }
+  // 用户自勾选删除对话回调
+  const deleteChat = async (list) => {
+    const res = await clearChat(appId, list);
+    if (res.code === 0) {
+      Message({ type: 'success', content: t('deleteSuccess') });
+      listRef.current = listRef.current.filter(item => !list.includes(item.logId));
+      dispatch(setChatList(deepClone(listRef.current)));
+      setEditorShow(false);
+    }
+  }
   function scrollToBottom() {
     setTimeout(() => {
       scrollBottom();
@@ -452,7 +470,8 @@ const ChatPreview = (props) => {
                 type={groupType}
                 setEditorShow={setEditorShow}
                 checkedList={checkedList}
-                reportClick={reportClick} />
+                reportClick={reportClick}
+                deleteChat={deleteChat} />
               :
               <SendEditor
                 onSend={onSend}

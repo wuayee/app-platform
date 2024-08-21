@@ -5,29 +5,19 @@ import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
 import { Message } from '@/shared/utils/message';
-import '../../index.scss';
-import './styles/index.scoped.scss';
+import Empty from '@/components/empty/empty-item';
 import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowledge';
 import { useTranslation } from 'react-i18next';
+import '../../index.scss';
+import './styles/index.scoped.scss';
 
 const KnowledgeBase = () => {
   const { t } = useTranslation();
-  // 路由
   const navigate = useHistory().push;
-
-  // 总条数
   const [total, setTotal] = useState(0);
-
-  // 分页
   const [page, setPage] = useState(1);
-
-  // 分页数
   const [pageSize, setPageSize] = useState(8);
-
-  // 搜索名称
   const [searchName, setSearchName] = useState('');
-
-  // 数据
   const [knowledgeData, setKnowledgeData] = useState<knowledgeBase[]>([]);
   const modalRef = useRef()
 
@@ -78,7 +68,7 @@ const KnowledgeBase = () => {
       Message({ type: 'success', content: t('deleteSuccess') });
       setPage(1);
       getKnowledgeList();
-      modalRef.current.destroy()
+      modalRef.current.destroy();
     })
   }
 
@@ -138,16 +128,19 @@ const KnowledgeBase = () => {
             placeholder={t('search')}
             onChange={(e) => onSearchValueChange(e.target.value)}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />} />
-
         </div>
-        <div className='containerArea'>
-          {knowledgeData.map(knowledge => (<>
-            <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
-              flex: '0'
-            }} clickMore={(e) => clickOpera(e, knowledge.id)} />
+        { total > 0 && <div className='containerArea'>
+          {  knowledgeData.map(knowledge => (<>
+              <KnowledgeCard 
+                key={knowledge.id} 
+                knowledge={knowledge} 
+                style={{ flex: '0'}} 
+                clickMore={(e) => clickOpera(e, knowledge.id)} />
           </>))}
-
-        </div>
+        </div>}
+        { total === 0 && <div className='knowledge-empty-box'>
+          <Empty />
+        </div> }
         <Pagination
           total={total}
           current={page}

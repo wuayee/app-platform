@@ -92,7 +92,6 @@ const ChatRunning = () => {
         width={800}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
-        centered
         footer={null}>
         <div style={{ maxHeight: '400px', overflow: 'auto' }}>
           <div dangerouslySetInnerHTML={{ __html: notice }}></div>

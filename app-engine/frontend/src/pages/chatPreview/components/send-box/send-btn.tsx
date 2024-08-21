@@ -2,7 +2,7 @@ import React, { forwardRef, useContext, useImperativeHandle, useState, useRef, u
 import { Tooltip } from 'antd';
 import { toClipboard } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
-import { CopyIcon, PlayIcon, StopIcon } from '@/assets/icon';
+import { CopyIcon, DeleteIcon, PlayIcon, StopIcon } from '@/assets/icon';
 import { textToVoice } from '@shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 import './styles/send-btn.scss'
@@ -164,11 +164,6 @@ const SendBtn = (props) => {
   return <>{(
     <div className='message-tip-box-send'>
       <div className='inner'>
-        {/* <Tooltip title='分享' color='white' overlayInnerStyle={{color: '#212121' }} destroyTooltipOnHide>
-          <div onClick={ hideTooltip }>
-            <ShareIcon />
-          </div>
-        </Tooltip> */}
         {sendType === 'text' &&
           <Tooltip title={t('copy')} color='white' overlayInnerStyle={{ color: '#212121' }}>
             <div onClick={handleCopyQuestion}>
@@ -176,9 +171,10 @@ const SendBtn = (props) => {
             </div>
           </Tooltip>
         }
-        {/* {  sendType === 'text' && isRecieve === true &&
-          <SoundBtn ref={soundBtnRef} handleClick={ useCallback(handlePlayQuestion) }/>
-        } */}
+        {<div title={t('delete')} onClick={() => setShareClass('delete')}>
+          <DeleteIcon className='hover-blue-icon' />
+        </div>
+        }
       </div>
     </div>
   )}</>

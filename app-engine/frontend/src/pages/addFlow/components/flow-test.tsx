@@ -11,6 +11,9 @@ import { useAppSelector } from '@/store/hook';
 import { EventSourceParserStream } from '@shared/event-source/stream';
 import RenderFormItem from './render-form-item';
 import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
+import { useAppDispatch } from '@/store/hook';
+import { setDimension } from '@/store/common/common';
+import { pduTypeMap } from '@/pages/chatPreview/common/config';
 import { useTranslation } from 'react-i18next';
 
 const Index = (props) => {
@@ -32,6 +35,8 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   const runningInstanceId = useRef('');
+  const dispatch = useAppDispatch();
+
   // 关闭测试抽屉
   const handleCloseDebug = () => {
     setLoading(false);
@@ -50,6 +55,7 @@ const Index = (props) => {
   }
   // 请求参数拼接
   const runningStart = (values) => {
+    dispatch(setDimension({ id: '', name: pduTypeMap[values.dimension], value: values.dimension }));
     let chatParams: any = {
       'app_id': appId,
       'question': values.Question,
@@ -73,12 +79,12 @@ const Index = (props) => {
       setLoading(false);
       return;
     }
-    const reader = res?.body?.pipeThrough(new TextDecoderStream())
-      .pipeThrough(new EventSourceParserStream()).getReader();
-    testStreaming(reader);
+    testStreaming(res);
   }
   // 流式输出sse数据
-  const testStreaming = async (reader) => {
+  const testStreaming = async (res) => {
+    let reader = res?.body?.pipeThrough(new TextDecoderStream())
+      .pipeThrough(new EventSourceParserStream()).getReader();
     let getReady = false;
     while (true) {
       const sseResData = await reader?.read();
@@ -171,6 +177,11 @@ const Index = (props) => {
     Message({ type: 'warning', content: content });
     elsaRunningCtl.current?.stop();
   }
+
+  const confirmSetOpen = (res) => {
+    setOpen(false);
+    testStreaming(res);
+  }
   return <>{(
     <div>
       <Drawer title={<h5>{t('debugRun')}</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
@@ -213,7 +224,7 @@ const Index = (props) => {
       {/* 表单抽屉 */}
       <Drawer title={<h5>{t('manualForm')}</h5>} open={open} onClose={() => setOpen(false)} width={800}>
         <div>
-          <RuntimeForm formConfig={formConfig} confirmCallBack={() => setOpen(false)} />
+          <RuntimeForm formConfig={formConfig} confirmCallBack={confirmSetOpen} />
         </div>
       </Drawer>
     </div>
