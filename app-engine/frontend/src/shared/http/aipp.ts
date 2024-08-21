@@ -108,6 +108,10 @@ export function getChatRecentLog(tenantId, chatId, appId) {
 export function clearInstance(tenantId, appId, type) {
   return del(`${AIPP_URL}/${tenantId}/log/app/${appId}?type=${type}`);
 }
+// 用户自勾选删除历史记录
+export function clearChat(appId, list) {
+  return del(`${AIPP_URL}/${appId}/log/logs`, list);
+}
 // 终止当前对话
 export function stopInstance(tenantId, instanceId, params) {
   return put(`${AIPP_URL}/${tenantId}/instances/${instanceId}/terminate`, params);

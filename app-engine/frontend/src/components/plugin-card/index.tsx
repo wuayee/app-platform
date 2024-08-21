@@ -49,6 +49,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus 
       setLoading(false);
       if (res.code === 0) {
         getPluginList();
+        modalRef.current.destroy();
         message.success(t('deleteSuccess'));
       }
     }).catch(() => {
