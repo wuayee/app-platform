@@ -209,17 +209,17 @@ class ClassDescriptorTest {
     void givenClassFileThenReturnClassReferenceOfDescription() {
         ClassDescriptor referenceDescriptor = ClassDescriptor.of(AttributeTarget.class);
         assertThat(referenceDescriptor.term())
-                .isEqualTo("Lcom/huawei/fitframework/jvm/test/AttributeTarget;");
+                .isEqualTo("Lmodelengine/fitframework/jvm/test/AttributeTarget;");
     }
 
     @Test
     @DisplayName("当提供 class 文件时，解析 class 文件类 Reference 描述符")
     void givenClassFileThenReturnClassParseReferenceDescription() {
         ClassDescriptor parse =
-                ClassDescriptor.parse("Lcom/huawei/fitframework/jvm/test/AttributeTarget;");
+                ClassDescriptor.parse("Lmodelengine/fitframework/jvm/test/AttributeTarget;");
         ClassDescriptor.Reference reference = ObjectUtils.cast(parse);
         String name = reference.name();
-        assertThat(name).isEqualTo("com.huawei.fitframework.jvm.test.AttributeTarget");
+        assertThat(name).isEqualTo("modelengine.fitframework.jvm.test.AttributeTarget");
     }
 
     @Test
@@ -240,7 +240,7 @@ class ClassDescriptorTest {
     @DisplayName("测试 ClassDescriptor.Reference 类 equals 方法，返回正常结果")
     void givenClassFileThenReturnClassDescriptorReferenceEqual() {
         ClassDescriptor attribute =
-                ClassDescriptor.parse("Lcom/huawei/fitframework/jvm/test/AttributeTarget;");
+                ClassDescriptor.parse("Lmodelengine/fitframework/jvm/test/AttributeTarget;");
         ClassDescriptor.Reference attributeReference = ObjectUtils.cast(attribute);
         assertThat(attributeReference.equals("assignmentReference")).isFalse();
         ClassDescriptor.Reference reference = attributeReference;
@@ -297,7 +297,7 @@ class ClassDescriptorTest {
     @Test
     @DisplayName("当提供 class 文件时，class 文件方法 Reference 类型解析描述符不完整异常")
     void givenClassFileThenReturnDescriptionReferenceTypeIncompleteException() {
-        assertThatThrownBy(() -> MethodDescriptor.parse("(ID)Lcom/huawei/fitframework/jvm/test/AttributeTarget"))
+        assertThatThrownBy(() -> MethodDescriptor.parse("(ID)Lmodelengine/fitframework/jvm/test/AttributeTarget"))
                 .isInstanceOf(IllegalStateException.class);
     }
 

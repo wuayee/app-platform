@@ -37,7 +37,7 @@ class ConstantValueAttributeTest {
     @DisplayName("初始化 ConstantValueAttribute 类")
     void init() throws IOException {
         try (InputStream inputStream = ConstantValueAttributeTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             this.pool = classFile.constants();
             FieldList fields = classFile.fields();

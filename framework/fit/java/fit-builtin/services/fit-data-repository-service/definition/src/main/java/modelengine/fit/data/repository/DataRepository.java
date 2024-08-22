@@ -20,7 +20,7 @@ public interface DataRepository {
      * @param id 表示缓存数据的唯一标识的 {@link String}。
      * @return 表示获取到的缓存数据的元数据的 {@link Metadata}。
      */
-    @Genericable(id = "com.huawei.fit.bigdata.cache.read.meta")
+    @Genericable(id = "modelengine.fit.bigdata.cache.read.meta")
     Metadata getMetadata(String id);
 
     /**
@@ -29,7 +29,7 @@ public interface DataRepository {
      * @param id 表示缓存数据的唯一标识的 {@link String}。
      * @return 表示获取到的字符串类型的缓存数据的 {@link String}。
      */
-    @Genericable(id = "com.huawei.fit.bigdata.cache.read.str")
+    @Genericable(id = "modelengine.fit.bigdata.cache.read.str")
     String getString(String id);
 
     /**
@@ -38,7 +38,7 @@ public interface DataRepository {
      * @param id 表示缓存数据的唯一标识的 {@link String}。
      * @return 表示获取到的字节数组类型的缓存数据的 {@code byte[]}。
      */
-    @Genericable(id = "com.huawei.fit.bigdata.cache.read.bytes")
+    @Genericable(id = "modelengine.fit.bigdata.cache.read.bytes")
     byte[] getBytes(String id);
 
     /**
@@ -47,7 +47,7 @@ public interface DataRepository {
      * @param id 表示需要保存的数据的唯一标识的 {@link String}。
      * @param data 表示需要保存的数据的 {@link Object}。
      */
-    @Genericable(id = "com.huawei.fit.bigdata.cache.save")
+    @Genericable(id = "modelengine.fit.bigdata.cache.save")
     void save(String id, Object data);
 
     /**
@@ -55,6 +55,6 @@ public interface DataRepository {
      *
      * @param id 表示需要删除的数据的唯一标识的 {@link String}。
      */
-    @Genericable(id = "com.huawei.fit.bigdata.cache.delete")
+    @Genericable(id = "modelengine.fit.bigdata.cache.delete")
     void delete(String id);
 }

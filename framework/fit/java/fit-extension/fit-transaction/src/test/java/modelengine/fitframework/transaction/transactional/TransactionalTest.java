@@ -110,7 +110,7 @@ class TransactionalTest {
         when(runtime.resolverOfAnnotations()).thenReturn(new DefaultAnnotationMetadataResolver());
         Plugin plugin = mock(Plugin.class);
         PluginMetadata metadata = mock(PluginMetadata.class);
-        when(metadata.group()).thenReturn("com.huawei.fitframework");
+        when(metadata.group()).thenReturn("modelengine.fitframework");
         when(metadata.name()).thenReturn("test");
         when(metadata.version()).thenReturn("1.0");
         when(plugin.metadata()).thenReturn(metadata);

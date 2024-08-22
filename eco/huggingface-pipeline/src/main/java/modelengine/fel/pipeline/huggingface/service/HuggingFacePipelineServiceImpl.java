@@ -75,7 +75,7 @@ public class HuggingFacePipelineServiceImpl implements HuggingFacePipelineServic
     }
 
     @Override
-    @Fitable(id = "com.huawei.jade.fel.pipeline.huggingface.service.call")
+    @Fitable(id = "modelengine.fel.pipeline.huggingface.service.call")
     public Object call(String task, String model, Map<String, Object> args) {
         try {
             Response<Object> response = this.api.callPipeline(this.gatewayUrl + CALL_PIPELINE_ENDPOINT,

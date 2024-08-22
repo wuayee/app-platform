@@ -5,7 +5,7 @@
 package modelengine.fitframework.serialization.tlv;
 
 /**
- * 表示 {@link com.huawei.fitframework.serialization.TagLengthValues} 的标签常量值。
+ * 表示 {@link modelengine.fitframework.serialization.TagLengthValues} 的标签常量值。
  *
  * @author 季聿阶
  * @since 2024-05-09

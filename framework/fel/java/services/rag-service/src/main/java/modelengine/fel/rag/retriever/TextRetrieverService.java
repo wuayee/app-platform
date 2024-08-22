@@ -23,6 +23,6 @@ public interface TextRetrieverService {
      * @param options 表示检索服务超参数的 {@link RetrieverOptions}。
      * @return 表示检索返回内容的 {@link String}。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.retriever.text")
+    @Genericable(id = "modelengine.fel.rag.retriever.text")
     List<FlatChunk> retrieve(String query, RetrieverOptions options);
 }

@@ -26,7 +26,7 @@ public class BeanDestroyers {
      * @param method 表示用以销毁Bean的方法的 {@link Method}。
      * @return 表示使用该方法对Bean进行销毁的Bean销毁程序的 {@link BeanDestroyer}。
      * @throws IllegalArgumentException {@code method} 为 {@code null}。
-     * @throws com.huawei.fitframework.ioc.BeanDefinitionException {@code method} 被 {@code static} 修饰。
+     * @throws modelengine.fitframework.ioc.BeanDefinitionException {@code method} 被 {@code static} 修饰。
      */
     public static BeanDestroyer method(Method method) {
         return new MethodBeanDestroyer(method);

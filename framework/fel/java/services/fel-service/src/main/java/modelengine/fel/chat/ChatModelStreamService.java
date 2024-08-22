@@ -22,6 +22,6 @@ public interface ChatModelStreamService {
      * @param request 表示聊天请求的 {@link ChatCompletion}。
      * @return 表示聊天模型生成序列的 {@link Choir}{@code <}{@link FlatChatMessage}{@code >}。
      */
-    @Genericable(id = "com.huawei.jade.fel.chat.streamGenerate")
+    @Genericable(id = "modelengine.fel.chat.streamGenerate")
     Choir<FlatChatMessage> generate(ChatCompletion request);
 }

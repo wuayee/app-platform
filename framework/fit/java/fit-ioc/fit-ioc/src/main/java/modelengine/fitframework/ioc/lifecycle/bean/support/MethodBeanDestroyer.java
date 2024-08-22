@@ -28,7 +28,7 @@ public class MethodBeanDestroyer implements BeanDestroyer {
      *
      * @param method 表示Bean的销毁方法的 {@link Method}。
      * @throws IllegalArgumentException {@code method} 为 {@code null}。
-     * @throws com.huawei.fitframework.ioc.BeanDefinitionException {@code method} 被 {@code static} 修饰。
+     * @throws modelengine.fitframework.ioc.BeanDefinitionException {@code method} 被 {@code static} 修饰。
      */
     public MethodBeanDestroyer(Method method) {
         this.method = Validation.notNull(method, "The method to destroy bean cannot be null.");

@@ -36,7 +36,7 @@ class MethodListTest {
     @DisplayName("初始化 ClassFile 类")
     void init() throws IOException {
         try (InputStream inputStream = ClassFileTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             this.classFile = new ClassFile(inputStream);
             this.constantPool = this.classFile.constants();
         }

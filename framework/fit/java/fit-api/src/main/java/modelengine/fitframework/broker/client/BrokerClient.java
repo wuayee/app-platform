@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
  * 服务调用的代理客户端。
  * <p>所有的服务的定义需要遵循以下两种规范之一：
  * <ol>
- *     <li><b>单接口单方法规范：</b>接口类上存在 {@link com.huawei.fitframework.annotation.Genericable}
+ *     <li><b>单接口单方法规范：</b>接口类上存在 {@link modelengine.fitframework.annotation.Genericable}
  *     注解，且接口类中仅有一个方法，该方法的名字为
- *     {@link com.huawei.fitframework.util.GenericableUtils#GENERICABLE_METHOD_NAME}。</li>
- *     <li><b>单接口多方法规范：</b>接口类中存在多个方法，每一个服务方法上存在 {@link com.huawei.fitframework.annotation.Genericable}
+ *     {@link modelengine.fitframework.util.GenericableUtils#GENERICABLE_METHOD_NAME}。</li>
+ *     <li><b>单接口多方法规范：</b>接口类中存在多个方法，每一个服务方法上存在 {@link modelengine.fitframework.annotation.Genericable}
  *     注解。</li>
  * </ol>
  * </p>
@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 public interface BrokerClient {
     /**
      * 获取一个服务的自定义动态路由器。
-     * <p>该服务类上必定需要存在 {@link com.huawei.fitframework.annotation.Genericable} 注解。</p>
+     * <p>该服务类上必定需要存在 {@link modelengine.fitframework.annotation.Genericable} 注解。</p>
      *
      * @param genericableClass 表示服务的类型的 {@link Class}{@code <?>}。
      * @return 表示服务的自定义动态路由器的 {@link Router}。
@@ -37,7 +37,7 @@ public interface BrokerClient {
 
     /**
      * 获取一个服务的自定义动态路由器。
-     * <p>该服务类的方法上必定需要存在 {@link com.huawei.fitframework.annotation.Genericable}
+     * <p>该服务类的方法上必定需要存在 {@link modelengine.fitframework.annotation.Genericable}
      * 注解，且需要存在一个服务的唯一标识和指定的 {@code genericableId} 一致。</p>
      *
      * @param genericableClass 表示服务的类型的 {@link Class}{@code <?>}。
@@ -81,7 +81,7 @@ public interface BrokerClient {
 
     /**
      * 获取一个服务。
-     * <p>该服务类上必定需要存在 {@link com.huawei.fitframework.annotation.Genericable} 注解。</p>
+     * <p>该服务类上必定需要存在 {@link modelengine.fitframework.annotation.Genericable} 注解。</p>
      *
      * @param genericableClass 表示服务的类型的 {@link Class}{@code <?>}。
      * @return 表示服务的 {@link Genericable}。
@@ -92,7 +92,7 @@ public interface BrokerClient {
 
     /**
      * 获取一个服务。
-     * <p>该服务类的方法上必定需要存在 {@link com.huawei.fitframework.annotation.Genericable}
+     * <p>该服务类的方法上必定需要存在 {@link modelengine.fitframework.annotation.Genericable}
      * 注解，且需要存在一个服务的唯一标识和指定的 {@code genericableId} 一致。</p>
      *
      * @param genericableClass 表示服务的类型的 {@link Class}{@code <?>}。

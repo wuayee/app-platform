@@ -44,9 +44,9 @@ public @interface AfterThrowing {
     /**
      * 获取切入点参数所有名称，以逗号分隔符隔开。
      * <p>如果参数只有一个，并且类型是以下特殊类型，该名称可以不写或为空。
-     * {@link com.huawei.fitframework.aop.JoinPoint}，
-     * {@link com.huawei.fitframework.aop.ProceedingJoinPoint}，
-     * {@link com.huawei.fitframework.aop.JoinPoint.StaticPart}</p>
+     * {@link modelengine.fitframework.aop.JoinPoint}，
+     * {@link modelengine.fitframework.aop.ProceedingJoinPoint}，
+     * {@link modelengine.fitframework.aop.JoinPoint.StaticPart}</p>
      * <p>如果参数多个，则必须与切入点方法参数名称一致，顺序一致。</p>
      *
      * @return 表示所有参数名称的 {@link String}。

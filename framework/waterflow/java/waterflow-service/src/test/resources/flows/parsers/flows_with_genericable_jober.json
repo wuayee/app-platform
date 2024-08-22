@@ -14,7 +14,7 @@
         ],
         "entity":{
           "genericable": {
-            "id": "com.huawei.fit.demo.flow.helloWorld",
+            "id": "modelengine.fit.demo.flow.helloWorld",
             "params": [
               {
                 "name": "name"

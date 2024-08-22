@@ -19,6 +19,6 @@ public interface EmbedModelService {
      * @param request 表示嵌入请求的 {@link EmbedRequest}。
      * @return 表示模型生成嵌入响应的 {@link EmbedResponse}。
      */
-    @Genericable(id = "com.huawei.jade.fel.embed.generate")
+    @Genericable(id = "modelengine.fel.embed.generate")
     EmbedResponse generate(EmbedRequest request);
 }

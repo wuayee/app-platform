@@ -41,7 +41,7 @@ public class HandlersTest {
     void invokeRegisterThenSystemPropertyIsEqualsToExpectedValue() {
         Handlers.register();
         String property = System.getProperty("java.protocol.handler.pkgs");
-        assertThat(property).isEqualTo("com.huawei.fitframework.protocol");
+        assertThat(property).isEqualTo("modelengine.fitframework.protocol");
     }
 
     @Test
@@ -50,6 +50,6 @@ public class HandlersTest {
         System.setProperty("java.protocol.handler.pkgs", "sun.net.www.protocol");
         Handlers.register();
         String property = System.getProperty("java.protocol.handler.pkgs");
-        assertThat(property).isEqualTo("com.huawei.fitframework.protocol|sun.net.www.protocol");
+        assertThat(property).isEqualTo("modelengine.fitframework.protocol|sun.net.www.protocol");
     }
 }

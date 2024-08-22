@@ -26,7 +26,7 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 /**
- * 为 {@link com.huawei.fitframework.ioc.BeanResolver BeanResolver} 提供基于 <a
+ * 为 {@link modelengine.fitframework.ioc.BeanResolver BeanResolver} 提供基于 <a
  * href="https://jcp.org/en/jsr/detail?id=250">JSR-250</a> 的实现。
  * <p>该实现仅提供 {@link Resource}、{@link PostConstruct}、{@link PreDestroy} 的实现。</p>
  *

@@ -55,7 +55,7 @@ public class TransactionAspect {
      * @return 表示切面结束之后的返回值的 {@link Object}。
      * @throws Throwable 当切面执行过程中发生的异常时。
      */
-    @Around("@annotation(com.huawei.fitframework.transaction.Transactional)")
+    @Around("@annotation(modelengine.fitframework.transaction.Transactional)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = ObjectUtils.cast(joinPoint.getSignature());
         AnnotationMetadata annotations =

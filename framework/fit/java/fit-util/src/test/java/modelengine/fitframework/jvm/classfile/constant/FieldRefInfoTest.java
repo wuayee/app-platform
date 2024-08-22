@@ -25,9 +25,9 @@ import java.io.InputStream;
  */
 @DisplayName("测试 FieldRefInfo 类以及相关类")
 class FieldRefInfoTest {
-    private static final String TEST_CLASS_PATH = "com/huawei/fitframework/jvm/test/AttributeTarget";
+    private static final String TEST_CLASS_PATH = "modelengine/fitframework/jvm/test/AttributeTarget";
 
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = FieldRefInfo.TAG;
 
     @Nested

@@ -29,6 +29,6 @@ public interface HuggingFacePipelineService {
      * @param args 表示调用参数的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      * @return 表示生成结果的 {@link Object}。
      */
-    @Genericable("com.huawei.jade.fel.pipeline.huggingface")
+    @Genericable("modelengine.fel.pipeline.huggingface")
     Object call(String task, String model, Map<String, Object> args);
 }

@@ -184,9 +184,9 @@ public class SchemaTypeUtilsTest {
         void shouldReturnTypeNameWhenTypeIsGeneric() {
             ParameterizedType type = TypeUtils.parameterized(Sample3.class, new Type[] {Sample1.class, Sample2.class});
             String actual = SchemaTypeUtils.getTypeName(type);
-            assertThat(actual).isEqualTo("com.huawei.fit.http.openapi3.swagger.util.SchemaTypeUtilsTest$Sample3_of_"
-                    + "com.huawei.fit.http.openapi3.swagger.util.SchemaTypeUtilsTest$Sample1_and_"
-                    + "com.huawei.fit.http.openapi3.swagger.util.SchemaTypeUtilsTest$Sample2");
+            assertThat(actual).isEqualTo("modelengine.fit.http.openapi3.swagger.util.SchemaTypeUtilsTest$Sample3_of_"
+                    + "modelengine.fit.http.openapi3.swagger.util.SchemaTypeUtilsTest$Sample1_and_"
+                    + "modelengine.fit.http.openapi3.swagger.util.SchemaTypeUtilsTest$Sample2");
         }
     }
 

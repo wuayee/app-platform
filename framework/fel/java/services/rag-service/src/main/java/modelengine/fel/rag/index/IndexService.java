@@ -21,7 +21,7 @@ public interface IndexService {
      * @param flatChunks 表示入库数据的 {@link List}{@code <}{@link FlatChunk}{@code >}。
      * @param options 表示索引服务超参数的 {@link IndexerOptions}。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.indexer.index")
+    @Genericable(id = "modelengine.fel.rag.indexer.index")
     void index(List<FlatChunk> flatChunks, IndexerOptions options);
 
     /**
@@ -31,7 +31,7 @@ public interface IndexService {
      * @param options 表示查询参数的{@link IndexerOptions}
      * @return 返回搜索结果列表
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.indexer.search")
+    @Genericable(id = "modelengine.fel.rag.indexer.search")
     List<FlatChunk> search(String query, IndexerOptions options);
 
     /**
@@ -40,7 +40,7 @@ public interface IndexService {
      * @param config 表示配置参数的{@link IndexConfig}
      * @return String
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.indexer.search.addconnector")
+    @Genericable(id = "modelengine.fel.rag.indexer.search.addconnector")
     String addConnector(IndexConfig config);
 
     /**
@@ -48,6 +48,6 @@ public interface IndexService {
      *
      * @param id 表示Id的{@link String}。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.indexer.search.removeconnector")
+    @Genericable(id = "modelengine.fel.rag.indexer.search.removeconnector")
     void removeConnector(String id);
 }

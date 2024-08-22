@@ -77,7 +77,7 @@ public class AtParamsMatcherTest {
     @DisplayName("当表达式包含 @params 范围匹配时，返回信息匹配成功")
     @Test
     void givenParametersFilterMatchThenReturnMatches() {
-        String exp = "@args(com.huawei.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
+        String exp = "@args(modelengine.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
         Method method = AtParamsMatcherTest.this.service1M6Method;
         AspectMethodMatcher methodMatcher = new AspectMethodMatcher(exp, TestExecutionAspect.class, null);
         // 类匹配

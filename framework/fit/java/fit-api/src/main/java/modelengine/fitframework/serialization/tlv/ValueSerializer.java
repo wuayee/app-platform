@@ -7,7 +7,7 @@ package modelengine.fitframework.serialization.tlv;
 import modelengine.fitframework.inspection.Nonnull;
 
 /**
- * 表示 {@link com.huawei.fitframework.serialization.TagLengthValues} 中值的序列化器。
+ * 表示 {@link modelengine.fitframework.serialization.TagLengthValues} 中值的序列化器。
  *
  * @param <T> 表示值的类型的 {@link T}。
  * @author 季聿阶

@@ -47,8 +47,8 @@ public interface LoggerFactory {
 
     /**
      * 将指定包路径及其子包路径的日志记录器的级别调整为指定值。
-     * <p>例如：{@code basePackage} 为 {@code 'com.huawei.fit'} 时，{@code 'com.huawei.fit'} 和
-     * {@code 'com.huawei.fit.sample'} 包下的所有日志记录器的级别会受影响，但是 {@code 'com.huawei.fitframework'}
+     * <p>例如：{@code basePackage} 为 {@code 'modelengine.fit'} 时，{@code 'modelengine.fit'} 和
+     * {@code 'modelengine.fit.sample'} 包下的所有日志记录器的级别会受影响，但是 {@code 'modelengine.fitframework'}
      * 包下的所有日志记录器的级别不受影响。</p>
      *
      * @param basePackage 表示指定基础包路径的 {@link String}。

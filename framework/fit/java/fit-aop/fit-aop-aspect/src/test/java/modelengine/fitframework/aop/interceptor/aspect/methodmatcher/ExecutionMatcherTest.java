@@ -55,8 +55,8 @@ public class ExecutionMatcherTest {
     @DisplayName("当表达式没有参数时，方法匹配器匹配成功")
     @ParameterizedTest
     @CsvSource({
-            "execution(public String com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.m1())",
-            "execution(* com.huawei.fitframework.aop.interceptor.aspect.test.*.m1(..))",
+            "execution(public String modelengine.fitframework.aop.interceptor.aspect.test.TestService1.m1())",
+            "execution(* modelengine.fitframework.aop.interceptor.aspect.test.*.m1(..))",
             "execution(java.lang.String m*())", "execution(java.lang.String *1())", "execution(* m1())"
     })
     void givenExpressionContainsExecutionWithNoParamThenProxyMatches(String exp) {
@@ -71,9 +71,9 @@ public class ExecutionMatcherTest {
     @DisplayName("当表达式有一个参数时，方法匹配器匹配成功")
     @ParameterizedTest
     @CsvSource({
-            "execution(public String com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.m2(String))",
-            "execution(* * com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.*(*))",
-            "execution(* com.huawei.fitframework.aop.interceptor.aspect.test.*.m2(..))",
+            "execution(public String modelengine.fitframework.aop.interceptor.aspect.test.TestService1.m2(String))",
+            "execution(* * modelengine.fitframework.aop.interceptor.aspect.test.TestService1.*(*))",
+            "execution(* modelengine.fitframework.aop.interceptor.aspect.test.*.m2(..))",
             "execution(java.lang.String m*(java.lang.String))", "execution(java.lang.String *2(String))",
             "execution(* m2(..))"
     })
@@ -90,11 +90,11 @@ public class ExecutionMatcherTest {
     @Test
     void givenExpressionContainsExecutionWithMultiParamsThenProxyMatches() {
         String[] expressions = {
-                "execution(public com.huawei.fitframework.aop.interceptor.aspect.test.TestParam"
-                        + " com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.m5("
-                        + "com.huawei.fitframework.aop.interceptor.aspect.test.TestParam, " + "java.util.List,"
+                "execution(public modelengine.fitframework.aop.interceptor.aspect.test.TestParam"
+                        + " modelengine.fitframework.aop.interceptor.aspect.test.TestService1.m5("
+                        + "modelengine.fitframework.aop.interceptor.aspect.test.TestParam, " + "java.util.List,"
                         + "int[]," + "java.util.Map))",
-                "execution(* * com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.*(" + "*, "
+                "execution(* * modelengine.fitframework.aop.interceptor.aspect.test.TestService1.*(" + "*, "
                         + "java.util.List," + "int[]," + "java.util.Map))", "execution(* m5(..))"
         };
         PointcutParameter[] parameters = new PointcutParameter[4];

@@ -9,4 +9,4 @@ databus:
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.data.repository'
+    - 'modelengine.fit.data.repository'

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 为 {@link com.huawei.fitframework.broker.client.Invoker.Filter} 提供空的实现。
+ * 为 {@link modelengine.fitframework.broker.client.Invoker.Filter} 提供空的实现。
  * <p>不进行任何过滤，直接返回输入的内容。</p>
  *
  * @author 梁济时

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  */
 @DisplayName("测试 MethodTypeInfo 类")
 class MethodTypeInfoTest {
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = MethodTypeInfo.TAG;
 
     @Nested

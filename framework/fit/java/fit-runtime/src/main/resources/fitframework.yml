@@ -85,5 +85,5 @@ matata:
 fit:
   beans:
     packages:
-    - 'com.huawei.fitframework'
-    - 'com.huawei.fit'
+    - 'modelengine.fitframework'
+    - 'modelengine.fit'

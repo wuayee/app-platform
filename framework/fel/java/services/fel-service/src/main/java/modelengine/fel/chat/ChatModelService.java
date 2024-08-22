@@ -21,6 +21,6 @@ public interface ChatModelService {
      * @param chatCompletion 表示聊天请求的 {@link ChatCompletion}。
      * @return 表示聊天模型生成结果的 {@link FlatChatMessage}。
      */
-    @Genericable(id = "com.huawei.jade.fel.chat.generate")
+    @Genericable(id = "modelengine.fel.chat.generate")
     FlatChatMessage generate(ChatCompletion chatCompletion);
 }

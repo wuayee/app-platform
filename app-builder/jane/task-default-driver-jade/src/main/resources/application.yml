@@ -2,8 +2,8 @@ fit:
   beans:
     packages:
       - 'com.huawei.fit.jane'
-      - 'com.huawei.fitframework'
-      - 'com.huawei.fit.integration'
+      - 'modelengine.fitframework'
+      - 'modelengine.fit.integration'
   datasource:
     primary: 'app-engine'
     instances:

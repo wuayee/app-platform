@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(PluginProperties.class)
-@ComponentScan(basePackages = "com.huawei.fitframework.starter.spring")
+@ComponentScan(basePackages = "modelengine.fitframework.starter.spring")
 public class SpringBootAutoConfiguration {
     private final ApplicationArguments args;
 

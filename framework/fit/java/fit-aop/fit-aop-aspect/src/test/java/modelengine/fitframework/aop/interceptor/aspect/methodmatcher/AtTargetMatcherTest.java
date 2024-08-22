@@ -73,7 +73,7 @@ public class AtTargetMatcherTest {
     @DisplayName("当表达式包含 @target 范围匹配时，返回信息匹配成功")
     @Test
     void givenParametersFilterMatchThenReturnMatches() {
-        String exp = "@target(com.huawei.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
+        String exp = "@target(modelengine.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
         Method method = AtTargetMatcherTest.this.service1M1Method;
         AspectMethodMatcher methodMatcher = new AspectMethodMatcher(exp, TestExecutionAspect.class, null);
         // 类匹配

@@ -98,7 +98,7 @@ public class ArgsMatcherTest {
         @ParameterizedTest
         @CsvSource({
                 "java.lang.String,m1_2",
-                "'com.huawei.fitframework.aop.interceptor.aspect.test.TestParam,java.util.List,int[],java.util.Map',"
+                "'modelengine.fitframework.aop.interceptor.aspect.test.TestParam,java.util.List,int[],java.util.Map',"
                         + "m1_5"
         })
         void givenParametersFilterMatchThenReturnMatches(String expressContent, String methodName) {

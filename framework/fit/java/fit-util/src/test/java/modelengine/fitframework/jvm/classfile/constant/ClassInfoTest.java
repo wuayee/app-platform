@@ -28,7 +28,7 @@ import java.io.InputStream;
  */
 @DisplayName("测试 ClassInfo 类")
 class ClassInfoTest {
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = ClassInfo.TAG;
 
     @Nested

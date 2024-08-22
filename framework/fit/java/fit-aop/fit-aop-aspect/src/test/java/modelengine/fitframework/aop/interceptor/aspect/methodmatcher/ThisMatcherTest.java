@@ -69,7 +69,7 @@ public class ThisMatcherTest {
     @Test
     @DisplayName("当表达式包含 this 范围匹配时，代理对象匹配成功")
     void givenExpressionContainsThisThenProxyMatches() {
-        String exp = "this(com.huawei.fitframework.aop.interceptor.aspect.test.TestService1)";
+        String exp = "this(modelengine.fitframework.aop.interceptor.aspect.test.TestService1)";
         PointcutParameter[] parameters = new PointcutParameter[1];
         AspectMethodMatcher methodMatcher = new AspectMethodMatcher(exp, TestExecutionAspect.class, parameters);
         boolean isCouldMatch = methodMatcher.couldMatch(TestService1.class);

@@ -93,9 +93,9 @@ class AspectParameterInjectionHelperTest {
             assertThat(joinPointTmp.getId()).isEqualTo(0);
             assertThat(joinPointTmp.toShortString()).isEqualTo("execution(TestService1.m2(..))");
             assertThat(joinPointTmp.toString()).isEqualTo(
-                    "execution(String com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.m2(String))");
+                    "execution(String modelengine.fitframework.aop.interceptor.aspect.test.TestService1.m2(String))");
             assertThat(joinPointTmp.toLongString()).isEqualTo(
-                    "execution(public java.lang.String com.huawei.fitframework.aop.interceptor.aspect.test"
+                    "execution(public java.lang.String modelengine.fitframework.aop.interceptor.aspect.test"
                             + ".TestService1.m2(java.lang.String))");
             assertThat(joinPointTmp.getStaticPart()).isEqualTo(joinPointTmp);
             assertThat(joinPointTmp.getTarget()).isEqualTo(TestService1.class);

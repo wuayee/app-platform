@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class MybatisTestListener implements TestListener {
     private static final Set<String> DEFAULT_SCAN_PACKAGES =
-            new HashSet<>(Arrays.asList("com.huawei.fitframework.transaction", "com.huawei.fit.integration.mybatis"));
+            new HashSet<>(Arrays.asList("modelengine.fitframework.transaction", "modelengine.fit.integration.mybatis"));
 
     @Override
     public Optional<TestContextConfiguration> config(Class<?> clazz) {

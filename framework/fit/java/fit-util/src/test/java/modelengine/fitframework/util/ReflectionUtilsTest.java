@@ -911,7 +911,7 @@ public class ReflectionUtilsTest {
             String actual1 = ReflectionUtils.toLongString(method);
             String actual2 = ReflectionUtils.toShortString(method);
             assertThat(actual1).isEqualTo(
-                    "public long com.huawei.fitframework.util.ReflectionUtilsTest$MockClass.exceptionMethod()");
+                    "public long modelengine.fitframework.util.ReflectionUtilsTest$MockClass.exceptionMethod()");
             assertThat(actual2).isEqualTo("MockClass.exceptionMethod()");
         }
     }
@@ -958,7 +958,7 @@ public class ReflectionUtilsTest {
             Method method = MockClass.class.getDeclaredMethod("exceptionMethod");
             String actual = ReflectionUtils.toString(method);
             assertThat(actual).isEqualTo(
-                    "long com.huawei.fitframework.util.ReflectionUtilsTest$MockClass.exceptionMethod()");
+                    "long modelengine.fitframework.util.ReflectionUtilsTest$MockClass.exceptionMethod()");
         }
 
         @Test
@@ -967,7 +967,7 @@ public class ReflectionUtilsTest {
             Method method = MockClass.class.getDeclaredMethod("getString", String.class);
             String actual = ReflectionUtils.toString(method);
             assertThat(actual).isEqualTo(
-                    "String com.huawei.fitframework.util.ReflectionUtilsTest$MockClass.getString(String)");
+                    "String modelengine.fitframework.util.ReflectionUtilsTest$MockClass.getString(String)");
         }
 
         @Test
@@ -986,7 +986,7 @@ public class ReflectionUtilsTest {
             Method method = MockClass.class.getDeclaredMethod("getArray", String[].class);
             String actual = ReflectionUtils.toString(method);
             assertThat(actual).isEqualTo(
-                    "String com.huawei.fitframework.util.ReflectionUtilsTest$MockClass.getArray(String[])");
+                    "String modelengine.fitframework.util.ReflectionUtilsTest$MockClass.getArray(String[])");
         }
 
         @Test
@@ -995,7 +995,7 @@ public class ReflectionUtilsTest {
             Method method = MockClass.class.getDeclaredMethod("getString", String.class, String.class);
             String actual = ReflectionUtils.toString(method);
             assertThat(actual).isEqualTo(
-                    "String com.huawei.fitframework.util.ReflectionUtilsTest$MockClass.getString(String,String)");
+                    "String modelengine.fitframework.util.ReflectionUtilsTest$MockClass.getString(String,String)");
         }
     }
 
@@ -1007,7 +1007,7 @@ public class ReflectionUtilsTest {
         void givenMethodHasParamsThenReturnMethodSignature() throws NoSuchMethodException {
             Method method = MockClass.class.getDeclaredMethod("getString", String.class, String.class);
             String actual = ReflectionUtils.signatureOf(method);
-            assertThat(actual).isEqualTo("com.huawei.fitframework.util.ReflectionUtilsTest$MockClass"
+            assertThat(actual).isEqualTo("modelengine.fitframework.util.ReflectionUtilsTest$MockClass"
                     + ".getString(java.lang.String, java.lang.String) : java.lang.String");
         }
 
@@ -1016,7 +1016,7 @@ public class ReflectionUtilsTest {
         void givenMethodNoParamsThenReturnMethodSignature() throws NoSuchMethodException {
             Method method = MockClass.class.getDeclaredMethod("getF3");
             String actual = ReflectionUtils.signatureOf(method);
-            assertThat(actual).isEqualTo("com.huawei.fitframework.util.ReflectionUtilsTest$MockClass.getF3() : long");
+            assertThat(actual).isEqualTo("modelengine.fitframework.util.ReflectionUtilsTest$MockClass.getF3() : long");
         }
     }
 

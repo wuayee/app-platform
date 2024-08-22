@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * <p>当调用的方法参数包含 {@link Validated} 注解时，会对该方法进行校验处理。当前存在两种场景包含该场景：
  * <ol>
  *     <li>方法参数直接包含 {@link Validated} 注解，此时校验的是该参数对象的字段。</li>
- *     <li>方法参数包含约束注解，如 {@link com.huawei.fitframework.validation.constraints.NotEmpty}，此时校验的是该参数对象。</li>
+ *     <li>方法参数包含约束注解，如 {@link modelengine.fitframework.validation.constraints.NotEmpty}，此时校验的是该参数对象。</li>
  * </ol>
  * </p>
  *

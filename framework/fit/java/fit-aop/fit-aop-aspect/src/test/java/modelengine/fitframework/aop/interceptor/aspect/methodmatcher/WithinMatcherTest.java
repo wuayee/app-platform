@@ -44,11 +44,11 @@ public class WithinMatcherTest {
     @DisplayName("当表达式包含 within 范围匹配时，对象匹配成功")
     @ParameterizedTest
     @CsvSource({
-            "within(com.huawei.fitframework.aop.interceptor.aspect.test.TestService1)",
-            "within(com.huawei.fitframework.aop.interceptor..TestService1)",
-            "within(com.huawei.fitframework.aop.interceptor..*)", "within(com.huawei.fitframework.aop.*.aspect.test.*)",
-            "within(com.huawei.fitframework.aop..aspect.test.*Service1)",
-            "within(com.huawei.fitframework.aop.interceptor.aspect.test.TestService*)"
+            "within(modelengine.fitframework.aop.interceptor.aspect.test.TestService1)",
+            "within(modelengine.fitframework.aop.interceptor..TestService1)",
+            "within(modelengine.fitframework.aop.interceptor..*)", "within(modelengine.fitframework.aop.*.aspect.test.*)",
+            "within(modelengine.fitframework.aop..aspect.test.*Service1)",
+            "within(modelengine.fitframework.aop.interceptor.aspect.test.TestService*)"
     })
     void givenExpressionContainsWithinThenProxyMatches(String exp) {
         PointcutParameter[] parameters = new PointcutParameter[1];

@@ -9,8 +9,8 @@ import com.huawei.databus.sdk.message.ApplyMemoryMessage;
 import com.huawei.databus.sdk.message.MessageHeader;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Validation;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 

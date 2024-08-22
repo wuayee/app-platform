@@ -9,7 +9,7 @@ import static modelengine.fitframework.inspection.Validation.notNull;
 import java.util.Map;
 
 /**
- * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 的原生 Json 对象实现。
+ * 表示 {@link modelengine.fitframework.json.schema.JsonSchema} 的原生 Json 对象实现。
  *
  * @author 季聿阶
  * @since 2024-04-05

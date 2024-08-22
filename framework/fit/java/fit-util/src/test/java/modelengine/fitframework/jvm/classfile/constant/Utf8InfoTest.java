@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  */
 @DisplayName("测试 Utf8Info 类")
 class Utf8InfoTest {
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = Utf8Info.TAG;
 
     @Nested

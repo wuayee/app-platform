@@ -40,7 +40,7 @@ class AnnotationListTest {
     @DisplayName("初始化 ClassFile 类")
     void init() throws IOException {
         try (InputStream inputStream = AnnotationListTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             this.constantPool = classFile.constants();
             this.attributes = classFile.attributes();
@@ -75,7 +75,7 @@ class AnnotationListTest {
     void givenClassFileThenReturnGetOfAnnotationList() {
         AnnotationInfo annotationInfo = this.lookup.annotations().get(U2.ZERO);
         String type = this.constantPool.get(annotationInfo.typeIndex()).toString();
-        assertThat(type).isEqualTo("Lcom/huawei/fitframework/jvm/test/AssignmentTarget;");
+        assertThat(type).isEqualTo("Lmodelengine/fitframework/jvm/test/AssignmentTarget;");
     }
 
     @Test

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 class StringInfoTest {
     private static final String STRING_TEST_VALUE = "aaaa";
 
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = StringInfo.TAG;
 
     @Nested

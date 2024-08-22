@@ -31,7 +31,7 @@ public class LangChainRunnableServiceImpl implements LangChainRunnableService {
     }
 
     @Override
-    @Fitable("com.huawei.jade.fel.plugin.langchain.runnable.invoke")
+    @Fitable("modelengine.fel.plugin.langchain.runnable.invoke")
     public Object invoke(String taskId, String fitableId, Object input) {
         return this.brokerClient.getRouter(Validation.notBlank(taskId, "The task id cannot be blank."))
                 .route(new FitableIdFilter(Validation.notBlank(fitableId, "The fitable id cannot be blank.")))

@@ -22,6 +22,6 @@ public interface ModelRerankService {
      * @param data 表示输入数据列表的 {@link List} {@code <}{@link FlatChunk}{@code >}。
      * @return 返回排序后的数据列表。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.rerank.model")
+    @Genericable(id = "modelengine.fel.rag.rerank.model")
     List<FlatChunk> rerank(String query, List<FlatChunk> data);
 }

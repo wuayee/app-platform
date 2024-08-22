@@ -24,7 +24,7 @@ public interface ToolProvider {
      * @param toolContext 表示自定义工具上下文的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      * @return 表示工具调用结果的 {@link FlatChatMessage}。
      */
-    @Genericable("com.huawei.jade.fel.spi.tool.call")
+    @Genericable("modelengine.fel.spi.tool.call")
     FlatChatMessage call(ToolCall toolCall, Map<String, Object> toolContext);
 
     /**
@@ -33,6 +33,6 @@ public interface ToolProvider {
      * @param name 表示工具名的 {@link List}{@code <}{@link String}{@code >}。
      * @return 表示工具对象列表列表的 {@link List}{@code <}{@link Tool}{@code >}。
      */
-    @Genericable("com.huawei.jade.fel.spi.tool.get")
+    @Genericable("modelengine.fel.spi.tool.get")
     List<Tool> getTool(List<String> name);
 }

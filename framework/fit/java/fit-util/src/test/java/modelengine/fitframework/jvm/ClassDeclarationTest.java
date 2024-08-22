@@ -31,7 +31,7 @@ class ClassDeclarationTest {
     @DisplayName("初始化 ClassDeclaration 类")
     void init() throws IOException {
         try (InputStream inputStream = ClassDeclarationTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             this.declaration = new DefaultClassDeclaration(classFile);
         }
@@ -48,7 +48,7 @@ class ClassDeclarationTest {
     @DisplayName("测试 ClassDeclaration 类 toString 方法，返回其名称")
     void givenClassFileThenReturnToString() {
         String name = this.declaration.toString();
-        assertThat(name).isEqualTo("com.huawei.fitframework.jvm.test.AttributeTarget");
+        assertThat(name).isEqualTo("modelengine.fitframework.jvm.test.AttributeTarget");
     }
 
     @Test

@@ -26,7 +26,7 @@ class ClassFileTest {
     @DisplayName("当提供 class 文件时，返回正常 ClassFile 信息")
     void givenJavaClassThenReturnParseInfo() throws IOException {
         try (InputStream inputStream = ClassFileTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             assertThat(classFile).isNotNull();
         }

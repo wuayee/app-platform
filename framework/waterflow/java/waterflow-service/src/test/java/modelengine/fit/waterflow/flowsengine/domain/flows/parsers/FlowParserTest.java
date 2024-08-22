@@ -260,7 +260,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
         Assertions.assertTrue(flowJober instanceof FlowGenericableJober);
         FlowGenericableJober genericableJober = (FlowGenericableJober) flowJober;
         Assertions.assertTrue(flowJober.getFitables().contains(genericableJober.getFitableId()));
-        Assertions.assertEquals("com.huawei.fit.demo.flow.helloWorld", genericableJober.getGenericableConfig().getId());
+        Assertions.assertEquals("modelengine.fit.demo.flow.helloWorld", genericableJober.getGenericableConfig().getId());
         Assertions.assertEquals(1, genericableJober.getGenericableConfig().getParams().size());
         Assertions.assertEquals("name", genericableJober.getGenericableConfig().getParams().get(0));
     }
@@ -297,7 +297,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
         Assertions.assertEquals(FlowCallbackType.GENERAL_CALLBACK, callback.getType());
         Assertions.assertTrue(callback.getFilteredKeys().isEmpty());
         Assertions.assertEquals(1, callback.getFitables().size());
-        Assertions.assertEquals("com.huawei.fit.jober.fitable.FlowInfoCallback", callback.getFitables().toArray()[0]);
+        Assertions.assertEquals("modelengine.fit.jober.fitable.FlowInfoCallback", callback.getFitables().toArray()[0]);
         Assertions.assertTrue(callback.getProperties().isEmpty());
     }
 

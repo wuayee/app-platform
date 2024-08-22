@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class InvokeDynamicInfoTest {
     private static final int DYNAMIC_TEST_VALUE = 0;
 
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = InvokeDynamicInfo.TAG;
 
     @Nested

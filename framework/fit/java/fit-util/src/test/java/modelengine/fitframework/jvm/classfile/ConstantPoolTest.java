@@ -40,7 +40,7 @@ class ConstantPoolTest {
     @DisplayName("初始化 ConstantPool 类")
     void init() throws IOException {
         try (InputStream inputStream = ConstantPoolTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             this.pool = classFile.constants();
         }
@@ -50,7 +50,7 @@ class ConstantPoolTest {
     @DisplayName("提供空类对象时，返回固定长度常量池常量数量")
     void givenEmptyClassShouldReturnFixedPoolCount() throws IOException {
         try (InputStream inputStream = ConstantPoolTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/EmptyTest.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/EmptyTest.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             int count = classFile.constants().count().intValue();
             assertThat(count).isEqualTo(EMPTY_CLASS_CONSTANT_POOL_SIZE);

@@ -67,11 +67,11 @@ class ConsoleLoggerTest {
     }
 
     @Nested
-    @DisplayName("当把 'com.huawei.fitframework.log' 包下的所有日志级别调整为错误级别之后")
+    @DisplayName("当把 'modelengine.fitframework.log' 包下的所有日志级别调整为错误级别之后")
     class AfterSetParentLevelsToError {
         @BeforeEach
         void setup() {
-            Loggers.getFactory().setLevels("com.huawei.fitframework.log", Logger.Level.ERROR);
+            Loggers.getFactory().setLevels("modelengine.fitframework.log", Logger.Level.ERROR);
         }
 
         @Test
@@ -100,11 +100,11 @@ class ConsoleLoggerTest {
     }
 
     @Nested
-    @DisplayName("当把 'com.huawei.fitframework.log.console' 包下的所有日志级别调整为错误级别之后")
+    @DisplayName("当把 'modelengine.fitframework.log.console' 包下的所有日志级别调整为错误级别之后")
     class AfterSetCurrentLevelsToError {
         @BeforeEach
         void setup() {
-            Loggers.getFactory().setLevels("com.huawei.fitframework.log.console", Logger.Level.ERROR);
+            Loggers.getFactory().setLevels("modelengine.fitframework.log.console", Logger.Level.ERROR);
         }
 
         @Test
@@ -133,11 +133,11 @@ class ConsoleLoggerTest {
     }
 
     @Nested
-    @DisplayName("当把 'com.huawei.fitframework.log.console.sample' 包下的所有日志级别调整为错误级别之后")
+    @DisplayName("当把 'modelengine.fitframework.log.console.sample' 包下的所有日志级别调整为错误级别之后")
     class AfterSetChildLevelsToError {
         @BeforeEach
         void setup() {
-            Loggers.getFactory().setLevels("com.huawei.fitframework.log.console.sample", Logger.Level.ERROR);
+            Loggers.getFactory().setLevels("modelengine.fitframework.log.console.sample", Logger.Level.ERROR);
         }
 
         @Test

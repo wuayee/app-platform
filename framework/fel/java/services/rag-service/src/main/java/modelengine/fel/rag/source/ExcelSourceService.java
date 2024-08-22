@@ -17,7 +17,7 @@ public interface ExcelSourceService {
      *
      * @param options 表示读取相关参数 {@link ExcelSourceOptions}。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.source.excel.load")
+    @Genericable(id = "modelengine.fel.rag.source.excel.load")
     void load(ExcelSourceOptions options);
 
     /**
@@ -25,6 +25,6 @@ public interface ExcelSourceService {
      *
      * @param options 表示读取相关参数 {@link ExcelSourceOptions}。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.source.excel.parse")
+    @Genericable(id = "modelengine.fel.rag.source.excel.parse")
     void parseContent(ExcelSourceOptions options);
 }

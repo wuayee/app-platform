@@ -56,7 +56,7 @@ import java.util.Locale;
  * @author 何嘉斌
  * @since 2024-07-26
  */
-@IntegrationTest(scanPackages = {"com.huawei.jade.app.engine.eval", "com.huawei.fitframework.transaction"})
+@IntegrationTest(scanPackages = {"com.huawei.jade.app.engine.eval", "modelengine.fitframework.transaction"})
 @Sql(scripts = "sql/test_create_table.sql")
 @DisplayName("评估数据集成测试")
 public class EvalDataIntegrationTest {

@@ -69,7 +69,7 @@ public class TargetMatcherTest {
     @Test
     @DisplayName("当表达式包含 target 范围匹配时，被代理对象匹配成功")
     void givenExpressionContainsTargetThenProxyMatches() {
-        String exp = "target(com.huawei.fitframework.aop.interceptor.aspect.test.TestService1)";
+        String exp = "target(modelengine.fitframework.aop.interceptor.aspect.test.TestService1)";
         PointcutParameter[] parameters = new PointcutParameter[1];
         AspectMethodMatcher methodMatcher = new AspectMethodMatcher(exp, TestExecutionAspect.class, parameters);
         boolean isCouldMatch = methodMatcher.couldMatch(TestService1.class);

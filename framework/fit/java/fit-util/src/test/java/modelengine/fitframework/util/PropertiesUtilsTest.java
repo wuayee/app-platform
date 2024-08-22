@@ -56,7 +56,7 @@ public class PropertiesUtilsTest {
                             .hasSize(1)
                             .element(0);
                     genericable1.extracting("id").isEqualTo("g1");
-                    genericable1.extracting("name").isEqualTo("com.huawei.fit.G1");
+                    genericable1.extracting("name").isEqualTo("modelengine.fit.G1");
                     genericable1.extracting("tags").asList().containsSequence("t1", "t2");
                     genericable1.extracting("route").isEqualTo("a1");
                     genericable1.extracting("trust")
@@ -65,7 +65,7 @@ public class PropertiesUtilsTest {
                             .hasFieldOrPropertyWithValue("after", "after")
                             .hasFieldOrPropertyWithValue("error", "error");
                     ObjectAssert<Object> fitable1 = genericable1.extracting("fitables").asList().hasSize(1).element(0);
-                    fitable1.hasFieldOrPropertyWithValue("id", "com.huawei.fit.F1.f1");
+                    fitable1.hasFieldOrPropertyWithValue("id", "modelengine.fit.F1.f1");
                     fitable1.extracting("tags").asList().containsSequence("f1", "f2");
                     fitable1.extracting("aliases").asList().containsSequence("a1", "a2");
                 }
@@ -120,7 +120,7 @@ public class PropertiesUtilsTest {
                             .hasSize(1)
                             .element(0);
                     genericable1.extracting("id").isEqualTo("g1");
-                    genericable1.extracting("name").isEqualTo("com.huawei.fit.G1");
+                    genericable1.extracting("name").isEqualTo("modelengine.fit.G1");
                     genericable1.extracting("tags").asList().containsSequence("t1", "t2");
                     genericable1.extracting("route").isEqualTo("a1");
                     genericable1.extracting("trust")
@@ -129,7 +129,7 @@ public class PropertiesUtilsTest {
                             .hasFieldOrPropertyWithValue("after", "after")
                             .hasFieldOrPropertyWithValue("error", "error");
                     ObjectAssert<Object> fitable1 = genericable1.extracting("fitables").asList().hasSize(1).element(0);
-                    fitable1.hasFieldOrPropertyWithValue("id", "com.huawei.fit.F1.f1");
+                    fitable1.hasFieldOrPropertyWithValue("id", "modelengine.fit.F1.f1");
                     fitable1.extracting("tags").asList().containsSequence("f1", "f2");
                     fitable1.extracting("aliases").asList().containsSequence("a1", "a2");
                 }
@@ -176,7 +176,7 @@ public class PropertiesUtilsTest {
                             .hasSize(1)
                             .element(0);
                     genericable1.extracting("id").isEqualTo("g1");
-                    genericable1.extracting("name").isEqualTo("com.huawei.fit.G1");
+                    genericable1.extracting("name").isEqualTo("modelengine.fit.G1");
                     genericable1.extracting("tags").asList().containsSequence("t1", "t2");
                     genericable1.extracting("route").isEqualTo("a1");
                     genericable1.extracting("trust")
@@ -185,7 +185,7 @@ public class PropertiesUtilsTest {
                             .hasFieldOrPropertyWithValue("after", "after")
                             .hasFieldOrPropertyWithValue("error", "error");
                     ObjectAssert<Object> fitable1 = genericable1.extracting("fitables").asList().hasSize(1).element(0);
-                    fitable1.hasFieldOrPropertyWithValue("id", "com.huawei.fit.F1.f1");
+                    fitable1.hasFieldOrPropertyWithValue("id", "modelengine.fit.F1.f1");
                     fitable1.extracting("tags").asList().containsSequence("f1", "f2");
                     fitable1.extracting("aliases").asList().containsSequence("a1", "a2");
                 }
@@ -209,20 +209,20 @@ public class PropertiesUtilsTest {
                     genericables.hasSize(2);
                     ObjectAssert<Object> genericable1 = genericables.element(0);
                     genericable1.extracting("id").isEqualTo("g1");
-                    genericable1.extracting("name").isEqualTo("com.huawei.fit.G1");
+                    genericable1.extracting("name").isEqualTo("modelengine.fit.G1");
                     genericable1.extracting("tags").asList().containsSequence("t1", "t2");
                     genericable1.extracting("route").isEqualTo("a1");
                     ObjectAssert<Object> fitable1 = genericable1.extracting("fitables").asList().hasSize(1).element(0);
-                    fitable1.hasFieldOrPropertyWithValue("id", "com.huawei.fit.F1.f1");
+                    fitable1.hasFieldOrPropertyWithValue("id", "modelengine.fit.F1.f1");
                     fitable1.extracting("tags").asList().containsSequence("f1", "f2");
                     fitable1.extracting("aliases").asList().containsSequence("a1", "a2");
                     ObjectAssert<Object> genericable2 = genericables.element(1);
                     genericable2.extracting("id").isEqualTo("g2");
-                    genericable2.extracting("name").isEqualTo("com.huawei.fit.G2");
+                    genericable2.extracting("name").isEqualTo("modelengine.fit.G2");
                     genericable2.extracting("tags").asList().containsSequence("t1", "t2");
                     genericable2.extracting("route").isEqualTo("a3");
                     ObjectAssert<Object> fitable2 = genericable2.extracting("fitables").asList().hasSize(1).element(0);
-                    fitable2.hasFieldOrPropertyWithValue("id", "com.huawei.fit.F1.f2");
+                    fitable2.hasFieldOrPropertyWithValue("id", "modelengine.fit.F1.f2");
                     fitable2.extracting("tags").asList().containsSequence("f1", "f2");
                     fitable2.extracting("aliases").asList().containsSequence("a3", "a4");
                 }

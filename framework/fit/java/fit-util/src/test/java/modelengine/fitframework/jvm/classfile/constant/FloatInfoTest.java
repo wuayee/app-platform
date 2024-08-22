@@ -27,7 +27,7 @@ import java.util.Arrays;
 class FloatInfoTest {
     private static final Float FLOAT_TEST_VALUE = 11.2f;
 
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = FloatInfo.TAG;
 
     @Nested

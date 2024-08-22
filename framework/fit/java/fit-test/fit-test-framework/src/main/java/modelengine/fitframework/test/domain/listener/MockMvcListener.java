@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class MockMvcListener implements TestListener {
     private static final Set<String> DEFAULT_SCAN_PACKAGES =
-            new HashSet<>(Arrays.asList("com.huawei.fit.server", "com.huawei.fit.http"));
+            new HashSet<>(Arrays.asList("modelengine.fit.server", "modelengine.fit.http"));
 
     private final int port;
 

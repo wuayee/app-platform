@@ -32,7 +32,7 @@ class GenericableUtilsTest {
         String methodName = "process";
         Class<?>[] parameterTypes = {Integer.class, String.class};
         String genericableId = GenericableUtils.getGenericableId(GenericableTest.class, methodName, parameterTypes);
-        String expected = "java.util.List " + "com.huawei.fitframework.util.GenericableUtilsTest$GenericableTest"
+        String expected = "java.util.List " + "modelengine.fitframework.util.GenericableUtilsTest$GenericableTest"
                 + ".process(java.lang.Integer,java.lang.String)";
         assertThat(genericableId).isEqualTo(expected);
     }

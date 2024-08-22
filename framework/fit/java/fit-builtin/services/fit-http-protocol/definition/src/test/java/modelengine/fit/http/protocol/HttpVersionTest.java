@@ -50,7 +50,7 @@ public class HttpVersionTest {
     class GivenEnum {
         @DisplayName("调用 Get 方法获取对应的属性值")
         @ParameterizedTest(name = "{0} 的协议为 {1}，主版本号为 {2}，次版本号为 {3}，显示字符串为 {4}")
-        @MethodSource("com.huawei.fit.http.protocol.HttpVersionTest#httpVersionProvider")
+        @MethodSource("modelengine.fit.http.protocol.HttpVersionTest#httpVersionProvider")
         void whenGetProtocolThenReturnCorrectProtocol(HttpVersion httpVersion, String protocol, int major, int minor,
                 String display) {
             assertThat(httpVersion.protocol()).isEqualTo(protocol);

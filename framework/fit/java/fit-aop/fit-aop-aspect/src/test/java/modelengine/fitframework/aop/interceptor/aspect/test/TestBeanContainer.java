@@ -66,7 +66,7 @@ public class TestBeanContainer extends AbstractDisposable implements BeanContain
         Before before = mock(Before.class);
         when(annotations.getAnnotation(Before.class)).thenReturn(before);
         when(before.value()).thenReturn(
-                "execution(String com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.m1())");
+                "execution(String modelengine.fitframework.aop.interceptor.aspect.test.TestService1.m1())");
         AnnotationMetadata am1 = mock(AnnotationMetadata.class);
         when(am1.isAnnotationPresent(eq(Aspect.class))).thenReturn(true);
         Aspect aspectAnnotation = mock(Aspect.class);

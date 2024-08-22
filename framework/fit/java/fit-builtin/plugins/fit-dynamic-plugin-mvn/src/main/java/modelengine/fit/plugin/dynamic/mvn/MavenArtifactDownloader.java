@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public interface MavenArtifactDownloader {
     /**
-     * 下载指定坐标的 Jar 文件，下载到本地形成一个去掉 {@link com.huawei.fitframework.protocol.jar.Jar#FILE_EXTENSION} 的文件。
+     * 下载指定坐标的 Jar 文件，下载到本地形成一个去掉 {@link modelengine.fitframework.protocol.jar.Jar#FILE_EXTENSION} 的文件。
      *
      * @param groupId 表示 Jar 的分组名的 {@link String}。
      * @param artifactId 表示 Jar 的名字的 {@link String}。

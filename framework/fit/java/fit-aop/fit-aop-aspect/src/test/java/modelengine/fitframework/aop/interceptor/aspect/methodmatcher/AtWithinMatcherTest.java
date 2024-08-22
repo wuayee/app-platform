@@ -61,7 +61,7 @@ public class AtWithinMatcherTest {
     @ParameterizedTest
     @CsvSource({"has_annotation", "m3_extends"})
     void givenExpressionContainsAnnotationThenMethodMatchesSuccessfully(String methodName) {
-        String exp = "@within(com.huawei.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
+        String exp = "@within(modelengine.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
         AspectMethodMatcher methodMatcher =
                 new AspectMethodMatcher(exp, TestExecutionAspect.class, new PointcutParameter[0]);
         boolean isCouldMatch = methodMatcher.couldMatch(TestService3.class);
@@ -74,7 +74,7 @@ public class AtWithinMatcherTest {
     @ParameterizedTest
     @CsvSource({"no_annotation", "m3_override", "m3_selfMethod"})
     void givenExpressionContainsAnnotationThenMethodMatchesFailed(String methodName) {
-        String exp = "@within(com.huawei.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
+        String exp = "@within(modelengine.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
         AspectMethodMatcher methodMatcher =
                 new AspectMethodMatcher(exp, TestExecutionAspect.class, new PointcutParameter[0]);
         boolean isCouldMatch = methodMatcher.couldMatch(TestService3.class);

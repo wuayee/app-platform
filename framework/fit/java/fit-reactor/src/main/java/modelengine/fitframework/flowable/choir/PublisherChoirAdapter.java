@@ -11,7 +11,7 @@ import modelengine.fitframework.flowable.Subscriber;
 import modelengine.fitframework.inspection.Nonnull;
 
 /**
- * 表示 {@link com.huawei.fitframework.flowable.Choir} 的指定 {@link Publisher} 的适配。
+ * 表示 {@link modelengine.fitframework.flowable.Choir} 的指定 {@link Publisher} 的适配。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
  * @author 季聿阶

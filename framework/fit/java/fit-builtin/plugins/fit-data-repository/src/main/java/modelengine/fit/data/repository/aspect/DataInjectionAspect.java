@@ -75,7 +75,7 @@ public class DataInjectionAspect {
         this.validationService = notNull(validationService, "The validation service cannot be null.");
     }
 
-    @Around(pointcut = "@annotation(com.huawei.fit.data.repository.annotation.DataInjection)")
+    @Around(pointcut = "@annotation(modelengine.fit.data.repository.annotation.DataInjection)")
     private Object aroundDataInjectionMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         DataInjection dataInjection = joinPoint.getMethod().getDeclaredAnnotation(DataInjection.class);
@@ -201,16 +201,16 @@ public class DataInjectionAspect {
     }
 
     private Object getActualValue(String actualValueId, String targetWorkerId) {
-        Metadata metadata = cast(this.invokeRepositoryMethod("com.huawei.fit.bigdata.cache.read.meta",
+        Metadata metadata = cast(this.invokeRepositoryMethod("modelengine.fit.bigdata.cache.read.meta",
                 targetWorkerId,
                 actualValueId));
         if (!StringUtils.equals(this.workerId, targetWorkerId)) {
             this.validationService.validateCapacity(metadata.getLength());
         }
         if (Objects.equals(metadata.getType(), MetadataType.STRING.code())) {
-            return this.invokeRepositoryMethod("com.huawei.fit.bigdata.cache.read.str", targetWorkerId, actualValueId);
+            return this.invokeRepositoryMethod("modelengine.fit.bigdata.cache.read.str", targetWorkerId, actualValueId);
         } else if (Objects.equals(metadata.getType(), MetadataType.BYTES.code())) {
-            return this.invokeRepositoryMethod("com.huawei.fit.bigdata.cache.read.bytes",
+            return this.invokeRepositoryMethod("modelengine.fit.bigdata.cache.read.bytes",
                     targetWorkerId,
                     actualValueId);
         } else {
@@ -264,7 +264,7 @@ public class DataInjectionAspect {
     }
 
     private void deleteCache(CacheKeyMetadata cacheKeyMetadata) {
-        this.invokeRepositoryMethod("com.huawei.fit.bigdata.cache.delete",
+        this.invokeRepositoryMethod("modelengine.fit.bigdata.cache.delete",
                 cacheKeyMetadata.getWorkerId(),
                 cacheKeyMetadata.getCacheKeyId());
     }

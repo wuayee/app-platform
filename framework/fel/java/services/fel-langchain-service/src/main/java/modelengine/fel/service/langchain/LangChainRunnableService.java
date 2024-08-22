@@ -21,6 +21,6 @@ public interface LangChainRunnableService {
      * @param input 表示输入数据的 {@link Object}。
      * @return 表示输出数据的 {@link Object}。
      */
-    @Genericable(id = "com.huawei.jade.fel.service.langchain.runnable")
+    @Genericable(id = "modelengine.fel.service.langchain.runnable")
     Object invoke(String taskId, String fitableId, Object input);
 }

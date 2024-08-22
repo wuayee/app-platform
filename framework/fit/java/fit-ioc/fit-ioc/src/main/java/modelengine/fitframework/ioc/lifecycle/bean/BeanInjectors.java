@@ -29,7 +29,7 @@ public class BeanInjectors {
      * @param supplier 表示待注入的值的提供程序的 {@link ValueSupplier}。
      * @return 表示用以向指定字段设置值的Bean注入程序的 {@link BeanInjector}。
      * @throws IllegalArgumentException {@code field} 为 {@code null}。
-     * @throws com.huawei.fitframework.ioc.BeanDefinitionException {@code field} 被 {@code final} 或 {@code static} 修饰。
+     * @throws modelengine.fitframework.ioc.BeanDefinitionException {@code field} 被 {@code final} 或 {@code static} 修饰。
      */
     public static BeanInjector field(Field field, ValueSupplier supplier) {
         return new FieldBeanInjector(field, supplier);
@@ -42,7 +42,7 @@ public class BeanInjectors {
      * @param values 表示待注入的值的 {@link Object}{@code []}。
      * @return 表示用以向指定方法注入值的Bean注入程序的 {@link BeanInjector}。
      * @throws IllegalArgumentException {@code method} 为 {@code null}。
-     * @throws com.huawei.fitframework.ioc.BeanDefinitionException {@code method} 被 {@code static} 修饰。
+     * @throws modelengine.fitframework.ioc.BeanDefinitionException {@code method} 被 {@code static} 修饰。
      */
     public static BeanInjector method(Method method, Object... values) {
         return new MethodBeanInjector(method, values);

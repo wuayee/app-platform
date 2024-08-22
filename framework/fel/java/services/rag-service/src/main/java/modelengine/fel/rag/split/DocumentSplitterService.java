@@ -23,6 +23,6 @@ public interface DocumentSplitterService {
      * @param options 表示检索服务超参数的 {@link SplitOptions}。
      * @return 表示切分后内容的 {@link List}{@code <}{@link FlatChunk}{@code >}。
      */
-    @Genericable(id = "com.huawei.jade.fel.rag.split.tokensplit")
+    @Genericable(id = "modelengine.fel.rag.split.tokensplit")
     List<FlatChunk> split(List<FlatDocument> input, SplitOptions options);
 }

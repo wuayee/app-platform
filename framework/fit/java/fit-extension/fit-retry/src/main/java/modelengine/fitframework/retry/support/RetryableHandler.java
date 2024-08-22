@@ -47,7 +47,7 @@ public class RetryableHandler {
         this.beanContainer = beanContainer;
     }
 
-    @Around("@annotation(com.huawei.fitframework.retry.annotation.Retryable)")
+    @Around("@annotation(modelengine.fitframework.retry.annotation.Retryable)")
     private Object handle(ProceedingJoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         if (!(signature instanceof MethodSignature)) {

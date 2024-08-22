@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  */
 @EnableMockMvc
 @FitTestWithJunit(includeClasses = Include1.class, excludeClasses = Exclude1.class)
-@ScanPackages("com.huawei.fitframework.test.beans")
+@ScanPackages("modelengine.fitframework.test.beans")
 @DisplayName("测试测试框架自身")
 public class SampleTest {
     @Fit

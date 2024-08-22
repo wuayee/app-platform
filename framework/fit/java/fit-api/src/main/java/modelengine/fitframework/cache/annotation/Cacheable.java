@@ -51,7 +51,7 @@ public @interface Cacheable {
      * </ul></p>
      * <p>默认缓存键生成方法为：
      * <ul>
-     *     <li>如果没有参数，则使用 {@link com.huawei.fitframework.util.StringUtils#EMPTY} 的信息作为键；</li>
+     *     <li>如果没有参数，则使用 {@link modelengine.fitframework.util.StringUtils#EMPTY} 的信息作为键；</li>
      *     <li>如果只有一个参数，则使用唯一的参数的信息作为键；</li>
      *     <li>如果有超过一个参数，则使用所有参数的整合信息作为键。</li>
      * </ul>

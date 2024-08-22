@@ -27,7 +27,7 @@ import java.util.Arrays;
 class DoubleInfoTest {
     private static final Double DOUBLE_TEST_VALUE = 12.1;
 
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = DoubleInfo.TAG;
 
     @Nested

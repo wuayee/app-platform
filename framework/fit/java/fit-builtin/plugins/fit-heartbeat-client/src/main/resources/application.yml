@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.heartbeat.client'
+    - 'modelengine.fit.heartbeat.client'

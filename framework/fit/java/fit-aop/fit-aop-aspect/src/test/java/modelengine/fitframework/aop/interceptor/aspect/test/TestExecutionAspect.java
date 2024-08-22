@@ -16,10 +16,10 @@ import modelengine.fitframework.aop.annotation.Pointcut;
  */
 @Aspect
 public class TestExecutionAspect {
-    @Before("execution(String com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.m1())")
+    @Before("execution(String modelengine.fitframework.aop.interceptor.aspect.test.TestService1.m1())")
     private void before1() {}
 
-    @Pointcut(pointcut = "execution(String com.huawei.fitframework.aop.interceptor.aspect.test.TestService1.*(..))")
+    @Pointcut(pointcut = "execution(String modelengine.fitframework.aop.interceptor.aspect.test.TestService1.*(..))")
     private void pointcut1() {}
 
     @Pointcut(pointcut = "this(service1) && args(name)", argNames = "service1,name")

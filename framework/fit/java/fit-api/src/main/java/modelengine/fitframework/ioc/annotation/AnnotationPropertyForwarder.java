@@ -13,7 +13,7 @@ import java.util.Optional;
  * <ul>
  *     <li>首先，实现该接口</li>
  *     <li>然后，在JAR包中的 {@code META-INF/services} 目录下增加
- *     {@code com.huawei.fitframework.ioc.annotation.AnnotationPropertyForwarder} 文件</li>
+ *     {@code modelengine.fitframework.ioc.annotation.AnnotationPropertyForwarder} 文件</li>
  *     <li>最后，将实现类的全名写入到该文件中，若存在多个实现类，每个实现类单独一行</li>
  * </ul>
  * <note>实现类所在的JAR需要与 {@code fit-ioc} 的JAR在相同的 {@link ClassLoader} 中被加载。</note>

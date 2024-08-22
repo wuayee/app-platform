@@ -219,7 +219,7 @@ public final class StringUtils {
      * @param format 表示格式化字符串的 {@link String}。
      * @param args 表示用以格式化字符串的参数的 {@link Object}{@code []}。如果参数中存在 {@code null}，其对应的格式化后会变成空字符串。
      * @return 表示格式化得到的字符串的 {@link String}。
-     * @throws com.huawei.fitframework.parameterization.StringFormatException 所提供的格式化字符串与格式化参数不匹配。
+     * @throws modelengine.fitframework.parameterization.StringFormatException 所提供的格式化字符串与格式化参数不匹配。
      */
     public static String format(String format, Object... args) {
         if (isBlank(format)) {

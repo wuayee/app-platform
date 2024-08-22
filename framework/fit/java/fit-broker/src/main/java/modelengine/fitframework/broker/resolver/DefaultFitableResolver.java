@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 /**
  * 表示 {@link LocalExecutorResolver} 的默认解析器。
- * <p>该解析器解析没有 {@link com.huawei.fitframework.annotation.Fitable} 注解的本地方法。</p>
+ * <p>该解析器解析没有 {@link modelengine.fitframework.annotation.Fitable} 注解的本地方法。</p>
  *
  * @author 季聿阶
  * @since 2022-07-04

@@ -27,7 +27,7 @@ import java.util.Arrays;
 class IntegerInfoTest {
     private static final Integer INTEGER_TEST_VALUE = 10;
 
-    private final String url = "com/huawei/fitframework/jvm/test/AttributeTarget.class";
+    private final String url = "modelengine/fitframework/jvm/test/AttributeTarget.class";
     private final U1 tag = IntegerInfo.TAG;
 
     @Nested

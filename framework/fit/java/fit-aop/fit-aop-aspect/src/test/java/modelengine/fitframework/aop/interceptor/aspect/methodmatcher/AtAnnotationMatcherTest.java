@@ -79,7 +79,7 @@ public class AtAnnotationMatcherTest {
         @DisplayName("当表达式包含 @Annotation 范围匹配时，返回信息匹配成功")
         @Test
         void givenParametersFilterMatchThenReturnMatches() {
-            String exp = "@annotation(com.huawei.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
+            String exp = "@annotation(modelengine.fitframework.aop.interceptor.aspect.test.TestAnnotation)";
             Method method = AtAnnotationMatcherTest.this.service1M3Method;
             AspectMethodMatcher methodMatcher = new AspectMethodMatcher(exp, TestExecutionAspect.class, null);
             // 类匹配

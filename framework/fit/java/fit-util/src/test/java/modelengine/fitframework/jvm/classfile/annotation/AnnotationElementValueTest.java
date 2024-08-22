@@ -42,7 +42,7 @@ class AnnotationElementValueTest {
     @DisplayName("初始化 ClassFile 类")
     void init() throws IOException {
         try (InputStream inputStream = AnnotationListTest.class.getClassLoader()
-                .getResourceAsStream("com/huawei/fitframework/jvm/test/AttributeTarget.class")) {
+                .getResourceAsStream("modelengine/fitframework/jvm/test/AttributeTarget.class")) {
             ClassFile classFile = new ClassFile(inputStream);
             AttributeList attributes = classFile.attributes();
             this.lookup = RuntimeVisibleAnnotationsAttribute.lookup(attributes);
@@ -56,7 +56,7 @@ class AnnotationElementValueTest {
             while (annotations.hasNext()) {
                 AnnotationInfo annotationInfo = annotations.next();
                 String typeIndex = classFile.constants().get(annotationInfo.typeIndex()).toString();
-                if (Objects.equals(typeIndex, "Lcom/huawei/fitframework/jvm/test/AssignmentTarget;")) {
+                if (Objects.equals(typeIndex, "Lmodelengine/fitframework/jvm/test/AssignmentTarget;")) {
                     annotationTmp = annotationInfo;
                     break;
                 }
@@ -281,7 +281,7 @@ class AnnotationElementValueTest {
                     getElementValue(AnnotationElementValueTest.this.pairList, "fruitColor");
             ConstantPool pool = AnnotationElementValueTest.this.pairList.annotation().file().constants();
             String value = pool.get(enumValue.typeNameIndex()).toString();
-            assertThat(value).isEqualTo("Lcom/huawei/fitframework/jvm/test/AssignmentTarget$EnumValue;");
+            assertThat(value).isEqualTo("Lmodelengine/fitframework/jvm/test/AssignmentTarget$EnumValue;");
         }
     }
 
@@ -347,7 +347,7 @@ class AnnotationElementValueTest {
     @Nested
     @DisplayName("测试内部类：AnnotationValue")
     class TestAnnotationValue {
-        private static final String VALUE = "Lcom/huawei/fitframework/jvm/test/NestAssignmentTarget;";
+        private static final String VALUE = "Lmodelengine/fitframework/jvm/test/NestAssignmentTarget;";
 
         @Test
         @DisplayName("提供 AnnotationElementValue.AnnotationValue 类时，返回注解元素信息")

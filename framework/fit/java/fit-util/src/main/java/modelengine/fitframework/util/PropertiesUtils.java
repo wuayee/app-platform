@@ -85,11 +85,11 @@ public class PropertiesUtils {
      * <p>例如：
      * <pre>
      *     genericables[0].id=g1
-     *     genericables[0].name=com.huawei.fit.G1
+     *     genericables[0].name=modelengine.fit.G1
      *     genericables[0].tags[0]=t1
      *     genericables[0].tags[1]=t2
      *     genericables[0].route=a1
-     *     genericables[0].fitables[0].id=com.huawei.fit.F1.f1
+     *     genericables[0].fitables[0].id=modelengine.fit.F1.f1
      *     genericables[0].fitables[0].tags[0]=f1
      *     genericables[0].fitables[0].tags[1]=f2
      *     genericables[0].fitables[0].aliases[0]=a1
@@ -101,12 +101,12 @@ public class PropertiesUtils {
      *         "genericables": [
      *             {
      *                 "id": "g1",
-     *                 "name": "com.huawei.fit.G1",
+     *                 "name": "modelengine.fit.G1",
      *                 "tags": ["t1", "t2"],
      *                 "route": "a1",
      *                 "fitables": [
      *                     {
-     *                         "id": "com.huawei.fit.F1.f1",
+     *                         "id": "modelengine.fit.F1.f1",
      *                         "tags": ["f1", "f2"],
      *                         "aliases": ["a1", "a2"]
      *                     }

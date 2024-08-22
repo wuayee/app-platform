@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
- * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 的布尔值实现。
+ * 表示 {@link modelengine.fitframework.json.schema.JsonSchema} 的布尔值实现。
  *
  * @author 季聿阶
  * @since 2024-03-31

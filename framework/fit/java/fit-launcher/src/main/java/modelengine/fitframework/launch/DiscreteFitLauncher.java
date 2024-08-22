@@ -31,7 +31,7 @@ public class DiscreteFitLauncher {
         File home = home();
         URLClassLoader sharedClassLoader = SharedClassLoader.create(home);
         URLClassLoader frameworkClassLoader = FrameworkClassLoader.create(home, sharedClassLoader);
-        Class<?> clazz = frameworkClassLoader.loadClass("com.huawei.fitframework.runtime.FitStarter");
+        Class<?> clazz = frameworkClassLoader.loadClass("modelengine.fitframework.runtime.FitStarter");
         Method method = clazz.getDeclaredMethod("start", Class.class, String[].class);
         Thread.currentThread().setContextClassLoader(frameworkClassLoader);
         try {

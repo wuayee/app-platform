@@ -90,7 +90,7 @@ public class DefaultRetryExecutor<T> implements RetryExecutor<T> {
     }
 
     /**
-     * 表示 {@link com.huawei.fitframework.retry.RetryExecutor.Builder} 的默认实现。
+     * 表示 {@link modelengine.fitframework.retry.RetryExecutor.Builder} 的默认实现。
      *
      * @param <T> 表示重试执行的返回值类型的 {@link T}。
      */

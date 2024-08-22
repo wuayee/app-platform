@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 类型的工具类。
+ * 表示 {@link modelengine.fitframework.json.schema.JsonSchema} 类型的工具类。
  *
  * @author 季聿阶
  * @since 2023-08-26

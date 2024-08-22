@@ -29,14 +29,13 @@ import modelengine.fitframework.model.tree.TreeNode;
 public class Demo {
     public static void main(String[] args) {
         Tree<Boolean> tree = Tree.create('.');
-        tree.put("com.huawei.fit", true);
-        tree.put("com.huawei.fitframework.demo", true);
+        tree.put("modelengine.fit", true);
+        tree.put("modelengine.fitframework.demo", true);
         print(tree);
-        // com=null
-        //   huawei=null
-        //     fit=true
-        //     fitframework=null
-        //       demo=true
+        // modelengine=null
+        //   fit=true
+        //   fitframework=null
+        //     demo=true
     }
 
     private static void print(Tree<?> tree) {
@@ -335,9 +334,9 @@ JRE在解析URL时，需要去获取对应协议的`URLStreamHandler`实例，�
 - 分割后的每个元素被认为是一个`package`名，在该包下的协议名称的子包中查找名为`Handler`的类型
 - 通过默认构造方法实例化`Handler`类，并将其强转为`URLStreamHandler`使用
 
-JDK预置的`URLStreamHandler`都定义在`sun.net.www.protocol`包下，以其作为参考，我们将使用`com.huawei.fitframework.protocol`包作为对URL协议的支持。
+JDK预置的`URLStreamHandler`都定义在`sun.net.www.protocol`包下，以其作为参考，我们将使用`modelengine.fitframework.protocol`包作为对URL协议的支持。
 
-因此，我们将通过`com.huawei.fitframework.protocol.jar.Handler`类型，提供对`jar`协议的扩展。
+因此，我们将通过`modelengine.fitframework.protocol.jar.Handler`类型，提供对`jar`协议的扩展。
 
 ## 架构优化
 

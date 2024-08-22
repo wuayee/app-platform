@@ -2,7 +2,7 @@ fit:
   beans:
     packages:
       - 'com.huawei.fit.jober.aipp'
-      - 'com.huawei.jade.fel'
+      - 'modelengine.fel'
       - 'com.huawei.jade.voice.to.text'
   messages:
     basename: i18n/messages, i18n/ui
