@@ -251,7 +251,7 @@ const ReportChart = (props) => {
           chartList.map((item, index) => {
             return(
               <React.Fragment key={index}>
-                <ChartItem chatConfig={item}/>
+                <ChartItem chartConfig={item}/>
                 <TextArea
                   defaultValue={item.chartSummary.replace(/<br>/g, '\n')}
                   autoSize

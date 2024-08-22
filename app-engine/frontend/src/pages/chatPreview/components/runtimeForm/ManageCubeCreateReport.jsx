@@ -95,7 +95,7 @@ const ManageCubeCreateReport = (props) => {
     <div className='form-wrap '>
       <div>
         <div className='report-title'>
-          <div style={{ fontSize: '28px', fontWeight: '600' }}>经营分析报告</div>
+          <div style={{ fontSize: '28px', fontWeight: '600' }}>{t('analysisReport')}</div>
           {mode !== 'history' && <EditOutlined onClick={handleEdit} style={{ fontSize: '20px', position: 'absolute', right: '20px' }} />}
         </div>
         {!chartData &&
@@ -120,7 +120,7 @@ const ManageCubeCreateReport = (props) => {
           </React.Fragment>
         ))}
         <div className='report-btn'>
-          {mode !== 'history' && <Button type='primary' onClick={handleSave} disabled={disabled} loading={loading}>保存</Button>}
+          {mode !== 'history' && <Button type='primary' onClick={handleSave} disabled={disabled} loading={loading}>{t('save')}</Button>}
         </div>
       </div>
     </div>

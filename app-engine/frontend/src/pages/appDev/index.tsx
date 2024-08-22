@@ -158,13 +158,7 @@ const AppDev: React.FC = () => {
                 label: t('mineApp'),
                 key: '1',
                 children: '',
-              },
-              {
-                label: t('teamApp'),
-                key: '2',
-                children: '',
-                disabled: true,
-              },
+              }
             ]}
           />
         </div>

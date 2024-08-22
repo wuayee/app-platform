@@ -205,7 +205,7 @@ const SendEditor = (props) => {
         if (entry.target === editorRef.current || entry.target === recommondRef.current) {
           height += entry.contentRect.height;
         }
-        setEditorHeight(height + 200);
+        setEditorHeight(height + 220);
       }
     });
     if (editorRef.current) {
