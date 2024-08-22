@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huawei.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper">
+<mapper namespace="modelengine.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper">
     <resultMap id="objectMap"
-               type="com.huawei.fit.waterflow.flowsengine.persist.po.FitableUsagePO">
+               type="modelengine.fit.waterflow.flowsengine.persist.po.FitableUsagePO">
         <result column="fitable_id" property="fitableId"/>
         <result column="definition_id" property="definitionId"/>
     </resultMap>

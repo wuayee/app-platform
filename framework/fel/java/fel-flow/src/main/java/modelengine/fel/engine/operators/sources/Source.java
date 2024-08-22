@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.operators.sources;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.emitters.Emitter;
-import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.emitters.Emitter;
+import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 
 import java.util.ArrayList;
 import java.util.Collections;

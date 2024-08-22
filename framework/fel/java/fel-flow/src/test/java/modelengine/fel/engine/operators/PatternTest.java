@@ -10,8 +10,8 @@ import static modelengine.fel.engine.operators.patterns.SyncTipper.question;
 import static modelengine.fel.engine.operators.patterns.SyncTipper.value;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.utils.IdGenerator;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.utils.IdGenerator;
 
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;

@@ -4,11 +4,11 @@
 
 package modelengine.fel.engine.activities;
 
-import com.huawei.fit.waterflow.domain.flow.Flow;
-import com.huawei.fit.waterflow.domain.states.MatchHappen;
-import com.huawei.fit.waterflow.domain.states.MatchToHappen;
-import com.huawei.fit.waterflow.domain.states.State;
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.states.MatchHappen;
+import modelengine.fit.waterflow.domain.states.MatchToHappen;
+import modelengine.fit.waterflow.domain.states.State;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import modelengine.fel.engine.activities.processors.AiBranchProcessor;
 import modelengine.fel.engine.activities.processors.AiBranchToProcessor;

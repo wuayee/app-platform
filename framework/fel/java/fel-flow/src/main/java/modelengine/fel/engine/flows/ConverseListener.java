@@ -4,8 +4,8 @@
 
 package modelengine.fel.engine.flows;
 
-import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
+import modelengine.fit.waterflow.domain.context.FlowContext;
+import modelengine.fit.waterflow.domain.stream.nodes.Retryable;
 
 import java.util.List;
 

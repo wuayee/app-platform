@@ -4,10 +4,10 @@
 
 package modelengine.fel.engine.flows;
 
-import com.huawei.fit.waterflow.domain.flow.Flow;
-import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
-import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
-import com.huawei.fit.waterflow.domain.utils.IdGenerator;
+import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
+import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
+import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fitframework.inspection.Validation;
 
 /**

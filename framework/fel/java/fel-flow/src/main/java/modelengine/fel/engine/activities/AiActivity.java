@@ -4,7 +4,7 @@
 
 package modelengine.fel.engine.activities;
 
-import com.huawei.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.engine.flows.AiFlow;
 

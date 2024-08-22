@@ -6,7 +6,7 @@ package modelengine.fel.engine.operators.prompts;
 
 import static modelengine.fel.engine.util.StateKey.HISTORY_INPUT;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fel.chat.ChatMessage;

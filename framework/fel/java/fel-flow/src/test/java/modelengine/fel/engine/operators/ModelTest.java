@@ -17,7 +17,7 @@ import modelengine.fel.engine.operators.models.ChatStreamModel;
 import modelengine.fel.engine.operators.patterns.SyncTipper;
 import modelengine.fel.engine.operators.prompts.Prompts;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fit.waterflow.domain.utils.SleepUtil;
+import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.serialization.ObjectSerializer;

@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
-import com.huawei.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.emitters.EmitterListener;
+import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.LazyLoader;
 import modelengine.fel.core.Pattern;

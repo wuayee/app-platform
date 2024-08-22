@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.activities;
 
-import com.huawei.fit.waterflow.domain.flow.Flow;
-import com.huawei.fit.waterflow.domain.states.Fork;
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.states.Fork;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import modelengine.fel.engine.activities.processors.AiBranchProcessor;
 import modelengine.fitframework.inspection.Validation;

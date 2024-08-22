@@ -4,8 +4,8 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.emitters.Emitter;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fel.core.Pattern;
 
 /**

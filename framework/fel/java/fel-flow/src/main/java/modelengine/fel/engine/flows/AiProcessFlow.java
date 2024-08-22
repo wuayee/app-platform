@@ -7,11 +7,11 @@ package modelengine.fel.engine.flows;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.emitters.Emitter;
-import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
-import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
-import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.emitters.Emitter;
+import modelengine.fit.waterflow.domain.emitters.EmitterListener;
+import modelengine.fit.waterflow.domain.flow.ProcessFlow;
+import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fitframework.util.ObjectUtils;
 
 /**

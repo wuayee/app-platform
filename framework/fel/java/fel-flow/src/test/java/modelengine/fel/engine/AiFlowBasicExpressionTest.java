@@ -8,7 +8,7 @@ import static modelengine.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.huawei.fit.waterflow.domain.utils.Mermaid;
+import modelengine.fit.waterflow.domain.utils.Mermaid;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.chat.character.AiMessage;

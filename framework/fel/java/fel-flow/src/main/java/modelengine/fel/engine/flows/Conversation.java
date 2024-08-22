@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.flows;
 
-import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.context.FlowContext;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import modelengine.fel.engine.activities.AiStart;
 import modelengine.fel.engine.activities.FlowCallBack;

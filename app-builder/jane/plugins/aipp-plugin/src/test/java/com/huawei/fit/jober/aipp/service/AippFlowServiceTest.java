@@ -48,7 +48,7 @@ import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowNodeFormInfo;
 import com.huawei.fit.jober.entity.FlowNodeInfo;
-import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
+import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.Invoker;
 import modelengine.fitframework.broker.client.Router;

@@ -4,7 +4,7 @@
 
 package modelengine.fel.engine.operators.models;
 
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterData;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterData;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;

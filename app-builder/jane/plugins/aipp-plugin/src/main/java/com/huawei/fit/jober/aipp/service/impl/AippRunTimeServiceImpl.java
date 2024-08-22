@@ -77,7 +77,7 @@ import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowInstanceResult;
 import com.huawei.fit.jober.entity.FlowStartParameter;
 import com.huawei.fit.jober.entity.task.TaskProperty;
-import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
+import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;

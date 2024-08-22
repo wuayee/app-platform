@@ -4,7 +4,7 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import com.huawei.fit.waterflow.domain.context.StateContext;
+import modelengine.fit.waterflow.domain.context.StateContext;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fel.chat.ChatMessage;

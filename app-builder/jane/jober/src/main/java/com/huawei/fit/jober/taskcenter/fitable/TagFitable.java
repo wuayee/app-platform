@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.taskcenter.fitable;
 
 import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fit.waterflow.biz.task.TagService;
+import modelengine.fit.waterflow.biz.task.TagService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 

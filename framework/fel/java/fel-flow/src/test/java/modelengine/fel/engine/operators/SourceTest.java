@@ -6,7 +6,7 @@ package modelengine.fel.engine.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.waterflow.domain.utils.SleepUtil;
+import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.flows.AiFlows;

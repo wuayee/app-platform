@@ -10,12 +10,12 @@ import static modelengine.fel.engine.util.StateKey.STREAMING_CONSUMER;
 import static modelengine.fel.engine.util.StateKey.STREAMING_FLOW_CONTEXT;
 import static modelengine.fel.engine.util.StateKey.STREAMING_PROCESSOR;
 
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
-import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
-import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
+import modelengine.fit.waterflow.domain.context.FlowContext;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.stream.nodes.Retryable;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fitframework.flowable.Publisher;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;

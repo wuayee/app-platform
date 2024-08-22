@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.operators.models;
 
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
-import com.huawei.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
+import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;

@@ -4,7 +4,7 @@
 
 package modelengine.fel.utils;
 
-import com.huawei.fit.waterflow.domain.utils.SleepUtil;
+import modelengine.fit.waterflow.domain.utils.SleepUtil;
 
 import java.util.function.Supplier;
 

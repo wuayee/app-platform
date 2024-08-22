@@ -6,7 +6,7 @@ package com.huawei.fit.jober.bff.service;
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.common.utils.UuidUtil;
-import com.huawei.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper;
+import modelengine.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper;
 import modelengine.fitframework.annotation.Alias;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;

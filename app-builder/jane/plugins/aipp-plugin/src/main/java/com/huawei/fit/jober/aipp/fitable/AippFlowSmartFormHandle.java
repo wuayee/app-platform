@@ -17,7 +17,7 @@ import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
+import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;

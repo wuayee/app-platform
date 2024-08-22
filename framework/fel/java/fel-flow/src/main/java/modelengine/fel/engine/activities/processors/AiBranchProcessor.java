@@ -4,7 +4,7 @@
 
 package modelengine.fel.engine.activities.processors;
 
-import com.huawei.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fel.engine.activities.AiState;
 import modelengine.fel.engine.flows.AiFlow;
 

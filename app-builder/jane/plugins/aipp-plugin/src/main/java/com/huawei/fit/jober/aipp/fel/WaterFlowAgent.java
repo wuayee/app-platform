@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import com.huawei.fit.waterflow.domain.context.StateContext;
+import modelengine.fit.waterflow.domain.context.StateContext;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapUtils;

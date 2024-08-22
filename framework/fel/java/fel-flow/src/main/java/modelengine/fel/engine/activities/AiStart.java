@@ -4,16 +4,16 @@
 
 package modelengine.fel.engine.activities;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.flow.Flow;
-import com.huawei.fit.waterflow.domain.flow.Flows;
-import com.huawei.fit.waterflow.domain.states.Start;
-import com.huawei.fit.waterflow.domain.states.State;
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
-import com.huawei.fit.waterflow.domain.stream.operators.SessionWindow;
-import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
-import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
-import com.huawei.fit.waterflow.domain.utils.Tuple;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.flow.Flows;
+import modelengine.fit.waterflow.domain.states.Start;
+import modelengine.fit.waterflow.domain.states.State;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.operators.SessionWindow;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
+import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
+import modelengine.fit.waterflow.domain.utils.Tuple;
 
 import modelengine.fel.engine.activities.processors.AiBranchProcessor;
 import modelengine.fel.engine.activities.processors.AiFlatMap;
