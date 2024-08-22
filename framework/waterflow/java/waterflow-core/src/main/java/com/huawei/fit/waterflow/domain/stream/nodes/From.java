@@ -14,7 +14,6 @@ import com.huawei.fit.waterflow.domain.context.WindowToken;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
-import com.huawei.fit.waterflow.domain.contextdata.GlobalFileData;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
@@ -428,7 +427,6 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         repo.save(trace, preList.get(0));
         repo.save(afterList);
         repo.save(preList);
-        GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
         return afterList;
     }
 }
