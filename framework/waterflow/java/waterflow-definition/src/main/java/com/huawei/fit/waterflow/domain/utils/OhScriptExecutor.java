@@ -4,19 +4,19 @@
 
 package com.huawei.fit.waterflow.domain.utils;
 
-import static com.huawei.fit.waterflow.domain.common.Constant.BUSINESS_DATA_KEY;
-import static com.huawei.fit.waterflow.domain.common.Constant.PASS_DATA;
+import static modelengine.fit.waterflow.domain.common.Constant.BUSINESS_DATA_KEY;
+import static modelengine.fit.waterflow.domain.common.Constant.PASS_DATA;
 
-import com.huawei.fit.ohscript.script.errors.GrammarSyntaxException;
-import com.huawei.fit.ohscript.script.errors.OhPanic;
-import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
-import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
-import com.huawei.fit.ohscript.script.lexer.Lexer;
-import com.huawei.fit.ohscript.script.parser.AST;
-import com.huawei.fit.ohscript.script.parser.GrammarBuilder;
-import com.huawei.fit.ohscript.script.parser.ParserBuilder;
-import com.huawei.fit.waterflow.common.ErrorCodes;
-import com.huawei.fit.waterflow.common.exceptions.WaterflowException;
+import modelengine.fit.ohscript.script.errors.GrammarSyntaxException;
+import modelengine.fit.ohscript.script.errors.OhPanic;
+import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
+import modelengine.fit.ohscript.script.interpreter.ASTEnv;
+import modelengine.fit.ohscript.script.lexer.Lexer;
+import modelengine.fit.ohscript.script.parser.AST;
+import modelengine.fit.ohscript.script.parser.GrammarBuilder;
+import modelengine.fit.ohscript.script.parser.ParserBuilder;
+import modelengine.fit.waterflow.common.ErrorCodes;
+import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import com.huawei.fit.waterflow.domain.context.FlowData;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
