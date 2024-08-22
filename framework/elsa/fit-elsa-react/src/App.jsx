@@ -56,6 +56,9 @@ function App() {
             agent.onModelSelect((onModelSelectedCallback) => {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
             });
+            agent.onCreateButtonClick((callback) => {
+                console.log("============================hahaha", callback);
+            });
             agent.onChange((dirtyAction) => {
                 console.log("=======================dirty action: ", dirtyAction);
             });

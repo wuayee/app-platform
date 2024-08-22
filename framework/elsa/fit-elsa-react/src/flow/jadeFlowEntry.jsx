@@ -236,6 +236,15 @@ const jadeFlowAgent = (graph) => {
     };
 
     /**
+     * 当点击创建测试集按钮时的回调.
+     *
+     * @param callback 回调函数.
+     */
+    self.onCreateButtonClick = (callback) => {
+        addSelectEventListener("CREATE_TEST_SET", callback);
+    };
+
+    /**
      * 当需要触发知识库选择时的回调.
      *
      * @param callback 回调函数.
