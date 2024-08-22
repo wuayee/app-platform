@@ -10,10 +10,7 @@ import static com.huawei.fit.waterflow.domain.enums.FlowNodeTriggerMode.MANUAL;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeType.END;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeType.START;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeType.STATE;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.huawei.fit.waterflow.FlowsDataBaseTest;
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
