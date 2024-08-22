@@ -11,14 +11,7 @@ import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.PENDING;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeType.END;
 import static com.huawei.fit.waterflow.domain.utils.WaterFlows.getPublisher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 import com.huawei.fit.waterflow.FlowsDataBaseTest;
 import com.huawei.fit.waterflow.FlowsTestUtil;
@@ -47,15 +40,16 @@ import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 
-import com.google.common.collect.Lists;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -144,8 +138,8 @@ class FlowDefinitionTest {
             }
             Set<String> flowNodeIdSet = flowDefinition.getNodeIdSet();
             Set<String> convertFlowNodeIdSet = flowNodes.keySet();
-            assertEquals(flowNodeIdSet.size(), convertFlowNodeIdSet.size());
-            assertTrue(CollectionUtils.equals(flowNodeIdSet, convertFlowNodeIdSet));
+            Assertions.assertEquals(flowNodeIdSet.size(), convertFlowNodeIdSet.size());
+            Assertions.assertTrue(CollectionUtils.equals(flowNodeIdSet, convertFlowNodeIdSet));
         }
 
         private void assertFlowableNode(Publisher<?> flowableNode, FlowDefinition flowDefinition) {
@@ -161,7 +155,7 @@ class FlowDefinitionTest {
             List<FlowEvent> events = flowNode.getEvents();
             flowableNode.getSubscriptions().forEach(subscription -> {
                 FlowEvent event = getEventById(subscription.getId(), events);
-                assertNotNull(event);
+                Assertions.assertNotNull(event);
                 assertEquals(subscription.getId(), event.getMetaId());
                 assertEquals(subscription.getTo().getId(), event.getTo());
                 flowableNodes.offer(subscription.getTo());
@@ -198,8 +192,8 @@ class FlowDefinitionTest {
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
 
             assertFlowsExecutorWithOnlyStateNode1To1(flowData, contexts, all);
-            assertEquals(flowData.getOperator(), contexts.get(0).getData().getOperator());
-            assertEquals(flowData.getStartTime(), contexts.get(0).getData().getStartTime());
+            Assertions.assertEquals(flowData.getOperator(), contexts.get(0).getData().getOperator());
+            Assertions.assertEquals(flowData.getStartTime(), contexts.get(0).getData().getStartTime());
         }
 
         @Test
@@ -207,7 +201,7 @@ class FlowDefinitionTest {
         void testFlowsExecutorStateNodeWithErrorForFirstNode1To1() {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            flowDefinition.setMetaId(STATE_ERROR_1);
+            flowDefinition.setMetaId(FlowsDataBaseTest.STATE_ERROR_1);
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
             String metaId = "state1";
             FlowNode flowNode = flowDefinition.getFlowNode(metaId);
@@ -229,7 +223,7 @@ class FlowDefinitionTest {
         void testFlowsExecutorStateNodeWithErrorForSecondNode1To1() {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            flowDefinition.setMetaId(STATE_ERROR_2);
+            flowDefinition.setMetaId(FlowsDataBaseTest.STATE_ERROR_2);
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
             String metaId = "state2";
             FlowNode flowNode = flowDefinition.getFlowNode(metaId);
@@ -264,9 +258,9 @@ class FlowDefinitionTest {
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
 
             assertFlowsExecutorWithConditionNodeFirstBranchTrue(flowData, contexts, all);
-            assertEquals(flowData.getOperator(), contexts.get(0).getData().getOperator());
-            assertEquals(flowData.getApplication(), contexts.get(0).getData().getApplication());
-            assertEquals(flowData.getStartTime(), contexts.get(0).getData().getStartTime());
+            Assertions.assertEquals(flowData.getOperator(), contexts.get(0).getData().getOperator());
+            Assertions.assertEquals(flowData.getApplication(), contexts.get(0).getData().getApplication());
+            Assertions.assertEquals(flowData.getStartTime(), contexts.get(0).getData().getStartTime());
         }
 
         @Test
@@ -324,7 +318,7 @@ class FlowDefinitionTest {
         void testFlowsExecutorConditionNodeWithError() {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            flowDefinition.setMetaId(CONDITION_ERROR_1);
+            flowDefinition.setMetaId(FlowsDataBaseTest.CONDITION_ERROR_1);
             FlowData flowData = getFlowData(flowsExecutorWithConditionNodeFirstBranchTrue(), "gsy");
             String metaId = "state1";
             FlowNode flowNode = flowDefinition.getFlowNode(metaId);
@@ -377,7 +371,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "true");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = FlowsTestUtil.waitSingle(
@@ -412,7 +406,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "false");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = FlowsTestUtil.waitSingle(
@@ -439,7 +433,7 @@ class FlowDefinitionTest {
                     contextSupplier(REPO, streamId, traceId, metaId, PENDING));
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
             assertFlowsManualExecutorWithConditionNodeCircle(metaId, contexts, all, 2, PENDING);
-            assertNull(contexts.get(0).getToBatch());
+            Assertions.assertNull(contexts.get(0).getToBatch());
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             FlowContext<FlowData> resumeContext = contexts.get(0);
@@ -448,13 +442,13 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "transferred");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             metaId = "event5";
             contexts = FlowsTestUtil.waitSingle(contextSupplier(REPO, streamId, traceId, metaId, PENDING));
             all = this.getContextsByTraceWrapper(REPO, traceId);
             assertFlowsManualExecutorWithConditionNodeCircle(metaId, contexts, all, 4, PENDING);
-            assertNull(contexts.get(0).getToBatch());
+            Assertions.assertNull(contexts.get(0).getToBatch());
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             resumeContext = contexts.get(0);
@@ -463,7 +457,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "approved");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             contexts = FlowsTestUtil.waitSingle(
@@ -497,11 +491,12 @@ class FlowDefinitionTest {
             Map<String, Object> data = new HashMap<>();
             data.put("businessData", flowData.getBusinessData());
             output.add(data);
-            when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(INVOKER);
-            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
-            when(INVOKER.communicationType(any())).thenReturn(INVOKER);
-            when(INVOKER.invoke(any())).thenReturn(output);
+            Mockito.when(BROKER_CLIENT.getRouter(ArgumentMatchers.any(), ArgumentMatchers.anyString()))
+                    .thenReturn(ROUTER);
+            Mockito.when(ROUTER.route(ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.timeout(ArgumentMatchers.anyLong(), ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.communicationType(ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.invoke(ArgumentMatchers.any())).thenReturn(output);
 
             String traceId = from.offer(flowData);
 
@@ -511,9 +506,9 @@ class FlowDefinitionTest {
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
 
             assertFlowsExecuteGeneralJober(contexts, all);
-            assertEquals(flowData.getOperator(), contexts.get(0).getData().getOperator());
-            assertEquals(flowData.getApplication(), contexts.get(0).getData().getApplication());
-            assertEquals(flowData.getStartTime(), contexts.get(0).getData().getStartTime());
+            Assertions.assertEquals(flowData.getOperator(), contexts.get(0).getData().getOperator());
+            Assertions.assertEquals(flowData.getApplication(), contexts.get(0).getData().getApplication());
+            Assertions.assertEquals(flowData.getStartTime(), contexts.get(0).getData().getStartTime());
         }
 
         @Test
@@ -526,12 +521,16 @@ class FlowDefinitionTest {
             assertSingleInstance(getPublisher(streamId), from);
 
             Router router = Mockito.mock(Router.class);
-            when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(router);
+            Mockito.when(BROKER_CLIENT.getRouter(ArgumentMatchers.any(), ArgumentMatchers.anyString()))
+                    .thenReturn(router);
             Invoker invoker = Mockito.mock(Invoker.class);
-            when(router.route(any())).thenReturn(invoker);
-            when(invoker.timeout(anyLong(), any())).thenReturn(invoker);
-            when(invoker.invoke(anyList())).thenThrow(new WaterflowException(FLOW_EXECUTE_FITABLE_TASK_FAILED));
-            when(invoker.invoke(any(), anyList(), anyString())).thenReturn(null);
+            Mockito.when(router.route(ArgumentMatchers.any())).thenReturn(invoker);
+            Mockito.when(invoker.timeout(ArgumentMatchers.anyLong(), ArgumentMatchers.any())).thenReturn(invoker);
+            Mockito.when(invoker.invoke(ArgumentMatchers.anyList()))
+                    .thenThrow(new WaterflowException(FLOW_EXECUTE_FITABLE_TASK_FAILED));
+            Mockito.when(invoker
+                            .invoke(ArgumentMatchers.any(), ArgumentMatchers.anyList(), ArgumentMatchers.anyString()))
+                    .thenReturn(null);
 
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
             String traceId = from.offer(flowData);
@@ -573,10 +572,11 @@ class FlowDefinitionTest {
                 result.put("businessData", businessData);
                 return result;
             }).collect(Collectors.toList());
-            when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(INVOKER);
-            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
-            when(INVOKER.invoke(any())).thenReturn(outputs);
+            Mockito.when(BROKER_CLIENT.getRouter(ArgumentMatchers.any(), ArgumentMatchers.anyString()))
+                    .thenReturn(ROUTER);
+            Mockito.when(ROUTER.route(ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.timeout(ArgumentMatchers.anyLong(), ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.invoke(ArgumentMatchers.any())).thenReturn(outputs);
 
             String traceId = from.offer(list.get(0));
 
@@ -602,16 +602,17 @@ class FlowDefinitionTest {
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
-            List<Map<String, Object>> outputs = Lists.newArrayList(flowDataList).stream().map(flowData -> {
+            List<Map<String, Object>> outputs = Arrays.asList(flowDataList).stream().map(flowData -> {
                 Map<String, Object> result = new HashMap<>();
                 Map<String, Object> businessData = flowData.getBusinessData();
                 result.put("businessData", businessData);
                 return result;
             }).collect(Collectors.toList());
-            when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(INVOKER);
-            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
-            when(INVOKER.invoke(any())).thenReturn(outputs);
+            Mockito.when(BROKER_CLIENT.getRouter(ArgumentMatchers.any(), ArgumentMatchers.anyString()))
+                    .thenReturn(ROUTER);
+            Mockito.when(ROUTER.route(ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.timeout(ArgumentMatchers.anyLong(), ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.invoke(ArgumentMatchers.any())).thenReturn(outputs);
 
             String traceId = from.offer(flowDataList);
 
@@ -652,7 +653,7 @@ class FlowDefinitionTest {
             String traceId3 = from.offer(flowData3);
             List<FlowContext<FlowData>> contexts3 = FlowsTestUtil.waitSingle(
                     contextSupplier(REPO, streamId, traceId3, eventMetaId, PENDING));
-            assertEquals(1, contexts3.size());
+            Assertions.assertEquals(1, contexts3.size());
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             FlowContext<FlowData> resumeContext3 = contexts3.get(0);
@@ -670,7 +671,7 @@ class FlowDefinitionTest {
             REPO.save(contexts3);
             block3.process(contexts3);
             contexts3 = FlowsTestUtil.waitEmpty(contextSupplier(REPO, streamId, traceId3, eventMetaId, PENDING));
-            assertEquals(0, contexts3.size());
+            Assertions.assertEquals(0, contexts3.size());
             return traceId3;
         }
 
@@ -678,7 +679,7 @@ class FlowDefinitionTest {
             String traceId1 = from.offer(flowData1);
             List<FlowContext<FlowData>> contexts1 = FlowsTestUtil.waitSingle(
                     contextSupplier(REPO, streamId, traceId1, eventMetaId, PENDING));
-            assertEquals(1, contexts1.size());
+            Assertions.assertEquals(1, contexts1.size());
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             FlowContext<FlowData> resumeContext1 = contexts1.get(0);
@@ -696,7 +697,7 @@ class FlowDefinitionTest {
             REPO.save(contexts1);
             block1.process(contexts1);
             contexts1 = FlowsTestUtil.waitFortyMillis(contextSupplier(REPO, streamId, traceId1, eventMetaId, PENDING));
-            assertEquals(1, contexts1.size());
+            Assertions.assertEquals(1, contexts1.size());
             return traceId1;
         }
 
@@ -737,10 +738,11 @@ class FlowDefinitionTest {
                 result.put("businessData", businessData);
                 return result;
             }).collect(Collectors.toList());
-            when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(INVOKER);
-            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
-            when(INVOKER.invoke(any())).thenReturn(outputs);
+            Mockito.when(BROKER_CLIENT.getRouter(ArgumentMatchers.any(), ArgumentMatchers.anyString()))
+                    .thenReturn(ROUTER);
+            Mockito.when(ROUTER.route(ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.timeout(ArgumentMatchers.anyLong(), ArgumentMatchers.any())).thenReturn(INVOKER);
+            Mockito.when(INVOKER.invoke(ArgumentMatchers.any())).thenReturn(outputs);
 
             String traceId = from.offer(list.get(0));
 

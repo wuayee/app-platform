@@ -8,19 +8,6 @@ import static com.huawei.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 import static java.util.Locale.ROOT;
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
-import com.huawei.fit.waterflow.domain.parsers.nodes.ConditionNodeParser;
-import com.huawei.fit.waterflow.domain.parsers.nodes.EndNodeParser;
-import com.huawei.fit.waterflow.domain.parsers.nodes.NodeParser;
-import com.huawei.fit.waterflow.domain.parsers.nodes.ParallelNodeParser;
-import com.huawei.fit.waterflow.domain.parsers.nodes.StartNodeParser;
-import com.huawei.fit.waterflow.domain.parsers.nodes.StateNodeParser;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.ConditionNodeRule;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.EndNodeRule;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.ForkNodeRule;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.NodeRule;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.ParallelNodeRule;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.StartNodeRule;
-import com.huawei.fit.waterflow.domain.validators.rules.nodes.StateNodeRule;
 
 import lombok.Getter;
 
@@ -34,28 +21,22 @@ import java.util.Arrays;
  */
 @Getter
 public enum FlowNodeType {
-    START("START", false, new StartNodeParser(), new StartNodeRule()),
-    STATE("STATE", false, new StateNodeParser(), new StateNodeRule()),
-    CONDITION("CONDITION", false, new ConditionNodeParser(), new ConditionNodeRule()),
-    PARALLEL("PARALLEL", false, new ParallelNodeParser(), new ParallelNodeRule()),
-    FORK("FORK", true, null, new ForkNodeRule()),
-    JOIN("JOIN", true, null, null),
-    EVENT("EVENT", true, null, null),
-    END("END", false, new EndNodeParser(), new EndNodeRule());
+    START("START", false),
+    STATE("STATE", false),
+    CONDITION("CONDITION", false),
+    PARALLEL("PARALLEL", false),
+    FORK("FORK", true),
+    JOIN("JOIN", true),
+    EVENT("EVENT", true),
+    END("END", false);
 
     private final String code;
 
     private final boolean subNode;
 
-    private final NodeParser nodeParser;
-
-    private final NodeRule nodeRule;
-
-    FlowNodeType(String code, boolean subNode, NodeParser nodeParser, NodeRule nodeRule) {
+    FlowNodeType(String code, boolean subNode) {
         this.code = code;
         this.subNode = subNode;
-        this.nodeParser = nodeParser;
-        this.nodeRule = nodeRule;
     }
 
     /**

@@ -305,21 +305,6 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * 构造错误
-     *
-     * @param streamId streamId
-     * @param metaId metaId
-     * @param name name
-     * @return String
-     */
-    protected String errorMessage(String streamId, String metaId, String name) {
-        return MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), streamId, metaId, name,
-                WaterflowException.class.getSimpleName(), String.format(Locale.ROOT,
-                        "execute jober failed, jober name: %s, jober type: ECHO_JOBER, fitables: [], errors: null",
-                        name));
-    }
-
-    /**
      * 判定单个实例
      *
      * @param existInstance existInstance
@@ -349,25 +334,6 @@ public abstract class FlowsDataBaseTest {
         assertEquals("echo: status", resultBusinessData.get("xxxStatus"));
         assertEquals("hello: echo: tag", resultBusinessData.get("xxxTag"));
         assertEquals("echo: id", resultBusinessData.get("xxxId"));
-    }
-
-    /**
-     * 断言是否全部完成
-     *
-     * @param flowDefinition 定义
-     * @param metaId 节点id
-     * @param contexts 当前的contexts
-     * @param allContexts 过程中产生的contexts
-     * @param expectedNodeNumber 期望的节点数量
-     */
-    protected void assertFlowsExecutorStateNodeWithError(FlowDefinition flowDefinition, String metaId,
-            List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts, int expectedNodeNumber) {
-        FlowNode flowNode = flowDefinition.getFlowNode(metaId);
-        assertEquals(1, contexts.size());
-        assertEquals(ERROR, contexts.get(0).getStatus());
-        assertEquals(errorMessage(flowDefinition.getStreamId(), metaId, flowNode.getName()),
-                contexts.get(0).getData().getErrorMessage());
-        assertEquals(expectedNodeNumber, allContexts.size());
     }
 
     /**
@@ -409,11 +375,11 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * assertFlowsExecutorWithConditionNodeSecondFalseBranch
+     * 断言是否全部完成
      *
-     * @param flowData flowData
-     * @param contexts contexts
-     * @param allContexts allContexts
+     * @param flowData 提供businessData的数量判定
+     * @param contexts 当前的contexts
+     * @param allContexts 过程中产生的contexts
      */
     protected void assertFlowsExecutorWithConditionNodeSecondFalseBranch(FlowData flowData,
             List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
@@ -426,24 +392,6 @@ public abstract class FlowsDataBaseTest {
         assertTrue(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "cmc.approved")));
         assertFalse(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "committer.approved")));
         assertEquals("state1: success", resultBusinessData.get("approvedResult"));
-    }
-
-    /**
-     * 断言是否全部完成
-     *
-     * @param flowDefinition 定义
-     * @param metaId 流程的唯一id
-     * @param flowNode 节点
-     * @param contexts 当前的contexts
-     * @param allContexts 过程中产生的contexts
-     */
-    protected void assertFlowsExecutorConditionNodeWithError(FlowDefinition flowDefinition, String metaId,
-            FlowNode flowNode, List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
-        assertEquals(1, contexts.size());
-        assertEquals(ERROR, contexts.get(0).getStatus());
-        assertEquals(errorMessage(flowDefinition.getStreamId(), metaId, flowNode.getName()),
-                contexts.get(0).getData().getErrorMessage());
-        assertEquals(3, allContexts.size());
     }
 
     /**
@@ -521,32 +469,6 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * 断言jober调用错误
-     *
-     * @param invoker invoker
-     * @param flowDefinition flowDefinition
-     * @param metaId metaId
-     * @param contexts contexts
-     * @param allContexts allContexts
-     */
-    protected void assertFlowsExecuteGeneralJoberError(Invoker invoker, FlowDefinition flowDefinition, String metaId,
-            List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
-        FlowNode flowNode = flowDefinition.getFlowNode(metaId);
-        assertEquals(1, contexts.size());
-        assertEquals(ERROR, contexts.get(0).getStatus());
-        String errorMsg = "execute jober failed, jober name: 通知, jober type: GENERAL_JOBER, fitables: [创建分支实现], "
-                + "errors: execute jober failed, jober name: {0}, jober type: {1}, fitables: {2}, errors: {3}";
-        String expected = MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), flowDefinition.getStreamId(),
-                metaId, flowNode.getName(), WaterflowException.class.getSimpleName(), errorMsg);
-        String actual = contexts.get(0).getData().getErrorMessage();
-        assertEquals(MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), flowDefinition.getStreamId(), metaId,
-                        flowNode.getName(), WaterflowException.class.getSimpleName(), errorMsg),
-                contexts.get(0).getData().getErrorMessage());
-        assertEquals(2, allContexts.size());
-        verify(invoker, times(1)).invoke(any(), anyList(), anyString());
-    }
-
-    /**
      * 断言是否全部完成
      *
      * @param contexts 当前的contexts
@@ -603,6 +525,84 @@ public abstract class FlowsDataBaseTest {
         contexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         assertEquals(10, allContexts.size());
         allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+    }
+
+    /**
+     * 断言是否全部完成
+     *
+     * @param flowDefinition 定义
+     * @param metaId 节点id
+     * @param contexts 当前的contexts
+     * @param allContexts 过程中产生的contexts
+     * @param expectedNodeNumber 期望的节点数量
+     */
+    protected void assertFlowsExecutorStateNodeWithError(FlowDefinition flowDefinition, String metaId,
+            List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts, int expectedNodeNumber) {
+        FlowNode flowNode = flowDefinition.getFlowNode(metaId);
+        assertEquals(1, contexts.size());
+        assertEquals(ERROR, contexts.get(0).getStatus());
+        assertEquals(errorMessage(flowDefinition.getStreamId(), metaId, flowNode.getName()),
+                contexts.get(0).getData().getErrorMessage());
+        assertEquals(expectedNodeNumber, allContexts.size());
+    }
+
+    /**
+     * 断言是否全部完成
+     *
+     * @param flowDefinition 定义
+     * @param metaId 流程的唯一id
+     * @param flowNode 节点
+     * @param contexts 当前的contexts
+     * @param allContexts 过程中产生的contexts
+     */
+    protected void assertFlowsExecutorConditionNodeWithError(FlowDefinition flowDefinition, String metaId,
+            FlowNode flowNode, List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
+        assertEquals(1, contexts.size());
+        assertEquals(ERROR, contexts.get(0).getStatus());
+        assertEquals(errorMessage(flowDefinition.getStreamId(), metaId, flowNode.getName()),
+                contexts.get(0).getData().getErrorMessage());
+        assertEquals(3, allContexts.size());
+    }
+
+    /**
+     * 断言jober调用错误
+     *
+     * @param invoker invoker
+     * @param flowDefinition flowDefinition
+     * @param metaId metaId
+     * @param contexts contexts
+     * @param allContexts allContexts
+     */
+    protected void assertFlowsExecuteGeneralJoberError(Invoker invoker, FlowDefinition flowDefinition, String metaId,
+            List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
+        FlowNode flowNode = flowDefinition.getFlowNode(metaId);
+        assertEquals(1, contexts.size());
+        assertEquals(ERROR, contexts.get(0).getStatus());
+        String errorMsg = "execute jober failed, jober name: 通知, jober type: GENERAL_JOBER, fitables: [创建分支实现], "
+                + "errors: execute jober failed, jober name: {0}, jober type: {1}, fitables: {2}, errors: {3}";
+        String expected = MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), flowDefinition.getStreamId(),
+                metaId, flowNode.getName(), WaterflowException.class.getSimpleName(), errorMsg);
+        String actual = contexts.get(0).getData().getErrorMessage();
+        assertEquals(MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), flowDefinition.getStreamId(), metaId,
+                        flowNode.getName(), WaterflowException.class.getSimpleName(), errorMsg),
+                contexts.get(0).getData().getErrorMessage());
+        assertEquals(2, allContexts.size());
+        verify(invoker, times(1)).invoke(any(), anyList(), anyString());
+    }
+
+    /**
+     * 构造错误
+     *
+     * @param streamId streamId
+     * @param metaId metaId
+     * @param name name
+     * @return String
+     */
+    protected String errorMessage(String streamId, String metaId, String name) {
+        return MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), streamId, metaId, name,
+                WaterflowException.class.getSimpleName(), String.format(Locale.ROOT,
+                        "execute jober failed, jober name: %s, jober type: ECHO_JOBER, fitables: [], errors: null",
+                        name));
     }
 
     private Object getBusinessDataFromChainedKey(Map<String, Object> businessData, String keyChain) {

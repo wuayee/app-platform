@@ -11,6 +11,7 @@ import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.domain.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.domain.enums.FlowDefinitionStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
+import com.huawei.fit.waterflow.domain.enums.FlowNodeTypeParser;
 import com.huawei.fit.waterflow.domain.parsers.nodes.NodeParser;
 import com.huawei.fit.waterflow.domain.parsers.nodes.events.EventParser;
 import com.huawei.fitframework.annotation.Component;
@@ -59,7 +60,8 @@ public class FlowParser implements Parser {
         Map<String, FlowNode> allNodeMap = new HashMap<>();
         IntStream.range(0, flowGraphData.getNodes()).forEach(nodeIndex -> {
             FlowNodeType nodeType = FlowNodeType.getNodeType(flowGraphData.getNodeType(nodeIndex));
-            NodeParser nodeParser = nodeType.getNodeParser();
+            FlowNodeTypeParser flowNodeTypeParser = FlowNodeTypeParser.getType(nodeType);
+            NodeParser nodeParser = flowNodeTypeParser.getNodeParser();
             Validation.notNull(nodeParser,
                     () -> new WaterflowParamException(INPUT_PARAM_IS_INVALID, "flow node type " + nodeType.getCode()));
             FlowNode flowNode = nodeParser.parseNode(flowGraphData, nodeIndex);
