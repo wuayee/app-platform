@@ -9,22 +9,24 @@ import { pluginItems } from '../../common/common';
 import { Icons } from "../../../../components/icons";
 import ToolCard from '../../../addFlow/components/tool-card';
 import Pagination from '../../../../components/pagination/index';
+import { useTranslation } from 'react-i18next';
 import '../styles/add-skill.scss';
 const { Search } = Input;
 
 const AddSkill = (props) => {
+  const { t } = useTranslation();
   const { modalRef, tenantId, checkData, confirmCallBack } = props;
-  const [ open, setOpen ] = useState(false);
-  const [ name, setName ] = useState('');
-  const [ pageNum, setPageNum ] = useState(1);
-  const [ pageSize, setPageSize ] = useState(10);
-  const [ total, setTotal ] = useState(0);
-  const [ pluginCategory, setPluginCategory ] = useState(pluginItems[0].key);
-  const [ pluginData, setPluginData ] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [pageNum, setPageNum] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [pluginCategory, setPluginCategory] = useState(pluginItems[0].key);
+  const [pluginData, setPluginData] = useState([]);
   const navigate = useHistory().push;
   const checkedList = useRef([]);
 
-  useEffect(()=> {
+  useEffect(() => {
     open && getPluginList();
     setPluginCategory(pluginItems[0].key);
   }, [open, name, pageNum, pageSize]);
@@ -38,8 +40,8 @@ const AddSkill = (props) => {
   }
   // 确定提交
   const confirm = () => {
-    let workFlowList:any = [];
-    let fitList:any = [];
+    let workFlowList: any = [];
+    let fitList: any = [];
     checkedList.current.forEach(item => {
       if (item.tags.includes('WATERFLOW')) {
         workFlowList.push(item);
@@ -51,7 +53,7 @@ const AddSkill = (props) => {
     let fitId = fitList.map(item => item.uniqueName);
     confirmCallBack(workFlowId, fitId);
     setOpen(false);
-  }  
+  }
   const selectCategory = (category: string) => {
     setPluginCategory(category);
     setPageNum(1);
@@ -59,7 +61,7 @@ const AddSkill = (props) => {
     getPluginList();
   }
   // 获取插件列表
-  const getPluginList = (category = pluginCategory)=> {
+  const getPluginList = (category = pluginCategory) => {
     getPlugins({ pageNum: pageNum - 1, pageSize, includeTags: 'FIT', name })
       .then(({ data, total }) => {
         setTotal(total);
@@ -87,7 +89,7 @@ const AddSkill = (props) => {
   }
   // 名称搜索
   const filterByName = (value: string) => {
-    if(value !== name) {
+    if (value !== name) {
       setName(value);
     }
   }
@@ -114,7 +116,7 @@ const AddSkill = (props) => {
   })
   return <>
     <Drawer
-      title='选择插件'
+      title={t('selectPlugin')}
       placement='right'
       width='1230px'
       closeIcon={false}
@@ -122,17 +124,17 @@ const AddSkill = (props) => {
       open={open}
       footer={
         <div className="drawer-footer">
-          <Button onClick={() => setOpen(false)}>取消</Button>
-          <Button type="primary" onClick={confirm}>确定</Button>
+          <Button onClick={() => setOpen(false)}>{t('cancel')}</Button>
+          <Button type="primary" onClick={confirm}>{t('ok')}</Button>
         </div>
       }
       extra={
-        <CloseOutlined onClick={() => setOpen(false)}/>
+        <CloseOutlined onClick={() => setOpen(false)} />
       }>
       <div className="mashup-add-drawer">
         <div className="mashup-add-tab">
-          <span className="active"><img src='/src/assets/images/ai/load.png' />市场</span>
-          <span><img src='/src/assets/images/ai/account.png' />我的</span>
+          <span className="active"><img src='./src/assets/images/ai/load.png' />{t('market')}</span>
+          <span><img src='./src/assets/images/ai/account.png' />{t('mine')}</span>
         </div>
         <div className="mashup-add-tablist">
           <Tabs
@@ -145,7 +147,7 @@ const AddSkill = (props) => {
           <div className="mashup-add-head">
             {
               pluginCategory !== 'WATERFLOW' ? (<Input
-                placeholder="搜索"
+                placeholder={t('plsEnter')}
                 style={{
                   marginBottom: 16,
                   width: '200px',
@@ -153,15 +155,15 @@ const AddSkill = (props) => {
                   border: '1px solid rgb(230, 230, 230)',
                 }}
                 onPressEnter={(e) => filterByName(e.target.value)}
-                prefix={<Icons.search color={'rgb(230, 230, 230)'}/>}
+                prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
                 defaultValue={name}
-              />) : (<Button type="primary" onClick={handleAddWaterFlow} style={{ marginBottom: 16 }}>创建工具流</Button>)
+              />) : (<Button type="primary" onClick={handleAddWaterFlow} style={{ marginBottom: 16 }}>{t('createWorkflow')}</Button>)
             }
           </div>
           <div className="mashup-add-inner">
-            {pluginData.map((card: any) => 
+            {pluginData.map((card: any) =>
               <div className="mashup-add-item" key={card.uniqueName}>
-                <ToolCard  pluginData={card} />
+                <ToolCard pluginData={card} />
                 <span className="check-item">
                   <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                 </span>
@@ -170,12 +172,12 @@ const AddSkill = (props) => {
           </div>
         </div>
         <div style={{ paddingTop: 16 }}>
-          { pluginCategory === 'FIT' && <Pagination
-              total={total}
-              current={pageNum}
-              onChange={selectPage}
-              pageSize={pageSize}
-          /> }
+          {pluginCategory === 'FIT' && <Pagination
+            total={total}
+            current={pageNum}
+            onChange={selectPage}
+            pageSize={pageSize}
+          />}
         </div>
       </div>
     </Drawer>

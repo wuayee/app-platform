@@ -17,7 +17,7 @@
 
 #include "http_manager.hpp"
 #include "http_util.hpp"
-
+#include "httplib_util.hpp"
 using namespace Fit;
 
 namespace {
@@ -59,10 +59,7 @@ FitCode Start(::Fit::Framework::PluginContext* context)
     HttpManager::Instance().SetHttpsConfig(move(contextPath), move(httpsWorkerPath), httpsProtocol, sslVerify,
         move(cerPath), move(privateKeyPath), move(privateKeyPwd), move(caCrtPth), move(keyPwdFilePath),
         move(pwdCryptoType));
-    int32_t ret = HttpManager::Instance().InitHttpsClient();
-    if (ret != FIT_OK) {
-        FIT_LOG_ERROR("Init https client failed %d.", ret);
-    }
+    HttpManager::Instance().InitHttpClient();
     if (!httpsHost.empty() && httpsPort != 0) {
         HttpManager::Instance().InitHttpsServer(move(httpsHost), httpsPort);
         ::Fit::Framework::Annotation::Fitable(StartHttpsServer)
@@ -78,23 +75,31 @@ FitCode Start(::Fit::Framework::PluginContext* context)
         ::Fit::Framework::Annotation::Fitable(StopHttpServer)
             .SetGenericId(fit::broker::server::stopServer::GENERIC_ID).SetFitableId("http");
     }
-    return ret;
+    return FIT_OK;
+}
+
+FitCode Stop()
+{
+    HttpManager::Instance().UninitHttpClient();
+    return FIT_OK;
 }
 
 FitCode HandleRequest(const Network::Request& request, Network::Response& response)
 {
     fit::hakuna::kernel::broker::server::processV3 proxy;
-    Fit::bytes metadata {request.metadata};
+    fit::hakuna::kernel::broker::shared::MetaData meta = fit_meta_data::convert(request.meta);
     Fit::bytes data {request.payload};
     ::fit::hakuna::kernel::broker::shared::FitResponse* result {nullptr};
-    auto ret = proxy(&metadata, &data, &result);
+    auto ret = proxy(&meta, &data, &result);
     if (ret != FIT_OK || (result == nullptr)) {
         FIT_LOG_ERROR("Failed to invoke broker server process. (ret=%X).", ret);
         return ret;
     }
     response.metadata = Fit::string(result->metadata.data(), result->metadata.size());
+    if (!response.meta.from_bytes(response.metadata)) {
+        FIT_LOG_ERROR("Deserialize response metadata failed.");
+    }
     response.payload = Fit::string(result->data.data(), result->data.size());
-
     return FIT_OK;
 }
 
@@ -163,5 +168,6 @@ FitCode StopHttpsServer(ContextObj ctx)
 FIT_REGISTRATIONS
 {
     Fit::Framework::PluginActivatorRegistrar().SetStart(Start);
+    Fit::Framework::PluginActivatorRegistrar().SetStop(Stop);
 }
 }

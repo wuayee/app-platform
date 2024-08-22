@@ -12,6 +12,6 @@ target_link_libraries(FitBrokerServerLink INTERFACE)
 
 #编译动态库
 add_library(FitBrokerServer SHARED )
-target_link_libraries(FitBrokerServer PRIVATE $<BUILD_INTERFACE:FitBrokerServerLink> FitBrokerServerObj)
+target_link_libraries(FitBrokerServer PRIVATE $<BUILD_INTERFACE:FitBrokerServerLink> FitUtil FitBrokerServerObj)
 set_target_properties(FitBrokerServer PROPERTIES LIBRARY_OUTPUT_NAME FitBrokerServer)
 set_target_properties(FitBrokerServer PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${FIT_LIB_DIR})

@@ -14,6 +14,7 @@
 #include <fit/fit_log.h>
 #include <fit/internal/fit_string_util.h>
 #include <fit/internal/fit_address_utils.h>
+#include <fit/internal/registry/repository/util_by_repo.h>
 
 #include "fit_code.h"
 #include "sql_wrapper/sql_cmd.hpp"
@@ -251,20 +252,7 @@ AddressStatusSet TableHeartbeat::query_all_beat()
 
 FitCode TableHeartbeat::get_current_time_ms(uint64_t& result)
 {
-    SqlCmd sqlCmd {};
-    sqlCmd.sql = "SELECT FLOOR(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) * 1000) AS current_timestamp_ms;";
-    auto sqlResult = connectionPool_->Submit(sqlCmd);
-    if (!sqlResult || !sqlResult->IsOk()) {
-        FIT_LOG_ERROR("Failed to get current time, (errMsg=%s).",
-            sqlResult ? sqlResult->GetErrorMessage() : "null result");
-        return FIT_ERR_FAIL;
-    }
-    if (sqlResult->CountRow() != 1 || sqlResult->CountCol() != 1) {
-        FIT_LOG_ERROR("The result is not expect, (row=%d, col=%d).", sqlResult->CountRow(), sqlResult->CountCol());
-        return FIT_ERR_FAIL;
-    }
-    result = atoll(sqlResult->GetResultRow(0)[0].c_str());
-    return FIT_OK;
+    return UtilByRepo::Instance().GetCurrentTimeMs(result);
 }
 
 vector<TableHeartbeat::SqlBuilderT::ColumnDescT> TableHeartbeat::GetWhere()

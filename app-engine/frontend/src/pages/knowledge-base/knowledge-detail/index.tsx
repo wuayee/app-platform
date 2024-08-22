@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form }from 'antd';
+import { Form } from 'antd';
 import { Button, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -10,13 +10,14 @@ import { KnowledgeIcons } from '../../../components/icons';
 import { getKnowledgeBaseById, getKnowledgeDetailById } from '../../../shared/http/knowledge';
 import { columnsFunc } from './table-config';
 import Pagination from '../../../components/pagination/index';
+import { useTranslation } from 'react-i18next';
 import { ModifyTable } from './modify-table';
 
 const KnowledgeBaseDetail = () => {
+  const { t } = useTranslation();
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
   const navigate = useHistory().push;
   const id = searchParams.id;
-
   const [knowledgeDetail, setKnowledgeDetail] = useState<any>(null)
   const [data, setData] = useState<any>([]);
 
@@ -26,7 +27,7 @@ const KnowledgeBaseDetail = () => {
   // 当前修改的值
   const [currentData, setCurrentData] = useState<any>(null);
 
-    // 总条数
+  // 总条数
   const [total, setTotal] = useState(0);
   // 分页
   const [page, setPage] = useState(1);
@@ -38,15 +39,15 @@ const KnowledgeBaseDetail = () => {
   const getKnowledgeBase = async (id: string) => {
     try {
       const res = await getKnowledgeBaseById(id);
-      setKnowledgeDetail({...res});
+      setKnowledgeDetail({ ...res });
     } catch (error) {
-      
+
     }
   };
 
   // 格式化时间
-  const formateTime = (dateStr: Date)=> {
-    if(!dateStr) return ''
+  const formateTime = (dateStr: Date) => {
+    if (!dateStr) return ''
     const date = new Date(dateStr);
     const y = date.getFullYear();
     const m = date.getMonth() + 1;
@@ -55,7 +56,7 @@ const KnowledgeBaseDetail = () => {
   };
 
   // 返回知识库
-  const goBack = ()=> {
+  const goBack = () => {
     navigate('/knowledge-base')
   };
 
@@ -66,22 +67,22 @@ const KnowledgeBaseDetail = () => {
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
-    if(page!==curPage) {
+    if (page !== curPage) {
       setPage(curPage);
     }
-    if(pageSize!=curPageSize) {
+    if (pageSize != curPageSize) {
       setPageSize(curPageSize);
     }
   }
 
   // 获取列表
-  const refresh = ()=> {
-    if(id) {
+  const refresh = () => {
+    if (id) {
       getKnowledgeDetailById(id, {
         pageNum: page - 1,
         pageSize: pageSize
-      }).then(res=> {
-        if(res?.result) {
+      }).then(res => {
+        if (res?.result) {
           setData(res?.result ?? []);
           setTotal(res?.count ?? 0);
         }
@@ -92,11 +93,11 @@ const KnowledgeBaseDetail = () => {
 
   // operator操作
   const operator = (type: 'delete' | 'modify' | 'clickHeader', data: any) => {
-    if(type === 'delete') {
+    if (type === 'delete') {
       setPage(1);
       refresh();
-    } else if(type === 'modify') {
-      setCurrentData({...data});
+    } else if (type === 'modify') {
+      setCurrentData({ ...data });
       setOpen(true);
       refresh();
     } else if (type === 'clickHeader') {
@@ -109,50 +110,50 @@ const KnowledgeBaseDetail = () => {
 
   const columns = columnsFunc(operator);
 
-  useEffect(()=> {
-    if(id) {
+  useEffect(() => {
+    if (id) {
       getKnowledgeBase(id);
     }
   }, []);
 
-  useEffect(()=> {
-    if(id) {
+  useEffect(() => {
+    if (id) {
       // getKnowledgeBase(id);
       refresh();
     }
   }, [page, pageSize]);
-  
+
 
   return (
     <>
-    <div className='aui-fullpage'>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'>
-        <BreadcrumbSelf searchFlag={true}></BreadcrumbSelf>
-      </div>
-    </div>
-      <div className='aui-block' style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8
-      }}>
-        <div className='knowledge-detail-header' style={{
-          display: 'flex', 
-          gap: 30,
-          alignItems: 'center',
-          paddingBottom: 20,
-          marginBottom: 10,
-          borderBottom: '1px solid #CDD7E6'
+      <div className='aui-fullpage'>
+        <div className='aui-header-1'>
+          <div className='aui-title-1'>
+            <BreadcrumbSelf searchFlag={true}></BreadcrumbSelf>
+          </div>
+        </div>
+        <div className='aui-block' style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8
         }}>
+          <div className='knowledge-detail-header' style={{
+            display: 'flex',
+            gap: 30,
+            alignItems: 'center',
+            paddingBottom: 20,
+            marginBottom: 10,
+            borderBottom: '1px solid #CDD7E6'
+          }}>
             <div className='detail-header-return' style={{
               cursor: 'pointer'
             }} onClick={goBack}>
-              {<KnowledgeIcons.leftArrow/>}
+              {<KnowledgeIcons.leftArrow />}
             </div>
             <div className='detail-header-info' style={{
-                flex: 1,
+              flex: 1,
 
-              }}>
+            }}>
               <div className='detail-info-title' style={{
                 fontSize: 20,
                 height: 30,
@@ -162,28 +163,28 @@ const KnowledgeBaseDetail = () => {
                 fontSize: 14,
                 color: 'rgba(105, 105, 105, .96)'
               }}>
-                {`${knowledgeDetail?.ownerName ?? ''}创建于${formateTime(knowledgeDetail?.createdAt as any as Date)}` }
+                {`${knowledgeDetail?.ownerName ?? ''}${t('createAt')}${formateTime(knowledgeDetail?.createdAt as any as Date)}`}
               </div>
             </div>
             <div className='detail-header-add'>
-              <Button type="primary"  onClick={onAdd} style={{
+              <Button type="primary" onClick={onAdd} style={{
                 borderRadius: 4,
                 backgroundColor: '#2673E5',
                 display: 'flex',
                 alignItems: 'center'
-              }}>{<KnowledgeIcons.add/>} 添加</Button>
+              }}>{<KnowledgeIcons.add />} {t('additions')}</Button>
             </div>
-        </div>
-        <div className='knowledge-detail-table' >
-          <div style={{ marginBottom: 10 }}>
-            <Table columns={columns} dataSource={data} size='small' pagination={false}/>
           </div>
-          <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
+          <div className='knowledge-detail-table' >
+            <div style={{ marginBottom: 10 }}>
+              <Table columns={columns} dataSource={data} size='small' pagination={false} />
+            </div>
+            <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
+          </div>
+          <div />
         </div>
-      <div />
-    </div>
-    </div>
-    <ModifyTable open={open} setOpen={setOpen} refresh={refresh} data={currentData}/>
+      </div>
+      <ModifyTable open={open} setOpen={setOpen} refresh={refresh} data={currentData} />
     </>
   )
 }

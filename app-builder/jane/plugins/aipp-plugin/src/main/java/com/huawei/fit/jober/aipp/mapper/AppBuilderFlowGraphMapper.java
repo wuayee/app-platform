@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.mapper;
 
+import com.huawei.fit.jober.aipp.aop.Locale;
 import com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public interface AppBuilderFlowGraphMapper {
      * @param id 要查询的流程图id
      * @return AppBuilder流程图信息
      */
+    @Locale
     AppBuilderFlowGraphPo selectWithId(String id);
 
     /**

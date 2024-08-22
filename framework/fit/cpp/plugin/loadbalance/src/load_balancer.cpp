@@ -33,7 +33,7 @@ size_t GetRandom(size_t bounds)
         return 0;
     }
 
-    return static_cast<size_t>(FitRandom()) % bounds;
+    return FitRandom<size_t>() % bounds;
 }
 
 class DefaultLoadBalancer : public virtual LoadBalancer {

@@ -9,12 +9,14 @@ import {Message} from "@shared/utils/message";
 import { saveReport } from "@shared/http/appBuilder";
 import { uuid } from "../../../../common/utils";
 import { useAppSelector } from '../../../../store/hook';
+import { useTranslation } from 'react-i18next';
 import './styles/interview-questions.scoped.scss';
 
 const { TextArea } = Input;
 const { Text } = Typography;
 
 const InterviewQuestions = (props) => {
+    const { t } = useTranslation();
     const { data, instanceId, mode } = props;
     const id = "interviewResult";
     const appId = useAppSelector((state) => state.appStore.appId);
@@ -51,7 +53,7 @@ const InterviewQuestions = (props) => {
     const handleSave = () => {
         saveContent(tenantId, appId, instanceId, {"businessData": {[id]: qa}}).then((res) => {
             if (res.code !== 0) {
-                Message({ type: 'warning', content: res.msg || '保存失败' });
+                Message({ type: 'warning', content: res.msg || t('savingFailed') });
             }
         })
     }
@@ -82,7 +84,7 @@ const InterviewQuestions = (props) => {
                   <TextArea
                     rows={4}
                     defaultValue={qa[index].answer}
-                    placeholder={"输入面试者的答复"}
+                    placeholder={t('plsEnter')}
                     onBlur={(e) => handleAnswerChange(index, e.target.value)}
                     style={{ marginTop: '8px' }}
                   />
@@ -110,7 +112,7 @@ const InterviewQuestions = (props) => {
               <div className={"block-bg big"} style={{ marginTop: '8px', height: '120px' }}/>
             </div>
           )}
-          <Button onClick={handleSave} className="save-button">保存</Button>
+          <Button onClick={handleSave} className="save-button">{t('save')}</Button>
         </div>
       </div>
   </>);

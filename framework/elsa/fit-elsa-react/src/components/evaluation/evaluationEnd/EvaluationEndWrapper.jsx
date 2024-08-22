@@ -1,4 +1,10 @@
 import {EvaluationOutput} from "@/components/evaluation/evaluationEnd/EvaluationOutput.jsx";
+import PropTypes from "prop-types";
+
+EvaluationEndWrapper.propTypes = {
+    data: PropTypes.object,
+    disabled: PropTypes.bool,
+};
 
 /**
  * 评估结束节点组件

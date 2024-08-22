@@ -12,6 +12,7 @@ import {
   getTableColums,
   createTableColumns,
 } from '@/shared/http/knowledge';
+import { useTranslation } from 'react-i18next';
 import './style.scoped.scss';
 
 // 创建知识库配置
@@ -40,11 +41,9 @@ const segmentData = new Array(4).fill(0).map((_, i) => ({
 }));
 
 const KnowledgeBaseDetailImportData = () => {
+  const { t } = useTranslation();
   const searchParams = qs.parse(useLocation().search.replace('?', ''));
-  const navigate = useHistory().push;
-
   const [currentSteps, setCurrentSteps] = useState(0);
-
   // 知识表id
   const id = searchParams.id || 0;
 
@@ -65,23 +64,23 @@ const KnowledgeBaseDetailImportData = () => {
 
   const steps: any[] = [
     {
-      title: '选择数据源',
+      title: t('dataSource'),
     },
   ];
 
   if (table_type === 'text') {
     steps.push({
-      title: '文本分段与清洗',
+      title: t('textSegmentation'),
     });
     steps.push({
-      title: '完成',
+      title: t('finished'),
     });
   } else {
     steps.push({
-      title: '表格配置',
+      title: t('tableConfig'),
     });
     steps.push({
-      title: '开始导入',
+      title: t('startImport'),
     });
   }
 
@@ -202,7 +201,7 @@ const KnowledgeBaseDetailImportData = () => {
         <div className='aui-header-1'>
           <div className='aui-title-1'>
             <BreadcrumbSelf
-              currentLabel={table_id ? '导入数据' : '导入数据'}
+              currentLabel={t('importingData')}
               searchFlag={true}
             ></BreadcrumbSelf>
           </div>
@@ -237,7 +236,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  取消
+                  {t('cancel')}
                 </Button>
               )}
 
@@ -248,7 +247,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  上一步
+                  {t('previousStep')}
                 </Button>
               )}
 
@@ -261,7 +260,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  下一步
+                  {t('nextStep')}
                 </Button>
               )}
 
@@ -273,7 +272,7 @@ const KnowledgeBaseDetailImportData = () => {
                     borderRadius: 4,
                   }}
                 >
-                  确定
+                  {t('ok')}
                 </Button>
               )}
             </div>

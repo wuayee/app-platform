@@ -32,8 +32,6 @@ const AddFlow = (props) => {
   const flowContext = {
     type,
     appInfo: type ? appInfo : flowInfo,
-    showMenu,
-    setShowMenu,
     setFlowInfo,
     showTime,
     setShowTime
@@ -50,7 +48,6 @@ const AddFlow = (props) => {
   }
   useEffect(() => {
     if (!type) return;
-    setShowMenu(true)
     setFlowTestTime(null);
     setFlowTestStatus(null);
     elsaRunningCtl.current?.reset();

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input } from 'antd';
-import { Form }from 'antd';
+import { Form } from 'antd';
 import { updateKnowledgeTable } from '../../../../shared/http/knowledge';
+import { useTranslation } from 'react-i18next';
 
 interface props {
   open: boolean;
@@ -18,7 +19,7 @@ type FieldType = {
 };
 
 const ModifyTable = ({ open, data, setOpen, refresh }: props) => {
-
+  const { t } = useTranslation();
   const [formLayout, setFormLayout] = useState<any>('vertical');
   const [form] = Form.useForm();
 
@@ -38,7 +39,7 @@ const ModifyTable = ({ open, data, setOpen, refresh }: props) => {
       });
       refresh();
     } catch (error) {
-      
+
     }
     setOpen(false);
   }
@@ -50,13 +51,13 @@ const ModifyTable = ({ open, data, setOpen, refresh }: props) => {
       for (let i = 0; i < name.length; i++) {
         let code = name.charCodeAt(i);
         if (code > 255) {
-          n +=2;
+          n += 2;
         } else {
           n += 1
         }
       }
       if (n > 255) {
-        return Promise.reject('字符串长度不能大于255');
+        return Promise.reject(t('stringLengthTips'));
       } else {
         return Promise.resolve();
       }
@@ -65,38 +66,38 @@ const ModifyTable = ({ open, data, setOpen, refresh }: props) => {
     }
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     form.setFieldValue('name', data?.name || '')
   }, [data])
   return (<>
     <Modal
-        title="修改知识表"
-        centered
-        open={open}
-        onOk={handleOk}
-        onCancel={()=> {
-          setOpen(false);
-        }}
-        mousePosition={{ x: 300, y: 300 }}
+      title={t('modify')}
+      centered
+      open={open}
+      onOk={handleOk}
+      onCancel={() => {
+        setOpen(false);
+      }}
+      mousePosition={{ x: 300, y: 300 }}
+    >
+      <Form<FieldType>
+        {...formItemLayout}
+        layout={formLayout}
+        form={form}
+        initialValues={initialValues}
+        style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
       >
-                   <Form<FieldType>
-            {...formItemLayout}
-            layout={formLayout}
-            form={form}
-            initialValues={initialValues}
-            style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
-          >
-            <Form.Item 
-              label="知识表名称"  
-              name = 'name' 
-              rules={[
-                { required: true},
-                { validator: changeName}]
-              }>
-              <Input placeholder='请输入'/>
-            </Form.Item>
-          </Form>
-      </Modal>
+        <Form.Item
+          label={t('knowledgeTableName')}
+          name='name'
+          rules={[
+            { required: true },
+            { validator: changeName }]
+          }>
+          <Input placeholder={t('plsEnter')} />
+        </Form.Item>
+      </Form>
+    </Modal>
   </>)
 };
 

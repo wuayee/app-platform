@@ -1,0 +1,22 @@
+{
+    "secure-access": {
+        "crypto-type":"scc",
+        "local-ak":"test_ak1",
+        "role-info" : [
+            {
+                "role": "provider",
+                "ak":"test_ak1",
+                "sk":"test_sk1",
+                "permissions": [
+                    {
+                        "genericableId":"provider_gid",
+                        "genericableVersion":"1.0.0",
+                        "fitableId":"provider_fid",
+                        "fitableVersion":"1.0.0",
+                        "enable":true
+                    }
+                ]
+            }
+        ]
+    }
+}

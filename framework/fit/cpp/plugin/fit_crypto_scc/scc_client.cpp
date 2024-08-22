@@ -51,7 +51,7 @@ int32_t SccClient::Decrypt(const Fit::string& src, Fit::string& dst)
     // 释放加密结果内存
     if (ret == SEC_SUCCESS) {
         dst = Fit::string(plainPassword, plainLen);
-        FIT_LOG_INFO("Decrypt success.");
+        FIT_LOG_DEBUG("Decrypt success.");
         // 释放解密结果内存
         if (plainPassword != nullptr) {
             free(plainPassword);

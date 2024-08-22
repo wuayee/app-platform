@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.mapper;
 
+import com.huawei.fit.jober.aipp.aop.Locale;
 import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public interface AppBuilderFormPropertyMapper {
      * @param formId 要查询表单属性的表单id
      * @return 表单属性信息集合
      */
+    @Locale
     List<AppBuilderFormPropertyPo> selectWithFormId(String formId);
 
     /**
@@ -29,6 +31,7 @@ public interface AppBuilderFormPropertyMapper {
      * @param id 要查询的表单属性的id
      * @return 表单属性信息
      */
+    @Locale
     AppBuilderFormPropertyPo selectWithId(String id);
 
     /**

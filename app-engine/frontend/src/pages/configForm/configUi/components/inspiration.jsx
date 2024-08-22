@@ -6,11 +6,13 @@ import TreeComponent from '../tree.jsx';
 import { getFitables } from '@shared/http/appBuilder';
 import { sourceTypes } from '../../common/common';
 import { uuid } from '../../../../common/utils';
+import { useTranslation } from 'react-i18next';
 import '../styles/inspiration.scss';
 import { Message } from '@/shared/utils/message';
 import '../styles/inspiration.scoped.scss';
 
 const Inspiration = (props) => {
+  const { t } = useTranslation();
   const { updateData } = props;
   const [inspirationValues, setInspirationValues] = useState(null);
   const [treeData, setTreeData] = useState(null);
@@ -38,17 +40,17 @@ const Inspiration = (props) => {
 
   const columns = [
     {
-      title: '变量',
+      title: t('variable'),
       dataIndex: 'var',
       key: 'var',
     },
     {
-      title: '类型',
+      title: t('varType'),
       dataIndex: 'varType',
       key: 'varType',
     },
     {
-      title: '来源类型',
+      title: t('sourceType'),
       dataIndex: 'sourceType',
       key: 'sourceType',
       render: (sourceType, record) => (
@@ -59,7 +61,7 @@ const Inspiration = (props) => {
     },
     {
       title: '来源信息',
-      dataIndex: 'sourceInfo',
+      dataIndex: t('sourceInfo'),
       key: 'sourceInfo',
       render: (sourceInfo, record) => (
         <>
@@ -79,7 +81,7 @@ const Inspiration = (props) => {
       )
     },
     {
-      title: '是否多选',
+      title: t('multiple'),
       dataIndex: 'multiple',
       key: 'multiple',
       render: (checked, record) => (
@@ -89,7 +91,7 @@ const Inspiration = (props) => {
       )
     },
     {
-      title: '操作',
+      title: t('operate'),
       key: 'action',
       render: (text, record) => {
         return (
@@ -197,7 +199,7 @@ const Inspiration = (props) => {
    */
   const validateCate = () => {
     if (disabled) {
-      Message({ type: 'warning', content: '存在不合法的类目，请先修改' });
+      Message({ type: 'warning', content: t('invalidCategory') });
       return true;
     }
     return false;
@@ -313,7 +315,7 @@ const Inspiration = (props) => {
         <div className='control'>
           <div className='control-header '>
             <div className='control-title'>
-              <span>开启后可在界面中作为预置指令库允许快捷操作。建议创建一级分类即可。</span>
+              <span>{t('invalidTip')}</span>
             </div>
           </div>
           <Form.Item
@@ -325,7 +327,7 @@ const Inspiration = (props) => {
             }}
           >
             <div className='inspiration-add'>
-              <Button type='link' onClick={onAddClick} icon={<PlusCircleOutlined />} >创建新灵感</Button>
+              <Button type='link' onClick={onAddClick} icon={<PlusCircleOutlined />} >{t('createInspiration')}</Button>
             </div>
             {
               inspirationValues && inspirationValues.inspirations.map((item, index) => (
@@ -335,8 +337,8 @@ const Inspiration = (props) => {
                       {item.name}
                     </span>
                     <span className='right'>
-                      <span onClick={() => clickInspiration(item)}>修改</span>
-                      <span onClick={() => handleDeleteIns(item.id)}>删除</span>
+                      <span onClick={() => clickInspiration(item)}>{t('modify')}</span>
+                      <span onClick={() => handleDeleteIns(item.id)}>{t('delete')}</span>
                     </span>
                   </div>
                   <div className='card-prompt'>
@@ -347,7 +349,7 @@ const Inspiration = (props) => {
             }
           </Form.Item>
         </div>
-        <Modal title='添加新的灵感' open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='1000px'>
+        <Modal title={t('createInspiration')} open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='1000px'>
           <div className='inspiration-wrap'>
             <Form
               form={modalForm}
@@ -355,7 +357,7 @@ const Inspiration = (props) => {
             >
               <Form.Item
                 name='name'
-                label='名称'
+                label={t('name')}
                 rules={[
                   {
                     required: true,
@@ -363,13 +365,13 @@ const Inspiration = (props) => {
                 ]}
                 style={{ marginBottom: '6px' }}
               >
-                <Input placeholder='请输入灵感大全名称'
+                <Input placeholder={t('plsEnter')}
                   maxLength={20}
                   showCount />
               </Form.Item>
               <Form.Item
                 name='description'
-                label='描述'
+                label={t('description')}
                 rules={[
                   {
                     required: true,
@@ -377,11 +379,11 @@ const Inspiration = (props) => {
                 ]}
                 style={{ marginBottom: '16px' }}
               >
-                <TextArea placeholder='请输入灵感大全描述' rows={3} />
+                <TextArea placeholder={t('plsEnter')} rows={3} />
               </Form.Item>
               <Form.Item
                 name='prompt'
-                label='提示词'
+                label={t('promptName')}
                 rules={[
                   {
                     required: true,
@@ -390,14 +392,14 @@ const Inspiration = (props) => {
                 style={{ marginBottom: '16px' }}
               >
                 <TextArea
-                  placeholder='你可以使用{{变量名}}添加变量'
+                  placeholder={t('promptTextarea')}
                   rows={6}
                   onBlur={onPromptChange}
                 />
               </Form.Item>
               <Form.Item
                 name='promptTemplate'
-                label='提示词模板'
+                label={t('prompt')}
                 rules={[
                   {
                     required: false,
@@ -406,21 +408,21 @@ const Inspiration = (props) => {
                 style={{ marginBottom: '16px' }}
               >
                 <TextArea
-                  placeholder='请输入'
+                  placeholder={t('plsEnter')}
                   rows={6}
                   onBlur={onPromptChange}
                 />
               </Form.Item>
               <Form.Item
                 name='promptVarData'
-                label='提示词变量'
+                label={t('promptVar')}
                 style={{ display: promptVar.length ? 'block' : 'none', marginTop: '10px' }}
               >
                 <Table columns={columns} dataSource={promptVarData} />
               </Form.Item>
               <Form.Item
                 name='category'
-                label='分类'
+                label={t('classify')}
                 style={{
                   flex: 5
                 }}
@@ -447,9 +449,9 @@ const Inspiration = (props) => {
                 name='auto'
                 label={
                   <div>
-                    <span> 是否自动执行</span>
-                    <Popover content={<div>选择自动执行，应用会自动将灵感大全的提示词发送给助手；<br />
-                        选择不自动执行，灵感大全的提示词会默认填充在对话框，支持修改，由用户自己发送给助手</div>}>
+                    <span>{t('automatic')}</span>
+                    <Popover content={<div>{t('automaticDesc')}<br />
+                      {t('automaticDesc2')} </div>}>
                       <QuestionCircleOutlined />
                     </Popover>
                   </div>
@@ -461,7 +463,7 @@ const Inspiration = (props) => {
             </Form>
           </div>
         </Modal>
-        <Modal title='类目配置' destroyOnClose open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='50vw'>
+        <Modal title={t('categoryConfiguration')} destroyOnClose open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='1000px'>
           <TreeComponent tree={treeData}
             nodeList={nodeList}
             updateTreeData={updateTreeData}

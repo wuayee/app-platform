@@ -3,9 +3,11 @@ import { Divider, Table, Tag } from 'antd';
 import { PluginIcons } from '@/components/icons/plugin';
 import { Icons } from '@/components/icons';
 import { IconMap, outputColumns, paramsColumns } from '../helper';
+import { useTranslation } from 'react-i18next';
 import '../style.scoped.scss';
 
 const PlugeDetail: React.FC = ({ pluginData }) => {
+  const { t } = useTranslation();
   const [data, setData] = useState<any>([]);
   const [inputParams, setInputParams] = useState([]);
   const [outputParams, setOutputParams] = useState([]);
@@ -49,20 +51,20 @@ const PlugeDetail: React.FC = ({ pluginData }) => {
             <Icons.user />
             <span>{data?.creator}</span>
             <span className='header-time' hidden>
-              创建于2021
+              {t('createdAt')}
             </span>
             <span className='header-time' hidden>
-              引用数:250
+              {t('quoteNumber')}
             </span>
           </div>
         </div>
       </div>
       <div style={{ marginTop: 14 }}>{data?.description}</div>
       <Divider />
-      <div className='param-title'>输入参数</div>
+      <div className='param-title'>{t('inputParam')}</div>
       <Table dataSource={inputParams} columns={paramsColumns} pagination={false} rowKey='key' />
       <div className='param-title' style={{ marginTop: 14 }}>
-        输出参数
+        {t('outputParam')}
       </div>
       <Table dataSource={outputParams} columns={outputColumns} pagination={false} rowKey='key' />
     </div>

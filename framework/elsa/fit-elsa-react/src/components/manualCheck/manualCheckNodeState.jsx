@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import "./style.css";
 import {manualCheckNodeDrawer} from "@/components/manualCheck/manualCheckNodeDrawer.jsx";
 
@@ -29,6 +29,23 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
      */
     self.serializerJadeConfig = (jadeConfig) => {
         self.flowMeta.task = jadeConfig;
+    };
+
+    /**
+     * @override
+     */
+    self.getEntity = () => {
+        return self.flowMeta.task;
+    };
+
+    /**
+     * @override
+     */
+    self.setFlowMeta = (flowMeta) => {
+        self.drawer.dispatch({
+            type: "system_update",
+            changes: [{key: "converter", value: flowMeta?.task?.converter}]
+        });
     };
 
     return self;

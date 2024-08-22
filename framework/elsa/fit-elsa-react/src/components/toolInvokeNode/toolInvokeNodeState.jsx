@@ -1,4 +1,4 @@
-import {jadeNode} from "@/components/jadeNode.jsx";
+import {jadeNode} from "@/components/base/jadeNode.jsx";
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import httpUtil from "@/components/util/httpUtil.jsx";
 import {formatString} from "@/components/util/StringUtil.js";
@@ -59,6 +59,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     /**
      * @override
      */
+    const processMetaData = self.processMetaData;
     self.processMetaData = (metaData) => {
         const _generateOutput = () => {
             newConfig.outputParams.push(convertReturnFormat(metaData.schema.return));
@@ -77,6 +78,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
             });
         };
 
+        processMetaData.apply(self, [metaData]);
         const newConfig = {...template};
         _generateInput();
         _generateOutput();

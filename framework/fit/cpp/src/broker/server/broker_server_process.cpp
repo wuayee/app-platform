@@ -16,8 +16,8 @@
 namespace Fit {
 namespace Core {
 namespace BrokerServer {
-FitCode BrokerServerProcess(ContextObj ctx, const Fit::bytes *metadata, const Fit::bytes *data,
-    ::fit::hakuna::kernel::broker::shared::FitResponse **rsp)
+FitCode BrokerServerProcess(ContextObj ctx, const fit::hakuna::kernel::broker::shared::MetaData *metadata,
+    const Fit::bytes *data, ::fit::hakuna::kernel::broker::shared::FitResponse **rsp)
 {
     *rsp = Fit::Context::NewObj<::fit::hakuna::kernel::broker::shared::FitResponse>(ctx);
     if (*rsp == nullptr) {

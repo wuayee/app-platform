@@ -1,5 +1,6 @@
 import EvaluationEndWrapper from "@/components/evaluation/evaluationEnd/EvaluationEndWrapper.jsx";
 import {v4 as uuidv4} from "uuid";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * 评估结束节点组件
@@ -7,7 +8,7 @@ import {v4 as uuidv4} from "uuid";
  * @param jadeConfig
  */
 export const evaluationEndComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
@@ -51,6 +52,7 @@ export const evaluationEndComponent = (jadeConfig) => {
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         /**
          * 添加一个子项
@@ -116,7 +118,7 @@ export const evaluationEndComponent = (jadeConfig) => {
                 _deleteRow();
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

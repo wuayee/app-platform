@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Tag, Button, message, Drawer } from 'antd';
+import React, { useState, useRef } from 'react';
+import { Tag, Button, message, Modal, Drawer } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { Icons } from '../icons';
@@ -10,8 +10,11 @@ import { useTranslation } from 'react-i18next';
 import './style.scss';
 
 const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus }: any) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isShow, setIsShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const modalRef = useRef()
   const navigate = useHistory().push;
   // 插件点击详情
   const pluginCardClick = () => {
@@ -19,6 +22,40 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus 
       ? navigate(`/plugin/detail/${pluginId}`)
       : setIsShow(true);
   };
+  // 删除
+  const deletePlugin = (e) => {
+    e.stopPropagation();
+    setIsOpen(false);
+    modalRef.current = Modal.warning({
+      title: t('deletePlugin'),
+      centered: true,
+      okText: t('ok'),
+      footer: (
+        <div className='drawer-footer'>
+          <Button onClick={() => modalRef.current.destroy()}>{t('cancel')}</Button>
+          <Button type="primary" loading={loading} onClick={confirm}>{t('ok')}</Button>
+        </div>
+      ),
+      content: (
+        <div style={{ margin: '8px 0' }}>
+          <span>{t('deleteKnowledgeTips')}</span>
+        </div>
+      )
+    });
+  }
+  const confirm = () => {
+    setLoading(true);
+    deletePluginAPI(pluginId).then((res) => {
+      setLoading(false);
+      if (res.code === 0) {
+        getPluginList();
+        modalRef.current.destroy();
+        message.success(t('deleteSuccess'));
+      }
+    }).catch(() => {
+      setLoading(false);
+    });
+  }
   const onClose = () => {
     setIsShow(false);
   };
@@ -88,23 +125,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus 
         </div>
         {isOpen && (
           <div style={{ position: 'absolute', right: '-20px', top: '-20px' }}>
-            <Button
-              style={{ width: 62 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpen(false);
-                deletePluginAPI(pluginId)
-                  .then((res) => {
-                    if (res.code === 0) {
-                      getPluginList();
-                      message.success(t('deleteSuccess'));
-                    }
-                  })
-                  .catch(() => {
-                    message.error(t('deleteFail'));
-                  });
-              }}
-            >
+            <Button style={{ width: 62 }} onClick={deletePlugin}>
               {t('delete')}
             </Button>
           </div>
@@ -127,6 +148,5 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus 
       </Drawer>
     </div>
   );
-};
-
+}
 export default PluginCard;

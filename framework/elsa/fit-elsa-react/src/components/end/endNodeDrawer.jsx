@@ -1,4 +1,4 @@
-import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
+import {jadeNodeDrawer} from "@/components/base/jadeNodeDrawer.jsx";
 import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
 import EndIcon from "../asserts/icon-end.svg?react"; // 导入背景图片
 

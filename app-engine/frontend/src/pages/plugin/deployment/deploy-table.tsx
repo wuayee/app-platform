@@ -7,9 +7,11 @@ import Pagination from '@/components/pagination/index';
 import { getPlugins, getDeployTool } from '@shared/http/plugin';
 import { debounce } from '@/shared/utils/common';
 import { PluginStatusTypeE, PluginCnType } from '../helper';
+import { useTranslation } from 'react-i18next';
 import '../styles/deploy-table.scss';
 
 const Deploy = ({ pluginRef }) => {
+  const { t } = useTranslation();
   const [tableData, setTableData] = useState([]);
   const [pluginData, setPluginData] = useState([]);
   const [deployedData, setDeployedData] = useState([]);
@@ -108,21 +110,21 @@ const Deploy = ({ pluginRef }) => {
     <div className='deploy-info-content'>
       <div className='deploy-table'>
         <div className='table-title'>
-          <span>插件资源池</span>
+          <span>{t('pluginResourcePool')}</span>
           <span className='num'>{total}</span>
         </div>
         <div className='table-search'>
           <div className='table-list'>
             <div className='left'>
-              <span>插件名称</span>
+              <span>{t('pluginName')}</span>
               <Input
-                placeholder='搜索'
+                placeholder={t('search')}
                 style={{ width: '140px', height: '25px', marginLeft: '16px' }}
                 prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
                 onChange={(e) => handleSearch(e.target.value, 'table')}
               />
             </div>
-            <div className='right'>插件详情</div>
+            <div className='right'>{t('pluginDetails')}</div>
           </div>
         </div>
         <div className='table-content'>
@@ -140,7 +142,7 @@ const Deploy = ({ pluginRef }) => {
           </div>)}
           {tableData.length === 0 && <Empty
             imageStyle={{ height: 60 }}
-            description={<span>暂无数据</span>} />}
+            description={<span>{t('noData')}</span>} />}
         </div>
         <div style={{ paddingTop: 16 }}>
           <Pagination total={total} current={pageNum} onChange={selectPage} pageSize={pageSize} />
@@ -149,21 +151,21 @@ const Deploy = ({ pluginRef }) => {
       <div className='icon'><RightOutlined /></div>
       <div className='deploy-table'>
         <div className='table-title'>
-          <span>已选</span>
+          <span>{t('selected')}</span>
           <span className='num'>{pluginLength}</span>
-          <span className='tips'>最多可选20个</span>
+          <span className='tips'>{t('selectedOptions')}</span>
         </div>
         <div className='table-search'>
           <div className='table-list'>
             <div className='left'>
-              <span>插件名称</span>
+              <span>{t('pluginName')}</span>
               <Input
-                placeholder='搜索'
+                placeholder={t('search')}
                 style={{ width: '140px', height: '25px', marginLeft: '16px' }}
                 prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
                 onChange={(e) => handleSearch(e.target.value)} />
             </div>
-            <div className='right'>插件详情</div>
+            <div className='right'>{t('pluginDetails')}</div>
           </div>
         </div>
         <div className='table-content'>
@@ -179,7 +181,7 @@ const Deploy = ({ pluginRef }) => {
               <span className='icon' onClick={() => onChange(false, item)}>
                 {item.deployStatus === 'deployed' ? <Tooltip
                   placement='left'
-                  title='取消已部署的插件，会导致正在运行的应用不可用，请谨慎操作'
+                  title={t('pluginTips')}
                   color='#ffffff'
                   overlayInnerStyle={{ color: '#333333' }}>
                   <CloseOutlined />
@@ -189,7 +191,7 @@ const Deploy = ({ pluginRef }) => {
           </div>)}
           {pluginData.length === 0 && <Empty
             imageStyle={{ height: 60 }}
-            description={<span>暂无数据</span>} />}
+            description={<span>{t('noData')}</span>} />}
         </div>
       </div>
     </div>

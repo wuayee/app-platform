@@ -9,7 +9,7 @@ import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -41,10 +41,9 @@ function _EvaluationOutput({disabled, output}) {
      *
      * @param data output数据
      * @param level 层级
-     * @param parent 父id
      * @return {{}}
      */
-    function convertToTreeData(data, level, parent) {
+    function convertToTreeData(data, level) {
         if (!data) {
             return {};
         }
@@ -111,8 +110,8 @@ function _EvaluationOutput({disabled, output}) {
 const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
     const {key, title, level} = node;
     const item = node.originalData;
-
     const form = useFormContext();
+    const {t} = useTranslation();
     const options = [{
         value: 'Reference',
         label: '引用',
@@ -173,6 +172,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
                       disabled={disabled}
                       onClick={() => handleDelete(key)}/>
             : <Button type="text"
+                      style={{marginLeft:'4px'}}
                       icon={<AddSubItem/>}
                       disabled={disabled}
                       onClick={() => handleAddSubItem(key)}/>;

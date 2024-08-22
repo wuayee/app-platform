@@ -8,8 +8,9 @@ import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
+import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
+import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 
 import java.io.File;
 import java.util.Arrays;
@@ -72,12 +73,12 @@ public class FileParser {
     }
 
     private static String validateSchemaStringField(Map<String, Object> schemaNode, String fieldName) {
-        Object field = notNull(schemaNode.get(fieldName), "Tool schema field value cannot be null. [field={0}]",
-            fieldName);
+        Object field = notNull(schemaNode.get(fieldName),
+            () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
         if (field instanceof String) {
-            return notBlank((String) field, "Tool schema field value cannot be blank. [field={0}]", fieldName);
+            return notBlank((String) field,
+                () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
         }
-        throw new IllegalArgumentException(
-            StringUtils.format("Failed to obtain the data in schema. [field={0}]", fieldName));
+        throw new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName);
     }
 }

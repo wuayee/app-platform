@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.po;
 
+import com.huawei.fit.jober.aipp.aop.LocaleField;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AppBuilderAppPo {
     private String id;
+    @LocaleField
     private String name;
     private String tenantId;
     private String configId;
@@ -33,6 +36,7 @@ public class AppBuilderAppPo {
     private String version;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+    @LocaleField
     private String attributes;
     private String state;
 }

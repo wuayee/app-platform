@@ -1,7 +1,6 @@
 .send-editor-container {
   margin: 0 auto;
   position: relative;
-  height: 250px;
   flex-shrink: 0;
   .editor-stop {
     position: absolute;
@@ -499,7 +498,7 @@
       margin-left: 16px;
       &:hover {
         path {
-          stroke: #2673e5;
+          fill: #2673e5;
         }
       }
     }

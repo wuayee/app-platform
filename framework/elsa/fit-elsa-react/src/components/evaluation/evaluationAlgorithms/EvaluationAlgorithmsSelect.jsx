@@ -3,6 +3,13 @@ import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagation
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
 import React from "react";
+import PropTypes from "prop-types";
+
+_EvaluationAlgorithmsSelect.prototypes = {
+    algorithms: PropTypes.array,
+    disabled: PropTypes.bool,
+    selectedAlgorithm: PropTypes.object
+};
 
 /**
  * 算法选择组件

@@ -120,6 +120,12 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      '/ttApi': {
+        target: 'http://10.169.57.250:8080',
+        pathRewrite: { '^/ttApi': '' },
+        secure: false,
+        changeOrigin: true,
+      },
     },
   },
 });

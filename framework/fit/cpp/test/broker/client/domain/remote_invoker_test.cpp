@@ -114,7 +114,7 @@ TEST_F(RemoteInvokerTest, should_return_not_found_when_invoke_given_mock_formatt
     EXPECT_EQ(result, FIT_ERR_NOT_FOUND);
 }
 
-TEST_F(RemoteInvokerTest, should_return_error_when_invoke_given_SerializeRequest_failed)
+TEST_F(RemoteInvokerTest, should_return_error_when_invoke_given_get_token_failed)
 {
     // given
     Fit::Framework::Formatter::FormatterMetaPtr formatterMetaPtr = std::make_shared<FormatterMeta>();
@@ -124,9 +124,6 @@ TEST_F(RemoteInvokerTest, should_return_error_when_invoke_given_SerializeRequest
     EXPECT_CALL(*formatterService_, GetFormatter(testing::A<const BaseSerialization&>()))
         .Times(1)
         .WillRepeatedly(testing::Return(formatterMetaPtr));
-    EXPECT_CALL(*formatterService_, SerializeRequest(_, _, _, _))
-        .Times(1)
-        .WillRepeatedly(testing::Return(FIT_ERR_SERIALIZE));
 
     auto config = std::make_shared<BrokerGenericableConfigMock>();
     EXPECT_CALL(*config, TraceIgnore()).Times(testing::AtLeast(1)).WillRepeatedly(testing::Return(true));
@@ -148,7 +145,7 @@ TEST_F(RemoteInvokerTest, should_return_error_when_invoke_given_SerializeRequest
     FitCode result = remoteInvoker->Invoke(testFitable.ctx_, in, out);
 
     // then
-    EXPECT_EQ(result, FIT_ERR_SERIALIZE);
+    EXPECT_EQ(result, FIT_ERR_FAIL);
 }
 
 TEST_F(RemoteInvokerTest, should_return_error_when_invoke_given_illgel_genericable_id)
@@ -188,7 +185,7 @@ TEST_F(RemoteInvokerTest, should_return_error_when_invoke_given_illgel_genericab
     FitCode result = remoteInvoker->Invoke(testFitable.ctx_, in, out);
 
     // then
-    EXPECT_EQ(result, FIT_ERR_SERIALIZE);
+    EXPECT_EQ(result, FIT_ERR_FAIL);
 }
 
 

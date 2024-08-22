@@ -72,8 +72,7 @@ FitCode Start(::Fit::Framework::PluginContext* context)
     auto connectionNum = config->Get(ConfigFields::PG_CONNECTION_NUM).AsInt(1);
     auto maxRetry = config->Get(ConfigFields::PG_CONNECTION_MAX_RETRY).AsInt(1);
     FIT_LOG_INFO("Activator Start with (conn num: %d, max retry: %d).", connectionNum, maxRetry);
-    return Repository::Pg::ConnectionPool::Instance().SetUp(
-        configStr, connectionNum, maxRetry,
+    return Repository::Pg::ConnectionPool::Instance().SetUp(configStr, connectionNum, maxRetry,
         [](const char* connectionInfo) { return make_unique<Fit::Repository::Pg::SqlConnection>(connectionInfo); });
 }
 

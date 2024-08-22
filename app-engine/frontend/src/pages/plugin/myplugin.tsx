@@ -13,39 +13,43 @@ import '../../index.scss';
 import './style.scoped.scss';
 import CreateWorkflow from '../addFlow/components/create-workflow';
 import CreateWorkfowDrawer from './upload/createWorkflow';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/locale/i18n';
 
 enum tabItemE {
   TOOL = 'FIT',
   TOOLFLOW = 'waterFlow',
 }
 
+
 const tabItems: TabsProps['items'] = [
   {
     key: tabItemE.TOOL,
-    label: '工具',
+    label: i18n.t('tool'),
   },
   {
     key: tabItemE.TOOLFLOW,
-    label: '工具流',
+    label: i18n.t('workflow'),
   },
 ];
 
 const appItems: TabsProps['items'] = [
   {
     key: 'draft',
-    label: '草稿',
+    label: i18n.t('draft'),
   },
   {
     key: 'published',
-    label: '已发布',
+    label: i18n.t('published'),
   },
   {
     key: 'avaliable',
-    label: '已上架',
+    label: i18n.t('alreadyShelves'),
   },
 ];
 
 const MyPlugins = () => {
+  const { t } = useTranslation();
   const [total, setTotal] = useState(0);
   const [name, setName] = useState<string>(undefined);
   const [pluginData, setPluginData] = useState([]);
@@ -129,13 +133,13 @@ const MyPlugins = () => {
               }
             }}
           >
-            创建
+            {t('create')}
           </Button>
           <Input
             disabled
             showCount
             maxLength={20}
-            placeholder='搜索'
+            placeholder={t('search')}
             onPressEnter={(e) => filterByName(e)}
             prefix={<Icons.search color='rgb(230, 230, 230)' />}
             defaultValue={name}
@@ -145,7 +149,7 @@ const MyPlugins = () => {
           <div hidden>
             <Dropdown menu={{ items: appItems }} trigger={['click']}>
               <Space className='app-select'>
-                全部应用
+                {t('allApplications')}
                 <DownOutlined />
               </Space>
             </Dropdown>

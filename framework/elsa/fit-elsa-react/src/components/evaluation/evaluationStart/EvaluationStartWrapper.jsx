@@ -1,3 +1,10 @@
+import PropTypes from "prop-types";
+
+EvaluationStartWrapper.propTypes = {
+    data: PropTypes.object,
+    disabled: PropTypes.bool,
+};
+
 /**
  * 评估开始节点组件
  *

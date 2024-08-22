@@ -215,3 +215,11 @@ COMMENT ON COLUMN "t_chat_session"."update_at" IS '更新时间';
 COMMENT ON COLUMN "t_chat_session"."update_by" IS '更新人';
 
 COMMENT ON COLUMN "t_chat_session"."status" IS '状态 0-正常 1-已删除';
+
+create table if not exists i18n
+(
+    id         varchar(64) not null primary key,
+    key        varchar(255) not null,
+    language   varchar(64)  not null,
+    value      text
+    );

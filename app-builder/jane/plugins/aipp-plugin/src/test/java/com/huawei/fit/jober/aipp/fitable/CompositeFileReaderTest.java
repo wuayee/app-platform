@@ -22,6 +22,7 @@ import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.exceptions.JobberException;
+import com.huawei.jade.common.ui.globalization.LocaleUiWord;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,10 +49,12 @@ public class CompositeFileReaderTest {
     private MetaInstanceService metaInstanceServiceMock;
     private AippLogService aippLogServiceMock;
     private CompositeFileReader fileReader;
+    private LocaleUiWord localeUiWord;
 
     @BeforeEach
     void setUp() {
-        this.fileReader = new CompositeFileReader(operatorServiceMock, metaInstanceServiceMock, aippLogServiceMock);
+        this.fileReader = new CompositeFileReader(operatorServiceMock, metaInstanceServiceMock, aippLogServiceMock,
+                localeUiWord);
     }
 
     @Test

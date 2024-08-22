@@ -5,7 +5,6 @@ import KnowledgeBase from '../pages/knowledge-base';
 import KnowledgeBaseCreate from '../pages/knowledge-base/create';
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Plugin from '../pages/plugin';
-import PageNormal from '../pages/page-normal';
 import ChatHome from '../pages/chatEngineHome/index';
 import ChatRunning from '../pages/chatRunning/index';
 import AppDetail from '../pages/appDetail';
@@ -20,6 +19,7 @@ import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
 import PlugeDetail from '../pages/plugin/detail/plugin-list';
 import PlugeFlowDetail from '../pages/plugin/detail/plugin-flow-detail';
+import i18n from '../locale/i18n';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -35,13 +35,13 @@ export const routeList: MenuItem[] = [
   {
     key: '/home',
     icon: Icons.home({}),
-    label: '首页',
+    label: i18n.t('homepage'),
     component: ChatHome,
     children: [
       {
         key: '/:tenantId/chatShare/:appId/:shareId',
         icon: Icons.app({}),
-        label: '分享对话',
+        label: i18n.t('shareConversation'),
         component: ChatShare,
         hidden: true,
       },
@@ -50,7 +50,7 @@ export const routeList: MenuItem[] = [
   {
     key: '/app',
     icon: Icons.app({}),
-    label: '应用市场',
+    label: i18n.t('applicationMarket'),
     component: Apps,
     children: [
       {
@@ -65,27 +65,27 @@ export const routeList: MenuItem[] = [
   {
     key: '/app-develop',
     icon: Icons.app({}),
-    label: '应用开发',
+    label: i18n.t('appDevelopment'),
     component: AppDev,
     children: [
       {
         key: '/app-develop/:tenantId/app-detail/:appId',
         icon: Icons.app({}),
-        label: 'app编排',
+        label: i18n.t('arrange'),
         component: AippIndex,
         hidden: true,
       },
       {
         key: '/app-develop/:tenantId/app-detail/add-flow/:appId',
         icon: Icons.app({}),
-        label: '新增工具流',
+        label: i18n.t('addWorkflow'),
         component: AddFlow,
         hidden: true,
       },
       {
         key: '/app-develop/:tenantId/app-detail/flow-detail/:appId',
         icon: Icons.app({}),
-        label: '工具流',
+        label: i18n.t('workflow'),
         component: FlowDetail,
         hidden: true,
       },
@@ -99,51 +99,44 @@ export const routeList: MenuItem[] = [
     ],
   },
   {
-    key: '/robot-market',
-    icon: Icons.app({}),
-    label: '机器人市场',
-    component: PageNormal,
-    hidden: true,
-  },
-  {
     key: '/knowledge-base',
     icon: Icons.app({}),
-    label: '知识库',
-    title: '知识库概览',
+    label: i18n.t('knowledgeBase'),
+    title: i18n.t('knowledgeOverview'),
     component: KnowledgeBase,
     children: [
       {
         key: '/knowledge-base/create',
         icon: Icons.app({}),
-        label: '创建知识库',
+        label: i18n.t('createKnowledgeBase'),
         component: KnowledgeBaseCreate,
         hidden: true,
       },
       {
         key: '/knowledge-base/knowledge-detail',
         icon: Icons.app({}),
-        label: '知识库详情',
+        label: i18n.t('knowledgeBaseDetail'),
         component: KnowledgeBaseDetail,
         hidden: true,
         children: [
           {
             key: '/knowledge-base/knowledge-detail/create-table',
             icon: Icons.app({}),
-            label: '添加知识表',
+            label: i18n.t('addingKnowledgeTable'),
             component: KnowledgeBaseDetailCreateTable,
             hidden: true,
           },
           {
             key: '/knowledge-base/knowledge-detail/import-data',
             icon: Icons.app({}),
-            label: '导入数据',
+            label: i18n.t('importingData'),
             component: KnowledgeBaseDetailImportData,
             hidden: true,
           },
           {
             key: '/knowledge-base/knowledge-detail/industry-terminology',
             icon: Icons.app({}),
-            label: '详情',
+            label: i18n.t('details'),
             component: IndustryTerminology,
             hidden: true,
           },
@@ -154,46 +147,25 @@ export const routeList: MenuItem[] = [
   {
     key: '/plugin',
     icon: Icons.app({}),
-    label: '插件',
+    label: i18n.t('plugin'),
     component: Plugin,
     children: [
       {
         key: '/plugin/detail/:pluginId',
         icon: Icons.app({}),
-        label: '插件详情',
+        label: i18n.t('pluginDetails'),
         component: PlugeDetail,
         hidden: true,
       },
       {
         key: '/plugin/detail-flow/:pluginId',
         icon: Icons.app({}),
-        label: '编排插件详情',
+        label: i18n.t('pluginDetails2'),
         component: PlugeFlowDetail,
         hidden: true,
       },
     ],
-  },
-  {
-    key: '/Tooling',
-    icon: Icons.app({}),
-    label: '工具',
-    component: PageNormal,
-    hidden: true,
-  },
-  {
-    key: '/WorkStream',
-    icon: Icons.app({}),
-    label: '工作流',
-    component: PageNormal,
-    hidden: true,
-  },
-  {
-    key: '/group',
-    icon: Icons.app({}),
-    label: '团队',
-    component: PageNormal,
-    hidden: true,
-  },
+  }
 ];
 
 // 生成菜单

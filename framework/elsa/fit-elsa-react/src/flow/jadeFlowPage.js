@@ -159,10 +159,17 @@ export const jadeFlowPage = (div, graph, name, id) => {
      * @override
      */
     const createNew = self.createNew;
-    self.createNew = (shapeType, x, y, id, properties, parent, ignoreLimit, data) => {
+    self.createNew = ({shapeType, x, y, id, properties, parent, ignoreLimit, data, metaData}) => {
+        const handleArgs = (args) => args.map(arg => arg === undefined ? null : arg);
+
         shapeCreationHandler.filter(v => v.type === "before")
-                .forEach(v => v.handle(self, shapeType, x, y, properties, parent));
-        const shape = createNew.apply(self, [shapeType, x, y, id, properties, parent, ignoreLimit, data]);
+                .forEach(v => {
+                    const [type, posX, posY, props, prnt] = handleArgs([shapeType, x, y, properties, parent]);
+                    v.handle(self, type, posX, posY, props, prnt);
+                });
+        const args = handleArgs([shapeType, x, y, id, properties, parent, ignoreLimit, data]);
+        const shape = createNew.apply(self, args);
+        shape.processMetaData(metaData);
         shapeCreationHandler.filter(v => v.type === "after")
                 .forEach(v => v.handle(self, shape));
         return shape;
@@ -178,7 +185,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
         const jadeNodes = self.shapes.filter(s => s.isTypeof("jadeNode"));
         // 找到所有节点text
         const textArray = jadeNodes.map(s => s.text);
-        if (!textArray.find(t => t === text)) {
+        if (textArray.filter(t => t === text).length <= 1) {
             return text;
         }
         const separator = "_";

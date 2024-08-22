@@ -9,6 +9,7 @@
 #include <cpp-httplib/httplib.h>
 #include <fit/stl/memory.hpp>
 #include <fit/internal/runtime/crypto/crypto_manager.hpp>
+#include <fit/fit_log.h>
 namespace Fit {
 class HttpServerFactory {
 public:

@@ -7,26 +7,30 @@
  */
 
 #include "remote_invoker.hpp"
+#include <atomic>
 #include <fit/fit_code_helper.h>
 #include <fit/fit_log.h>
 #include <fit/internal/util/protocol/fit_meta_data.h>
-#include <fit/internal/util/protocol/fit_meta_package_builder.h>
 #include <fit/internal/util/protocol/fit_response_meta_data.h>
 #include <fit/internal/util/protocol/tlv/tlv_tag_define.hpp>
 #include <fit/internal/util/vector_utils.hpp>
-
-#include <genericable/com_huawei_fit_hakuna_kernel_broker_client_request_response_v4/1.0.0/cplusplus/requestResponseV4.hpp>
+#include <fit/external/util/context/context_base.h>
+#include <genericable/com_huawei_fit_hakuna_kernel_broker_client_request_response_v5/1.0.0/cplusplus/requestResponseV5.hpp>
 #include <genericable/com_huawei_fit_hakuna_kernel_registry_listener_mark_fitable_address_status/1.0.0/cplusplus/markFitableAddressStatus.hpp>
-
+#include <genericable/com_huawei_fit_secure_access_get_token/1.0.0/cplusplus/getToken.hpp>
 #include "fitable_invoker_factory.hpp"
 
-using namespace Fit;
 using namespace Fit::Framework::Annotation;
 using namespace Fit::Framework::Formatter;
 using namespace Fit::Util;
 
-using RequestResponse = ::fit::hakuna::kernel::broker::client::requestResponseV4;
+using RequestParam = ::fit::hakuna::kernel::broker::client::RequestParam;
+using RequestResponseV5 = ::fit::hakuna::kernel::broker::client::requestResponseV5;
+namespace {
+static std::atomic<bool> g_isEnableAccessToken {false};
+}
 
+namespace Fit {
 RemoteInvoker::RemoteInvoker(const FitableInvokerFactory* factory,
     FitableCoordinatePtr coordinate, FitableType fitableType, FitableEndpointPtr endpoint, FitConfigPtr config)
     : FitableInvokerBase(factory, move(coordinate), fitableType, move(config)), endpoint_(move(endpoint))
@@ -50,9 +54,8 @@ FitableEndpointPtr RemoteInvoker::GetEndpoint() const
 
 FitCode RemoteInvoker::Invoke(ContextObj context, vector<any>& in, vector<any>& out) const
 {
-    FitCode ret;
-    bytes metadataBytes;
-    ret = BuildMetadataBytes(context, metadataBytes);
+    RequestMetaData metaData;
+    FitCode ret = BuildMetadataBytes(context, metaData);
     if (ret != FIT_OK) {
         FIT_LOG_ERROR("Failed to build metadata for remote invocation. [genericable=%s, fitable=%s, error=%x]",
             GetCoordinate()->GetGenericableId().c_str(), GetCoordinate()->GetFitableId().c_str(), ret);
@@ -67,7 +70,7 @@ FitCode RemoteInvoker::Invoke(ContextObj context, vector<any>& in, vector<any>& 
         return ret;
     }
 
-    return InvokeRemoteFitable(context, metadataBytes, requestBytes, out);
+    return InvokeRemoteFitable(context, metaData, requestBytes, out);
 }
 FitCode FillGlobalContext(ContextObj context, fit_meta_data& meta)
 {
@@ -103,7 +106,8 @@ FitCode FillTLV(ContextObj context, fit_meta_data& meta)
     }
     return FIT_OK;
 }
-FitCode RemoteInvoker::BuildMetadataBytes(ContextObj context, bytes& result) const
+
+FitCode RemoteInvoker::BuildMetadataBytes(ContextObj context, RequestMetaData& metaData) const
 {
     auto formatter = GetFactory()->GetFormatterService()->GetFormatter(GetSerialization());
     if (formatter == nullptr) {
@@ -114,18 +118,21 @@ FitCode RemoteInvoker::BuildMetadataBytes(ContextObj context, bytes& result) con
             static_cast<int32_t>(GetSerialization().fitableType));
         return FIT_ERR_NOT_FOUND;
     }
+
+    Fit::string token = ContextGetAccessToken(context);
     auto meta = fit_meta_data(fit_meta_defines::META_VERSION_HAS_RESPONSE_META, formatter->GetFormat(),
-        fit_version {1, 0, 0}, GetCoordinate()->GetGenericableId(), GetCoordinate()->GetFitableId());
+        fit_version {1, 0, 0}, GetCoordinate()->GetGenericableId(), GetCoordinate()->GetFitableId(), token);
     auto tlvRet = FillTLV(context, meta);
     if (tlvRet != FIT_OK) {
         return tlvRet;
     }
-    result = fit_meta_package_builder::build(meta);
-    if (result.empty()) {
-        FIT_LOG_ERROR("Failed to build request meta. (genericableId=%s, fitableId=%s).",
-            GetSerialization().genericId.c_str(), GetCoordinate()->GetFitableId().c_str());
-        return FIT_ERR_SERIALIZE;
-    }
+
+    metaData.version = meta.get_version();
+    metaData.payloadFormat = meta.get_payload_format();
+    metaData.genericableVersion = meta.get_generic_version().to_string();
+    metaData.genericableId = meta.get_generic_id();
+    metaData.fitableId = meta.get_fit_id();
+    metaData.accessToken = meta.get_access_token();
     return FIT_OK;
 }
 
@@ -137,7 +144,7 @@ FitCode RemoteInvoker::SerializeRequest(ContextObj context, const vector<any>& i
     return ret;
 }
 
-FitCode RemoteInvoker::InvokeRemoteFitable(ContextObj context, const bytes& metadata, const bytes& request,
+FitCode RemoteInvoker::InvokeRemoteFitable(ContextObj context, const RequestMetaData& metaData, const bytes& request,
     vector<any>& out) const
 {
     ::fit::hakuna::shared::Address targetAddress;
@@ -145,20 +152,24 @@ FitCode RemoteInvoker::InvokeRemoteFitable(ContextObj context, const bytes& meta
     targetAddress.port = GetEndpoint()->GetPort();
     targetAddress.host = GetEndpoint()->GetHost();
 
-    ::fit::hakuna::kernel::broker::client::RequestContext requestContext;
-    requestContext.timeout = ContextGetTimeout(context);
     auto& appRef = GetEndpoint()->GetContext().application;
     auto& workerRef = GetEndpoint()->GetContext().worker;
-    requestContext.application.name = appRef.name;
-    requestContext.application.nameVersion = appRef.version;
-    requestContext.application.extensions = appRef.extensions;
-    requestContext.worker.id = workerRef.id;
-    requestContext.worker.extensions = workerRef.extensions;
 
-    ::fit::hakuna::kernel::broker::shared::FitResponse* result {nullptr};
-    RequestResponse proxy;
+    RequestParam requestParam;
+    requestParam.timeout = ContextGetTimeout(context);
+    requestParam.address = targetAddress;
+    requestParam.metaData = metaData;
+    requestParam.data = request;
+    requestParam.worker.id = workerRef.id;
+    requestParam.worker.extensions = workerRef.extensions;
+    requestParam.application.name = appRef.name;
+    requestParam.application.nameVersion = appRef.version;
+    requestParam.application.extensions = appRef.extensions;
+
+    ::fit::hakuna::kernel::broker::shared::FitResponseV2* result {nullptr};
+    RequestResponseV5 proxy;
     proxy.SetAlias("protocol=" + Fit::to_string(GetEndpoint()->GetProtocol()));
-    auto ret = proxy(&targetAddress, &metadata, &request, &requestContext, &result);
+    auto ret = proxy(&requestParam, &result);
     if (ret == FIT_OK) {
         return ParseResult(context, result, out);
     } else if (IsNetErrorCode(ret)) {
@@ -175,27 +186,22 @@ FitCode RemoteInvoker::InvokeRemoteFitable(ContextObj context, const bytes& meta
     }
 }
 
-FitCode RemoteInvoker::ParseResult(ContextObj context, ::fit::hakuna::kernel::broker::shared::FitResponse* fitResponse,
-    vector<any>& out) const
+FitCode RemoteInvoker::ParseResult(ContextObj context,
+    ::fit::hakuna::kernel::broker::shared::FitResponseV2* fitResponse, vector<any>& out) const
 {
     if (!fitResponse) {
         FIT_LOG_ERROR("The response returned from remote fitable is nullptr. [genericable=%s, fitable=%s]",
             GetCoordinate()->GetGenericableId().c_str(), GetCoordinate()->GetFitableId().c_str());
         return FIT_ERR_NET_NO_RESPONSE;
     }
-    fit_response_meta_data metadata;
-    if (!metadata.from_bytes(fitResponse->metadata)) {
-        FIT_LOG_ERROR("Failed to read metadata from response returned by remote fitable. [genericable=%s, fitable=%s]",
-            GetCoordinate()->GetGenericableId().c_str(), GetCoordinate()->GetFitableId().c_str());
-        return FIT_ERR_NET_INVALID_RESPONSE_METADATA;
-    }
-    if (metadata.get_code() != FIT_OK) {
+
+    if (fitResponse->code != FIT_OK) {
         FIT_LOG_ERROR("Remote fitable invoked failed. "
             "[genericable=%s, fitable=%s, host=%s, port=%d, error=%x, message=%s]",
             GetCoordinate()->GetGenericableId().c_str(), GetCoordinate()->GetFitableId().c_str(),
-            GetEndpoint()->GetHost().c_str(), GetEndpoint()->GetPort(), metadata.get_code(),
-            metadata.get_message().c_str());
-        return (FitCode)metadata.get_code();
+            GetEndpoint()->GetHost().c_str(), GetEndpoint()->GetPort(), fitResponse->code,
+            fitResponse->message.c_str());
+        return (FitCode)fitResponse->code;
     }
     if (GetFitableType() == FitableType::MAIN) {
         Response response = GetFactory()->GetFormatterService()->DeserializeResponse(
@@ -256,6 +262,67 @@ FitCode RemoteInvoker::DisableAddress() const
     return ret;
 }
 
+AuthenticationForRemoteInvoker::AuthenticationForRemoteInvoker(
+    const ::Fit::FitableInvokerFactory* factory, ::Fit::FitableCoordinatePtr coordinate,
+    ::Fit::Framework::Annotation::FitableType fitableType, ::Fit::FitableEndpointPtr endpoint, FitConfigPtr config)
+    : RemoteInvoker(factory, move(coordinate), fitableType, move(endpoint), move(config))
+{
+}
+
+int32_t AuthenticationForRemoteInvoker::GetToken(bool isForceUpdate, Fit::string& token) const
+{
+    fit::secure::access::GetToken getTokenExec;
+    Fit::string* tokenTemp = new Fit::string();
+    int32_t ret = getTokenExec(&isForceUpdate, &tokenTemp);
+    if (ret != FIT_OK) {
+        FIT_LOG_ERROR("Get token failed, %d.", ret);
+        return ret;
+    }
+
+    token = *tokenTemp;
+    return FIT_OK;
+}
+
+FitCode AuthenticationForRemoteInvoker::Invoke(ContextObj context, ::Fit::Framework::Arguments& in,
+    ::Fit::Framework::Arguments& out) const
+{
+    if (!AuthenticationForRemoteInvoker::GetIsEnableAccessToken() || !GetConfig()->IsRegistryFitable()) {
+        return RemoteInvoker::Invoke(context, in, out);
+    }
+
+    string token {};
+    FitCode ret = GetToken(false, token);
+    if (ret != FIT_OK) {
+        FIT_LOG_ERROR("Get token failed.");
+        return ret;
+    }
+    ContextSetAccessToken(context, token.c_str());
+    ret = RemoteInvoker::Invoke(context, in, out);
+    if (ret == FIT_ERR_AUTHENTICATION_INVALID_ACCESS_TOKEN) {
+        FIT_LOG_WARN("Token is invalid error occurs. [genericableId=%s, genericableVersion=%s, "
+            "fitableId=%s, fitableVersion=%s, errorCode=%d.]",
+            GetCoordinate()->GetGenericableId().c_str(), GetCoordinate()->GetFitableVersion().c_str(),
+            GetCoordinate()->GetFitableId().c_str(), GetCoordinate()->GetFitableVersion().c_str(), ret);
+        ret = GetToken(true, token);
+        if (ret != FIT_OK) {
+            FIT_LOG_ERROR("Get token failed.");
+            return ret;
+        }
+        ContextSetAccessToken(context, token.c_str());
+        ret = RemoteInvoker::Invoke(context, in, out);
+    }
+    return ret;
+}
+
+void AuthenticationForRemoteInvoker::SetIsEnableAccessToken(bool isEnableAccessTokenIn)
+{
+    g_isEnableAccessToken.store(isEnableAccessTokenIn);
+}
+bool AuthenticationForRemoteInvoker::GetIsEnableAccessToken()
+{
+    return g_isEnableAccessToken.load();
+}
+
 RemoteInvokerBuilder& RemoteInvokerBuilder::SetFactory(const FitableInvokerFactory* factory)
 {
     factory_ = factory;
@@ -288,7 +355,8 @@ RemoteInvokerBuilder& RemoteInvokerBuilder::SetFitConfig(FitConfigPtr config)
 
 std::unique_ptr<FitableInvoker> RemoteInvokerBuilder::Build()
 {
-    auto invoker = make_unique<RemoteInvoker>(factory_, move(coordinate_), fitableType_, move(endpoint_),
-        move(config_));
+    auto invoker = make_unique<AuthenticationForRemoteInvoker>(
+        factory_, move(coordinate_), fitableType_, move(endpoint_), move(config_));
     return make_unique<FitableInvokerTraceDecorator>(move(invoker));
+}
 }

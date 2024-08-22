@@ -2,6 +2,7 @@ import {v4 as uuidv4} from "uuid";
 import EvaluationAlgorithmsWrapper from "@/components/evaluation/evaluationAlgorithms/EvaluationAlgorithmsWrapper.jsx";
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import {updateInput} from "@/components/util/JadeConfigUtils.js";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * 评估算法节点组件
@@ -9,7 +10,7 @@ import {updateInput} from "@/components/util/JadeConfigUtils.js";
  * @param jadeConfig
  */
 export const evaluationAlgorithmsComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
@@ -47,6 +48,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         /**
          * 切换算法
@@ -138,7 +140,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
                 newConfig.inputParams = updateInput(config.inputParams, action.id, action.changes);
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };
