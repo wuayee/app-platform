@@ -2,6 +2,7 @@
   margin: 0 auto;
   position: relative;
   flex-shrink: 0;
+  height: 250px;
   .editor-stop {
     position: absolute;
     top: -40px;
@@ -360,6 +361,10 @@
   color: #1A1A1A;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+  position: absolute;
+  z-index: 99;
+  width: 100%;
+  top: 0;
   .recommends-top {
     display: flex;
     align-items: center;
