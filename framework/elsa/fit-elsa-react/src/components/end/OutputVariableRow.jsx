@@ -4,7 +4,7 @@ import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSele
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 _OutputVariableRow.propTypes = {
     item: PropTypes.object.isRequired,
@@ -24,7 +24,7 @@ _OutputVariableRow.propTypes = {
 function _OutputVariableRow({item, handleItemChange, disabled}) {
     const inputName = `value-${item.id}`;
     const form = useFormContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const _onReferencedValueChange = (value) => {
         handleItemChange(item.id, [{key: "referenceKey", value: value}]);
@@ -61,30 +61,30 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
-                            disabled={disabled}
-                            reference={item}
-                            onReferencedValueChange={_onReferencedValueChange}
-                            onReferencedKeyChange={_onReferencedKeyChange}
-                            style={{fontSize: "12px"}}
-                            placeholder={t('pleaseSelect')}
-                            showSearch
-                            className="value-custom jade-select"
-                            dropdownStyle={{
-                                maxHeight: 400, overflow: 'auto'
-                            }}
-                            value={item.value}
-                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
+                        disabled={disabled}
+                        reference={item}
+                        onReferencedValueChange={_onReferencedValueChange}
+                        onReferencedKeyChange={_onReferencedKeyChange}
+                        style={{fontSize: "12px"}}
+                        placeholder={t('pleaseSelect')}
+                        showSearch
+                        className="value-custom jade-select"
+                        dropdownStyle={{
+                            maxHeight: 400, overflow: 'auto'
+                        }}
+                        value={item.value}
+                        rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                     />
                 </>);
             case 'Input':
                 return (<>
                     <Form.Item
-                            style={{marginBottom: '8px'}}
-                            id={`value-${item.id}`}
-                            name={`value-${item.id}`}
-                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
-                            validateTrigger="onBlur"
-                            initialValue={item.value}
+                        style={{marginBottom: '8px'}}
+                        id={`value-${item.id}`}
+                        name={`value-${item.id}`}
+                        rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
+                        validateTrigger="onBlur"
+                        initialValue={item.value}
                     >
                         <JadeInput disabled={disabled}
                                    className="value-custom jade-input"
@@ -113,16 +113,16 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
                             onChange={(value) => {
                                 form.resetFields([`reference-${item.id}`, inputName]);
                                 let changes = [
-                                        {key: 'from', value: value},
-                                        {key: "value", value: ""}
+                                    {key: 'from', value: value},
+                                    {key: "value", value: ""}
                                 ];
                                 if (value === "Input") {
                                     changes = [
-                                            {key: 'from', value: value},
-                                            {key: "value", value: ""},
-                                            {key: "referenceNode", value: ""},
-                                            {key: "referenceId", value: ""},
-                                            {key: "referenceKey", value: ""}
+                                        {key: 'from', value: value},
+                                        {key: "value", value: ""},
+                                        {key: "referenceNode", value: ""},
+                                        {key: "referenceId", value: ""},
+                                        {key: "referenceKey", value: ""}
                                     ];
                                 }
                                 handleItemChange(item.id, changes);
@@ -141,9 +141,9 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
 
 const areEqual = (prevProps, nextProps) => {
     return prevProps.item.id === nextProps.item.id
-            && prevProps.item.from === nextProps.item.from
-            && prevProps.item.value === nextProps.item.value
-            && prevProps.disabled === nextProps.disabled;
+        && prevProps.item.from === nextProps.item.from
+        && prevProps.item.value === nextProps.item.value
+        && prevProps.disabled === nextProps.disabled;
 };
 
-export const OutputVariableRow =  React.memo(_OutputVariableRow, areEqual);
+export const OutputVariableRow = React.memo(_OutputVariableRow, areEqual);

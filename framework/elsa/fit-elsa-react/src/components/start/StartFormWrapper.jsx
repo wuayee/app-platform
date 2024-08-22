@@ -7,7 +7,7 @@ import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import MultiConversation from "@/components/start/MultiConversation.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -24,7 +24,7 @@ StartFormWrapper.propTypes = {
  * @returns {JSX.Element} 开始表单Wrapper的DOM
  */
 export default function StartFormWrapper({data, disabled}) {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const shape = useShapeContext();
     const config = shape.graph.configs.find(node => node.node === "startNodeStart");
@@ -86,7 +86,7 @@ export default function StartFormWrapper({data, disabled}) {
     };
 
     const content = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-        <Trans i18nKey="startNodeInputPopover" components={{ p: <p /> }} />
+        <Trans i18nKey="startNodeInputPopover" components={{p: <p/>}}/>
     </div>);
 
     // 处理内部组件值变化的回调函数

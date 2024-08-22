@@ -4,7 +4,7 @@ import {useDispatch} from "@/components/DefaultRoot.jsx";
 import {Button} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import {ConnectorProvider} from "@/components/common/ConnectorProvider.jsx";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 /**
  * 条件节点表单Wrapper
@@ -14,7 +14,7 @@ import { useTranslation, Trans } from "react-i18next";
 export default function ConditionFormWrapper({disabled, data}) {
     const dispatch = useDispatch();
 
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const branches = data.branches;
 

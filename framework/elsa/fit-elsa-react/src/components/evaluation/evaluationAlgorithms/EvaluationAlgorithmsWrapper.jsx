@@ -4,8 +4,8 @@ import {PassingScore} from "@/components/evaluation/evaluationAlgorithms/Passing
 import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
 import {EvaluationInput} from "@/components/evaluation/evaluationAlgorithms/EvaluationInput.jsx";
-import httpUtil from "@/components/util/httpUtil.jsx";
 import PropTypes from "prop-types";
+import httpUtil from "@/components/util/httpUtil.jsx";
 
 EvaluationAlgorithmsWrapper.propTypes = {
     data: PropTypes.object,

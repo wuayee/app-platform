@@ -5,7 +5,7 @@ import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Text} = Typography;
 
@@ -52,7 +52,7 @@ const LEVEL_DISTANCE = 24;
  */
 export default function JadeInputTree({data, updateItem, disabled, getOptions = defaultGetOptions}) {
     const form = useFormContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const treeData = data.map(d => convert(d, 0));
 
     /**
@@ -83,7 +83,7 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
             if (type === "Object" || type === "Array") {
                 try {
                     value = JSON.parse(value);
-                } catch(error) {
+                } catch (error) {
                     console.error("Input value is invalid json.");
                 }
             }
@@ -145,7 +145,10 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
                                             disabled={disabled}
-                                            rules={node.isRequired ? [{required: true, message: t('fieldValueCannotBeEmpty')}] : []}
+                                            rules={node.isRequired ? [{
+                                                required: true,
+                                                message: t('fieldValueCannotBeEmpty')
+                                            }] : []}
                                             reference={node}
                                             onReferencedKeyChange={(e) => onReferenceKeyChange(node.id, e)}
                                             onReferencedValueChange={(v) => onReferenceValueChange(node.id, v)}
@@ -269,6 +272,7 @@ const defaultGetOptions = (node) => {
  */
 const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
     const form = useFormContext();
+    const {t} = useTranslation();
 
     /**
      * 处理选择变化事件.
@@ -298,13 +302,13 @@ const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
 
     return (<>
         <JadeStopPropagationSelect
-                style={{background: "#f7f7f7", width: "100%"}}
-                disabled={disabled}
-                placeholder={t('pleaseSelect')}
-                defaultValue={node.from}
-                className={"jade-input-tree-title-select jade-select"}
-                onChange={handleItemChange}
-                options={options}
+            style={{background: "#f7f7f7", width: "100%"}}
+            disabled={disabled}
+            placeholder={t('pleaseSelect')}
+            defaultValue={node.from}
+            className={"jade-input-tree-title-select jade-select"}
+            onChange={handleItemChange}
+            options={options}
         />
     </>);
 };

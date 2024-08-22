@@ -6,7 +6,7 @@ import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSele
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -87,20 +87,20 @@ function _InputForm({queryData, disabled}) {
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
-                            disabled={disabled}
-                            reference={item}
-                            onReferencedValueChange={(v) => _onReferencedValueChange(item, v)}
-                            onReferencedKeyChange={(e) => _onReferencedKeyChange(item, e)}
-                            style={{fontSize: "12px"}}
-                            placeholder={t('pleaseSelect')}
-                            onMouseDown={(e) => e.stopPropagation()}
-                            showSearch
-                            className="value-custom jade-select"
-                            dropdownStyle={{
-                                maxHeight: 400,
-                                overflow: 'auto',
-                            }}
-                            rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
+                        disabled={disabled}
+                        reference={item}
+                        onReferencedValueChange={(v) => _onReferencedValueChange(item, v)}
+                        onReferencedKeyChange={(e) => _onReferencedKeyChange(item, e)}
+                        style={{fontSize: "12px"}}
+                        placeholder={t('pleaseSelect')}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        showSearch
+                        className="value-custom jade-select"
+                        dropdownStyle={{
+                            maxHeight: 400,
+                            overflow: 'auto',
+                        }}
+                        rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                     />
                 </>);
             case 'Input':
@@ -127,21 +127,21 @@ function _InputForm({queryData, disabled}) {
         }
     };
 
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const tips = <div className={"jade-font-size"}><p>{t('knowledgeBaseInputPopover')}</p></div>;
 
     return (<div>
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={['Input']}>
             <Panel header={
-                        <div className="panel-header">
-                            <span className="jade-panel-header-font">{t('input')}</span>
-                            <Popover content={tips}>
-                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
-                            </Popover>
-                        </div>
-                    }
-                    className="jade-panel"
-                    key='Input'
+                <div className="panel-header">
+                    <span className="jade-panel-header-font">{t('input')}</span>
+                    <Popover content={tips}>
+                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
+                    </Popover>
+                </div>
+            }
+                   className="jade-panel"
+                   key='Input'
             >
                 <div className={"jade-custom-panel-content"}>
                     <Row>
@@ -179,7 +179,10 @@ function _InputForm({queryData, disabled}) {
                                         handleItemChange(queryData.id, changes);
                                         form.resetFields([`reference-${queryData.id}`, name]);
                                     }}
-                                    options={[{value: 'Reference', label: t('reference')}, {value: 'Input', label: '输入'}]}
+                                    options={[{value: 'Reference', label: t('reference')}, {
+                                        value: 'Input',
+                                        label: '输入'
+                                    }]}
                                     value={queryData.from}
                                 />
                             </Form.Item>
@@ -198,4 +201,4 @@ const areEqual = (prevProps, nextProps) => {
     return prevProps.queryData === nextProps.queryData && prevProps.disabled === nextProps.disabled;
 };
 
-export const InputForm =  React.memo(_InputForm, areEqual);
+export const InputForm = React.memo(_InputForm, areEqual);
