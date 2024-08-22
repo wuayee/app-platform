@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @DisplayName("测试 DefaultThreadPoolExecutor 类")
 public class DefaultThreadPoolExecutorTest {
     private ThreadPoolExecutor threadPoolExecutor;
-    private AtomicReference<String> Message;
+    private AtomicReference<String> message;
     private Task.DisposableTask disposableTask;
 
     private final String expected = "final";
@@ -53,10 +53,10 @@ public class DefaultThreadPoolExecutorTest {
                 .exceptionHandler((thread, throwable) -> {})
                 .rejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy())
                 .build();
-        this.Message = new AtomicReference<>("original");
+        this.message = new AtomicReference<>("original");
         Callable<String> callable = () -> {
-            this.Message.set(this.expected);
-            return this.Message.get();
+            this.message.set(this.expected);
+            return this.message.get();
         };
         this.disposableTask = Task.builder().callable(callable).buildDisposable();
     }
@@ -76,17 +76,17 @@ public class DefaultThreadPoolExecutorTest {
         @Test
         void givenAtomicParameterWhenInvokeExecuteThenUpdateSuccessfully() {
             this.executor().execute(DefaultThreadPoolExecutorTest.this.disposableTask);
-            while (!Objects.equals(DefaultThreadPoolExecutorTest.this.Message.get(),
+            while (!Objects.equals(DefaultThreadPoolExecutorTest.this.message.get(),
                     DefaultThreadPoolExecutorTest.this.expected)) {
                 ThreadUtils.sleep(0);
             }
-            assertThat(DefaultThreadPoolExecutorTest.this.Message.get()).isEqualTo(this.expected());
+            assertThat(DefaultThreadPoolExecutorTest.this.message.get()).isEqualTo(this.expected());
         }
 
         @Test
         @DisplayName("调用执行方法，执行 Runnable 任务成功")
         void givenAtomicParameterWhenExecuteWithRunnableThenUpdateSuccessfully() {
-            Runnable runnable = () -> DefaultThreadPoolExecutorTest.this.Message.set(this.expected());
+            Runnable runnable = () -> DefaultThreadPoolExecutorTest.this.message.set(this.expected());
             Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (thread, throwable) -> {};
             Task.DisposableTask runnableTask = Task.builder()
                     .runnable(runnable)
@@ -94,10 +94,10 @@ public class DefaultThreadPoolExecutorTest {
                     .policy(ExecutePolicy.fixedDelay(10L))
                     .buildDisposable();
             this.executor().execute(runnableTask);
-            while (!Objects.equals(DefaultThreadPoolExecutorTest.this.Message.get(), this.expected())) {
+            while (!Objects.equals(DefaultThreadPoolExecutorTest.this.message.get(), this.expected())) {
                 ThreadUtils.sleep(0);
             }
-            assertThat(DefaultThreadPoolExecutorTest.this.Message.get()).isEqualTo(this.expected());
+            assertThat(DefaultThreadPoolExecutorTest.this.message.get()).isEqualTo(this.expected());
         }
 
         @DisplayName("调用提交方法，任务执行成功")
@@ -131,7 +131,7 @@ public class DefaultThreadPoolExecutorTest {
             RejectedExecutionException rejectedExecutionException = catchThrowableOfType(() -> this.executor()
                     .execute(DefaultThreadPoolExecutorTest.this.disposableTask), RejectedExecutionException.class);
             assertThat(rejectedExecutionException).isNotNull();
-            assertThat(DefaultThreadPoolExecutorTest.this.Message.get()).isNotEqualTo(this.expected());
+            assertThat(DefaultThreadPoolExecutorTest.this.message.get()).isNotEqualTo(this.expected());
         }
 
         @DisplayName("调用提交方法，任务执行失败并抛出异常")
@@ -140,7 +140,7 @@ public class DefaultThreadPoolExecutorTest {
             RejectedExecutionException rejectedExecutionException = catchThrowableOfType(() -> this.executor()
                     .submit(DefaultThreadPoolExecutorTest.this.disposableTask), RejectedExecutionException.class);
             assertThat(rejectedExecutionException).isNotNull();
-            assertThat(DefaultThreadPoolExecutorTest.this.Message.get()).isNotEqualTo(this.expected());
+            assertThat(DefaultThreadPoolExecutorTest.this.message.get()).isNotEqualTo(this.expected());
         }
     }
 }
