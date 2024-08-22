@@ -15,6 +15,8 @@ import java.util.Set;
  * @since 2024-07-25
  */
 public class PluginQuery extends ToolQuery {
+    private Boolean isBuiltin;
+
     /**
      * 空参构造 {@link PluginQuery}。
      */
@@ -30,6 +32,7 @@ public class PluginQuery extends ToolQuery {
         private String mode;
         private Integer offset;
         private Integer limit;
+        private Boolean isBuiltin;
 
         /**
          * 向当前构建器中设置关键词。
@@ -98,6 +101,17 @@ public class PluginQuery extends ToolQuery {
         }
 
         /**
+         * 向构建器中设置是否内置。
+         *
+         * @param isBuiltin 表示是否内置的 {@link Boolean}。
+         * @return 表示当前构建器的 {@link PluginToolQuery.Builder}。
+         */
+        public Builder isBuiltin(Boolean isBuiltin) {
+            this.isBuiltin = isBuiltin;
+            return this;
+        }
+
+        /**
          * 构建对象。
          *
          * @return 表示构建出来的对象的 {@link PluginToolQuery}。
@@ -110,7 +124,26 @@ public class PluginQuery extends ToolQuery {
             pluginQuery.setMode(this.mode);
             pluginQuery.setOffset(this.offset);
             pluginQuery.setLimit(this.limit);
+            pluginQuery.setBuiltin(this.isBuiltin);
             return pluginQuery;
         }
+    }
+
+    /**
+     * 获取是否内置。
+     *
+     * @return 表示是否内置的 {@link Boolean}。
+     */
+    public Boolean getBuiltin() {
+        return this.isBuiltin;
+    }
+
+    /**
+     * 设置是否内置。
+     *
+     * @param builtin 表示是否内置的 {@link Boolean}。
+     */
+    public void setBuiltin(Boolean builtin) {
+        this.isBuiltin = builtin;
     }
 }

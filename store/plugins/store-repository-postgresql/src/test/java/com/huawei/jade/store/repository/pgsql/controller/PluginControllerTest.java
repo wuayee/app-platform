@@ -158,6 +158,7 @@ public class PluginControllerTest {
             .param("excludeTags", "APP")
             .param("pageNum", "1")
             .param("pageSize", "10")
+            .param("isBuiltin", "false")
             .responseType(TypeUtils.parameterized(Result.class, new Type[] {List.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);

@@ -166,6 +166,7 @@ public class PluginController {
      * @param mode 表示查询工具的标签与和或方式的 {@link String}。
      * @param pageNum 表示页码的 {@code int}。
      * @param pageSize 表示限制的 {@code int}。
+     * @param isBuiltin 表示插件是否内置的 {@link Boolean}。
      * @return 表示格式化的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link PluginToolData}{@code >}{@code >}。
      */
     @GetMapping("/search")
@@ -174,7 +175,8 @@ public class PluginController {
         @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
         @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
         @RequestQuery(value = "pageNum", defaultValue = "1") int pageNum,
-        @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize) {
+        @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize,
+        @RequestQuery(value = "isBuiltin", required = false) Boolean isBuiltin) {
         notNegative(pageNum, "The page number cannot be negative.");
         notNegative(pageSize, "The page size cannot be negative.");
         PluginQuery pluginQuery = new PluginQuery.Builder().toolName(name)
@@ -183,6 +185,7 @@ public class PluginController {
             .mode(validateTagMode(mode))
             .offset(calculateOffset(pageNum, pageSize))
             .limit(pageSize)
+            .isBuiltin(isBuiltin)
             .build();
         ListResult<PluginData> res = this.pluginService.getPlugins(pluginQuery);
         return Result.ok(res.getData(), res.getCount());

@@ -92,6 +92,17 @@ public class PluginData {
     private List<PluginToolData> pluginToolDataList;
 
     /**
+     * 表示插件是否内置。
+     * <p>
+     *     <ul>
+     *         <li>添加插件时不传入。</li>
+     *         <li>查询插件时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private Boolean isBuiltin;
+
+    /**
      * 获取插件的创建者。
      *
      * @return 表示插件创建者的 {@link String}。
@@ -216,5 +227,23 @@ public class PluginData {
      */
     public void setPluginToolDataList(List<PluginToolData> pluginToolDataList) {
         this.pluginToolDataList = pluginToolDataList;
+    }
+
+    /**
+     * 获取是否内置。
+     *
+     * @return 表示是否内置的 {@link Boolean}。
+     */
+    public Boolean getBuiltin() {
+        return this.isBuiltin;
+    }
+
+    /**
+     * 设置是否内置。
+     *
+     * @param builtin 表示是否内置的 {@link Boolean}。
+     */
+    public void setBuiltin(Boolean builtin) {
+        this.isBuiltin = builtin;
     }
 }
