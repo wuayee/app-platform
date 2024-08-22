@@ -50,7 +50,8 @@ public final class PartialJsonOutputParser<O> implements JsonOutputParser<O> {
         try {
             return this.parse0(input);
         } catch (IllegalStateException e) {
-            log.warn("Parse '{}' error, msg: {}.", input, e.getMessage());
+            log.warn("Parse error, msg: {}.", e.getMessage());
+            log.debug("Parse '{}' error", input);
         }
         return this.jsonOutputParser.parse("{}");
     }
