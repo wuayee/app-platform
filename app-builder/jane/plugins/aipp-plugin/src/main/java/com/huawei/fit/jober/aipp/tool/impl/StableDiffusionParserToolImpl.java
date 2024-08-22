@@ -10,8 +10,8 @@ import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.serialization.ObjectSerializer;
-import com.huawei.jade.fel.core.formatters.Parser;
-import com.huawei.jade.fel.core.formatters.json.JsonOutputParser;
+import modelengine.fel.core.formatters.Parser;
+import modelengine.fel.core.formatters.json.JsonOutputParser;
 
 /**
  * StableDiffusion模型json入参解析器实现

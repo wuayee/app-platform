@@ -16,7 +16,7 @@ import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.carver.operation.support.OperationLogFields;
-import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
+import modelengine.fel.core.template.support.DefaultStringTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -11,11 +11,11 @@ import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
-import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
-import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
+import modelengine.fel.model.openai.client.OpenAiClient;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
+import modelengine.fel.model.openai.entity.chat.message.Role;
 
 import java.io.IOException;
 import java.util.Collections;

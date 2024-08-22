@@ -12,7 +12,7 @@ import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
-import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 
 /**
  * 表示 {@link ToolFactory} 的 HuggingFace 的实现。

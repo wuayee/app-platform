@@ -14,11 +14,11 @@ import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.carver.tool.service.ToolExecuteService;
 import com.huawei.jade.carver.tool.service.ToolService;
-import com.huawei.jade.fel.chat.character.ToolMessage;
-import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.tool.Tool;
-import com.huawei.jade.fel.tool.ToolCall;
-import com.huawei.jade.fel.tool.ToolProvider;
+import modelengine.fel.chat.character.ToolMessage;
+import modelengine.fel.chat.protocol.FlatChatMessage;
+import modelengine.fel.tool.Tool;
+import modelengine.fel.tool.ToolCall;
+import modelengine.fel.tool.ToolProvider;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

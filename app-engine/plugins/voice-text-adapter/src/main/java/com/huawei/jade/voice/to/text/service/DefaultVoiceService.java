@@ -6,7 +6,7 @@ package com.huawei.jade.voice.to.text.service;
 
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
-import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 import com.huawei.jade.voice.service.VoiceService;
 
 import java.util.HashMap;

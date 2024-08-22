@@ -17,8 +17,8 @@ import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.TextEntity;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.impl.LLMServiceImpl;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import modelengine.fel.model.openai.client.OpenAiClient;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
 import com.huawei.jade.voice.service.VoiceService;
 
 import org.junit.jupiter.api.Test;

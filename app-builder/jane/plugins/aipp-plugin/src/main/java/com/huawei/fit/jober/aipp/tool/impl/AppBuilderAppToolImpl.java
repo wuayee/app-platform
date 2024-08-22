@@ -23,9 +23,9 @@ import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.serialization.SerializationException;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
-import com.huawei.jade.fel.core.formatters.OutputParser;
-import com.huawei.jade.fel.core.formatters.json.JsonOutputParser;
-import com.huawei.jade.fel.core.formatters.support.MarkdownParser;
+import modelengine.fel.core.formatters.OutputParser;
+import modelengine.fel.core.formatters.json.JsonOutputParser;
+import modelengine.fel.core.formatters.support.MarkdownParser;
 
 import java.util.List;
 import java.util.Objects;

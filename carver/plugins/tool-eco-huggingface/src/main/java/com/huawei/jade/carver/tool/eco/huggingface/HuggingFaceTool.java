@@ -10,7 +10,7 @@ import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.eco.AbstractTaskTool;
-import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 
 import java.util.HashMap;
 import java.util.List;

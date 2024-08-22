@@ -22,7 +22,7 @@ import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import modelengine.fel.model.openai.client.OpenAiClient;
 import com.huawei.jade.voice.service.VoiceService;
 
 import org.apache.commons.io.FileUtils;

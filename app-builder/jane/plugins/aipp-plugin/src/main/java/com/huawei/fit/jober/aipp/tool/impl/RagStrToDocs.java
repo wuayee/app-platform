@@ -10,7 +10,7 @@ import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
-import com.huawei.jade.fel.retrieve.TextDocument;
+import modelengine.fel.retrieve.TextDocument;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -25,12 +25,12 @@ import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
-import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
-import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
-import com.huawei.jade.fel.model.openai.entity.chat.message.content.UserContent;
+import modelengine.fel.model.openai.client.OpenAiClient;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
+import modelengine.fel.model.openai.entity.chat.message.Role;
+import modelengine.fel.model.openai.entity.chat.message.content.UserContent;
 import com.huawei.jade.voice.service.VoiceService;
 
 import lombok.AllArgsConstructor;

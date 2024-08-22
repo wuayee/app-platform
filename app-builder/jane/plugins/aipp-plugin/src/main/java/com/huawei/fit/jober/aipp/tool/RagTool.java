@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.tool;
 
 import modelengine.fitframework.annotation.Genericable;
-import com.huawei.jade.fel.retrieve.TextDocument;
+import modelengine.fel.retrieve.TextDocument;
 
 import java.util.List;
 

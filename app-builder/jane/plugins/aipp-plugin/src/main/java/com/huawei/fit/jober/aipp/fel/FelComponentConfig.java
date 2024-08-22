@@ -7,11 +7,11 @@ package com.huawei.fit.jober.aipp.fel;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import modelengine.fitframework.annotation.Bean;
 import modelengine.fitframework.annotation.Component;
-import com.huawei.jade.fel.chat.ChatModelStreamService;
-import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
-import com.huawei.jade.fel.tool.ToolProvider;
+import modelengine.fel.chat.ChatModelStreamService;
+import modelengine.fel.chat.ChatOptions;
+import modelengine.fel.chat.Prompt;
+import modelengine.fel.engine.operators.patterns.AbstractAgent;
+import modelengine.fel.tool.ToolProvider;
 
 /**
  * FelComponentConfig
