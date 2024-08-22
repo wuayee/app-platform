@@ -127,20 +127,24 @@ public class NettyHttpClassicServer implements HttpClassicServer {
             this.httpsPort = greaterThan(port,
                     0,
                     "The port to bind to netty http server cannot be less than 1. [port={0}, isSecure={1}]",
-                    port, true);
+                    port,
+                    true);
             this.httpsPort = lessThanOrEquals(port,
                     65535,
                     "The port to bind to netty http server cannot be more than 65535. [port={0}, isSecure={1}]",
-                    port, true);
+                    port,
+                    true);
         } else {
             this.httpPort = greaterThan(port,
                     0,
                     "The port to bind to netty http server cannot be less than 1. [port={0}, isSecure={1}]",
-                    port, false);
+                    port,
+                    false);
             this.httpPort = lessThanOrEquals(port,
                     65535,
                     "The port to bind to netty http server cannot be more than 65535. [port={0}, isSecure={1}]",
-                    port, false);
+                    port,
+                    false);
         }
         return this;
     }
@@ -262,6 +266,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         notNull(this.httpsConfig, "The https config cannot be null.");
         String trustStorePassword = this.httpsConfig.trustStorePassword().orElse(StringUtils.EMPTY);
         String keyStorePassword = this.httpsConfig.keyStorePassword().orElse(StringUtils.EMPTY);
+        boolean isSecureRandomEnabled = this.httpsConfig.secureRandomEnabled();
         if (this.httpsConfig.encrypted()) {
             Decryptor decryptor =
                     notNull(this.container.beans().lookup(Decryptor.class), "The decryptor cannot be null.");
@@ -272,7 +277,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         String keyStoreFile = this.httpsConfig.keyStoreFile().orElse(StringUtils.EMPTY);
         KeyManager[] keyManagers = SslUtils.getKeyManagers(keyStoreFile, keyStorePassword);
         TrustManager[] trustManagers = SslUtils.getTrustManagers(trustStoreFile, trustStorePassword);
-        return SslUtils.getSslContext(keyManagers, trustManagers);
+        return SslUtils.getSslContext(keyManagers, trustManagers, isSecureRandomEnabled);
     }
 
     @Override

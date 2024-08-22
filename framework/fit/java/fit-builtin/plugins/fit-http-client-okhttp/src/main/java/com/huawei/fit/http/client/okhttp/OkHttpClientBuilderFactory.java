@@ -70,7 +70,7 @@ public class OkHttpClientBuilderFactory {
             throws GeneralSecurityException {
         String keyStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE));
         String keyStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD));
-
+        Boolean isStrongRandom = cast(config.custom().getOrDefault(HttpsConstants.CLIENT_SECURE_STRONG_RANDOM, false));
         KeyManager[] keyManagers;
         if (StringUtils.isNotBlank(keyStoreFile) && StringUtils.isNotBlank(keyStorePassword)) {
             keyManagers = getKeyManagers(keyStoreFile, keyStorePassword);
@@ -93,7 +93,7 @@ public class OkHttpClientBuilderFactory {
             }
         }
 
-        SSLContext sslContext = SslUtils.getSslContext(keyManagers, trustManagers);
+        SSLContext sslContext = SslUtils.getSslContext(keyManagers, trustManagers, isStrongRandom);
         if (trustManagers != null && trustManagers[0] instanceof X509TrustManager) {
             clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagers[0]);
         }

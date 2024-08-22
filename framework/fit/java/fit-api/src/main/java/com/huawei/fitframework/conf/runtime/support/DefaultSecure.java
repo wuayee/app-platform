@@ -61,6 +61,11 @@ public class DefaultSecure implements Secure {
     private String keyStorePassword;
 
     /**
+     * 配置项：{@code 'secure-random-enabled'}。
+     */
+    private Boolean secureRandomEnabled;
+
+    /**
      * 设置端口是否打开的标志。
      *
      * @param isEnabled 表示端口是否打开的标志的 {@link Boolean}。
@@ -141,6 +146,15 @@ public class DefaultSecure implements Secure {
         this.keyStorePassword = keyStorePassword;
     }
 
+    /**
+     * 设置是否启用安全随机数生成器。
+     *
+     * @param secureRandomEnabled 表示是否启用安全随机数生成器的 {@link Boolean}。
+     */
+    public void setSecureRandomEnabled(Boolean secureRandomEnabled) {
+        this.secureRandomEnabled = secureRandomEnabled;
+    }
+
     @Override
     public boolean isProtocolEnabled() {
         return this.isEnabled != null ? this.isEnabled : this.port != null;
@@ -184,5 +198,10 @@ public class DefaultSecure implements Secure {
     @Override
     public Optional<String> keyStorePassword() {
         return Optional.ofNullable(this.keyStorePassword);
+    }
+
+    @Override
+    public boolean secureRandomEnabled() {
+        return this.secureRandomEnabled != null ? this.secureRandomEnabled : false;
     }
 }

@@ -77,5 +77,12 @@ public interface ClientConfig {
          * @return 表示秘钥库的秘钥项的密码的 {@link Optional}{@code <}{@link String}{@link >}。
          */
         Optional<String> keyStorePassword();
+
+        /**
+         * 获取是否启用安全随机数生成器。
+         *
+         * @return 如果启用，则返回 {@code true}，否则，返回 {@code false}。
+         */
+        boolean secureRandomEnabled();
     }
 }
