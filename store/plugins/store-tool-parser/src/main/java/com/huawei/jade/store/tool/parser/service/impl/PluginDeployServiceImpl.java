@@ -26,6 +26,7 @@ import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.SecurityUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.ThreadUtils;
+import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
@@ -100,6 +101,9 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
     private static final String RUNNABLES = "runnables";
     private static final String EXTENSIONS = "extensions";
     private static final String TAGS = "tags";
+    private static final String USER = "user";
+    private static final String BUILTIN = "BUILTIN";
+    private static final String AND = "AND";
 
     private final PluginService pluginService;
     private final ObjectSerializer serializer;
@@ -149,11 +153,23 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
             .stream()
             .map(PluginData::getPluginId)
             .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(expiredStatusIds)) {
-            return;
+        if (CollectionUtils.isNotEmpty(expiredStatusIds)) {
+            expiredStatusIds.forEach(this::undeployPlugin);
+            this.pluginService.updateDeployStatus(expiredStatusIds, DeployStatus.UNDEPLOYED);
         }
-        expiredStatusIds.forEach(this::undeployPlugin);
-        this.pluginService.updateDeployStatus(expiredStatusIds, DeployStatus.UNDEPLOYED);
+        // 内置工具修改为已部署
+        PluginQuery pluginQuery = new PluginQuery();
+        pluginQuery.setExcludeTags(new HashSet<>());
+        pluginQuery.setIncludeTags(new HashSet<>(Collections.singletonList(BUILTIN)));
+        pluginQuery.setMode(AND);
+        List<String> builtInPluginIds = this.pluginService.getPlugins(pluginQuery)
+            .getData()
+            .stream()
+            .map(PluginData::getPluginId)
+            .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(builtInPluginIds)) {
+            this.pluginService.updateDeployStatus(builtInPluginIds, DeployStatus.DEPLOYED);
+        }
     }
 
     @Override
@@ -439,6 +455,8 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
             generateNewName(FileUtils.ignoreExtension(oldFileName), FileUtils.extension(oldFileName)));
         pluginFile.renameTo(newFile);
         PluginData pluginData = new PluginData();
+        pluginData.setCreator(USER);
+        pluginData.setModifier(USER);
         pluginData.setPluginId(pluginId);
         pluginData.setExtension(this.parseUniquenessData(validationFile, newFile.getName()));
         pluginData.setPluginName(this.getStringInMapObject(
