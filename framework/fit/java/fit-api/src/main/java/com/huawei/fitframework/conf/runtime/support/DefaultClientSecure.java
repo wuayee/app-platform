@@ -51,6 +51,11 @@ public class DefaultClientSecure implements Secure {
     private String keyStorePassword;
 
     /**
+     * 配置项：{@code 'secure-random-enabled'}。
+     */
+    private Boolean secureRandomEnabled;
+
+    /**
      * 设置是否忽略 hostname。
      *
      * @param ignoreHostname 表示是否忽略 hostname 的 {@link Boolean}。
@@ -118,6 +123,15 @@ public class DefaultClientSecure implements Secure {
         this.keyStorePassword = keyStorePassword;
     }
 
+    /**
+     * 设置是否启用安全随机数生成器。
+     *
+     * @param secureRandomEnabled 表示是否启用安全随机数生成器的 {@link Boolean}。
+     */
+    public void setSecureRandomEnabled(Boolean secureRandomEnabled) {
+        this.secureRandomEnabled = secureRandomEnabled;
+    }
+
     @Override
     public boolean ignoreHostName() {
         return this.ignoreHostname != null ? this.ignoreHostname : false;
@@ -146,5 +160,10 @@ public class DefaultClientSecure implements Secure {
     @Override
     public Optional<String> keyStorePassword() {
         return Optional.ofNullable(this.keyStorePassword);
+    }
+
+    @Override
+    public boolean secureRandomEnabled() {
+        return this.secureRandomEnabled != null ? this.secureRandomEnabled : false;
     }
 }

@@ -28,4 +28,7 @@ public class HttpsConstants {
 
     /** 表示客户端客户端文件密码 */
     public static final String CLIENT_SECURE_KEY_STORE_PASSWORD = "client.http.secure.key-store-password";
+
+    /** 表示客户端是否启用强随机数生成器 */
+    public static final String CLIENT_SECURE_STRONG_RANDOM = "client.http.secure.secure-random-enabled";
 }
