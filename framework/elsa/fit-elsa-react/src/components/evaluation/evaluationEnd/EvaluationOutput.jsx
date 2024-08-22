@@ -9,7 +9,7 @@ import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -28,7 +28,7 @@ _EvaluationOutput.propTypes = {
  */
 function _EvaluationOutput({disabled, output}) {
     const shape = useShapeContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const [outputTreeData, setOutputTreeData] = useState(() => [convertToTreeData(output, 1, null)]);
 
@@ -172,7 +172,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
                       disabled={disabled}
                       onClick={() => handleDelete(key)}/>
             : <Button type="text"
-                      style={{marginLeft:'4px'}}
+                      style={{marginLeft: '4px'}}
                       icon={<AddSubItem/>}
                       disabled={disabled}
                       onClick={() => handleAddSubItem(key)}/>;

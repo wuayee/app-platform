@@ -99,6 +99,42 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
         };
 
         /**
+         * 构造输出jadeConfig
+         *
+         * @param inputJson 算法的schema
+         * @return {{name: string, id: string, type: string, value: *[]}} 输出jadeConfig
+         * @private
+         */
+        const _buildOutputParams = inputJson => {
+            const newOutputParams = convertReturnFormat(inputJson.schema.return);
+            const algorithmInput = {
+                id: "algorithmInput_" + uuidv4(),
+                name: "algorithmInput",
+                type: "Object",
+                value: []
+            };
+            algorithmInput.value = [...newConfig.inputParams];
+            const algorithmScore = {
+                id: "algorithmScore_" + uuidv4(),
+                name: "score",
+                type: "Integer",
+                from: "Input",
+                value: ''
+            };
+            const isPass = {
+                id: "isPass_" + uuidv4(),
+                name: "isPass",
+                type: "Boolean",
+                from: "Input",
+                value: ''
+            };
+            newOutputParams.value.push(isPass);
+            newOutputParams.value.push(algorithmScore);
+            newOutputParams.value.push(algorithmInput);
+            return newOutputParams;
+        };
+
+        /**
          * 创建输出
          *
          * @private
@@ -108,7 +144,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
                 return;
             }
             const inputJson = action.value;
-            const newOutputParams = convertReturnFormat(inputJson.schema.return);
+            const newOutputParams = _buildOutputParams(inputJson);
             newConfig.outputParams = [newOutputParams];
         };
 

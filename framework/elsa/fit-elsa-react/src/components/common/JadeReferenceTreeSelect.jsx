@@ -3,8 +3,8 @@ import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useRef, useState} from "react";
 import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {InfoCircleOutlined} from '@ant-design/icons';
+import {useTranslation} from "react-i18next";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
 
 /**
  * jade的带引用功能的级联选择框.
@@ -16,7 +16,7 @@ import { useTranslation, Trans } from "react-i18next";
 export const JadeReferenceTreeSelect = (props) => {
     const {reference, onReferencedValueChange, onReferencedKeyChange, rules, className, ...rest} = props;
     const shape = useShapeContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const form = useFormContext();
     const stopObserve = useRef(null);
     const [treeData, setTreeData] = useState([]);
@@ -89,7 +89,8 @@ export const JadeReferenceTreeSelect = (props) => {
             return nodeInfo.id === VIRTUAL_CONTEXT_NODE.id ? <>
                 <div className={"jade-font-size"}>
                     <span>{nodeInfo.name}</span>
-                    <Popover className={"jade-drop-down-popover"} overlayClassName="jade-drop-down-popover-overlay" content={content}>
+                    <Popover className={"jade-drop-down-popover"} overlayClassName="jade-drop-down-popover-overlay"
+                             content={content}>
                         <InfoCircleOutlined/>
                     </Popover>
                 </div>
@@ -157,23 +158,23 @@ export const JadeReferenceTreeSelect = (props) => {
 
     return (<>
         <Form.Item
-                id={`reference-id-${reference.id}`}
-                name={[name]}
-                initialValue={reference.referenceKey}
-                rules={rules}
-                validateTrigger="onBlur"
+            id={`reference-id-${reference.id}`}
+            name={[name]}
+            initialValue={reference.referenceKey}
+            rules={rules}
+            validateTrigger="onBlur"
         >
             <TreeSelect
-                    {...rest}
-                    className={combinedClassName}
-                    treeDataSimpleMode
-                    dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
-                    placeholder={t('pleaseSelect')}
-                    onChange={onChange}
-                    treeData={treeData}
-                    onDropdownVisibleChange={onDropdownVisibleChange}
-                    treeDefaultExpandAll={false}
-                    style={{minWidth: `${minWidth}`}}
+                {...rest}
+                className={combinedClassName}
+                treeDataSimpleMode
+                dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
+                placeholder={t('pleaseSelect')}
+                onChange={onChange}
+                treeData={treeData}
+                onDropdownVisibleChange={onDropdownVisibleChange}
+                treeDefaultExpandAll={false}
+                style={{minWidth: `${minWidth}`}}
             />
         </Form.Item>
     </>);

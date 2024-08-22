@@ -7,7 +7,7 @@ import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useState} from "react";
 import httpUtil from "../util/httpUtil.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 LlmFormWrapper.propTypes = {
     data: PropTypes.object.isRequired,
@@ -24,7 +24,7 @@ LlmFormWrapper.propTypes = {
 export default function LlmFormWrapper({data, disabled}) {
     const dispatch = useDispatch();
     const shape = useShapeContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     let config;
     if (!shape || !shape.graph || !shape.graph.configs) {
         console.error('Cannot get shape.graph.configs.');
@@ -39,8 +39,8 @@ export default function LlmFormWrapper({data, disabled}) {
         temperature: data.inputParams.find(item => item.name === "temperature"),
         systemPrompt: data.inputParams.find(item => item.name === "systemPrompt"),
         prompt: data.inputParams.filter(item => item.name === "prompt")
-                .flatMap(item => item.value)
-                .find(item => item.name === "template")
+            .flatMap(item => item.value)
+            .find(item => item.name === "template")
     };
 
     const initItems = () => {

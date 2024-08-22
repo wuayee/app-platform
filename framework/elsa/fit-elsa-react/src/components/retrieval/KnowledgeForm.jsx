@@ -4,7 +4,7 @@ import {MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined} from "@ant-de
 import {KnowledgeConfig} from "@/components/retrieval/KnowledgeConfig.jsx";
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -26,7 +26,7 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
     // 保存下拉框选项
     const dispatch = useDispatch();
     const shape = useShapeContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     /**
      * 删除知识库
@@ -88,7 +88,7 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
                       defaultActiveKey={['Knowledge']}>
         <Panel style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
                header={<div
-                       style={{display: 'flex', alignItems: 'center'}}>
+                   style={{display: 'flex', alignItems: 'center'}}>
                    <span className="jade-panel-header-font">{t('knowledgeBase')}</span>
                    <Popover content={tips}>
                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
@@ -108,15 +108,15 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
                         // 历史数据/模板中知识库自带一个空数组的object结构体，这里不需要渲染这个所以加上此条件
                         .filter(item => item.value && item.value.length > 0)
                         .map((item) => (<>
-                        <Row key={`knowledgeRow-${item.id}`}>
-                            <div className={"jade-custom-multi-select-with-slider-div item-hover"}>
+                            <Row key={`knowledgeRow-${item.id}`}>
+                                <div className={"jade-custom-multi-select-with-slider-div item-hover"}>
                                 <span className={"jade-custom-multi-select-item"}>
                                     {item.value?.find(subItem => subItem.name === "name")?.value ?? ""}
                                 </span>
-                                {renderDeleteIcon(item)}
-                            </div>
-                        </Row>
-                    </>))}
+                                    {renderDeleteIcon(item)}
+                                </div>
+                            </Row>
+                        </>))}
                 </div>
                 <KnowledgeConfig maximum={maximum} disabled={disabled}/>
             </div>
@@ -126,8 +126,8 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
 
 const areEqual = (prevProps, nextProps) => {
     return prevProps.knowledge === nextProps.knowledge
-            && prevProps.maximum === nextProps.maximum
-            && prevProps.disabled === nextProps.disabled;
+        && prevProps.maximum === nextProps.maximum
+        && prevProps.disabled === nextProps.disabled;
 };
 
-export const KnowledgeForm =  React.memo(_KnowledgeForm, areEqual);
+export const KnowledgeForm = React.memo(_KnowledgeForm, areEqual);

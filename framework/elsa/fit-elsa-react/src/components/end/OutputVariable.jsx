@@ -6,7 +6,7 @@ import {OutputVariableRow} from "@/components/end/OutputVariableRow.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
-import { useTranslation, Trans } from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -25,7 +25,7 @@ _OutputVariable.propTypes = {
  */
 function _OutputVariable({inputParams, disabled}) {
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     /**
      * 处理输入发生变化的动作
@@ -40,7 +40,7 @@ function _OutputVariable({inputParams, disabled}) {
 
     const tips =
         <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-            <Trans i18nKey="endOutputPopover" components={{ p: <p /> }} />
+            <Trans i18nKey="endOutputPopover" components={{p: <p/>}}/>
         </div>;
 
     return (
@@ -89,4 +89,4 @@ const areEqual = (prevProps, nextProps) => {
     return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.inputParams, nextProps.inputParams);
 };
 
-export const OutputVariable =  React.memo(_OutputVariable, areEqual);
+export const OutputVariable = React.memo(_OutputVariable, areEqual);

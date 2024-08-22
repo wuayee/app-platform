@@ -4,7 +4,7 @@ import React from "react";
 import "./style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -19,7 +19,7 @@ _OutputForm.propTypes = {
  * @constructor
  */
 function _OutputForm({outputParams}) {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const tips = <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
         <p>{t('knowledgeBaseOutputPopover')}</p>
@@ -55,4 +55,4 @@ const areEqual = (prevProps, nextProps) => {
     return prevProps.outputParams === nextProps.outputParams && prevProps.disabled === nextProps.disabled;
 };
 
-export const OutputForm =  React.memo(_OutputForm, areEqual);
+export const OutputForm = React.memo(_OutputForm, areEqual);
