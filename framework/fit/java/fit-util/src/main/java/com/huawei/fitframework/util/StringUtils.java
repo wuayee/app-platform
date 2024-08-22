@@ -228,6 +228,7 @@ public final class StringUtils {
      * 使用指定的格式化字符串对参数进行格式化，并返回格式化后的字符串。
      * <p><b>注意：{@code format} 中如果含有如下特殊字符（{@code '\u007b'}，{@code '\u007d'}，{@code '/'}），需要在该字符前增加转义字符
      * {@code '/'} 进行转义。</b></p>
+     *
      * @param format 表示格式化字符串的 {@link String}。
      * @param args 表示用以格式化字符串的参数的 {@link Object}{@code []}。如果参数中存在 {@code null}，其对应的格式化后会变成空字符串。
      * @return 表示格式化得到的字符串的 {@link String}。
