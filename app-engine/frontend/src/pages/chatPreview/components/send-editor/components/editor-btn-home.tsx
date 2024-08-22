@@ -233,7 +233,7 @@ const EditorBtnHome = (props) => {
                 { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
                 {showMulti && <div className='multi-conversation-title'>
                   <span>{t('multiTurnConversation')}</span>
-                  <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange} />
+                  <Switch className='multi-conversation-switch' checked={useMemory} onChange={onMultiConverChange} />
                 </div>}
                 <span className='item-clear' onClick={onClickNewChat}>+ {t('newChat')}</span>
               </div>

@@ -213,6 +213,10 @@ const Inspiration = (props) => {
       }
     });
   }
+  // 搜索
+  const searchChange = (e) => {
+    onSearch(e.target.value);
+  }
   function handleOpenChange(newOpen) {
     setPopoverOpen(newOpen);
   }
@@ -248,9 +252,9 @@ const Inspiration = (props) => {
             </div>
             <div className='prompt-search'>
               <Input
-                disabled
                 prefix={<SearchOutlined />}
                 allowClear
+                onChange={searchChange}
                 placeholder={t('search')}
               />
             </div>

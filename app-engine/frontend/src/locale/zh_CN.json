@@ -271,6 +271,7 @@
   "zipDescription": "每个zip包最多取20个插件，插件名称长度不能超过64位，描述长度不能超过256位",
   "noPluginSelected": "未选择插件",
   "uploadTool": "上传工具",
+  "maxUploadTips": "最大上传数量为5个",
   "uploadTip": "建议用户在本地调试插件，避免部署失败；相同工具将会覆盖。",
   "uploadingPlugin": "上传插件中",
   "uploadTo": "上传至：",

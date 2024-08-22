@@ -60,8 +60,8 @@ const Inspiration = (props) => {
       )
     },
     {
-      title: '来源信息',
-      dataIndex: t('sourceInfo'),
+      title: t('sourceInfo'),
+      dataIndex: 'sourceInfo',
       key: 'sourceInfo',
       render: (sourceInfo, record) => (
         <>
@@ -98,7 +98,7 @@ const Inspiration = (props) => {
           <div style={{ display: 'flex' }}>
             <Button type='text' onClick={(event) => handleDeleteClick(record, event)}>
               <DeleteOutlined />
-              <span style={{ fontSize: '12px' }}>删除</span>
+              <span style={{ fontSize: '12px' }}>{t('delete')}</span>
             </Button>
           </div>
         );
@@ -330,8 +330,8 @@ const Inspiration = (props) => {
               <Button type='link' onClick={onAddClick} icon={<PlusCircleOutlined />} >{t('createInspiration')}</Button>
             </div>
             {
-              inspirationValues && inspirationValues.inspirations.map((item, index) => (
-                <div className='inspiration-container'>
+              inspirationValues && inspirationValues.inspirations.map(item => (
+                <div className='inspiration-container' key={item.id}>
                   <div className='card-title'>
                     <span className='left'>
                       {item.name}
