@@ -528,8 +528,8 @@ class FlowDefinitionTest {
             Mockito.when(invoker.timeout(ArgumentMatchers.anyLong(), ArgumentMatchers.any())).thenReturn(invoker);
             Mockito.when(invoker.invoke(ArgumentMatchers.anyList()))
                     .thenThrow(new WaterflowException(FLOW_EXECUTE_FITABLE_TASK_FAILED));
-            Mockito.when(
-                            invoker.invoke(ArgumentMatchers.any(), ArgumentMatchers.anyList(), ArgumentMatchers.anyString()))
+            Mockito.when(invoker
+                            .invoke(ArgumentMatchers.any(), ArgumentMatchers.anyList(), ArgumentMatchers.anyString()))
                     .thenReturn(null);
 
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");

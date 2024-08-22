@@ -151,7 +151,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             flowDefinition.setMetaId(EMPTY);
             WaterflowParamException nullException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition metaId, metaId can not be blank"), nullException.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition metaId, metaId can not be blank"),
+                    nullException.getMessage());
 
             flowDefinition.setMetaId("11");
             WaterflowParamException lengthException = Assertions.assertThrows(WaterflowParamException.class,
@@ -172,7 +173,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             flowDefinition.setName(EMPTY);
             WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition name, name can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition name, name can not be blank"),
+                    exception.getMessage());
 
             flowDefinition.setName("apimckapimckapimckapimckapimckapapimckapimckapimckapimckapimckapap"
                     + "imckapimckapimckapimckapimckapapimckapimckapimckapimckapimcka"
@@ -180,7 +182,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
                     + "ckapapimckapimckapimckapimckapimckapapimckapimckapimckapimckapimckap1");
             WaterflowParamException lengthException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition name, name length over 256"), lengthException.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition name, name length over 256"),
+                    lengthException.getMessage());
 
             flowDefinition.setName("name@");
             WaterflowParamException specialCharException = Assertions.assertThrows(WaterflowParamException.class,
@@ -195,7 +198,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             flowDefinition.setVersion(EMPTY);
             WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition version, version can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition version, version can not be blank"),
+                    exception.getMessage());
 
             flowDefinition.setVersion("1");
             WaterflowParamException formatException = Assertions.assertThrows(WaterflowParamException.class,
@@ -217,7 +221,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
             WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition tenant, tenant can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition tenant, tenant can not be blank"),
+                    exception.getMessage());
         }
 
         @Test
@@ -226,7 +231,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             flowDefinition.setStatus(null);
             WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition status, status can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition status, status can not be blank"),
+                    exception.getMessage());
         }
 
         @Test
@@ -236,7 +242,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
             WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition nodes, nodes can not be empty"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition nodes, nodes can not be empty"),
+                    exception.getMessage());
         }
 
         @Test
@@ -251,12 +258,14 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
             WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("all node number, node number must more than 3"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("all node number, node number must more than 3"),
+                    exception.getMessage());
 
             flowDefinition.setNodeMap(new HashMap<>());
             WaterflowParamException nullException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            Assertions.assertEquals(errorMessage("flow definition nodes, nodes can not be empty"), nullException.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition nodes, nodes can not be empty"),
+                    nullException.getMessage());
         }
 
         @Test
@@ -349,11 +358,13 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             Assertions.assertEquals(errorMessage("flow node metaId, metaId can not be blank"), exception.getMessage());
 
             nodeMap.get(START_ID).setMetaId("start11");
-            exception = Assertions.assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
+            exception = Assertions.assertThrows(WaterflowParamException.class,
+                    () -> flowNodeValidator.validate(flowDefinition));
             Assertions.assertEquals(errorMessage("flow node metaId size must be 6"), exception.getMessage());
 
             nodeMap.get(START_ID).setMetaId("start%");
-            exception = Assertions.assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
+            exception = Assertions.assertThrows(WaterflowParamException.class,
+                    () -> flowNodeValidator.validate(flowDefinition));
             Assertions.assertEquals(errorMessage("flow node metaId not allow special char"), exception.getMessage());
         }
 
@@ -455,7 +466,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get("state2").getJober().setFitables(new HashSet<>());
             flowDefinition.setNodeMap(nodeMap);
 
-            exception = Assertions.assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
+            exception = Assertions.assertThrows(WaterflowParamException.class,
+                    () -> flowNodeValidator.validate(flowDefinition));
             Assertions.assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
         }
 
@@ -837,8 +849,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         private FlowDefinition flowDefinition;
 
         private FlowDefinition getFlowDefinitionFromJson() {
-            String jsonData = getJsonData(
-                    getFilePath("general_flows_with_customized_node_types_and_smart_form_task.json"));
+            String jsonData =
+                    getJsonData(getFilePath("general_flows_with_customized_node_types_and_smart_form_task.json"));
             flowDefinition = flowParser.parse(jsonData);
             flowDefinition.setTenant(TENANT);
             return flowDefinition;
@@ -868,8 +880,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         private FlowDefinition flowDefinition;
 
         private FlowDefinition getFlowDefinitionFromJson() {
-            String jsonData = getJsonData(
-                    getFilePath("general_flows_with_customized_node_types_and_smart_form_task.json"));
+            String jsonData =
+                    getJsonData(getFilePath("general_flows_with_customized_node_types_and_smart_form_task.json"));
             flowDefinition = flowParser.parse(jsonData);
             flowDefinition.setTenant(TENANT);
             return flowDefinition;
