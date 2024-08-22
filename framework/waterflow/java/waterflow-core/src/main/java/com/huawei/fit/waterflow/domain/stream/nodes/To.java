@@ -10,7 +10,6 @@ import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.ARCHIVED;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.NEW;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.PENDING;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.READY;
-import static com.huawei.fit.waterflow.domain.enums.FlowNodeType.END;
 import static com.huawei.fit.waterflow.domain.enums.ParallelMode.EITHER;
 import static com.huawei.fit.waterflow.domain.enums.ProcessType.PRE_PROCESS;
 import static com.huawei.fit.waterflow.domain.enums.ProcessType.PROCESS;
@@ -23,7 +22,6 @@ import com.huawei.fit.waterflow.domain.context.WindowToken;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
-import com.huawei.fit.waterflow.domain.contextdata.GlobalFileData;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.enums.ProcessType;
@@ -486,7 +484,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             Retryable<I> retryable = new Retryable<>(this.getFlowContextRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
             Optional.ofNullable(this.globalErrorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
-            GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
         } finally {
             updateConcurrency(preList, -1);
         }
@@ -587,7 +584,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         this.getFlowContextRepo().update(preList);
         this.getFlowContextRepo()
                 .updateStatus(preList, preList.get(0).getStatus().toString(), preList.get(0).getPosition());
-        GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
     }
 
     /**
