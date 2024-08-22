@@ -11,14 +11,6 @@
 
     <artifactId>jade-app-engine-parent</artifactId>
     <packaging>pom</packaging>
-    
-    <properties>
-        <lombok.version>1.18.26</lombok.version>
-        <mybatis.version>3.5.9</mybatis.version>
-        <druid.version>1.2.20</druid.version>
-        <postgresql.version>42.6.1</postgresql.version>
-    </properties>
-
     <modules>
         <module>plugins</module>
         <module>services</module>

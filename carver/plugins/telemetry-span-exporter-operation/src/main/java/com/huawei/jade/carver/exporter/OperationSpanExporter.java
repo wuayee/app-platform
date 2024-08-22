@@ -66,7 +66,7 @@ public class OperationSpanExporter implements CarverSpanExporter {
                     .forEach(this::exporterHandle);
             return CompletableResultCode.ofSuccess();
         } catch (Exception exception) {
-            log.warn("Export span failed.", exception);
+            log.warn("Export span failed.");
             return CompletableResultCode.ofFailure();
         }
     }

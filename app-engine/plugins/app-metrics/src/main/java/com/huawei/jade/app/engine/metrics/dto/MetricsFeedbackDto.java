@@ -9,6 +9,7 @@ import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.validation.constraints.Range;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,12 +18,13 @@ import java.time.LocalDateTime;
 /**
  * MetricsFeedbackDTO类消息处理策略
  *
- * @author c00819987
+ * @author 陈霄宇
  * @since 2024/05/28
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MetricsFeedbackDto {
     @Property(description = "应用id")
     @RequestQuery(name = "appId")

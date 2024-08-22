@@ -10,7 +10,7 @@ import com.huawei.jade.app.engine.metrics.vo.MetricsAnalysisVo;
 /**
  * MetricService类消息处理策略
  *
- * @author c00819987
+ * @author 陈霄宇
  * @since 2024/05/21
  */
 public interface MetricsAnalysisService {

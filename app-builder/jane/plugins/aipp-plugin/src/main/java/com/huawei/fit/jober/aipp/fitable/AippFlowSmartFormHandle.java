@@ -24,6 +24,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
                 .putInfo(AippConst.INST_CURR_FORM_ID_KEY, sheetId)
                 .putInfo(AippConst.INST_CURR_FORM_VERSION_KEY, "1.0.0")
                 .putInfo(AippConst.INST_CURR_NODE_ID_KEY, nodeId)
+                .putInfo(AippConst.INST_SMART_FORM_TIME_KEY, LocalDateTime.now())
                 .build();
 
         this.metaInstanceService.patchMetaInstance(ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY)),

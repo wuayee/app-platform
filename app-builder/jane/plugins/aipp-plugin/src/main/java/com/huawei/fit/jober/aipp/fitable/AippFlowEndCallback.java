@@ -32,6 +32,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.log.Logger;
@@ -40,7 +41,9 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
 import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -187,14 +190,23 @@ public class AippFlowEndCallback implements FlowCallbackService {
             OperationContext context =
                     JsonUtils.parseObject(ObjectUtils.cast(businessData.get(AippConst.BS_HTTP_CONTEXT_KEY)),
                             OperationContext.class);
+
             // 构造用户历史对话记录并插表
+            String resumeDuration =
+                    ObjectUtils.cast(businessData.getOrDefault(AippConst.INST_RESUME_DURATION_KEY, "0"));
+            Object createTimeObj = Validation.notNull(businessData.get(AippConst.INST_CREATE_TIME_KEY),
+                    "The create time cannot be null.");
+            LocalDateTime createTime = LocalDateTime.parse(createTimeObj.toString());
+            LocalDateTime finishTime = LocalDateTime.now();
+            long realCost = Duration.between(createTime, finishTime).toMillis() - Long.parseLong(resumeDuration);
+            LocalDateTime realFinishTime = (realCost > 0) ? createTime.plus(realCost, ChronoUnit.MILLIS) : finishTime;
             ConversationRecordPo conversationRecordPo = ConversationRecordPo.builder()
                     .appId(ObjectUtils.cast(businessData.get(AippConst.ATTR_APP_ID_KEY)))
                     .question(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_QUESTION_KEY)))
                     .answer(logMsg)
                     .createUser(context.getName())
-                    .createTime(LocalDateTime.parse(businessData.get(AippConst.INSTANCE_START_TIME).toString()))
-                    .finishTime(LocalDateTime.now())
+                    .createTime(createTime)
+                    .finishTime(realFinishTime)
                     .instanceId(aippInstId)
                     .build();
             conversationRecordService.insertConversationRecord(conversationRecordPo);

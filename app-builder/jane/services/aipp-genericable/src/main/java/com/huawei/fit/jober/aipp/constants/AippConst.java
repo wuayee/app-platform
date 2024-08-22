@@ -440,6 +440,16 @@ public class AippConst {
     public static final String INST_CURR_FORM_DATA_KEY = "curr_form_data";
 
     /**
+     * aipp smart form time instance key
+     */
+    public static final String INST_SMART_FORM_TIME_KEY = "inst_smart_form_time";
+
+    /**
+     * aipp resume duration instance key
+     */
+    public static final String INST_RESUME_DURATION_KEY = "inst_resume_duration";
+
+    /**
      * aipp inst_status instance key
      */
     public static final String INST_STATUS_KEY = "inst_status";
@@ -709,6 +719,8 @@ public class AippConst {
                     new FormMetaItem(INST_CURR_FORM_ID_KEY, "当前表单id", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_CURR_FORM_VERSION_KEY, "当前表单版本", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_CURR_FORM_DATA_KEY, "当前表单数据", "TEXT", STRING_LEN * 8, null),
+                    new FormMetaItem(INST_SMART_FORM_TIME_KEY, "elsa 表单渲染时间戳", "TEXT", STRING_LEN, null),
+                    new FormMetaItem(INST_RESUME_DURATION_KEY, "人工节点时间耗时", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_STATUS_KEY, "实例状态", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_PROGRESS_KEY, "实例进度", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_AGENT_RESULT_KEY, "aipp agent结果", "TEXT", STRING_LEN, null),

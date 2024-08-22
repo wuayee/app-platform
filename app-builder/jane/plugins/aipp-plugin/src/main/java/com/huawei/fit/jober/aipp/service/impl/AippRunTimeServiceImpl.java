@@ -98,6 +98,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -230,7 +231,7 @@ public class AippRunTimeServiceImpl
         return InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_NAME_KEY, businessData.getOrDefault(AippConst.INST_NAME_KEY, "无标题"))
                 .putInfo(AippConst.INST_CREATOR_KEY, creator)
-                .putInfo(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now())
+                .putInfo(AippConst.INST_CREATE_TIME_KEY, businessData.get(AippConst.INST_CREATE_TIME_KEY))
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.RUNNING.name())
                 .putInfo(AippConst.INST_PROGRESS_KEY, "0")
                 .build();
@@ -345,7 +346,7 @@ public class AippRunTimeServiceImpl
                 RestartModeEnum.OVERWRITE.getMode()));
         businessData.put(AippConst.RESTART_MODE, restartMode);
         // 记录启动时间
-        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
+        businessData.put(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now());
 
         // 创建meta实例
         String metaVersionId = meta.getVersionId();
@@ -380,7 +381,7 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.RESTART_MODE,
                 businessData.getOrDefault(AippConst.RESTART_MODE, RestartModeEnum.OVERWRITE.getMode()));
         // 记录启动时间
-        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
+        businessData.put(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now());
 
         // 创建meta实例
         Instance metaInst = this.metaInstanceService.createMetaInstance(meta.getVersionId(),
@@ -1007,6 +1008,19 @@ public class AippRunTimeServiceImpl
 
         // 获取旧的实例数据
         Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
+        // 获取人工节点开始时间戳 [记录人工节点时延]
+        String smartFormTimeStr = instDetail.getInfo().get(AippConst.INST_SMART_FORM_TIME_KEY);
+        LocalDateTime smartFormTime =
+                StringUtils.isBlank(smartFormTimeStr) ? LocalDateTime.now() : LocalDateTime.parse(smartFormTimeStr);
+        long resumeDuration =
+                Long.parseLong(instDetail.getInfo().getOrDefault(AippConst.INST_RESUME_DURATION_KEY, "0"));
+        Duration duration = Duration.between(smartFormTime, LocalDateTime.now());
+        businessData.put(AippConst.INST_RESUME_DURATION_KEY, String.valueOf(resumeDuration + duration.toMillis()));
+        String createTime = instDetail.getInfo().get(AippConst.INST_CREATE_TIME_KEY);
+        if (StringUtils.isNotEmpty(createTime)) {
+            businessData.put(AippConst.INST_CREATE_TIME_KEY, createTime);
+        }
+
         // 持久化aipp实例表单记录
         String formId = instDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = instDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);

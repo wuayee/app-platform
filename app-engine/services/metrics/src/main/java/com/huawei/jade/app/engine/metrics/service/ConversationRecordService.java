@@ -9,7 +9,7 @@ import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
 /**
  * ConversationRecordService类消息处理策略
  *
- * @author c00819987
+ * @author 陈霄宇
  * @since 2024/05/28
  */
 public interface ConversationRecordService {

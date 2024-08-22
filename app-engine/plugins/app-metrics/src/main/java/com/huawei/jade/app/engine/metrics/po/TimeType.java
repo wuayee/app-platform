@@ -7,7 +7,7 @@ package com.huawei.jade.app.engine.metrics.po;
 /**
  * TimeType类消息处理策略
  *
- * @author c00819987
+ * @author 陈霄宇
  * @since 2024/05/23
  */
 public enum TimeType {
