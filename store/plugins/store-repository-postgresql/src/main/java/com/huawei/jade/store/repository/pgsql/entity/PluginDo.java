@@ -45,6 +45,11 @@ public class PluginDo extends CommonDo {
     private DeployStatus deployStatus;
 
     /**
+     * 表示插件是否内置。
+     */
+    private boolean isBuiltin;
+
+    /**
      * 用传输层的插件数据 {@link PluginData} 构造 {@link PluginDo}。
      *
      * @param pluginData 表示传输层的插件数据的 {@link PluginData}。
@@ -83,6 +88,7 @@ public class PluginDo extends CommonDo {
         if (pluginDo.getDeployStatus() != null) {
             pluginData.setDeployStatus(pluginDo.getDeployStatus().toString());
         }
+        pluginData.setBuiltin(pluginDo.isBuiltin());
         return pluginData;
     }
 }

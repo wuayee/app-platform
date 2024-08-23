@@ -12,6 +12,7 @@ create table if not exists store_plugin
     "plugin_name"   varchar(256)                          not null,
     "extension"     json        default '{}'::json        not null,
     "deploy_status" varchar(20) default 'UNDEPLOYED'      not null,
+    "is_builtin"    boolean     default false             not null,
     unique ("plugin_id")
 );
 comment on column store_plugin.id is '插件的自增主键';
@@ -23,5 +24,6 @@ comment on column store_plugin.plugin_id is '插件的唯一标识';
 comment on column store_plugin.plugin_name is '插件的名字';
 comment on column store_plugin.extension is '插件的扩展字段';
 comment on column store_plugin.deploy_status is '插件的部署状态';
+comment on column store_plugin.is_builtin is '插件是否内置';
 end
 $$;

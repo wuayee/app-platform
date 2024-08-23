@@ -50,11 +50,13 @@ public class PluginDoTest {
         pluginDo.setPluginName("testPlugin");
         pluginDo.setExtension("{\"type\":\"java\"}");
         pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
+        pluginDo.setBuiltin(true);
         PluginData pluginData = PluginDo.toPluginData(pluginDo, this.serializer);
         assertThat(pluginData.getPluginId()).isEqualTo("testPluginId");
         assertThat(pluginData.getPluginName()).isEqualTo("testPlugin");
         assertThat(pluginData.getExtension()).isEqualTo(MapBuilder.<String, Object>get()
                 .put("type", "java").build());
         assertThat(pluginData.getDeployStatus()).isEqualTo("DEPLOYED");
+        assertThat(pluginData.getBuiltin()).isEqualTo(true);
     }
 }
