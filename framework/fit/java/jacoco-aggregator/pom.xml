@@ -111,35 +111,35 @@
 
         <!-- FIT Service -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-heartbeat</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-protocol</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-message-serializer</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
 

@@ -24,7 +24,7 @@
 
         <!-- Service -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
@@ -32,7 +32,7 @@
             <artifactId>store-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
         <dependency>

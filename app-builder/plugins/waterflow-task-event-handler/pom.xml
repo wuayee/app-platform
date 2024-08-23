@@ -18,7 +18,7 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-service</artifactId>
         </dependency>
 

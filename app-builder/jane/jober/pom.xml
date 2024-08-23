@@ -54,19 +54,19 @@
 
         <!-- Genericables -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-data-repository-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-service</artifactId>
         </dependency>
 

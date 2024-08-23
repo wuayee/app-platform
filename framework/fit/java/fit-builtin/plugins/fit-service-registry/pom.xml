@@ -24,19 +24,19 @@
 
         <!-- Micro genericables -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-message-serializer</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-heartbeat</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-server</artifactId>
         </dependency>
 

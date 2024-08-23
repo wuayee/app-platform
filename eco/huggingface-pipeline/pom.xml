@@ -40,7 +40,7 @@
     <dependencies>
         <!-- FEL -->
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-pipeline-service</artifactId>
             <version>${fel.version}</version>
         </dependency>

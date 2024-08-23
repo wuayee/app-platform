@@ -26,11 +26,11 @@
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-pipeline-service</artifactId>
         </dependency>
         <dependency>

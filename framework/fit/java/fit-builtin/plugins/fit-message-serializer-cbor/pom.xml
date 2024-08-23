@@ -29,7 +29,7 @@
 
         <!-- Micro genericables -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-message-serializer</artifactId>
         </dependency>
 
@@ -45,7 +45,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-message-serializer-test</artifactId>
             <scope>test</scope>
         </dependency>

@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>jade-fel-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.jade.fel</groupId>
+    <groupId>modelengine.fit.jade.fel</groupId>
     <artifactId>fel-flow</artifactId>
 
     <dependencies>
@@ -25,21 +25,21 @@
 
         <!-- FEL -->
         <dependency>
-            <groupId>com.huawei.fit.jade.fel</groupId>
+            <groupId>modelengine.fit.jade.fel</groupId>
             <artifactId>fel-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-service</artifactId>
         </dependency>
 
         <!-- WaterFlow -->
         <dependency>
-            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-bridge-fit-reactor</artifactId>
         </dependency>
 

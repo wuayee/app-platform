@@ -27,7 +27,7 @@
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
 

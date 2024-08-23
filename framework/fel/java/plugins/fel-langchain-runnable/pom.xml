@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade.fel</groupId>
+        <groupId>modelengine.fit.jade.fel</groupId>
         <artifactId>fel-plugins-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.jade.plugin</groupId>
+    <groupId>modelengine.fit.jade.plugin</groupId>
     <artifactId>fel-langchain-runnable</artifactId>
 
     <dependencies>
@@ -21,7 +21,7 @@
 
         <!-- services -->
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-langchain-service</artifactId>
             <version>${fel.version}</version>
         </dependency>

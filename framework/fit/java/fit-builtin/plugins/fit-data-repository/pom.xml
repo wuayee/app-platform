@@ -28,7 +28,7 @@
         </dependency>
         <!-- FIT Services -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-data-repository-service</artifactId>
         </dependency>
 

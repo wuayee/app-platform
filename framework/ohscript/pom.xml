@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>OhScript</name>
-    <groupId>com.huawei.fit.ohscript</groupId>
+    <groupId>modelengine.fit.ohscript</groupId>
     <artifactId>ohscript</artifactId>
     <version>0.0.3.6-SNAPSHOT</version>
 
@@ -60,7 +60,7 @@
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
             <version>${fit.version}</version>
         </dependency>

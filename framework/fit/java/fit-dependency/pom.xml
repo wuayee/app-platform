@@ -193,52 +193,52 @@
 
             <!-- FIT Service -->
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-client</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-data-repository-service</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-heartbeat</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-protocol</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-message-serializer</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-message-serializer-test</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-security</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-server</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-service-registry-and-discovery</artifactId>
                 <version>${fit.version}</version>
             </dependency>

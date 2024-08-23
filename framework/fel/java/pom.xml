@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huawei.fit.jade</groupId>
+    <groupId>modelengine.fit.jade</groupId>
     <artifactId>jade-fel-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -44,9 +44,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.huawei.fit.jade</groupId>
+                <groupId>modelengine.fit.jade</groupId>
                 <artifactId>fel-dependency</artifactId>
-                <version>${fel.version}</version>
+                <version>1.0.0-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

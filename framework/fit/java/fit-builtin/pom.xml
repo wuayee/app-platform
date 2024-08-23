@@ -9,7 +9,7 @@
         <version>3.5.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.builtin</groupId>
+    <groupId>modelengine.fit.builtin</groupId>
     <artifactId>fit-builtin-parent</artifactId>
     <packaging>pom</packaging>
 

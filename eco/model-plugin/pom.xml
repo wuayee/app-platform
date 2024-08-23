@@ -27,7 +27,7 @@
     <dependencies>
         <!-- FEL -->
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>

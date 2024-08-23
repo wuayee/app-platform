@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.huawei.fit.jade.waterflow</groupId>
+        <groupId>modelengine.fit.jade.waterflow</groupId>
         <artifactId>jade-waterflow-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -17,12 +17,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.ohscript</groupId>
+            <groupId>modelengine.fit.ohscript</groupId>
             <artifactId>ohscript</artifactId>
             <exclusions>
                 <exclusion>
@@ -34,7 +34,7 @@
                     <artifactId>fit-util</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.huawei.fit.service</groupId>
+                    <groupId>modelengine.fit.service</groupId>
                     <artifactId>fit-http-classic</artifactId>
                 </exclusion>
             </exclusions>

@@ -24,7 +24,7 @@
 
         <!-- Micro genericables -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-heartbeat</artifactId>
         </dependency>
 

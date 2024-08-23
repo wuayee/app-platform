@@ -29,7 +29,7 @@
             <artifactId>tool-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-service</artifactId>
         </dependency>
 
