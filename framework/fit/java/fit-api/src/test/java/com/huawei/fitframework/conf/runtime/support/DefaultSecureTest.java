@@ -21,6 +21,8 @@ public class DefaultSecureTest {
     void shouldCreateInstance() {
         DefaultSecure secure = new DefaultSecure();
         secure.setSecureRandomEnabled(true);
+        secure.setSecureProtocol("TLSv1.2");
         Assertions.assertTrue(secure.secureRandomEnabled());
+        Assertions.assertEquals("TLSv1.2", secure.secureProtocol().get());
     }
 }

@@ -21,6 +21,8 @@ public class DefaultClientSecureTest {
     void shouldCreateInstance() {
         DefaultClientSecure clientSecure = new DefaultClientSecure();
         clientSecure.setSecureRandomEnabled(true);
+        clientSecure.setSecureProtocol("TLSv1.2");
         Assertions.assertTrue(clientSecure.secureRandomEnabled());
+        Assertions.assertEquals("TLSv1.2", clientSecure.secureProtocol().get());
     }
 }

@@ -66,6 +66,11 @@ public class DefaultSecure implements Secure {
     private Boolean secureRandomEnabled;
 
     /**
+     * 配置项：{@code 'secure-protocol'}。
+     */
+    private String secureProtocol;
+
+    /**
      * 设置端口是否打开的标志。
      *
      * @param isEnabled 表示端口是否打开的标志的 {@link Boolean}。
@@ -155,6 +160,15 @@ public class DefaultSecure implements Secure {
         this.secureRandomEnabled = secureRandomEnabled;
     }
 
+    /**
+     * 设置安全通信协议。
+     *
+     * @param secureProtocol 表示安全通信协议的 {@link String}。
+     */
+    public void setSecureProtocol(String secureProtocol) {
+        this.secureProtocol = secureProtocol;
+    }
+
     @Override
     public boolean isProtocolEnabled() {
         return this.isEnabled != null ? this.isEnabled : this.port != null;
@@ -203,5 +217,10 @@ public class DefaultSecure implements Secure {
     @Override
     public boolean secureRandomEnabled() {
         return this.secureRandomEnabled != null ? this.secureRandomEnabled : false;
+    }
+
+    @Override
+    public Optional<String> secureProtocol() {
+        return Optional.ofNullable(this.secureProtocol);
     }
 }
