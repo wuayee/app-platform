@@ -30,7 +30,8 @@ import java.util.Optional;
 public abstract class AbstractMappingProcessor implements MappingProcessor {
     private static final Logger LOG = Logger.get(AbstractMappingProcessor.class);
 
-    private static Object getValueByPath(Map<String, Object> businessData, List<String> paths, String nodeMetaId) {
+    private static Object getValueByPath(Map<String, Object> businessData, List<String> paths, String nodeMetaId,
+        boolean isFallbackOnNodeDataMiss) {
         if (paths.isEmpty()) {
             return null;
         }
@@ -47,6 +48,9 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
             return result.getValue();
         }
         // 兼容逻辑，如果没有从作用域空间找到，则尝试从businessData查找一次
+        if (!isFallbackOnNodeDataMiss) {
+            return null;
+        }
         return findValueByPath(businessData, paths).getValue();
     }
 
@@ -102,7 +106,8 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
     }
 
     private Object generateReference(MappingNode mappingConfig, Map<String, Object> businessData) {
-        return getValueByPath(businessData, cast(mappingConfig.getValue()), mappingConfig.getReferenceNode());
+        return getValueByPath(businessData, cast(mappingConfig.getValue()), mappingConfig.getReferenceNode(),
+                mappingConfig.isFallbackOnNodeDataMiss());
     }
 
     /**

@@ -19,9 +19,7 @@ import lombok.Getter;
 @Getter
 public class MappingNode {
     private String name;
-
     private MappingNodeType type;
-
     private MappingFromType from;
 
     /**
@@ -34,4 +32,18 @@ public class MappingNode {
      * 引用节点的id, from为reference时才有意义
      */
     private String referenceNode;
+
+    /**
+     * 数据查找是否走兜底查询，在businessData中进行二次查询
+     */
+    private boolean fallbackOnNodeDataMiss;
+
+    public MappingNode(String name, MappingNodeType type, MappingFromType from, Object value, String referenceNode) {
+        this.name = name;
+        this.type = type;
+        this.from = from;
+        this.value = value;
+        this.referenceNode = referenceNode;
+        this.fallbackOnNodeDataMiss = false;
+    }
 }
