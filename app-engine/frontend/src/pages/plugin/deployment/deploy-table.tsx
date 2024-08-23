@@ -24,7 +24,7 @@ const Deploy = ({ pluginRef }) => {
   const pluginList = useRef([]);
   // 获取所有列表
   const getData = async () => {
-    const response = await getPlugins({ pageNum, pageSize, excludeTags: 'APP', name });
+    const response = await getPlugins({ pageNum, pageSize, excludeTags: 'APP', name, isBuiltin: false });
     if (response.code === 0) {
       let list = response.data || [];
       list.forEach(item => {

@@ -112,7 +112,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus 
           </div>
         </div>
         <div
-          hidden={pluginData?.pluginToolDataList !== null}
+          hidden={pluginData?.pluginToolDataList !== null || pluginData?.isBuiltin}
           onClick={(e) => {
             e.stopPropagation();
             !isOpen ? setIsOpen(true) : setIsOpen(false);
@@ -132,9 +132,9 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus 
         )}
       </div>
       {/* 卡片状态 */}
-      { pluginData.deployStatus && <span className={['plugin-tag', PluginStatusTypeE[pluginData.deployStatus]].join(' ')}>
+      { (pluginData.deployStatus && !pluginData.isBuiltin) ? <span className={['plugin-tag', PluginStatusTypeE[pluginData.deployStatus]].join(' ')}>
         {PluginCnType[pluginData.deployStatus]}
-      </span>}
+      </span> : <span></span>}
       <Drawer
         width={800}
         open={isShow}

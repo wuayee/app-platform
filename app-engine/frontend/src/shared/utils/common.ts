@@ -1,6 +1,5 @@
 import {useLocation} from "react-router-dom";
 import {useCallback, useMemo, useState} from "react";
-import DOMPurify from 'dompurify';
 import { Message } from '@shared/utils/message';
 import { DEMISSIONAPPID } from './configvar';
 import { storage } from "../storage";
@@ -67,10 +66,10 @@ export const trans = (text) => {
     if (textHtml.length) {
       return textHtml;
     }
-    return DOMPurify.sanitize(text.replaceAll('<br>', ''));
+    return text.replaceAll('<br>', '');
   } catch {
     if (text?.trim().length) {
-      return DOMPurify.sanitize(text.replaceAll('<br>', ''));
+      return text.replaceAll('<br>', '');
     }
   }
   return '';
@@ -198,10 +197,13 @@ export const isJsonString = (str) => {
 * @return {string} 返回转换后的HTML格式文本
 */
 export const urlify = (text) => { 
-  const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-  return text.replace(urlRegex, (url) => { 
-    return `<a href="${url}" target="_blank">${url}</a>`;
-  }) 
+  if (text) {
+    const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(urlRegex, (url) => { 
+      return `<a href="${url}" target="_blank">${url}</a>`;
+    }) 
+  }
+  return text
 } 
 
 /**

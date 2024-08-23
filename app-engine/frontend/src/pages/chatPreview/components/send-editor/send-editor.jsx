@@ -49,7 +49,7 @@ const SendEditor = (props) => {
   const [selectDom, setSelectDom] = useState();
   const [showSelect, setShowSelect] = useState(false);
   const [showClear, setShowClear] = useState(false);
-  const [editorHeight, setEditorHeight] = useState(290);
+  const [recommondTop, setRecommondTop] = useState(0);
   const [openHistory, setOpenHistory] = useState(false);
   const [positionConfig, setPositionConfig] = useState({});
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
@@ -198,27 +198,13 @@ const SendEditor = (props) => {
       dispatch(setUseMemory(false));
     }
   }, [showMulti]);
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        let height = 0;
-        if (entry.target === editorRef.current || entry.target === recommondRef.current) {
-          height += entry.contentRect.height;
-        }
-        setEditorHeight(height + 220);
-      }
-    });
-    if (editorRef.current) {
-      resizeObserver.observe(editorRef.current);
-      resizeObserver.observe(recommondRef.current);
+  const resetEditorHeight = (list) => {
+    if (list.length > 0) {
+      setRecommondTop(recommondRef.current.scrollHeight+editorRef.current.scrollHeight - 140);
+    } else {
+      setRecommondTop(0);
     }
-    return () => {
-      if (editorRef.current) {
-        resizeObserver.unobserve(editorRef.current);
-        resizeObserver.unobserve(recommondRef.current);
-      }
-    }
-  }, []);
+  }
   function plays() {
     let audio = document.querySelector('#audio')
     audio.play()
@@ -228,15 +214,15 @@ const SendEditor = (props) => {
     audio.pause()
   }
   return <>{(
-    <div className='send-editor-container' style={{ height: `${editorHeight}px` }} onClick={handleEditorClick}>
+    <div className='send-editor-container' onClick={handleEditorClick}>
       { chatRunning &&
         <div className='editor-stop' onClick={onStop}>
           <img src='./src/assets/images/ai/stop.png' alt='' />
           <span>{t('stopResponding')}</span>
         </div>
       }
-      <div ref={recommondRef}>
-        <Recommends onSend={onSend} />
+      <div className='recommends-inner' style={{top: `-${recommondTop}px`}} ref={recommondRef}>
+        <Recommends resetEditorHeight={resetEditorHeight} onSend={onSend} />
       </div>
       <div className='editor-inner' >
         <EditorBtnHome

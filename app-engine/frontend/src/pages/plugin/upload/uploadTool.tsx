@@ -59,7 +59,10 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const onChangeSpace = (value) => { };
   // 添加数据
   const addFileData = (data, file) => {
-    if (fileData.current.length > 4) return;
+    if (fileData.current.length > 4) {
+      Message({ type: 'warning', content: t('maxUploadTips') })
+      return;
+    };
     fileData.current = [...fileData.current, file];
     setFileList(fileData.current);
     Object.keys(data).forEach(key => {
@@ -237,6 +240,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
             addFileData={addFileData}
             fileList={fileList}
             removeFileData={removeFileData}
+            style={{ margin: '10px 0' }}
           />
           <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
             {

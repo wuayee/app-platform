@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Drawer, Form, Alert, Spin } from 'antd';
 import { StartIcon, CloseIcon, RunIcon } from '@assets/icon';
@@ -35,6 +35,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   const runningInstanceId = useRef('');
+  const runningParsing = useRef(false);
   const dispatch = useAppDispatch();
 
   // 关闭测试抽屉
@@ -85,8 +86,9 @@ const Index = (props) => {
   const testStreaming = async (res) => {
     let reader = res?.body?.pipeThrough(new TextDecoderStream())
       .pipeThrough(new EventSourceParserStream()).getReader();
+    runningParsing.current = true;
     let getReady = false;
-    while (true) {
+    while (true && runningParsing.current) {
       const sseResData = await reader?.read();
       const { done, value } = sseResData;
       if (!done) {
@@ -177,11 +179,16 @@ const Index = (props) => {
     Message({ type: 'warning', content: content });
     elsaRunningCtl.current?.stop();
   }
-
   const confirmSetOpen = (res) => {
     setOpen(false);
     testStreaming(res);
   }
+  useEffect(() => {
+    return () => {
+      timerRef.current && clearInterval(timerRef.current);
+      runningParsing.current = false;
+    }
+  }, [])
   return <>{(
     <div>
       <Drawer title={<h5>{t('debugRun')}</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
