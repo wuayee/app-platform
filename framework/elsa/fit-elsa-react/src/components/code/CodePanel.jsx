@@ -109,10 +109,9 @@ function _CodePanel({disabled, input, dispatch}) {
                                    message: '代码不能为空！',
                                },
                            ]}>
-                    <CodeEditor code={code}
-                                height={defaultEditorHeight}
-                                language={selectedLanguage}
-                                onChange={editCode}/>
+                    <div style={{height: defaultEditorHeight + "px"}}>
+                        <CodeEditor code={code} language={selectedLanguage} onChange={editCode}/>
+                    </div>
                 </Form.Item>
                 <CodeDrawer container={shape.page.graph.div.parentElement}
                             width={defaultDrawerWidth}

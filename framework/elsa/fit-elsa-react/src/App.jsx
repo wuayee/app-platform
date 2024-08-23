@@ -51,7 +51,7 @@ function App() {
             }
         });
 
-        JadeFlow.evaluate(stage, "1111", evaluationTestData, false, configs).then(agent => {
+        JadeFlow.edit(stage, "1111", graphData, configs, null).then(agent => {
             window.agent = agent;
             agent.onModelSelect((onModelSelectedCallback) => {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
@@ -88,7 +88,8 @@ function App() {
                         open={open}
                         languages={["python"]}
                         editorConfig={{
-                            language: "python", code: "async def main(args: Args) -> Output:\n return ret"
+                            language: "python", code: "async def main(args: Args) -> Output:\n return ret",
+                            suggestions: [{label: "zyyyyyyyyyyyy", insertText: "zyyyyyyyyyyyy"}]
                         }}
                         onClose={() => setOpen(false)}
                         onConfirm={(v) => {
