@@ -4,7 +4,6 @@
 
 package com.huawei.jade.app.engine.task.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.task.convertor.EvalCaseConvertor;
 import com.huawei.jade.app.engine.task.entity.EvalCaseEntity;
 import com.huawei.jade.app.engine.task.entity.EvalRecordEntity;
@@ -12,6 +11,7 @@ import com.huawei.jade.app.engine.task.mapper.EvalCaseMapper;
 import com.huawei.jade.app.engine.task.po.EvalCasePo;
 import com.huawei.jade.app.engine.task.service.EvalCaseService;
 import com.huawei.jade.app.engine.task.service.EvalRecordService;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 
