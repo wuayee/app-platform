@@ -40,6 +40,7 @@ public class MappingFlowDataConverterParser implements FlowDataConverterParser {
     private static final String FROM = "from";
 
     private static final String REFERENCE_NODE = "referenceNode";
+    private static final String FALLBACK_ON_NODE_DATA_MISS = "fallbackOnNodeDataMiss";
 
     private static MappingNode getMappingNode(Map<String, Object> config) {
         Object value = config.get(VALUE);
@@ -51,12 +52,15 @@ public class MappingFlowDataConverterParser implements FlowDataConverterParser {
                     .map(MappingFlowDataConverterParser::getMappingNode)
                     .collect(Collectors.toList());
         }
+        boolean fallbackOnNodeDataMiss = (boolean) Optional.ofNullable(config.get(FALLBACK_ON_NODE_DATA_MISS))
+                .orElse(false);
         return MappingNode.builder()
                 .name(cast(config.get(NAME)))
                 .type(type)
                 .from(from)
                 .value(value)
                 .referenceNode(cast(config.get(REFERENCE_NODE)))
+                .fallbackOnNodeDataMiss(fallbackOnNodeDataMiss)
                 .build();
     }
 

@@ -60,9 +60,9 @@ class ArrayMappingProcessorTest {
     void shouldReturnValueWhenGenerateGivenElementWithRefValue() {
         List<Object> expectValue = new ArrayList<>(Arrays.asList("str1", 666));
         ArrayList<MappingNode> arrayValueConfig = new ArrayList<>(Arrays.asList(
-                new MappingNode("", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("str"), ""),
+                new MappingNode("", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("str"), "", true),
                 new MappingNode("", MappingNodeType.INTEGER, MappingFromType.REFERENCE,
-                        Arrays.asList("level1", "level2"), "")));
+                        Arrays.asList("level1", "level2"), "", true)));
         MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 arrayValueConfig, "");
         Map<String, Object> businessData = MapBuilder.<String, Object>get()

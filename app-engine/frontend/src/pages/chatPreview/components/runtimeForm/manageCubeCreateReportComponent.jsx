@@ -11,7 +11,8 @@ export const manageCubeCreateReportComponent = (jadeConfig) => {
     self.getJadeConfig = () => {
       return jadeConfig ? jadeConfig : {
         "inputParams": [{
-            id: uuidv4(), name: "reportResult", type: "String", from: "Reference", value: ["output"]
+            id: uuidv4(), name: "reportResult", type: "String", from: "Reference",
+          value: ["output"], fallbackOnNodeDataMiss: true
         }], "outputParams": [{
             id: uuidv4(), name: "reportResult", type: "String", from: "Input", value: ""
         }]

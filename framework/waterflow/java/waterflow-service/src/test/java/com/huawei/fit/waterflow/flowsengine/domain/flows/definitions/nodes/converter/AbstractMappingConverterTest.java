@@ -41,7 +41,7 @@ public class AbstractMappingConverterTest {
     void shouldReturnValueWhenGenerateGivenReferenceTypeAndOneLevelPath() {
         String expectValue = "level1Value";
         MappingNode mappingConfig = new MappingNode("keyString", MappingNodeType.STRING, MappingFromType.REFERENCE,
-                Arrays.asList("level1"), "");
+                Arrays.asList("level1"), "", true);
         Map<String, Object> businessData = MapBuilder.<String, Object>get().put("level1", expectValue).build();
 
         AbstractMappingProcessor target = new MappingConverterForTest();
@@ -56,7 +56,7 @@ public class AbstractMappingConverterTest {
     void shouldReturnValueWhenGenerateGivenReferenceTypeAndMultiLevelPath() {
         String expectValue = "level2Value";
         MappingNode mappingConfig = new MappingNode("keyString", MappingNodeType.STRING, MappingFromType.REFERENCE,
-                Arrays.asList("level1", "level2"), "");
+                Arrays.asList("level1", "level2"), "", true);
         Map<String, Object> businessData = MapBuilder.<String, Object>get()
                 .put("level1", MapBuilder.<String, Object>get().put("level2", expectValue).build())
                 .build();

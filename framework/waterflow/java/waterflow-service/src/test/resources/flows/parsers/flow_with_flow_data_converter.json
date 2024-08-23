@@ -1,0 +1,41 @@
+{
+  "type": "mapping_converter",
+  "entity": {
+    "inputParams": [
+      {
+        "id": "condition_b63e38ea-b27e-4895-b2d8-de84384fae2e",
+        "from": "Reference",
+        "name": "condition",
+        "type": "String",
+        "value": [
+          "output",
+          "llmOutput"
+        ],
+        "referenceId": "8e900cd6-d151-402b-b6b2-194790edf467",
+        "referenceKey": "llmOutput",
+        "referenceNode": "jade5wc1ee",
+        "fallbackOnNodeDataMiss": true
+      },
+      {
+        "id": "query_88827f8c-a610-46b7-8b50-4531bb87763f",
+        "from": "Reference",
+        "name": "query",
+        "type": "String",
+        "value": [
+          "query"
+        ],
+        "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
+        "referenceKey": "query",
+        "referenceNode": "jade6qm5eg"
+      }
+    ],
+    "outputParams": [
+      {
+        "id": "output_fc952038-1a14-442b-bd78-8515e69449fa",
+        "name": "output",
+        "type": "String",
+        "value": []
+      }
+    ]
+  }
+}

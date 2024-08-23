@@ -60,11 +60,12 @@ class ObjectMappingProcessorTest {
     void shouldReturnValueWhenGenerateGivenElementWithRefValue() {
         Map<String, Object> expectValue = MapBuilder.<String, Object>get().put("int", 666).put("str", "str1").build();
         ArrayList<MappingNode> objectValueConfig = new ArrayList<>(Arrays.asList(
-                new MappingNode("str", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("str"), ""),
+                new MappingNode("str", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("str"),
+                        "", true),
                 new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.REFERENCE,
-                        Arrays.asList("level1", "level2"), "")));
+                        Arrays.asList("level1", "level2"), "", true)));
         MappingNode mappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.EXPAND,
-                objectValueConfig, "");
+                objectValueConfig, "", true);
         Map<String, Object> businessData = MapBuilder.<String, Object>get()
                 .put("level1", MapBuilder.<String, Object>get().put("level2", 666).build())
                 .put("str", "str1")
