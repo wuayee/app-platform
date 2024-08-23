@@ -1,6 +1,7 @@
-#!/user/bin/python
-# -*- coding: utf-8 -*-
-# Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+# Copyright (c) 2024 Huawei Technologies Co., Ltd. All Rights Reserved.
+# This file is a part of the ModelEngine Project.
+#  Licensed under the MIT License. See License.txt in the project root for license information.
+# ======================================================================================================================
 """
 Description: 文档局部内容去重
 Create: 2023/12/7 15:43
