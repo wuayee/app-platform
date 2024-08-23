@@ -30,7 +30,7 @@ const AddKnowledge = (props) => {
       dataIndex: 'name',
       key: 'name',
       render: (text) => <span style={{ display: 'flex', alignItems: 'center' }}>
-        <img src='/src/assets/images/ai/iconx.png' style={{ marginRight: '6px' }} />
+        <img src='./src/assets/images/ai/iconx.png' style={{ marginRight: '6px' }} />
         {text}
       </span>,
     },
@@ -63,7 +63,7 @@ const AddKnowledge = (props) => {
     setOpen(true);
     setCheck();
   }
-  // 设置选中
+  // 设置选中列表
   const setCheck = () => {
     let arr = checkData.current.map(item => Number(item.tableId));
     setSelectedRowKeys(arr);
@@ -84,11 +84,8 @@ const AddKnowledge = (props) => {
         if (data.length) {
           initTagList(data);
           setKnowledgeItem(data[0]);
-        } else {
-          setKnowledgeItem({});
         }
         setTotal(res.data.total);
-        knowledgeCurrent.current = JSON.parse(JSON.stringify(data));
       }
     })
   }
@@ -97,6 +94,7 @@ const AddKnowledge = (props) => {
     let arr = [];
     data.forEach(item => {
       let list = checkData.current.filter(cItem => Number(cItem.repoId) === item.id);
+      item.child = [];
       if (list.length) {
         let obj = {
           name: item.name,
@@ -104,12 +102,11 @@ const AddKnowledge = (props) => {
           child: list
         }
         arr.push(obj);
+        item.child = list;
       }
     });
     setKnowledgeList(arr);
-  }
-  const leftMenuClick = (item) => {
-    setKnowledgeItem(item);
+    knowledgeCurrent.current = JSON.parse(JSON.stringify(data));
   }
   // 获取右侧列表
   const getTableList = (item) => {
@@ -132,18 +129,21 @@ const AddKnowledge = (props) => {
     let arr = [];
     setSelectedRowKeys(newSelectedRowKeys);
     knowledgeCurrent.current.forEach(item => {
-      let obj = {};
-      obj.name = item.name;
-      obj.id = item.id;
-      obj.show = false;
-      obj.child = [];
-      item.list?.forEach(lItem => {
-        if (newSelectedRowKeys.includes(lItem.id)) {
-          obj.child.push(lItem);
-          obj.show = true;
-        }
-      });
-      arr.push(obj);
+      if (item.id === knowledgeItem.id) {
+        let obj = {};
+        obj.name = item.name;
+        obj.id = item.id;
+        obj.child = [];
+        item.list?.forEach(lItem => {
+          if (newSelectedRowKeys.includes(lItem.id)) {
+            obj.child.push(lItem);
+          }
+        });
+        item.child = obj.child;
+        arr.push(obj);
+      } else {
+        arr.push(item);
+      }
     });
     let list = arr.filter(item => item.child.length > 0);
     setKnowledgeList(list);
@@ -263,7 +263,7 @@ const AddKnowledge = (props) => {
               {
                 knowledgeOptions?.map((item, index) => {
                   return (
-                    <div className='item' key={index} onClick={() => leftMenuClick(item)}>
+                    <div className='item' key={index} onClick={() => setKnowledgeItem(item)}>
                       <span className={knowledgeItem?.id === item.id ? 'active' : null}>{item.name}</span>
                     </div>
                   )
@@ -277,7 +277,7 @@ const AddKnowledge = (props) => {
           <div className='knowledge-right'>
             <div className='knowledge-details'>
               <div className='left'>
-                <img src='/src/assets/images/knowledge/knowledge-base.png' alt='' />
+                <img src='./src/assets/images/knowledge/knowledge-base.png' alt='' />
               </div>
               <div className='right'>
                 <div className='knowledge-title'>{knowledgeItem?.name}</div>

@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, Tabs, Modal, notification } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { Icons } from '@/components/icons';
 import AppCard from '@/components/appCard';
 import EditModal from '../components/edit-modal';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
-import { deleteAppApi, getUserCollectionNoDesc, queryAppDevApi } from '@/shared/http/appDev.js';
+import { deleteAppApi, queryAppDevApi } from '@/shared/http/appDev.js';
 import { debounce } from '@/shared/utils/common';
-import { useAppDispatch } from '@/store/hook';
-import { setCollectionValue } from '@/store/collection/collection';
 import { Message } from '@/shared/utils/message';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +31,7 @@ const AppDev: React.FC = () => {
       name: search || undefined
     };
     const res: any = await queryAppDevApi(tenantId, params);
-    if (res.code === 0) {
+    if (res && res.code === 0) {
       const { results, range } = res.data;
       const arr = results.map((v: any) => {
         const { description, icon } = v.attributes;
@@ -125,19 +124,11 @@ const AppDev: React.FC = () => {
       setLoading(false);
     }
   }
-  const dispatch = useAppDispatch();
-  // 获取当前登录用户名
-  const getLoaclUser = () => {
-    return localStorage.getItem('currentUserIdComplete') ?? '';
-  }
-  // 获取用户收藏列表
-  const getUserCollectionList = async () => {
-    const res = await getUserCollectionNoDesc(getLoaclUser());
-    const collectMap = (res?.data ?? []).reduce((prev: any, next: any) => {
-      prev[next.appId] = true;
-      return prev
-    }, {})
-    dispatch(setCollectionValue(collectMap));
+  // 联机帮助
+  const onlineHelp = () => {
+    if (window.self !== window.top) {
+      window.open(`${window.parent.location.origin}/help/app_development.html`, '_blank');
+    }
   }
   useEffect(() => {
     queryApps();
@@ -147,6 +138,7 @@ const AppDev: React.FC = () => {
     <div className='apps_root'>
       <div className='apps_header'>
         <div className='apps_title'>{t('appDevelopment')}</div>
+        <QuestionCircleOutlined onClick={onlineHelp} />
       </div>
       <div className='apps_main'>
         <div className='tabs'>
