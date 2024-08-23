@@ -10,6 +10,7 @@ import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.schedule.ExecutePolicy;
 import com.huawei.fitframework.schedule.Task;
 import com.huawei.fitframework.util.LockUtils;
+import com.huawei.fitframework.util.ThreadUtils;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -27,13 +28,12 @@ import java.util.concurrent.TimeoutException;
  * @since 2022-12-27
  */
 public class ReschedulableTask implements Task, ScheduledFuture<Object> {
+    private static final int TIME_ABNORMAL_SLEEP_TIME = 1000;
     private final ScheduledExecutorService threadPool;
     private final Task task;
     private final Instant startTime;
     private final ReschedulableExecution execution;
-
     private final Object lock = LockUtils.newSynchronizedLock();
-
     private volatile ScheduledFuture<Object> currentScheduledFuture;
 
     ReschedulableTask(ScheduledExecutorService threadPool, Task task, Instant startTime) {
@@ -41,6 +41,21 @@ public class ReschedulableTask implements Task, ScheduledFuture<Object> {
         this.task = notNull(task, "The task cannot be null.");
         this.startTime = notNull(startTime, "The start time cannot be null.");
         this.execution = new ReschedulableExecution();
+    }
+
+    private boolean isCurTimeInvalid(Instant curTime) {
+        return curTime.isBefore(this.startTime) || this.execution.lastExecuteTime()
+                .map(lastTime -> lastTime.isAfter(curTime))
+                .orElse(false);
+    }
+
+    private Instant getCurTime() {
+        Instant curTime = Instant.now();
+        while (this.isCurTimeInvalid(curTime)) {
+            ThreadUtils.sleep(TIME_ABNORMAL_SLEEP_TIME);
+            curTime = Instant.now();
+        }
+        return curTime;
     }
 
     /**
@@ -57,7 +72,8 @@ public class ReschedulableTask implements Task, ScheduledFuture<Object> {
             }
             Instant nextExecuteTime = optionalNextExecuteTime.get();
             this.execution.updateScheduledTime(nextExecuteTime);
-            long initialDelay = nextExecuteTime.toEpochMilli() - Instant.now().toEpochMilli();
+            Instant curTime = this.getCurTime();
+            long initialDelay = nextExecuteTime.toEpochMilli() - curTime.toEpochMilli();
             this.currentScheduledFuture = this.threadPool.schedule(this, initialDelay, TimeUnit.MILLISECONDS);
             return this;
         }
@@ -76,11 +92,11 @@ public class ReschedulableTask implements Task, ScheduledFuture<Object> {
     @Override
     public Object call() throws Exception {
         synchronized (this.lock) {
-            this.execution.updateExecuteTime(Instant.now());
+            this.execution.updateExecuteTime(this.getCurTime());
         }
         Object actualResult = this.task.call();
         synchronized (this.lock) {
-            this.execution.updateCompleteTime(Instant.now());
+            this.execution.updateCompleteTime(this.getCurTime());
             notNull(this.currentScheduledFuture, "The current scheduled future cannot be null.");
             if (!this.currentScheduledFuture.isCancelled()) {
                 this.schedule();
