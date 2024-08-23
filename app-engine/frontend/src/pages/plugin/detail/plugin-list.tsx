@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Drawer, Button } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import PluginCard from '@/components/plugin-card';
 import EmptyItem from '@/components/empty/empty-item';
 import DeployMent from '../deployment';
@@ -20,6 +20,12 @@ const PliginList = (props) => {
       setData(data);
     });
   };
+  // 联机帮助
+  const onlineHelp = () => {
+    if (window.self !== window.top) {
+      window.parent.open(`${window.parent.location.origin}/help/toctopics/application_plug-in.html`, '_blank');
+    }
+  }
   useEffect(() => {
     getPluginList();
   }, []);
@@ -28,7 +34,10 @@ const PliginList = (props) => {
       {
         <div className='plugin-detail'>
           <div className='aui-header-1 '>
-            <div className='aui-title-1'>{t('pluginManagement')}</div>
+            <div className='aui-title-1'>
+              {t('pluginManagement')}
+              <QuestionCircleOutlined onClick={onlineHelp} style={{ marginLeft: '8px', fontSize: '18px' }} />
+            </div>
             <Button size='small' onClick={() => setOpen(true)}>{t('deploying')}</Button>
           </div>
           <div className='plugin-detail-list'>

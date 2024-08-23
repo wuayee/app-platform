@@ -103,6 +103,11 @@ const EditModal = (props) => {
   }
   const onChange = ({ file }) => {
     let validateResult = fileValidate(file);
+    if (!validateResult) {
+      form.setFieldsValue({
+        icon: appInfo.attributes?.icon || ''
+      })
+    }
     validateResult && pictureUpload(file);
   }
   // 上传图片

@@ -141,7 +141,7 @@ const Deploy = ({ pluginRef }) => {
             </div>
           </div>)}
           {tableData.length === 0 && <Empty
-            imageStyle={{ height: 60 }}
+            imageStyle={{ height: 60, margin: '100px 0' }}
             description={<span>{t('noData')}</span>} />}
         </div>
         <div style={{ paddingTop: 16 }}>
@@ -190,7 +190,7 @@ const Deploy = ({ pluginRef }) => {
             </div>
           </div>)}
           {pluginData.length === 0 && <Empty
-            imageStyle={{ height: 60 }}
+            imageStyle={{ height: 60, margin: '100px 0' }}
             description={<span>{t('noData')}</span>} />}
         </div>
       </div>
