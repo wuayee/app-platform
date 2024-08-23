@@ -23,7 +23,7 @@ const PliginList = (props) => {
   // 联机帮助
   const onlineHelp = () => {
     if (window.self !== window.top) {
-      window.parent.open(`${window.parent.location.origin}/help/toctopics/application_plug-in.html`, '_blank');
+      window.open(`${window.parent.location.origin}/help/toctopics/application_plug-in.html`, '_blank');
     }
   }
   useEffect(() => {

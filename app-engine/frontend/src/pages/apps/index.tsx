@@ -82,7 +82,7 @@ const Apps: React.FC = () => {
   // 联机帮助
   const onlineHelp = () => {
     if (window.self !== window.top) {
-      window.parent.open(`${window.parent.location.origin}/help/app_market.html`, '_blank');
+      window.open(`${window.parent.location.origin}/help/app_market.html`, '_blank');
     }
   }
 
