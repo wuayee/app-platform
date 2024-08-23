@@ -18,46 +18,46 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-runtime</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-conf</artifactId>
             <version>${fit.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-conf-yaml</artifactId>
             <version>${fit.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-ioc</artifactId>
             <version>${fit.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-plugin</artifactId>
             <version>${fit.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-log-console</artifactId>
             <version>${fit.version}</version>
         </dependency>

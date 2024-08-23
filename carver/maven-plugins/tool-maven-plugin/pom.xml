@@ -21,11 +21,11 @@
     <dependencies>
         <!-- FIT -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-maven-plugin-util</artifactId>
             <version>${fit.version}</version>
         </dependency>

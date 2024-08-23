@@ -16,7 +16,7 @@
     <dependencies>
         <!-- Fit -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
@@ -32,7 +32,7 @@
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
         </dependency>
         <dependency>
@@ -40,7 +40,7 @@
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-transaction</artifactId>
         </dependency>
 

@@ -39,7 +39,7 @@ import java.util.zip.ZipOutputStream;
  */
 @DisplayName("测试 MavenCoordinate 工具类")
 class MavenCoordinateTest {
-    private static final String GROUP_ID = "com.huawei.fitframework";
+    private static final String GROUP_ID = "modelengine.fitframework";
     private static final String ARTIFACT_ID = "fit-util";
     private static final String VERSION = "3.0.0-SNAPSHOT";
 
@@ -285,7 +285,7 @@ class MavenCoordinateTest {
         @DisplayName("提供 maven 坐标类，返回冒号连接的字符串")
         void testToString() {
             final String toString = mavenCoordinate.toString();
-            assertThat(toString).isEqualTo("com.huawei.fitframework:fit-util:3.0.0-SNAPSHOT");
+            assertThat(toString).isEqualTo("modelengine.fitframework:fit-util:3.0.0-SNAPSHOT");
         }
     }
 }

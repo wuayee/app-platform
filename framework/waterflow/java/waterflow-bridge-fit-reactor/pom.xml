@@ -15,7 +15,7 @@
             <artifactId>waterflow-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-reactor</artifactId>
         </dependency>
         <dependency>

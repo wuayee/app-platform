@@ -55,7 +55,7 @@ public abstract class AbstractRepackager extends AbstractExecutor {
     protected static final List<String> BASE_ARTIFACT_IDS = Collections.singletonList("fit-protocol-nestable-jar");
 
     /** 表示框架的 groupId 名字。 */
-    protected static final String FRAMEWORK_GROUP_ID = "com.huawei.fitframework";
+    protected static final String FRAMEWORK_GROUP_ID = "modelengine.fitframework";
 
     private static final String YML = "yml";
     private static final String YAML = "yaml";

@@ -18,7 +18,6 @@ import modelengine.fitframework.ioc.annotation.support.DefaultAnnotationMetadata
 import modelengine.fitframework.runtime.FitRuntime;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -104,7 +103,6 @@ public class MethodInterceptorComparatorTest {
 
             @Test
             @DisplayName("当对拦截器进行排序时，返回顺序：around、beforeHigherOrder、before、after、afterReturn、afterThrow")
-            @Disabled
             void shouldReturnHigherOrderInterceptorBeforeOtherSameTypeInterceptor() {
                 List<MethodInterceptor> methodInterceptorList = methodInterceptors.stream()
                         .sorted(new MethodInterceptorComparator())

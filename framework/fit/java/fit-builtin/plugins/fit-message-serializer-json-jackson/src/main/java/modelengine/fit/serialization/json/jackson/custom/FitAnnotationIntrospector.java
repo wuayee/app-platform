@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class FitAnnotationIntrospector extends AnnotationIntrospector {
     @Override
     public Version version() {
-        return VersionUtil.parseVersion("3.5.0", "com.huawei.fit.plugin", "fit-message-serializer-json-jackson");
+        return VersionUtil.parseVersion("3.5.0", "modelengine.fit.plugin", "fit-message-serializer-json-jackson");
     }
 
     @Override

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fitframework</groupId>
+        <groupId>modelengine.fitframework</groupId>
         <artifactId>fitframework-parent</artifactId>
         <version>3.5.0-SNAPSHOT</version>
     </parent>
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-protocol-nestable-jar</artifactId>
         </dependency>
     </dependencies>
@@ -27,7 +27,7 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -46,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.huawei.fitframework.launch.DiscreteFitLauncher</mainClass>
+                            <mainClass>modelengine.fitframework.launch.DiscreteFitLauncher</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Created-By>FIT lab (Huawei)</Created-By>

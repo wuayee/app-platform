@@ -18,32 +18,32 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-value-fastjson</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-server-netty</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-server-http</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-handler-registry</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-client-okhttp</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-runtime</artifactId>
         </dependency>
     </dependencies>
