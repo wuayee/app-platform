@@ -148,7 +148,7 @@ public class UrlClassLoaderScannerTest {
                     IllegalStateException exception = catchThrowableOfType(actual::scan, IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to scan class directory. [directory=" + FileUtils.path(directory) + "]")
-                            .cause()
+                            .getCause()
                             .isInstanceOf(IOException.class);
                 }
             }
@@ -194,7 +194,7 @@ public class UrlClassLoaderScannerTest {
                     IllegalStateException exception = catchThrowableOfType(actual::scan, IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to load JAR file. [url=" + urls[0].toExternalForm() + "]")
-                            .cause()
+                            .getCause()
                             .isInstanceOf(IOException.class);
                 }
             }
@@ -222,7 +222,7 @@ public class UrlClassLoaderScannerTest {
                     IllegalStateException exception = catchThrowableOfType(actual::scan, IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to parse class path. [classPath=://fit.lab?q=%]")
-                            .cause()
+                            .getCause()
                             .isInstanceOf(IOException.class);
                 }
             }

@@ -52,7 +52,7 @@
         <json-schema.version>1.14.4</json-schema.version>
 
         <!-- Test framework versions -->
-        <assertj.version>3.26.3</assertj.version>
+        <assertj.version>3.22.0</assertj.version>
         <junit.version>5.10.3</junit.version>
         <mockito.version>4.11.0</mockito.version>
         <h2.version>2.2.224</h2.version>

@@ -405,7 +405,7 @@ public class IoUtilsTest {
                         assertThat(exception).isNotNull()
                                 .hasMessage("Failed to read properties from embedded resource. [resourceKey="
                                         + TestProperties.this.invalidResourceKey + "]")
-                                .cause()
+                                .getCause()
                                 .isInstanceOf(IOException.class);
                     }
                 }
@@ -443,7 +443,7 @@ public class IoUtilsTest {
                         assertThat(exception).isNotNull()
                                 .hasMessage("Failed to read properties from embedded resource. [resourceKey="
                                         + TestProperties.this.invalidResourceKey + "]")
-                                .cause()
+                                .getCause()
                                 .isInstanceOf(IOException.class);
                     }
                 }

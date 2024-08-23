@@ -91,7 +91,7 @@ public class PropertiesUtilsTest {
                             catchThrowableOfType(() -> PropertiesUtils.mapFrom(spy), IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to load configuration from properties. [file=testFile.txt]")
-                            .cause()
+                            .getCause()
                             .isInstanceOf(IOException.class);
                 }
             }
@@ -147,8 +147,7 @@ public class PropertiesUtilsTest {
                             catchThrowableOfType(() -> PropertiesUtils.mapFrom(in), IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to load configuration from properties input stream.")
-                            .cause()
-                            .isInstanceOf(IOException.class);
+                        .getCause().isInstanceOf(IOException.class);
                 }
             }
         }
