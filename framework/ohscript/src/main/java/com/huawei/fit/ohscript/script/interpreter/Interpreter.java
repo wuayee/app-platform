@@ -386,34 +386,40 @@ public enum Interpreter {
     CONDITION_EXPRESSION {
         @Override
         public ReturnValue interpret(SyntaxNode node, ASTEnv env, ActivationContext current) throws OhPanic {
-            ReturnValue x = node.child(0).interpret(env, current);
-            TerminalNode op = ObjectUtils.cast(node.child(1));
-            boolean x1;
-            if (x.value() instanceof Boolean) {
-                x1 = ObjectUtils.cast(x.value());
+            ReturnValue leftValue = node.child(0).interpret(env, current);
+            boolean result;
+            if (leftValue.value() instanceof Boolean) {
+                result = ObjectUtils.cast(leftValue.value());
             } else {
-                x1 = (ObjectUtils.<Number>cast(x.value())).doubleValue() > 0;
+                result = (ObjectUtils.<Number>cast(leftValue.value())).doubleValue() > 0;
             }
-            if (x1 && op.nodeType() == Terminal.OR_OR) {
-                return this.createValue(true, node, env, current);
+            for (int index = 2; index < node.childCount(); index = index + 2) {
+                TerminalNode op = ObjectUtils.cast(node.child(index - 1));
+                if (result && op.nodeType() == Terminal.OR_OR) {
+                    return this.createValue(true, node, env, current);
+                }
+                if (!result && op.nodeType() == Terminal.AND_AND) {
+                    return this.createValue(false, node, env, current);
+                }
+                result = opRight(result, op, node.child(index).interpret(env, current));
             }
-            if (!x1 && op.nodeType() == Terminal.AND_AND) {
-                return this.createValue(false, node, env, current);
-            }
-            ReturnValue y = node.child(2).interpret(env, current);
-            boolean y1;
-            if (y.value() instanceof Boolean) {
-                y1 = ObjectUtils.cast(y.value());
+            return this.createValue(result, node, env, current);
+        }
+
+        private boolean opRight(boolean left, TerminalNode op, ReturnValue rightValue) {
+            boolean right;
+            if (rightValue.value() instanceof Boolean) {
+                right = ObjectUtils.cast(rightValue.value());
             } else {
-                y1 = (ObjectUtils.<Number>cast(y.value())).doubleValue() > 0;
+                right = (ObjectUtils.<Number>cast(rightValue.value())).doubleValue() > 0;
             }
             if (op.nodeType() == Terminal.OR_OR) {
-                return this.createValue(x1 || y1, node, env, current);
+                return left || right;
             }
             if (op.nodeType() == Terminal.AND_AND) {
-                return this.createValue(x1 && y1, node, env, current);
+                return left && right;
             }
-            return this.createValue(false, node, env, current);
+            return false;
         }
 
         private ReturnValue createValue(Boolean bool, SyntaxNode node, ASTEnv env, ActivationContext current) {
