@@ -1,4 +1,3 @@
-import {Editor, loader} from "@monaco-editor/react";
 import * as monaco from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
@@ -26,8 +25,6 @@ self.MonacoEnvironment = {
     },
 };
 
-loader.config({monaco});
-
 CodeEditor.propTypes = {
     language: PropTypes.string.isRequired,
     height: PropTypes.number,
@@ -42,7 +39,6 @@ CodeEditor.propTypes = {
  * 代码编辑器.
  *
  * @param language 默认语言.
- * @param height 高度.
  * @param code 默认代码.
  * @param onChange 数据变化时触发.
  * @param theme 主题.
@@ -51,9 +47,7 @@ CodeEditor.propTypes = {
  * @return {JSX.Element}
  * @constructor
  */
-export default function CodeEditor({
-                                       language,
-                                       height,
+export default function CodeEditor({language,
                                        code,
                                        onChange,
                                        theme = "vs-dark",
@@ -61,23 +55,18 @@ export default function CodeEditor({
                                        suggestions = []
                                    }) {
     const monacoRef = useRef(null);
-    const _height = isNaN(height) ? height : height + "px";
     const providerRef = useRef(null);
-
-    const onMount = (editor, monaco) => {
-        monacoRef.current = monaco;
-        !options.readOnly && registerSuggestions(monaco);
-    };
+    const divRef = useRef();
 
     useEffect(() => {
-        if (!monacoRef.current || suggestions.length <= 0) {
+        if (suggestions.length <= 0) {
             return;
         }
         // 在每次 suggestions 变化时重新注册补全提示
-        !options.readOnly && registerSuggestions(monacoRef.current);
+        !options.readOnly && registerSuggestions();
     }, [suggestions]);
 
-    const registerSuggestions = (monaco) => {
+    const registerSuggestions = () => {
         // 如果存在，注销之后重新注册
         if (providerRef.current) {
             providerRef.current.dispose();
@@ -98,6 +87,26 @@ export default function CodeEditor({
         });
     };
 
+    useEffect(() => {
+        monacoRef.current = monaco.editor.create(divRef.current, {
+            value: code,
+            language: language,
+            lineNumbers: "on",
+            roundedSelection: false,
+            scrollBeyondLastLine: false,
+            readOnly: options.readOnly,
+            theme: theme,
+            automaticLayout: true
+        });
+        monacoRef.current.onDidChangeModelContent(() => {
+            onChange && onChange(monacoRef.current.getModel().getValue());
+        });
+        registerSuggestions();
+        return () => {
+            monacoRef.current.dispose();
+        };
+    }, []);
+
     /**
      * 构造对应语言的代码补全提示
      *
@@ -114,15 +123,6 @@ export default function CodeEditor({
     };
 
     return (<>
-        <Editor className={"jade-code-editor"}
-                defaultLanguage={language}
-                language={language}
-                width={"100%"}
-                height={_height}
-                value={code}
-                theme={theme}
-                options={{...options}}
-                onMount={onMount}
-                onChange={(v) => onChange && onChange(v)}/>
+        <div ref={divRef} className={"jade-code-editor"} style={{width: "100%", height: "100%"}}/>
     </>);
-};
+}

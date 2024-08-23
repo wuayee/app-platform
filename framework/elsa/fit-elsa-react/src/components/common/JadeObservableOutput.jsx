@@ -127,6 +127,7 @@ const TreeNode = ({node, disabled, shape, dispatch, output}) => {
     const dataTypes = Object.values(DATA_TYPES);
     const inputWidth = 140 - (node.level - 1) * 24;
     const {key, title, type, level} = node;
+    const {t} = useTranslation();
     // 输出的最大层数是4
     const maxLevel = 4;
 
