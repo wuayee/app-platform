@@ -1098,15 +1098,15 @@ class InterpreterTest {
         internal.put("outputScope", outputScope);
 
         HashMap<Object, Object> jadew98cnn = new HashMap<>();
-        outputScope.put("jadew98cnn", jadew98cnn);
+        outputScope.put("jadea0rbki", jadew98cnn);
 
         HashMap<Object, Object> output = new HashMap<>();
         jadew98cnn.put("output", output);
 
-        HashMap<Object, Object> key2 = new HashMap<>();
-        output.put("key2", key2);
-
-        key2.put("key21", "123");
+        output.put("needTime", false);
+        output.put("needProduct", false);
+        output.put("needIndicator", true);
+        output.put("groupBy", "");
 
         String userDataKey = "userData";
         String businessDataKey = "businessData";
@@ -1116,12 +1116,22 @@ class InterpreterTest {
         ParserBuilder newParserBuilder = new ParserBuilder(new GrammarBuilder(), new Lexer());
         newParserBuilder.addExternalOh(userDataKey, userData);
 
-        String code = "let businessDataJson = ext::util.stringToJson(ext::userData.get(\"businessData\")); "
-                + "let businessData = ext::util.jsonToEntity(businessDataJson); "
-                + "(businessData._internal.outputScope.jadew98cnn.output.key2.key22 == null)";
+        String code = "let businessData = ext::util.stringToJson(ext::userData.get(\"businessData\"));  "
+                + "let passData = ext::util.stringToJson(ext::userData.get(\"passData\")); "
+                + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
+                + ".get(\"needTime\") == false) "
+                + "&& "
+                + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
+                + ".get(\"needProduct\") == false) "
+                + "&& "
+                + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
+                + ".get(\"needIndicator\") == false) "
+                + "&& "
+                + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
+                + ".get(\"groupBy\") == null)";
         AST ast = newParserBuilder.parseString("", code);
         ASTEnv env = new ASTEnv(ast);
-        assertEquals(true, env.execute());
+        assertEquals(false, env.execute());
     }
 
     @Test
