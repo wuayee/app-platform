@@ -123,5 +123,12 @@ public interface ServerConfig {
          * @return 如果启用，则返回 {@code true}，否则，返回 {@code false}。
          */
         boolean secureRandomEnabled();
+
+        /**
+         * 获取安全通信协议。
+         *
+         * @return 表示安全通信协议的 {@link Optional}{@code <}{@link String}{@link >}。
+         */
+        Optional<String> secureProtocol();
     }
 }

@@ -68,6 +68,7 @@ import javax.net.ssl.TrustManager;
 @Component
 public class NettyHttpClassicServer implements HttpClassicServer {
     private static final Logger log = Logger.get(NettyHttpClassicServer.class);
+    private static final String SECURE_DEFAULT_PROTOCOL = "TLSv1.2";
 
     private final BeanContainer container;
     private final HttpDispatcher dispatcher;
@@ -267,6 +268,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         String trustStorePassword = this.httpsConfig.trustStorePassword().orElse(StringUtils.EMPTY);
         String keyStorePassword = this.httpsConfig.keyStorePassword().orElse(StringUtils.EMPTY);
         boolean isSecureRandomEnabled = this.httpsConfig.secureRandomEnabled();
+        String secureProtocol = this.httpsConfig.secureProtocol().orElse(SECURE_DEFAULT_PROTOCOL);
         if (this.httpsConfig.encrypted()) {
             Decryptor decryptor =
                     notNull(this.container.beans().lookup(Decryptor.class), "The decryptor cannot be null.");
@@ -277,7 +279,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         String keyStoreFile = this.httpsConfig.keyStoreFile().orElse(StringUtils.EMPTY);
         KeyManager[] keyManagers = SslUtils.getKeyManagers(keyStoreFile, keyStorePassword);
         TrustManager[] trustManagers = SslUtils.getTrustManagers(trustStoreFile, trustStorePassword);
-        return SslUtils.getSslContext(keyManagers, trustManagers, isSecureRandomEnabled);
+        return SslUtils.getSslContext(keyManagers, trustManagers, isSecureRandomEnabled, secureProtocol);
     }
 
     @Override

@@ -55,6 +55,11 @@ public class DefaultClientSecure implements Secure {
      */
     private Boolean secureRandomEnabled;
 
+    /*
+     * 配置项：{@code 'secure-protocol'}。
+     */
+    private String secureProtocol;
+
     /**
      * 设置是否忽略 hostname。
      *
@@ -132,6 +137,15 @@ public class DefaultClientSecure implements Secure {
         this.secureRandomEnabled = secureRandomEnabled;
     }
 
+    /**
+     * 设置安全通信协议。
+     *
+     * @param secureProtocol 表示安全通信协议的 {@link String}。
+     */
+    public void setSecureProtocol(String secureProtocol) {
+        this.secureProtocol = secureProtocol;
+    }
+
     @Override
     public boolean ignoreHostName() {
         return this.ignoreHostname != null ? this.ignoreHostname : false;
@@ -165,5 +179,10 @@ public class DefaultClientSecure implements Secure {
     @Override
     public boolean secureRandomEnabled() {
         return this.secureRandomEnabled != null ? this.secureRandomEnabled : false;
+    }
+
+    @Override
+    public Optional<String> secureProtocol() {
+        return Optional.ofNullable(this.secureProtocol);
     }
 }

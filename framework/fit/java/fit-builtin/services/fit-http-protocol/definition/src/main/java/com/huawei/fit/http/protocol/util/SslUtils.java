@@ -71,13 +71,15 @@ public class SslUtils {
      * @param keyManagers 表示密钥管理器数组的 {@link KeyManager}{@code []}。
      * @param trustManagers 表示信任管理器数组的 {@link TrustManager}{@code []}。
      * @param isSecureRandomEnabled 表示是否启用安全随机数的 {@code boolean}。
+     * @param secureProtocol 表示通信协议的 {@code String}。
      * @return 表示获取 SSL 上下文的 {@link SSLContext}。
      * @throws NoSuchAlgorithmException 当加密算法使用不当时。
      * @throws KeyManagementException 当密钥的密码不正确或者密钥已经被损坏时。
      */
     public static SSLContext getSslContext(KeyManager[] keyManagers, TrustManager[] trustManagers,
-            boolean isSecureRandomEnabled) throws NoSuchAlgorithmException, KeyManagementException {
-        SSLContext sslContext = SSLContext.getInstance("TLS");
+            boolean isSecureRandomEnabled, String secureProtocol)
+            throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance(secureProtocol);
         long seed = System.currentTimeMillis();
         SecureRandom secureRandom = isSecureRandomEnabled
                 ? SecureRandom.getInstanceStrong()

@@ -33,6 +33,7 @@ import javax.net.ssl.X509TrustManager;
  */
 public class OkHttpClientBuilderFactory {
     private static final Logger log = Logger.get(OkHttpClientBuilderFactory.class);
+    private static final String SECURE_DEFAULT_PROTOCOL = "TLSv1.2";
     private static volatile OkHttpClient.Builder okHttpClientBuilder;
     private static final Object LOCK = LockUtils.newSynchronizedLock();
 
@@ -71,6 +72,8 @@ public class OkHttpClientBuilderFactory {
         String keyStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE));
         String keyStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD));
         Boolean isStrongRandom = cast(config.custom().getOrDefault(HttpsConstants.CLIENT_SECURE_STRONG_RANDOM, false));
+        String secureProtocol = cast(config.custom()
+                .getOrDefault(HttpsConstants.CLIENT_SECURE_SECURITY_PROTOCOL, SECURE_DEFAULT_PROTOCOL));
         KeyManager[] keyManagers;
         if (StringUtils.isNotBlank(keyStoreFile) && StringUtils.isNotBlank(keyStorePassword)) {
             keyManagers = getKeyManagers(keyStoreFile, keyStorePassword);
@@ -93,7 +96,7 @@ public class OkHttpClientBuilderFactory {
             }
         }
 
-        SSLContext sslContext = SslUtils.getSslContext(keyManagers, trustManagers, isStrongRandom);
+        SSLContext sslContext = SslUtils.getSslContext(keyManagers, trustManagers, isStrongRandom, secureProtocol);
         if (trustManagers != null && trustManagers[0] instanceof X509TrustManager) {
             clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagers[0]);
         }

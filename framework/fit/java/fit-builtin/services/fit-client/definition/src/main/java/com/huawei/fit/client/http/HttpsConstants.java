@@ -31,4 +31,7 @@ public class HttpsConstants {
 
     /** 表示客户端是否启用强随机数生成器 */
     public static final String CLIENT_SECURE_STRONG_RANDOM = "client.http.secure.secure-random-enabled";
+
+    /** 表示客户端通信协议 */
+    public static final String CLIENT_SECURE_SECURITY_PROTOCOL = "client.http.secure.secure-protocol";
 }
