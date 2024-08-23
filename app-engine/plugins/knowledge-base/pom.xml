@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>app-engine-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
