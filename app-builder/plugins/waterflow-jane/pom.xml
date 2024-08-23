@@ -25,15 +25,15 @@
             <artifactId>waterflow-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>waterflow-biz-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>waterflow-graph-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>jober-exception-handler</artifactId>
         </dependency>
 
