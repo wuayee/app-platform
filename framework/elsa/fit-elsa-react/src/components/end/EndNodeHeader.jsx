@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {Header} from "@/components/Header.jsx";
+import PropTypes from "prop-types";
 
 /**
  * 头部.
  *
  * @param shape 图形.
- * @param disabled 是否禁用.
+ * @param shapeStatus 图形状态集合.
  * @return {JSX.Element}
  * @constructor
  */
-export const EndNodeHeader = ({shape, disabled}) => {
+export const EndNodeHeader = ({shape, shapeStatus}) => {
     const [, setEndNodeCount] = useState(0);
 
     useEffect(() => {
@@ -20,6 +21,11 @@ export const EndNodeHeader = ({shape, disabled}) => {
     }, []);
 
     return (<>
-        <Header shape={shape} disabled={disabled}/>
+        <Header shape={shape} shapeStatus={shapeStatus}/>
     </>);
+};
+
+EndNodeHeader.propTypes = {
+    shape: PropTypes.object,
+    shapeStatus: PropTypes.object
 };

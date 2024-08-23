@@ -9,24 +9,24 @@ import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const {Panel} = Collapse;
 
 _EvaluationOutput.propTypes = {
-    disabled: PropTypes.bool,
+    shapeStatus: PropTypes.object,
     output: PropTypes.object
 };
 
 /**
  * 评估结束节点输出组件
  *
- * @param disabled 是否禁用
+ * @param shapeStatus 节点状态
  * @param output 输出数据
  * @return {JSX.Element}
  * @constructor
  */
-function _EvaluationOutput({disabled, output}) {
+function _EvaluationOutput({shapeStatus, output}) {
     const shape = useShapeContext();
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -48,7 +48,8 @@ function _EvaluationOutput({disabled, output}) {
             return {};
         }
         const {id, name, type, value} = data;
-        const children = Array.isArray(value) ? value.filter(item => typeof item === "object").map(item => convertToTreeData(item, level + 1, data)) : [];
+        const children = Array.isArray(value) ?
+            value.filter(item => typeof item === "object").map(item => convertToTreeData(item, level + 1)) : [];
         return {
             key: id,
             title: name,
@@ -71,7 +72,7 @@ function _EvaluationOutput({disabled, output}) {
      * @return {JSX.Element}
      */
     const renderTreeNode = (node) => {
-        return <EvaluationEndOutputTreeNode node={node} disabled={disabled} shape={shape} dispatch={dispatch}/>;
+        return <EvaluationEndOutputTreeNode node={node} shapeStatus={shapeStatus} shape={shape} dispatch={dispatch}/>;
     };
 
     return (<>
@@ -101,13 +102,13 @@ function _EvaluationOutput({disabled, output}) {
  * 输出树状展示组件
  *
  * @param node 节点数据
- * @param disabled 是否禁用
+ * @param shapeStatus 节点状态
  * @param shape 图形
  * @param dispatch 发送数据的动作
  * @return {JSX.Element} 组件
  * @constructor
  */
-const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
+const EvaluationEndOutputTreeNode = ({node, shapeStatus, shape, dispatch}) => {
     const {key, title, level} = node;
     const item = node.originalData;
     const form = useFormContext();
@@ -115,7 +116,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
     const options = [{
         value: 'Reference',
         label: '引用',
-        disabled: disabled
+        disabled: shapeStatus.disabled
     }];
 
     /**
@@ -169,12 +170,12 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
         return level > 1
             ? <Button type="text"
                       icon={<DeleteItem/>}
-                      disabled={disabled}
+                      disabled={shapeStatus.disabled}
                       onClick={() => handleDelete(key)}/>
             : <Button type="text"
                       style={{marginLeft: '4px'}}
                       icon={<AddSubItem/>}
-                      disabled={disabled}
+                      disabled={shapeStatus.disabled}
                       onClick={() => handleAddSubItem(key)}/>;
     };
 
@@ -204,7 +205,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
         >
             <JadeStopPropagationSelect
                 className={"value-source-custom jade-select"}
-                disabled={disabled}
+                disabled={shapeStatus.disabled}
                 options={options}
             />
         </Form.Item>;
@@ -219,7 +220,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
                    name={`value-select-${shape.id}-${key}`}
                    id={`type-${node.id}-${key}`}
         > <JadeReferenceTreeSelect
-            disabled={disabled}
+            disabled={shape.page.isShapeReferenceDisabled(shapeStatus)}
             reference={item}
             onReferencedValueChange={_onReferencedValueChange}
             onReferencedKeyChange={_onReferencedKeyChange}
@@ -245,7 +246,7 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
                            initialValue={title}
                 >
                     <JadeInput className="jade-input"
-                               disabled={level === 1 || disabled}
+                               disabled={level === 1 || shapeStatus.disabled}
                                onChange={(e) => editOutputName(key, 'editOutputProperty', e)}
                     />
                 </Form.Item>
@@ -263,8 +264,15 @@ const EvaluationEndOutputTreeNode = ({node, disabled, shape, dispatch}) => {
     </>);
 };
 
+EvaluationEndOutputTreeNode.propTypes = {
+    node: PropTypes.object,
+    shapeStatus: PropTypes.object,
+    shape: PropTypes.object,
+    dispatch: PropTypes.func,
+};
+
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.disabled === nextProps.disabled && prevProps.output === nextProps.output;
+    return prevProps.shapeStatus === nextProps.shapeStatus && prevProps.output === nextProps.output;
 };
 
 export const EvaluationOutput = React.memo(_EvaluationOutput, areEqual);

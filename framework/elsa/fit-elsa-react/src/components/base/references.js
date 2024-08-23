@@ -28,7 +28,7 @@ export const referenceDecorate = (node) => {
      * @return {(function(): void)|*}
      */
     node.observeTo = (referenceId, nodeId, observableId, observer) => {
-        const preNodeInfos = node.getPreNodeInfos();
+        const preNodeInfos = node.getPreReferencableNodeInfos();
         const observerProxy = ObserverProxy(referenceId, nodeId, observableId, observer, node);
         if (node.isReferenceAvailable(preNodeInfos, observerProxy)) {
             observerProxy.status = OBSERVER_STATUS.ENABLE;

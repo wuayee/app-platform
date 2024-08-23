@@ -191,7 +191,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      *
      * @return {*[]} 前置节点信息列表.
      */
-    self.getPreReferenceNodeInfos = () => {
+    self.getPreReferencableNodeInfos = () => {
         return self.getPreNodeInfos().filter(s => s.runnable === self.runnable);
     };
 
@@ -329,7 +329,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.validate = () => {
         return new Promise((resolve, reject) => {
             try {
-                const preNodeInfos = self.getPreReferenceNodeInfos();
+                const preNodeInfos = self.getPreReferencableNodeInfos();
                 const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
                 self.observed.forEach(o => {
                     const node = self.page.getShapeById(o.nodeId);
@@ -352,16 +352,34 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     /**
      * 设置节点状态.
      *
-     * @param status 状态.
+     * @param runStatus 运行状态.
+     * @param disabled 是否禁用.
+     * @param published 是否发布.
+     * @param runnable 可运行状态.
      */
-    self.setRunStatus = (status) => {
-        self.runStatus = status;
-        self.emphasized = status === NODE_STATUS.RUNNING;
-        const focused = self.page.getFocusedShapes();
-        if (focused.length === 0) {
-            self.isFocused = status === NODE_STATUS.RUNNING;
+    self.setStatus = ({runStatus, disabled, published, runnable}) => {
+        if (runStatus) {
+            self.runStatus = runStatus;
+            self.emphasized = runStatus === NODE_STATUS.RUNNING;
+            const focused = self.page.getFocusedShapes();
+            if (focused.length === 0) {
+                self.isFocused = runStatus === NODE_STATUS.RUNNING;
+            }
         }
-        self.drawer.setRunStatus(status);
+
+        if (disabled !== null && disabled !== undefined) {
+            self.disabled = disabled;
+        }
+
+        if (published !== null && published !== undefined) {
+            self.published = published;
+        }
+
+        if (runnable !== null && runnable !== undefined) {
+            self.runnable = runnable;
+        }
+
+        self.drawer.setShapeStatus && self.drawer.setShapeStatus({runStatus, disabled, published, runnable});
     };
 
     /**

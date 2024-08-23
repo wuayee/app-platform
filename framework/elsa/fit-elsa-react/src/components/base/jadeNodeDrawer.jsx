@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import {rectangleDrawer, isPointInRect} from "@fit-elsa/elsa-core";
+import {isPointInRect, rectangleDrawer} from "@fit-elsa/elsa-core";
 import React, {useRef, useState} from "react";
 import {NODE_STATUS} from "@";
 import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";
@@ -81,17 +81,24 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
     const JadeWrapper = () => {
         self.panelRef = useRef();
         self.rootRef = useRef();
-        const [runStatus, setRunStatus] = useState(shape.runStatus);
-        const [disabled, setDisabled] = useState(shape.disabled);
+        const [shapeStatus, setShapeStatus] = useState({
+            disabled: shape.disabled,
+            published: shape.published || false,
+            runnable: shape.runnable,
+            runStatus: shape.runStatus
+        });
 
-        // 设置运行状态.
-        self.setRunStatus = status => {
-            setRunStatus(status);
-        };
-
-        // 设置是否禁用.
-        self.setDisabled = (disabled) => {
-            setDisabled(disabled);
+        // 设置节点状态.
+        self.setShapeStatus = (updated) => {
+            const newStatus = {...shapeStatus};
+            Object.keys(updated).forEach(k => {
+                const v = updated[k];
+                if (v === null || v === undefined) {
+                    return;
+                }
+                newStatus[k] = updated[k];
+            });
+            setShapeStatus(newStatus);
         };
 
         // 当展示报告时，需要重新计算area.
@@ -100,10 +107,13 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
         };
 
         return (<>
-            {runStatus !== NODE_STATUS.DEFAULT &&
-                    <RunningStatusPanel shape={shape} ref={self.panelRef} onReportShow={onReportShow}/>}
+            {shapeStatus.runStatus !== NODE_STATUS.DEFAULT &&
+                <RunningStatusPanel shape={shape} ref={self.panelRef} onReportShow={onReportShow}/>}
             <div style={{position: "relative", background: "white", padding: 16, borderRadius: shape.borderRadius}}>
-                <DefaultRoot ref={self.rootRef} shape={shape} component={shape.getComponent()} disabled={disabled} />
+                <DefaultRoot ref={self.rootRef}
+                             shape={shape}
+                             component={shape.getComponent()}
+                             shapeStatus={shapeStatus}/>
             </div>
         </>);
     };
@@ -141,7 +151,8 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
      *
      * @overview
      */
-    self.drawFocusFrame = () => {};
+    self.drawFocusFrame = () => {
+    };
 
     /**
      * @override
@@ -197,23 +208,23 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
 
         // 上右.
         self.waterDrops.push(waterDrop(HORIZONTAL_RIGHT,
-                (x, ctl) => x + ctl.percent * width,
-                (y) => y + emphasizedOffset));
+            (x, ctl) => x + ctl.percent * width,
+            (y) => y + emphasizedOffset));
 
         // 下左.
         self.waterDrops.push(waterDrop(HORIZONTAL_LEFT,
-                (x, ctl) => x + width - ctl.percent * width,
-                (y) => y + height - emphasizedOffset));
+            (x, ctl) => x + width - ctl.percent * width,
+            (y) => y + height - emphasizedOffset));
         const count = Math.floor(height / WATER_DROP_DISTANCE) + 1;
         for (let i = 0; i < count; i++) {
             // 左上
             self.waterDrops.push(waterDrop(VERTICAL_UP,
-                    (x) => x + emphasizedOffset,
-                    (y, ctl) => y + height / count * (count - i) - ctl.percent * height / count));
+                (x) => x + emphasizedOffset,
+                (y, ctl) => y + height / count * (count - i) - ctl.percent * height / count));
 
             // 右下.
             self.waterDrops.push(waterDrop(VERTICAL_DOWN, (x) => x + width - emphasizedOffset,
-                    (y, ctl) => y + height / count * i + ctl.percent * height / count))
+                (y, ctl) => y + height / count * i + ctl.percent * height / count))
         }
     };
 
@@ -254,11 +265,11 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
     /**
      * 获取Header组件
      *
-     * @param disabled 是否禁用.
+     * @param shapeStatus 图形状态集合.
      * @return {JSX.Element}
      */
-    self.getHeaderComponent = (disabled) => {
-        return (<Header shape={shape} disabled={disabled}/>);
+    self.getHeaderComponent = (shapeStatus) => {
+        return (<Header shape={shape} shapeStatus={shapeStatus}/>);
     }
 
     /**
@@ -307,7 +318,7 @@ const STEP = 0.009
 const waterDrop = (rawSvg, getX, getY) => {
     const self = {};
     self.img = null;
-    self.control = { percent: 0, times: 0 };
+    self.control = {percent: 0, times: 0};
 
     /**
      * 绘制.
@@ -335,7 +346,7 @@ const waterDrop = (rawSvg, getX, getY) => {
      * 加载svg为image对象.
      */
     self.load = () => {
-        const svg = new Blob([rawSvg], {type:"image/svg+xml;charset=utf-8"});
+        const svg = new Blob([rawSvg], {type: "image/svg+xml;charset=utf-8"});
         const url = URL.createObjectURL(svg);
         const img = new Image();
         img.src = url;

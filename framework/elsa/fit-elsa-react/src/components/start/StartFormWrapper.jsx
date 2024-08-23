@@ -13,17 +13,17 @@ const {Panel} = Collapse;
 
 StartFormWrapper.propTypes = {
     data: PropTypes.object.isRequired,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 };
 
 /**
  * 开始表单Wrapper
  *
  * @param data 数据.
- * @param disabled 是否禁用.
+ * @param shapeStatus 图形状态.
  * @returns {JSX.Element} 开始表单Wrapper的DOM
  */
-export default function StartFormWrapper({data, disabled}) {
+export default function StartFormWrapper({data, shapeStatus}) {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const shape = useShapeContext();
@@ -54,7 +54,7 @@ export default function StartFormWrapper({data, disabled}) {
             ?.find(configItem => configItem.hasOwnProperty("allowAdd")); // 查找具有 "allowAdd" 属性的对象
         if (configObject ? configObject.allowAdd : false) {
             return (<>
-                <Button disabled={disabled}
+                <Button disabled={shapeStatus.disabled}
                         type="text"
                         className="icon-button"
                         onClick={addItem}
@@ -68,7 +68,7 @@ export default function StartFormWrapper({data, disabled}) {
     const renderDeleteIcon = (item) => {
         if (!item.disableModifiable) {
             return (<>
-                <Button disabled={disabled}
+                <Button disabled={shapeStatus.disabled}
                         type="text"
                         className="icon-button"
                         style={{"height": "22px", "marginLeft": "auto"}}
@@ -153,7 +153,10 @@ export default function StartFormWrapper({data, disabled}) {
                 }
             </Collapse>
 
-            <MultiConversation className="jade-multi-conversation" itemId={memoryId} disabled={disabled} config={config}
+            <MultiConversation className="jade-multi-conversation"
+                               itemId={memoryId}
+                               disabled={shapeStatus.disabled}
+                               config={config}
                                props={{
                                    switch: {
                                        value: multiConversationSwitchValue,

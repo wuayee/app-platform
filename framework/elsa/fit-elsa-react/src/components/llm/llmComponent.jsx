@@ -62,11 +62,11 @@ export const llmComponent = (jadeConfig) => {
     /**
      * 必须.
      *
-     * @param disabled 是否禁用.
+     * @param shapeStatus 图形状态集合.
      * @param data 数据.
      */
-    self.getReactComponents = (disabled, data) => {
-        return (<><LlmFormWrapper disabled={disabled} data={data}/></>);
+    self.getReactComponents = (shapeStatus, data) => {
+        return (<><LlmFormWrapper shapeStatus={shapeStatus} data={data}/></>);
     };
 
     /**

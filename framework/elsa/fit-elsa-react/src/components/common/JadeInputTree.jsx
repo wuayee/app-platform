@@ -3,7 +3,7 @@ import "./jadeInputTree.css";
 import PropTypes from "prop-types";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
-import {useFormContext} from "@/components/DefaultRoot.jsx";
+import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import {useTranslation} from "react-i18next";
 
@@ -32,7 +32,7 @@ const convert = (data, level) => {
 JadeInputTree.propTypes = {
     data: PropTypes.array.isRequired,
     updateItem: PropTypes.func.isRequired,
-    disabled: PropTypes.bool.isRequired,
+    shapeStatus: PropTypes.object.isRequired,
     getOptions: PropTypes.func
 
 };
@@ -45,14 +45,15 @@ const LEVEL_DISTANCE = 24;
  *
  * @param data 数据.
  * @param updateItem 修改方法.
- * @param disabled 是否禁用.
+ * @param shapeStatus 节点状态
  * @param getOptions 获取options的方法.
  * @return {JSX.Element}
  * @constructor
  */
-export default function JadeInputTree({data, updateItem, disabled, getOptions = defaultGetOptions}) {
+export default function JadeInputTree({data, updateItem, shapeStatus, getOptions = defaultGetOptions}) {
     const form = useFormContext();
     const {t} = useTranslation();
+    const shape = useShapeContext();
     const treeData = data.map(d => convert(d, 0));
 
     /**
@@ -133,7 +134,7 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
                 initialValue={node.value}
                 validateTrigger="onBlur"
             >
-                <JadeInput disabled={disabled}
+                <JadeInput disabled={shapeStatus.disabled}
                            className="jade-input"
                            style={{borderRadius: "0px 8px 8px 0px"}}
                            placeholder={"请输入"}
@@ -144,7 +145,7 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
             </Form.Item>;
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
-                                            disabled={disabled}
+                                            disabled={shape.page.isShapeReferenceDisabled(shapeStatus)}
                                             rules={node.isRequired ? [{
                                                 required: true,
                                                 message: t('fieldValueCannotBeEmpty')
@@ -194,7 +195,7 @@ export default function JadeInputTree({data, updateItem, disabled, getOptions = 
                                 <JadeInputTreeSelect node={node}
                                                      options={getOptions(node)}
                                                      updateItem={updateItem}
-                                                     disabled={disabled}/>
+                                                     disabled={shapeStatus.disabled}/>
                             </div>
                         </Form.Item>
                     </Col>

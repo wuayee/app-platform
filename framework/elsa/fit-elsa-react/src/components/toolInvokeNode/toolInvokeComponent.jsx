@@ -25,9 +25,9 @@ export const toolInvokeComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <ToolInvokeFormWrapper disabled={disabled} data={data}/>
+            <ToolInvokeFormWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

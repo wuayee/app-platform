@@ -39,9 +39,9 @@ export const evaluationTestSetComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <EvaluationTestSetWrapper disabled={disabled} data={data}/>
+            <EvaluationTestSetWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

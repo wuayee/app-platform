@@ -24,7 +24,7 @@ _CodePanel.propTypes = {
 /**
  * code编辑器面板
  *
- * @param disabled 是否禁用
+ * @param shapeStatus 图形状态
  * @param input 数据
  * @param dispatch 回调
  * @return {JSX.Element}

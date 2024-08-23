@@ -1,5 +1,5 @@
-import {page, uuid, sleep} from "@fit-elsa/elsa-core";
-import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
+import {page, sleep, uuid} from "@fit-elsa/elsa-core";
+import {NODE_STATUS, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 
 /**
  * jadeFlow的page.
@@ -159,7 +159,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
      * @override
      */
     const createNew = self.createNew;
-    self.createNew = ({shapeType, x, y, id, properties, parent, ignoreLimit, data, metaData}) => {
+    self.createNew = (shapeType, x, y, id, properties, parent, ignoreLimit, data, metaData) => {
         const handleArgs = (args) => args.map(arg => arg === undefined ? null : arg);
 
         shapeCreationHandler.filter(v => v.type === "before")
@@ -169,9 +169,9 @@ export const jadeFlowPage = (div, graph, name, id) => {
                 });
         const args = handleArgs([shapeType, x, y, id, properties, parent, ignoreLimit, data]);
         const shape = createNew.apply(self, args);
-        shape.processMetaData(metaData);
+        shape.processMetaData && shape.processMetaData(metaData);
         shapeCreationHandler.filter(v => v.type === "after")
-                .forEach(v => v.handle(self, shape));
+            .forEach(v => v.handle(self, shape));
         return shape;
     }
 
@@ -268,6 +268,81 @@ export const jadeFlowPage = (div, graph, name, id) => {
             await sleep(50);
         }
         self.removeEventListener("shape_rendered", listener);
+    };
+
+    /**
+     * 重置当前页中节点状态
+     *
+     * @param nodes 节点
+     */
+    self.resetRunStatus = nodes => {
+        nodes.forEach(n => {
+            n.setStatus({runStatus: NODE_STATUS.DEFAULT, disabled: false});
+            n.moveable = true;
+            delete n.output;
+            delete n.input;
+            delete n.cost;
+        });
+        graph.activePage.isRunning = false;
+    };
+
+    /**
+     * 返回停止运行流程测试方法
+     *
+     * @return 停止运行流程测试方法
+     */
+    self.stopRun = nodes => {``
+        nodes.forEach(n => {
+            // 修改属性会导致dirties事件，并且dirties事件是异步的，因此在触发时，isRunning已是false状态.
+            // 所以这里需要使用ignoreChange使其不触发dirties事件.
+            n.ignoreChange(() => {
+                n.moveable = true;
+                n.emphasized = false;
+            });
+            n.setStatus({disabled: false});
+        });
+        graph.activePage.isRunning = false;
+    };
+
+    /**
+     * 判断引用是否处于disabled状态.
+     *
+     * @param shapeStatus 图形的状态集合.
+     * @return {*} true/false.
+     */
+    self.isShapeReferenceDisabled = (shapeStatus) => {
+        return shapeStatus.disabled;
+    };
+
+    /**
+     * 节点是否可修改.
+     *
+     * @param shape 图形对象.
+     * @return {*|boolean} true/false.
+     */
+    self.isShapeModifiable = (shape) => {
+        return shape.runnable !== false;
+    };
+
+    /**
+     * 校验流程.
+     *
+     * @return {Promise<void>} Promise 校验结果
+     */
+    self.validate = async () => {
+        const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
+        if (nodes.length < 3) {
+            return Promise.reject("流程校验失败，至少需要三个节点");
+        }
+        const validationPromises = nodes.map(s => s.validate().catch(error => error));
+        const results = await Promise.all(validationPromises);
+        // 获取所有校验失败的信息
+        const errors = results.filter(result => result.errorFields);
+        if (errors.length > 0) {
+            return Promise.reject(errors);
+        }
+        // 可选：.then()中可以获取校验的所有节点信息 Promise.resolve(results.filter(result => !errors.includes(result)))
+        return Promise.resolve();
     };
 
     return self;

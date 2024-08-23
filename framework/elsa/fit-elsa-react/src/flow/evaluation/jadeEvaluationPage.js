@@ -1,4 +1,6 @@
 import {jadeFlowPage} from "@/flow/jadeFlowPage.js";
+import {NODE_STATUS} from "@";
+import {createProcessor} from "@/flow/evaluation/runableProcessors.js";
 
 const DISTANCE = 20;
 const EVALUATION_START_NODE = "evaluationStartNodeStart";
@@ -39,8 +41,8 @@ export const jadeEvaluationPage = (div, graph, name, id) => {
                     s.moveable = false;
                     s.selectable = false;
                     s.deletable = false;
-                    s.disabled = true;
                 });
+                s.setStatus({disabled: true, published: true});
                 s.invalidateAlone();
             });
         } else {
@@ -59,27 +61,17 @@ export const jadeEvaluationPage = (div, graph, name, id) => {
         let maxX = self.shapes[0].x + self.shapes[0].width;
         let maxY = self.shapes[0].y + self.shapes[0].height;
         self.shapes.forEach(s => {
-            s.runnable = false;
-            s.deletable = false;
-            s.disabled = true;
-
-            // 条件节点需要将所有的条件也设置为runnable = false.
-            if (s.isTypeof("conditionNodeCondition")) {
-                s.flowMeta.conditionParams.branches.forEach(b => b.runnable = false);
-            }
-
             if (s.flowMeta) {
                 self.flowMetas[s.id] = JSON.parse(JSON.stringify(s.flowMeta));
             }
-
             minX = Math.min(minX, s.x);
             maxX = Math.max(maxX, s.x + s.width);
             maxY = Math.max(maxY, s.y + s.height);
         });
 
         // 创建开始结束节点.
-        self.createNew({shapeType: EVALUATION_START_NODE, x: minX, y: maxY + DISTANCE});
-        self.createNew({shapeType: EVALUATION_END_NODE, x: maxX, y: maxY + DISTANCE});
+        self.createNew(EVALUATION_START_NODE, minX, maxY + DISTANCE);
+        self.createNew(EVALUATION_END_NODE, maxX, maxY + DISTANCE);
     };
 
     /**
@@ -166,181 +158,66 @@ export const jadeEvaluationPage = (div, graph, name, id) => {
         self.onShapeConnect();
     };
 
-    return self;
-};
-
-/* 创建处理器 */
-const createProcessor = (shape) => {
-    if (shape.isTypeof("jadeEvent")) {
-        return eventProcessor(shape);
-    } else if (shape.isTypeof(EVALUATION_NODE)) {
-        return evaluationProcessor(shape);
-    } else if (shape.isTypeof("conditionNodeCondition")) {
-        return conditionProcessor(shape);
-    } else {
-        return normalProcessor(shape);
-    }
-};
-
-/**
- * 条件节点处理器.
- *
- * @param shape 图形节点.
- * @return {{}}
- */
-const conditionProcessor = (shape) => {
-    const self = {};
-    self.isUpdated = false;
-    const updatedBranches = [];
-
     /**
-     * 检查runnable状态.
+     * 重置当前页中节点状态
      *
-     * @param runnableFlow runnable流.
+     * @param nodes 节点
      */
-    self.checkRunnable = (runnableFlow) => {
-        shape.runnable = runnableFlow.has(shape.id);
-        shape.getFlowMeta().conditionParams.branches.forEach((b, index) => {
-            const events = shape.getEventsByBranchId(b.id);
-            const prevRunnable = b.runnable;
-            const runnable = events.length > 0 && events.some(e => runnableFlow.has(e.toShape));
-            if (prevRunnable !== runnable) {
-                self.isUpdated = true;
-                updatedBranches.push({id: b.id, index: index, runnable});
-            }
+    self.resetRunStatus = nodes => {
+        nodes.forEach(n => {
+            n.moveable = true;
+            n.setStatus({runStatus: NODE_STATUS.DEFAULT, disabled: !n.isTypeof(EVALUATION_NODE)});
+            delete n.output;
+            delete n.input;
+            delete n.cost;
         });
+        graph.activePage.isRunning = false;
     };
 
     /**
-     * runnable状态发生变化时的处理逻辑.
+     * 返回停止运行流程测试方法
      *
-     * @param page 页面对象.
      */
-    self.process = (page) => {
-        const flowMeta = shape.getFlowMeta();
-        flowMeta.conditionParams.branches = flowMeta.conditionParams.branches.map((b, index) => {
-            const updatedBranch = updatedBranches.find(ub => ub.index === index);
-            if (updatedBranch) {
-                if (updatedBranch.runnable) {
-                    const branch = page.latestFlowMetas[shape.id].conditionParams.branches[index];
-                    branch.runnable = updatedBranch.runnable;
-                    return branch;
-                } else {
-                    page.latestFlowMetas[shape.id].conditionParams.branches[index] = b;
-                    return {...page.flowMetas[shape.id].conditionParams.branches[index]};
-                }
-            } else {
-                return b;
-            }
+    self.stopRun = nodes => {
+        nodes.forEach(n => {
+            // 修改属性会导致dirties事件，并且dirties事件是异步的，因此在触发时，isRunning已是false状态.
+            // 所以这里需要使用ignoreChange使其不触发dirties事件.
+            n.ignoreChange(() => {
+                n.moveable = true;
+                n.emphasized = false;
+            });
+            n.setStatus({disabled: !n.isTypeof(EVALUATION_NODE)});
         });
-
-        onShapeRunnableSwitch(shape, flowMeta);
-    };
-
-    return self;
-};
-
-/**
- * 普通节点处理器.
- *
- * @param shape 图形节点.
- * @return {{}}
- */
-const normalProcessor = (shape) => {
-    const self = {};
-    self.isUpdated = false;
-
-    /**
-     * 检查runnable状态.
-     *
-     * @param runnableFlow runnable流.
-     */
-    self.checkRunnable = (runnableFlow) => {
-        const prevRunnable = shape.runnable;
-        shape.runnable = runnableFlow.has(shape.id);
-        self.isUpdated = prevRunnable !== shape.runnable;
+        graph.activePage.isRunning = false;
     };
 
     /**
-     * runnable状态发生变化时的处理逻辑.
-     *
-     * @param page 页面对象.
+     * @override
      */
-    self.process = (page) => {
-        // 图形runnable由true切换为false，需要保存最新的flowMeta数据.
-        if (!shape.runnable) {
-            // 这里必须深拷贝，否则会导致进入流程-修改引用-出流程-再进流程，修改的引用失效.
-            page.latestFlowMetas[shape.id] = JSON.parse(JSON.stringify(shape.getFlowMeta()));
+    self.isShapeReferenceDisabled = (shapeStatus) => {
+        return shapeStatus.published ||
+            (shapeStatus.runStatus === NODE_STATUS.RUNNING || shapeStatus.runStatus === NODE_STATUS.UN_RUNNING) ||
+            (!shapeStatus.runnable && shapeStatus.disabled);
+    };
+
+    /**
+     * @override
+     */
+    self.isShapeModifiable = (shape) => {
+        return shape.isTypeof(EVALUATION_NODE) || shape.runnable !== false;
+    };
+
+    /**
+     * @override
+     */
+    const validate = self.validate;
+    self.validate = async () => {
+        const runnableFlow = getEvaluationFlow();
+        if (runnableFlow.size === 0) {
+            return Promise.reject("评估流程不存在.");
         }
-        const flowMeta = shape.runnable ? page.latestFlowMetas[shape.id] : page.flowMetas[shape.id];
-        onShapeRunnableSwitch(shape, flowMeta);
+        return await validate.apply(self);
     };
 
     return self;
-};
-
-/**
- * 线处理器.
- *
- * @param shape 图形节点.
- * @return {{}}
- */
-const eventProcessor = (shape) => {
-    const self = {};
-    self.isUpdated = false;
-
-    /**
-     * 检查runnable状态.
-     *
-     * @param runnableFlow runnable流.
-     */
-    self.checkRunnable = (runnableFlow) => {
-        shape.runnable = runnableFlow.has(shape.fromShape) && runnableFlow.has(shape.toShape);
-    };
-
-    /**
-     * 空实现.
-     */
-    self.process = () => {};
-
-    return self;
-};
-
-/**
- * 评估节点处理器.
- *
- * @param shape 图形节点.
- * @return {{}}
- */
-const evaluationProcessor = (shape) => {
-    const self = {};
-    self.isUpdated = false;
-
-    /**
-     * 检查runnable状态.
-     *
-     * @param runnableFlow runnable流.
-     */
-    self.checkRunnable = (runnableFlow) => {
-        shape.runnable = runnableFlow.has(shape.id);
-    };
-
-    /**
-     * 空实现.
-     */
-    self.process = () => {};
-
-    return self;
-};
-
-const onShapeRunnableSwitch = (s, flowMeta) => {
-    s.disabled = !s.runnable;
-    s.drawer.setDisabled(s.disabled);
-    if (flowMeta) {
-        s.cleanObserved();
-        s.setFlowMeta(flowMeta);
-    } else {
-        // flowMeta不存在，说明是第一次从非runnable状态切换到runnable状态，此时disable所有reference即可.
-        s.disableObserved();
-    }
 };

@@ -43,9 +43,9 @@ export const evaluationEndComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <EvaluationEndWrapper disabled={disabled} data={data}/>
+            <EvaluationEndWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

@@ -190,11 +190,13 @@ export default function IfForm({
      */
     const renderDeleteIcon = () => {
         if (totalItemNum > 2) {
-            return <Button type="text" className="jade-panel-header-icon-position icon-button"
-                           disabled={disabled}
-                           onClick={() => handleDeleteBranch()}>
-                <MinusCircleOutlined/>
-            </Button>
+            return (<>
+                <Button type="text" className="jade-panel-header-icon-position icon-button"
+                        disabled={disabled}
+                        onClick={() => handleDeleteBranch()}>
+                    <MinusCircleOutlined/>
+                </Button>
+            </>);
         } else {
             return null;
         }
@@ -484,7 +486,9 @@ export default function IfForm({
                 </Row>
                 {branch.conditions.map((condition, index) => renderCondition(conditionWrapper(condition), index))}
                 <Row gutter={16} style={{marginBottom: "6px", marginRight: 0}}>
-                    <Button type="link" className="icon-button" onClick={() => addCondition(branch.id)}
+                    <Button type="link"
+                            className="icon-button"
+                            onClick={() => addCondition(branch.id)}
                             disabled={disabled}
                             style={{height: "32px", paddingLeft: "8px"}}>
                         <PlusOutlined/>
