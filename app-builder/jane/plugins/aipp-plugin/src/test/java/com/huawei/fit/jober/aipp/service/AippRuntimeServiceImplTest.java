@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.dynamicform.DynamicFormMetaService;
 import com.huawei.fit.dynamicform.DynamicFormService;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
@@ -30,8 +29,9 @@ import com.huawei.fit.jober.common.RangeResult;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowNodeInfo;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

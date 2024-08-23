@@ -26,11 +26,11 @@
             <artifactId>ohscript</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>com.huawei.fitframework</groupId>
+                    <groupId>modelengine.fitframework</groupId>
                     <artifactId>fit-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.huawei.fitframework</groupId>
+                    <groupId>modelengine.fitframework</groupId>
                     <artifactId>fit-util</artifactId>
                 </exclusion>
                 <exclusion>
@@ -44,7 +44,7 @@
             <artifactId>fastjson</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
         </dependency>
         <dependency>

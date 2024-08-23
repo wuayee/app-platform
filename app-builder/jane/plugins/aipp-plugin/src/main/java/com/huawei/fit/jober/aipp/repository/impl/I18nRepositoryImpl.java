@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.repository.impl;
 import com.huawei.fit.jober.aipp.mapper.I18nMapper;
 import com.huawei.fit.jober.aipp.po.I18nPo;
 import com.huawei.fit.jober.aipp.repository.I18nRepository;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.Map;

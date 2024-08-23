@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mockStatic;
 import com.huawei.fit.jober.aipp.common.ResourceLoader;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippFormComponentDto;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

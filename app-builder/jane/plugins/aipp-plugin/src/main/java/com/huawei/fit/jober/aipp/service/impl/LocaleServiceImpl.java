@@ -6,9 +6,9 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.jober.aipp.repository.I18nRepository;
 import com.huawei.fit.jober.aipp.service.LocaleService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Initialize;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Initialize;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Locale;
 import java.util.Map;

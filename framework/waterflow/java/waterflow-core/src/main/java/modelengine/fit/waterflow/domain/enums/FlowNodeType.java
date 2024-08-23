@@ -7,7 +7,7 @@ package modelengine.fit.waterflow.domain.enums;
 import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 import static java.util.Locale.ROOT;
 
-import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
+import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 
 import lombok.Getter;
 
