@@ -31,6 +31,7 @@ public class EvalInstanceServiceImpl implements EvalInstanceService {
     @Override
     public void createEvalInstance(Long taskId) {
         EvalInstancePo po = new EvalInstancePo();
+        po.setTaskId(taskId);
         this.taskInstanceMapper.create(po);
     }
 }

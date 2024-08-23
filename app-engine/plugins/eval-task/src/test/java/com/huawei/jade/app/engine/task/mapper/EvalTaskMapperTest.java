@@ -34,7 +34,7 @@ public class EvalTaskMapperTest {
     private EvalTaskMapper evalTaskMapper;
 
     @Test
-    @DisplayName("插入数据集后，回填主键成功")
+    @DisplayName("插入评估任务后，回填主键成功")
     void shouldOkWhenCreateEvalTask() {
         EvalTaskPo evalTaskPo = new EvalTaskPo();
         evalTaskPo.setName("task1");

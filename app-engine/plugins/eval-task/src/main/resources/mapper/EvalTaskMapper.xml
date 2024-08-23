@@ -11,8 +11,8 @@
     </resultMap>
 
     <insert id="create" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_app_engine_eval_task (name, description, status, app_id, workflow_id) VALUES
-        (#{name}, #{description}, #{status}, #{appId}, #{workflowId})
+        INSERT INTO t_app_engine_eval_task (name, description, status, app_id, workflow_id)
+        VALUES (#{name}, #{description}, #{status}, #{appId}, #{workflowId})
     </insert>
 
     <!-- 分页查询评估任务元数据 -->

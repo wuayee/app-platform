@@ -12,7 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * 定义评估应用的转换器接口。
+ * 定义评估任务的转换器接口。
  *
  * @author 何嘉斌
  * @since 2024-08-09

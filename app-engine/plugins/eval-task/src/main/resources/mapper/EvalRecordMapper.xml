@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.task.mapper.EvalRecordMapper">
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_record (input, node_id, score, task_case_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.input}, #{item.nodeId}, #{item.score}, #{item.taskCaseId})
+        </foreach>
+    </insert>
+</mapper>
