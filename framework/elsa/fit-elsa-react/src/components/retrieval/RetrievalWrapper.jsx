@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 RetrievalWrapper.propTypes = {
     data: PropTypes.object.isRequired,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 };
 
 
@@ -13,18 +13,18 @@ RetrievalWrapper.propTypes = {
  * retrieval组件Wrapper
  *
  * @param data 数据.
- * @param disabled 是否禁用.
+ * @param shapeStatus 节点状态
  * @returns {JSX.Element} retrieval组件dom
  */
-export default function RetrievalWrapper({data, disabled}) {
+export default function RetrievalWrapper({data, shapeStatus}) {
     const queryData = data && data.inputParams.find(item => item.name === "query");
     const knowledge = data && (data.inputParams.find(item => item.name === "knowledge")?.value ?? []);
     const maximum = data && data.inputParams.find(item => item.name === "maximum").value;
     const outputParams = data && data.outputParams;
 
     return (<>
-        <InputForm disabled={disabled} queryData={queryData}/>
-        <KnowledgeForm knowledge={knowledge} maximum={maximum} disabled={disabled}/>
+        <InputForm shapeStatus={shapeStatus} queryData={queryData}/>
+        <KnowledgeForm knowledge={knowledge} maximum={maximum} disabled={shapeStatus.disabled}/>
         <OutputForm outputParams={outputParams}/>
     </>);
 }

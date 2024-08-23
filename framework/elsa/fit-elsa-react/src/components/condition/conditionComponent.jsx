@@ -65,8 +65,8 @@ export const conditionComponent = (jadeConfig) => {
     /**
      * 必须.
      */
-    self.getReactComponents = (disabled, data) => {
-        return (<><ConditionFormWrapper data={data} disabled={disabled}/></>);
+    self.getReactComponents = (shapeStatus, data) => {
+        return (<><ConditionFormWrapper data={data} shapeStatus={shapeStatus}/></>);
     };
 
     /**

@@ -83,7 +83,7 @@ export const JadeReferenceTreeSelect = (props) => {
      * 当dropdown显示时触发，实时获取tree数据.
      */
     const onDropdownVisibleChange = () => {
-        const nodeInfos = shape.getPreReferenceNodeInfos().filter(n => n.observableList.length > 0);
+        const nodeInfos = shape.getPreReferencableNodeInfos().filter(n => n.observableList.length > 0);
 
         const getTitle = (nodeInfo) => {
             return nodeInfo.id === VIRTUAL_CONTEXT_NODE.id ? <>
@@ -139,7 +139,8 @@ export const JadeReferenceTreeSelect = (props) => {
     // reference变化需要重新监听.
     useEffect(() => {
         stopObserve.current && stopObserve.current();
-        if (reference.referenceNode && reference.referenceId) {
+        // disabled为true的状态下，不需要注册监听，只展示即可.
+        if (reference.referenceNode && reference.referenceId && !rest.disabled) {
             stopObserve.current = shape.observeTo(reference.id,
                 reference.referenceNode,
                 reference.referenceId,

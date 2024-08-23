@@ -63,9 +63,9 @@ export const retrievalComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <RetrievalWrapper disabled={disabled} data={data} />
+            <RetrievalWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

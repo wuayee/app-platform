@@ -34,8 +34,8 @@ export const endComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
-        return (<EndNodeWrapper disabled={disabled} data={data}/>);
+    self.getReactComponents = (shapeStatus, data) => {
+        return (<EndNodeWrapper shapeStatus={shapeStatus} data={data}/>);
     };
 
     /**

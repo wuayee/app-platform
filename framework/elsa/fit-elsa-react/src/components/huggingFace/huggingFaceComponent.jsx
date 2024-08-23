@@ -28,9 +28,9 @@ export const huggingFaceComponent = (jadeConfig) => {
      *
      * @return {JSX.Element}
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <HuggingFaceFormWrapper disabled={disabled} data={data}/>
+            <HuggingFaceFormWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

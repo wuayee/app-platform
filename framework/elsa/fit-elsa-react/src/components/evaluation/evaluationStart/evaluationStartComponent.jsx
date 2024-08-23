@@ -22,9 +22,9 @@ export const evaluationStartComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <EvaluationStartWrapper disabled={disabled} data={data}/>
+            <EvaluationStartWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

@@ -2,6 +2,7 @@ import {evaluationNode} from "@/components/evaluation/evaluationNode.jsx";
 import {evaluationEndComponent} from "@/components/evaluation/evaluationEnd/evaluationEndComponent.jsx";
 import {evaluationEndNodeDrawer} from "@/components/evaluation/evaluationEnd/evaluationEndNodeDrawer.jsx";
 import {DIRECTION} from "@fit-elsa/elsa-core";
+import {SECTION_TYPE} from "@/common/Consts.js";
 
 /**
  * 评估结束节点shape
@@ -26,6 +27,18 @@ export const evaluationEndNodeEnd = (id, x, y, width, height, parent, drawer) =>
     self.initConnectors = () => {
         initConnectors.apply(self);
         self.connectors.remove(c => c.direction.key === DIRECTION.E.key);
+    };
+
+    /**
+     * 评估结束节点的测试报告章节
+     */
+    self.getRunReportSections = () => {
+        return [{
+            no: "1",
+            name: "输出",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.getOutputData(self.input)
+        }];
     };
 
     return self;

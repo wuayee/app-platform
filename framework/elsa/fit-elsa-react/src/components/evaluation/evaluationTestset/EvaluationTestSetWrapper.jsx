@@ -27,13 +27,13 @@ const getEvaluationTestSetConfig = shape => {
 };
 
 /**
- * 评估算法节点组件
+ * 评估算法节点组件.
  *
- * @param data 节点数据
- * @param disabled 是否禁用
+ * @param data 节点数据.
+ * @param shapeStatus 图形状态集合.
  * @constructor
  */
-export default function EvaluationTestSetWrapper({data, disabled}) {
+export default function EvaluationTestSetWrapper({data, shapeStatus}) {
     const shape = useShapeContext();
     const selectedTestSet = data && (data.inputParams[0].value.find(item => item.name === "name")?.value ?? '');
     // const testQuantity = data && (data.inputParams[0].value.find(item => item.name === "quantity")?.value ?? 0); 暂时注释，后续放开
@@ -56,9 +56,16 @@ export default function EvaluationTestSetWrapper({data, disabled}) {
     }, []); // useEffect 依赖数组为空，表示只在组件挂载时执行一次
 
     return (<>
-        <EvaluationTestSetSelect disabled={disabled} testSets={testSets} selectedTestSet={selectedTestSet}
+        <EvaluationTestSetSelect shapeStatus={shapeStatus}
+                                 testSets={testSets}
+                                 selectedTestSet={selectedTestSet}
                                  config={config}/>
         {/*<TestQuantity disabled={disabled} quantity={testQuantity}/>*/}
         <InvokeOutput outputData={data.outputParams}/>
     </>);
 }
+
+EvaluationTestSetWrapper.propTypes = {
+    data: PropTypes.object,
+    shapeStatus: PropTypes.object
+};

@@ -14,8 +14,8 @@ export const endNodeDrawer = (shape, div, x, y) => {
     /**
      * @override
      */
-    self.getHeaderComponent = (disabled) => {
-        return (<EndNodeHeader shape={shape} disabled={disabled}/>);
+    self.getHeaderComponent = (shapeStatus) => {
+        return (<EndNodeHeader shape={shape} shapeStatus={shapeStatus}/>);
     };
 
     /**

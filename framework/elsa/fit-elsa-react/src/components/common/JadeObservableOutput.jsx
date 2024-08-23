@@ -86,7 +86,11 @@ function _JadeObservableOutput({disabled, output}) {
      * @return {JSX.Element}
      */
     const renderTreeNode = (node) => {
-        return <TreeNode node={node} disabled={disabled} shape={shape} dispatch={dispatch} output={output}/>
+        return <TreeNode node={node}
+                         disabled={disabled}
+                         shape={shape}
+                         dispatch={dispatch}
+                         output={output}/>
     };
 
     return (<>

@@ -27,14 +27,19 @@ const getEvaluationAlgorithmsConfig = shape => {
     }
 };
 
+EvaluationAlgorithmsWrapper.propTypes = {
+    shapeStatus: PropTypes.object,
+    data: PropTypes.object
+};
+
 /**
  * 评估算法节点组件
  *
  * @param data 节点数据
- * @param disabled 是否禁用
+ * @param shapeStatus 节点状态
  * @constructor
  */
-export default function EvaluationAlgorithmsWrapper({data, disabled}) {
+export default function EvaluationAlgorithmsWrapper({data, shapeStatus}) {
     const shape = useShapeContext();
     const selectedAlgorithm = data && (data.algorithm.value.find(item => item.name === "uniqueName")?.value ?? '');
     const score = data.score.value;
@@ -58,10 +63,9 @@ export default function EvaluationAlgorithmsWrapper({data, disabled}) {
     /**
      * 获取输出描述信息
      *
-     * @param outputData 输出数据
      * @return {JSX.Element}
      */
-    const getDescription = (outputData) => {
+    const getDescription = () => {
         return <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
             <p>ActualInput: 实际输入</p>
             <p>ExpectOutput:预期输出</p>
@@ -72,9 +76,11 @@ export default function EvaluationAlgorithmsWrapper({data, disabled}) {
     };
 
     return (<>
-        <EvaluationInput inputData={data.inputParams} disabled={disabled}/>
-        <EvaluationAlgorithmsSelect disabled={disabled} algorithms={algorithms} selectedAlgorithm={selectedAlgorithm}/>
-        <PassingScore disabled={disabled} score={score}/>
+        <EvaluationInput inputData={data.inputParams} disabled={shapeStatus.disabled}/>
+        <EvaluationAlgorithmsSelect disabled={shapeStatus.disabled}
+                                    algorithms={algorithms}
+                                    selectedAlgorithm={selectedAlgorithm}/>
+        <PassingScore disabled={shapeStatus.disabled} score={score}/>
         <InvokeOutput outputData={data.outputParams} getDescription={getDescription}/>
     </>);
 }
