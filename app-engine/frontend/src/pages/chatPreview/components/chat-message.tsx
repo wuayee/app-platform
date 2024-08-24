@@ -4,7 +4,7 @@ import SendBox from './send-box/send-box';
 import ReciveBox from './receive-box/receive-box';
 import ChatDetail from './chat-details';
 import { ChatContext } from '../../aippIndex/context';
-import { queryFeedback } from '@shared/http/chat';
+import { queryFeedback } from '@/shared/http/chat';
 import { deepClone, scrollBottom } from '../utils/chat-process';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList } from '@/store/chatStore/chatStore';

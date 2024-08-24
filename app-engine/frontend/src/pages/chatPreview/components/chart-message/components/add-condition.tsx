@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Popover, Button } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import AddConditionForm from './add-condition-form';
 import { useTranslation } from 'react-i18next';
 

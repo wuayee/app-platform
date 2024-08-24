@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined, DeleteOutlined, QuestionCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Form, Select, Col, Row, Input, Modal, Switch, Table, Button, TreeSelect, Card, Popover } from 'antd';
-import TreeComponent from '../tree.jsx';
-import { getFitables } from '@shared/http/appBuilder';
+import { Form, Select, Input, Modal, Switch, Table, Button, TreeSelect, Popover } from 'antd';
+import TreeComponent from '../tree';
+import { getFitables } from '@/shared/http/appBuilder';
 import { sourceTypes } from '../../common/common';
-import { uuid } from '../../../../common/utils';
+import { uuid } from '@/common/utils';
 import { useTranslation } from 'react-i18next';
 import '../styles/inspiration.scss';
 import { Message } from '@/shared/utils/message';

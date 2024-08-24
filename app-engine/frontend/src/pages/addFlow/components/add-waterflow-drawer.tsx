@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
 import { useParams, useHistory } from 'react-router-dom';
-import { createAipp } from '@shared/http/aipp';
+import { createAipp } from '@/shared/http/aipp';
 import { CloseOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 

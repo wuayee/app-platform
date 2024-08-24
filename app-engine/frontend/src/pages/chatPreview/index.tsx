@@ -2,10 +2,10 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
 import { Spin } from 'antd';
 import { LeftArrowIcon } from '@assets/icon';
-import { Message } from '@shared/utils/message';
-import { isJsonString, updateChatId } from '@shared/utils/common';
+import { Message } from '@/shared/utils/message';
+import { isJsonString, updateChatId } from '@/shared/utils/common';
 import ChatMessage from './components/chat-message';
-import SendEditor from './components/send-editor/send-editor.jsx';
+import SendEditor from './components/send-editor/send-editor';
 import CheckGroup from './components/check-group';
 import Inspiration from './components/inspiration';
 import { initChat } from './common/config';
@@ -15,8 +15,8 @@ import {
   stopInstance,
   getChatRecentLog,
   clearChat
-} from '@shared/http/aipp';
-import { sseChat, saveContent, getReportInstance } from '@shared/http/sse';
+} from '@/shared/http/aipp';
+import { sseChat, saveContent, getReportInstance } from '@/shared/http/sse';
 import {
   historyChatProcess,
   inspirationProcess,
@@ -36,9 +36,9 @@ import {
   setChatRunning,
   setFormReceived,
 } from '@/store/chatStore/chatStore';
-import { storage } from '@shared/storage';
-import { EventSourceParserStream } from '@shared/event-source/stream';
-import { isBusinessMagicCube } from '@shared/utils/common';
+import { storage } from '@/shared/storage';
+import { EventSourceParserStream } from '@/shared/event-source/stream';
+import { isBusinessMagicCube } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 
 const ChatPreview = (props) => {
@@ -348,7 +348,7 @@ const ChatPreview = (props) => {
     initObj.loading = false;
     if (status === 'ARCHIVED') {
       initObj.finished = true;
-    } 
+    }
     idx = listRef.current.length - 1;
     if (testRef.current) {
       initObj.messageType = 'form';

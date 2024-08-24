@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState, useContext } from 'react';
-import { Spin } from "antd";
-import { saveChart } from "@shared/http/sse";
-import { Message } from '@shared/utils/message';
+import { Spin } from 'antd';
+import { saveChart } from '@/shared/http/sse';
+import { Message } from '@/shared/utils/message';
 import { ChatContext } from '@/pages/aippIndex/context';
 import ChartCondition from '../../chart-message/chart-condition'
 import ChartMessage from '../../chart-message/chart-message';
@@ -52,7 +52,7 @@ const ConditionForm = (props) => {
     }
   }
   return <>
-    { !data && <div className="title">{t('sourceTracingForm')}</div>}
+    { !data && <div className='title'>{t('sourceTracingForm')}</div>}
     { filters && (<Spin spinning={loading}>  <ChartCondition data={filters} confirm={formConfirm} /> </Spin>)}
     { chartConfig && <ChartMessage chartConfig={chartConfig} />}
   </>

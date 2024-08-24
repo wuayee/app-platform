@@ -18,8 +18,8 @@ const CreateWorkflow = (props) => {
       ? { AIPP_URL: `${window.location.origin}/api/jober/v1/api` }
       : httpUrlMap[process.env.NODE_ENV];
   const [form] = Form.useForm();
-  const [filePath, setFilePath] = useState(undefined);
-  const [fileName, setFileName] = useState(undefined);
+  const [filePath, setFilePath] = useState('');
+  const [fileName, setFileName] = useState('');
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const appId = useAppSelector((state) => state.appStore.appId);
   const navigate = useHistory().push;
@@ -45,6 +45,9 @@ const CreateWorkflow = (props) => {
   const beforeUpload = (file) => false;
   const onChange = ({ file }) => {
     let validateResult = fileValidate(file);
+    if (!validateResult) {
+      setFilePath('');
+    }
     validateResult && pictureUpload(file);
   };
   useEffect(() => {

@@ -6,10 +6,10 @@ import { JadeFlow } from '@fit-elsa/elsa-react';
 import AddKnowledge from '../../configForm/configUi/components/add-knowledge';
 import HuggingFaceModal from './hugging-face-modal';
 import ToolModal from './tool-modal';
-import { debounce } from '@shared/utils/common';
-import { updateFlowInfo } from '@shared/http/aipp';
-import { getAddFlowConfig } from '@shared/http/appBuilder';
-import { Message } from '@shared/utils/message';
+import { debounce } from '@/shared/utils/common';
+import { updateFlowInfo } from '@/shared/http/aipp';
+import { getAddFlowConfig } from '@/shared/http/appBuilder';
+import { Message } from '@/shared/utils/message';
 import { useAppDispatch } from '@/store/hook';
 import { setAppInfo } from '@/store/appInfo/appInfo';
 import { FlowContext } from '../../aippIndex/context';
@@ -52,9 +52,9 @@ const Stage = (props) => {
     CONFIGS[configIndex].params.tenantId = tenantId;
     CONFIGS[configIndex].params.appId = appId;
     const importFiles = [
-      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/fileContentComponent.jsx`),
-      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
-      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/fileContentComponent`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
     ];

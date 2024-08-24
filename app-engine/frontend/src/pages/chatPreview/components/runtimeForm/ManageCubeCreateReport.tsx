@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Button } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import ReportChart from './ReportChart.jsx';
-import { saveContent } from '@shared/http/sse';
+import ReportChart from './ReportChart';
+import { saveContent } from '@/shared/http/sse';
 import chartImg from '@/assets/images/chart.png';
 import tableImg from '@/assets/images/table.png';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import './styles/manage-cube-create-report.scoped.scss';
 

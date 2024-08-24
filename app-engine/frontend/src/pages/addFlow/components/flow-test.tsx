@@ -2,13 +2,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Drawer, Form, Alert, Spin } from 'antd';
-import { StartIcon, CloseIcon, RunIcon } from '@assets/icon';
-import { Message } from '@shared/utils/message';
-import { reTestInstance } from '@shared/http/aipp';
+import { StartIcon, CloseIcon, RunIcon } from '@/assets/icon';
+import { Message } from '@/shared/utils/message';
+import { reTestInstance } from '@/shared/http/aipp';
 import { messageProcess } from '../../chatPreview/utils/chat-process';
-import { workflowDebug, getTestVersion } from '@shared/http/sse';
+import { workflowDebug, getTestVersion } from '@/shared/http/sse';
 import { useAppSelector } from '@/store/hook';
-import { EventSourceParserStream } from '@shared/event-source/stream';
+import { EventSourceParserStream } from '@/shared/event-source/stream';
 import RenderFormItem from './render-form-item';
 import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
 import { useAppDispatch } from '@/store/hook';
@@ -35,6 +35,7 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   const runningInstanceId = useRef('');
+  // 是否监听sse流式输出
   const runningParsing = useRef(false);
   const dispatch = useAppDispatch();
 
@@ -50,7 +51,7 @@ const Index = (props) => {
     setTestTime(0);
     form.validateFields().then((values) => {
       runningStart(values);
-    }).catch((errorInfo) => {
+    }).catch(() => {
       Message({ type: 'warning', content: t('plsEnterRequiredItem') });
     });
   }

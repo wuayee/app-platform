@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
-import { LeftArrowIcon } from '@assets/icon';
+import { LeftArrowIcon } from '@/assets/icon';
 import { useParams, useHistory } from 'react-router-dom';
-import { getAppInfo } from '@shared/http/aipp';
+import { getAppInfo } from '@/shared/http/aipp';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { configMap } from '../addFlow/config';
 import i18n from '../../locale/i18n';
@@ -32,9 +32,9 @@ const FlowDetail = () => {
     CONFIGS[configIndex].params.tenantId = tenantId;
     CONFIGS[configIndex].params.appId = appId;
     const importFiles = [
-      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/fileContentComponent.jsx`),
-      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
-      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/fileContentComponent`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/interviewQuestionsComponent`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/manageCubeCreateReportComponent`),
       () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
       () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
     ];

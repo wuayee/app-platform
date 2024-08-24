@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
 import { UploadFile } from 'antd/lib';
-import { Message } from '@shared/utils/message';
-import useSearchParams from '@shared/hooks/useSearchParams';
-import { deleteLocalFile, uploadLocalFile } from '../../shared/http/knowledge';
+import { Message } from '@/shared/utils/message';
+import useSearchParams from '@/shared/hooks/useSearchParams';
+import { deleteLocalFile, uploadLocalFile } from '@/shared/http/knowledge';
 import { useTranslation } from 'react-i18next';
 
 const { Dragger } = Upload;

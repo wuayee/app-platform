@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ConfigUI from './configUi/index.jsx';
+import ConfigUI from './configUi/index';
 import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
 

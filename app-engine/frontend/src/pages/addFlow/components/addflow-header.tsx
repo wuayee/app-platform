@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { LeftArrowIcon, UploadIcon } from '@assets/icon';
-import { updateAppInfo } from '@shared/http/aipp';
-import { Message } from '@shared/utils/message';
+import { LeftArrowIcon, UploadIcon } from '@/assets/icon';
+import { updateAppInfo } from '@/shared/http/aipp';
+import { Message } from '@/shared/utils/message';
 import { FlowContext } from '../../aippIndex/context';
 import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';

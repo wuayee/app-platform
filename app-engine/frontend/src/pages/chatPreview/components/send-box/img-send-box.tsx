@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { httpUrlMap } from '@shared/http/httpConfig';
-import fileImg from '@assets/images/ai/file2.png';
+import { httpUrlMap } from '@/shared/http/httpConfig';
+import fileImg from '@/assets/images/ai/file2.png';
 
 const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
 const ImgSendBox = (props) => {

@@ -4,8 +4,8 @@ import { Button, Checkbox, Drawer, Select, Table, Tag, Spin, Empty, Tooltip } fr
 import { GetProp } from 'antd/lib';
 import { v4 as uuidv4 } from 'uuid';
 import DraggerUpload from '@/components/draggerUpload';
-import { uploadPlugin } from '@shared/http/plugin';
-import { Message } from '@shared/utils/message';
+import { uploadPlugin } from '@/shared/http/plugin';
+import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/locale/i18n';
 import '../style.scoped.scss';

@@ -6,17 +6,17 @@ import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
 import AddWaterFlow from './add-waterflow-drawer';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import CreateWorkflow from './create-workflow';
 import { getMyPlugin, getPluginTools } from '@/shared/http/plugin';
 import { useAppSelector } from '@/store/hook';
 import { PluginTypeE } from './model';
 import { useTranslation } from 'react-i18next';
 import { deepClone } from '../../chatPreview/utils/chat-process';
-const { Search } = Input;
-const { Option } = Select;
 import '../styles/tool-modal.scss';
 
+const { Search } = Input;
+const { Option } = Select;
 const ToolDrawer = (props) => {
   const { t } = useTranslation();
   const { showModal, setShowModal, checkData, confirmCallBack, type, modalType, toolsConfirm } = props;
