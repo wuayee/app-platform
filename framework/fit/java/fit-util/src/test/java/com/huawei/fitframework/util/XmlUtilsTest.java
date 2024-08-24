@@ -234,7 +234,7 @@ public class XmlUtilsTest {
                         catchThrowableOfType(XmlUtils::createDocument, IllegalStateException.class);
                 assertThat(exception).hasMessage(StringUtils.format(
                         "Failed to enable feature for document builder factory. [feature={0}]",
-                        feature)).cause().isInstanceOf(ParserConfigurationException.class);
+                        feature)).getCause().isInstanceOf(ParserConfigurationException.class);
             }
         }
 
@@ -252,7 +252,7 @@ public class XmlUtilsTest {
                         catchThrowableOfType(XmlUtils::createDocument, IllegalStateException.class);
                 assertThat(exception).hasMessage(StringUtils.format(
                         "Failed to disable feature for document builder factory. [feature={0}]",
-                        feature)).cause().isInstanceOf(ParserConfigurationException.class);
+                        feature)).getCause().isInstanceOf(ParserConfigurationException.class);
             }
         }
 
@@ -267,7 +267,7 @@ public class XmlUtilsTest {
                 IllegalStateException exception =
                         catchThrowableOfType(XmlUtils::createDocument, IllegalStateException.class);
                 assertThat(exception).hasMessage("Failed to create document builder.")
-                        .cause()
+                        .getCause()
                         .isInstanceOf(ParserConfigurationException.class);
             }
         }
@@ -476,7 +476,7 @@ public class XmlUtilsTest {
                 IllegalStateException exception =
                         catchThrowableOfType(() -> XmlUtils.load(in), IllegalStateException.class);
                 assertThat(exception).hasMessage("Failed to parse XML from the input stream.")
-                        .cause()
+                        .getCause()
                         .isInstanceOf(SAXException.class);
             }
         }

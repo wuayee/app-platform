@@ -70,7 +70,7 @@ public class ReflectionUtilsTest {
             MethodNotFoundException exception =
                     catchThrowableOfType(() -> ReflectionUtils.getDeclaredConstructor(MockClass.class, Integer.class),
                             MethodNotFoundException.class);
-            assertThat(exception).isNotNull().cause().isInstanceOf(NoSuchMethodException.class);
+            assertThat(exception).isNotNull().getCause().isInstanceOf(NoSuchMethodException.class);
         }
     }
 
@@ -208,7 +208,7 @@ public class ReflectionUtilsTest {
             MethodNotFoundException exception =
                     catchThrowableOfType(() -> ReflectionUtils.getDeclaredMethod(MockClass.class, "notExist"),
                             MethodNotFoundException.class);
-            assertThat(exception).isNotNull().cause().isInstanceOf(NoSuchMethodException.class);
+            assertThat(exception).isNotNull().getCause().isInstanceOf(NoSuchMethodException.class);
         }
     }
 
@@ -285,7 +285,7 @@ public class ReflectionUtilsTest {
                 FieldVisitException exception =
                         catchThrowableOfType(() -> ReflectionUtils.getField(new MockClass(), field),
                                 FieldVisitException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(IllegalArgumentException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalArgumentException.class);
             }
         }
 
@@ -317,7 +317,7 @@ public class ReflectionUtilsTest {
                 FieldVisitException exception =
                         catchThrowableOfType(() -> ReflectionUtils.getField(new MockClass(), "notExist"),
                                 FieldVisitException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(NoSuchFieldException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(NoSuchFieldException.class);
             }
 
             @Test
@@ -326,7 +326,7 @@ public class ReflectionUtilsTest {
                 FieldVisitException exception =
                         catchThrowableOfType(() -> ReflectionUtils.getField(MockClass.class, "f3"),
                                 FieldVisitException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(IllegalArgumentException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalArgumentException.class);
             }
         }
     }
@@ -640,7 +640,7 @@ public class ReflectionUtilsTest {
                 ObjectInstantiationException exception =
                         catchThrowableOfType(() -> ReflectionUtils.instantiate(MoDefaultConstructorError.class),
                                 ObjectInstantiationException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(NoSuchMethodException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(NoSuchMethodException.class);
             }
         }
 
@@ -677,7 +677,7 @@ public class ReflectionUtilsTest {
                 ObjectInstantiationException exception =
                         catchThrowableOfType(() -> ReflectionUtils.instantiate(constructor),
                                 ObjectInstantiationException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(IllegalStateException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalStateException.class);
             }
 
             @Test
@@ -688,7 +688,7 @@ public class ReflectionUtilsTest {
                 ObjectInstantiationException exception =
                         catchThrowableOfType(() -> ReflectionUtils.instantiate(constructor),
                                 ObjectInstantiationException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(IllegalArgumentException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalArgumentException.class);
             }
         }
     }
@@ -744,7 +744,7 @@ public class ReflectionUtilsTest {
             MethodInvocationException exception =
                     catchThrowableOfType(() -> ReflectionUtils.invoke(mockClass, exceptionMethod),
                             MethodInvocationException.class);
-            assertThat(exception).isNotNull().cause().isInstanceOf(IllegalStateException.class);
+            assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalStateException.class);
         }
 
         @Test
@@ -755,7 +755,7 @@ public class ReflectionUtilsTest {
             MethodInvocationException exception =
                     catchThrowableOfType(() -> ReflectionUtils.invoke(mockClass, invokeExceptionMethod),
                             MethodInvocationException.class);
-            assertThat(exception).isNotNull().cause().isInstanceOf(IllegalArgumentException.class);
+            assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalArgumentException.class);
         }
     }
 
@@ -854,7 +854,7 @@ public class ReflectionUtilsTest {
                 FieldVisitException exception =
                         catchThrowableOfType(() -> ReflectionUtils.setField(new MockClass(), field, "Hello"),
                                 FieldVisitException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(IllegalArgumentException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(IllegalArgumentException.class);
             }
         }
 
@@ -887,7 +887,7 @@ public class ReflectionUtilsTest {
                 FieldVisitException exception =
                         catchThrowableOfType(() -> ReflectionUtils.setField(new MockClass(), "notExist", 1),
                                 FieldVisitException.class);
-                assertThat(exception).isNotNull().cause().isInstanceOf(NoSuchFieldException.class);
+                assertThat(exception).isNotNull().getCause().isInstanceOf(NoSuchFieldException.class);
             }
         }
     }

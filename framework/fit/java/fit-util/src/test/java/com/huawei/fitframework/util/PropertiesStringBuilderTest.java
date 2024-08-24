@@ -95,7 +95,7 @@ class PropertiesStringBuilderTest {
                     Assertions.catchThrowableOfType(builder::build, IllegalStateException.class);
             assertThat(exception).isNotNull()
                     .hasMessage("Failed to store properties to memory stream.")
-                    .cause()
+                    .getCause()
                     .isInstanceOf(IOException.class);
         }
 

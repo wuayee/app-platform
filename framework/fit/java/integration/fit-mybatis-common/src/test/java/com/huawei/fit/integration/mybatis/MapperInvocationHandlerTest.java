@@ -63,7 +63,7 @@ public class MapperInvocationHandlerTest {
         when(session.getMapper(eq(Mapper.class))).thenReturn(actual);
         Mapper proxiedMapper = MapperInvocationHandler.proxy(sqlSessionFactory, Mapper.class, true);
         DataAccessException exception = catchThrowableOfType(() -> proxiedMapper.count(-1), DataAccessException.class);
-        assertThat(exception).isNotNull().cause().isNotNull().hasMessage("DataAccessError");
+        assertThat(exception).isNotNull().getCause().isNotNull().hasMessage("DataAccessError");
     }
 
     @Test

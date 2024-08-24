@@ -123,7 +123,7 @@ public class UrlUtilsTest {
                                     IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Unsupported decoding type: UTF-8.")
-                            .cause()
+                            .getCause()
                             .isInstanceOf(UnsupportedEncodingException.class);
                 }
             }
@@ -158,7 +158,7 @@ public class UrlUtilsTest {
                                     IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Unsupported encoding type: UTF-8.")
-                            .cause()
+                            .getCause()
                             .isInstanceOf(UnsupportedEncodingException.class);
                 }
             }
@@ -192,7 +192,7 @@ public class UrlUtilsTest {
                         catchThrowableOfType(() -> UrlUtils.exists(url), IllegalStateException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("Failed to convert url to file. [url=]")
-                        .cause()
+                        .getCause()
                         .isInstanceOf(URISyntaxException.class);
             }
         }
@@ -253,7 +253,7 @@ public class UrlUtilsTest {
                 assertThat(exception).isNotNull()
                         .hasMessage(StringUtils.format("Failed to create jar file. [url={0}]",
                                 file.toURI().toURL().getPath()))
-                        .cause()
+                        .getCause()
                         .isInstanceOf(IOException.class);
             }
         }
