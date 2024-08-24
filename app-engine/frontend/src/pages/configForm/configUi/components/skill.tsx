@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { getToolsList } from '@shared/http/plugin';
+import { getToolsList } from '@/shared/http/plugin';
 import { useTranslation } from 'react-i18next';
 import AddSkill from '../../../addFlow/components/tool-modal';
 

@@ -1,20 +1,20 @@
-import React, {useState, useEffect, useMemo, useContext} from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { throttle } from 'lodash';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import { Button, DatePicker, Select, TreeSelect } from 'antd';
 import {
   FinanceGroupType,
   groupTypeOption,
   typeMap,
   belongsMap,
-} from './options.js';
-import { formatYYYYMM } from './question-util.js';
+} from './options';
+import { formatYYYYMM } from './question-util';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { resumeInstance, getClarifyOptions, getFuClarifyOptions, stopInstance } from '@shared/http/aipp';
+import { resumeInstance, getClarifyOptions, getFuClarifyOptions, stopInstance } from '@/shared/http/aipp';
 import { ChatContext } from '../../../../aippIndex/context';
+import { saveContent } from '@/shared/http/sse';
 import './index.scoped.scss';
-import { saveContent } from '@shared/http/sse';
 
 dayjs.extend(customParseFormat);
 
@@ -279,7 +279,7 @@ const QuestionClar = (props) => {
   // 拒绝
   const rejectClar = throttle(() => confirmCallBack ? rejectQuestion() : handleRejectClar(), 500, { trailing: false });
   const rejectQuestion = () => {
-    stopInstance(tenantId, data?.formData?.instanceId, { content: '不好意思，请明确条件后重新提问' }).then(()=>{
+    stopInstance(tenantId, data?.formData?.instanceId, { content: '不好意思，请明确条件后重新提问' }).then(() => {
       confirmCallBack();
     });
   }
@@ -489,13 +489,13 @@ const QuestionClar = (props) => {
               </div>
             );
           })}
+        </div>
+        {mode !== 'history' && confirmCallBack &&
+          <div className='footer'>
+            <Button className='mr10' type='primary' loading={loading} onClick={confirmClar}>确定</Button>
+            <Button onClick={rejectClar}>拒绝澄清</Button>
+          </div>}
       </div>
-      { mode !== 'history' && confirmCallBack &&
-        <div className='footer'>
-          <Button className='mr10' type='primary' loading={loading} onClick={confirmClar}>确定</Button>
-          <Button onClick={rejectClar}>拒绝澄清</Button>
-        </div> }
-</div>
     </div>
   </>);
 }

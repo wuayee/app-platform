@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
-import { Message } from '@shared/utils/message';
-import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
-import { getRecommends } from '@shared/http/chat';
+import { Message } from '@/shared/utils/message';
+import { PanleCloseIcon, PanleIcon, RebotIcon } from '@/assets/icon';
+import { getRecommends } from '@/shared/http/chat';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { useTranslation } from 'react-i18next';

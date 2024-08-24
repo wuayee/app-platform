@@ -2,8 +2,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Checkbox } from 'antd';
-import { ChatUserIcon } from '@assets/icon';
-import { trans } from '@shared/utils/common';
+import { ChatUserIcon } from '@/assets/icon';
+import { trans } from '@/shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
 import SendBtn from './send-btn';
 import ImgSendBox from './img-send-box';

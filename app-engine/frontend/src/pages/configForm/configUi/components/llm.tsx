@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Form, Select, InputNumber, Input } from 'antd';
-import { getModels } from '@shared/http/appBuilder';
+import { getModels } from '@/shared/http/appBuilder';
 import { useTranslation } from 'react-i18next';
 
 const LLM = (props) => {

@@ -4,7 +4,7 @@ import { Input, Button, Checkbox, Empty, Tooltip, Modal } from 'antd';
 import { RightOutlined, CloseOutlined } from '@ant-design/icons';
 import { Icons } from '@/components/icons';
 import Pagination from '@/components/pagination/index';
-import { getPlugins, getDeployTool } from '@shared/http/plugin';
+import { getPlugins, getDeployTool } from '@/shared/http/plugin';
 import { debounce } from '@/shared/utils/common';
 import { PluginStatusTypeE, PluginCnType } from '../helper';
 import { useTranslation } from 'react-i18next';

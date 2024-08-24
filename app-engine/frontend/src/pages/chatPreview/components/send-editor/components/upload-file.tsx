@@ -1,9 +1,9 @@
 import React, { useImperativeHandle, useState } from 'react';
 import { Modal, Upload } from 'antd';
-import { uploadChatFile } from '@shared/http/aipp';
-import { Message } from '@shared/utils/message';
+import { uploadChatFile } from '@/shared/http/aipp';
+import { Message } from '@/shared/utils/message';
 import { fileTypeSet } from '../../../utils/chat-process';
-import exportImg from '@assets/images/ai/export.png'
+import exportImg from '@/assets/images/ai/export.png'
 import { useAppSelector } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
 

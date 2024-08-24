@@ -1,6 +1,6 @@
 import { casecadeMap, conditionMap, compareMap } from '../common/condition';
 import { uniqBy } from 'lodash';
-import { getOptionNodes } from '@shared/http/aipp';
+import { getOptionNodes } from '@/shared/http/aipp';
 
 let jsonArray = [];
 let hierarchy = [];
@@ -14,10 +14,10 @@ export function getOptionsByCasecade(field, form) {
   if (Array.isArray(field.belongs)) {
     const flag = form.oversea_flag || form.condition?.oversea_flag || form.condition1?.oversea_flag || form.condition2?.oversea_flag
     if (flag === '国内') {
-      [,field.belongs] = field.belongs
+      [, field.belongs] = field.belongs
       cascade = casecadeMap[field.belongs]
     } else if (flag === '海外') {
-      [field.belongs]= field.belongs
+      [field.belongs] = field.belongs
       cascade = casecadeMap[field.belongs]
     } else {
       cascade = []
@@ -121,14 +121,14 @@ function buildValueHierarchy(jsonArray) {
   return result;
 }
 function max(arr) {
-  return arr.reduce( (accu, curr) => {
+  return arr.reduce((accu, curr) => {
     if (curr > accu) return curr
     return accu
   })
 }
 function getDepth(arr) {
   const eleDepths = []
-  arr.forEach( ele => {
+  arr.forEach(ele => {
     let depth = 0
     if (Array.isArray(ele)) {
       depth = getDepth(ele)
@@ -182,9 +182,8 @@ export const formatterLabel = (data) => {
     return data.value.join('，');
   }
   if (data.filterType === 'compare') {
-    return `${compareMap[Object.keys(data.value)[0]]}${
-      Object.values(data.value)[0]
-    }`;
+    return `${compareMap[Object.keys(data.value)[0]]}${Object.values(data.value)[0]
+      }`;
   }
   const option = data.options.find((item) => data.value === item.value);
   return option.label;

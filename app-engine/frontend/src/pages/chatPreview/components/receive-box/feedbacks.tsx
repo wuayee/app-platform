@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Modal, Input } from 'antd';
 import { LikeIcon, UnlikeIcon, LikeSelectIcon, UnlikeSelectIcon } from '@/assets/icon';
-import { feedbacksRq, updateFeedback, deleteFeedback } from '@shared/http/chat';
+import { feedbacksRq, updateFeedback, deleteFeedback } from '@/shared/http/chat';
 import { useTranslation } from 'react-i18next';
 import './styles/feedbacks.scss';
 const { TextArea } = Input;

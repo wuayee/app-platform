@@ -7,7 +7,7 @@ import AppCard from '@/components/appCard';
 import EditModal from '../components/edit-modal';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
-import { deleteAppApi, queryAppDevApi } from '@/shared/http/appDev.js';
+import { deleteAppApi, queryAppDevApi } from '@/shared/http/appDev';
 import { debounce } from '@/shared/utils/common';
 import { Message } from '@/shared/utils/message';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';

@@ -1,6 +1,6 @@
-import { isJsonString, getUiD } from '@shared/utils/common';
-import { queryInspirationSelect } from '@shared/http/aipp';
-import { Message } from '@shared/utils/message';
+import { isJsonString, getUiD } from '@/shared/utils/common';
+import { queryInspirationSelect } from '@/shared/http/aipp';
+import { Message } from '@/shared/utils/message';
 import { v4 as uuidv4 } from 'uuid';
 
 // 历史会话消息处理
@@ -173,7 +173,6 @@ export const reportProcess = (list, listRef) => {
 };
 // 流式接收消息数据处理
 export const messageProcess = (instanceId, messageData, atAppInfo) => {
-  let logId = uuidv4();
   let obj = {
     loading: false,
     openLoading: false,
@@ -182,13 +181,13 @@ export const messageProcess = (instanceId, messageData, atAppInfo) => {
     finished: true,
     checked: false,
     messageType: 'form',
-    logId,
+    logId: messageData.log_id,
     formConfig: {
       instanceId,
       parentInstanceId: messageData.parentInstanceId,
       formName: messageData.formAppearance[0].name || 'normal',
       type: 'edit',
-      logId,
+      logId: messageData.log_id,
       formAppearance: messageData.formAppearance,
       formData: messageData.formData,
     }

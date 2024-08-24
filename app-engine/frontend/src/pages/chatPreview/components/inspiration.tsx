@@ -15,12 +15,12 @@ import {
 } from '../utils/inspiration-utils';
 import { setDimension } from '@/store/common/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import { queryDepartMent, queryInspiration } from '@/shared/http/aipp';
 import { storage } from '@/shared/storage';
 import { pduMap } from '../common/config';
 import { HOME_APP_ID, FINANCE_APP_ID, TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
-import { isBusinessMagicCube } from '@shared/utils/common';
+import { isBusinessMagicCube } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import '../styles/inspiration.scss';
 

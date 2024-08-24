@@ -1,22 +1,20 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { Button, Modal, Switch } from 'antd';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import { CloseOutlined } from '@ant-design/icons';
 import {
   LinkIcon,
   AtIcon,
   HistoryIcon,
-  ArrowDownIcon,
-  ClearChatIcon,
   ShareIcon,
   NotificationIcon
 } from '@/assets/icon';
-import { clearInstance } from '@shared/http/aipp';
+import { clearInstance } from '@/shared/http/aipp';
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from '../../star-apps';
-import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import {

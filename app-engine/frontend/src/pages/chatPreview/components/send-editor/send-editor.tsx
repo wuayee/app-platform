@@ -7,17 +7,16 @@ import React, {
 } from 'react';
 import { AudioIcon, AudioActiveIcon, DeleteContentIcon } from '@/assets/icon';
 import $ from 'jquery';
-import { Message } from '@shared/utils/message';
-import { httpUrlMap } from '@shared/http/httpConfig';
+import { Message } from '@/shared/utils/message';
 import { messagePaste } from './utils';
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
 import EditorSelect from './components/editor-selet';
-import '@shared/utils/rendos';
+import '@/shared/utils/rendos';
 import '../../styles/send-editor.scss';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setUseMemory } from '@/store/common/common';
-import { uploadChatFile, voiceToText } from '@shared/http/aipp';
+import { uploadChatFile, voiceToText } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 
 const AudioBtn = forwardRef((props, ref) => {
@@ -200,7 +199,7 @@ const SendEditor = (props) => {
   }, [showMulti]);
   const resetEditorHeight = (list) => {
     if (list.length > 0) {
-      setRecommondTop(recommondRef.current.scrollHeight+editorRef.current.scrollHeight - 140);
+      setRecommondTop(recommondRef.current.scrollHeight + editorRef.current.scrollHeight - 140);
     } else {
       setRecommondTop(0);
     }
@@ -221,7 +220,7 @@ const SendEditor = (props) => {
           <span>{t('stopResponding')}</span>
         </div>
       }
-      <div className='recommends-inner' style={{top: `-${recommondTop}px`}} ref={recommondRef}>
+      <div className='recommends-inner' style={{ top: `-${recommondTop}px` }} ref={recommondRef}>
         <Recommends resetEditorHeight={resetEditorHeight} onSend={onSend} />
       </div>
       <div className='editor-inner' >

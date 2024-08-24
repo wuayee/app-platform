@@ -3,7 +3,7 @@ import React, { useImperativeHandle, useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Drawer, Pagination, Table, Button, Input, Dropdown, Select, Tag } from 'antd';
 import { CloseOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
-import { getKnowledges, getKnowledgesList } from '@shared/http/appBuilder';
+import { getKnowledges, getKnowledgesList } from '@/shared/http/appBuilder';
 import { formatDateTime } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import '../styles/add-knowledge.scss';

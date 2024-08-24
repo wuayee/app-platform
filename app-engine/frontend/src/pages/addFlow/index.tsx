@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 import { Tooltip } from 'antd';
 import { useParams } from 'react-router-dom'
-import { getAppInfo } from '@shared/http/aipp';
+import { getAppInfo } from '@/shared/http/aipp';
 import { ConfigFlowIcon } from '@assets/icon';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import { FlowContext } from '../aippIndex/context';
 import LeftMenu from './components/left-menu';
 import Stage from './components/elsa-stage';

@@ -45,7 +45,7 @@ const Plugin = () => {
           <CloseOutlined onClick={() => setOpen(false)} />
         }
         footer={[
-          <Button key="back" onClick={() => setOpen(false)}>
+          <Button onClick={() => setOpen(false)}>
             {t('close')}
           </Button>
         ]}

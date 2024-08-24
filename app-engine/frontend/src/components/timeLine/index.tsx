@@ -3,18 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { Drawer, Timeline, Empty } from 'antd';
 import { useParams } from 'react-router-dom';
 import { CloseOutlined } from '@ant-design/icons';
-import { getVersion } from '@shared/http/aipp';
+import { getVersion } from '@/shared/http/aipp';
 import { useTranslation } from "react-i18next";
 
 const TimeLine = (props) => {
   const { open, setOpen } = props;
-  const [ timeList, setTimeList ] = useState([]);
+  const [timeList, setTimeList] = useState([]);
   const { tenantId, appId } = useParams();
   const { t } = useTranslation();
 
   useEffect(() => {
     open && getVersion(tenantId, appId).then(res => {
-      if(res.code === 0) {
+      if (res.code === 0) {
         dataProcess(res.data);
       }
     })
@@ -42,16 +42,16 @@ const TimeLine = (props) => {
       closeIcon={false}
       onClose={() => setOpen(false)}
       open={open}
-      footer={null }
+      footer={null}
       extra={
-        <CloseOutlined onClick={() => setOpen(false)}/>
+        <CloseOutlined onClick={() => setOpen(false)} />
       }>
       <div>
         <div style={{ marginBottom: '18px', display: 'flex', alignItems: 'center' }}>
-          <img src='./src/assets/images/ai/tag.png'  />
+          <img src='./src/assets/images/ai/tag.png' />
           <span style={{ marginLeft: '12px' }}>{t('cannotRevertVersion')}</span>
         </div>
-        { timeList.length > 0 ? <Timeline  items={timeList} /> : 
+        {timeList.length > 0 ? <Timeline items={timeList} /> :
           <div style={{ marginTop: '300px' }}><Empty description={t('noData')} /></div>
         }
       </div>

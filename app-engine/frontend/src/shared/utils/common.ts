@@ -1,8 +1,8 @@
-import {useLocation} from "react-router-dom";
-import {useCallback, useMemo, useState} from "react";
-import { Message } from '@shared/utils/message';
+import { useLocation } from 'react-router-dom';
+import { useCallback, useMemo, useState } from 'react';
+import { Message } from '@/shared/utils/message';
 import { DEMISSIONAPPID } from './configvar';
-import { storage } from "../storage";
+import { storage } from '../storage';
 import i18n from '@/locale/i18n';
 
 /**
@@ -12,10 +12,10 @@ import i18n from '@/locale/i18n';
  * @returns {string} status的值
  */
 export const getQueryStatus = (name) => {
-    return (() => {
-        const {search} = useLocation();
-        return useMemo(() => new URLSearchParams(search), [search]);
-    })().get(name);
+  return (() => {
+    const { search } = useLocation();
+    return useMemo(() => new URLSearchParams(search), [search]);
+  })().get(name);
 };
 
 /**
@@ -25,8 +25,8 @@ export const getQueryStatus = (name) => {
  * @returns {*}
  */
 export const getQueryVariableByIndex = (index) => {
-    const query = window.location.pathname.split("/");
-    return query[index];
+  const query = window.location.pathname.split('/');
+  return query[index];
 }
 
 /**
@@ -37,7 +37,7 @@ export const getQueryVariableByIndex = (index) => {
  * @returns {*}
  */
 export const getUrlVariableByName = (props, variable) => {
-    return props.match.params[variable];
+  return props.match.params[variable];
 }
 
 /**
@@ -47,7 +47,7 @@ export const getUrlVariableByName = (props, variable) => {
 */
 export const useMergeState = (initialState) => {
   const [state, setState] = useState(initialState);
-  const setMergeState = useCallback((newState) => setState((prevState) => ({...prevState, ...newState})), []);
+  const setMergeState = useCallback((newState) => setState((prevState) => ({ ...prevState, ...newState })), []);
   return [state, setMergeState];
 };
 
@@ -86,7 +86,7 @@ const setFileType = (textItem) => {
     } else if (textItem.mime.indexOf('audio') !== -1) {
       htmlStr = `<audio src=data:${textItem.mime};base64,${textItem.data} controls></audio>`
     }
-  } else if (isArray){
+  } else if (isArray) {
     textItem.forEach(item => {
       if (item.mime.indexOf('image') !== -1) {
         htmlStr += `<img src=data:${item.mime};base64,${item.data} /><br />`
@@ -168,8 +168,8 @@ export const debounce = (fn, wait) => {
     const context = this
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
-        timer = null
-        fn.apply(context,args)
+      timer = null
+      fn.apply(context, args)
     }, wait)
   }
 }
@@ -181,7 +181,7 @@ export const debounce = (fn, wait) => {
 */
 export const isJsonString = (str) => {
   try {
-    if (typeof JSON.parse(str) === "object") {
+    if (typeof JSON.parse(str) === 'object') {
       return true;
     }
   } catch (e) {
@@ -196,15 +196,15 @@ export const isJsonString = (str) => {
 * @param {string} text - 需要转换的文本
 * @return {string} 返回转换后的HTML格式文本
 */
-export const urlify = (text) => { 
+export const urlify = (text) => {
   if (text) {
     const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(urlRegex, (url) => { 
-      return `<a href="${url}" target="_blank">${url}</a>`;
-    }) 
+    return text.replace(urlRegex, (url) => {
+      return `<a href='${url}' target='_blank'>${url}</a>`;
+    })
   }
   return text
-} 
+}
 
 /**
 * 版本号比较函数
@@ -212,20 +212,20 @@ export const urlify = (text) => {
 * @param {string} lastVersion - 参照的版本号，默认为空字符串
 * @return {number} 返回比较结果，-1表示preVersion小于lastVersion，1表示preVersion大于lastVersion，0表示两者相等
 */
-export const versionStringCompare = (preVersion='', lastVersion='') => {
+export const versionStringCompare = (preVersion = '', lastVersion = '') => {
   let sources = preVersion.split('.');
   let dests = lastVersion.split('.');
   let maxL = Math.max(sources.length, dests.length);
   let result = 0;
-  for (let i = 0; i < maxL; i++) {  
-    let preValue = sources.length>i ? sources[i]:0;
+  for (let i = 0; i < maxL; i++) {
+    let preValue = sources.length > i ? sources[i] : 0;
     let preNum = isNaN(Number(preValue)) ? preValue.charCodeAt() : Number(preValue);
-    let lastValue = dests.length>i ? dests[i]:0;
-    let lastNum =  isNaN(Number(lastValue)) ? lastValue.charCodeAt() : Number(lastValue);
+    let lastValue = dests.length > i ? dests[i] : 0;
+    let lastNum = isNaN(Number(lastValue)) ? lastValue.charCodeAt() : Number(lastValue);
     if (preNum < lastNum) {
       result = -1;
       break;
-    } else if (preNum > lastNum) { 
+    } else if (preNum > lastNum) {
       result = 1;
       break;
     }

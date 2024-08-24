@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Icons } from '@/components/icons';
-import { queryAppsApi } from '@/shared/http/apps.js';
+import { queryAppsApi } from '@/shared/http/apps';
 import AppCard from '@/components/appCard';
 import { debounce } from '@/shared/utils/common';
 import { useHistory } from 'react-router-dom';

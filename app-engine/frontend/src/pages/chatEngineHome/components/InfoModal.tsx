@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Spin, Modal, Button } from 'antd';
-import { NewFeatIcon, RocketIcon, FixIcon } from '@assets/icon';
-import { getAnnouncement } from '@shared/http/apps';
-import styles from './infomodal.module.scss';
+import { NewFeatIcon, RocketIcon, FixIcon } from '@/assets/icon';
+import { getAnnouncement } from '@/shared/http/apps';
+import './infomodal.module.scss';
 
 const InfoModal = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,24 +16,24 @@ const InfoModal = () => {
     const mapper = {
       '新功能': {
         id: 1,
-        icon: <NewFeatIcon/>,
+        icon: <NewFeatIcon />,
       },
       '优化': {
         id: 2,
-        icon: <RocketIcon/>,
+        icon: <RocketIcon />,
       },
       '修复': {
         id: 3,
-        icon: <FixIcon/>,
+        icon: <FixIcon />,
       },
     };
-    for(const key of Object.keys(data)){
+    for (const key of Object.keys(data)) {
       const item = {
         icon: mapper[key].icon,
         title: key,
         id: mapper[key].id,
         desc: <div>{
-            data[key].map((a, idx) => <p key={idx}>{`${idx + 1}. ${a.content}`}</p>)
+          data[key].map((a, idx) => <p key={idx}>{`${idx + 1}. ${a.content}`}</p>)
         }</div>,
       }
       res.push(item);
@@ -44,12 +44,12 @@ const InfoModal = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAnnouncement();
-      if(!res.announcementsByType) return
+      if (!res.announcementsByType) return
       setLastAnnounceTime(res.latestCreateTime);
       handleData(res.announcementsByType);
       const timeNow = Date.parse(res.latestCreateTime);
       const timeOld = Date.parse(lastAnnounceTime || res.latestCreateTime);
-      if(timeNow > timeOld){
+      if (timeNow > timeOld) {
         setShowModal(true);
         localStorage.setItem('lastAnnounceTime', res.latestCreateTime);
       }
@@ -58,33 +58,33 @@ const InfoModal = () => {
     fetchData();
   }, []);
 
-  const footer = () => <div className='center' style={{width: '100%'}}>
+  const footer = () => <div className='center' style={{ width: '100%' }}>
     <Button onClick={() => setShowModal(false)}>
-        我知道了
+      我知道了
     </Button>
-  </div> 
+  </div>
 
   return (
-    <Modal 
-      title={`更新日志`} 
-      open={showModal} 
-      footer={spinning ? null : footer} 
-      keyboard 
+    <Modal
+      title={`更新日志`}
+      open={showModal}
+      footer={spinning ? null : footer}
+      keyboard
       className='modal'
       onCancel={() => setShowModal(false)}
     >
       <div>{spinning ? '' : lastAnnounceTime.split(' ')[0]}</div>
       <hr className='updateDivLine' />
       <div className={spinning ? 'contentSpin' : 'updateContent'}>
-      { 
-        spinning ? <Spin spinning={spinning}/> :
-          infoList.map(item => <div className='updateItem' key={item.title}>
-            <div className='itemTitle'>{item.icon}{item.title}</div>
-            <div className='desc'>
-              {item.desc}
-            </div>
-          </div>)
-      }
+        {
+          spinning ? <Spin spinning={spinning} /> :
+            infoList.map(item => <div className='updateItem' key={item.title}>
+              <div className='itemTitle'>{item.icon}{item.title}</div>
+              <div className='desc'>
+                {item.desc}
+              </div>
+            </div>)
+        }
       </div>
     </Modal>
   )

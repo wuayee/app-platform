@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import { shareDialog } from '@shared/http/aipp';;
-import { toClipboard } from '@shared/utils/common';
+import { shareDialog } from '@/shared/http/aipp';;
+import { toClipboard } from '@/shared/utils/common';
 import { useAppSelector } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
 import '../styles/check-group.scss';

@@ -12,11 +12,11 @@ import { setCurAppId } from '@/store/collection/collection';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setAtChatId, setOpenStar } from '@/store/chatStore/chatStore';
 import { setAtAppId, setAtAppInfo } from '@/store/appInfo/appInfo';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import avatarNormal from '@/assets/images/knowledge/knowledge-base.png';
 import { HOME_APP_ID } from '../send-editor/common/config';
-import './style.scoped.scss';
 import { useTranslation } from 'react-i18next';
+import './style.scoped.scss';
 
 interface StarAppsProps {
   handleAt: (val: any) => void;
