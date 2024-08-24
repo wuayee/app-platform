@@ -63,10 +63,10 @@ public class OperationSpanExporter implements CarverSpanExporter {
             spanDataCollection.stream()
                     .filter(Objects::nonNull)
                     .filter(span -> span.getName() != null && span.getName().startsWith(OPERATION_PREFIX))
-                    .forEach(this::exporterHandle);
+                    .forEach(this::exportSpanData);
             return CompletableResultCode.ofSuccess();
         } catch (Exception exception) {
-            log.warn("Export span failed.", exception);
+            log.warn("Export span failed.");
             return CompletableResultCode.ofFailure();
         }
     }
@@ -97,6 +97,15 @@ public class OperationSpanExporter implements CarverSpanExporter {
             this.exportFailDetail(spanData, exceptionMessage.get(), systemAttributes);
         } else {
             this.exportSuccessDetail(spanData, systemAttributes);
+        }
+    }
+
+    private void exportSpanData(SpanData spanData) {
+        try {
+            this.exporterHandle(spanData);
+        } catch (Exception exception) {
+            log.warn("Operation export failed. [operation={}]", spanData.getName());
+            throw exception;
         }
     }
 
