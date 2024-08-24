@@ -34,11 +34,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,6 +54,7 @@ import javax.xml.transform.TransformerFactory;
  * @author 季聿阶
  * @since 2020-07-24
  */
+@DisplayName("测试 XmlUtils")
 public class XmlUtilsTest {
     private Document document;
     private Document department;
@@ -750,6 +753,80 @@ public class XmlUtilsTest {
 
         public void setEmployees(List<Employee> employees) {
             this.employees = employees;
+        }
+    }
+
+    @Nested
+    @DisplayName("测试安全设置的启用和禁用效果")
+    class XmlSecurityTest {
+        @Nested
+        @DisplayName("测试 XmlUtils 类的安全设置")
+        class XmlUtilsSecurityTest {
+            @Test
+            @DisplayName("测试 FEATURE_DISALLOW_DOCTYPE_DECL 设置的启用，即禁用 DOCTYPE 声明")
+            void testDisallowDoctypeDecl() throws Exception {
+                try (InputStream in = getClass().getResourceAsStream("/security-test-file/external.xml")) {
+                    assertThatThrownBy(() -> XmlUtils.load(in)).isInstanceOf(IllegalStateException.class)
+                            .hasMessage("Failed to parse XML from the input stream.")
+                            .getCause()
+                            .isInstanceOf(SAXException.class);
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("为安全设置提供对照测试")
+        class XmlUtilsSecurityControlledTest {
+            @Test
+            @DisplayName("测试 FEATURE_DISALLOW_DOCTYPE_DECL 设置的禁用，即启用 DOCTYPE 声明")
+            void testDisallowDoctypeDecl() throws Exception {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
+                try (InputStream in = getClass().getResourceAsStream("/security-test-file/external.xml")) {
+                    DocumentBuilder builder = factory.newDocumentBuilder();
+                    Document doc = builder.parse(in);
+                    String extractedData = doc.getDocumentElement().getTextContent();
+                    assertThat(extractedData).isEqualTo("This is an example of an external entity.");
+                }
+            }
+
+            @Test
+            @DisplayName("测试 FEATURE_ALLOW_EXTERNAL_GENERAL_ENTITIES 设置的启用，即启用外部一般实体加载")
+            void testExternalGeneralEntities() throws Exception {
+                String txtFilePath = XmlUtilsTest.class.getResource("/security-test-file/external.txt").getFile();
+                String maliciousXml =
+                        "<?xml version=\"1.0\"?>\n" + "<!DOCTYPE root [\n" + "<!ENTITY ext SYSTEM \"file://"
+                                + txtFilePath + "\">\n" + "]>\n" + "<root>&ext;</root>\n";
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature("http://xml.org/sax/features/external-general-entities", true);
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
+                try (InputStream in = new ByteArrayInputStream(maliciousXml.getBytes(StandardCharsets.UTF_8))) {
+                    DocumentBuilder builder = factory.newDocumentBuilder();
+                    Document doc = builder.parse(in);
+                    String extractedData = doc.getDocumentElement().getTextContent();
+                    assertThat(extractedData).isEqualTo("This is an external general entity.");
+                }
+            }
+
+            @Test
+            @DisplayName("测试 FEATURE_ALLOW_LOAD_EXTERNAL_DTD 设置的启用，即启用加载外部 DTD")
+            void testLoadExternalDTD() throws Exception {
+                String dtdFilePath = XmlUtilsTest.class.getResource("/security-test-file/external.dtd").getFile();
+                String maliciousXml =
+                        "<?xml version=\"1.0\"?>\n" + "<!DOCTYPE root SYSTEM \"file://" + dtdFilePath + "\">\n"
+                                + "<root>&demoEntity;</root>\n";
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", true);
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
+                try (InputStream in = new ByteArrayInputStream(maliciousXml.getBytes(StandardCharsets.UTF_8))) {
+                    DocumentBuilder builder = factory.newDocumentBuilder();
+                    Document doc = builder.parse(in);
+                    String extractedData = doc.getDocumentElement().getTextContent();
+                    assertThat(extractedData).isEqualTo("Demo entity content of a DTD file.");
+                }
+            }
         }
     }
 }
