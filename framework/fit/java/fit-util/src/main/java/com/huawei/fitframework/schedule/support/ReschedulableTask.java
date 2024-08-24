@@ -51,6 +51,10 @@ public class ReschedulableTask implements Task, ScheduledFuture<Object> {
 
     private Instant getCurTime() {
         Instant curTime = Instant.now();
+        if (this.execution.status() == ExecutePolicy.ExecutionStatus.SCHEDULING) {
+            // 当第一次进行调度的时候，忽略时间回拨问题。
+            return curTime;
+        }
         while (this.isCurTimeInvalid(curTime)) {
             ThreadUtils.sleep(TIME_ABNORMAL_SLEEP_TIME);
             curTime = Instant.now();
@@ -71,8 +75,8 @@ public class ReschedulableTask implements Task, ScheduledFuture<Object> {
                 return this;
             }
             Instant nextExecuteTime = optionalNextExecuteTime.get();
-            this.execution.updateScheduledTime(nextExecuteTime);
             Instant curTime = this.getCurTime();
+            this.execution.updateScheduledTime(nextExecuteTime);
             long initialDelay = nextExecuteTime.toEpochMilli() - curTime.toEpochMilli();
             this.currentScheduledFuture = this.threadPool.schedule(this, initialDelay, TimeUnit.MILLISECONDS);
             return this;
