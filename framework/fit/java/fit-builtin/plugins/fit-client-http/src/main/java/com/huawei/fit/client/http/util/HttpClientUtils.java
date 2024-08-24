@@ -21,6 +21,7 @@ import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
 import com.huawei.fitframework.broker.GenericableMetadata;
+import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.ioc.BeanContainer;
@@ -130,11 +131,7 @@ public class HttpClientUtils {
     private static int getResponseDataFormat(Request request, HttpClassicClientResponse<Object> clientResponse) {
         String dataFormat = clientResponse.headers()
                 .first(FIT_DATA_FORMAT.value())
-                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
-                        "No response data format. [protocol={0}, address={1}, header={2}]",
-                        request.protocol(),
-                        request.address(),
-                        FIT_DATA_FORMAT.value())));
+                .orElse(String.valueOf(SerializationFormat.UNKNOWN.code()));
         try {
             return Integer.parseInt(dataFormat);
         } catch (NumberFormatException e) {
