@@ -225,7 +225,7 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
         PluginData pluginData = this.pluginService.getPlugin(pluginId);
         if (pluginData.getPluginId() == null) {
             // 无此插件时，返回删除数量为 0
-            log.warn("No plugin found when try to delete. [pluginFile={}]", pluginId);
+            log.warn("No plugin found when try to delete. [pluginId={}]", pluginId);
             return 0;
         }
         this.pluginService.deletePlugin(pluginId);
@@ -234,6 +234,7 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
         FileUtils.delete(deployPath.toFile());
         Path persistentPath = this.generatePersistentPath(pluginData);
         FileUtils.delete(persistentPath.toFile());
+        log.info("Succeeded to delete plugin. [pluginName={}]", pluginData.getPluginName());
         // 正常删除，返回删除数量为 1
         return 1;
     }
@@ -255,7 +256,7 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
         try {
             FileUtils.delete(deployedPath.toFile());
         } catch (IllegalStateException e) {
-            log.error("Failed to delete plugin. [pluginFile={}]", pluginId, e);
+            log.error("Failed to delete plugin. [pluginName={}]", pluginData.getPluginName(), e);
         }
     }
 
@@ -264,7 +265,8 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
         String pluginFullName = this.getPluginFullName(pluginData);
         this.registerQueryThread.execute(Task.builder()
             .runnable(() -> this.deploy(pluginData, pluginFullName, pluginId))
-            .uncaughtExceptionHandler((thread, cause) -> this.exceptionCaught(cause, pluginFullName, pluginId))
+            .uncaughtExceptionHandler(
+                (thread, cause) -> this.exceptionCaught(cause, pluginData.getPluginName(), pluginId))
             .buildDisposable());
     }
 
@@ -331,8 +333,8 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
         return fitableInfo;
     }
 
-    private void exceptionCaught(Throwable cause, String pluginFullName, String pluginId) {
-        log.error(StringUtils.format("Failed to deploy file. [pluginFile={0}]", pluginFullName), cause);
+    private void exceptionCaught(Throwable cause, String pluginName, String pluginId) {
+        log.error(StringUtils.format("Failed to deploy file. [pluginFile={0}]", pluginName), cause);
         this.undeployPlugin(pluginId);
         pluginService.updateDeployStatus(Collections.singletonList(pluginId), DeployStatus.DEPLOYMENT_FAILED);
     }

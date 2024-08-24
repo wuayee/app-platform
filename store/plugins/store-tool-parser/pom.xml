@@ -35,6 +35,15 @@
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-instrumentation-annotations</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.caver</groupId>
+            <artifactId>telemetry-aop</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>

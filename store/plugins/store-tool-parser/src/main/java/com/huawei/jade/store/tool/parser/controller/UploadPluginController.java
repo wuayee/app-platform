@@ -25,6 +25,10 @@ import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 import com.huawei.jade.store.tool.parser.param.DeployParam;
 import com.huawei.jade.store.tool.parser.service.PluginDeployService;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +60,9 @@ public class UploadPluginController {
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @PostMapping(path = "/save", description = "保存上传工具文件")
-    public Result<String> saveUploadFile(PartitionedEntity receivedFiles, @RequestParam("toolNames") String toolNames) {
+    @WithSpan("operation.store.plugin.upload")
+    public Result<String> saveUploadFile(PartitionedEntity receivedFiles,
+        @RequestParam("toolNames") @SpanAttribute("toolNames") String toolNames) {
         notNull(receivedFiles, "The file to be uploaded cannot be null.");
         notNull(toolNames, "The tools name cannot be null.");
         List<NamedEntity> entityList = receivedFiles.entities()
@@ -76,8 +82,9 @@ public class UploadPluginController {
      * @param pluginId 表示插件唯一标识的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
+    @WithSpan("operation.store.plugin.delete")
     @DeleteMapping(value = "/delete/{pluginId}", description = "删除插件")
-    public Result<String> deletePlugin(@PathVariable("pluginId") String pluginId) {
+    public Result<String> deletePlugin(@PathVariable("pluginId") @SpanAttribute("pluginId") String pluginId) {
         notBlank(pluginId, "The plugin id cannot be blank.");
         int deleteNum = this.pluginDeployService.deletePlugin(pluginId);
         return Result.ok(null, deleteNum);
@@ -90,9 +97,11 @@ public class UploadPluginController {
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @PostMapping(path = "/deploy", description = "部署插件")
+    @WithSpan("operation.store.plugin.deploy")
     public Result<String> deployPlugin(@RequestBody DeployParam deployParam) {
         notNull(deployParam, "The deploy param cannot be null.");
         List<String> pluginIds = deployParam.getPluginIds();
+        Span.current().setAttribute("pluginIds", pluginIds.toString());
         this.pluginDeployService.deployPlugins(pluginIds);
         return Result.ok(null, pluginIds.size());
     }

@@ -237,6 +237,14 @@ class PluginDeployServiceImplTest {
     }
 
     @Test
+    @DisplayName("删除无效插件符合预期")
+    void testDeleteInvalidPlugin() {
+        when(mockPluginService.getPlugin("pluginId")).thenReturn(new PluginData());
+        final int result = pluginDeployServiceImplUnderTest.deletePlugin("pluginId");
+        assertThat(result).isEqualTo(0);
+    }
+
+    @Test
     @DisplayName("获取已部署插件数量成功")
     void testQueryCountByDeployStatus() {
         when(mockPluginService.getPluginsCount(DeployStatus.DEPLOYED)).thenReturn(0);
