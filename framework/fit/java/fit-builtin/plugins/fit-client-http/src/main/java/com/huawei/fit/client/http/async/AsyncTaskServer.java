@@ -112,16 +112,17 @@ class AsyncTaskServer {
         try (HttpClassicClientResponse<Object> clientResponse = client.exchange(this.buildRequest(client,
                 request,
                 workerConfig))) {
-            Response response = HttpClientUtils.getResponse(this.container, request, clientResponse);
-            if (response.metadata().code() == AsyncTaskNotFoundException.CODE) {
+            int responseCode = HttpClientUtils.getResponseCode(request, clientResponse);
+            if (responseCode == AsyncTaskNotFoundException.CODE) {
                 // 如果返回值为任务未找到 (AsyncTaskNotFoundException)，则说明服务器端已无任务，客户端现有的任务已丢失。
                 // 此时应该停止长轮询、清理任务并退出服务器。
                 this.cleanUp();
                 return true;
-            } else if (response.metadata().code() == AsyncTaskNotCompletedException.CODE) {
+            } else if (responseCode == AsyncTaskNotCompletedException.CODE) {
                 // 如果返回值为任务未完成，继续长轮询。
             } else {
                 // 如果返回值为 OK 或者其他情况，则将结果传递给客户端请求线程。
+                Response response = HttpClientUtils.getResponse(this.container, request, clientResponse);
                 AsyncTaskResult result = new AsyncTaskResult(response);
                 String asyncTaskId = HttpUtils.getAsyncTaskId(response.metadata().tagValues());
                 SynchronousQueue<AsyncTaskResult> queue = this.pendingTasks.get(asyncTaskId);

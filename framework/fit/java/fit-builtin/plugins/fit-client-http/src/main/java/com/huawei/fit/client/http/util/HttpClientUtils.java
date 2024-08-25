@@ -108,6 +108,32 @@ public class HttpClientUtils {
         return Response.create(responseMetadata, null);
     }
 
+    /**
+     * 获取 Http 响应中的错误码。
+     *
+     * @param request 表示 Http 请求的 {@link Request}。
+     * @param clientResponse 表示 Http 客户端响应的 {@link HttpClassicClientResponse}{@code <}{@link Object}{@code >}。
+     * @return 表示错误码的 {@code int}。
+     */
+    public static int getResponseCode(Request request, HttpClassicClientResponse<Object> clientResponse) {
+        String code = clientResponse.headers()
+                .first(FIT_CODE.value())
+                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                        "No response code. [protocol={0}, address={1}, header={2}]",
+                        request.protocol(),
+                        request.address(),
+                        FIT_CODE.value())));
+        try {
+            return Integer.parseInt(code);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(StringUtils.format(
+                    "Incorrect response code. [protocol={0}, address={1}, code={2}]",
+                    request.protocol(),
+                    request.address(),
+                    code));
+        }
+    }
+
     private static Object getResponseData(BeanContainer container, Request request, ResponseMetadata responseMetadata,
             HttpClassicClientResponse<Object> clientResponse) {
         int format = responseMetadata.dataFormat();
@@ -140,25 +166,6 @@ public class HttpClientUtils {
                     request.protocol(),
                     request.address(),
                     dataFormat));
-        }
-    }
-
-    private static int getResponseCode(Request request, HttpClassicClientResponse<Object> clientResponse) {
-        String code = clientResponse.headers()
-                .first(FIT_CODE.value())
-                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
-                        "No response code. [protocol={0}, address={1}, header={2}]",
-                        request.protocol(),
-                        request.address(),
-                        FIT_CODE.value())));
-        try {
-            return Integer.parseInt(code);
-        } catch (NumberFormatException e) {
-            throw new IllegalStateException(StringUtils.format(
-                    "Incorrect response code. [protocol={0}, address={1}, code={2}]",
-                    request.protocol(),
-                    request.address(),
-                    code));
         }
     }
 
