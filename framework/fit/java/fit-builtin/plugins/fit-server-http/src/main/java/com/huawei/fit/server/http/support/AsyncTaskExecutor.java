@@ -4,6 +4,7 @@
 
 package com.huawei.fit.server.http.support;
 
+import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.exception.AsyncTaskExecutionException;
@@ -17,7 +18,11 @@ import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,10 +47,12 @@ public class AsyncTaskExecutor {
     private static final int FIT_MAX_ASYNC_TASK_NUM = 1000;
 
     private final ConcurrentHashMap<String, AsyncTaskCreator> creators;
+    private final HashMap<String, Long> accessedTimes;
     private final ExecutorService asyncTaskExecutorService;
 
     private AsyncTaskExecutor() {
         this.creators = new ConcurrentHashMap<>();
+        this.accessedTimes = new HashMap<>();
         this.asyncTaskExecutorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1,
                 Runtime.getRuntime().availableProcessors() * 2,
                 60,
@@ -97,8 +104,11 @@ public class AsyncTaskExecutor {
     }
 
     private AsyncTaskCreator getOrCreateAsyncTaskCreator(String workerId, String workerInstanceId) {
-        // 根据 workerId 获取任务提交者，如果任务来自一个新的提交者实例，则丢弃已有实例和附属的任务记录
+        // 根据 workerId 获取任务提交者，如果任务来自一个新的提交者实例，则丢弃已有实例和附属的任务记录；
+        // 并且基于懒汉方式丢弃长时间无人访问的 AsyncTaskCreator。
         synchronized (this.creators) {
+            this.accessedTimes.put(workerId, System.currentTimeMillis());
+            this.clearAsyncTaskCreatorNotAccessed();
             AsyncTaskCreator creator = this.creators.get(workerId);
             if (creator == null || creator.isNotSameInstance(workerInstanceId)) {
                 creator = new AsyncTaskCreator(workerInstanceId);
@@ -126,7 +136,25 @@ public class AsyncTaskExecutor {
                 log.warn(message);
                 throw new AsyncTaskNotFoundException(message);
             }
+            this.accessedTimes.put(workerId, System.currentTimeMillis());
+            this.clearAsyncTaskCreatorNotAccessed();
             return creator;
         }
+    }
+
+    private void clearAsyncTaskCreatorNotAccessed() {
+        Set<String> toRemoveWorkers = new HashSet<>();
+        long currentTimeMillis = System.currentTimeMillis();
+        for (Map.Entry<String, Long> entry : this.accessedTimes.entrySet()) {
+            if (currentTimeMillis - entry.getValue() <= FIT_ASYNC_LONG_POLLING_DURATION_MILLIS * 5) {
+                continue;
+            }
+            String workerId = entry.getKey();
+            toRemoveWorkers.add(workerId);
+            AsyncTaskCreator obsoleteCreator = this.creators.remove(workerId);
+            log.warn("Worker instance have not been accessed for a long time, discard obsolete instance tasks. "
+                    + "[workerId={}, obsoleteInstanceId={}]", workerId, obsoleteCreator.getInstanceId());
+        }
+        toRemoveWorkers.forEach(this.accessedTimes::remove);
     }
 }
