@@ -47,7 +47,7 @@
 
         <!-- OhScript -->
         <dependency>
-            <groupId>com.huawei.fit.ohscript</groupId>
+            <groupId>modelengine.fit.ohscript</groupId>
             <artifactId>ohscript</artifactId>
             <version>0.0.3.6-SNAPSHOT</version>
         </dependency>
