@@ -36,6 +36,7 @@ import com.huawei.jade.fel.engine.operators.patterns.SimplePattern;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.engine.util.AiFlowSession;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
