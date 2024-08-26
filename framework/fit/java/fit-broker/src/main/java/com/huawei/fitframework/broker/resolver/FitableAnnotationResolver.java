@@ -16,6 +16,7 @@ import com.huawei.fitframework.broker.util.AnnotationUtils;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanMetadata;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -36,6 +37,7 @@ public class FitableAnnotationResolver implements LocalExecutorResolver {
      * 该模式仅支持数字、大小写字母以及 '-'、'_'、'*'、'.' 字符且长度在128以内。
      */
     private static final Pattern ID_PATTERN = Pattern.compile("^[\\w\\-\\.\\*]{1,128}+$");
+    private static final Logger LOG = Logger.get(FitableAnnotationResolver.class);
 
     private final BeanContainer container;
     private final LocalExecutorRepository.Registry registry;
@@ -60,6 +62,8 @@ public class FitableAnnotationResolver implements LocalExecutorResolver {
         }
         String fitableId = annotation.id();
         if (!ID_PATTERN.matcher(opGenericableId.get()).matches() || !ID_PATTERN.matcher(fitableId).matches()) {
+            LOG.error("Genericable id or fitable id does not meet the naming requirements. "
+                    + "[genericableId={}, fitableId={}]", opGenericableId.get(), fitableId);
             throw new IllegalStateException("Genericable id or fitable id does not meet the naming requirements: "
                     + "only numbers, uppercase and lowercase letters, and '-', '_', '*', '.' are supported, "
                     + "and the length is less than 128.");
