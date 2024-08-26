@@ -109,7 +109,7 @@ const QuestionClar = (props) => {
       initSelections(originData);
       let options = originData;
       if (dataDimension.value === 'CPL') {
-        options = calcProducts;
+        // options = calcProducts;
       }
       // 如果是“预算预测”产品选项则只取前两层
       if (whetherShowTheFirstTwoFloors()) {

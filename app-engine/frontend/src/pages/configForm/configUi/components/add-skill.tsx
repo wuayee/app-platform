@@ -3,12 +3,12 @@ import React, { useImperativeHandle, useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Drawer, Tabs, Button, Input, Checkbox } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { getPlugins } from '@shared/http/plugin';
-import { createAipp } from "@shared/http/aipp";
+import { getPlugins } from '@/shared/http/plugin';
+import { createAipp } from '@/shared/http/aipp';
 import { pluginItems } from '../../common/common';
-import { Icons } from "../../../../components/icons";
+import { Icons } from '@/components/icons';
 import ToolCard from '../../../addFlow/components/tool-card';
-import Pagination from '../../../../components/pagination/index';
+import Pagination from '@/components/pagination/index';
 import { useTranslation } from 'react-i18next';
 import '../styles/add-skill.scss';
 const { Search } = Input;
@@ -123,28 +123,28 @@ const AddSkill = (props) => {
       onClose={() => setOpen(false)}
       open={open}
       footer={
-        <div className="drawer-footer">
+        <div className='drawer-footer'>
           <Button onClick={() => setOpen(false)}>{t('cancel')}</Button>
-          <Button type="primary" onClick={confirm}>{t('ok')}</Button>
+          <Button type='primary' onClick={confirm}>{t('ok')}</Button>
         </div>
       }
       extra={
         <CloseOutlined onClick={() => setOpen(false)} />
       }>
-      <div className="mashup-add-drawer">
-        <div className="mashup-add-tab">
-          <span className="active"><img src='./src/assets/images/ai/load.png' />{t('market')}</span>
+      <div className='mashup-add-drawer'>
+        <div className='mashup-add-tab'>
+          <span className='active'><img src='./src/assets/images/ai/load.png' />{t('market')}</span>
           <span><img src='./src/assets/images/ai/account.png' />{t('mine')}</span>
         </div>
-        <div className="mashup-add-tablist">
+        <div className='mashup-add-tablist'>
           <Tabs
             items={pluginItems}
             activeKey={pluginCategory}
             onChange={(key: string) => selectCategory(key)}
           />
         </div>
-        <div className="mashup-add-content">
-          <div className="mashup-add-head">
+        <div className='mashup-add-content'>
+          <div className='mashup-add-head'>
             {
               pluginCategory !== 'WATERFLOW' ? (<Input
                 placeholder={t('plsEnter')}
@@ -157,14 +157,14 @@ const AddSkill = (props) => {
                 onPressEnter={(e) => filterByName(e.target.value)}
                 prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
                 defaultValue={name}
-              />) : (<Button type="primary" onClick={handleAddWaterFlow} style={{ marginBottom: 16 }}>{t('createWorkflow')}</Button>)
+              />) : (<Button type='primary' onClick={handleAddWaterFlow} style={{ marginBottom: 16 }}>{t('createWorkflow')}</Button>)
             }
           </div>
-          <div className="mashup-add-inner">
+          <div className='mashup-add-inner'>
             {pluginData.map((card: any) =>
-              <div className="mashup-add-item" key={card.uniqueName}>
+              <div className='mashup-add-item' key={card.uniqueName}>
                 <ToolCard pluginData={card} />
-                <span className="check-item">
+                <span className='check-item'>
                   <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                 </span>
               </div>
