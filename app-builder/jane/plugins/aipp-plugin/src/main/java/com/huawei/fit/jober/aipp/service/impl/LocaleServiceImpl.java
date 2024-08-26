@@ -7,6 +7,8 @@ package com.huawei.fit.jober.aipp.service.impl;
 import com.huawei.fit.jober.aipp.repository.I18nRepository;
 import com.huawei.fit.jober.aipp.service.LocaleService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Initialize;
+import com.huawei.fitframework.log.Logger;
 
 import java.util.Locale;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @Component
 public class LocaleServiceImpl implements LocaleService {
+    private static final Logger log = Logger.get(LocaleServiceImpl.class);
     private static Map<String, Map<String, String>> resourceMap = null;
 
     private final I18nRepository i18nRepository;
@@ -30,10 +33,16 @@ public class LocaleServiceImpl implements LocaleService {
 
     @Override
     public String getLocaleMessage(String key, Locale locale) {
-        if (resourceMap == null) {
-            resourceMap = this.i18nRepository.selectResource();
-        }
         return resourceMap.get(locale.getLanguage())
                 .getOrDefault(key, resourceMap.get(Locale.ENGLISH.getLanguage()).get(key));
+    }
+
+    /**
+     * 加载国际化资源。
+     */
+    @Initialize
+    protected void loadResource() {
+        log.info("load locale resource.");
+        resourceMap = this.i18nRepository.selectResource();
     }
 }
