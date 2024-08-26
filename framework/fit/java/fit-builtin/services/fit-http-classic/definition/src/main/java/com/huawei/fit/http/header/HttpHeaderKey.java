@@ -20,7 +20,8 @@ public enum HttpHeaderKey {
     FIT_DATA_FORMAT("FIT-Data-Format"),
     FIT_CODE("FIT-Code"),
     FIT_MESSAGE("FIT-Message"),
-    FIT_TLV("FIT-TLV");
+    FIT_TLV("FIT-TLV"),
+    FIT_ACCESS_TOKEN("FIT-Access-Token");
 
     private final String value;
 

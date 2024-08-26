@@ -4,6 +4,7 @@
 
 package com.huawei.fit.client.http.util;
 
+import static com.huawei.fit.http.header.HttpHeaderKey.FIT_ACCESS_TOKEN;
 import static com.huawei.fit.http.header.HttpHeaderKey.FIT_CODE;
 import static com.huawei.fit.http.header.HttpHeaderKey.FIT_DATA_FORMAT;
 import static com.huawei.fit.http.header.HttpHeaderKey.FIT_GENERICABLE_VERSION;
@@ -88,6 +89,9 @@ public class HttpClientUtils {
                 .add(FIT_GENERICABLE_VERSION.value(), request.metadata().genericableVersion().toString())
                 .add(FIT_TLV.value(), HttpUtils.encode(tagLengthValues.serialize()))
                 .add(MessageHeaderNames.ACCEPT, MimeType.APPLICATION_OCTET_STREAM.value());
+        if (StringUtils.isNotBlank(request.metadata().accessToken())) {
+            clientRequest.headers().add(FIT_ACCESS_TOKEN.value(), request.metadata().accessToken());
+        }
     }
 
     /**

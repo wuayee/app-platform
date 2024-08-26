@@ -26,9 +26,13 @@ struct MemoryStruct {
     Fit::string value;
 };
 
-static size_t MemoryCallback(void *contents, size_t size, size_t nmemb, void *user)
+static size_t MemoryCallback(void *contents, size_t size, size_t dataBlockNumber, void *user)
 {
-    size_t realSize = size * nmemb;
+    if (contents == nullptr || size == 0 || dataBlockNumber == 0) {
+        FIT_LOG_ERROR("Content is invalid, (size:dataBlockNumber) (%lu:%lu).", size, dataBlockNumber);
+        return 0;
+    }
+    size_t realSize = size * dataBlockNumber;
     struct MemoryStruct *mem = (struct MemoryStruct *)user;
     mem->value += Fit::string((char *)contents, realSize);
     return realSize;

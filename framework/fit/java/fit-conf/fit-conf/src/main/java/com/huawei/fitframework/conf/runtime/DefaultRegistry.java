@@ -26,7 +26,9 @@ public class DefaultRegistry implements Registry {
     private int protocol;
     private String environment;
     private List<DefaultAvailableService> availableServices;
+    private List<DefaultAvailableService> authRequiredServices;
     private Map<String, Object> extensions;
+    private DefaultSecureAccess secureAccess;
 
     /**
      * 设置主机地址的配置。
@@ -75,6 +77,25 @@ public class DefaultRegistry implements Registry {
     }
 
     /**
+     * 设置需要鉴权服务地址的配置列表。
+     *
+     * @param authRequiredServices 表示待设置的可用服务地址的配置列表的 {@link List}{@code <}{@link
+     * DefaultAvailableService}{@code >}。
+     */
+    public void setAuthRequiredServices(List<DefaultAvailableService> authRequiredServices) {
+        this.authRequiredServices = authRequiredServices;
+    }
+
+    /**
+     * 设置认证鉴权的配置。
+     *
+     * @param secureAccess 表示待设置的认证鉴权配置的 {@link SecureAccess}。
+     */
+    public void setSecureAccess(DefaultSecureAccess secureAccess) {
+        this.secureAccess = secureAccess;
+    }
+
+    /**
      * 设置扩展信息集合。
      *
      * @param extensions 表示待设置的扩展信息集合的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
@@ -117,6 +138,14 @@ public class DefaultRegistry implements Registry {
     }
 
     @Override
+    public List<AvailableService> authRequiredServices() {
+        if (this.authRequiredServices == null) {
+            return Collections.emptyList();
+        }
+        return Collections.unmodifiableList(this.authRequiredServices);
+    }
+
+    @Override
     public Map<String, Object> extensions() {
         if (this.extensions == null) {
             return Collections.emptyMap();
@@ -135,14 +164,22 @@ public class DefaultRegistry implements Registry {
     }
 
     @Override
+    public SecureAccess secureAccess() {
+        return this.secureAccess;
+    }
+
+    @Override
     public String toString() {
         return StringUtils.format("/{\"host\": \"{0}\", \"port\": {1}, \"protocol\": {2}, \"environment\": \"{3}\", "
-                        + "\"available-services\": {4}, \"extensions\": {5}/}",
+                        + "\"available-services\": {4}, \"auth-required-services\": {5}, \"extensions\": {6}, "
+                        + "\"secure-access\": {7}/}",
                 this.host,
                 this.port,
                 this.protocol,
                 this.environment,
                 this.availableServices,
-                this.extensions);
+                this.authRequiredServices,
+                this.extensions,
+                this.secureAccess);
     }
 }

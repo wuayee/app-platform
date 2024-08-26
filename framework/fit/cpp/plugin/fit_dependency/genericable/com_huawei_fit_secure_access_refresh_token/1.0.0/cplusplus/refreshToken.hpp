@@ -22,7 +22,7 @@ struct __RefreshToken {
 
 class RefreshToken : public ::Fit::Framework::ProxyClient<FitCode(__RefreshToken::InType, __RefreshToken::OutType)> {
 public:
-    static constexpr const char *GENERIC_ID = "81d53be622ef980c4df8fc2cd7b5ce79";
+    static constexpr const char *GENERIC_ID = "matata.registry.secure-access.refresh-token";
     RefreshToken() : ::Fit::Framework::ProxyClient<FitCode(__RefreshToken::InType, __RefreshToken::OutType)>(GENERIC_ID)
     {}
     explicit RefreshToken(ContextObj ctx)

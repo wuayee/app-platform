@@ -1,6 +1,6 @@
 {
     "genericables": {
-        "d1cf7d396a9d4c999d08f0e2205fb71b": {
+        "matata.registry.secure-access.get-token": {
             "name": "get_token",
             "fitables": {
                 "apply_token": {}
@@ -11,7 +11,7 @@
             "tags": "traceIgnored,trustIgnored,registry,localOnly",
             "genericable-config-sources": "config_file"
         },
-        "b594c4454da4e532cdb85b9c779a2c81": {
+        "matata.registry.secure-access.apply-token": {
             "name": "applyToken",
             "fitables": {
                 "apply_token": {}
@@ -22,7 +22,7 @@
             "tags": "traceIgnored,trustIgnored,registry",
             "genericable-config-sources": "config_file"
         },
-        "2d69e74d58e4acbb14baf961a3975185": {
+        "matata.registry.secure-access.is-authorized": {
             "name": "isAuthorized",
             "fitables": {
                 "is_authorized": {}
@@ -33,7 +33,7 @@
             "tags": "traceIgnored,trustIgnored,registry",
             "genericable-config-sources": "config_file"
         },
-        "81d53be622ef980c4df8fc2cd7b5ce79": {
+        "matata.registry.secure-access.refresh-token": {
             "name": "refreshToken",
             "fitables": {
                 "refresh_token_for_registry_server": {}
@@ -44,7 +44,7 @@
             "tags": "traceIgnored,trustIgnored,registry",
             "genericable-config-sources": "config_file"
         },
-        "a47083333e1bb92d139e08503aa6cb47": {
+        "matata.registry.secure-access.sign": {
             "name": "sign",
             "fitables": {
                 "sign_for_cpp": {}

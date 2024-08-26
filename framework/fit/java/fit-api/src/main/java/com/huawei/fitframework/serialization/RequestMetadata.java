@@ -63,6 +63,13 @@ public interface RequestMetadata {
     TagLengthValues tagValues();
 
     /**
+     * 获取请求的令牌。
+     *
+     * @return 表示请求令牌的 {@link String}。
+     */
+    String accessToken();
+
+    /**
      * 为 {@link RequestMetadata} 提供构建器。
      *
      * @author 季聿阶
@@ -116,6 +123,14 @@ public interface RequestMetadata {
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder tagValues(TagLengthValues tagLengthValues);
+
+        /**
+         * 向当前构建器中设置请求的令牌。
+         *
+         * @param accessToken 表示请求令牌的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder accessToken(String accessToken);
 
         /**
          * 构建一个远端服务调用的元数据信息。

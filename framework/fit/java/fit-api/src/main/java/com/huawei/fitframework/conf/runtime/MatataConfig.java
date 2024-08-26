@@ -71,6 +71,14 @@ public interface MatataConfig {
         List<AvailableService> availableServices();
 
         /**
+         * 获取 {@code 'matata.registry.auth-required-services'} 的配置项。
+         *
+         * @return 表示 {@code 'matata.registry.auth-required-services'} 的配置项的 {@link List}{@code
+         * <}{@link AvailableService}{@code >}。
+         */
+        List<AvailableService> authRequiredServices();
+
+        /**
          * 获取 {@code 'matata.registry.extensions'} 的配置项。
          *
          * @return 表示 {@code 'matata.registry.extensions'} 的配置项的
@@ -85,6 +93,13 @@ public interface MatataConfig {
          * {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
          */
         Map<String, String> visualExtensions();
+
+        /**
+         * 获取 {@code 'matata.registry.secure-access'} 的配置项。
+         *
+         * @return 表示 {@code 'matata.registry.secure-access'} 的配置项的 {@link SecureAccess}。
+         */
+        SecureAccess secureAccess();
 
         /**
          * 表示 {@code 'matata.registry'} 中关于可用服务的配置项。
@@ -147,6 +162,39 @@ public interface MatataConfig {
              * @return 表示服务实现的唯一标识的 {@link UniqueFitableId}。
              */
             UniqueFitableId toUniqueId();
+        }
+
+        /**
+         * 表示 {@code 'matata.registry'} 中关于认证鉴权的配置项。
+         */
+        interface SecureAccess {
+            /**
+             * 获取 {@code 'matata.registry.secure-access.enabled'} 的配置项。
+             *
+             * @return 表示 {@code 'matata.registry.secure-access.enabled'} 的配置项的 {@link Boolean}。
+             */
+            boolean enabled();
+
+            /**
+             * 获取 {@code 'matata.registry.secure-access.access-token'} 的配置项。
+             *
+             * @return 表示 {@code 'matata.registry.secure-access.access-token'} 的配置项的 {@link String}。
+             */
+            boolean encrypted();
+
+            /**
+             * 获取 {@code 'matata.registry.secure-access.access-key'} 的配置项。
+             *
+             * @return 表示 {@code 'matata.registry.secure-access.access-key'} 的配置项的 {@link String}。
+             */
+            String accessKey();
+
+            /**
+             * 获取 {@code 'matata.registry.secure-access.secret-key'} 的配置项。
+             *
+             * @return 表示 {@code 'matata.registry.secure-access.secret-key'} 的配置项的 {@link String}。
+             */
+            String secretKey();
         }
     }
 }
