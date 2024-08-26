@@ -8,6 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import com.huawei.fit.serialization.MessageSerializerTest;
+import com.huawei.fitframework.conf.Config;
+import com.huawei.fitframework.conf.support.PropertiesConfig;
 import com.huawei.fitframework.test.genericable.GenericableTestUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 
@@ -19,6 +21,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.lang.reflect.Method;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 /**
@@ -29,10 +32,14 @@ import java.util.stream.Stream;
  */
 @DisplayName("测试 MessageSerializer 的基本测试用例")
 public class MessageSerializerGenericableTest {
+    private Properties properties = new Properties();
+    private Config config = new PropertiesConfig("test", properties);
+
     private final MessageSerializerTest test =
             new MessageSerializerTest(() -> new JacksonMessageSerializer(new JacksonObjectSerializer(null,
                     null,
-                    null)));
+                    null),
+                    this.config));
 
     @BeforeEach
     void setup() {

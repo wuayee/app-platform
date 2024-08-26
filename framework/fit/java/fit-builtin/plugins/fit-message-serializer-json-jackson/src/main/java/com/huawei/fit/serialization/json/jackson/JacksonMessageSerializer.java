@@ -9,8 +9,10 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fit.serialization.MessageSerializer;
+import com.huawei.fit.serialization.util.MessageSerializerUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.serialization.SerializationException;
@@ -35,16 +37,19 @@ import java.lang.reflect.Type;
 public class JacksonMessageSerializer implements MessageSerializer {
     private final ObjectSerializer serializer;
     private final ObjectMapper mapper;
+    private final Config config;
 
     /**
      * 构造一个新的 {@link JacksonMessageSerializer} 实例。
      *
      * @param serializer 表示用于序列化和反序列化实例的 {@link ObjectSerializer}。
+     * @param config 表示配置的 {@link Config}。
      */
-    public JacksonMessageSerializer(@Fit(alias = "jackson") ObjectSerializer serializer) {
+    public JacksonMessageSerializer(@Fit(alias = "jackson") ObjectSerializer serializer, Config config) {
         this.serializer = notNull(serializer, "The Jackson serializer cannot be null.");
         JacksonObjectSerializer jacksonObjectSerializer = cast(this.serializer);
         this.mapper = jacksonObjectSerializer.getMapper();
+        this.config = notNull(config, "The message serializer config cannot be null.");
     }
 
     @Override
@@ -55,6 +60,7 @@ public class JacksonMessageSerializer implements MessageSerializer {
     @Override
     public Object[] deserializeRequest(Type[] argumentTypes, byte[] serialized) {
         ArrayNode array;
+        MessageSerializerUtils.isSupportedLength(serialized.length, this.config);
         try {
             array = this.mapper.readValue(serialized, ArrayNode.class);
         } catch (IOException e) {
@@ -82,6 +88,7 @@ public class JacksonMessageSerializer implements MessageSerializer {
         if (ArrayUtils.isEmpty(serialized)) {
             return null;
         }
+        MessageSerializerUtils.isSupportedLength(serialized.length, this.config);
         return this.serializer.deserialize(serialized, UTF_8, returnType);
     }
 

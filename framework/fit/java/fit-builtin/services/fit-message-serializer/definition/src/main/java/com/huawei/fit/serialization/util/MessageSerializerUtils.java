@@ -4,9 +4,13 @@
 
 package com.huawei.fit.serialization.util;
 
+import com.huawei.fit.serialization.Constants;
 import com.huawei.fit.serialization.MessageSerializer;
+import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanFactory;
+import com.huawei.fitframework.serialization.SerializationException;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +34,21 @@ public class MessageSerializerUtils {
         return getMessageSerializers(container).stream()
                 .filter(serializer -> serializer.getFormat() == format)
                 .findFirst();
+    }
+
+    /**
+     * 判断是否超过反序列化数据大小阈值。
+     *
+     * @param length 表示反序列化数据长度的 {@code long}。
+     * @param config 表示指定配置的 {@link Config}。
+     */
+    public static void isSupportedLength(long length, Config config) {
+        long largeDataSize = config.keys().contains(Constants.LARGE_DATA_SIZE) ? config.get(
+                Constants.LARGE_DATA_SIZE, Long.class) : 0L;
+        if (largeDataSize != 0L && length > largeDataSize) {
+            throw new SerializationException(StringUtils.format("The deserialized data size exceeds the threshold. "
+                    + "[largeDataSize={0}]", largeDataSize));
+        }
     }
 
     private static List<MessageSerializer> getMessageSerializers(BeanContainer container) {

@@ -6,8 +6,9 @@ package com.huawei.fit.serialization.cbor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.cbor.test.box.Box;
+import com.huawei.fitframework.conf.Config;
+import com.huawei.fitframework.conf.support.PropertiesConfig;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Properties;
 
 /**
  * 为 {@link CborMessageSerializer} 提供单元测试。
@@ -29,10 +31,13 @@ import java.util.Arrays;
  */
 public class CborMessageSerializerTest {
     private CborMessageSerializer cborMessageSerializer;
+    private Properties properties = new Properties();
+    private Config config = new PropertiesConfig("test", properties);
 
     @BeforeEach
     void setup() {
-        this.cborMessageSerializer = new CborMessageSerializer(new CborObjectSerializer());
+        this.cborMessageSerializer = new CborMessageSerializer(new CborObjectSerializer(),
+                this.config);
     }
 
     @AfterEach
@@ -53,7 +58,8 @@ public class CborMessageSerializerTest {
     @Nested
     @DisplayName("给定一个结构体对象")
     class GivenParamsAreCustom {
-        private final MessageSerializer messageSerializer = new CborMessageSerializer(new CborObjectSerializer());
+        private final CborMessageSerializer messageSerializer = new CborMessageSerializer(new CborObjectSerializer(),
+                CborMessageSerializerTest.this.config);
 
         private Type simpleGenericType;
 

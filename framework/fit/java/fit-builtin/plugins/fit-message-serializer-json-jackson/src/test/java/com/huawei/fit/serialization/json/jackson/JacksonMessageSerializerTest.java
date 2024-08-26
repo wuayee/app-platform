@@ -9,7 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.huawei.fit.serialization.test.box.Box;
 import com.huawei.fit.serialization.test.person.PersonAlias;
 import com.huawei.fit.serialization.test.person.PersonName;
+import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
+import com.huawei.fitframework.conf.support.PropertiesConfig;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -23,6 +25,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Properties;
 
 /**
  * 为 {@link JacksonMessageSerializer} 提供单元测试。
@@ -33,10 +36,14 @@ import java.util.Collections;
 @DisplayName("测试 JacksonMessageSerializer")
 public class JacksonMessageSerializerTest {
     private JacksonMessageSerializer messageSerializer;
+    private Properties properties = new Properties();
+    private Config config = new PropertiesConfig("test", properties);
 
     @BeforeEach
     void setup() {
-        this.messageSerializer = new JacksonMessageSerializer(new JacksonObjectSerializer(null, null, null));
+        this.messageSerializer = new JacksonMessageSerializer(
+                new JacksonObjectSerializer(null, null, null),
+                this.config);
     }
 
     @Test
