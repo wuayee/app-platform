@@ -4,6 +4,7 @@
 
 package modelengine.fel.engine.activities;
 
+import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
@@ -11,7 +12,6 @@ import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.states.DataStart;
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fel.engine.flows.AiProcessFlow;
 
 /**
  * 数据优先流的开始节点。

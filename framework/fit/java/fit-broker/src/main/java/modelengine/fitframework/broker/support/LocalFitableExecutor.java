@@ -5,7 +5,6 @@
 package modelengine.fitframework.broker.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.annotation.Alias;
 import modelengine.fitframework.broker.Fitable;

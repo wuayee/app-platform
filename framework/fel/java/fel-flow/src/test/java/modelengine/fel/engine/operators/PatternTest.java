@@ -4,24 +4,8 @@
 
 package modelengine.fel.engine.operators;
 
-import static modelengine.fel.engine.operators.patterns.SyncTipper.fewShot;
-import static modelengine.fel.engine.operators.patterns.SyncTipper.history;
-import static modelengine.fel.engine.operators.patterns.SyncTipper.question;
-import static modelengine.fel.engine.operators.patterns.SyncTipper.value;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.utils.IdGenerator;
-
-import modelengine.fel.engine.flows.AiFlows;
-import modelengine.fel.engine.flows.AiProcessFlow;
-import modelengine.fel.engine.flows.Conversation;
-import modelengine.fel.engine.operators.patterns.SimplePattern;
-import modelengine.fel.engine.operators.patterns.SyncTipper;
-import modelengine.fel.engine.operators.prompts.Prompts;
-import modelengine.fitframework.resource.web.Media;
-import modelengine.fitframework.util.CollectionUtils;
-import modelengine.fitframework.util.StringUtils;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.Prompt;
@@ -33,7 +17,18 @@ import modelengine.fel.core.memory.Memory;
 import modelengine.fel.core.retriever.Retriever;
 import modelengine.fel.core.template.MessageContent;
 import modelengine.fel.core.util.Tip;
+import modelengine.fel.engine.flows.AiFlows;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.flows.Conversation;
+import modelengine.fel.engine.operators.patterns.SimplePattern;
+import modelengine.fel.engine.operators.patterns.SyncTipper;
+import modelengine.fel.engine.operators.prompts.Prompts;
 import modelengine.fel.engine.util.AiFlowSession;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.utils.IdGenerator;
+import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.Test;
 

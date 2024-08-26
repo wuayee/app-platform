@@ -21,7 +21,6 @@ import modelengine.fit.http.protocol.MimeType;
 import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.ServerRequest;
-
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.ObjectUtils;
 

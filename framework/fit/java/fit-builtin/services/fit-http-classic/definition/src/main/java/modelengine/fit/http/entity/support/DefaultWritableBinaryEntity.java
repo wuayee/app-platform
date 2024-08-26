@@ -10,7 +10,6 @@ import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.entity.WritableBinaryEntity;
 import modelengine.fit.http.protocol.MimeType;
 import modelengine.fit.http.protocol.ServerResponse;
-
 import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;

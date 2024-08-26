@@ -6,7 +6,6 @@ package modelengine.fel.engine.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.flows.AiFlows;
@@ -14,6 +13,7 @@ import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.flows.ConverseLatch;
 import modelengine.fel.engine.operators.prompts.Prompts;
 import modelengine.fel.engine.operators.sources.Source;
+import modelengine.fit.waterflow.domain.utils.SleepUtil;
 
 import org.junit.jupiter.api.Test;
 

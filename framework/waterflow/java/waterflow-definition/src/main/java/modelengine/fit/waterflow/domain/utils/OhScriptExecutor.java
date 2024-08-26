@@ -7,6 +7,8 @@ package modelengine.fit.waterflow.domain.utils;
 import static modelengine.fit.waterflow.domain.common.Constant.BUSINESS_DATA_KEY;
 import static modelengine.fit.waterflow.domain.common.Constant.PASS_DATA;
 
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.ohscript.script.errors.GrammarSyntaxException;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
@@ -20,8 +22,6 @@ import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.context.FlowData;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

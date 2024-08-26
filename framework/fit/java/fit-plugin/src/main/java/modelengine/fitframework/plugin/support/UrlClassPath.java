@@ -10,7 +10,6 @@ import modelengine.fitframework.protocol.jar.JarCache;
 import modelengine.fitframework.protocol.jar.JarLocation;
 import modelengine.fitframework.util.LockUtils;
 import modelengine.fitframework.util.StringUtils;
-
 import sun.misc.Resource;
 import sun.net.www.ParseUtil;
 

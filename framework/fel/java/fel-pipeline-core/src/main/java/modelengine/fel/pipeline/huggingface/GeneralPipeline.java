@@ -5,9 +5,8 @@
 package modelengine.fel.pipeline.huggingface;
 
 import modelengine.fel.pipeline.Pipeline;
-import modelengine.fitframework.inspection.Validation;
-
 import modelengine.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Map;
 

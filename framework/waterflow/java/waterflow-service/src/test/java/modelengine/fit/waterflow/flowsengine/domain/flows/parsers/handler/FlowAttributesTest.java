@@ -4,11 +4,11 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.handler;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.FlowAttributes;
-import modelengine.fitframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.FlowAttributes;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -4,8 +4,6 @@
 
 package modelengine.fel.engine.operators.models;
 
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatModelService;
 import modelengine.fel.chat.ChatOptions;
@@ -17,6 +15,8 @@ import modelengine.fel.core.memory.Memory;
 import modelengine.fel.core.model.BlockModel;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fel.engine.util.StateKey;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Optional;
 

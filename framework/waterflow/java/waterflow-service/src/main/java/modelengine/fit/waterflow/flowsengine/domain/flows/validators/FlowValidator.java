@@ -7,12 +7,12 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.validators;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.FlowRule;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 

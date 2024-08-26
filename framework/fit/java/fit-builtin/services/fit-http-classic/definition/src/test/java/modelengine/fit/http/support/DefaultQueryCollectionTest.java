@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fit.http.QueryCollection;
 import modelengine.fit.http.header.ConfigurableCookieCollection;
-import modelengine.fit.http.support.DefaultQueryCollection;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

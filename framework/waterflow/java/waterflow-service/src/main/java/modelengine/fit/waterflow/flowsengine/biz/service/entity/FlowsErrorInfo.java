@@ -4,11 +4,10 @@
 
 package modelengine.fit.waterflow.flowsengine.biz.service.entity;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.context.ContextErrorInfo;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.ContextErrorInfo;
 
 import java.util.Map;
 

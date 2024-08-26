@@ -6,6 +6,7 @@ package modelengine.fit.waterflow.domain.enums;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.parsers.nodes.ConditionNodeParser;
 import modelengine.fit.waterflow.domain.parsers.nodes.EndNodeParser;
@@ -20,8 +21,6 @@ import modelengine.fit.waterflow.domain.validators.rules.nodes.NodeRule;
 import modelengine.fit.waterflow.domain.validators.rules.nodes.ParallelNodeRule;
 import modelengine.fit.waterflow.domain.validators.rules.nodes.StartNodeRule;
 import modelengine.fit.waterflow.domain.validators.rules.nodes.StateNodeRule;
-
-import lombok.Getter;
 
 import java.util.Arrays;
 

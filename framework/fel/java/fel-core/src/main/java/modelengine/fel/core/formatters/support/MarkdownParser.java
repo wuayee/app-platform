@@ -4,9 +4,9 @@
 
 package modelengine.fel.core.formatters.support;
 
+import modelengine.fel.core.formatters.OutputParser;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.core.formatters.OutputParser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

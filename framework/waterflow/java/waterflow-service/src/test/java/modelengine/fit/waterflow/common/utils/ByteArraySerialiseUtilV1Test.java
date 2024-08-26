@@ -4,10 +4,10 @@
 
 package modelengine.fit.waterflow.common.utils;
 
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

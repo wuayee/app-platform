@@ -4,8 +4,8 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.core.Pattern;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.function.Function;
 

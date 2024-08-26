@@ -14,7 +14,6 @@ import modelengine.fit.http.protocol.util.SslUtils;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.LockUtils;
 import modelengine.fitframework.util.StringUtils;
-
 import okhttp3.OkHttpClient;
 
 import java.security.GeneralSecurityException;

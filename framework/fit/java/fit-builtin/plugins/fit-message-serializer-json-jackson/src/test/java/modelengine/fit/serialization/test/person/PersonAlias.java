@@ -4,9 +4,9 @@
 
 package modelengine.fit.serialization.test.person;
 
-import modelengine.fitframework.annotation.Property;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 为单元测试提供人的信息定义。

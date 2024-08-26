@@ -11,9 +11,9 @@ import modelengine.fit.http.entity.EntitySerializer;
 import modelengine.fit.http.header.ContentType;
 import modelengine.fit.http.header.CookieCollection;
 import modelengine.fit.http.protocol.HttpVersion;
+import modelengine.fit.http.protocol.MessageHeaderValues;
 import modelengine.fit.http.protocol.MessageHeaders;
 import modelengine.fit.http.protocol.MimeType;
-import modelengine.fit.http.protocol.MessageHeaderValues;
 import modelengine.fitframework.serialization.ObjectSerializer;
 
 import java.lang.reflect.Type;

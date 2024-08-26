@@ -4,13 +4,6 @@
 
 package modelengine.fel.engine.operators.models;
 
-import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
-import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fitframework.flowable.Choir;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.StringUtils;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatModelStreamService;
 import modelengine.fel.chat.ChatOptions;
@@ -18,6 +11,13 @@ import modelengine.fel.chat.Prompt;
 import modelengine.fel.chat.protocol.ChatCompletion;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fel.engine.util.StateKey;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Optional;
 

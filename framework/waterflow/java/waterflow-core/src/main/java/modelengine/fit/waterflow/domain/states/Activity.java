@@ -4,9 +4,8 @@
 
 package modelengine.fit.waterflow.domain.states;
 
-import modelengine.fit.waterflow.domain.flow.Flow;
-
 import lombok.Getter;
+import modelengine.fit.waterflow.domain.flow.Flow;
 
 /**
  * 所有activity基类

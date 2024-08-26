@@ -10,7 +10,6 @@ import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.proxy.RequestBuilder;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.protocol.HttpRequestMethod;
-
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.model.MultiValueMap;
 import modelengine.fitframework.model.support.DefaultMultiValueMap;

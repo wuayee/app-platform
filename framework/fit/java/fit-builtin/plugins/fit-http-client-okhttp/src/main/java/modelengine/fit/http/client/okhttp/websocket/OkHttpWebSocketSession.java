@@ -13,7 +13,6 @@ import modelengine.fit.http.websocket.Session;
 import modelengine.fit.http.websocket.client.WebSocketClassicListener;
 import modelengine.fit.http.websocket.client.support.EmptyWebSocketListener;
 import modelengine.fit.http.websocket.support.AbstractSession;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;

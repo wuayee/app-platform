@@ -8,9 +8,8 @@ import modelengine.fit.waterflow.common.ErrorCodes;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowTrace;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.List;
 import java.util.Set;

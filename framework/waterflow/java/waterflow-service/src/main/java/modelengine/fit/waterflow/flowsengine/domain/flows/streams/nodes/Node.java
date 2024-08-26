@@ -12,12 +12,11 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowconte
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.ParallelMode;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.From;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.Identity;
-import modelengine.fit.waterflow.flowsengine.domain.flows.streams.To;
-
-import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.Processors;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.To;
 
 import java.util.List;
 import java.util.function.Supplier;

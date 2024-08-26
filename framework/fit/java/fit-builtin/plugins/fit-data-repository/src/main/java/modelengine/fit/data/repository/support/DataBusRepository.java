@@ -17,6 +17,7 @@ import com.huawei.databus.sdk.support.OpenConnectionResult;
 import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
+
 import modelengine.fit.data.repository.entity.Metadata;
 import modelengine.fit.data.repository.entity.MetadataType;
 import modelengine.fitframework.log.Logger;

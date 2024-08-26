@@ -15,7 +15,6 @@ import modelengine.fit.http.client.proxy.HttpEmitter;
 import modelengine.fit.http.client.proxy.PropertyValueApplier;
 import modelengine.fit.http.client.proxy.RequestBuilder;
 import modelengine.fit.http.protocol.HttpRequestMethod;
-
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.StringUtils;
 

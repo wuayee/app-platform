@@ -12,7 +12,6 @@ import modelengine.fit.http.entity.MultiValueEntity;
 import modelengine.fit.http.entity.support.DefaultMultiValueEntity;
 import modelengine.fit.http.protocol.util.BodyUtils;
 import modelengine.fit.http.util.HttpUtils;
-
 import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;

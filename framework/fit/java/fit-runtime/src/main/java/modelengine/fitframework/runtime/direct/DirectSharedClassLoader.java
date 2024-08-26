@@ -4,13 +4,9 @@
 
 package modelengine.fitframework.runtime.direct;
 
-import static modelengine.fitframework.util.ObjectUtils.as;
-
 import modelengine.fitframework.jvm.ClassDeclaration;
 import modelengine.fitframework.jvm.classfile.ClassFile;
 import modelengine.fitframework.resource.ClassPath;
-import modelengine.fitframework.resource.ResourceTree.FileNode;
-import modelengine.fitframework.resource.ResourceTree.Node;
 import modelengine.fitframework.resource.ResourceTree;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;

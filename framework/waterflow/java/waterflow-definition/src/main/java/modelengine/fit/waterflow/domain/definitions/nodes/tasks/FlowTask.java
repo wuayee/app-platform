@@ -4,12 +4,11 @@
 
 package modelengine.fit.waterflow.domain.definitions.nodes.tasks;
 
-import modelengine.fit.waterflow.domain.enums.FlowTaskType;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import modelengine.fit.waterflow.domain.enums.FlowTaskType;
 
 import java.util.Map;
 import java.util.Set;

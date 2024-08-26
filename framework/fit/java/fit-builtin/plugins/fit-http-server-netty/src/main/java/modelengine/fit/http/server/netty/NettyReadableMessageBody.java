@@ -6,14 +6,13 @@ package modelengine.fit.http.server.netty;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
+import io.netty.buffer.ByteBuf;
 import modelengine.fit.http.protocol.support.AbstractReadableMessageBody;
 import modelengine.fit.http.server.netty.support.CompositeByteBufReadableMessageBody;
 import modelengine.fit.http.server.netty.support.FileChannelReadableMessageBody;
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.util.LockUtils;
 import modelengine.fitframework.util.ThreadUtils;
-
-import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Condition;

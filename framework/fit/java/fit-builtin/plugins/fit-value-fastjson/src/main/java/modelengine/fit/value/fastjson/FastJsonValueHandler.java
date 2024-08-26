@@ -4,12 +4,12 @@
 
 package modelengine.fit.value.fastjson;
 
+import com.alibaba.fastjson.JSONPath;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.value.ValueFetcher;
 import modelengine.fitframework.value.ValueSetter;
-
-import com.alibaba.fastjson.JSONPath;
 
 /**
  * {@link ValueFetcher} 的 fastjson 的实现。

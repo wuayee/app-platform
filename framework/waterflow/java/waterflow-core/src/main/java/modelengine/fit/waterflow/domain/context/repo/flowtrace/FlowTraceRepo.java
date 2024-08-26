@@ -5,7 +5,6 @@
 package modelengine.fit.waterflow.domain.context.repo.flowtrace;
 
 import modelengine.fit.waterflow.domain.context.FlowTrace;
-
 import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 
 import java.util.List;

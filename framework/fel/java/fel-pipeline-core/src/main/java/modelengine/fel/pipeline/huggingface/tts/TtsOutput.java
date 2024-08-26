@@ -4,10 +4,9 @@
 
 package modelengine.fel.pipeline.huggingface.tts;
 
+import lombok.Data;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.resource.web.Media;
-
-import lombok.Data;
 
 /**
  * 表示语音合成任务的输出参数。

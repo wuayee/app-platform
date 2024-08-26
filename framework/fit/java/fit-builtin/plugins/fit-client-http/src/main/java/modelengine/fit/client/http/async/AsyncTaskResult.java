@@ -5,9 +5,8 @@
 package modelengine.fit.client.http.async;
 
 import modelengine.fit.client.Response;
-import modelengine.fit.http.exception.AsyncTaskExecutionException;
-
 import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.exception.AsyncTaskExecutionException;
 import modelengine.fitframework.serialization.ResponseMetadata;
 
 /**

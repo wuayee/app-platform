@@ -4,7 +4,6 @@
 
 package modelengine.fitframework.util.wildcard;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;

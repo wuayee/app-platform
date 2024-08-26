@@ -6,8 +6,8 @@ package modelengine.fit.waterflow.domain.parsers.nodes.filters;
 
 import modelengine.fit.waterflow.domain.definitions.nodes.filters.FlowFilter;
 import modelengine.fit.waterflow.domain.definitions.nodes.filters.FlowTransBatchSizeFilter;
-import modelengine.fit.waterflow.domain.parsers.FlowGraphData;
 import modelengine.fit.waterflow.domain.enums.FlowFilterType;
+import modelengine.fit.waterflow.domain.parsers.FlowGraphData;
 
 /**
  * ClassName

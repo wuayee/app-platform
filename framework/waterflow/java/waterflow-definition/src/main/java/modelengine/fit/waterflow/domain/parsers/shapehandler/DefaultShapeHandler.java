@@ -4,9 +4,9 @@
 
 package modelengine.fit.waterflow.domain.parsers.shapehandler;
 
-import modelengine.fitframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONObject;
+
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.Map;

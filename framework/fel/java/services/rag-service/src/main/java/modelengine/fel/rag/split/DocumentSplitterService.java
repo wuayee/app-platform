@@ -4,9 +4,9 @@
 
 package modelengine.fel.rag.split;
 
-import modelengine.fitframework.annotation.Genericable;
 import modelengine.fel.rag.protocol.FlatChunk;
 import modelengine.fel.rag.protocol.FlatDocument;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 

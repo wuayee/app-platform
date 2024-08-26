@@ -6,14 +6,14 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import com.alibaba.fastjson.JSON;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowGenericableJober;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberProperties;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberType;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSON;
 
 import java.util.List;
 import java.util.Map;

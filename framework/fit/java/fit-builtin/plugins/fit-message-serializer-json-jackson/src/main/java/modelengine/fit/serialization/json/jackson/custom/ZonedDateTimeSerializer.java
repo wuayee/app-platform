@@ -6,12 +6,12 @@ package modelengine.fit.serialization.json.jackson.custom;
 
 import static modelengine.fitframework.util.StringUtils.blankIf;
 
-import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
-import modelengine.fitframework.util.StringUtils;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.time.ZoneId;

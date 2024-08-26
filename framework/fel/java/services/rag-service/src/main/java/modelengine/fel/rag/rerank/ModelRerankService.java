@@ -4,8 +4,8 @@
 
 package modelengine.fel.rag.rerank;
 
-import modelengine.fitframework.annotation.Genericable;
 import modelengine.fel.rag.protocol.FlatChunk;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 

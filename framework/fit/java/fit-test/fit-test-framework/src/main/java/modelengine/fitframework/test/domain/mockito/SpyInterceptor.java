@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.test.domain.mockito;
 
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
-
 import modelengine.fitframework.annotation.Order;
 import modelengine.fitframework.ioc.BeanMetadata;
 import modelengine.fitframework.ioc.lifecycle.bean.BeanLifecycle;

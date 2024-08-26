@@ -9,8 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.http.entity.FileEntity;
-import modelengine.fit.security.http.name.FileNameValidateConfig;
 import modelengine.fit.security.http.FitSecurityException;
+import modelengine.fit.security.http.name.FileNameValidateConfig;
 import modelengine.fit.security.http.support.FileNameException;
 
 import org.junit.jupiter.api.DisplayName;

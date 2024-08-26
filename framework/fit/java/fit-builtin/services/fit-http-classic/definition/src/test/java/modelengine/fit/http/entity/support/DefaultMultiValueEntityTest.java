@@ -6,7 +6,6 @@ package modelengine.fit.http.entity.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fit.http.entity.support.DefaultMultiValueEntity;
 import modelengine.fit.http.server.handler.MockHttpClassicServerRequest;
 import modelengine.fit.http.server.support.DefaultHttpClassicServerRequest;
 import modelengine.fitframework.model.MultiValueMap;

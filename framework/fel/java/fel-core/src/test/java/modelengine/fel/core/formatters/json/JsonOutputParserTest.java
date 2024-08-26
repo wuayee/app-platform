@@ -6,13 +6,13 @@ package modelengine.fel.core.formatters.json;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import modelengine.fel.core.formatters.OutputParser;
+import modelengine.fel.core.formatters.Parser;
+import modelengine.fel.core.formatters.support.MarkdownParser;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.TypeUtils;
-import modelengine.fel.core.formatters.OutputParser;
-import modelengine.fel.core.formatters.Parser;
-import modelengine.fel.core.formatters.support.MarkdownParser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

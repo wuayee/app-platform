@@ -6,7 +6,6 @@ package modelengine.fitframework.serialization.tlv;
 
 import static modelengine.fitframework.inspection.Validation.isTrue;
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.ReflectionUtils;

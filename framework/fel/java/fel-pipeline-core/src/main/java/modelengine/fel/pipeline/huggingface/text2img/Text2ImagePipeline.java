@@ -6,9 +6,8 @@ package modelengine.fel.pipeline.huggingface.text2img;
 
 import modelengine.fel.pipeline.huggingface.ExplicitPipeline;
 import modelengine.fel.pipeline.huggingface.PipelineTask;
-import modelengine.fitframework.resource.web.Media;
-
 import modelengine.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fitframework.resource.web.Media;
 
 import java.util.List;
 

@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.operators.patterns;
 
+import modelengine.fel.core.Pattern;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
-import modelengine.fel.core.Pattern;
 
 /**
  * 流程委托单元。

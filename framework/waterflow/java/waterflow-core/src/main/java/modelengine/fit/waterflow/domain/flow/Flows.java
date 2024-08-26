@@ -4,6 +4,7 @@
 
 package modelengine.fit.waterflow.domain.flow;
 
+import lombok.Setter;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMemoMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMemoRepo;
@@ -14,8 +15,6 @@ import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocksMemo;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.states.DataStart;
 import modelengine.fit.waterflow.domain.states.Start;
-
-import lombok.Setter;
 
 /**
  * 用于工程师编程交互的Flow API集合

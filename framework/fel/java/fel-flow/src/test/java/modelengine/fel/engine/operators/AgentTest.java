@@ -7,15 +7,6 @@ package modelengine.fel.engine.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import modelengine.fel.engine.flows.AiFlows;
-import modelengine.fel.engine.flows.AiProcessFlow;
-import modelengine.fel.engine.flows.Conversation;
-import modelengine.fel.engine.operators.models.ChatChunk;
-import modelengine.fel.engine.operators.models.StreamingConsumer;
-import modelengine.fel.engine.operators.patterns.AbstractAgent;
-import modelengine.fel.engine.operators.patterns.DefaultStreamAgent;
-import modelengine.fel.engine.operators.prompts.Prompts;
-import modelengine.fitframework.flowable.Choir;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatModelStreamService;
 import modelengine.fel.chat.ChatOptions;
@@ -25,10 +16,18 @@ import modelengine.fel.chat.character.ToolMessage;
 import modelengine.fel.chat.protocol.FlatChatMessage;
 import modelengine.fel.core.memory.CacheMemory;
 import modelengine.fel.core.util.Tip;
-
+import modelengine.fel.engine.flows.AiFlows;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.flows.Conversation;
+import modelengine.fel.engine.operators.models.ChatChunk;
+import modelengine.fel.engine.operators.models.StreamingConsumer;
+import modelengine.fel.engine.operators.patterns.AbstractAgent;
+import modelengine.fel.engine.operators.patterns.DefaultStreamAgent;
+import modelengine.fel.engine.operators.prompts.Prompts;
 import modelengine.fel.tool.Tool;
 import modelengine.fel.tool.ToolCall;
 import modelengine.fel.tool.ToolProvider;
+import modelengine.fitframework.flowable.Choir;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -4,9 +4,8 @@
 
 package modelengine.fit.waterflow.domain.enums;
 
-import modelengine.fitframework.util.StringUtils;
-
 import lombok.Getter;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Optional;

@@ -8,12 +8,12 @@ import static modelengine.fitframework.datasource.support.FitDataSourceConfig.IN
 import static modelengine.fitframework.datasource.support.FitDataSourceConfig.PRIMARY_MODE;
 import static modelengine.fitframework.datasource.support.FitDataSourceConfig.SEPARATOR;
 
+import com.alibaba.druid.pool.DruidDataSourceFactory;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.datasource.support.AbstractFitDataSource;
 import modelengine.fitframework.ioc.BeanContainer;
-
-import com.alibaba.druid.pool.DruidDataSourceFactory;
 
 import java.util.Properties;
 import java.util.Set;

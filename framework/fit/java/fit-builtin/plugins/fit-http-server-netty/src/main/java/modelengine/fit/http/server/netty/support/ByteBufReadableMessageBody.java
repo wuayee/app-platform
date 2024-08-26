@@ -4,11 +4,10 @@
 
 package modelengine.fit.http.server.netty.support;
 
+import io.netty.buffer.ByteBuf;
 import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 import modelengine.fitframework.inspection.Nonnull;
-
-import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 import java.util.Deque;

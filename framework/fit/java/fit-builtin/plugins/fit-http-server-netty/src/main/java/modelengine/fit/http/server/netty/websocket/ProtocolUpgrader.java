@@ -8,6 +8,13 @@ import static modelengine.fit.http.HttpClassicRequestAttribute.PATH_PATTERN;
 import static modelengine.fit.http.protocol.MessageHeaderValues.WEBSOCKET;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import modelengine.fit.http.protocol.MessageHeaderNames;
 import modelengine.fit.http.protocol.MessageHeaderValues;
 import modelengine.fit.http.server.HttpClassicServer;
@@ -16,14 +23,6 @@ import modelengine.fit.http.server.netty.NettyHttpServerRequest;
 import modelengine.fit.http.server.support.DefaultHttpClassicServerRequest;
 import modelengine.fit.http.websocket.server.WebSocketHandler;
 import modelengine.fitframework.util.StringUtils;
-
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
 /**
  * 表示 Http 协议的升级处理器。

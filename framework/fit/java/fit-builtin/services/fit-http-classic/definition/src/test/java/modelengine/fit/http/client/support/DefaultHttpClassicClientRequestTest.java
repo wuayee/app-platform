@@ -25,7 +25,6 @@ import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.support.DefaultClientResponse;
 import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
 import modelengine.fit.http.protocol.support.DefaultRequestLine;
-
 import modelengine.fitframework.model.MultiValueMap;
 import modelengine.fitframework.model.support.DefaultMultiValueMap;
 

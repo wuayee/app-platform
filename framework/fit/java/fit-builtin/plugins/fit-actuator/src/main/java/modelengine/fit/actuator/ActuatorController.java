@@ -16,7 +16,6 @@ import modelengine.fit.http.annotation.DocumentIgnored;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.RequestQuery;
-
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.Endpoint;
 import modelengine.fitframework.broker.Fitable;

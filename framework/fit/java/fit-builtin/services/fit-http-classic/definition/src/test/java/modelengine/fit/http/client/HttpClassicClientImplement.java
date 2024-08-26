@@ -14,7 +14,6 @@ import modelengine.fit.http.entity.TextEntity;
 import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.websocket.Session;
 import modelengine.fit.http.websocket.client.WebSocketClassicListener;
-
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.value.ValueFetcher;
 

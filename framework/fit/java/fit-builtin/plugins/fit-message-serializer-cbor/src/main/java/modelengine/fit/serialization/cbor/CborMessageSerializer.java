@@ -4,8 +4,8 @@
 
 package modelengine.fit.serialization.cbor;
 
-import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fit.serialization.util.MessageSerializerUtils;

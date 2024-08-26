@@ -7,6 +7,11 @@ package modelengine.fit.waterflow.domain.definitions;
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_FIND_TO_NODE_BY_EVENT_FAILED;
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_HAS_NO_START_NODE;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fit.waterflow.domain.context.FlowData;
@@ -20,12 +25,6 @@ import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.utils.WaterFlows;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.HashSet;

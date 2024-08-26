@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.ohscript.fixture.ExternalCall;
 import modelengine.fit.ohscript.fixture.Female;
 import modelengine.fit.ohscript.fixture.Human;
@@ -27,8 +29,6 @@ import modelengine.fit.ohscript.script.parser.ParserBuilder;
 import modelengine.fit.ohscript.util.EmptyValue;
 import modelengine.fit.ohscript.util.TestResource;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSONObject;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

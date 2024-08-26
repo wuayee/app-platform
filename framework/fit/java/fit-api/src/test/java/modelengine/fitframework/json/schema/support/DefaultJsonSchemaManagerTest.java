@@ -4,7 +4,6 @@
 
 package modelengine.fitframework.json.schema.support;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fitframework.annotation.Property;

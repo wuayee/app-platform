@@ -4,12 +4,11 @@
 
 package modelengine.fel.chat;
 
-import modelengine.fel.tool.Tool;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fel.tool.Tool;
 
 import java.util.List;
 

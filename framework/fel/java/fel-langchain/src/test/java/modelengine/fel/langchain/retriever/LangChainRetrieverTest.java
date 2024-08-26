@@ -6,9 +6,9 @@ package modelengine.fel.langchain.retriever;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fitframework.util.MapBuilder;
 import modelengine.fel.retrieve.Document;
 import modelengine.fel.service.langchain.LangChainRunnableService;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

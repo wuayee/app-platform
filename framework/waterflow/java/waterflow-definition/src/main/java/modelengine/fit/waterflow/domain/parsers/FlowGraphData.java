@@ -4,18 +4,18 @@
 
 package modelengine.fit.waterflow.domain.parsers;
 
+import static java.util.Locale.ROOT;
 import static modelengine.fit.waterflow.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static modelengine.fit.waterflow.domain.enums.FlowNodeType.EVENT;
-import static java.util.Locale.ROOT;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
 import java.util.HashSet;

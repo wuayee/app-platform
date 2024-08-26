@@ -4,10 +4,9 @@
 
 package modelengine.fit.waterflow.domain.events;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fitframework.event.Event;
-
-import lombok.Getter;
 
 import java.util.List;
 

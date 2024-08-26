@@ -4,12 +4,12 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.extractors;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.extractors.ConditionParamsExtractor;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

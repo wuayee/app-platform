@@ -4,15 +4,14 @@
 
 package modelengine.fel.langchain.retriever;
 
-import modelengine.fel.langchain.runnable.LangChainRunnable;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fel.core.retriever.Retriever;
-
+import modelengine.fel.langchain.runnable.LangChainRunnable;
 import modelengine.fel.retrieve.Document;
 import modelengine.fel.retrieve.TextDocument;
 import modelengine.fel.service.langchain.LangChainRunnableService;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;

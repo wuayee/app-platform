@@ -15,8 +15,8 @@ import modelengine.fit.ohscript.script.parser.nodes.NonTerminalNode;
 import modelengine.fit.ohscript.script.parser.nodes.ScriptNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.util.Tool;
 import modelengine.fit.ohscript.util.Constants;
+import modelengine.fit.ohscript.util.Tool;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;

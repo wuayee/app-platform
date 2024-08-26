@@ -7,10 +7,10 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.enums;
 import static com.huawei.fit.jober.common.ErrorCodes.ENUM_CONVERT_FAILED;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.converter.FlowDataConverterParser;
-import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.converter.MappingFlowDataConverterParser;
 
 import lombok.Getter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.converter.FlowDataConverterParser;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.converter.MappingFlowDataConverterParser;
 
 import java.util.Arrays;
 import java.util.Locale;

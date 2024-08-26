@@ -6,7 +6,6 @@ package modelengine.fit.waterflow.domain.definitions.nodes.jobers;
 
 import modelengine.fit.waterflow.domain.context.FlowData;
 import modelengine.fit.waterflow.spi.WaterflowTaskHandler;
-
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
 import modelengine.fitframework.log.Logger;
 

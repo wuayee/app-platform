@@ -4,8 +4,8 @@
 
 package modelengine.fel.engine.operators.models;
 
-import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
 import modelengine.fel.core.model.Model;
+import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
 
 /**
  * 流式模型。

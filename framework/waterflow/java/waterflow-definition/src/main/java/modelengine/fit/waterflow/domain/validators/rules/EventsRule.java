@@ -9,7 +9,6 @@ import modelengine.fit.waterflow.domain.definitions.FlowDefinition;
 import modelengine.fit.waterflow.domain.definitions.nodes.FlowNode;
 import modelengine.fit.waterflow.domain.definitions.nodes.events.FlowEvent;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
-
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 

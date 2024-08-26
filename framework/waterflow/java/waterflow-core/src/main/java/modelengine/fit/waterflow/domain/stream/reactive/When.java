@@ -4,16 +4,15 @@
 
 package modelengine.fit.waterflow.domain.stream.reactive;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.enums.ProcessType;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fitframework.util.CollectionUtils;
-
-import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;

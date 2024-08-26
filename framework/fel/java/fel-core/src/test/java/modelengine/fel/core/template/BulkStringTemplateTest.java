@@ -7,8 +7,8 @@ package modelengine.fel.core.template;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import modelengine.fitframework.util.MapBuilder;
 import modelengine.fel.core.template.support.DefaultBulkStringTemplate;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

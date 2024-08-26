@@ -12,7 +12,6 @@ import modelengine.fitframework.parameterization.ParameterizedStringResolver;
 import modelengine.fitframework.parameterization.ResolvedParameter;
 import modelengine.fitframework.plugin.maven.support.AbstractExecutor;
 import modelengine.fitframework.plugin.maven.support.SharedDependency;
-import modelengine.fitframework.protocol.jar.Jar.Entry;
 import modelengine.fitframework.protocol.jar.Jar;
 import modelengine.fitframework.protocol.jar.JarEntryLocation;
 import modelengine.fitframework.util.FileUtils;

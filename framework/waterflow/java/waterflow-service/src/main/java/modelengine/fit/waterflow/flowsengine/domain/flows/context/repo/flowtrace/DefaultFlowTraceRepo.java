@@ -6,14 +6,13 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrac
 
 import static modelengine.fit.waterflow.common.Constant.TRACE_EXCLUSIVE_STATUS_MAP;
 
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowTrace;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
 import modelengine.fit.waterflow.flowsengine.persist.po.FlowTracePO;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

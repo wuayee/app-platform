@@ -6,6 +6,11 @@ package modelengine.fit.http.server.netty;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.LastHttpContent;
 import modelengine.fit.http.protocol.Address;
 import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
 import modelengine.fit.http.protocol.HttpRequestMethod;
@@ -16,12 +21,6 @@ import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.ServerRequest;
 import modelengine.fit.http.protocol.util.HeaderUtils;
 import modelengine.fitframework.util.ObjectUtils;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.LastHttpContent;
 
 import java.io.IOException;
 import java.io.InputStream;

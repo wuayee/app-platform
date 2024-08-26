@@ -4,14 +4,14 @@
 
 package modelengine.fel.engine.operators.patterns;
 
+import modelengine.fel.core.Pattern;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.LazyLoader;
-import modelengine.fel.core.Pattern;
-import modelengine.fel.engine.flows.AiProcessFlow;
-import modelengine.fel.engine.util.AiFlowSession;
 
 /**
  * 流程委托单元。

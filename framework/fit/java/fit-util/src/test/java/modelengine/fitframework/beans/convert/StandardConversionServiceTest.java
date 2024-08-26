@@ -4,7 +4,6 @@
 
 package modelengine.fitframework.beans.convert;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 

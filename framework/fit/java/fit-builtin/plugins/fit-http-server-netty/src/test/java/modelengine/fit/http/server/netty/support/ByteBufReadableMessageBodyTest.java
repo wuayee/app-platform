@@ -7,10 +7,9 @@ package modelengine.fit.http.server.netty.support;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
-import modelengine.fit.http.server.netty.NettyReadableMessageBody;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

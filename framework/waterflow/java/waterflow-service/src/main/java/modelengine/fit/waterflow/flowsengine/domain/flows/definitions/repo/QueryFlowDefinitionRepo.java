@@ -4,13 +4,12 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.repo;
 
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.flowsengine.persist.entity.FlowStreamInfo;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
 import modelengine.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
 import modelengine.fitframework.annotation.Component;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;

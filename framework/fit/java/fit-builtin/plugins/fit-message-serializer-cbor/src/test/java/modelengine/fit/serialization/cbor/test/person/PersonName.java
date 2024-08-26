@@ -4,9 +4,8 @@
 
 package modelengine.fit.serialization.cbor.test.person;
 
-import modelengine.fitframework.util.StringUtils;
-
 import lombok.Data;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 为单元测试提供人名的信息定义。

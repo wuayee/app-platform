@@ -6,6 +6,7 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
@@ -23,8 +24,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.utils.FlowExecuteInfoU
 import modelengine.fit.waterflow.flowsengine.utils.OhScriptExecutor;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collections;

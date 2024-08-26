@@ -4,11 +4,10 @@
 
 package modelengine.fel.engine.activities;
 
+import lombok.Getter;
+import modelengine.fel.engine.flows.AiFlow;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fel.engine.flows.AiFlow;
-
-import lombok.Getter;
 
 /**
  * AI 相关的节点的基类。

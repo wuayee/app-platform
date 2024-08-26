@@ -4,15 +4,7 @@
 
 package modelengine.fitframework.schedule.support;
 
-import static modelengine.fitframework.inspection.Validation.isTrue;
-import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus.EXECUTED;
-import static modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus.EXECUTING;
-import static modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus.SCHEDULED;
-import static modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus.SCHEDULING;
-
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus;
 import modelengine.fitframework.schedule.ExecutePolicy;
 
 import java.time.Instant;

@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.schedule.cron;
 
-import static modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus.EXECUTED;
-import static modelengine.fitframework.schedule.ExecutePolicy.ExecutionStatus.SCHEDULING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.mock;

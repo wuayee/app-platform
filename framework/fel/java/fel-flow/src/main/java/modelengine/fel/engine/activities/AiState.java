@@ -4,6 +4,10 @@
 
 package modelengine.fel.engine.activities;
 
+import modelengine.fel.engine.flows.AiFlow;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.flows.ConverseListener;
+import modelengine.fel.engine.util.StateKey;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
@@ -20,10 +24,6 @@ import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fel.engine.flows.AiFlow;
-import modelengine.fel.engine.flows.AiProcessFlow;
-import modelengine.fel.engine.flows.ConverseListener;
-import modelengine.fel.engine.util.StateKey;
 
 import java.util.Collections;
 import java.util.HashSet;

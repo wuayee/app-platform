@@ -6,6 +6,8 @@ package modelengine.fit.waterflow.domain.parsers.nodes;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.definitions.nodes.FlowNode;
 import modelengine.fit.waterflow.domain.definitions.nodes.callbacks.FlowCallback;
@@ -23,8 +25,6 @@ import modelengine.fit.waterflow.domain.parsers.nodes.filters.FilterParser;
 import modelengine.fit.waterflow.domain.parsers.nodes.jobers.JoberParser;
 import modelengine.fit.waterflow.domain.parsers.nodes.tasks.TaskParser;
 import modelengine.fitframework.inspection.Validation;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Optional;

@@ -5,7 +5,6 @@
 package modelengine.fitframework.jvm.classfile.annotation;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.exception.MethodNotFoundException;
 import modelengine.fitframework.inspection.Nonnull;

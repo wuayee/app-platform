@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.flowable.choir;
 
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
-
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.flowable.Subscriber;
 import modelengine.fitframework.flowable.subscription.AbstractSubscription;

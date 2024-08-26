@@ -4,9 +4,9 @@
 
 package modelengine.fel.engine.util;
 
+import modelengine.fel.core.Pattern;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fel.core.Pattern;
 
 import java.util.Collections;
 import java.util.List;

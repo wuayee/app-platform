@@ -8,6 +8,8 @@ import static com.huawei.fit.jober.common.ErrorCodes.ENUM_CONVERT_FAILED;
 import static java.util.Locale.ROOT;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.ConditionNodeParser;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.EndNodeParser;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.NodeParser;
@@ -21,8 +23,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.nodes
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.nodes.ParallelNodeRule;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.nodes.StartNodeRule;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.nodes.StateNodeRule;
-
-import lombok.Getter;
 
 import java.util.Arrays;
 

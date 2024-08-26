@@ -6,11 +6,6 @@ package modelengine.fel.engine.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fel.engine.flows.AiFlows;
-import modelengine.fel.engine.flows.AiProcessFlow;
-import modelengine.fel.engine.flows.Conversation;
-import modelengine.fel.engine.operators.prompts.Prompts;
-import modelengine.fitframework.resource.web.Media;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.Prompt;
@@ -20,6 +15,11 @@ import modelengine.fel.core.memory.CacheMemory;
 import modelengine.fel.core.memory.Memory;
 import modelengine.fel.core.template.MessageContent;
 import modelengine.fel.core.util.Tip;
+import modelengine.fel.engine.flows.AiFlows;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.flows.Conversation;
+import modelengine.fel.engine.operators.prompts.Prompts;
+import modelengine.fitframework.resource.web.Media;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

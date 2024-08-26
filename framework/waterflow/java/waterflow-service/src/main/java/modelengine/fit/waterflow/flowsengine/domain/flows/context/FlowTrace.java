@@ -4,13 +4,12 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.context;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
-import modelengine.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

@@ -4,10 +4,9 @@
 
 package modelengine.fel.engine.activities;
 
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fel.engine.flows.Action;
-
 import lombok.Getter;
+import modelengine.fel.engine.flows.Action;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.function.Consumer;
 

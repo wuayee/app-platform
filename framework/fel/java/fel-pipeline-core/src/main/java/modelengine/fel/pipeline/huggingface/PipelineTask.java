@@ -6,17 +6,16 @@ package modelengine.fel.pipeline.huggingface;
 
 import static modelengine.fel.pipeline.huggingface.type.Constant.LIST_MEDIA_TYPE;
 
+import lombok.Getter;
 import modelengine.fel.pipeline.huggingface.asr.AsrInput;
 import modelengine.fel.pipeline.huggingface.asr.AsrOutput;
 import modelengine.fel.pipeline.huggingface.asr.AsrPipeline;
 import modelengine.fel.pipeline.huggingface.img2img.Image2ImageInput;
 import modelengine.fel.pipeline.huggingface.img2img.Image2ImagePipeline;
 import modelengine.fel.pipeline.huggingface.text2img.Text2ImageInput;
+import modelengine.fel.pipeline.huggingface.text2img.Text2ImagePipeline;
 import modelengine.fel.pipeline.huggingface.tts.TtsInput;
 import modelengine.fel.pipeline.huggingface.tts.TtsOutput;
-
-import lombok.Getter;
-import modelengine.fel.pipeline.huggingface.text2img.Text2ImagePipeline;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;

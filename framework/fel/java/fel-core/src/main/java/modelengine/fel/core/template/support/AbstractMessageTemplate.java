@@ -4,13 +4,12 @@
 
 package modelengine.fel.core.template.support;
 
-import modelengine.fel.core.template.MessageContent;
-import modelengine.fitframework.resource.web.Media;
-import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fel.chat.ChatMessage;
-
+import modelengine.fel.core.template.MessageContent;
 import modelengine.fel.core.template.MessageTemplate;
 import modelengine.fel.core.template.StringTemplate;
+import modelengine.fitframework.resource.web.Media;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.List;

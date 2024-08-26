@@ -4,10 +4,10 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.converter;
 
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.FlowsDataBaseTest;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
-
-import com.alibaba.fastjson.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -4,6 +4,7 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.ParallelMode;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
@@ -11,8 +12,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.streams.Identity;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.Processors;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;

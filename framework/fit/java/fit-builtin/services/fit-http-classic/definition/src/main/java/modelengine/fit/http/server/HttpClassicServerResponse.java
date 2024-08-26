@@ -9,7 +9,6 @@ import modelengine.fit.http.HttpResource;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.entity.WritableBinaryEntity;
 import modelengine.fit.http.header.ConfigurableCookieCollection;
-
 import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
 import modelengine.fit.http.protocol.ServerResponse;
 import modelengine.fit.http.server.support.DefaultHttpClassicServerResponse;

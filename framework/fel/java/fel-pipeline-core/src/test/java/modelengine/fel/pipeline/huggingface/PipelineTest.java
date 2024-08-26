@@ -8,12 +8,11 @@ import static modelengine.fitframework.util.IoUtils.content;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fel.pipeline.Pipeline;
+import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.TypeUtils;
-
-import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtensionContext;

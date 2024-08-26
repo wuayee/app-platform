@@ -4,9 +4,9 @@
 
 package modelengine.fel.chat.character;
 
+import modelengine.fel.chat.MessageType;
 import modelengine.fitframework.resource.web.Media;
 import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fel.chat.MessageType;
 
 import java.util.Collections;
 import java.util.List;

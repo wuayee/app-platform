@@ -4,11 +4,10 @@
 
 package modelengine.fit.waterflow.domain.context;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.utils.Tuple;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

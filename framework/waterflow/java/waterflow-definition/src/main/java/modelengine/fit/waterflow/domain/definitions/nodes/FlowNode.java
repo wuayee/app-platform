@@ -7,6 +7,10 @@ package modelengine.fit.waterflow.domain.definitions.nodes;
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_ENGINE_EXECUTOR_ERROR;
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPPORT;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.context.FlowData;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
@@ -24,11 +28,6 @@ import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.text.MessageFormat;
 import java.util.List;

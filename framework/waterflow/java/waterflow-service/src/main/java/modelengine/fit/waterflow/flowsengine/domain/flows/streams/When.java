@@ -4,14 +4,13 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.streams;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.ProcessType;
 import modelengine.fitframework.util.CollectionUtils;
-
-import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;

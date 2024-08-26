@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.flowable;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 import modelengine.fitframework.flowable.subscriber.EmptySubscriber;
 import modelengine.fitframework.flowable.subscriber.FunctionalSubscriber;
 import modelengine.fitframework.util.ObjectUtils;

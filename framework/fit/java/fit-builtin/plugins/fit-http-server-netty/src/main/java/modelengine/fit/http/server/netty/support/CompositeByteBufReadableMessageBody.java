@@ -4,13 +4,12 @@
 
 package modelengine.fit.http.server.netty.support;
 
-import modelengine.fit.http.protocol.ReadableMessageBody;
-import modelengine.fit.http.server.netty.NettyReadableMessageBody;
-import modelengine.fitframework.inspection.Nonnull;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
+import modelengine.fit.http.protocol.ReadableMessageBody;
+import modelengine.fit.http.server.netty.NettyReadableMessageBody;
+import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;
 

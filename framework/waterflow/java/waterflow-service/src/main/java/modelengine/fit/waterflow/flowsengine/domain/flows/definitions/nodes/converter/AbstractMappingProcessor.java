@@ -11,9 +11,9 @@ import static modelengine.fit.waterflow.common.Constant.INTERNAL_OUTPUT_SCOPE_KE
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fitframework.log.Logger;
 
 import lombok.Getter;
+import modelengine.fitframework.log.Logger;
 
 import java.util.HashMap;
 import java.util.List;

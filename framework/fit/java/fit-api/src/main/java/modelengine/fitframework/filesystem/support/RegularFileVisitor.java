@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.filesystem.support;
 
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
-
 import modelengine.fitframework.filesystem.FileChangedObserver;
 import modelengine.fitframework.filesystem.FileCreatedObserver;
 import modelengine.fitframework.filesystem.FileObservers;

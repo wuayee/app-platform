@@ -4,8 +4,8 @@
 
 package modelengine.fel.chat.character;
 
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.chat.MessageType;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Optional;
 

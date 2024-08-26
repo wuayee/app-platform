@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.type.support;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.type.TypeMatcher;
 import modelengine.fitframework.util.ObjectUtils;

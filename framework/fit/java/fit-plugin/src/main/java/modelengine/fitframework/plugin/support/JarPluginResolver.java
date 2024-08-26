@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.plugin.support;
 
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
-
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.maven.MavenCoordinate;
 import modelengine.fitframework.model.Version;

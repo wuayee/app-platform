@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.transaction;
 
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
-
 import modelengine.fitframework.transaction.support.DefaultTransactionMetadataBuilder;
 import modelengine.fitframework.util.ObjectUtils;
 

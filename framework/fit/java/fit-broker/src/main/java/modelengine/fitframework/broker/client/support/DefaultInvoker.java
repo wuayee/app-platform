@@ -6,7 +6,6 @@ package modelengine.fitframework.broker.client.support;
 
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.broker.CommunicationType;
 import modelengine.fitframework.broker.ConfigurableGenericable;

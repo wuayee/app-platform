@@ -4,21 +4,20 @@
 
 package modelengine.fel.engine.flows;
 
-import modelengine.fit.waterflow.domain.context.FlowContext;
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.ChatOptions;
+import modelengine.fel.core.memory.Memory;
 import modelengine.fel.engine.activities.AiStart;
 import modelengine.fel.engine.activities.FlowCallBack;
 import modelengine.fel.engine.operators.models.ChatChunk;
 import modelengine.fel.engine.operators.models.StreamingConsumer;
 import modelengine.fel.engine.operators.sources.Source;
+import modelengine.fel.engine.util.StateKey;
+import modelengine.fit.waterflow.domain.context.FlowContext;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fel.chat.ChatMessage;
-import modelengine.fel.chat.ChatOptions;
-import modelengine.fel.core.memory.Memory;
-import modelengine.fel.engine.util.StateKey;
 
 import java.util.List;
 import java.util.Map;

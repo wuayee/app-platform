@@ -8,7 +8,6 @@ import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowData;
 import modelengine.fit.waterflow.spi.WaterflowNodeNotify;
-
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
 import modelengine.fitframework.log.Logger;
 

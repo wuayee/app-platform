@@ -12,6 +12,9 @@ import static modelengine.fit.waterflow.domain.enums.FlowNodeType.EVENT;
 import static modelengine.fit.waterflow.domain.enums.FlowNodeType.START;
 import static modelengine.fit.waterflow.domain.enums.FlowNodeType.STATE;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.FlowsDataBaseTest;
 import modelengine.fit.waterflow.domain.definitions.FlowDefinition;
 import modelengine.fit.waterflow.domain.definitions.nodes.FlowConditionNode;
@@ -21,15 +24,12 @@ import modelengine.fit.waterflow.domain.definitions.nodes.filters.FlowFilter;
 import modelengine.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
 import modelengine.fit.waterflow.domain.definitions.nodes.tasks.FlowTask;
 import modelengine.fit.waterflow.domain.enums.FlowDefinitionStatus;
-import modelengine.fit.waterflow.domain.enums.FlowNodeType;
-import modelengine.fit.waterflow.domain.parsers.nodes.events.EventParser;
 import modelengine.fit.waterflow.domain.enums.FlowJoberProperties;
 import modelengine.fit.waterflow.domain.enums.FlowJoberType;
+import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fit.waterflow.domain.enums.FlowTaskType;
+import modelengine.fit.waterflow.domain.parsers.nodes.events.EventParser;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

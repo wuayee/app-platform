@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.entity.TextEvent;
 import modelengine.fit.http.entity.TextEventStreamEntity;
-import modelengine.fit.http.entity.support.DefaultTextEventStreamEntity;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.StringUtils;

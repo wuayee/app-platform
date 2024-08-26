@@ -4,12 +4,11 @@
 
 package modelengine.fit.waterflow.domain.context;
 
-import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
-import modelengine.fit.waterflow.domain.utils.IdGenerator;
-
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
+import modelengine.fit.waterflow.domain.utils.IdGenerator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

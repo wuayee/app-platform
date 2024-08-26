@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.broker.support;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 import modelengine.fitframework.broker.ExceptionInfo;
 import modelengine.fitframework.broker.FitExceptionCreator;
 import modelengine.fitframework.exception.Errors;

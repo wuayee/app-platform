@@ -6,11 +6,10 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcont
 
 import static modelengine.fit.waterflow.common.Constant.STREAM_ID_SEPARATOR;
 
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO;
 import modelengine.fitframework.annotation.Component;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;

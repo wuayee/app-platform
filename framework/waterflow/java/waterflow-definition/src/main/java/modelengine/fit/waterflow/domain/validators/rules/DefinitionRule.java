@@ -11,7 +11,6 @@ import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.definitions.FlowDefinition;
 import modelengine.fit.waterflow.domain.enums.FlowDefinitionStatus;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
-
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 

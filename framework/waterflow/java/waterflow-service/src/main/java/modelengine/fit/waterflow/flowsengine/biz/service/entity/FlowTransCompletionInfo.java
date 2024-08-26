@@ -4,13 +4,12 @@
 
 package modelengine.fit.waterflow.flowsengine.biz.service.entity;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTraceStatus;
 
 import java.util.List;
 

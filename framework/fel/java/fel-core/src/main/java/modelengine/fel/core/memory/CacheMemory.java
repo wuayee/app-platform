@@ -4,11 +4,11 @@
 
 package modelengine.fel.core.memory;
 
+import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.core.template.BulkStringTemplate;
 import modelengine.fel.core.template.support.DefaultBulkStringTemplate;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.MapBuilder;
-import modelengine.fel.chat.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;

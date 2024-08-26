@@ -6,8 +6,6 @@ package modelengine.fit.http.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fit.http.client.HttpClassicClientFactory;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

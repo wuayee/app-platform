@@ -9,8 +9,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 import modelengine.fit.http.HttpMessage;
-
-import modelengine.fit.http.entity.ReadableBinaryEntity;
 import modelengine.fit.http.entity.support.DefaultReadableBinaryEntity;
 
 import org.junit.jupiter.api.BeforeEach;

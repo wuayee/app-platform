@@ -7,6 +7,7 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.task
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.entity.task.TaskProperty;
+
 import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;

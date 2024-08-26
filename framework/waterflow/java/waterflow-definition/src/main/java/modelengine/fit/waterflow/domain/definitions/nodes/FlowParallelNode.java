@@ -6,6 +6,7 @@ package modelengine.fit.waterflow.domain.definitions.nodes;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPPORT;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fit.waterflow.domain.context.FlowContext;
@@ -21,11 +22,8 @@ import modelengine.fit.waterflow.domain.stream.nodes.ParallelNode;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
-
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;

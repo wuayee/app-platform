@@ -4,8 +4,8 @@
 
 package modelengine.fit.serialization.http.websocket;
 
-import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.serialization.TagLengthValues;
 import modelengine.fitframework.serialization.tlv.TagValuesChecker;

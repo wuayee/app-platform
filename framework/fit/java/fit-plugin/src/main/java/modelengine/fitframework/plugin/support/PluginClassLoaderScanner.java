@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.plugin.support;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 import modelengine.fitframework.jvm.scan.PackageScanner;
 import modelengine.fitframework.jvm.scan.support.ClassLoaderPackageScanner;
 import modelengine.fitframework.util.ObjectUtils;

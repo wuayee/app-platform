@@ -18,7 +18,6 @@ import modelengine.fit.http.protocol.ClientResponse;
 import modelengine.fit.http.protocol.MessageHeaderNames;
 import modelengine.fit.http.protocol.MimeType;
 import modelengine.fit.http.protocol.support.DefaultClientResponse;
-
 import modelengine.fitframework.model.MultiValueMap;
 import modelengine.fitframework.model.support.DefaultMultiValueMap;
 import modelengine.fitframework.serialization.ObjectSerializer;

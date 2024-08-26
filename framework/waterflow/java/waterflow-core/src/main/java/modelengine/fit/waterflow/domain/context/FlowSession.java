@@ -4,12 +4,11 @@
 
 package modelengine.fit.waterflow.domain.context;
 
+import lombok.Setter;
 import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.Setter;
 
 import java.util.Map;
 import java.util.Optional;

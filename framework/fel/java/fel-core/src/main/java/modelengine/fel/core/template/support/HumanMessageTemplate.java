@@ -4,10 +4,10 @@
 
 package modelengine.fel.core.template.support;
 
-import modelengine.fitframework.resource.web.Media;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.character.HumanMessage;
 import modelengine.fel.core.template.StringTemplate;
+import modelengine.fitframework.resource.web.Media;
 
 import java.util.List;
 

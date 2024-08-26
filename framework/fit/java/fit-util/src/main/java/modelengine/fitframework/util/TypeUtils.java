@@ -5,7 +5,6 @@
 package modelengine.fitframework.util;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

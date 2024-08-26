@@ -4,9 +4,9 @@
 
 package modelengine.fitframework.serialization.tlv;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 import modelengine.fitframework.serialization.TagLengthValues;
 import modelengine.fitframework.serialization.tlv.support.ExceptionPropertiesValueSerializer;

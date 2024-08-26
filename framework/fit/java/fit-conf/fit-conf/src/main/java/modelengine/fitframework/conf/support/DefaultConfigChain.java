@@ -6,8 +6,6 @@ package modelengine.fitframework.conf.support;
 
 import static modelengine.fitframework.inspection.Validation.between;
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.as;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.conf.ConfigChain;

@@ -4,12 +4,17 @@
 
 package modelengine.fel.engine.operators.models;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
 import static modelengine.fel.engine.util.StateKey.HISTORY_INPUT;
 import static modelengine.fel.engine.util.StateKey.STREAMING_CONSUMER;
 import static modelengine.fel.engine.util.StateKey.STREAMING_FLOW_CONTEXT;
 import static modelengine.fel.engine.util.StateKey.STREAMING_PROCESSOR;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.Prompt;
+import modelengine.fel.chat.character.HumanMessage;
+import modelengine.fel.core.memory.Memory;
+import modelengine.fel.engine.util.StateKey;
 import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitter;
 import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
 import modelengine.fit.waterflow.domain.context.FlowContext;
@@ -20,11 +25,6 @@ import modelengine.fitframework.flowable.Publisher;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.chat.ChatMessage;
-import modelengine.fel.chat.Prompt;
-import modelengine.fel.chat.character.HumanMessage;
-import modelengine.fel.core.memory.Memory;
-import modelengine.fel.engine.util.StateKey;
 
 import java.util.Collections;
 

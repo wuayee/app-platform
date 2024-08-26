@@ -5,7 +5,6 @@
 package modelengine.fitframework.globalization;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.util.ObjectUtils;

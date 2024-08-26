@@ -4,11 +4,11 @@
 
 package modelengine.fit.plugin.dynamic.mvn;
 
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static modelengine.fitframework.inspection.Validation.isTrue;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNull;
 import static modelengine.fitframework.util.ObjectUtils.getIfNull;
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.DocumentIgnored;

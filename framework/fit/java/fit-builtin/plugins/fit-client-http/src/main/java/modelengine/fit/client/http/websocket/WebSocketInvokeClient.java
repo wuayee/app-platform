@@ -6,14 +6,13 @@ package modelengine.fit.client.http.websocket;
 
 import modelengine.fit.client.Request;
 import modelengine.fit.client.Response;
+import modelengine.fit.client.http.InvokeClient;
 import modelengine.fit.client.http.support.AbstractInvokeClient;
 import modelengine.fit.client.http.support.ConnectionBuilder;
 import modelengine.fit.client.http.support.ConnectionBuilderFactory;
 import modelengine.fit.http.client.HttpClassicClient;
 import modelengine.fit.http.protocol.Protocol;
 import modelengine.fit.http.websocket.Session;
-
-import modelengine.fit.client.http.InvokeClient;
 import modelengine.fitframework.broker.CommunicationType;
 import modelengine.fitframework.conf.runtime.ClientConfig;
 import modelengine.fitframework.conf.runtime.WorkerConfig;

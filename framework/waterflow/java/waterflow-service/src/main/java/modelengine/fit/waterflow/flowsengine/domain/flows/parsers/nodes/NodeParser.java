@@ -7,6 +7,9 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.filters.FlowFilter;
@@ -23,8 +26,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.filters.
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers.JoberParser;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.tasks.TaskParser;
 import modelengine.fitframework.inspection.Validation;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Optional;

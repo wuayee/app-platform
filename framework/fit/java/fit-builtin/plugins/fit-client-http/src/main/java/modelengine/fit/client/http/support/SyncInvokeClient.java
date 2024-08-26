@@ -6,12 +6,11 @@ package modelengine.fit.client.http.support;
 
 import modelengine.fit.client.Request;
 import modelengine.fit.client.Response;
+import modelengine.fit.client.http.InvokeClient;
 import modelengine.fit.client.http.util.HttpClientUtils;
 import modelengine.fit.http.client.HttpClassicClient;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
-
-import modelengine.fit.client.http.InvokeClient;
 import modelengine.fitframework.broker.CommunicationType;
 import modelengine.fitframework.conf.runtime.ClientConfig;
 import modelengine.fitframework.conf.runtime.WorkerConfig;

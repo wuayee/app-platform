@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import modelengine.fit.http.HttpResource;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.entity.TextEntity;
-
 import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
 import modelengine.fit.http.protocol.ConfigurableStatusLine;
 import modelengine.fit.http.protocol.ServerResponse;

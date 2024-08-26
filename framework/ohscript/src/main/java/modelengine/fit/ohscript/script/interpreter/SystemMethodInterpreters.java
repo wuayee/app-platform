@@ -7,8 +7,8 @@ package modelengine.fit.ohscript.script.interpreter;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
-import modelengine.fit.ohscript.util.TriFunction;
 import modelengine.fit.ohscript.util.Constants;
+import modelengine.fit.ohscript.util.TriFunction;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;

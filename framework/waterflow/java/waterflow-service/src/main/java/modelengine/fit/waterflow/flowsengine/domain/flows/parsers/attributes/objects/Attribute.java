@@ -4,11 +4,10 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.extractors.ValueExtractor;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.Getter;
 
 import java.util.List;
 import java.util.Map;

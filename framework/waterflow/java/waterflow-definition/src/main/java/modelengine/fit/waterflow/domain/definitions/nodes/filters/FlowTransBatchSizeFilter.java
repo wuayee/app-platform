@@ -7,7 +7,6 @@ package modelengine.fit.waterflow.domain.definitions.nodes.filters;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowData;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
-
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
 

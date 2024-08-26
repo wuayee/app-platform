@@ -4,6 +4,9 @@
 
 package modelengine.fit.ohscript.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 import modelengine.fit.ohscript.script.interpreter.ActivationContext;
@@ -13,9 +16,6 @@ import modelengine.fit.ohscript.script.parser.nodes.ScriptNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;

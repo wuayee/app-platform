@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
 import modelengine.fit.waterflow.FlowsDataBaseTest;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowEndNode;
@@ -20,6 +21,8 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.call
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowEchoJober;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowGeneralJober;
+import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeTriggerMode;
+import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.Parser;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.CallbacksRule;
@@ -29,9 +32,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.FlowR
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.JobersRule;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.NodesRule;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.TasksRule;
-
-import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeTriggerMode;
-import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -4,13 +4,12 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
-import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 
 import java.util.Map;
 import java.util.Set;

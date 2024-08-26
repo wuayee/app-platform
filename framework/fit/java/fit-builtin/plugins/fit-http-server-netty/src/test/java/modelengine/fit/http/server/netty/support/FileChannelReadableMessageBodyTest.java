@@ -13,10 +13,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.http.server.netty.NettyReadableMessageBody;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

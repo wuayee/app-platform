@@ -6,9 +6,8 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.utils;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-
 import modelengine.fit.waterflow.common.Constant;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

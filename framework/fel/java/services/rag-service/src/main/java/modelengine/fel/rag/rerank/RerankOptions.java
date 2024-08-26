@@ -4,12 +4,11 @@
 
 package modelengine.fel.rag.rerank;
 
-import modelengine.fel.rag.protocol.FlatChunk;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fel.rag.protocol.FlatChunk;
 
 import java.util.List;
 

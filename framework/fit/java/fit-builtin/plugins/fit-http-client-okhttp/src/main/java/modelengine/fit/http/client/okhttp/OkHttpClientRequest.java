@@ -18,7 +18,6 @@ import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.WritableMessageBody;
 import modelengine.fit.http.protocol.support.ClientRequestBody;
 import modelengine.fitframework.model.MultiValueMap;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;

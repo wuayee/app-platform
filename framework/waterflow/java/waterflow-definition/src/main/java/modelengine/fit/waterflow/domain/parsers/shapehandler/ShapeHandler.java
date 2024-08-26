@@ -4,11 +4,10 @@
 
 package modelengine.fit.waterflow.domain.parsers.shapehandler;
 
-import modelengine.fitframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONObject;
 
 import lombok.RequiredArgsConstructor;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.Map;

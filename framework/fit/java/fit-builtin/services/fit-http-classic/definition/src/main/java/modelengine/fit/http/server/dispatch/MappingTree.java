@@ -5,7 +5,6 @@
 package modelengine.fit.http.server.dispatch;
 
 import modelengine.fit.http.protocol.HttpRequestMethod;
-
 import modelengine.fit.http.server.HttpHandler;
 import modelengine.fit.http.server.dispatch.support.DefaultMappingTree;
 import modelengine.fitframework.util.StringUtils;

@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.runtime.direct;
 
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
-
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.model.Version;

@@ -6,20 +6,21 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.parsers;
 
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static com.huawei.fit.jober.common.ErrorCodes.INVALID_EVENT_SIZE;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 import static java.util.Locale.ROOT;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
-import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.util.ConvertConditionToRuleUtils;
-import modelengine.fit.waterflow.common.Constant;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import modelengine.fit.waterflow.common.Constant;
+import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.util.ConvertConditionToRuleUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

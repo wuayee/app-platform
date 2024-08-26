@@ -4,12 +4,12 @@
 
 package modelengine.fel.engine.operators.prompts;
 
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.core.template.StringTemplate;
 import modelengine.fel.core.template.support.SystemMessageTemplate;
 import modelengine.fel.core.util.Tip;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 系统提示词模板。仅使用文本数据渲染模板，忽略媒体数据。

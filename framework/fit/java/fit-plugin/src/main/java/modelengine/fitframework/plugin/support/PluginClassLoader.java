@@ -10,7 +10,6 @@ import modelengine.fitframework.jvm.classfile.ClassFile;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.ReflectionUtils;
 import modelengine.fitframework.util.support.IteratorEnumerationAdapter;
-
 import sun.misc.Resource;
 
 import java.io.IOException;

@@ -4,13 +4,13 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import modelengine.fel.engine.operators.models.ChatChunk;
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.chat.protocol.FlatChatMessage;
+import modelengine.fel.engine.operators.models.ChatChunk;
 import modelengine.fel.tool.ToolProvider;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Collections;
 import java.util.List;

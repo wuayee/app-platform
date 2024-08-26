@@ -8,7 +8,6 @@ import static modelengine.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import modelengine.fit.waterflow.domain.utils.Mermaid;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.chat.character.AiMessage;
@@ -21,8 +20,8 @@ import modelengine.fel.engine.flows.Conversation;
 import modelengine.fel.engine.operators.models.ChatBlockModel;
 import modelengine.fel.engine.operators.patterns.FlowSupportable;
 import modelengine.fel.engine.operators.prompts.Prompts;
-
 import modelengine.fel.utils.AiFlowTestData;
+import modelengine.fit.waterflow.domain.utils.Mermaid;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -6,16 +6,15 @@ package modelengine.fit.http.server.netty.websocket;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.http.websocket.Session;
-import modelengine.fit.http.websocket.server.WebSocketSessionMapper;
-import modelengine.fit.http.websocket.support.AbstractSession;
-
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.websocket.Session;
+import modelengine.fit.http.websocket.server.WebSocketSessionMapper;
+import modelengine.fit.http.websocket.support.AbstractSession;
 
 /**
  * 表示 {@link Session} 的 Netty 的实现。

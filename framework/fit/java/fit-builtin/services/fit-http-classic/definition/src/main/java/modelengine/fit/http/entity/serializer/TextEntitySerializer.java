@@ -11,7 +11,6 @@ import modelengine.fit.http.entity.EntityWriteException;
 import modelengine.fit.http.entity.TextEntity;
 import modelengine.fit.http.entity.support.DefaultTextEntity;
 import modelengine.fit.http.protocol.util.BodyUtils;
-
 import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;

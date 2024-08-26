@@ -4,19 +4,19 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import modelengine.fel.engine.activities.AiStart;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.StringUtils;
 import modelengine.fel.core.Pattern;
 import modelengine.fel.core.examples.ExampleSelector;
 import modelengine.fel.core.formatters.Formatter;
 import modelengine.fel.core.memory.Memory;
 import modelengine.fel.core.template.MessageContent;
 import modelengine.fel.core.util.Tip;
+import modelengine.fel.engine.activities.AiStart;
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fel.engine.util.StateKey;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 平行分支工具。<p>用于 {@link AiStart#runnableParallel(Pattern[])} 表达式。

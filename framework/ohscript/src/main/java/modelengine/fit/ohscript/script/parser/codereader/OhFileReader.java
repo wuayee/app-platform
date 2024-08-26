@@ -4,10 +4,9 @@
 
 package modelengine.fit.ohscript.script.parser.codereader;
 
+import lombok.SneakyThrows;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.SneakyThrows;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

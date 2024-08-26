@@ -6,12 +6,7 @@ package modelengine.fit.http.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fit.http.server.DoHttpServerFilterException;
-import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.http.server.HttpClassicServerResponse;
-import modelengine.fit.http.server.HttpServerFilter;
 import modelengine.fit.http.server.HttpServerFilter.PriorityComparator;
-import modelengine.fit.http.server.HttpServerFilterChain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -4,14 +4,10 @@
 
 package modelengine.fitframework.schedule.support;
 
-import static modelengine.fitframework.inspection.Validation.greaterThan;
-import static modelengine.fitframework.inspection.Validation.greaterThanOrEquals;
-import static modelengine.fitframework.inspection.Validation.notNull;
 import static java.lang.Thread.UncaughtExceptionHandler;
 
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.schedule.ExecuteException;
-import modelengine.fitframework.schedule.Task.DisposableTask;
 import modelengine.fitframework.schedule.Task;
 import modelengine.fitframework.schedule.ThreadPoolExecutor;
 import modelengine.fitframework.thread.DefaultThreadFactory;

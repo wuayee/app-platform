@@ -5,7 +5,6 @@
 package modelengine.fitframework.aop.interceptor.cache;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import modelengine.fitframework.aop.interceptor.support.AbstractMethodInterceptor;
 import modelengine.fitframework.cache.Cache;

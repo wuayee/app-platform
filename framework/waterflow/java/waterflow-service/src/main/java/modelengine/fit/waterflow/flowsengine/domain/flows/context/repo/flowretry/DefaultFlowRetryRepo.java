@@ -4,12 +4,11 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry;
 
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowRetry;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
 import modelengine.fit.waterflow.flowsengine.persist.po.FlowRetryPO;
 import modelengine.fitframework.annotation.Component;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;

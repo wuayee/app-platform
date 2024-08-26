@@ -7,10 +7,10 @@ package modelengine.fit.security.http.upload.support;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.security.http.FitSecurityException;
 import modelengine.fit.security.http.name.FileNameValidateUtils;
 import modelengine.fit.security.http.upload.FileUploadValidateConfig;
 import modelengine.fit.security.http.upload.FileUploadValidator;
-import modelengine.fit.security.http.FitSecurityException;
 
 import java.util.Arrays;
 import java.util.List;

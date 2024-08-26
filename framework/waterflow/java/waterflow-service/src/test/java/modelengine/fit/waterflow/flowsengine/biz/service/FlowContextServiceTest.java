@@ -6,6 +6,9 @@ package modelengine.fit.waterflow.flowsengine.biz.service;
 
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
 import com.huawei.fit.jane.task.util.OperationContext;
+
+import com.alibaba.fastjson.JSON;
+
 import modelengine.fit.waterflow.DatabaseBaseTest;
 import modelengine.fit.waterflow.FlowsDataBaseTest;
 import modelengine.fit.waterflow.common.utils.UUIDUtil;
@@ -34,8 +37,6 @@ import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
 import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
-
-import com.alibaba.fastjson.JSON;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

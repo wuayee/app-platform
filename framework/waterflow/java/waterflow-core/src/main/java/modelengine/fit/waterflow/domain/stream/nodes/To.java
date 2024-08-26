@@ -14,6 +14,7 @@ import static modelengine.fit.waterflow.domain.enums.ParallelMode.EITHER;
 import static modelengine.fit.waterflow.domain.enums.ProcessType.PRE_PROCESS;
 import static modelengine.fit.waterflow.domain.enums.ProcessType.PROCESS;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fit.waterflow.domain.context.FlowContext;
@@ -40,8 +41,6 @@ import modelengine.fitframework.schedule.Task;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collections;

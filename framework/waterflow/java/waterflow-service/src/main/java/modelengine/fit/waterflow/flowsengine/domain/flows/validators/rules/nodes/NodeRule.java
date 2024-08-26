@@ -7,6 +7,7 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.node
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeTriggerMode;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.Rules;

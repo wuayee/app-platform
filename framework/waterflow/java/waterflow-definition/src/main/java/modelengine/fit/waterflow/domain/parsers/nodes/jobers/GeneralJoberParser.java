@@ -6,8 +6,8 @@ package modelengine.fit.waterflow.domain.parsers.nodes.jobers;
 
 import modelengine.fit.waterflow.domain.definitions.nodes.jobers.FlowGeneralJober;
 import modelengine.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
-import modelengine.fit.waterflow.domain.parsers.FlowGraphData;
 import modelengine.fit.waterflow.domain.enums.FlowJoberType;
+import modelengine.fit.waterflow.domain.parsers.FlowGraphData;
 
 /**
  * General任务解析接口

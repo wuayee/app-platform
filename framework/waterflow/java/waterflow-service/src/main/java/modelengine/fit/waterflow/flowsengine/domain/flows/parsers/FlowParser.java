@@ -7,6 +7,10 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.parsers;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
+import com.alibaba.fastjson.JSONObject;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
@@ -19,10 +23,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.events.E
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.inspection.Validation;
-
-import com.alibaba.fastjson.JSONObject;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;

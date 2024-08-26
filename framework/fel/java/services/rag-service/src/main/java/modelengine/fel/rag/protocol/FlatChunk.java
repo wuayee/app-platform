@@ -4,11 +4,10 @@
 
 package modelengine.fel.rag.protocol;
 
-import modelengine.fel.rag.Chunk;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fel.rag.Chunk;
 
 import java.util.HashMap;
 import java.util.List;

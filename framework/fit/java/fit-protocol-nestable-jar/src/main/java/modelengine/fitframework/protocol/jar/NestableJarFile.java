@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.protocol.jar;
 
-import static modelengine.fitframework.protocol.jar.support.Locations.path;
-
 import modelengine.fitframework.protocol.jar.support.Locations;
 
 import java.io.IOException;

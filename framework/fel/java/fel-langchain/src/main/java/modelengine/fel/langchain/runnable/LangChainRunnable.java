@@ -4,9 +4,9 @@
 
 package modelengine.fel.langchain.runnable;
 
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.core.Pattern;
 import modelengine.fel.service.langchain.LangChainRunnableService;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * LangChain 通用 Runnable 算子代理。

@@ -4,10 +4,6 @@
 
 package modelengine.fitframework.schedule.support;
 
-import static modelengine.fitframework.inspection.Validation.greaterThan;
-import static modelengine.fitframework.inspection.Validation.isFalse;
-import static modelengine.fitframework.inspection.Validation.isTrue;
-
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.schedule.ExecutePolicy;

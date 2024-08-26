@@ -5,7 +5,6 @@
 package modelengine.fitframework.util;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import modelengine.fitframework.util.support.Unzip;
 import modelengine.fitframework.util.support.Zip;

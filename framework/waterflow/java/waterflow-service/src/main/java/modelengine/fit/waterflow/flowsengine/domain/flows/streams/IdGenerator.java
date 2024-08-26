@@ -4,10 +4,9 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.streams;
 
-import modelengine.fit.waterflow.common.utils.UUIDUtil;
-
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fit.waterflow.common.utils.UUIDUtil;
 
 /**
  * ID生成器抽象类

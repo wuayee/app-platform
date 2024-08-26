@@ -6,6 +6,7 @@ package modelengine.fit.ohscript.script.parser;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import lombok.SneakyThrows;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
 import modelengine.fit.ohscript.script.errors.SyntaxError;
@@ -37,8 +38,6 @@ import modelengine.fit.ohscript.util.Pair;
 import modelengine.fit.ohscript.util.Tool;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.SneakyThrows;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;

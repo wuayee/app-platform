@@ -8,6 +8,12 @@ import static com.huawei.fit.jober.common.ErrorCodes.ENTITY_NOT_FOUND;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_ALREADY_EXIST;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.common.utils.UUIDUtil;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
@@ -20,12 +26,6 @@ import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.transaction.Transactional;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

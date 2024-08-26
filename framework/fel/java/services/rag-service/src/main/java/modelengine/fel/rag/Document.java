@@ -4,10 +4,9 @@
 
 package modelengine.fel.rag;
 
-import modelengine.fitframework.util.ObjectUtils;
-
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;

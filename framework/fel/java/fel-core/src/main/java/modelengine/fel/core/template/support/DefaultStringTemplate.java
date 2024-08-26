@@ -4,13 +4,13 @@
 
 package modelengine.fel.core.template.support;
 
+import modelengine.fel.core.template.StringTemplate;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.merge.ConflictResolutionPolicy;
 import modelengine.fitframework.parameterization.ParameterizedString;
 import modelengine.fitframework.parameterization.ParameterizedStringResolver;
 import modelengine.fitframework.parameterization.ResolvedParameter;
 import modelengine.fitframework.util.MapUtils;
-import modelengine.fel.core.template.StringTemplate;
 
 import java.util.Collections;
 import java.util.HashMap;

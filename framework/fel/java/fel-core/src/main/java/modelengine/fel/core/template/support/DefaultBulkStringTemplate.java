@@ -4,9 +4,9 @@
 
 package modelengine.fel.core.template.support;
 
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.core.template.BulkStringTemplate;
 import modelengine.fel.core.template.StringTemplate;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.List;
 import java.util.Map;

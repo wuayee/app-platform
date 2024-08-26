@@ -4,13 +4,13 @@
 
 package modelengine.fel.plugin.langchain;
 
+import modelengine.fel.service.langchain.LangChainRunnableService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
 import modelengine.fitframework.conf.runtime.SerializationFormat;
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fel.service.langchain.LangChainRunnableService;
 
 import java.util.concurrent.TimeUnit;
 

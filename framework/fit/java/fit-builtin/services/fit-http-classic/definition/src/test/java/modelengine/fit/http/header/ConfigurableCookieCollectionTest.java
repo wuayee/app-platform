@@ -9,8 +9,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import modelengine.fit.http.Cookie;
 
-import modelengine.fit.http.header.ConfigurableCookieCollection;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

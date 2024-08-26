@@ -4,13 +4,12 @@
 
 package modelengine.fit.waterflow.domain.stream.reactive;
 
+import lombok.Getter;
+import lombok.Setter;
 import modelengine.fit.waterflow.domain.enums.SpecialDisplayNode;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 节点展示信息。

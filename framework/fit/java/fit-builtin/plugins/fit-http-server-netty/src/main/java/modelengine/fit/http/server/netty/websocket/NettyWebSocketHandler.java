@@ -6,12 +6,6 @@ package modelengine.fit.http.server.netty.websocket;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.http.websocket.CloseReason;
-import modelengine.fit.http.websocket.Session;
-import modelengine.fit.http.websocket.server.WebSocketHandler;
-import modelengine.fitframework.log.Logger;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -19,6 +13,11 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.websocket.CloseReason;
+import modelengine.fit.http.websocket.Session;
+import modelengine.fit.http.websocket.server.WebSocketHandler;
+import modelengine.fitframework.log.Logger;
 
 /**
  * 表示 Netty 用于处理 WebSocket 消息的处理器。

@@ -4,14 +4,13 @@
 
 package modelengine.fit.waterflow.flowsengine.biz.service.entity;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowRetry;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.To;
-
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 

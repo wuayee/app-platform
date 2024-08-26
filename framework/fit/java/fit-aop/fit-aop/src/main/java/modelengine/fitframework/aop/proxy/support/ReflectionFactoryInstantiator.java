@@ -6,7 +6,6 @@ package modelengine.fitframework.aop.proxy.support;
 
 import modelengine.fitframework.aop.proxy.ObjectInstantiator;
 import modelengine.fitframework.util.ObjectUtils;
-
 import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.Constructor;

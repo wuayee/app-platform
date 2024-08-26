@@ -6,9 +6,8 @@ package modelengine.fit.waterflow.domain.enums;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 
-import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
-
 import lombok.Getter;
+import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 
 import java.util.Arrays;
 

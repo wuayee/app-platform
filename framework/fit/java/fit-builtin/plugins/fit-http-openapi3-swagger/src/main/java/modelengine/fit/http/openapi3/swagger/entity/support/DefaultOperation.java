@@ -12,7 +12,6 @@ import modelengine.fit.http.openapi3.swagger.entity.Parameter;
 import modelengine.fit.http.openapi3.swagger.entity.RequestBody;
 import modelengine.fit.http.openapi3.swagger.entity.Responses;
 import modelengine.fit.http.protocol.HttpRequestMethod;
-
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;

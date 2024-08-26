@@ -6,6 +6,9 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import com.alibaba.fastjson.JSON;
+
+import lombok.Getter;
 import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
@@ -16,10 +19,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import modelengine.fitframework.log.Logger;
-
-import com.alibaba.fastjson.JSON;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

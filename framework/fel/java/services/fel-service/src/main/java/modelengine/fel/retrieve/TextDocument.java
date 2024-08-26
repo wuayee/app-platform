@@ -4,11 +4,10 @@
 
 package modelengine.fel.retrieve;
 
-import modelengine.fitframework.util.StringUtils;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Map;

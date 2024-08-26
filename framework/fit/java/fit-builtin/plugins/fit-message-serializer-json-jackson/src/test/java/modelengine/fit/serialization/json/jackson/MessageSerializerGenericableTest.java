@@ -7,6 +7,7 @@ package modelengine.fit.serialization.json.jackson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fit.serialization.MessageSerializerTest;
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.conf.support.PropertiesConfig;

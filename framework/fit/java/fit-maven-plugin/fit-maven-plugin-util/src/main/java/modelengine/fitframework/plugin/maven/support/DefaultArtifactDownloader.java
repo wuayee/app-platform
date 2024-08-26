@@ -4,11 +4,10 @@
 
 package modelengine.fitframework.plugin.maven.support;
 
-import modelengine.fitframework.plugin.maven.ArtifactDownloader;
-import modelengine.fitframework.plugin.maven.MavenCoordinate;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import modelengine.fitframework.plugin.maven.ArtifactDownloader;
+import modelengine.fitframework.plugin.maven.MavenCoordinate;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;

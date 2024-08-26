@@ -4,9 +4,9 @@
 
 package modelengine.fel.core.formatters.json;
 
+import modelengine.fel.core.formatters.OutputParser;
 import modelengine.fel.core.formatters.support.MarkdownParser;
 import modelengine.fitframework.serialization.ObjectSerializer;
-import modelengine.fel.core.formatters.OutputParser;
 
 import java.lang.reflect.Type;
 

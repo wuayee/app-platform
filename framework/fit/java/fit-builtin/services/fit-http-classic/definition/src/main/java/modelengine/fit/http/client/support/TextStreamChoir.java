@@ -10,7 +10,6 @@ import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.TextEvent;
 import modelengine.fit.http.entity.TextEventStreamEntity;
-
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.flowable.Subscriber;
 import modelengine.fitframework.flowable.Subscription;

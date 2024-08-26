@@ -5,15 +5,15 @@
 package modelengine.fel.pipeline.huggingface;
 
 import modelengine.fel.pipeline.Pipeline;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.MapBuilder;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.ReflectionUtils;
 import modelengine.fel.pipeline.huggingface.asr.AsrPipeline;
 import modelengine.fel.pipeline.huggingface.img2img.Image2ImagePipeline;
 import modelengine.fel.pipeline.huggingface.text2img.Text2ImagePipeline;
 import modelengine.fel.pipeline.huggingface.tts.TtsPipeline;
 import modelengine.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;

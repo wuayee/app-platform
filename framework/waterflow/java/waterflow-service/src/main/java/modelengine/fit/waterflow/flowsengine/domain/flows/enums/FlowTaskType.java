@@ -8,9 +8,9 @@ import static com.huawei.fit.jober.common.ErrorCodes.ENUM_CONVERT_FAILED;
 import static java.util.Locale.ROOT;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.tasks.TaskParser;
 
 import lombok.Getter;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.tasks.TaskParser;
 
 import java.util.Arrays;
 

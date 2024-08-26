@@ -6,17 +6,16 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.job
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import modelengine.fit.waterflow.common.Constant;
-import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import modelengine.fitframework.broker.CommunicationType;
-import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
-import modelengine.fitframework.log.Logger;
-
 import com.alibaba.fastjson.JSON;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fit.waterflow.common.Constant;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

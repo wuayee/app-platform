@@ -6,7 +6,6 @@ package modelengine.fitframework.filesystem.support;
 
 import static modelengine.fitframework.inspection.Validation.isTrue;
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import modelengine.fitframework.filesystem.DirectoryMonitor;
 import modelengine.fitframework.filesystem.FileDeletedObserver;

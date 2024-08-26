@@ -10,7 +10,6 @@ import static org.mockito.Mockito.mock;
 import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.entity.EntitySerializer;
 import modelengine.fit.http.entity.TextEntity;
-import modelengine.fit.http.entity.serializer.TextEntitySerializer;
 import modelengine.fit.http.entity.support.DefaultTextEntity;
 
 import org.junit.jupiter.api.DisplayName;

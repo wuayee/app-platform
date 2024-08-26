@@ -4,6 +4,10 @@
 
 package modelengine.fit.http.server.netty;
 
+import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
+import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static modelengine.fit.http.HttpClassicRequestAttribute.HTTP_HANDLER;
 import static modelengine.fit.http.HttpClassicRequestAttribute.PATH_PATTERN;
 import static modelengine.fit.http.protocol.MessageHeaderNames.CONTENT_LENGTH;
@@ -12,11 +16,20 @@ import static modelengine.fit.http.protocol.MimeType.APPLICATION_JSON;
 import static modelengine.fit.http.protocol.MimeType.TEXT_PLAIN;
 import static modelengine.fitframework.inspection.Validation.notNull;
 import static modelengine.fitframework.util.ObjectUtils.cast;
-import static io.netty.handler.codec.http.HttpResponseStatus.CONTINUE;
-import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.ErrorResponse;
 import modelengine.fit.http.server.HttpClassicServer;
@@ -32,20 +45,6 @@ import modelengine.fitframework.schedule.Task;
 import modelengine.fitframework.schedule.ThreadPoolExecutor;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.StringUtils;
-
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpObject;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpUtil;
-import io.netty.handler.codec.http.LastHttpContent;
-import io.netty.util.Attribute;
-import io.netty.util.AttributeKey;
 
 import java.io.IOException;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;

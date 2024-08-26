@@ -7,6 +7,11 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.cal
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_CALLBACK_FITABLES_FAILED;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
@@ -16,11 +21,6 @@ import modelengine.fit.waterflow.flowsengine.utils.FlowUtil;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.exception.FitException;
 import modelengine.fitframework.log.Logger;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;

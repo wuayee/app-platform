@@ -4,14 +4,14 @@
 
 package modelengine.fel.core.examples.support;
 
+import modelengine.fel.core.examples.Example;
+import modelengine.fel.core.examples.ExampleSelector;
 import modelengine.fel.core.template.BulkStringTemplate;
 import modelengine.fel.core.template.StringTemplate;
 import modelengine.fel.core.template.support.DefaultBulkStringTemplate;
 import modelengine.fel.core.template.support.DefaultStringTemplate;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.MapBuilder;
-import modelengine.fel.core.examples.Example;
-import modelengine.fel.core.examples.ExampleSelector;
 
 import java.util.ArrayList;
 import java.util.Arrays;

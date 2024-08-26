@@ -4,9 +4,10 @@
 
 package modelengine.fit.waterflow.domain.enums;
 
-import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 import static java.util.Locale.ROOT;
+import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.parsers.nodes.filters.BatchSizeFilterParser;
 import modelengine.fit.waterflow.domain.parsers.nodes.filters.FilterParser;
@@ -14,8 +15,6 @@ import modelengine.fit.waterflow.domain.parsers.nodes.filters.TransBatchSizeFilt
 import modelengine.fit.waterflow.domain.validators.rules.filters.BatchSizeFilterRule;
 import modelengine.fit.waterflow.domain.validators.rules.filters.FilterRule;
 import modelengine.fit.waterflow.domain.validators.rules.filters.TransBatchSizeFilterRule;
-
-import lombok.Getter;
 
 import java.util.Arrays;
 

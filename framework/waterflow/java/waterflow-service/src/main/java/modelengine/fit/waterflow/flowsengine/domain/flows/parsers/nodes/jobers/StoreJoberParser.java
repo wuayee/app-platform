@@ -6,6 +6,9 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers;
 
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowStoreJober;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowStoreJober.ServiceMeta;
@@ -13,9 +16,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberPropert
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberType;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 import java.util.Map;

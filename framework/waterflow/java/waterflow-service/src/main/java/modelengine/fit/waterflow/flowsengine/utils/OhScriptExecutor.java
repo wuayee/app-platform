@@ -6,6 +6,11 @@ package modelengine.fit.waterflow.flowsengine.utils;
 
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+
 import modelengine.fit.ohscript.script.errors.GrammarSyntaxException;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
@@ -14,15 +19,11 @@ import modelengine.fit.ohscript.script.lexer.Lexer;
 import modelengine.fit.ohscript.script.parser.AST;
 import modelengine.fit.ohscript.script.parser.GrammarBuilder;
 import modelengine.fit.ohscript.script.parser.ParserBuilder;
-import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fit.waterflow.common.Constant;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.HashMap;
 import java.util.Map;

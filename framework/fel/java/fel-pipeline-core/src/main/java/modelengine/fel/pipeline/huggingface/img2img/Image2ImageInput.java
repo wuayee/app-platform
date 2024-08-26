@@ -4,10 +4,9 @@
 
 package modelengine.fel.pipeline.huggingface.img2img;
 
+import lombok.Data;
 import modelengine.fel.pipeline.PipelineInput;
 import modelengine.fitframework.annotation.Property;
-
-import lombok.Data;
 
 /**
  * 表示图生图任务的输入参数。

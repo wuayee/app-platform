@@ -4,9 +4,8 @@
 
 package modelengine.fitframework.plugin.maven.support;
 
-import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.protocol.jar.JarEntryLocation;
 import modelengine.fitframework.util.FileUtils;

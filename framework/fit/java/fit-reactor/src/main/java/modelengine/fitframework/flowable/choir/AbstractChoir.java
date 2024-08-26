@@ -4,14 +4,6 @@
 
 package modelengine.fitframework.flowable.choir;
 
-import static modelengine.fitframework.flowable.subscriber.FunctionalSubscriber.DEFAULT_ON_SUBSCRIBED_CHOIR_ACTION;
-import static modelengine.fitframework.flowable.subscriber.FunctionalSubscriber.EMPTY_COMPLETE_ACTION;
-import static modelengine.fitframework.flowable.subscriber.FunctionalSubscriber.EMPTY_CONSUME_ACTION;
-import static modelengine.fitframework.flowable.subscriber.FunctionalSubscriber.EMPTY_FAIL_ACTION;
-import static modelengine.fitframework.util.ObjectUtils.cast;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
-
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.flowable.Publisher;
 import modelengine.fitframework.flowable.Solo;

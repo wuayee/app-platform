@@ -26,7 +26,6 @@ import modelengine.fit.http.protocol.MessageHeaderNames;
 import modelengine.fit.http.protocol.MimeType;
 import modelengine.fit.http.protocol.Protocol;
 import modelengine.fit.serialization.http.HttpUtils;
-
 import modelengine.fitframework.conf.runtime.WorkerConfig;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.log.Logger;

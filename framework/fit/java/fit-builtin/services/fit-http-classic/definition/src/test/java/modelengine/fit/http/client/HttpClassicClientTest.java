@@ -10,7 +10,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.http.HttpResource;
-
 import modelengine.fit.http.client.support.AbstractHttpClassicClient;
 import modelengine.fit.http.client.support.DefaultHttpClassicClientRequest;
 import modelengine.fit.http.protocol.ClientRequest;

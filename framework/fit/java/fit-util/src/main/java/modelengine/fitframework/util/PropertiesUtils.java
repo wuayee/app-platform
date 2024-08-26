@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.util;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.support.PropertyKey;
 import modelengine.fitframework.util.support.PropertyKeys;

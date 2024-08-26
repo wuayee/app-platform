@@ -15,7 +15,6 @@ import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.client.proxy.PropertyValueApplier;
 import modelengine.fit.http.client.proxy.RequestBuilder;
-
 import modelengine.fit.http.protocol.HttpRequestMethod;
 
 import org.junit.jupiter.api.BeforeEach;

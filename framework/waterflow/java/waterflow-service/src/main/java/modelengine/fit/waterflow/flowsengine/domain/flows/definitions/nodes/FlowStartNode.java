@@ -4,6 +4,7 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
@@ -11,8 +12,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.From;
 import modelengine.fitframework.log.Logger;
-
-import lombok.Getter;
 
 import java.util.Optional;
 

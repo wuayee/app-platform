@@ -4,14 +4,14 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.extractors;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.types.Attributes;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.types.EventAttributes;
 import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.types.NodeAttributes;
 import modelengine.fitframework.util.ObjectUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import java.util.Locale;
 import java.util.stream.Collectors;

@@ -21,8 +21,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.task.util.OperationContext;
+
 import modelengine.fit.waterflow.DatabaseBaseTest;
 import modelengine.fit.waterflow.FlowsDataBaseTest;
+import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.common.utils.UUIDUtil;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
@@ -44,7 +46,6 @@ import modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO;
 import modelengine.fit.waterflow.flowsengine.utils.FlowExecutors;
 import modelengine.fit.waterflow.flowsengine.utils.PriorityThreadPool;
 import modelengine.fit.waterflow.flowsengine.utils.WaterFlows;
-import modelengine.fit.waterflow.common.Constant;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.util.IoUtils;
 import modelengine.fitframework.util.StringUtils;

@@ -4,6 +4,7 @@
 
 package modelengine.fit.ohscript.script.parser.nodes;
 
+import lombok.Setter;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 import modelengine.fit.ohscript.script.interpreter.ActivationContext;
@@ -21,8 +22,6 @@ import modelengine.fit.ohscript.util.Pair;
 import modelengine.fit.ohscript.util.Tool;
 import modelengine.fit.ohscript.util.Triple;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.Setter;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

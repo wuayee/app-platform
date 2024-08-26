@@ -22,7 +22,6 @@ import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.server.HttpDispatcher;
 import modelengine.fit.http.server.HttpHandler;
 import modelengine.fit.http.server.ReflectibleMappingHandler;
-
 import modelengine.fit.http.server.handler.PropertyValueMetadata;
 import modelengine.fit.http.server.handler.Source;
 import modelengine.fitframework.annotation.Property;

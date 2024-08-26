@@ -4,13 +4,13 @@
 
 package modelengine.fel.engine.operators.patterns;
 
+import modelengine.fel.core.Pattern;
+import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fel.core.Pattern;
-import modelengine.fel.engine.util.AiFlowSession;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;

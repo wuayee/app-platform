@@ -5,7 +5,6 @@
 package modelengine.fit.http.websocket;
 
 import modelengine.fit.http.HttpMessage;
-
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.websocket.server.WebSocketSessionMapper;

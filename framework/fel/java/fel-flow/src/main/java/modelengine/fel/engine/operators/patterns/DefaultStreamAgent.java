@@ -4,9 +4,6 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import modelengine.fit.waterflow.domain.context.StateContext;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.ChatModelStreamService;
@@ -17,6 +14,9 @@ import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.operators.models.ChatChunk;
 import modelengine.fel.engine.operators.models.ChatStreamModel;
 import modelengine.fel.tool.ToolProvider;
+import modelengine.fit.waterflow.domain.context.StateContext;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Collections;
 

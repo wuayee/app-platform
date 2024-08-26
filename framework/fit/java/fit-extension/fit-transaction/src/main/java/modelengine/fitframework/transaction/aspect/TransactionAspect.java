@@ -5,7 +5,6 @@
 package modelengine.fitframework.transaction.aspect;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.aop.MethodSignature;

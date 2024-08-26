@@ -6,12 +6,11 @@ package modelengine.fit.http.server.netty.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
+import io.netty.buffer.ByteBuf;
 import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.util.FileUtils;
-
-import io.netty.buffer.ByteBuf;
 
 import java.io.File;
 import java.io.IOException;

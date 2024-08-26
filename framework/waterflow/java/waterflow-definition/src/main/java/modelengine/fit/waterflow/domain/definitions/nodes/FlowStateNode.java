@@ -4,6 +4,9 @@
 
 package modelengine.fit.waterflow.domain.definitions.nodes;
 
+import com.alibaba.fastjson.JSON;
+
+import lombok.Getter;
 import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowData;
@@ -13,12 +16,7 @@ import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.domain.stream.nodes.Blocks;
 import modelengine.fit.waterflow.domain.stream.nodes.Node;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
-
 import modelengine.fitframework.log.Logger;
-
-import com.alibaba.fastjson.JSON;
-
-import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.List;

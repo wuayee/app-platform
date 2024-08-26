@@ -4,22 +4,6 @@
 
 package modelengine.fel.engine.activities;
 
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.flow.Flow;
-import modelengine.fit.waterflow.domain.flow.Flows;
-import modelengine.fit.waterflow.domain.states.Start;
-import modelengine.fit.waterflow.domain.states.State;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-import modelengine.fit.waterflow.domain.stream.operators.SessionWindow;
-import modelengine.fit.waterflow.domain.stream.reactive.Processor;
-import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
-import modelengine.fit.waterflow.domain.utils.Tuple;
-
-import modelengine.fel.engine.activities.processors.AiBranchProcessor;
-import modelengine.fel.engine.activities.processors.AiFlatMap;
-import modelengine.fel.engine.flows.Conversation;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.Prompt;
@@ -30,8 +14,11 @@ import modelengine.fel.core.retriever.Indexer;
 import modelengine.fel.core.retriever.Retriever;
 import modelengine.fel.core.retriever.Splitter;
 import modelengine.fel.core.util.Tip;
+import modelengine.fel.engine.activities.processors.AiBranchProcessor;
+import modelengine.fel.engine.activities.processors.AiFlatMap;
 import modelengine.fel.engine.flows.AiFlow;
 import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.flows.Conversation;
 import modelengine.fel.engine.operators.models.ChatChunk;
 import modelengine.fel.engine.operators.models.StreamModel;
 import modelengine.fel.engine.operators.patterns.AbstractFlowPattern;
@@ -40,6 +27,18 @@ import modelengine.fel.engine.operators.patterns.SimpleFlowPattern;
 import modelengine.fel.engine.operators.prompts.PromptTemplate;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fel.engine.util.StateKey;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.flow.Flows;
+import modelengine.fit.waterflow.domain.states.Start;
+import modelengine.fit.waterflow.domain.states.State;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.operators.SessionWindow;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
+import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
+import modelengine.fit.waterflow.domain.utils.Tuple;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -4,14 +4,13 @@
 
 package modelengine.fit.waterflow.domain.definitions.nodes.filters;
 
-import modelengine.fit.waterflow.domain.context.FlowData;
-import modelengine.fit.waterflow.domain.enums.FlowFilterType;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import modelengine.fit.waterflow.domain.context.FlowData;
+import modelengine.fit.waterflow.domain.enums.FlowFilterType;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.Map;
 

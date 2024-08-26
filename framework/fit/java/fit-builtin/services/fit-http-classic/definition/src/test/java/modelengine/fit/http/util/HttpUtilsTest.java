@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 import modelengine.fit.http.header.HeaderValue;
-import modelengine.fit.http.util.HttpUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.DisplayName;

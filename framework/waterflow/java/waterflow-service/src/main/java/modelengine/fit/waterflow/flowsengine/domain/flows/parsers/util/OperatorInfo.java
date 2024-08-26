@@ -7,13 +7,13 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.util;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import modelengine.fit.waterflow.common.Constant;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import modelengine.fit.waterflow.common.Constant;
 
 /**
  * 运算符相关信息

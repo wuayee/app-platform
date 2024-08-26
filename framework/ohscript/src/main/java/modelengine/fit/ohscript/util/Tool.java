@@ -14,7 +14,6 @@ import modelengine.fit.ohscript.script.parser.nodes.BlockNode;
 import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fitframework.util.ObjectUtils;
-
 import sun.misc.Unsafe;
 
 import net.bytebuddy.ByteBuddy;

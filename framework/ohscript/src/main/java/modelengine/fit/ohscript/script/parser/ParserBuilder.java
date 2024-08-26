@@ -8,9 +8,8 @@ import modelengine.fit.ohscript.script.lexer.Lexer;
 import modelengine.fit.ohscript.script.parser.codereader.CodeReader;
 import modelengine.fit.ohscript.script.parser.codereader.OhFileReader;
 import modelengine.fit.ohscript.script.parser.codereader.StringCodeReader;
-import modelengine.fit.ohscript.util.OhUtil;
-
 import modelengine.fit.ohscript.util.Constants;
+import modelengine.fit.ohscript.util.OhUtil;
 
 import java.io.IOException;
 

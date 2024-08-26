@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.launch;
 
-import static modelengine.fitframework.protocol.jar.JarEntryLocation.ENTRY_PATH_SEPARATOR;
-
 import modelengine.fitframework.protocol.Handlers;
 import modelengine.fitframework.protocol.jar.Jar;
 import modelengine.fitframework.protocol.jar.JarEntryLocation;

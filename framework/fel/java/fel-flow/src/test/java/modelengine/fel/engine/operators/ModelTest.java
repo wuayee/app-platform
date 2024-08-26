@@ -4,11 +4,21 @@
 
 package modelengine.fel.engine.operators;
 
-import static modelengine.fel.engine.operators.patterns.SyncTipper.format;
 import static modelengine.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import lombok.Data;
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.ChatMessages;
+import modelengine.fel.chat.ChatOptions;
+import modelengine.fel.chat.character.AiMessage;
+import modelengine.fel.chat.protocol.FlatChatMessage;
+import modelengine.fel.core.formatters.OutputParser;
+import modelengine.fel.core.formatters.json.JsonOutputParser;
+import modelengine.fel.core.memory.CacheMemory;
+import modelengine.fel.core.memory.Memory;
+import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.flows.Conversation;
@@ -22,18 +32,6 @@ import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.chat.ChatMessage;
-import modelengine.fel.chat.ChatMessages;
-import modelengine.fel.chat.ChatOptions;
-import modelengine.fel.chat.character.AiMessage;
-import modelengine.fel.chat.protocol.FlatChatMessage;
-import modelengine.fel.core.formatters.OutputParser;
-import modelengine.fel.core.formatters.json.JsonOutputParser;
-import modelengine.fel.core.memory.CacheMemory;
-import modelengine.fel.core.memory.Memory;
-import modelengine.fel.core.util.Tip;
-
-import lombok.Data;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

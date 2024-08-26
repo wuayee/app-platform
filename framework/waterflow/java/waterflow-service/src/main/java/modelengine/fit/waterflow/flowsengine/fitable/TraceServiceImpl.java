@@ -15,10 +15,11 @@ import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.entity.FlowNodePublishInfo;
 import com.huawei.fit.jober.entity.FlowPublishContext;
+
+import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.flowsengine.biz.service.FlowsService;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
-import modelengine.fit.waterflow.common.Constant;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.broker.client.BrokerClient;

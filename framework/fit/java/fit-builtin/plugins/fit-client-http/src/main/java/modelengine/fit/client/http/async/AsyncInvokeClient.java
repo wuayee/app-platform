@@ -6,7 +6,6 @@ package modelengine.fit.client.http.async;
 
 import modelengine.fit.client.Request;
 import modelengine.fit.client.Response;
-
 import modelengine.fit.client.http.InvokeClient;
 import modelengine.fit.client.http.support.AbstractInvokeClient;
 import modelengine.fit.client.http.util.HttpClientUtils;

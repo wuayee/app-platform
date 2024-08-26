@@ -12,7 +12,6 @@ import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.entity.ReadableBinaryEntity;
 import modelengine.fit.http.protocol.MimeType;
-
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.util.StringUtils;
 

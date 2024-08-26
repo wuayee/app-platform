@@ -6,9 +6,8 @@ package modelengine.fit.waterflow.domain.context.repo.flowcontext;
 
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowTrace;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.Deque;
 import java.util.List;

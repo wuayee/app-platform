@@ -6,6 +6,7 @@ package modelengine.fit.waterflow.domain.parsers;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.definitions.FlowDefinition;
 import modelengine.fit.waterflow.domain.definitions.nodes.FlowNode;
@@ -17,8 +18,6 @@ import modelengine.fit.waterflow.domain.parsers.nodes.events.EventParser;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.inspection.Validation;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;

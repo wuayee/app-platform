@@ -4,8 +4,8 @@
 
 package modelengine.fel.core.examples.support;
 
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fel.core.examples.Example;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * 表示 {@link Example} 的默认实现。

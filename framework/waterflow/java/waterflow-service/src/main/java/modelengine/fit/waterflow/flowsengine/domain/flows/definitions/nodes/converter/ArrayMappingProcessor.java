@@ -8,6 +8,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
 import modelengine.fitframework.log.Logger;
 
 import java.util.List;

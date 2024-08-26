@@ -8,7 +8,6 @@ import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fit.integration.mybatis.MapperInvocationHandler;
 import modelengine.fitframework.aop.proxy.FitProxy;
-
 import sun.reflect.ReflectionFactory;
 
 import net.bytebuddy.ByteBuddy;

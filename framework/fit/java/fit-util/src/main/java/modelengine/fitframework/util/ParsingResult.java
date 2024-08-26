@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.util;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 /**
  * 为解析字符串提供结果。
  *

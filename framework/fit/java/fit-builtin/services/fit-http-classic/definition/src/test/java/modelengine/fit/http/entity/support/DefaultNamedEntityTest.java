@@ -9,7 +9,6 @@ import static org.mockito.Mockito.mock;
 
 import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.entity.Entity;
-import modelengine.fit.http.entity.support.DefaultNamedEntity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

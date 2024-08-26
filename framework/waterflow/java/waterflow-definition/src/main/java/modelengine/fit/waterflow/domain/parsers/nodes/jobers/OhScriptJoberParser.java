@@ -6,8 +6,8 @@ package modelengine.fit.waterflow.domain.parsers.nodes.jobers;
 
 import modelengine.fit.waterflow.domain.definitions.nodes.jobers.FlowJober;
 import modelengine.fit.waterflow.domain.definitions.nodes.jobers.FlowOhScriptJober;
-import modelengine.fit.waterflow.domain.parsers.FlowGraphData;
 import modelengine.fit.waterflow.domain.enums.FlowJoberType;
+import modelengine.fit.waterflow.domain.parsers.FlowGraphData;
 
 /**
  * ohScript脚本任务解析器

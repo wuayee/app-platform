@@ -6,6 +6,7 @@ package modelengine.fit.waterflow.domain.enums;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
 import modelengine.fit.waterflow.domain.parsers.nodes.jobers.EchoJoberParser;
 import modelengine.fit.waterflow.domain.parsers.nodes.jobers.GeneralJoberParser;
@@ -17,8 +18,6 @@ import modelengine.fit.waterflow.domain.validators.rules.jobers.GeneralJoberRule
 import modelengine.fit.waterflow.domain.validators.rules.jobers.HttpJoberRule;
 import modelengine.fit.waterflow.domain.validators.rules.jobers.JoberRule;
 import modelengine.fit.waterflow.domain.validators.rules.jobers.OhScriptJoberRule;
-
-import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Locale;

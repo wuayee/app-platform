@@ -6,13 +6,13 @@ package modelengine.fel.core.template;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fitframework.resource.web.Media;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.MessageType;
 import modelengine.fel.core.template.support.DefaultStringTemplate;
 import modelengine.fel.core.template.support.HumanMessageTemplate;
 import modelengine.fel.core.template.support.SystemMessageTemplate;
 import modelengine.fel.core.util.Tip;
+import modelengine.fitframework.resource.web.Media;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

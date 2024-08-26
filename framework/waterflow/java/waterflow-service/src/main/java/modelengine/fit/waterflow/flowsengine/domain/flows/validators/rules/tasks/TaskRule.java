@@ -5,6 +5,7 @@
 package modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.tasks;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import modelengine.fit.waterflow.flowsengine.domain.flows.validators.rules.Rules;
 

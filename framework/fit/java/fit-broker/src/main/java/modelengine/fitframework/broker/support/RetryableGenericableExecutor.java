@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.broker.support;
 
-import static modelengine.fitframework.util.ObjectUtils.cast;
-
 import modelengine.fitframework.broker.Fitable;
 import modelengine.fitframework.broker.GenericableExecutor;
 import modelengine.fitframework.broker.InvocationContext;

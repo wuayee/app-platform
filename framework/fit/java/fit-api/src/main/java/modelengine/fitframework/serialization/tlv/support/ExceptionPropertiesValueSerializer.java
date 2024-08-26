@@ -4,8 +4,8 @@
 
 package modelengine.fitframework.serialization.tlv.support;
 
-import static modelengine.fitframework.inspection.Validation.isTrue;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static modelengine.fitframework.inspection.Validation.isTrue;
 
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.serialization.TagLengthValues;

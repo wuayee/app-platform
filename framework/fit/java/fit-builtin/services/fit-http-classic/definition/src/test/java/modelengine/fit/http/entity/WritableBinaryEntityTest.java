@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 
 import modelengine.fit.http.HttpMessage;
-
 import modelengine.fit.http.entity.support.DefaultWritableBinaryEntity;
 import modelengine.fit.http.protocol.ServerResponse;
 

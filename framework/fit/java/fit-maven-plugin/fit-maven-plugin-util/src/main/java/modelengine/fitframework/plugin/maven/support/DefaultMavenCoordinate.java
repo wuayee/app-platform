@@ -4,10 +4,9 @@
 
 package modelengine.fitframework.plugin.maven.support;
 
-import modelengine.fitframework.plugin.maven.MavenCoordinate;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import modelengine.fitframework.plugin.maven.MavenCoordinate;
 
 import java.util.Arrays;
 

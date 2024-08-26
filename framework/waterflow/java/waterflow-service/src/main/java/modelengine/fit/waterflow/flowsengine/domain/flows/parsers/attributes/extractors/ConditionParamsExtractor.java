@@ -4,11 +4,11 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.extractors;
 
-import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
-import modelengine.fitframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.attributes.objects.AttributesData;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;

@@ -6,7 +6,6 @@ package modelengine.fit.http.header;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import modelengine.fit.http.header.ParameterCollection;
 import modelengine.fit.http.header.support.DefaultParameterCollection;
 
 import org.junit.jupiter.api.AfterEach;

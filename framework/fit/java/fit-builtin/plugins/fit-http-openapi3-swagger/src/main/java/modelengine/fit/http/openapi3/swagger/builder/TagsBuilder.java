@@ -8,7 +8,6 @@ import modelengine.fit.http.openapi3.swagger.EntityBuilder;
 import modelengine.fit.http.openapi3.swagger.entity.Tag;
 import modelengine.fit.http.server.HttpDispatcher;
 import modelengine.fit.http.server.HttpHandlerGroup;
-
 import modelengine.fitframework.ioc.BeanContainer;
 
 import java.util.Collection;

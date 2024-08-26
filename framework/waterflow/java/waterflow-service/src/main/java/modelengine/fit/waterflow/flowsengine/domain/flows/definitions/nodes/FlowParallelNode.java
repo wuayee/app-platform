@@ -8,6 +8,8 @@ import static com.huawei.fit.jober.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPP
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
+
+import lombok.Getter;
 import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
@@ -22,8 +24,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.JoinNode
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.ParallelNode;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;

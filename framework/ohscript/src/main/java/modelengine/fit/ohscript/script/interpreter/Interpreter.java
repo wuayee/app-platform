@@ -48,8 +48,8 @@ import modelengine.fit.ohscript.util.Constants;
 import modelengine.fit.ohscript.util.EmptyValue;
 import modelengine.fit.ohscript.util.OhFunction;
 import modelengine.fit.ohscript.util.Pair;
-import modelengine.fit.ohscript.util.TriFunction;
 import modelengine.fit.ohscript.util.Tool;
+import modelengine.fit.ohscript.util.TriFunction;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 

@@ -19,11 +19,10 @@ import modelengine.fit.http.protocol.MimeType;
 import modelengine.fit.http.server.DoHttpHandlerException;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.HttpHandler;
 import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fit.serialization.http.HttpUtils;
 import modelengine.fit.serialization.util.MessageSerializerUtils;
-
-import modelengine.fit.http.server.HttpHandler;
 import modelengine.fitframework.broker.GenericableMetadata;
 import modelengine.fitframework.broker.server.Response;
 import modelengine.fitframework.conf.runtime.SerializationFormat;

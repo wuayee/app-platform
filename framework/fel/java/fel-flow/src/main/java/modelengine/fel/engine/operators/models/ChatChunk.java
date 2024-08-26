@@ -4,15 +4,14 @@
 
 package modelengine.fel.engine.operators.models;
 
+import lombok.NoArgsConstructor;
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.MessageType;
+import modelengine.fel.tool.ToolCall;
 import modelengine.fit.waterflow.bridge.fitflow.FiniteEmitterData;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.chat.ChatMessage;
-import modelengine.fel.chat.MessageType;
-import modelengine.fel.tool.ToolCall;
-
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;

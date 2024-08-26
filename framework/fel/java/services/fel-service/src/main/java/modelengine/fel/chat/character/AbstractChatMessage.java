@@ -4,9 +4,9 @@
 
 package modelengine.fel.chat.character;
 
+import modelengine.fel.chat.ChatMessage;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.chat.ChatMessage;
 
 /**
  * 表示聊天消息的抽象实现。

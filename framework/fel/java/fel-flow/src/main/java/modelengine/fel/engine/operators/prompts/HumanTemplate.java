@@ -6,9 +6,6 @@ package modelengine.fel.engine.operators.prompts;
 
 import static modelengine.fel.engine.util.StateKey.HISTORY_INPUT;
 
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.Prompt;
@@ -18,6 +15,9 @@ import modelengine.fel.core.template.StringTemplate;
 import modelengine.fel.core.template.support.HumanMessageTemplate;
 import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.util.AiFlowSession;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Map;
 import java.util.Optional;

@@ -6,10 +6,9 @@ package modelengine.fit.waterflow.flowsengine.utils;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import lombok.Data;
 import modelengine.fit.waterflow.flowsengine.biz.service.CustomThreadFactory;
 import modelengine.fitframework.log.Logger;
-
-import lombok.Data;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.PriorityBlockingQueue;

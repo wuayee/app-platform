@@ -9,11 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import modelengine.fit.waterflow.DatabaseBaseTest;
+import modelengine.fit.waterflow.common.Constant;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.flowsengine.persist.entity.FlowContextUpdateInfo;
 import modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-
-import modelengine.fit.waterflow.common.Constant;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

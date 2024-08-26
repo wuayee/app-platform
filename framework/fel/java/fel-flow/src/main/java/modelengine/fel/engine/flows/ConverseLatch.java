@@ -4,11 +4,10 @@
 
 package modelengine.fel.engine.flows;
 
-import modelengine.fitframework.log.Logger;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.log.Logger;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

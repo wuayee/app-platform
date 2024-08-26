@@ -4,6 +4,7 @@
 
 package modelengine.fit.waterflow.domain.validators;
 
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.waterflow.common.ErrorCodes;
 import modelengine.fit.waterflow.common.exceptions.BadRequestException;
 import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
@@ -11,8 +12,6 @@ import modelengine.fit.waterflow.domain.definitions.FlowDefinition;
 import modelengine.fit.waterflow.domain.validators.rules.FlowRule;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 

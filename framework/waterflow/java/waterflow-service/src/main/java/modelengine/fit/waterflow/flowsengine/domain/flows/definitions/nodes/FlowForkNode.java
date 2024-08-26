@@ -7,6 +7,8 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPPORT;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
+
+import lombok.Getter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
@@ -15,8 +17,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import modelengine.fitframework.log.Logger;
-
-import lombok.Getter;
 
 import java.util.Optional;
 

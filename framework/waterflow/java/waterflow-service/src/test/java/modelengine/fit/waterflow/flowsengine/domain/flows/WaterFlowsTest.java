@@ -4,7 +4,6 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows;
 
-import static modelengine.fit.waterflow.flowsengine.domain.flows.FlowsTestUtil.waitUntil;
 import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
 import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.READY;
 import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.ParallelMode.EITHER;

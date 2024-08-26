@@ -9,15 +9,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.http.protocol.HttpRequestMethod;
-import modelengine.fit.http.server.HttpHandler;
-import modelengine.fit.http.server.netty.support.DefaultNettyServerConfig;
-import modelengine.fit.server.http.HttpConfig;
-import modelengine.fitframework.ioc.BeanContainer;
-import modelengine.fitframework.serialization.ObjectSerializer;
-import modelengine.fitframework.util.MapBuilder;
-import modelengine.fitframework.value.ValueFetcher;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
@@ -29,6 +20,14 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.Attribute;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.server.HttpHandler;
+import modelengine.fit.http.server.netty.support.DefaultNettyServerConfig;
+import modelengine.fit.server.http.HttpConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.value.ValueFetcher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -4,17 +4,17 @@
 
 package modelengine.fit.serialization.json.jackson.custom;
 
-import modelengine.fitframework.annotation.Aliases;
-import modelengine.fitframework.annotation.Property;
-import modelengine.fitframework.serialization.annotation.SerializeStrategy;
-import modelengine.fitframework.util.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.util.VersionUtil;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.Annotated;
+
+import modelengine.fitframework.annotation.Aliases;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.serialization.annotation.SerializeStrategy;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;

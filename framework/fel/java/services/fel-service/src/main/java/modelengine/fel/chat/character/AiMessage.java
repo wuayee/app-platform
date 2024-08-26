@@ -4,10 +4,10 @@
 
 package modelengine.fel.chat.character;
 
-import modelengine.fitframework.util.CollectionUtils;
-import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fel.chat.MessageType;
 import modelengine.fel.tool.ToolCall;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.List;

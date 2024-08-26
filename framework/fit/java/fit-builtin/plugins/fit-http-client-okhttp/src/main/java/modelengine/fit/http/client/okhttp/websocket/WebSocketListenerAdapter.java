@@ -13,7 +13,6 @@ import modelengine.fit.http.websocket.client.WebSocketClassicListener;
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.inspection.Nullable;
 import modelengine.fitframework.model.MultiValueMap;
-
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;

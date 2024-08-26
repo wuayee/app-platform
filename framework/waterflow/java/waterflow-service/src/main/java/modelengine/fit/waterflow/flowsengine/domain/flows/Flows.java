@@ -4,6 +4,7 @@
 
 package modelengine.fit.waterflow.flowsengine.domain.flows;
 
+import lombok.Setter;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowOfferId;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowTrans;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoMessenger;
@@ -18,8 +19,6 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.streams.From;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
 import modelengine.fit.waterflow.flowsengine.domain.flows.streams.Processors;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

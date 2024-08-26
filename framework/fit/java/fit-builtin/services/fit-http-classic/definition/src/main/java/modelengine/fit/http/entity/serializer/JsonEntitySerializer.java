@@ -14,7 +14,6 @@ import modelengine.fit.http.entity.EntityWriteException;
 import modelengine.fit.http.entity.ObjectEntity;
 import modelengine.fit.http.entity.support.DefaultObjectEntity;
 import modelengine.fit.http.protocol.MessageHeaderNames;
-
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.serialization.SerializationException;

@@ -4,10 +4,9 @@
 
 package modelengine.fel.pipeline.huggingface.tts;
 
+import lombok.Data;
 import modelengine.fel.pipeline.PipelineInput;
 import modelengine.fitframework.annotation.Property;
-
-import lombok.Data;
 
 import java.util.Map;
 

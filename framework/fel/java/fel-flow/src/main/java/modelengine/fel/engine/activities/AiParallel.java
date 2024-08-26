@@ -4,13 +4,12 @@
 
 package modelengine.fel.engine.activities;
 
+import modelengine.fel.engine.activities.processors.AiBranchProcessor;
+import modelengine.fel.engine.flows.AiFlow;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.states.Fork;
 import modelengine.fit.waterflow.domain.states.Parallel;
-
-import modelengine.fel.engine.activities.processors.AiBranchProcessor;
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fel.engine.flows.AiFlow;
 
 /**
  * 平行节点。

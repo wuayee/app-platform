@@ -5,8 +5,6 @@
 package modelengine.fitframework.maven;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.maven.MavenCoordinate.POM_FILE_NAME;
-import static modelengine.fitframework.protocol.jar.JarEntryLocation.ENTRY_PATH_SEPARATOR;
 
 import modelengine.fitframework.protocol.jar.Jar;
 import modelengine.fitframework.protocol.jar.JarEntryLocation;

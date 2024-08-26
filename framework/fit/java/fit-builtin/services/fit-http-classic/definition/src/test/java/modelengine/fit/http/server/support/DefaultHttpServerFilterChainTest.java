@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpServerFilter;
 import modelengine.fit.http.server.handler.AbstractHttpHandler;
-import modelengine.fit.http.server.support.DefaultHttpServerFilterChain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

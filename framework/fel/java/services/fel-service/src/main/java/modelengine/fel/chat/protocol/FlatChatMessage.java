@@ -4,16 +4,15 @@
 
 package modelengine.fel.chat.protocol;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.MessageType;
+import modelengine.fel.tool.ToolCall;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.resource.web.Media;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.chat.ChatMessage;
-import modelengine.fel.chat.MessageType;
-import modelengine.fel.tool.ToolCall;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;

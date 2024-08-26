@@ -7,11 +7,6 @@ package modelengine.fit.waterflow.flowsengine.domain.flows.context;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_OHSCRIPT_INVOKE_FITABLE_ERROR;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_SYSTEM_ERROR;
 
-import modelengine.fit.waterflow.common.utils.ByteArraySerialiseUtilV1;
-import modelengine.fit.waterflow.common.Constant;
-import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -21,6 +16,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import modelengine.fit.waterflow.common.Constant;
+import modelengine.fit.waterflow.common.utils.ByteArraySerialiseUtilV1;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
