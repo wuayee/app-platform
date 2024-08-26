@@ -126,6 +126,7 @@ class PluginDeployServiceImplTest {
         pluginData.setExtension(extension);
         pluginData.setDeployStatus(DeployStatus.UNDEPLOYED.name());
         pluginData.setPluginToolDataList(Arrays.asList(mockPluginToolData()));
+        pluginData.setBuiltin(false);
         return pluginData;
     }
 
