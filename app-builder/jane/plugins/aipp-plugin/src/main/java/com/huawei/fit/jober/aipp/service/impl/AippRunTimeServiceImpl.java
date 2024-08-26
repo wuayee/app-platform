@@ -391,21 +391,23 @@ public class AippRunTimeServiceImpl
 
         // 持久化日志
         businessData.put(AippConst.BS_AIPP_QUESTION_KEY, question);
-        this.persistAippLog(businessData);
 
-        // 添加文件记录标记, 使用aippId
-        uploadedFileManageService.addFileRecord(meta.getId(),
-                context.getW3Account(),
-                Paths.get(AippFileUtils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
-
-        // 持久化aipp实例表单记录
-        this.persistAippFormLog(meta, businessData);
-
-        // 记录上下文
-        this.recordContext(context, meta, businessData, metaInst);
         return Tuple.duet(metaInst.getId(),
                 Choir.create(emitter -> {
                     this.appChatSSEService.addEmitter(metaInst.getId(), emitter, new CountDownLatch(1));
+
+                    this.persistAippLog(businessData);
+
+                    // 添加文件记录标记, 使用aippId
+                    uploadedFileManageService.addFileRecord(meta.getId(), context.getW3Account(),
+                            Paths.get(AippFileUtils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
+
+                    // 持久化aipp实例表单记录
+                    this.persistAippFormLog(meta, businessData);
+
+                    // 记录上下文
+                    this.recordContext(context, meta, businessData, metaInst);
+
                     this.startFlowWithMemoryOrNot(businessData, meta, context, metaInst);
                     this.appChatSSEService.latchAwait(metaInst.getId());
                 }));

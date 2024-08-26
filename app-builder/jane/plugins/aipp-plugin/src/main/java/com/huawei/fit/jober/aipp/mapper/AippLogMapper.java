@@ -169,4 +169,11 @@ public interface AippLogMapper {
      * @param instanceIds 表示指定实例 id 集合。
      */
     void deleteByInstanceIds(List<String> instanceIds);
+
+    /**
+     * 根据 logId 删除对话记录。
+     *
+     * @param logIds 表示指定的历史记录 id 的 {@link List}{@code <}{@link Long}{@code >}。
+     */
+    void deleteInstanceLogs(@Param("logIds") List<Long> logIds);
 }

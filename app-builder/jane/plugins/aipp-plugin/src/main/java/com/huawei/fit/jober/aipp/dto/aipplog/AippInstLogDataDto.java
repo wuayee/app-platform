@@ -35,6 +35,7 @@ public class AippInstLogDataDto {
     private String status;
     private String appName;
     private String appIcon;
+    private LocalDateTime createAt;
     private AippInstanceLogBody question;
     private List<AippInstanceLogBody> instanceLogBodies;
 
@@ -52,6 +53,7 @@ public class AippInstLogDataDto {
         final String inAippId = instanceLogs.get(0).getAippId();
         final String inAippVersion = instanceLogs.get(0).getVersion();
         final String inInstanceId = instanceLogs.get(0).getInstanceId();
+        final LocalDateTime inCreateAt = instanceLogs.get(0).getCreateAt();
 
         List<AippInstLogDataDto.AippInstanceLogBody> logBodies = instanceLogs.stream()
                 .filter(log -> !(log.getLogType().equals(AippInstLogType.QUESTION.name())
@@ -63,7 +65,7 @@ public class AippInstLogDataDto {
                         || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .findFirst().orElse(null);
         return new AippInstLogDataDto(inAippId, inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(),
-                null, null, convert(questionInfo), logBodies);
+                null, null, inCreateAt, convert(questionInfo), logBodies);
     }
 
     /**

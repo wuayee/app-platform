@@ -116,16 +116,17 @@ public class AippFlowEndCallback implements FlowCallbackService {
             Map<String, Object> formDataMap = FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId);
             String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
             String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
+            String returnedLogId = null;
+            if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
+                returnedLogId = this.saveFormToLog(businessData, endFormId, endFormVersion, formDataMap);
+            }
             AppChatRsp appChatRsp = AppChatRsp.builder().chatId(chatId).atChatId(atChatId)
                     .status(FlowTraceStatus.ARCHIVED.name())
                     .answer(Collections.singletonList(AppChatRsp.Answer.builder()
                             .content(formDataMap).type(AippInstLogType.FORM.name()).build()))
-                    .instanceId(aippInstId)
+                    .instanceId(aippInstId).logId(returnedLogId)
                     .build();
             this.appChatSseService.sendToAncestorLastData(aippInstId, appChatRsp);
-            if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
-                this.saveFormToLog(businessData, endFormId, endFormVersion, formDataMap);
-            }
         } else {
             this.logFinalOutput(contexts, businessData, aippInstId);
         }
@@ -154,13 +155,13 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
     }
 
-    private void saveFormToLog(Map<String, Object> businessData, String endFormId, String endFormVersion,
+    private String saveFormToLog(Map<String, Object> businessData, String endFormId, String endFormVersion,
             Map<String, Object> formDataMap) {
         AippLogData logData =
                 FormUtils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
         logData.setFormAppearance(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_APPEARANCE_KEY)));
         logData.setFormData(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_DATA_KEY)));
-        this.aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
+        return this.aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
     }
 
     private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,

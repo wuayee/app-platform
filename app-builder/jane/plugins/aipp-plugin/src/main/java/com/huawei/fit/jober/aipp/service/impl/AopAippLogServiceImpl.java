@@ -33,14 +33,16 @@ public class AopAippLogServiceImpl implements AopAippLogService {
      * 插入aipp的历史记录
      *
      * @param logDto 插入数据
-     * @throws IllegalArgumentException 不合法的参数时抛出。
+     * @return 返回插入的历史记录的唯一标识符
+     * @throws IllegalArgumentException 不合法的参数时抛出
+     * @throws AippParamException 当参数校验失败时抛出此异常
      */
     @Override
     @AippLogInsert
-    public void insertLog(AippLogCreateDto logDto) throws IllegalArgumentException {
+    public String insertLog(AippLogCreateDto logDto) throws IllegalArgumentException {
         if (logDto.allFieldsNotNull()) {
             aippLogMapper.insertOne(logDto);
-            return;
+            return logDto.getLogId();
         }
         log.error("null field exists in req {}", logDto);
         // 待各个参数独立校验

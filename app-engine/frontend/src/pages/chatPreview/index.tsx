@@ -259,7 +259,7 @@ const ChatPreview = (props) => {
       // 普通日志
       messageData.answer?.forEach((log) => {
         if (log.type === 'FORM') {
-          let obj = messageProcess(runningInstanceId.current, log.content, atAppInfo);
+          let obj = messageProcess(runningInstanceId.current, { ...log.content, log_id: messageData.log_id }, atAppInfo);
           chatForm(obj);
           saveLocalChatId(messageData);
         }

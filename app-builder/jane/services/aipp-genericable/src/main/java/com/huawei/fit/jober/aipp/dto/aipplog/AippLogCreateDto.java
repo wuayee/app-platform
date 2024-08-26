@@ -55,6 +55,9 @@ public class AippLogCreateDto {
     @Property(description = "at chat id")
     private String atChatId;
 
+    @Property(description = "log id")
+    private String logId;
+
     /**
      * 判断所有字段是否为空。
      *
