@@ -143,5 +143,32 @@ export const jadeFlowGraph = (div, title) => {
         return null;
     };
 
+    /**
+     * @override
+     */
+    const edit = self.edit;
+    self.edit = async (index, div, id) => {
+        const pageData = self.getPageData(index);
+        normalizeData(pageData);
+        return edit.apply(self, [index, div, id]);
+    };
+
+    // 数据归一化，当runnable为undefined或为null时，说明是老数据，需要将他们的runnable设置为true.
+    const normalizeData = (pageData) => {
+        pageData.shapes.forEach(shapeData => {
+            if (shapeData.runnable === undefined || shapeData.runnable === null) {
+                shapeData.runnable = true;
+            }
+
+            if (shapeData.type === "conditionNodeCondition") {
+                shapeData.flowMeta.conditionParams.branches.forEach(b => {
+                    if (b.runnable === undefined || b.runnable === null) {
+                        b.runnable = true;
+                    }
+                });
+            }
+        });
+    };
+
     return self;
 };
