@@ -32,13 +32,18 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
+import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +65,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final AppBuilderFormRepository formRepository;
     private final BrokerClient brokerClient;
     private final BeanContainer beanContainer;
+    private final ConversationRecordService conversationRecordService;
     private final AppBuilderFormService formService;
     private final AippStreamService aippStreamService;
     private final MetaInstanceService metaInstanceService;
@@ -67,9 +73,9 @@ public class AippFlowEndCallback implements FlowCallbackService {
 
     public AippFlowEndCallback(@Fit MetaService metaService, @Fit AippLogService aippLogService,
             @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
-            @Fit BeanContainer beanContainer, @Fit AppBuilderFormService formService,
-            @Fit AippStreamService aippStreamService, @Fit MetaInstanceService metaInstanceService,
-            @Fit AppChatSseService appChatSseService) {
+            @Fit BeanContainer beanContainer, @Fit ConversationRecordService conversationRecordService,
+            @Fit AppBuilderFormService formService, @Fit AippStreamService aippStreamService,
+            @Fit MetaInstanceService metaInstanceService, @Fit AppChatSseService appChatSseService) {
         this.formService = formService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
@@ -78,6 +84,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer = beanContainer;
         this.aippStreamService = aippStreamService;
         this.metaInstanceService = metaInstanceService;
+        this.conversationRecordService = conversationRecordService;
         this.appChatSseService = appChatSseService;
     }
 
@@ -176,6 +183,34 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer.all(AppFlowFinishObserver.class).stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)
                 .forEach(finishObserver -> finishObserver.onFinished(logMsg, this.buildAttributes(aippInstId)));
+
+        // 评估调用接口时不记录历史会话
+        Object isEval = businessData.get(AippConst.IS_EVAL_INVOCATION);
+        if (isEval == null || !ObjectUtils.<Boolean>cast(isEval)) {
+            OperationContext context =
+                    JsonUtils.parseObject(ObjectUtils.cast(businessData.get(AippConst.BS_HTTP_CONTEXT_KEY)),
+                            OperationContext.class);
+
+            // 构造用户历史对话记录并插表
+            String resumeDuration =
+                    ObjectUtils.cast(businessData.getOrDefault(AippConst.INST_RESUME_DURATION_KEY, "0"));
+            Object createTimeObj = Validation.notNull(businessData.get(AippConst.INST_CREATE_TIME_KEY),
+                    "The create time cannot be null.");
+            LocalDateTime createTime = LocalDateTime.parse(createTimeObj.toString());
+            LocalDateTime finishTime = LocalDateTime.now();
+            long realCost = Duration.between(createTime, finishTime).toMillis() - Long.parseLong(resumeDuration);
+            LocalDateTime realFinishTime = (realCost > 0) ? createTime.plus(realCost, ChronoUnit.MILLIS) : finishTime;
+            ConversationRecordPo conversationRecordPo = ConversationRecordPo.builder()
+                    .appId(ObjectUtils.cast(businessData.get(AippConst.ATTR_APP_ID_KEY)))
+                    .question(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_QUESTION_KEY)))
+                    .answer(logMsg)
+                    .createUser(context.getName())
+                    .createTime(createTime)
+                    .finishTime(realFinishTime)
+                    .instanceId(aippInstId)
+                    .build();
+            conversationRecordService.insertConversationRecord(conversationRecordPo);
+        }
     }
 
     private Map<String, Object> buildAttributes(String aippInstId) {

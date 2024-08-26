@@ -22,6 +22,7 @@
         <module>schema-validator</module>
         <module>schema-generator</module>
         <module>simple-uid-generator</module>
+        <module>app-metrics</module>
     </modules>
 
     <build>

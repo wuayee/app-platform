@@ -218,6 +218,11 @@
             <artifactId>mockito-inline</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.jade.service</groupId>
+            <artifactId>app-engine-metrics-base-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
