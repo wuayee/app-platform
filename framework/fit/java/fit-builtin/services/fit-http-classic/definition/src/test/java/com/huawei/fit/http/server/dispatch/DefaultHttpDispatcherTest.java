@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.huawei.fit.http.protocol.Address;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpDispatcher;
@@ -42,6 +43,9 @@ public class DefaultHttpDispatcherTest {
         this.dispatcher = HttpDispatcher.create();
         this.request = mock(HttpClassicServerRequest.class);
         this.handler = mock(HttpHandler.class);
+        Address remoteAddress = mock(Address.class);
+        when(this.request.remoteAddress()).thenReturn(remoteAddress);
+        when(this.request.remoteAddress().hostAddress()).thenReturn("127.0.0.1");
     }
 
     @AfterEach

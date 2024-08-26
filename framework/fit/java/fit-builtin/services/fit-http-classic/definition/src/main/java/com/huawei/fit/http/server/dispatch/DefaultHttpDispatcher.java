@@ -16,6 +16,7 @@ import com.huawei.fit.http.server.HttpHandlerGroup;
 import com.huawei.fit.http.server.HttpHandlerNotFoundException;
 import com.huawei.fit.http.server.RegisterHttpHandlerException;
 import com.huawei.fit.http.server.dispatch.support.DefaultMappingTree;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.resource.UrlUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.OptionalUtils;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
  * @since 2022-07-19
  */
 public class DefaultHttpDispatcher implements HttpDispatcher {
+    private static final Logger log = Logger.get(DefaultHttpDispatcher.class);
     private static final char PATH_SEPARATOR = '/';
 
     /**
@@ -80,6 +82,8 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
 
     @Override
     public HttpHandler dispatch(HttpClassicServerRequest request, HttpClassicResponse response) {
+        log.debug("Remote address accessed. [path={}, remote={}]",
+                request.path(), request.remoteAddress().hostAddress());
         return OptionalUtils.get(() -> this.selectFromNoPathVariableHandlers(request))
                 .orElse(() -> this.selectFromPathVariableHandlers(request))
                 .orElse(() -> this.selectFromWildcardHandlers(request))
