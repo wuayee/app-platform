@@ -15,16 +15,22 @@ import com.huawei.fitframework.validation.constraints.Positive;
  */
 public class Product {
     @NotBlank(message = "产品名不能为空")
-    private final String name;
+    private String name;
 
     @Positive(message = "产品价格必须为正")
-    private final Double price;
+    private Double price;
 
     @Positive(message = "产品数量必须为正")
-    private final Integer quantity;
+    private Integer quantity;
 
     @NotBlank(message = "产品类别不能为空")
-    private final String category;
+    private String category;
+
+    /**
+     * Product 默认构造函数。
+     *
+     */
+    public Product() {}
 
     public Product(String name, Double price, Integer quantity, String category) {
         this.name = name;
