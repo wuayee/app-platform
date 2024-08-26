@@ -95,12 +95,11 @@ public class OpenAiMessageUtils {
             toolCallId = inputMessage.getId();
         }
         Object content = getMessageContent(inputMessage);
-
-        return new OpenAiChatMessage(
-                Role.generateRole(inputMessage.type()),
-                content,
-                toolCallId,
-                toolCalls);
+        return OpenAiChatMessage.builder().role(Role.generateRole(inputMessage.type()).name())
+                .content(content)
+                .toolCallId(toolCallId)
+                .toolCalls(toolCalls)
+                .build();
     }
 
     /**

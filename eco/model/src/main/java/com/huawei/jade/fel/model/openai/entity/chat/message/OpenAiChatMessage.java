@@ -4,19 +4,26 @@
 
 package com.huawei.jade.fel.model.openai.entity.chat.message;
 
+import com.huawei.fitframework.annotation.Property;
+import com.huawei.fitframework.serialization.annotation.SerializeStrategy;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.model.openai.entity.chat.message.content.UserContent;
 import com.huawei.jade.fel.model.openai.entity.chat.message.tool.OpenAiToolCall;
+import com.huawei.jade.fel.tool.ToolCall;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.beans.ConstructorProperties;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 此类用于表示 OpenAI 的消息对象。
@@ -27,21 +34,27 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Builder
-@Getter
+@NoArgsConstructor
+@SerializeStrategy(include = SerializeStrategy.Include.NON_NULL)
 public class OpenAiChatMessage {
-    private final Role role;
+    private String role;
 
     /**
      * 使用 {@link Object} 对类型进行通用表示，有以下两种类型：
      * <b>1. {@link String} 类型，表示单纯文本消息；</b>
      * <b>2. 一个由 {@link UserContent} 组成的列表。</b>
      */
-    private final Object content;
+    @Getter
+    private Object content;
 
+    @Property(name = "tool_call_id")
     @JsonProperty("tool_call_id")
+    @Getter
     private String toolCallId;
 
+    @Property(name = "tool_calls")
     @JsonProperty("tool_calls")
+    @Getter
     private List<OpenAiToolCall> toolCalls;
 
     /**
@@ -53,8 +66,41 @@ public class OpenAiChatMessage {
      */
     @ConstructorProperties({"role", "content", "tool_calls"})
     public OpenAiChatMessage(Role role, String content, List<OpenAiToolCall> toolCalls) {
-        this.role = role;
+        this.role = role.name();
         this.content = content;
         this.toolCalls = ObjectUtils.getIfNull(toolCalls, Collections::emptyList);
+    }
+
+    /**
+     * 获取角色。
+     *
+     * @return 表示角色的 {@link Role}。
+     */
+    public Role getRole() {
+        return Role.valueOf(StringUtils.toUpperCase(this.role));
+    }
+
+    /**
+     * 获取消息内容，使用 {@link Object} 对类型进行通用表示，有以下两种类型：
+     * <ol>
+     *     <li>{@link String} 类型，表示单纯文本消息；</li>
+     *     <li>由 {@link UserContent} 组成的列表。</li>
+     * </ol>
+     *
+     * @return 表示消息内容的 {@link Object}。
+     */
+    public Object content() {
+        return this.content;
+    }
+
+    /**
+     * 获取消息的工具调用。
+     *
+     * @return 表示工具调用的 {@link List}{@code <}{@link ToolCall}{@code >}。
+     */
+    public List<ToolCall> toolCalls() {
+        return Optional.ofNullable(this.toolCalls)
+                .map(t -> t.stream().map(OpenAiToolCall::buildFelToolCall).collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
     }
 }

@@ -41,7 +41,7 @@ public class OpenAiChatMessageTest {
     @Test
     void testSystemMessageSerialization() throws JsonProcessingException {
         OpenAiChatMessage message = OpenAiChatMessage.builder()
-                .role(Role.SYSTEM)
+                .role(Role.SYSTEM.name())
                 .content("test")
                 .build();
         String json = "{\"role\":\"system\",\"content\":\"test\"}";
@@ -51,7 +51,7 @@ public class OpenAiChatMessageTest {
     @Test
     void testBasicUserMessageSerialization() throws JsonProcessingException {
         OpenAiChatMessage message = OpenAiChatMessage.builder()
-                .role(Role.USER)
+                .role(Role.USER.name())
                 .content("test")
                 .build();
         String json = "{\"role\":\"user\",\"content\":\"test\"}";
@@ -86,7 +86,7 @@ public class OpenAiChatMessageTest {
         UserContent imageContent = UserContent.image("url");
         List<UserContent> content = Arrays.asList(textContent, imageContent);
         OpenAiChatMessage message = OpenAiChatMessage.builder()
-                .role(Role.USER)
+                .role(Role.USER.name())
                 .content(content)
                 .build();
         String json = "{"
@@ -101,7 +101,7 @@ public class OpenAiChatMessageTest {
     @Test
     void testAssistantMessageBasicSerialization() throws JsonProcessingException {
         OpenAiChatMessage message = OpenAiChatMessage.builder()
-                .role(Role.ASSISTANT)
+                .role(Role.ASSISTANT.name())
                 .content("test")
                 .build();
         String json = "{\"role\":\"assistant\",\"content\":\"test\"}";
@@ -163,7 +163,7 @@ public class OpenAiChatMessageTest {
         toolCall.setFunction(functionCall);
 
         OpenAiChatMessage message = OpenAiChatMessage.builder()
-                .role(Role.ASSISTANT)
+                .role(Role.ASSISTANT.name())
                 .content("test")
                 .toolCalls(Collections.singletonList(toolCall))
                 .build();
@@ -203,7 +203,7 @@ public class OpenAiChatMessageTest {
     @Test
     void testToolMessageSerialization() throws JsonProcessingException {
         OpenAiChatMessage message = OpenAiChatMessage.builder()
-                .role(Role.TOOL)
+                .role(Role.TOOL.name())
                 .content("test")
                 .toolCallId("test_id")
                 .build();

@@ -4,7 +4,14 @@
 
 package com.huawei.jade.fel.model.openai.entity.chat;
 
+import static com.huawei.fitframework.util.ObjectUtils.cast;
+
+import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.model.openai.entity.Usage;
+import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 
 import lombok.Data;
 
@@ -19,6 +26,8 @@ import java.util.List;
  */
 @Data
 public class OpenAiChatCompletionResponse {
+    private static final ChatMessage EMPTY_RESPONSE = new AiMessage(StringUtils.EMPTY);
+
     /**
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/object#chat/object-choices">OpenAI API</a>
      */
@@ -28,4 +37,24 @@ public class OpenAiChatCompletionResponse {
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/object#chat/object-usage">OpenAI API</a>
      */
     private Usage usage;
+
+    /**
+     * 获取响应中的消息。
+     *
+     * @return 表示模型回复的 {@link ChatMessage}。
+     */
+    public ChatMessage message() {
+        if (CollectionUtils.isEmpty(choices)) {
+            return EMPTY_RESPONSE;
+        }
+        OpenAiChatMessage openAiChatMessage = choices.get(0).getMessage();
+        if (openAiChatMessage == null) {
+            return EMPTY_RESPONSE;
+        }
+        String content = StringUtils.EMPTY;
+        if (openAiChatMessage.getContent() instanceof String) {
+            content = cast(openAiChatMessage.getContent());
+        }
+        return new AiMessage(content, openAiChatMessage.toolCalls());
+    }
 }
