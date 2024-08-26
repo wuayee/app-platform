@@ -682,8 +682,7 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
                 "the size of required in tools.json cannot be larger than properties size.");
         }
         if (!schema.containsKey(ORDER)) {
-            throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
-                "schema in tools.json should contain key: order.");
+            return;
         }
         List<String> order = cast(schema.get(ORDER));
         if (!order.isEmpty() && order.size() != properties.size()) {

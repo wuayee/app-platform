@@ -27,10 +27,6 @@
             "b"
           ]
         },
-        "order": [
-          "a",
-          "b"
-        ],
         "return": {
           "description": "The sum of two list",
           "type": "int"
