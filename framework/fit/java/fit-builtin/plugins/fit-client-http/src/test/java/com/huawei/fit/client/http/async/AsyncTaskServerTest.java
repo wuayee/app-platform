@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.client.http.async;
+
+import static com.huawei.fit.http.header.HttpHeaderKey.FIT_CODE;
+import static com.huawei.fit.http.header.HttpHeaderKey.FIT_TLV;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import com.huawei.fit.client.Address;
+import com.huawei.fit.client.Request;
+import com.huawei.fit.client.RequestContext;
+import com.huawei.fit.http.client.HttpClassicClient;
+import com.huawei.fit.http.client.HttpClassicClientRequest;
+import com.huawei.fit.http.client.HttpClassicClientResponse;
+import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
+import com.huawei.fit.http.protocol.HttpRequestMethod;
+import com.huawei.fit.http.protocol.Protocol;
+import com.huawei.fit.serialization.http.HttpUtils;
+import com.huawei.fitframework.broker.CommunicationType;
+import com.huawei.fitframework.conf.runtime.SerializationFormat;
+import com.huawei.fitframework.conf.runtime.WorkerConfig;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.serialization.RequestMetadata;
+import com.huawei.fitframework.serialization.TagLengthValues;
+import com.huawei.fitframework.util.ObjectUtils;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 为 {@link AsyncTaskServer} 提供单元测试。
+ *
+ * @author 季聿阶
+ * @since 2024-08-26
+ */
+@DisplayName("测试 AsyncTaskServer")
+public class AsyncTaskServerTest {
+    @Test
+    @DisplayName("当长轮训时，获取正确的结果")
+    void shouldGetCorrectResultWhenAsyncLongPolling() {
+        BeanContainer container = mock(BeanContainer.class);
+        WorkerConfig config = mock(WorkerConfig.class);
+        when(config.id()).thenReturn("workerId");
+        when(config.instanceId()).thenReturn("instanceId");
+        HttpClassicClient client = mock(HttpClassicClient.class);
+        HttpClassicClientRequest request = mock(HttpClassicClientRequest.class);
+        when(client.createRequest(eq(HttpRequestMethod.GET), anyString())).thenReturn(request);
+        HttpClassicClientResponse<Object> response = ObjectUtils.cast(mock(HttpClassicClientResponse.class));
+        when(client.exchange(request)).thenReturn(response);
+        ConfigurableMessageHeaders requestHeaders = ConfigurableMessageHeaders.create();
+        when(request.headers()).thenReturn(requestHeaders);
+        TagLengthValues responseTlv = TagLengthValues.create();
+        String taskId = "taskId";
+        HttpUtils.setAsyncTaskId(responseTlv, taskId);
+        ConfigurableMessageHeaders responseHeaders = ConfigurableMessageHeaders.create()
+                .add(FIT_CODE.value(), "200")
+                .add(FIT_TLV.value(), HttpUtils.encode(responseTlv.serialize()));
+        when(response.headers()).thenReturn(responseHeaders);
+        AsyncTaskServer server = new AsyncTaskServer(container,
+                config,
+                client,
+                Request.custom()
+                        .protocol(Protocol.HTTP.protocol())
+                        .address(Address.create("localhost", 8080))
+                        .metadata(RequestMetadata.custom().dataFormat(SerializationFormat.JSON.code()).build())
+                        .data(new Object[0])
+                        .context(RequestContext.create(1000, TimeUnit.MILLISECONDS, CommunicationType.ASYNC, null))
+                        .build(),
+                "instanceId");
+        AsyncTaskResult actual = server.get(taskId);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getResponse().metadata().code()).isEqualTo(200);
+    }
+}

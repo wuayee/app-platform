@@ -17,16 +17,13 @@ import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.protocol.MessageHeaderNames;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.broker.GenericableMetadata;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.tlv.TlvUtils;
@@ -42,22 +39,6 @@ import java.lang.reflect.Type;
  * @since 2023-11-17
  */
 public class HttpClientUtils {
-    private static final Logger log = Logger.get(HttpClientUtils.class);
-
-    /**
-     * 获取 Http 请求中的服务版本号。
-     *
-     * @param request 表示请求的 {@link HttpClassicServerRequest}。
-     * @return 表示请求中的服务版本号的 {@link String}。
-     */
-    public static String getGenericableVersion(HttpClassicServerRequest request) {
-        return request.headers().first(FIT_GENERICABLE_VERSION.value()).orElseGet(() -> {
-            log.warn("No specified FIT-Genericable-Version in headers, use default value instead. "
-                    + "[defaultGenericableVersion={}]", GenericableMetadata.DEFAULT_VERSION);
-            return GenericableMetadata.DEFAULT_VERSION;
-        });
-    }
-
     /**
      * 获取 Http 响应中的 TLV。
      *
@@ -112,6 +93,32 @@ public class HttpClientUtils {
         return Response.create(responseMetadata, null);
     }
 
+    /**
+     * 获取 Http 响应中的错误码。
+     *
+     * @param request 表示 Http 请求的 {@link Request}。
+     * @param clientResponse 表示 Http 客户端响应的 {@link HttpClassicClientResponse}{@code <}{@link Object}{@code >}。
+     * @return 表示错误码的 {@code int}。
+     */
+    public static int getResponseCode(Request request, HttpClassicClientResponse<Object> clientResponse) {
+        String code = clientResponse.headers()
+                .first(FIT_CODE.value())
+                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                        "No response code. [protocol={0}, address={1}, header={2}]",
+                        request.protocol(),
+                        request.address(),
+                        FIT_CODE.value())));
+        try {
+            return Integer.parseInt(code);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException(StringUtils.format(
+                    "Incorrect response code. [protocol={0}, address={1}, code={2}]",
+                    request.protocol(),
+                    request.address(),
+                    code));
+        }
+    }
+
     private static Object getResponseData(BeanContainer container, Request request, ResponseMetadata responseMetadata,
             HttpClassicClientResponse<Object> clientResponse) {
         int format = responseMetadata.dataFormat();
@@ -144,25 +151,6 @@ public class HttpClientUtils {
                     request.protocol(),
                     request.address(),
                     dataFormat));
-        }
-    }
-
-    private static int getResponseCode(Request request, HttpClassicClientResponse<Object> clientResponse) {
-        String code = clientResponse.headers()
-                .first(FIT_CODE.value())
-                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
-                        "No response code. [protocol={0}, address={1}, header={2}]",
-                        request.protocol(),
-                        request.address(),
-                        FIT_CODE.value())));
-        try {
-            return Integer.parseInt(code);
-        } catch (NumberFormatException e) {
-            throw new IllegalStateException(StringUtils.format(
-                    "Incorrect response code. [protocol={0}, address={1}, code={2}]",
-                    request.protocol(),
-                    request.address(),
-                    code));
         }
     }
 
