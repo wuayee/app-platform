@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.model.openai.entity.chat;
 
+import com.huawei.fitframework.annotation.Alias;
+import com.huawei.fitframework.annotation.Aliases;
 import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -22,6 +24,7 @@ public class OpenAiChatCompletionChoice {
     /**
      * 表示一条模型消息。
      */
+    @Aliases(@Alias("delta"))
     @JsonAlias("delta")
     private OpenAiChatMessage message;
 }

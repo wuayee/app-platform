@@ -5,9 +5,20 @@
 package com.huawei.jade.fel.model.openai.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
+import com.huawei.fit.http.client.HttpClassicClientFactory;
+import com.huawei.fit.http.client.okhttp.OkHttpClassicClientFactory;
+import com.huawei.fit.security.Decryptor;
+import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.conf.support.ReadonlyMapConfig;
 import com.huawei.fitframework.flowable.Choir;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.test.annotation.FitTestWithJunit;
+import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
@@ -16,6 +27,9 @@ import com.huawei.jade.fel.embed.EmbedOptions;
 import com.huawei.jade.fel.embed.EmbedRequest;
 import com.huawei.jade.fel.embed.EmbedResponse;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import com.huawei.jade.fel.model.openai.client.OpenAiClientSse;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -23,10 +37,13 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,15 +55,34 @@ import java.util.stream.Collectors;
  * @author 张庭怿
  * @since 2024-05-17
  */
+@FitTestWithJunit(includeClasses = {OpenAiClientSse.class, OkHttpClassicClientFactory.class})
 public class OpenAiModelServiceTest {
+    private static final ObjectSerializer SERIALIZER = new JacksonObjectSerializer(null, null, null);
+
     private MockWebServer server;
 
     private OpenAiClient client;
 
+    private OpenAiClientSse sseClient;
+    @Fit
+    private Config config;
+    @Fit
+    private HttpClassicClientFactory httpClientFactory;
+    @Mock
+    private Decryptor decryptor;
+    @Fit
+    private BeanContainer container;
+
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() {
         this.server = new MockWebServer();
         this.client = new OpenAiClient("http://localhost:" + this.server.getPort(), null);
+        this.sseClient = new OpenAiClientSse("http://localhost:" + this.server.getPort(),
+                this.config,
+                this.httpClientFactory, SERIALIZER, this.container);
+        Mockito.doAnswer((Answer<Void>) invocation -> invocation.getArgument(0))
+                .when(this.decryptor)
+                .decrypt(any(String.class));
     }
 
     @AfterEach
@@ -82,11 +118,23 @@ public class OpenAiModelServiceTest {
     @Test
     public void testOpenAiChatModelStreamService() {
         List<String> contents = Arrays.asList("1", "2", "3");
-        this.server.enqueue(new MockResponse().setBody(this.getMockStreamResponseBody(contents)));
-        OpenAiChatModelStreamService service = new OpenAiChatModelStreamService(this.client);
+        this.server.enqueue(new MockResponse().setBody(this.getMockStreamResponseBody(contents))
+                .setHeader("content-type", "text/event-stream"));
+
+        OpenAiChatModelStreamService service = new OpenAiChatModelStreamService(this.sseClient);
         Choir<FlatChatMessage> choir = service.generate(this.getRequest());
+
         List<FlatChatMessage> response = choir.blockAll();
         assertThat(response).extracting(FlatChatMessage::getText).isEqualTo(contents);
+    }
+
+    @Test
+    public void shouldNotContainNullItemWhenSerializerObj() {
+        OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder().messages(Collections.singletonList(
+                OpenAiChatMessage.builder().role("ai").build())).model("model").build();
+        String serialize = SERIALIZER.serialize(request);
+
+        assertThat(serialize).isEqualTo("{\"messages\":[{\"role\":\"ai\"}],\"model\":\"model\",\"stream\":false}");
     }
 
     @Test
@@ -95,7 +143,6 @@ public class OpenAiModelServiceTest {
         this.client = new OpenAiClient("http://localhost:" + this.server.getPort(), new ReadonlyMapConfig(configMap));
         testOpenAiChatModelService();
         testOpenAiEmbedModelService();
-        testOpenAiChatModelStreamService();
     }
 
     private ChatCompletion getRequest() {
@@ -114,22 +161,16 @@ public class OpenAiModelServiceTest {
     }
 
     private String getMockChatCompletionResponseBody(String content) {
-        return "{\"id\": \"0\","
-                + "\"object\": \"chat.completion\","
-                + "\"created\": 0,"
-                + "\"model\": \"test_model\","
-                + "\"choices\": [{\"index\": 0,"
-                + "\"message\": {\"role\": \"assistant\",\"content\": \"" + content + "\"},"
-                + "\"finish_reason\": \"length\"}],"
+        return "{\"id\": \"0\"," + "\"object\": \"chat.completion\"," + "\"created\": 0," + "\"model\": \"test_model\","
+                + "\"choices\": [{\"index\": 0," + "\"message\": {\"role\": \"assistant\",\"content\": \"" + content
+                + "\"}," + "\"finish_reason\": \"length\"}],"
                 + "\"usage\": {\"prompt_tokens\": 0,\"completion_tokens\": 0,\"total_tokens\": 0}}";
     }
 
     private String getMockEmbeddingResponseBody(List<Float> vector) {
         String embeddings = vector.stream().map(String::valueOf).collect(Collectors.joining(","));
-        return "{\"object\": \"list\","
-                + "\"data\": [{\"index\": 0,"
-                + "\"object\": \"embedding\",\"embedding\": [" + embeddings + "]}],"
-                + "\"model\": \"bce-embedding-base\","
+        return "{\"object\": \"list\"," + "\"data\": [{\"index\": 0," + "\"object\": \"embedding\",\"embedding\": ["
+                + embeddings + "]}]," + "\"model\": \"bce-embedding-base\","
                 + "\"usage\": {\"prompt_tokens\": 0,\"total_tokens\": 0}}";
     }
 
@@ -141,11 +182,8 @@ public class OpenAiModelServiceTest {
     }
 
     private String getMockStreamResponseChunk(String content) {
-        return "data: {\"id\": \"0\","
-                + "\"object\": \"chat.completion.chunk\","
-                + "\"created\": 0,"
-                + "\"model\": \"test_model\","
-                + "\"choices\": [{\"index\": 0,\"delta\": {\"content\": \"" + content + "\"},"
-                + "\"finish_reason\": null}]}\n\n";
+        return "data: {\"id\": \"0\"," + "\"object\": \"chat.completion.chunk\"," + "\"created\": 0,"
+                + "\"model\": \"test_model\"," + "\"choices\": [{\"index\": 0,\"delta\": {\"content\": \"" + content
+                + "\"}," + "\"finish_reason\": null}]}\n\n";
     }
 }

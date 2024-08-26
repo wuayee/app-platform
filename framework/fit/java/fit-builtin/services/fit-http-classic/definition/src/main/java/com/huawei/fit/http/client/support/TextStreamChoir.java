@@ -19,6 +19,8 @@ import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.util.LockUtils;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -49,6 +51,9 @@ public class TextStreamChoir<T> extends AbstractChoir<T> implements Choir<T> {
     }
 
     private static class TextStreamSubscription<T> extends AbstractSubscription implements WorkerObserver<T> {
+        private static final int HTTP_SUCCESS_CODE_MIN = 200;
+        private static final int HTTP_SUCCESS_CODE_MAX = 300;
+
         private final Subscriber<T> subscriber;
         private final HttpClassicClientRequest request;
         private final Type responseType;
@@ -86,6 +91,11 @@ public class TextStreamChoir<T> extends AbstractChoir<T> implements Choir<T> {
 
         private void exchange() {
             try (HttpClassicClientResponse<T> response = this.request.exchange(this.responseType)) {
+                if (!ObjectUtils.between(response.statusCode(), HTTP_SUCCESS_CODE_MIN, HTTP_SUCCESS_CODE_MAX,
+                        true, false)) {
+                    throw new IllegalStateException(
+                            StringUtils.format("Http response error. [statusCode={0}]", response.statusCode()));
+                }
                 TextEventStreamEntity entity = response.textEventStreamEntity()
                         .orElseThrow(() -> new IllegalStateException("No text event stream entity."));
                 Worker.create(this, entity.stream().map(this::convert)).run();

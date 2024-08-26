@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.model.openai.entity.chat.message.tool;
 
+import com.huawei.fitframework.annotation.Property;
 import com.huawei.jade.fel.tool.ToolCall;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +25,7 @@ public class OpenAiToolCall {
     private String type;
 
     @JsonProperty("function")
+    @Property(name = "function")
     private FunctionCall function;
 
     /**

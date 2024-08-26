@@ -104,7 +104,7 @@ public class LLMServiceImpl implements LLMService {
         log.info("get image url: {}", imageUrl);
         UserContent promptContent = UserContent.text(prompt);
         UserContent imageContent = UserContent.image(imageUrl);
-        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER)
+        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER.name())
                 .content(Arrays.asList(promptContent, imageContent)).build();
         OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
                 .model(LlmModelNameEnum.QWEN_VL.getValue()).messages(Collections.singletonList(msg)).build();
@@ -129,7 +129,7 @@ public class LLMServiceImpl implements LLMService {
 
     @Override
     public String askModelWithText(String prompt, LlmModelNameEnum model) throws IOException {
-        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER)
+        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER.name())
                 .content(prompt).build();
         OpenAiChatCompletionRequest requset = OpenAiChatCompletionRequest.builder().model(model.getValue())
                 .messages(Collections.singletonList(promptMsg)).build();
@@ -140,7 +140,7 @@ public class LLMServiceImpl implements LLMService {
     @Override
     public String askModelWithText(String prompt, int maxTokens, double temperature, LlmModelNameEnum model)
             throws IOException {
-        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER)
+        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER.name())
                 .content(prompt).build();
         OpenAiChatCompletionRequest requset = OpenAiChatCompletionRequest.builder().model(model.getValue())
                 .messages(Collections.singletonList(promptMsg)).temperature(temperature).maxTokens(maxTokens).build();

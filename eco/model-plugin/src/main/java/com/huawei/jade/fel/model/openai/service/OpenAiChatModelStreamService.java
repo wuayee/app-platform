@@ -10,8 +10,7 @@ import com.huawei.fitframework.flowable.Choir;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.model.openai.client.ChatStreamCallback;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import com.huawei.jade.fel.model.openai.client.OpenAiClientSse;
 import com.huawei.jade.fel.model.openai.utils.OpenAiMessageUtils;
 
 /**
@@ -22,9 +21,9 @@ import com.huawei.jade.fel.model.openai.utils.OpenAiMessageUtils;
  */
 @Component
 public class OpenAiChatModelStreamService implements ChatModelStreamService {
-    private OpenAiClient openAiClient;
+    private OpenAiClientSse openAiClient;
 
-    public OpenAiChatModelStreamService(OpenAiClient openAiClient) {
+    public OpenAiChatModelStreamService(OpenAiClientSse openAiClient) {
         this.openAiClient = openAiClient;
     }
 
@@ -37,9 +36,6 @@ public class OpenAiChatModelStreamService implements ChatModelStreamService {
     @Override
     @Fitable(id = "com.huawei.fit.jade.model.client.openai.chat.stream.generate")
     public Choir<FlatChatMessage> generate(ChatCompletion request) {
-        return Choir.create(emitter -> {
-            openAiClient.createChatCompletionStream(OpenAiMessageUtils.buildChatCompletionRequest(request))
-                    .enqueue(new ChatStreamCallback(emitter));
-        });
+        return this.openAiClient.generate(OpenAiMessageUtils.buildChatCompletionRequest(request));
     }
 }

@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.model.openai.entity.chat;
 
+import com.huawei.fitframework.annotation.Property;
+import com.huawei.fitframework.serialization.annotation.SerializeStrategy;
 import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import com.huawei.jade.fel.model.openai.entity.chat.message.tool.OpenAiTool;
 
@@ -30,6 +32,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SerializeStrategy(include = SerializeStrategy.Include.NON_NULL)
 public class OpenAiChatCompletionRequest {
     /**
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages">OpenAI API</a>
@@ -47,12 +50,14 @@ public class OpenAiChatCompletionRequest {
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-frequency_penalty">
      * OpenAI API</a>
      */
+    @Property(name = "frequency_penalty")
     @JsonProperty("frequency_penalty")
     private Double frequencyPenalty;
 
     /**
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-max_tokens">OpenAI API</a>
      */
+    @Property(name = "max_tokens")
     @JsonProperty("max_tokens")
     private Integer maxTokens;
 
@@ -60,6 +65,7 @@ public class OpenAiChatCompletionRequest {
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-presence_penalty">
      * OpenAI API</a>
      */
+    @Property(name = "presence_penalty")
     @JsonProperty("presence_penalty")
     private Double presencePenalty;
 
@@ -82,18 +88,21 @@ public class OpenAiChatCompletionRequest {
     /**
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-top_p">OpenAI API</a>
      */
+    @Property(name = "top_p")
     @JsonProperty("top_p")
     private Double topP;
 
     /**
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-tools">OpenAI API</a>
      */
+    @Property(name = "tools")
     @JsonProperty("tools")
     private List<OpenAiTool> tools;
 
     /**
      * @see <a href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-tool_choice">OpenAI API</a>
      */
+    @Property(name = "tool_choice")
     @JsonProperty("tool_choice")
     private String toolChoice;
 

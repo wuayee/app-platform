@@ -45,6 +45,10 @@
             <artifactId>fit-http-client-okhttp</artifactId>
             <version>${fit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-security</artifactId>
+        </dependency>
 
         <!-- FEL -->
         <dependency>
