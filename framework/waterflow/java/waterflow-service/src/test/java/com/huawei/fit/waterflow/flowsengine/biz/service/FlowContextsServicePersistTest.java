@@ -160,7 +160,7 @@ public class FlowContextsServicePersistTest extends DatabaseBaseTest {
             FLOW_RETRY_REPO.save(Collections.singletonList(flowRetry));
             when(traceOwnerService.getTraces()).thenReturn(new ArrayList<>(context.getTraceId()));
 
-            FLOW_CONTEXTS_SERVICE.retryJober();
+            FLOW_CONTEXTS_SERVICE.retryTask();
 
             FlowRetryPO flowRetryPO = FLOW_RETRY_MAPPER.find("toBatchId");
             if (flowRetryPO != null) {

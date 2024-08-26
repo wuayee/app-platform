@@ -4,26 +4,19 @@ FROM ${BASE_IMAGE}
 ENV APP_PATH /opt/jane
 
 COPY EulerOS.repo /etc/yum.repos.d/
-COPY scc.conf /
 
 RUN  yum makecache && \
-     yum install -y shadow-utils && \
+     yum install -y shadow-utils vi && \
      groupadd -g 1888 -r jane && \
      groupadd -g 2000 -r edatamate && \
      useradd -u 1888 -r -g 1888 -G 2000 -M jane
 
 #安装scc
-RUN curl -k https://cmc-lfg-artifactory.cmc.tools.huawei.com/artifactory/cbu-common-general/seccomponent/1.1.8/seccomponent-1.1.8-release.aarch64.rpm -o seccomponent-1.1.8-release.rpm \
-    && rpm -ivh seccomponent-1.1.8-release.rpm \
-    && rm seccomponent-1.1.8-release.rpm \
+COPY seccomponent-1.1.8-release.rpm /
+RUN rpm -ivh /seccomponent-1.1.8-release.rpm \
+    && rm -f /seccomponent-1.1.8-release.rpm \
     && chmod 500 /usr/local/seccomponent -R \
     && chown -R 1888:2000 /usr/local/seccomponent
-
-RUN mkdir -p /usr/local/java
-COPY java /usr/local/java
-ENV JAVA_HOME=/usr/local/java
-ENV PATH=/usr/local/java/bin:${PATH}
-RUN chmod -R +x /usr/local/java/bin
 
 #镜像仓里的
 RUN mkdir -p /opt

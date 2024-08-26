@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,9 +36,20 @@ public class CleanDataListQuery implements Serializable {
     private String title;
 
     /**
+     * 任务名称
+     */
+    private String taskName;
+
+    /**
      * 来源数据集版本
      */
     private String version;
+
+    /**
+     * 任务状态
+     * 支持批量查询
+     */
+    private List<String> status;
 
     /**
      * 排序规则

@@ -11,7 +11,7 @@ import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
 import com.huawei.fit.jober.FlowsService;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.entity.FlowInfo;
-import com.huawei.fit.waterflow.graph.FlowsEngineWebService;
+import com.huawei.fit.waterflow.graph.FlowsEngineWebServiceForDbGraph;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
@@ -28,9 +28,9 @@ import com.alibaba.fastjson.JSONObject;
  */
 @Component
 public class FlowsServiceImpl implements FlowsService {
-    private final FlowsEngineWebService flowsEngineService;
+    private final FlowsEngineWebServiceForDbGraph flowsEngineService;
 
-    public FlowsServiceImpl(FlowsEngineWebService flowsEngineService) {
+    public FlowsServiceImpl(FlowsEngineWebServiceForDbGraph flowsEngineService) {
         this.flowsEngineService = flowsEngineService;
     }
 

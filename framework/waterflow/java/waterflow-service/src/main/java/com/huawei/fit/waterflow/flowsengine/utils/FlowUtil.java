@@ -33,6 +33,9 @@ import java.util.regex.Pattern;
 public final class FlowUtil {
     private static final Logger log = Logger.get(FlowContextsService.class);
 
+    private static final Pattern LEGACY_RULE_NOT_PATTERN = Pattern.compile("!\\{\\{[^!{}]*\\}\\}");
+
+
     private static final Pattern LEGACY_RULE_KEY_PATTERN = Pattern.compile("\\{\\{([^\\}]+)\\}\\}");
 
     private static final Pattern LEGACY_RULE_KEY_PATTERN_WITH_QUOTES = Pattern.compile("'\\{\\{([^\\}]+)\\}\\}'");
@@ -78,6 +81,17 @@ public final class FlowUtil {
             formattedVariable = formattedVariable.replace(formatVariable, value);
         }
         return formattedVariable;
+    }
+
+    /**
+     * 判断条件规则是否为非模式
+     * 输入"!{{var}}"，返回true
+     *
+     * @param conditionRule 条件规则
+     * @return 是否为非模式
+     */
+    public static boolean isPatternOfNot(String conditionRule) {
+        return LEGACY_RULE_NOT_PATTERN.matcher(conditionRule).find();
     }
 
     /**

@@ -19,11 +19,12 @@ import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.edatamate.client.FlowConfiguration;
 import com.huawei.fit.waterflow.edatamate.client.QueryCriteria;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;
+import com.huawei.fit.waterflow.edatamate.entity.TaskInstanceUpdateInfo;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowsService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
-import com.huawei.fit.waterflow.graph.FlowsEngineWebService;
+import com.huawei.fit.waterflow.graph.FlowsEngineWebServiceForDbGraph;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
@@ -61,7 +62,7 @@ public class OrchestratorFitService {
 
     private final FlowsService flowsService;
 
-    private final FlowsEngineWebService flowsEngineService;
+    private final FlowsEngineWebServiceForDbGraph flowsEngineService;
 
     private final String tenantId;
 
@@ -72,7 +73,7 @@ public class OrchestratorFitService {
     private final TagService tagService;
 
     public OrchestratorFitService(OrchestratorService orchestratorService, FlowContextsService flowContextsService,
-            FlowsService flowsService, FlowsEngineWebService flowsEngineService,
+            FlowsService flowsService, FlowsEngineWebServiceForDbGraph flowsEngineService,
             @Value("${a3000.tenantId}") String tenantId, @Value("${a3000.operator}") String operator, FlowLocks locks,
             TagService tagService) {
         this.orchestratorService = orchestratorService;
@@ -355,5 +356,17 @@ public class OrchestratorFitService {
             json.replace(startIndex, startIndex + oldId.length(), newId);
             startIndex = json.indexOf(oldId, startIndex + newId.length());
         }
+    }
+
+
+    /**
+     * 更新任务实例
+     *
+     * @param taskId 任务定义id
+     * @param taskInstanceId 任务实例id
+     * @param updateInfo 需要更新的字段信息
+     */
+    public void updateTaskInstance(String taskId, String taskInstanceId, TaskInstanceUpdateInfo updateInfo) {
+        orchestratorService.updateTaskInstance(taskId, taskInstanceId, updateInfo);
     }
 }

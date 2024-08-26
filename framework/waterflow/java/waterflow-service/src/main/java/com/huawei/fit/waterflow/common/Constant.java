@@ -35,7 +35,7 @@ public final class Constant {
     /**
      * 重试的时间间隔
      */
-    public static final Integer RETRY_INTERVAL = 1000;
+    public static final Integer RETRY_INTERVAL = 2000;
 
     /**
      * 流程定义ID分隔符

@@ -279,7 +279,8 @@ class FlowContextsServiceTest {
         @DisplayName("测试重试自动任务成功")
         public void testRetryJoberSuccess() {
             FlowRetry flowRetry = new FlowRetry("toBatchId", "toBatch", LocalDateTime.now(), null, 0, 1);
-            when(flowRetryRepo.filterByNextRetryTime(any())).thenReturn(Collections.singletonList(flowRetry));
+            when(flowRetryRepo.filterByNextRetryTime(any(), anyList()))
+                    .thenReturn(Collections.singletonList(flowRetry));
             Lock lock = Mockito.mock(Lock.class);
             when(flowLocks.getDistributedLock("retry-toBatchId")).thenReturn(lock);
             when(lock.tryLock()).thenReturn(true);
@@ -288,7 +289,7 @@ class FlowContextsServiceTest {
             context.setStatus(RETRYABLE);
             context.toBatch("toBatchId");
             List<FlowContext<FlowData>> contexts = Collections.singletonList(context);
-            when(flowContextRepo.getByToBatch("toBatchId")).thenReturn(contexts);
+            when(flowContextRepo.getByToBatch(Collections.singletonList("toBatchId"))).thenReturn(contexts);
             FlowDefinition flowDefinition = Mockito.mock(FlowDefinition.class);
             when(flowDefinitionRepo.findByStreamId("streamId")).thenReturn(flowDefinition);
             From<FlowData> from = Mockito.mock(From.class);
@@ -297,7 +298,7 @@ class FlowContextsServiceTest {
             when(from.getSubscriber("position")).thenReturn(to);
             when(flowLocks.getDistributedLock(
                     flowLocks.streamNodeLockKey("streamId", "position", PROCESS.toString()))).thenReturn(lock);
-            flowContextsService.retryJober();
+            flowContextsService.retryTask();
             verify(lock, times(1)).tryLock();
             verify(lock, times(1)).lock();
             verify(flowContextRepo, times(1)).updateStatus(contexts, READY.toString(), "position");

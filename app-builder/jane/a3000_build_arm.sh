@@ -11,20 +11,19 @@ module_name=$4
 CRTDIR=$(pwd)
 settings_file=${CRTDIR}/.ci/settings.xml
 
+mvn -f ../fit/java clean install -U  -s ${settings_file} -gs ${settings_file} -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
+mvn -f ../fit/ohscript clean install -U  -s ${settings_file} -gs ${settings_file} -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
+
 curl -o artget https://cmc-szver-artifactory.cmc.tools.huawei.com/artifactory/CMC-Release/artget/install/prod/Latest/linux/artget
 ls -l
 sudo chmod 777 artget
-#下载导入euler v2r11基础镜像
-./artget pull "EulerOSServerV200R011C00ARM 2024.02.05.112244" -ru software -user "${CMC_USERNAME}" -pwd "${CMC_PASSWORD}" -rp "Software/aarch64/DockerStack/EulerOS_Server_V200R011C00SPC508B950-docker.aarch64.tar.xz" -ap "./"
-file_name=$(basename ./*.tar.xz)
-docker import "$file_name" euleros:base
-base_image=euleros:base
 
 #Step1 编译jober-genericable、task
 mvn -f jober-genericable clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
 mvn -f waterflow-edatamate-genericable clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
 mvn -f task clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
 mvn -f flow-graph clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
+mvn -f health-plugin clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
 
 #Step2 编译flowable-ohscript-plugin、flowable-flow-plugin插件模块
 mvn -f flowable-ohscript-plugin clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
@@ -43,15 +42,23 @@ app_path=${module_path}/target/${app}
 ls -l ${app_path}
 mv ${app_path} ${CRTDIR}/
 
-#Step6 下载jre-8u252
-./artget pull "Huawei JDK V100R001C00SPC192B002" -ru software -user ${CMC_USERNAME} -pwd ${CMC_PASSWORD} -rp "jre-8u252-linux-aarch64.tar.gz" -ap "./"
-mkdir ./java
-tar -xzvf *.tar.gz -C ./java --strip-components=1
-echo "build the backend image by base image ${base} on ${PLATFORM}"
+#Step6 下载jre
+artget pull "${cmc_repository}" -ru software -user ${CMC_USERNAME} -pwd ${CMC_PASSWORD} -rp safe_images/jre/jre-${PLATFORM}.tar -ap ./
+docker load -i jre-${PLATFORM}.tar
+rm -f jre-${PLATFORM}.tar
+jre_base=jre:${PLATFORM}
 
 #Step7 打包镜像
 SERVICE_VERSION=${jane_branch}-${ENV_PIPELINE_STARTTIME}
 echo "buildVersion=eDataMate-${ENV_PIPELINE_STARTTIME}" >> "${WORKSPACE}"/buildInfo.properties
+
+mv EulerOS_${PLATFORM}.repo EulerOS.repo
+
+if [ ${PLATFORM} == "arm_64" ]; then
+  curl -k https://cmc-lfg-artifactory.cmc.tools.huawei.com/artifactory/cbu-common-general/seccomponent/1.1.8/seccomponent-1.1.8-release.aarch64.rpm -o seccomponent-1.1.8-release.rpm
+else
+  curl -k https://cmc-lfg-artifactory.cmc.tools.huawei.com/artifactory/cbu-common-general/seccomponent/1.1.8/seccomponent-1.1.8-release.x86_64.rpm -o seccomponent-1.1.8-release.rpm
+fi
 
 mkdir sql
 server_sql_list=$(find "${WORKSPACE}"/Orchestration/jane/jober/sql/A3000/new/ -name "*.sql")
@@ -61,16 +68,16 @@ do
 done
 
 if [ -z "${APP_VERSION}" ];then
-  docker build --build-arg BASE_IMAGE=${base_image} --build-arg APP=${app} -t ${remote_harbor}/${ENV}/${image_name}:${PLATFORM}-${SERVICE_VERSION} --file=${CRTDIR}/Dockerfile ${CRTDIR}/
+  docker build --build-arg BASE_IMAGE=${jre_base} --build-arg APP=${app} -t ${remote_harbor}/${ENV}/${image_name}:${PLATFORM}-${SERVICE_VERSION} --file=${CRTDIR}/Dockerfile ${CRTDIR}/
   docker save -o "${image_name}.${PLATFORM}-${SERVICE_VERSION}.tar" ${remote_harbor}/${ENV}/${image_name}:${PLATFORM}-${SERVICE_VERSION}
 
   cd sql
   tar -cvf sql_jane_${ENV_PIPELINE_STARTTIME}.tar *
   mv sql_jane_${ENV_PIPELINE_STARTTIME}.tar ../
 else
-  docker build --build-arg BASE_IMAGE=${base_image} --build-arg APP=${app} -t fit/${image_name}:${image_tag} --file=${CRTDIR}/Dockerfile ${CRTDIR}/
-  docker tag fit/edatamate-jane:arm_64-${APP_VERSION} edatamate-jane:arm_64-${APP_VERSION}
-  docker save -o edatamate-jane.arm_64-${APP_VERSION}.tar edatamate-jane:arm_64-${APP_VERSION}
+  docker build --build-arg BASE_IMAGE=${jre_base} --build-arg APP=${app} -t fit/${image_name}:${image_tag} --file=${CRTDIR}/Dockerfile ${CRTDIR}/
+  docker tag fit/edatamate-jane:${PLATFORM}-${APP_VERSION} edatamate-jane:${PLATFORM}-${APP_VERSION}
+  docker save -o edatamate-jane.${PLATFORM}-${APP_VERSION}.tar edatamate-jane:${PLATFORM}-${APP_VERSION}
 
   cd sql
   tar -cvf sql_jane_${APP_VERSION}.tar *

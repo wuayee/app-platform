@@ -5,6 +5,7 @@
 package com.huawei.fit.waterflow.flowsengine.biz.service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -45,6 +46,14 @@ public interface TraceOwnerService {
      * @return boolean
      */
     boolean isOwn(String traceId);
+
+    /**
+     * trace map中包含任意一个trace列表的值，返回true
+     *
+     * @param traceIds trace id列表
+     * @return true or false
+     */
+    boolean isAnyOwn(Set<String> traceIds);
 
     /**
      * getTraces

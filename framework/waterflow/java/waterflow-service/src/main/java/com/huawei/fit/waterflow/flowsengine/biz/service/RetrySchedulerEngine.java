@@ -6,6 +6,7 @@ package com.huawei.fit.waterflow.flowsengine.biz.service;
 
 import com.huawei.fit.service.FitablesRegisteredObserver;
 import com.huawei.fit.waterflow.common.utils.GlobalExecutorUtil;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
@@ -28,22 +29,38 @@ public class RetrySchedulerEngine implements FitablesRegisteredObserver {
 
     private final long scheduleRate;
 
+    private final FlowRetryRepo retryRepo;
+
     public RetrySchedulerEngine(FlowContextsService flowContextsService,
-            @Value("${jane.flowsEngine.retry.scheduleRate}") long scheduleRate) {
+                                @Value("${jane.flowsEngine.retry.scheduleRate}") long scheduleRate,
+                                FlowRetryRepo retryRepo) {
         this.flowContextsService = flowContextsService;
         this.scheduleRate = scheduleRate;
+        this.retryRepo = retryRepo;
     }
 
     /**
-     * 安排重试可重试状态上下文的定时任务
+     * 定时检测是否有重试数据
      */
     @Override
     public void onFitablesRegistered() {
         Task retryTask = Task.builder()
-                .runnable(() -> flowContextsService.retryJober())
+                .runnable(this::retryCheck)
                 .policy(ExecutePolicy.fixedRate(scheduleRate))
                 .build();
         log.info("Start scheduling retry tasks");
         GlobalExecutorUtil.getInstance().getSchedulerPool().schedule(retryTask, Instant.now());
+    }
+
+    private void retryCheck() {
+        try {
+            int retryCount = retryRepo.hasRetryData();
+            if (retryCount == 0 || flowContextsService.isRetryRunning()) {
+                return;
+            }
+            flowContextsService.retryTask();
+        } catch (Exception ex) {
+            log.error("retryCheck failed, exception: ", ex);
+        }
     }
 }

@@ -25,7 +25,6 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.IdGenerator;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.schedule.annotation.Scheduled;
 
@@ -46,6 +45,12 @@ import java.util.stream.Collectors;
 public class RestartContextSchedule {
     private static final Logger log = Logger.get(RestartContextSchedule.class);
 
+    private static final List<String> APPLICATIONS = new ArrayList<>();
+
+    static {
+        APPLICATIONS.add("a3000");
+    }
+
     private final FlowTraceRepo traceRepo;
 
     private final FlowContextPersistRepo contextPersistRepo;
@@ -58,19 +63,15 @@ public class RestartContextSchedule {
 
     private final TraceOwnerService traceOwnerService;
 
-    private final boolean ownTrace;
-
     public RestartContextSchedule(FlowTraceRepo traceRepo, FlowContextPersistRepo contextPersistRepo,
             DefaultFlowDefinitionRepo flowDefinitionRepo, FlowLocks locks,
-            FlowContextPersistMessenger messenger, TraceOwnerService traceOwnerService,
-            @Value("${a3000.ownTrace}") boolean isEnableOwnTrace) {
+            FlowContextPersistMessenger messenger, TraceOwnerService traceOwnerService) {
         this.traceRepo = traceRepo;
         this.contextPersistRepo = contextPersistRepo;
         this.flowDefinitionRepo = flowDefinitionRepo;
         this.locks = locks;
         this.messenger = messenger;
         this.traceOwnerService = traceOwnerService;
-        this.ownTrace = isEnableOwnTrace;
     }
 
     /**
@@ -78,11 +79,9 @@ public class RestartContextSchedule {
      */
     @Scheduled(strategy = Scheduled.Strategy.FIXED_RATE, value = "60000")
     public void restartInterruptContext() {
-        if (!this.ownTrace) {
-            return;
-        }
         try {
-            List<String> traceIds = traceRepo.findRunningTrace();
+            List<String> traceIds = traceRepo.findRunningTrace(APPLICATIONS);
+            log.info("restartInterruptContext. traceIds:{}.", String.join(",", traceIds));
             restartContext(traceIds);
         } catch (Throwable e) {
             log.error("[restartInterruptContext] exception, errorMessage={}.", e.getMessage());

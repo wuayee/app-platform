@@ -1,0 +1,9 @@
+fit:
+  beans:
+    packages:
+      - 'com.huawei.fit.jane'
+      - 'com.huawei.fitframework'
+      - 'com.huawei.fit.integration'
+
+forest:
+  interface-package: com.huawei.fit.jane.flow.graph.client

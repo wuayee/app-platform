@@ -488,9 +488,9 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
-            businessData.put("cmc", new HashMap<String, Boolean>() {
+            businessData.put("cmc", new HashMap<String, Object>() {
                 {
-                    put("approved", false);
+                    put("approved", "false");
                 }
             });
             FlowData flowData = getFlowData(businessData, "gsy");
@@ -505,6 +505,32 @@ class FlowDefinitionTest {
                     contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
             assertFlowsExecutorWithConditionNodeFirstFalseBranch(flowData, contexts, all);
+        }
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1包含condition节点的分支1通过{{reject}}字段来进行驳回的场景")
+        void testFlowsExecutorWithConditionNodeRejectBranch() {
+            String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1_reject.json"));
+            FlowDefinition flowDefinition = PARSER.parse(jsonData);
+            Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
+            businessData.put("cmc", new HashMap<String, Object>() {
+                {
+                    put("reject", "true");
+                }
+            });
+            FlowData flowData = getFlowData(businessData, "gsy");
+            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            String streamId = flowDefinition.getStreamId();
+            assertSingleInstance(getPublisher(streamId), from);
+
+            String traceId = from.offer(flowData).getTraceId();
+
+            FlowNode flowNode = flowDefinition.getFlowNode(END);
+            List<FlowContext<FlowData>> contexts = waitSingle(
+                    contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
+            assertEquals(3, this.getContextsByTraceWrapper(REPO, traceId).size());
+            Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
+            assertEquals("success", resultBusinessData.get("approvedResult"));
         }
 
         @Test

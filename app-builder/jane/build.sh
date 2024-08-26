@@ -210,6 +210,9 @@ cp ${CRTDIR}/plugins/aipp-plugin/target/*.jar ./fit/custom/
 mvn -f flow-graph-db-driver clean install -U  -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
 cp ${CRTDIR}/flow-graph-db-driver/target/*.jar ./fit/custom/
 
+mvn -f flow-graph-elsa-driver clean install -U  -s ${settings_file} -gs ${settings_file} -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
+cp ${CRTDIR}/flow-graph-elsa-driver/target/*.jar ./fit/custom/
+
 #Step4 编译jober
 mvn -f jober clean install -U -s ${settings_file} -gs ${settings_file} -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal
 cp ${CRTDIR}/jober/target/*.jar ./fit/custom/

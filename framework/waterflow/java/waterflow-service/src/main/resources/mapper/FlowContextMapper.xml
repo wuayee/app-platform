@@ -540,7 +540,23 @@
         <include refid="columns"/>
         FROM
         <include refid="table"/>
-        WHERE to_batch = #{toBatch}
+        WHERE to_batch
+        IN
+        <foreach item="item" index="index" collection="toBatchIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findWithoutFlowDataByToBatch" resultMap="objectMapWithoutFlowData">
+        SELECT
+        <include refid="columnsWithoutFlowData"/>
+        FROM
+        <include refid="table"/>
+        WHERE to_batch
+        IN
+        <foreach item="item" index="index" collection="toBatchIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 
     <select id="findFinishedContextsPagedByTraceId" resultMap="objectMap">

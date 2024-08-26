@@ -92,7 +92,7 @@ class RestartContextScheduleTest extends DatabaseBaseTest {
         fitableUsageMapper = sqlSessionManager.getMapper(FitableUsageMapper.class);
         flowDefinitionRepo = new DefaultFlowDefinitionRepo(flowDefinitionMapper, fitableUsageMapper, parser);
         restartContextSchedule = new RestartContextSchedule(traceRepo, contextPersistRepo, flowDefinitionRepo, locks,
-                messenger, traceOwnerService, false);
+                messenger, traceOwnerService);
     }
 
     @Nested

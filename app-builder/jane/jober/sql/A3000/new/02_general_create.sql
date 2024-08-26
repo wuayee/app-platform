@@ -728,3 +728,12 @@ ALTER TABLE task ADD COLUMN IF NOT EXISTS category VARCHAR(32) NOT NULL DEFAULT 
 ALTER TABLE file ADD COLUMN IF NOT EXISTS type VARCHAR(32);
 ALTER TABLE task_property ADD COLUMN IF NOT EXISTS template_id CHAR(32) NOT NULL DEFAULT '00000000000000000000000000000000';
 ALTER TABLE tenant ADD COLUMN IF NOT EXISTS access_level VARCHAR(32);
+
+CREATE TABLE IF NOT EXISTS flow_notification_queue
+(
+    id               VARCHAR(32) NOT NULL PRIMARY KEY,
+    fitable_id       VARCHAR(128) NOT NULL,
+    data             JSONB   NOT NULL,
+    next_notify_time  timestamp without time zone,
+    notify_count      INTEGER NOT NULL
+    );

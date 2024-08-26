@@ -27,6 +27,7 @@ import com.huawei.fit.jober.entity.task.TaskType;
 import com.huawei.fit.waterflow.common.utils.TimeUtil;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;
 import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
+import com.huawei.fit.waterflow.edatamate.entity.TaskInstanceUpdateInfo;
 import com.huawei.fit.waterflow.edatamate.enums.ScanStatus;
 import com.huawei.fit.waterflow.edatamate.enums.TaskStartType;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
@@ -81,42 +82,69 @@ import java.util.stream.Collectors;
 @Component
 @Setter
 public class OrchestratorService {
+    /**
+     * OhScript获取任务实例Id脚本。
+     */
+    public static final String OH_SCRIPT_TASK_INSTANCE_ID_VAR = "var taskInstanceId = "
+            + "ext::context.get(0).get(\"businessData\").get(\"taskInstanceId\");\n";
+
     private static final Logger log = Logger.get(OrchestratorService.class);
+
+    private static final String OH_SCRIPT_FILTER_CONFIG = ".invokerFilterBeanName = \"a3000PodAffinityFilter\";"
+            + ".filterExtensions = entity { .taskInstanceId = taskInstanceId; };";
 
     private static final Map<String, String> conditionFitableCode = MapBuilder.<String, String>get()
             .put("com.huawei.eDataMate.operators.pdf_extractor_plugin",
                     "if(type==\"pdf\"){\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.pdf_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
+            .put("com.huawei.eDataMate.operators.pdf_extractor_cpu_plugin",
+                    "if(type==\"pdf\"){\n" + "    let context1 = entity{\n"
+                            + "        .async = true; .format = \"cbor\"; .id = "
+                            + "\"com.huawei.eDataMate.operators.pdf_extractor_cpu_plugin\";\n" + "    };\n"
+                            + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
             .put("com.huawei.eDataMate.operators.word_extractor_plugin",
                     "if (type == \"word\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.word_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
             .put("com.huawei.eDataMate.operators.md_extractor_plugin",
                     "if (type == \"md\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.md_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}\n" + "\n"
                             + "if (type == \"markdown\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.md_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
             .put("com.huawei.eDataMate.operators.xml_extractor_plugin",
                     "if (type == \"xml\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.xml_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
             .put("com.huawei.eDataMate.operators.html_extractor_plugin",
                     "if (type == \"html\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.html_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
             .put("com.huawei.eDataMate.operators.txt_extractor_plugin",
                     "if (type == \"txt\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
                             + "        .async = true; .format = \"cbor\"; .id = "
                             + "\"com.huawei.eDataMate.operators.txt_extractor_plugin\";\n" + "    };\n"
+                            + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
+            .put("com.huawei.eDataMate.operators.json_extractor_plugin",
+                    "if (type == \"json\") {\n" + "    let context1 = entity{\n"
+                            + OH_SCRIPT_FILTER_CONFIG
+                            + "        .async = true; .format = \"cbor\"; .id = "
+                            + "\"com.huawei.eDataMate.operators.json_extractor_plugin\";\n" + "    };\n"
                             + "    let f1 = fit::handleTask(context1);\n" + "    ext::context >> f1\n" + "}")
             .build();
 
@@ -181,6 +209,8 @@ public class OrchestratorService {
         Map<String, Object> businessData = ObjectUtils.cast(map.get("businessData"));
         businessData.put("taskId", taskId);
         businessData.put("taskInstanceId", instanceId);
+        // 身份标识
+        businessData.put("application", "a3000");
         map.put("businessData", businessData);
         flowConfig = JSONObject.toJSONString(map);
         String flowId = info.get("flow_id");
@@ -227,6 +257,9 @@ public class OrchestratorService {
         Map<String, Object> updateFiled = new HashMap<>();
         updateFiled.put("status", "TERMINATE");
         taskUpdater.updateTaskInstance(taskId, instanceId, updateFiled);
+        // 触发回调操作
+        Map<String, Object> businessData = taskUpdater.getBusinessData(flowTransId);
+        taskUpdater.instanceCallback("TERMINATE", businessData);
         log.info("terminate task {} success.", instanceId);
         return true;
     }
@@ -531,16 +564,24 @@ public class OrchestratorService {
     private Map<String, List<String>> buildInfosMap(CleanDataListQuery request) {
         Map<String, List<String>> infosMap = new HashMap<>();
         Optional.ofNullable(request.getTitle())
-                .filter(name -> !name.isEmpty())
-                .ifPresent(id -> infosMap.put("title", Collections.singletonList(request.getTitle())));
+                .filter(title -> !title.isEmpty())
+                .ifPresent(title -> infosMap.put("title", Collections.singletonList(request.getTitle())));
 
         Optional.ofNullable(request.getVersion())
                 .filter(version -> !version.isEmpty())
-                .ifPresent(id -> infosMap.put("version", Collections.singletonList(request.getVersion())));
+                .ifPresent(version -> infosMap.put("version", Collections.singletonList(request.getVersion())));
+
+        Optional.ofNullable(request.getTaskName())
+                .filter(version -> !version.isEmpty())
+                .ifPresent(taskName -> infosMap.put("task_name", Collections.singletonList(request.getTaskName())));
 
         Optional.ofNullable(request.getTaskId())
                 .filter(id -> !id.isEmpty())
                 .ifPresent(id -> infosMap.put("id", Collections.singletonList(request.getTaskId())));
+
+        Optional.ofNullable(request.getStatus())
+                .filter(status -> !status.isEmpty())
+                .ifPresent(status -> infosMap.put("status", request.getStatus()));
         return infosMap;
     }
 
@@ -698,7 +739,7 @@ public class OrchestratorService {
             if (conditionFitableCode.containsKey(list.get(0))) {
                 response.add(conditionScript(list));
             } else {
-                response.add(flowsService.getScript(list));
+                response.add(OH_SCRIPT_TASK_INSTANCE_ID_VAR + flowsService.getScript(list));
             }
         }
         log.info("Get script success.");
@@ -707,6 +748,7 @@ public class OrchestratorService {
 
     private String conditionScript(List<String> fitableIds) {
         StringBuilder script = new StringBuilder();
+        script.append(OH_SCRIPT_TASK_INSTANCE_ID_VAR);
         script.append("var type = ext::context.get(0).get(\"passData\").get(\"meta\").get(\"fileType\");\n");
         fitableIds.forEach(id -> {
             if (!conditionFitableCode.containsKey(id)) {
@@ -764,6 +806,9 @@ public class OrchestratorService {
         Instance instance = getTaskInfo(instanceId, taskId);
         Map<String, String> instanceInfo = instance.getInfo();
         String flowTransId = instanceInfo.get("flow_context_id");
+        if (StringUtils.isBlank(flowTransId)) {
+            return new CleanTaskPageResult(0, new ArrayList<>());
+        }
         String endNode = getEndNode(flowTransId);
         List<FlowContext<FlowData>> contexts = new ArrayList<>();
         int totalNum = 0;
@@ -803,6 +848,9 @@ public class OrchestratorService {
         Instance instance = getTaskInfo(instanceId, taskId);
         Map<String, String> instanceInfo = instance.getInfo();
         String flowTransId = instanceInfo.get("flow_context_id");
+        if (flowTransId == null || flowTransId.isEmpty()) {
+            return new CleanTaskPageResult(0, new ArrayList<>());
+        }
         String endNode = getEndNode(flowTransId);
         List<FlowContext<FlowData>> contexts = new ArrayList<>();
         int totalNum = 0;
@@ -854,9 +902,11 @@ public class OrchestratorService {
      *
      * @param taskId taskId
      * @param taskInstanceId taskInstanceId
-     * @param updateFields updateFields
+     * @param updateInfo updateFields
      */
-    public void updateTaskInstance(String taskId, String taskInstanceId, Map<String, Object> updateFields) {
+    public void updateTaskInstance(String taskId, String taskInstanceId, TaskInstanceUpdateInfo updateInfo) {
+        Map<String, Object> updateFields = new HashMap<>();
+        updateFields.put("status", updateInfo.getStatus());
         taskUpdater.updateTaskInstance(taskId, taskInstanceId, updateFields);
     }
 

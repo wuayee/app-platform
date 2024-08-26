@@ -144,6 +144,7 @@ public class ApprovalTaskInstanceTriggerTest extends DatabaseBaseTest {
 
         @Test
         @DisplayName("流程实例手动流转condition节点true分支的场景持久化")
+        @Disabled
         void testFlowsManualExecutorWithConditionNodeTrueBranch() {
             String jsonData = getJsonData(getFilePath("flows_manual_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);

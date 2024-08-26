@@ -433,7 +433,7 @@ public class FlowContextMapperTest extends DatabaseBaseTest {
     @Test
     public void testFindByToBatch() {
         executeSqlInFile(sqlFile);
-        List<FlowContextPO> contextPO = flowContextMapper.findByToBatch("5");
+        List<FlowContextPO> contextPO = flowContextMapper.findByToBatch(Collections.singletonList("5"));
         Assertions.assertEquals(2, contextPO.size());
         Assertions.assertEquals("4", contextPO.get(0).getContextId());
         Assertions.assertEquals("5", contextPO.get(1).getContextId());

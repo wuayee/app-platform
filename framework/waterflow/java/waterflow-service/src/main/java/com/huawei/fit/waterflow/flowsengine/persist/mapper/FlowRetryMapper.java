@@ -36,12 +36,14 @@ public interface FlowRetryMapper {
     FlowRetryPO find(@Param("entityId") String entityId);
 
     /**
-     * 根据下次重试时间筛选出到期的重试记录
+     * 根据下次重试时间筛选出到期并且不在id列表中的重试记录
      *
      * @param time 用于比对的时间
+     * @param exceptEntityIds 流程上下文entityId列表
      * @return 重试记录PO对象列表
      */
-    List<FlowRetryPO> filterByNextRetryTime(@Param("time") LocalDateTime time);
+    List<FlowRetryPO> filterByNextRetryTime(@Param("time") LocalDateTime time, List<String> exceptEntityIds);
+
 
     /**
      * 批量更新流程自动任务重试记录
@@ -66,4 +68,19 @@ public interface FlowRetryMapper {
      * @param entityIdList 流程上下文entityId列表 {@link String}
      */
     void batchDelete(@Param("entityIdList") List<String> entityIdList);
+
+    /**
+     * 获取下一次需要重试的数据
+     *
+     * @param time 时间
+     * @return retry数据
+     */
+    FlowRetryPO getNextFlowRetry(LocalDateTime time);
+
+    /**
+     * 检查当前是否存在重试数据
+     *
+     * @return 表中数据行数
+     */
+    int hasRetryData();
 }

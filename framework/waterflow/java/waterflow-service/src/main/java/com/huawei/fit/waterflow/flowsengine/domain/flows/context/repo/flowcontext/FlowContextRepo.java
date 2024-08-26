@@ -145,10 +145,10 @@ public interface FlowContextRepo<T> {
     /**
      * 根据toBatch查找FlowContext<T>
      *
-     * @param toBatch 上下文toBatch
+     * @param toBatchIds 上下文toBatch
      * @return List<FlowContext < T>>
      */
-    List<FlowContext<T>> getByToBatch(String toBatch);
+    List<FlowContext<T>> getByToBatch(List<String> toBatchIds);
 
     /**
      * 查找和指定一批ID对应的状态为PENDING且SENT了的流程上下文
@@ -593,6 +593,16 @@ public interface FlowContextRepo<T> {
      */
     default void updateProcessStatus(List<FlowContext<T>> contexts) {
         throw new JobberException(ErrorCodes.FLOW_ENGINE_DATABASE_NOT_SUPPORT, "updateProcessStatus");
+    }
+
+    /**
+     * 根据to batch id查询不带有flow data的上下文数据
+     *
+     * @param toBatchIds toBatchId列表
+     * @return 上下文列表
+     */
+    default List<FlowContext<String>> getWithoutFlowDataByToBatch(List<String> toBatchIds) {
+        throw new JobberException(ErrorCodes.FLOW_ENGINE_DATABASE_NOT_SUPPORT, "getWithoutFlowDataByToBatch");
     }
 }
 
