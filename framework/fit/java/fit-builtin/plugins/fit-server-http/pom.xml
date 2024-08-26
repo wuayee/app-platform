@@ -35,6 +35,10 @@
             <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-server</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.service</groupId>
+            <artifactId>fit-message-serializer</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>

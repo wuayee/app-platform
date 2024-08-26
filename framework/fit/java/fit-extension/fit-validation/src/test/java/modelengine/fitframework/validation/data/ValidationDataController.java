@@ -2,14 +2,14 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.validation.data;
+package modelengine.fitframework.validation.data;
 
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.validation.Validated;
-import com.huawei.fitframework.validation.group.PersonGroup;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.validation.Validated;
+import modelengine.fitframework.validation.group.PersonGroup;
 
 /**
  * 表示评估注解验证数据接口集。

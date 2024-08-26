@@ -4,9 +4,9 @@
 
 package com.huawei.jade.app.engine.metrics.dto;
 
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Property;
 import com.huawei.jade.app.engine.metrics.po.TimeType;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

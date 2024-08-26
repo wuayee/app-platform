@@ -140,7 +140,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>
@@ -156,7 +156,7 @@
             <artifactId>druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
@@ -222,6 +222,10 @@
             <groupId>com.huawei.jade.service</groupId>
             <artifactId>app-engine-metrics-base-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-test-framework</artifactId>
         </dependency>
     </dependencies>
 

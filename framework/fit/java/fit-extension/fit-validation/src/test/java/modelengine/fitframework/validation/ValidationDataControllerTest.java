@@ -2,19 +2,19 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.validation;
+package modelengine.fitframework.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
-import com.huawei.fitframework.validation.data.Person;
-import com.huawei.fitframework.validation.data.Product;
-import com.huawei.fitframework.validation.data.ValidationDataController;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
+import modelengine.fitframework.validation.data.Person;
+import modelengine.fitframework.validation.data.Product;
+import modelengine.fitframework.validation.data.ValidationDataController;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

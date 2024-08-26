@@ -4,9 +4,9 @@
 
 package com.huawei.jade.app.engine.metrics.dto;
 
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.validation.constraints.Range;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.validation.constraints.Range;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

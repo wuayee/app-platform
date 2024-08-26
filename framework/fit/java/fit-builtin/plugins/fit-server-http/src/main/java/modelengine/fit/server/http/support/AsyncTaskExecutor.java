@@ -4,7 +4,7 @@
 
 package modelengine.fit.server.http.support;
 
-import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
+import static modelengine.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fit.http.exception.AsyncTaskExecutionException;

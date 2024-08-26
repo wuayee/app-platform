@@ -16,10 +16,10 @@ import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
 import com.huawei.fit.jane.flow.graph.entity.elsa.GraphParam;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.SaveFlowsResponse;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.model.RangedResultSet;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.Collections;
 import java.util.stream.Collectors;

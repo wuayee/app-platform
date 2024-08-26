@@ -9,8 +9,8 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.verify;
 
-import com.huawei.fit.waterflow.edatamate.dao.FlowNotificationMapper;
-import com.huawei.fit.waterflow.edatamate.dao.po.FlowNotificationPo;
+import modelengine.fit.waterflow.edatamate.dao.FlowNotificationMapper;
+import modelengine.fit.waterflow.edatamate.dao.po.FlowNotificationPo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

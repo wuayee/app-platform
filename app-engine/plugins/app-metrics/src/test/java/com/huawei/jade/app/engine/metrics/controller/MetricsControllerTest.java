@@ -9,13 +9,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.jade.app.engine.metrics.dto.MetricsFeedbackDto;
 import com.huawei.jade.app.engine.metrics.po.TimeType;
 import com.huawei.jade.app.engine.metrics.service.MetricsAnalysisService;
@@ -23,6 +16,13 @@ import com.huawei.jade.app.engine.metrics.service.MetricsFeedbackService;
 import com.huawei.jade.app.engine.metrics.vo.MetricsAnalysisVo;
 import com.huawei.jade.app.engine.metrics.vo.MetricsFeedbackVo;
 import com.huawei.jade.app.engine.metrics.vo.Page;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

@@ -4,15 +4,6 @@
 
 package com.huawei.jade.app.engine.metrics.controller;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.entity.FileEntity;
-import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.metrics.dto.MetricsFeedbackDto;
 import com.huawei.jade.app.engine.metrics.po.TimeType;
 import com.huawei.jade.app.engine.metrics.service.MetricsAnalysisService;
@@ -20,6 +11,15 @@ import com.huawei.jade.app.engine.metrics.service.MetricsFeedbackService;
 import com.huawei.jade.app.engine.metrics.vo.MetricsAnalysisVo;
 import com.huawei.jade.app.engine.metrics.vo.MetricsFeedbackVo;
 import com.huawei.jade.app.engine.metrics.vo.Page;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

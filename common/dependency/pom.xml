@@ -86,12 +86,12 @@
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
+                <groupId>modelengine.fit.integration</groupId>
                 <artifactId>fit-druid</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
+                <groupId>modelengine.fit.integration</groupId>
                 <artifactId>fit-mybatis</artifactId>
                 <version>${fit.version}</version>
             </dependency>

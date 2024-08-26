@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.metrics.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.metrics.dto.MetricsFeedbackDto;
 import com.huawei.jade.app.engine.metrics.mapper.ConversationRecordMapper;
 import com.huawei.jade.app.engine.metrics.service.MetricsFeedbackService;

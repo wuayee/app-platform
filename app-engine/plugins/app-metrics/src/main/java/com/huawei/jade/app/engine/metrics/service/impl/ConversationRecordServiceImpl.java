@@ -4,11 +4,11 @@
 
 package com.huawei.jade.app.engine.metrics.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.metrics.mapper.ConversationRecordMapper;
 import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
 import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 
 /**
  * 历史对话服务的实现类。
