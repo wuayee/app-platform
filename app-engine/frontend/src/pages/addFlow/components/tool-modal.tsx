@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
 import AddWaterFlow from './add-waterflow-drawer';
@@ -49,7 +48,6 @@ const ToolDrawer = (props) => {
   useEffect(() => {
     type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
   }, [props.checkData]);
-  const items = categoryItems;
   const btnItems = [
     { key: 'tool', label: t('tool') },
     { key: 'workflow', label: t('workflow') },

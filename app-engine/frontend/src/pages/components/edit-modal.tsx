@@ -30,6 +30,7 @@ const EditModal = (props) => {
     { value: t('writingAssistant'), label: t('writingAssistant') },
   ];
   const showModal = () => {
+    form.resetFields(['name']);
     setIsModalOpen(true);
   };
   useEffect(() => {

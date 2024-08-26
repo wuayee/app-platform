@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tree, Input, Button, Menu, Dropdown } from 'antd';
 import { PlusOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { uuid } from '@/common/utils';
+import { uuid } from '@/common/util';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 
