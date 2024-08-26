@@ -76,6 +76,9 @@ export const jadeEvaluationGraph = (div, title) => {
                     if (shapeData.type === "conditionNodeCondition") {
                         shapeData.flowMeta.conditionParams.branches.forEach(b => b.runnable = false);
                     }
+                    if (shapeData.type === "jadeEvent") {
+                        shapeData.selectable = false;
+                    }
                 });
             }
         }
