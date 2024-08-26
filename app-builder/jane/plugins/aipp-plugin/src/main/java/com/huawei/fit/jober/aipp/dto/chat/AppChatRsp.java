@@ -42,6 +42,10 @@ public class AppChatRsp {
     @JsonProperty("instance_id")
     private String instanceId;
 
+    @Property(description = "log id")
+    @JsonProperty("log_id")
+    private String logId;
+
     /**
      * Answer
      *

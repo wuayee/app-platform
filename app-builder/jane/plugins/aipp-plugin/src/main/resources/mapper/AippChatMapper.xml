@@ -92,7 +92,7 @@
         select log_data
         from aipp_instance_log
         where instance_id = #{instanceId}
-          and log_type = 'MSG'
+          and log_type = 'MSG' and is_deleted = 0
     </select>
 
     <select id="countChat" resultType="int">

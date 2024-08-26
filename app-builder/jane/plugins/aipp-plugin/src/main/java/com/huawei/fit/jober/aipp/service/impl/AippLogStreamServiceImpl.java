@@ -82,6 +82,7 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
                 .status(status)
                 .instanceId(instanceId)
                 .answer(Collections.singletonList(answer))
+                .logId(log.getLogId())
                 .build();
     }
 

@@ -130,7 +130,7 @@
         </if>
     </delete>
 
-    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto">
+    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto" useGeneratedKeys="true" keyProperty="logId">
         insert into aipp_instance_log (aipp_id, version, aipp_type, instance_id, log_data, log_type, create_by, path)
         values (#{aippId}, #{version}, #{aippType}, #{instanceId}, #{logData}::jsonb, #{logType}, #{createUserAccount},
                 #{path})
@@ -171,11 +171,13 @@
         select
         <include refid="Base_Column_List"/>
         from aipp_instance_log
-        <where>
+        where is_deleted = 0
+        <if test="instanceIds != null and instanceIds.size > 0">
+            and
             <foreach collection="instanceIds" item="item" separator="or" close=")" open="(">
                 path LIKE '%/'||#{item}||'%'
             </foreach>
-        </where>
+        </if>
     </select>
 
     <select id="getParentPath" resultType="string">
@@ -221,6 +223,15 @@
         where
         <foreach collection="instanceIds" item="id" separator=" OR ">
             path LIKE '/' || #{id} || '%'
+        </foreach>
+    </update>
+
+    <update id="deleteInstanceLogs">
+        UPDATE aipp_instance_log
+        set is_deleted = 1
+        where log_id in
+        <foreach collection="logIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
         </foreach>
     </update>
 </mapper>

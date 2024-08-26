@@ -45,6 +45,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -228,14 +229,12 @@ public class AippLogServiceImpl implements AippLogService {
         return filter;
     }
 
-
     private List<AippInstLogDataDto> queryAndSortLogs(List<String> instanceIds, OperationContext context) {
         return queryRecentLogByInstanceIds(instanceIds, context).values()
                 .stream()
                 .filter(CollectionUtils::isNotEmpty)
                 .map(AippInstLogDataDto::fromAippInstLogList)
-                .filter(dto -> dto.getQuestion() != null)
-                .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
+                .sorted(Comparator.comparing(AippInstLogDataDto::getCreateAt))
                 .collect(Collectors.toList());
     }
 
@@ -251,10 +250,12 @@ public class AippLogServiceImpl implements AippLogService {
     public List<AippInstLogDataDto> queryRecentLogsSinceResume(String aippId, String aippType,
             OperationContext context) {
         List<String> instanceIds = aippLogMapper.selectRecentAfterResume(aippId, aippType, context.getW3Account());
+        // 该功能未上线，待测试
         return queryRecentLogByInstanceIds(instanceIds, context).values()
                 .stream()
+                .filter(CollectionUtils::isNotEmpty)
                 .map(AippInstLogDataDto::fromAippInstLogList)
-                .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
+                .sorted(Comparator.comparing(AippInstLogDataDto::getCreateAt))
                 .collect(Collectors.toList());
     }
 
@@ -413,7 +414,7 @@ public class AippLogServiceImpl implements AippLogService {
      * @param businessData 业务数据
      */
     @Override
-    public void insertLog(String logType, AippLogData logData, Map<String, Object> businessData) {
+    public String insertLog(String logType, AippLogData logData, Map<String, Object> businessData) {
         String aippId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_ID_KEY));
         String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
@@ -422,23 +423,18 @@ public class AippLogServiceImpl implements AippLogService {
         String w3Account = DataUtils.getOpContext(businessData).getW3Account();
         if (!AippLogUtils.validFormMsg(logData, logType)) {
             log.warn("invalid logData {}, logType {}, aippId {}, instId {}", logData, logType, aippId, instId);
-            return;
+            return null;
         }
         String path = buildPath(instId, parentInstId);
         String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
         String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
-        this.aopAippLogService.insertLog(AippLogCreateDto.builder()
-                .aippId(aippId)
-                .version(version)
-                .aippType(aippType)
-                .instanceId(instId)
-                .logType(logType)
-                .logData(JsonUtils.toJsonString(logData))
-                .createUserAccount(w3Account)
-                .path(path)
-                .chatId(chatId)
-                .atChatId(atChatId)
-                .build());
+        return this.aopAippLogService
+                .insertLog(AippLogCreateDto.builder()
+                .aippId(aippId).version(version)
+                .aippType(aippType).instanceId(instId)
+                .logType(logType).logData(JsonUtils.toJsonString(logData))
+                .createUserAccount(w3Account).path(path)
+                .chatId(chatId).atChatId(atChatId).build());
     }
 
     /**
@@ -524,11 +520,12 @@ public class AippLogServiceImpl implements AippLogService {
         OperationContext context) {
         List<String> instanceIds =
             aippLogMapper.selectRecentInstanceId(aippId, aippType, count, context.getW3Account());
+        // 该功能未上线，待测试
         return queryRecentLogByInstanceIds(instanceIds, context).values()
             .stream()
+            .filter(CollectionUtils::isNotEmpty)
             .map(AippInstLogDataDto::fromAippInstLogListAfterSplice)
-            .filter(dto -> dto.getQuestion() != null)
-            .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
+            .sorted(Comparator.comparing(AippInstLogDataDto::getCreateAt))
             .collect(Collectors.toList());
     }
 
@@ -564,5 +561,14 @@ public class AippLogServiceImpl implements AippLogService {
             throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
         }
         return this.aippLogMapper.getLogsByInstanceIdAndLogTypes(instanceId, logTypes);
+    }
+
+    @Override
+    public void deleteLogs(List<Long> logIds) {
+        if (CollectionUtils.isEmpty(logIds)) {
+            log.error("logIds is null or empty.");
+            return;
+        }
+        this.aippLogMapper.deleteInstanceLogs(logIds);
     }
 }

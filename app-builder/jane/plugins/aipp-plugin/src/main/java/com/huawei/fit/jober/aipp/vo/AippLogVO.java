@@ -49,6 +49,8 @@ public class AippLogVO {
 
     private String atChatId;
 
+    private String logId;
+
     /**
      * 通过 {@link AippLogCreateDto} 对象创建 {@link  AippLogVO} 对象.
      *
@@ -66,6 +68,7 @@ public class AippLogVO {
                 .path(dto.getPath())
                 .chatId(dto.getChatId())
                 .atChatId(dto.getAtChatId())
+                .logId(dto.getLogId())
                 .build();
     }
 

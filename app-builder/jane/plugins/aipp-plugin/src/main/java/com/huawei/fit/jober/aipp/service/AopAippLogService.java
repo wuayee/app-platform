@@ -14,10 +14,11 @@ import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
  */
 public interface AopAippLogService {
     /**
-     * 插入aipp的历史记录
+     * 插入aipp的历史记录。
      *
-     * @param logDto 插入数据
+     * @param logDto 历史记录的数据传输对象。
+     * @return 返回插入的历史记录的唯一标识符。
      * @throws IllegalArgumentException 不合法的参数时抛出。
      */
-    void insertLog(AippLogCreateDto logDto) throws IllegalArgumentException;
+    String insertLog(AippLogCreateDto logDto) throws IllegalArgumentException;
 }
