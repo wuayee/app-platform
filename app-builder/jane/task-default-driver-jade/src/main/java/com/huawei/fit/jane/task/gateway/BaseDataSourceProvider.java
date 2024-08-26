@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.task.gateway;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 
 import javax.sql.DataSource;
 

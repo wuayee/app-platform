@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.util;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 /**
  * AippString 操作工具类

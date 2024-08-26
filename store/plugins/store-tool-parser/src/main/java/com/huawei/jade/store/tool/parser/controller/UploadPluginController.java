@@ -4,19 +4,9 @@
 
 package com.huawei.jade.store.tool.parser.controller;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.entity.NamedEntity;
-import com.huawei.fit.http.entity.PartitionedEntity;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.common.Result;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.support.DeployStatus;
@@ -24,6 +14,16 @@ import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 import com.huawei.jade.store.tool.parser.param.DeployParam;
 import com.huawei.jade.store.tool.parser.service.PluginDeployService;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.PartitionedEntity;
+import modelengine.fitframework.annotation.Component;
 
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;

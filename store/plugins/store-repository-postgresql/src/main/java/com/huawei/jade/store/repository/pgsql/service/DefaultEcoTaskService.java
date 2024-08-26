@@ -4,15 +4,16 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+
 import com.huawei.jade.store.entity.query.TaskQuery;
 import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.repository.pgsql.entity.TaskDo;

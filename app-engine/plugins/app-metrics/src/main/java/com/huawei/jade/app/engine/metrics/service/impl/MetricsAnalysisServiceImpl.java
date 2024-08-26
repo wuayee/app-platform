@@ -4,9 +4,6 @@
 
 package com.huawei.jade.app.engine.metrics.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.schedule.annotation.Scheduled;
 import com.huawei.jade.app.engine.metrics.mapper.ConversationRecordMapper;
 import com.huawei.jade.app.engine.metrics.mapper.MetricsAccessMapper;
 import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
@@ -15,6 +12,9 @@ import com.huawei.jade.app.engine.metrics.po.TimeType;
 import com.huawei.jade.app.engine.metrics.service.MetricsAnalysisService;
 import com.huawei.jade.app.engine.metrics.vo.MetricsAnalysisVo;
 import com.huawei.jade.app.engine.metrics.vo.UserAccessVo;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.schedule.annotation.Scheduled;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;

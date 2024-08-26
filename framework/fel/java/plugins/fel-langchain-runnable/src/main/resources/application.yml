@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.fel.plugin.langchain'
+    - 'modelengine.fel.plugin.langchain'

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.voice.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 提供语音的通用服务。

@@ -37,7 +37,7 @@ public class TestAspect2 {
 1. `before1()` 先执行， `before2()`后执行
 2. `before2()` 先执行， `before1()`后执行
 
-但在一些特殊场景下，要求两者之间有严格的执行顺序，此时可以通过设置优先级来控制执行顺序，通过`com.huawei.fitframework.annotation.Order`注解实现。例如：
+但在一些特殊场景下，要求两者之间有严格的执行顺序，此时可以通过设置优先级来控制执行顺序，通过`modelengine.fitframework.annotation.Order`注解实现。例如：
 
 ```java
 

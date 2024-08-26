@@ -6,7 +6,8 @@ package com.huawei.jade.store.repository.pgsql.entity;
 
 import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.support.DeployStatus;
 

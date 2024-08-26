@@ -4,13 +4,14 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFormDto;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;

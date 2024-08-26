@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.common.validation;
 
-import com.huawei.fitframework.validation.ConstraintValidator;
+import modelengine.fitframework.validation.ConstraintValidator;
 
 /**
  * The SizeValidator

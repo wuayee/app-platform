@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>app-engine-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -39,7 +39,7 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
@@ -55,28 +55,27 @@
             <artifactId>poi-ooxml</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-druid</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
 
         <!-- Test -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -92,9 +91,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
-                <version>${fit.version}</version>
+                <version>3.5.0-SNAPSHOT</version>
                 <configuration>
                     <category>user</category>
                     <level>3</level>
@@ -115,9 +114,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
-                <version>${fit.version}</version>
+                <version>3.5.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>dependency</id>

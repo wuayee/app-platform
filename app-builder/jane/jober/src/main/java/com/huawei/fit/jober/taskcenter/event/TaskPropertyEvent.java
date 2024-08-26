@@ -5,7 +5,8 @@
 package com.huawei.fit.jober.taskcenter.event;
 
 import com.huawei.fit.jane.task.domain.TaskProperty;
-import com.huawei.fitframework.event.Event;
+
+import modelengine.fitframework.event.Event;
 
 /**
  * 为任务属性相关的事件提供数据。

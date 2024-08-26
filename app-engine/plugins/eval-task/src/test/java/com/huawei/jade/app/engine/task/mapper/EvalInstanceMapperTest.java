@@ -6,10 +6,10 @@ package com.huawei.jade.app.engine.task.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.MybatisTest;
-import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.test.domain.db.DatabaseModel;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.MybatisTest;
+import modelengine.fitframework.test.annotation.Sql;
+import modelengine.fitframework.test.domain.db.DatabaseModel;
 import com.huawei.jade.app.engine.task.po.EvalInstancePo;
 
 import org.junit.jupiter.api.DisplayName;

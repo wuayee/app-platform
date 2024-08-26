@@ -5,7 +5,7 @@
 package com.huawei.databus.sdk.support;
 
 import com.huawei.databus.sdk.api.DataBusRequest;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 /**
  * DataBus 服务释放共享内存请求

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.exporter.repository.stub;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.service.CarverSpanExporter;
 
 import io.opentelemetry.sdk.common.CompletableResultCode;

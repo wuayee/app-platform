@@ -4,18 +4,19 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.ResponseStatus;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.common.model.TextStringValue;
-import com.huawei.fit.service.RegistryService;
-import com.huawei.fit.service.entity.FitableMetaInstance;
-import com.huawei.fit.service.entity.GenericableInfo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.GenericableMetadata;
+
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.ResponseStatus;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.service.RegistryService;
+import modelengine.fit.service.entity.FitableMetaInstance;
+import modelengine.fit.service.entity.GenericableInfo;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.GenericableMetadata;
 
 import java.util.Collections;
 import java.util.List;

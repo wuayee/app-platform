@@ -4,9 +4,9 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.support;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.ToolFactory;
 import com.huawei.jade.carver.tool.repository.ToolFactoryRepository;
 

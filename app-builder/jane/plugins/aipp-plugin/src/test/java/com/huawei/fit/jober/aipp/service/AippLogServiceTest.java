@@ -43,7 +43,8 @@ import com.huawei.fit.jober.aipp.service.impl.AopAippLogServiceImpl;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.RangeResult;
 import com.huawei.fit.jober.common.RangedResultSet;
-import com.huawei.fitframework.util.MapBuilder;
+
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

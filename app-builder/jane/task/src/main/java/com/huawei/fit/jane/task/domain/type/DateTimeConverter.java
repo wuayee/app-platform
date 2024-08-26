@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jane.task.domain.type;
 
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.ParsingResult;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.support.DefaultParsingResult;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.support.DefaultParsingResult;
 
 import java.sql.Timestamp;
 import java.time.Instant;

@@ -11,7 +11,8 @@ import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
 import com.huawei.fit.jane.flow.graph.entity.elsa.GraphParam;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.SaveFlowsResponse;
-import com.huawei.fitframework.model.RangedResultSet;
+
+import modelengine.fitframework.model.RangedResultSet;
 
 /**
  * 定义所有使用elsaClient的场景,来源a3000和elsa

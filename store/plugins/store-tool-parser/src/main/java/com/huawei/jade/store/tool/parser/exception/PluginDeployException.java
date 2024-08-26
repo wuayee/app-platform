@@ -4,8 +4,9 @@
 
 package com.huawei.jade.store.tool.parser.exception;
 
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
 
 import java.util.HashMap;

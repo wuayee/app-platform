@@ -14,7 +14,7 @@
         ],
         "entity":{
           "genericable": {
-            "id": "com.huawei.fit.demo.flow.helloWorld",
+            "id": "modelengine.fit.demo.flow.helloWorld",
             "params": [
               {
                 "name": "name"
@@ -33,7 +33,7 @@
     "name": "通知回调",
     "type": "general_callback",
     "fitables": [
-      "com.huawei.fit.jober.fitable.FlowInfoCallback"
+      "modelengine.fit.jober.fitable.FlowInfoCallback"
     ]
   }
 }

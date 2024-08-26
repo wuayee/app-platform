@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.huawei.fitframework.starter.spring.SpringBootAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=modelengine.fitframework.starter.spring.SpringBootAutoConfiguration

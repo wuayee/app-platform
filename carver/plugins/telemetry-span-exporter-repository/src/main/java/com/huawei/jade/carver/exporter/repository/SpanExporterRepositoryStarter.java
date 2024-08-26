@@ -4,15 +4,15 @@
 
 package com.huawei.jade.carver.exporter.repository;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginStartedObserver;
-import com.huawei.fitframework.plugin.PluginStartingObserver;
-import com.huawei.fitframework.plugin.PluginStoppingObserver;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginStartedObserver;
+import modelengine.fitframework.plugin.PluginStartingObserver;
+import modelengine.fitframework.plugin.PluginStoppingObserver;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.service.CarverSpanExporter;
 import com.huawei.jade.service.SpanExporterRepository;
 

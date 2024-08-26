@@ -8,12 +8,12 @@ import com.huawei.fit.jane.dlock.jdbc.service.CleanExpiredLocksScheduleService;
 import com.huawei.fit.jane.dlock.jdbc.utils.CustomThreadFactory;
 import com.huawei.fit.jane.dlock.jdbc.utils.DistributedLockStatus;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.transaction.DataAccessException;
-import com.huawei.fitframework.transaction.TransactionException;
 
 import lombok.Getter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.transaction.TransactionException;
 
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.schema;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 

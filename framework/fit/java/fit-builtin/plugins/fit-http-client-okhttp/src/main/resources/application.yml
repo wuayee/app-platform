@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.http.client.okhttp'
+    - 'modelengine.fit.http.client.okhttp'

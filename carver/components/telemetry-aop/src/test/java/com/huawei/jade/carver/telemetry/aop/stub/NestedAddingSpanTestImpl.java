@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.telemetry.aop.stub;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 
 import io.opentelemetry.instrumentation.annotations.AddingSpanAttributes;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;

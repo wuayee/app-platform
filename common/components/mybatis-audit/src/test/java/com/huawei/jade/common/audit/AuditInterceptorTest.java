@@ -7,10 +7,10 @@ package com.huawei.jade.common.audit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.MybatisTest;
-import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.MybatisTest;
+import modelengine.fitframework.test.annotation.Sql;
+import modelengine.fitframework.transaction.DataAccessException;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.common.audit.stub.TestMapper;

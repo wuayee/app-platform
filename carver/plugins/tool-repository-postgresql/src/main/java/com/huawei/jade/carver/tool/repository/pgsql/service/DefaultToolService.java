@@ -4,14 +4,14 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.service;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;

@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.exporter.repository;
 
-import com.huawei.fitframework.annotation.AcceptConfigValues;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.AcceptConfigValues;
+import modelengine.fitframework.annotation.Component;
 
 import io.opentelemetry.sdk.trace.SpanProcessor;
 import lombok.Data;

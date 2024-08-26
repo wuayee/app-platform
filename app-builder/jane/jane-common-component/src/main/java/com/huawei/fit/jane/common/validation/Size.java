@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jane.common.validation;
 
-import com.huawei.fitframework.validation.Validated;
-import com.huawei.fitframework.validation.constraints.Constraint;
+import modelengine.fitframework.validation.Validated;
+import modelengine.fitframework.validation.constraints.Constraint;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.domain.util;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.common.ServerInternalException;
@@ -14,8 +14,9 @@ import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 import com.huawei.fit.jober.taskcenter.util.sql.DeleteSql;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
+
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collection;

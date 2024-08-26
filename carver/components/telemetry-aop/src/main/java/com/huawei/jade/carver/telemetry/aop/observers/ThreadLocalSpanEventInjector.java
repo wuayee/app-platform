@@ -6,7 +6,7 @@ package com.huawei.jade.carver.telemetry.aop.observers;
 
 import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYSTEM_ATTRIBUTE_EVENT_NAME;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.carver.operation.enums.OperationLogConstant;

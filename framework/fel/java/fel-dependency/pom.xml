@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huawei.fit.jade</groupId>
+    <groupId>modelengine.fit.jade</groupId>
     <artifactId>fel-dependency</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -35,58 +35,58 @@
         <dependencies>
             <!-- FIT -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-api</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- WaterFlow -->
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-core</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-bridge-fit-reactor</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
 
             <!-- FEL -->
             <dependency>
-                <groupId>com.huawei.fit.jade.fel</groupId>
+                <groupId>modelengine.fit.jade.fel</groupId>
                 <artifactId>fel-core</artifactId>
                 <version>${fel.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.service</groupId>
+                <groupId>modelengine.fit.jade.service</groupId>
                 <artifactId>fel-langchain-service</artifactId>
-                <version>${fel.version}</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.service</groupId>
+                <groupId>modelengine.fit.jade.service</groupId>
                 <artifactId>fel-pipeline-service</artifactId>
-                <version>${fel.version}</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.service</groupId>
+                <groupId>modelengine.fit.jade.service</groupId>
                 <artifactId>fel-service</artifactId>
-                <version>${fel.version}</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.service</groupId>
+                <groupId>modelengine.fit.jade.service</groupId>
                 <artifactId>rag-service</artifactId>
-                <version>${fel.version}</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <!-- Tool -->
@@ -106,7 +106,7 @@
 
             <!-- Test Plugin -->
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-message-serializer-json-jackson</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>
@@ -133,17 +133,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
 </project>

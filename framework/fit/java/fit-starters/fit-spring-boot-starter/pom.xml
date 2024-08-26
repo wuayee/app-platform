@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.huawei.fitframework</groupId>
+    <groupId>modelengine.fitframework</groupId>
     <artifactId>fit-spring-boot-starter</artifactId>
     <version>3.5.0-SNAPSHOT</version>
 
@@ -34,40 +34,27 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-runtime</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-aop-bytebuddy</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-conf-yaml</artifactId>
             <version>${fit.version}</version>
         </dependency>
 
         <!-- Plugin -->
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-dynamic-plugin-directory</artifactId>
             <version>${fit.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
 </project>

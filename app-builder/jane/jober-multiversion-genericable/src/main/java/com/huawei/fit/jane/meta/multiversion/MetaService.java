@@ -11,7 +11,8 @@ import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.property.MetaPropertyDeclarationInfo;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.task.TaskProperty;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 提供给AIPP的元数据服务。

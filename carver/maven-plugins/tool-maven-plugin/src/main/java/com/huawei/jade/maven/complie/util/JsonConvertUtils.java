@@ -4,7 +4,7 @@
 
 package com.huawei.jade.maven.complie.util;
 
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.maven.complie.entity.MethodEntity;
 import com.huawei.jade.maven.complie.entity.ParameterEntity;
 

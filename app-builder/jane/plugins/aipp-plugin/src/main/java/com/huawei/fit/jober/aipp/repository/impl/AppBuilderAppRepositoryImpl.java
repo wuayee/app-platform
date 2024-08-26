@@ -9,7 +9,8 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderAppSerializer;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;

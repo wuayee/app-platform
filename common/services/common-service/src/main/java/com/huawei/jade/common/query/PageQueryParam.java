@@ -4,8 +4,8 @@
 
 package com.huawei.jade.common.query;
 
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.validation.constraints.Range;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.validation.constraints.Range;
 
 import lombok.Data;
 

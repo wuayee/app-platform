@@ -4,7 +4,7 @@
 
 package com.huawei.jade.store.tool.parser.service;
 
-import com.huawei.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.NamedEntity;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.support.DeployStatus;
 

@@ -14,15 +14,15 @@
     <dependencies>
         <!-- FIT -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
 
@@ -35,13 +35,13 @@
 
         <!-- Test Fit Core -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-runtime</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-message-serializer-json-jackson</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
@@ -59,31 +59,31 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-value-fastjson</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-server-netty</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-server-http</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-handler-registry</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-client-okhttp</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
@@ -93,7 +93,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -106,7 +106,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

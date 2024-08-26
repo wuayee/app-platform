@@ -47,7 +47,7 @@ mvn clean install -s settings.xml
 
 ### Class文件解析及生成
 
-在 `com.huawei.fitframework.jvm` 包中，当前仅实现了对类型最基础信息的读取，待完善剩余功能。
+在 `modelengine.fitframework.jvm` 包中，当前仅实现了对类型最基础信息的读取，待完善剩余功能。
 
 同时需要设计并实现类生成能力，提供友好的API（可参考C# Emit）。
 

@@ -46,8 +46,9 @@ import com.huawei.fit.jober.taskcenter.util.MapSerializer;
 import com.huawei.fit.jober.taskcenter.validation.RelationshipValidator;
 import com.huawei.fit.jober.taskcenter.validation.TaskValidator;
 import com.huawei.fit.jober.taskcenter.validation.impl.TaskValidatorImpl;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.util.MapBuilder;
+
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

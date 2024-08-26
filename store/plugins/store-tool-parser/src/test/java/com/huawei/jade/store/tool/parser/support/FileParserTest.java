@@ -6,8 +6,9 @@ package com.huawei.jade.store.tool.parser.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
+
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;

@@ -12,17 +12,17 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.IntegrationTest;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.test.annotation.Spy;
-import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.IntegrationTest;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.test.annotation.Spy;
+import modelengine.fitframework.test.annotation.Sql;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.dto.EvalDataUpdateDto;
@@ -56,7 +56,7 @@ import java.util.Locale;
  * @author 何嘉斌
  * @since 2024-07-26
  */
-@IntegrationTest(scanPackages = {"com.huawei.jade.app.engine.eval", "com.huawei.fitframework.transaction"})
+@IntegrationTest(scanPackages = {"com.huawei.jade.app.engine.eval", "modelengine.fitframework.transaction"})
 @Sql(scripts = "sql/test_create_table.sql")
 @DisplayName("评估数据集成测试")
 public class EvalDataIntegrationTest {

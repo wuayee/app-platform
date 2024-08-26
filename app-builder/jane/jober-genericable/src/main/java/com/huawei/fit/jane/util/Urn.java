@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jane.util;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示统一资源名称。

@@ -50,7 +50,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
 
@@ -97,11 +97,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.huawei.fit.jade.fel</groupId>
+            <groupId>modelengine.fit.jade.fel</groupId>
             <artifactId>fel-flow</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
+            <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>fel-service</artifactId>
         </dependency>
         <dependency>
@@ -134,13 +134,13 @@
             <artifactId>mockito-junit-jupiter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-message-serializer-json-jackson</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>
@@ -156,11 +156,11 @@
             <artifactId>druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-security</artifactId>
         </dependency>
         <dependency>
@@ -168,7 +168,7 @@
             <artifactId>fit-elsa-interface</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
         </dependency>
         <dependency>
@@ -208,7 +208,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
@@ -223,12 +223,16 @@
             <artifactId>app-engine-metrics-base-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-test-framework</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <configuration>

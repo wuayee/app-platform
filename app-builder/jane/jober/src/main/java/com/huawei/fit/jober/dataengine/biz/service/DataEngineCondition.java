@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.dataengine.biz.service;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.Condition;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.Condition;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
 
 /**
  * TimeSchedulerDataEngine生效条件

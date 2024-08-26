@@ -8,9 +8,10 @@ import com.huawei.fit.jane.task.gateway.EmployeeDetailVO;
 import com.huawei.fit.jober.UserService;
 import com.huawei.fit.jober.common.utils.UserUtil;
 import com.huawei.fit.jober.entity.user.EmployeeDetail;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 
 /**
  * {@link UserService}的实现类

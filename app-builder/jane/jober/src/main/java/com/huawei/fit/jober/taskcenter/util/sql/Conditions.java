@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.util.sql;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import java.util.Collections;
 import java.util.LinkedList;

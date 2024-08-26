@@ -9,7 +9,8 @@ import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

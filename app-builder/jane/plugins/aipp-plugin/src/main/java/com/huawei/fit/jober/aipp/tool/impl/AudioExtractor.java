@@ -17,13 +17,14 @@ import com.huawei.fit.jober.aipp.util.LLMUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
 import com.huawei.jade.voice.service.VoiceService;
+
+import modelengine.fel.model.openai.client.OpenAiClient;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
 
 import org.apache.commons.io.FileUtils;
 

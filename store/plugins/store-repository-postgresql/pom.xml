@@ -14,33 +14,33 @@
     <dependencies>
         <!-- FIT core -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-transaction</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
 
         <!-- Services -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-security</artifactId>
         </dependency>
         <dependency>
@@ -95,7 +95,7 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
     </dependencies>
@@ -103,7 +103,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -122,7 +122,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

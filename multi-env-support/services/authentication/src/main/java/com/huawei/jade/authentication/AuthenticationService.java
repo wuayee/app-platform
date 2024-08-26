@@ -4,7 +4,7 @@
 
 package com.huawei.jade.authentication;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 
 /**
  * 用户认证服务接口。

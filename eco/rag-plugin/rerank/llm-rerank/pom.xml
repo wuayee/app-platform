@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>jade-rag-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
@@ -21,7 +21,7 @@
     <dependencies>
         <!-- fel -->
         <dependency>
-            <groupId>com.huawei.fit.jade.fel</groupId>
+            <groupId>modelengine.fit.jade.fel</groupId>
             <artifactId>fel-flow</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -69,7 +69,7 @@
 
             <!-- Fit -->
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

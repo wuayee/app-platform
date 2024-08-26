@@ -8,7 +8,8 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.declaration.TreeDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.TreeEntity;
 import com.huawei.fit.jober.taskcenter.filter.TreeFilter;
-import com.huawei.fitframework.model.RangedResultSet;
+
+import modelengine.fitframework.model.RangedResultSet;
 
 /**
  * 为任务树提供管理。

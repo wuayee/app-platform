@@ -18,8 +18,9 @@ import com.huawei.fit.jane.task.TaskInstanceInfo;
 import com.huawei.fit.jane.task.TaskPropertyInfo;
 import com.huawei.fit.jane.task.TaskSourceInfo;
 import com.huawei.fit.jane.task.TaskTypeInfo;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

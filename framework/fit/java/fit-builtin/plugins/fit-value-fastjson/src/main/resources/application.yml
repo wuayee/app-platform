@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.value.fastjson'
+    - 'modelengine.fit.value.fastjson'

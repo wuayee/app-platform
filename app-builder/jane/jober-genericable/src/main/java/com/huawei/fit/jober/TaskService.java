@@ -8,7 +8,8 @@ import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.TaskFilter;
 import com.huawei.fit.jober.entity.task.Task;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 任务定义服务Genericable。

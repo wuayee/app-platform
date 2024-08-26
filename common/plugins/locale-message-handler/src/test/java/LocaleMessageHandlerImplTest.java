@@ -2,8 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-import com.huawei.fitframework.globalization.StringResource;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.globalization.StringResource;
+import modelengine.fitframework.plugin.Plugin;
+
 import com.huawei.jade.common.localemessage.LocaleMessageHandlerImpl;
 
 import org.junit.jupiter.api.Assertions;

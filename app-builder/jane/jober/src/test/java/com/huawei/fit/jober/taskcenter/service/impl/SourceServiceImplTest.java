@@ -30,8 +30,9 @@ import com.huawei.fit.jober.taskcenter.util.DefaultDynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.validation.RelationshipValidator;
 import com.huawei.fit.jober.taskcenter.validation.SourceValidator;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.plugin.Plugin;
+
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

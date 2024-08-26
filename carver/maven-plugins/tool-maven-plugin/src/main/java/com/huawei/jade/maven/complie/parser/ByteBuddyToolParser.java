@@ -4,9 +4,9 @@
 
 package com.huawei.jade.maven.complie.parser;
 
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Property;
 import com.huawei.jade.carver.tool.annotation.ToolMethod;
 import com.huawei.jade.maven.complie.entity.MethodEntity;
 import com.huawei.jade.maven.complie.entity.ParameterEntity;

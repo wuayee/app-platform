@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.task.entity;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.Data;
 

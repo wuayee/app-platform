@@ -4,16 +4,16 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.plugin.PluginStartedObserver;
-import com.huawei.fitframework.plugin.PluginStoppingObserver;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.plugin.PluginStartedObserver;
+import modelengine.fitframework.plugin.PluginStoppingObserver;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.ToolFactory;
 import com.huawei.jade.carver.tool.repository.ToolFactoryRepository;
 

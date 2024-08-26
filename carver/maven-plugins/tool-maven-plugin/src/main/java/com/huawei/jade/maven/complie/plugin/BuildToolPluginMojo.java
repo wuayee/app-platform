@@ -4,7 +4,7 @@
 
 package com.huawei.jade.maven.complie.plugin;
 
-import com.huawei.fitframework.plugin.maven.support.AbstractMojo;
+import modelengine.fitframework.plugin.maven.support.AbstractMojo;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;

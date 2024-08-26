@@ -4,11 +4,11 @@
 
 package com.huawei.jade.carver.tool.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.json.schema.JsonSchemaManager;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.json.schema.JsonSchemaManager;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import java.lang.reflect.Method;

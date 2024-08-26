@@ -5,8 +5,8 @@ fit:
   beans:
     packages:
       - 'com.huawei.fit.jober'
-      - 'com.huawei.fitframework'
-      - 'com.huawei.fit.integration'
+      - 'modelengine.fitframework'
+      - 'modelengine.fit.integration'
   messages:
     basename: i18n/messages
 

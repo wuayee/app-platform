@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.tool.support.entity;
 
-import com.huawei.fit.http.annotation.RequestHeader;
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fit.http.annotation.RequestHeader;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 表示教育信息。

@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.schema.validator;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 import com.huawei.jade.app.engine.schema.SchemaValidator;
 import com.huawei.jade.app.engine.schema.exception.ContentInvalidException;
 import com.huawei.jade.app.engine.schema.exception.SchemaInvalidException;

@@ -32,7 +32,8 @@ import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
 import com.huawei.fit.runtime.entity.Parameter;
 import com.huawei.fit.runtime.entity.RuntimeData;
-import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
+
+import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

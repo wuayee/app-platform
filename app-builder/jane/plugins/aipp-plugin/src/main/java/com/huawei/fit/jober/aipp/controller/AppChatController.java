@@ -4,11 +4,6 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
@@ -16,10 +11,16 @@ import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
 import com.huawei.fit.jober.aipp.service.AppChatService;
 import com.huawei.fit.jober.aipp.service.impl.AppChatServiceImpl;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 

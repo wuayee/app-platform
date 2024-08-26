@@ -6,8 +6,8 @@ package com.huawei.jade.app.engine.eval.manager.impl;
 
 import static com.huawei.jade.app.engine.eval.code.AppEvalRetCode.EVAL_DATA_INVALID_ERROR;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 import com.huawei.jade.app.engine.eval.exception.AppEvalException;
 import com.huawei.jade.app.engine.eval.manager.EvalDataValidator;
 import com.huawei.jade.app.engine.eval.mapper.EvalDatasetMapper;

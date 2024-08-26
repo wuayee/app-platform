@@ -4,13 +4,14 @@
 
 package com.huawei.jade.store.repository.pgsql.controller;
 
-import static com.huawei.fitframework.inspection.Validation.notNegative;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNegative;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fitframework.annotation.Component;
+
 import com.huawei.jade.common.Result;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;

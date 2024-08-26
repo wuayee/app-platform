@@ -12,11 +12,11 @@ import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.domain.portal.TaskNode;
-import com.huawei.fitframework.model.RangedResultSet;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;
 import java.util.Map;
@@ -58,7 +58,7 @@ public interface PortalService {
      * @param limit 表示待查询的结果集中允许包含结果的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 表示查询到的任务数据源的
-     * {@link com.huawei.fitframework.model.RangedResultSet}{@code <}{@link SourceEntity}{@code >}。
+     * {@link RangedResultSet}{@code <}{@link SourceEntity}{@code >}。
      */
     RangedResultSet<SourceEntity> listSource(String treeId, String nodeId, long offset, int limit,
             OperationContext context);

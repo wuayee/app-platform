@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.tool.eco.langchain;
 
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.eco.AbstractKvTool;
 
 /**

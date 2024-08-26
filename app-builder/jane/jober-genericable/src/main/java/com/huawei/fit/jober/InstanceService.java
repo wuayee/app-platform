@@ -10,7 +10,8 @@ import com.huawei.fit.jober.entity.InstanceQueryFilter;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.TaskEntity;
 import com.huawei.fit.jober.entity.instance.Instance;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 任务实例服务Genericable。

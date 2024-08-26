@@ -7,9 +7,9 @@ package com.huawei.jade.carver.telemetry.aop.parsers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.stub.WithSpanObjectParse;
 

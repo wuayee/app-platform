@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service;
 
-import com.huawei.fit.http.websocket.Session;
+import modelengine.fit.http.websocket.Session;
 
 import java.util.Optional;
 

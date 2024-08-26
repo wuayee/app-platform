@@ -4,12 +4,12 @@
 
 package com.huawei.jade.app.engine.task.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.task.convertor.EvalRecordConvertor;
 import com.huawei.jade.app.engine.task.entity.EvalRecordEntity;
 import com.huawei.jade.app.engine.task.mapper.EvalRecordMapper;
 import com.huawei.jade.app.engine.task.po.EvalRecordPo;
 import com.huawei.jade.app.engine.task.service.EvalRecordService;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;

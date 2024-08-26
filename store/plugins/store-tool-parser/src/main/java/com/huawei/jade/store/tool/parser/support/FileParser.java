@@ -4,11 +4,12 @@
 
 package com.huawei.jade.store.tool.parser.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;

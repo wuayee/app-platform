@@ -4,17 +4,18 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptDto;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

@@ -4,9 +4,9 @@
 
 package com.huawei.jade.authentication.context;
 
-import com.huawei.fit.http.Cookie;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fit.http.Cookie;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;

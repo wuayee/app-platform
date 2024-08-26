@@ -23,8 +23,8 @@ import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.databus.sdk.tools.SeqGenerator;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

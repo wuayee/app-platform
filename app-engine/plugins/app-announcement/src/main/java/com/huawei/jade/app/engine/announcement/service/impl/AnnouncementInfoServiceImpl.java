@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.announcement.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.announcement.dto.AnnouncementInfoDto;
 import com.huawei.jade.app.engine.announcement.mapper.AnnouncementInfoMapper;
 import com.huawei.jade.app.engine.announcement.mapstruct.mapper.AnnouncementInfoStructMapper;

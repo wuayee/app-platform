@@ -7,8 +7,9 @@ package com.huawei.fit.jober.aipp.util;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

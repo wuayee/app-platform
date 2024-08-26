@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jane.task.gateway;
 
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 为 {@link AppInfo} 提供a3000的默认实现。

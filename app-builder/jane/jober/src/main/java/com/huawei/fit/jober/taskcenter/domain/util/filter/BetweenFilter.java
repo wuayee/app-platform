@@ -4,15 +4,16 @@
 
 package com.huawei.fit.jober.taskcenter.domain.util.filter;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jober.taskcenter.domain.util.Filter;
 import com.huawei.fit.jober.taskcenter.domain.util.FilterParser;
 import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.Condition;
-import com.huawei.fitframework.util.ParsingResult;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 

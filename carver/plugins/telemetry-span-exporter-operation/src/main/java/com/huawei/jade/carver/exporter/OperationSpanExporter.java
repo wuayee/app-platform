@@ -9,11 +9,11 @@ import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP
 import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_RESULT_KEY;
 import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_SUCCEED;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.service.CarverSpanExporter;
 

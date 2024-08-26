@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.task.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.task.mapper.EvalInstanceMapper;
 import com.huawei.jade.app.engine.task.po.EvalInstancePo;
 import com.huawei.jade.app.engine.task.service.EvalInstanceService;

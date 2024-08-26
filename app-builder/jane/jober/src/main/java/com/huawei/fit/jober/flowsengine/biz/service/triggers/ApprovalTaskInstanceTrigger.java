@@ -6,25 +6,26 @@ package com.huawei.fit.jober.flowsengine.biz.service.triggers;
 
 import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
 import static com.huawei.fit.jober.common.Constant.OPERATOR_KEY;
-import static com.huawei.fit.waterflow.flowsengine.utils.FlowUtil.originalVariable;
+import static modelengine.fit.waterflow.flowsengine.utils.FlowUtil.originalVariable;
 
 import com.huawei.fit.jober.InstanceChangedService;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
 import com.huawei.fit.jober.entity.task.Task;
-import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fit.waterflow.flowsengine.biz.service.FlowContextsService;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

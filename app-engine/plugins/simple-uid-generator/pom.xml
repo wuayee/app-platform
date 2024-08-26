@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>app-engine-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -15,11 +15,11 @@
     <dependencies>
         <!-- Fit -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
 
@@ -30,11 +30,11 @@
 
         <!-- Orm -->
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>
@@ -58,7 +58,7 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -75,7 +75,7 @@
         <plugins>
             <!-- Fit -->
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.uid;
 
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.uid.mapper.WorkerGeneratorMapper;
 import com.huawei.jade.app.engine.uid.po.WorkerPo;
 

@@ -4,9 +4,9 @@
 
 package com.huawei.jade.app.engine.base.service.impl;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
 import com.huawei.jade.app.engine.base.mapper.UsrFeedbackMapper;
 import com.huawei.jade.app.engine.base.service.UsrFeedbackService;

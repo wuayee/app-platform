@@ -9,12 +9,12 @@ import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.AippLogUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.flowable.Emitter;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;

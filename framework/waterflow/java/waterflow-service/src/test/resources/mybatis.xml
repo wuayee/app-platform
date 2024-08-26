@@ -10,7 +10,7 @@
         <setting name="localCacheScope" value="STATEMENT"/>
     </settings>
     <typeAliases>
-        <typeAlias type="com.huawei.fit.waterflow.DruidDataSourceFactory" alias="DRUID"/>
+        <typeAlias type="modelengine.fit.waterflow.DruidDataSourceFactory" alias="DRUID"/>
     </typeAliases>
     <environments default="edevops">
         <environment id="edevops">

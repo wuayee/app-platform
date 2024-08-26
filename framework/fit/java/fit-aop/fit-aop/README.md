@@ -114,7 +114,7 @@ interface MethodMatcherCollection {
 interface MethodInterceptorResolver {
 + resolve(BeanMetadata beanMetadata, Object bean) : List<MethodInterceptor>
 }
-package com.huawei.fitframework.aop.aspectj {
+package modelengine.fitframework.aop.aspectj {
   class AspectJMethodInterceptorResolver {
   - methodMatcher : MethodMatcher
   + resolve(BeanMetadata beanMetadata, Object bean) : List<MethodInterceptor>
@@ -206,7 +206,7 @@ class AopProxyFactoryComposite {
 - objectFactory : AopProxyFactory
 + createProxy(InterceptSupport support) : Object
 }
-package com.huawei.fitframework.aop.cglib {
+package modelengine.fitframework.aop.cglib {
   class CglibObjectAopProxyFactory {
   + createProxy(InterceptSupport support) : Object
   }

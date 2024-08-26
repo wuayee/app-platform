@@ -15,8 +15,9 @@ import com.huawei.fit.jober.aipp.dto.CodeExecuteParamDto;
 import com.huawei.fit.jober.aipp.dto.CodeExecuteResDto;
 import com.huawei.fit.jober.aipp.init.serialization.AippJacksonObjectSerializer;
 import com.huawei.fit.jober.aipp.service.impl.CodeExecuteServiceImpl;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import org.junit.jupiter.api.Test;
 

@@ -4,12 +4,12 @@
 
 package com.huawei.jade.carver.telemetry.aop.parsers;
 
-import static com.huawei.fitframework.annotation.Order.LOW;
+import static modelengine.fitframework.annotation.Order.LOW;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.value.ValueFetcher;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParser;
 
 import java.util.Collections;

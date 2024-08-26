@@ -6,7 +6,7 @@ package com.huawei.databus.sdk.support;
 
 import com.huawei.databus.sdk.api.DataBusResult;
 import com.huawei.databus.sdk.message.ErrorType;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Optional;
 

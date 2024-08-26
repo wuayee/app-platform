@@ -4,12 +4,12 @@
 
 package com.huawei.fit.jober.aipp.util;
 
-import static com.huawei.fit.http.client.HttpClassicClientFactory.Config;
+import static modelengine.fit.http.client.HttpClassicClientFactory.Config;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.protocol.HttpResponseStatus;
 
 import java.io.IOException;
 import java.util.Locale;

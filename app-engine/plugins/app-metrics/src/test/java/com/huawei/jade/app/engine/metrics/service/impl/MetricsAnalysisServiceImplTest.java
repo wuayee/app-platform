@@ -10,13 +10,13 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.metrics.mapper.ConversationRecordMapper;
 import com.huawei.jade.app.engine.metrics.mapper.MetricsAccessMapper;
 import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
 import com.huawei.jade.app.engine.metrics.po.TimeType;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

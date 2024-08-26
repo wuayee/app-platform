@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.eval.dto;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 import com.huawei.jade.common.query.PageQueryParam;
 
 import lombok.Data;

@@ -12,9 +12,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mock;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
 import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
 import com.huawei.jade.app.engine.task.mapper.EvalTaskMapper;

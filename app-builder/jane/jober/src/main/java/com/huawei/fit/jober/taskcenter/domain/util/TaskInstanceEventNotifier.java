@@ -8,7 +8,8 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.util.support.DefaultTaskInstanceEventNotifier;
-import com.huawei.fitframework.plugin.Plugin;
+
+import modelengine.fitframework.plugin.Plugin;
 
 /**
  * 为任务实例的变更提供事件触发器。

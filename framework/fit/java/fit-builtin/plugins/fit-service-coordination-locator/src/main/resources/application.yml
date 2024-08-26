@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.service.locator'
+    - 'modelengine.fit.service.locator'

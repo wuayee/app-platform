@@ -4,13 +4,13 @@
 
 package com.huawei.jade.carver.tool.eco.huggingface;
 
-import static com.huawei.fitframework.inspection.Validation.isInstanceOf;
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.isInstanceOf;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.eco.AbstractTaskTool;
-import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 
 import java.util.HashMap;
 import java.util.List;

@@ -4,28 +4,9 @@
 
 package com.huawei.jade.store.tool.parser.service.impl;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.entity.FileEntity;
-import com.huawei.fit.http.entity.NamedEntity;
-import com.huawei.fit.service.RegistryService;
-import com.huawei.fit.service.entity.FitableAddressInstance;
-import com.huawei.fit.service.entity.FitableInfo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
-import com.huawei.fitframework.schedule.Task;
-import com.huawei.fitframework.schedule.ThreadPoolExecutor;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.SecurityUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.ThreadUtils;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
@@ -38,6 +19,25 @@ import com.huawei.jade.store.tool.parser.config.RegistryQueryPoolConfig;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 import com.huawei.jade.store.tool.parser.service.PluginDeployService;
 import com.huawei.jade.store.tool.parser.support.FileParser;
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.service.RegistryService;
+import modelengine.fit.service.entity.FitableAddressInstance;
+import modelengine.fit.service.entity.FitableInfo;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.schedule.Task;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.SecurityUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import java.io.File;
 import java.io.IOException;

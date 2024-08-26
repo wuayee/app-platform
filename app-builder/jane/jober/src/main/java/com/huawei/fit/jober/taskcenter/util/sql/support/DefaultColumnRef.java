@@ -4,12 +4,13 @@
 
 package com.huawei.fit.jober.taskcenter.util.sql.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 

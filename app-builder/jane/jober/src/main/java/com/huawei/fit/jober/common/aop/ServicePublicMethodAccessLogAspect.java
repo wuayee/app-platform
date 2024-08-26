@@ -5,12 +5,13 @@
 package com.huawei.fit.jober.common.aop;
 
 import com.huawei.fit.jober.common.model.LogSubject;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.aop.ProceedingJoinPoint;
-import com.huawei.fitframework.aop.annotation.Around;
-import com.huawei.fitframework.aop.annotation.Aspect;
-import com.huawei.fitframework.aop.annotation.Pointcut;
-import com.huawei.fitframework.log.Logger;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.aop.ProceedingJoinPoint;
+import modelengine.fitframework.aop.annotation.Around;
+import modelengine.fitframework.aop.annotation.Aspect;
+import modelengine.fitframework.aop.annotation.Pointcut;
+import modelengine.fitframework.log.Logger;
 
 import java.time.LocalDateTime;
 

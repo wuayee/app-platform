@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.schema.exception;
 
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.schema.code.SchemaValidatorRetCode;
 
 /**

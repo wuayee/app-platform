@@ -8,8 +8,9 @@ import com.huawei.fit.jober.aipp.enums.FileExtensionEnum;
 import com.huawei.fit.jober.aipp.service.OperatorService;
 import com.huawei.fit.jober.aipp.tool.FileTool;
 import com.huawei.fit.jober.aipp.util.AippStringUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 
 import java.io.File;
 import java.nio.file.Paths;

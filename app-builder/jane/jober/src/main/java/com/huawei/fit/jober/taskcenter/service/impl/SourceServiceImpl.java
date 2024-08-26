@@ -45,15 +45,16 @@ import com.huawei.fit.jober.taskcenter.util.Sqls;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.validation.RelationshipValidator;
 import com.huawei.fit.jober.taskcenter.validation.SourceValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

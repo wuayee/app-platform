@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>jade-fel-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.jade.fel</groupId>
+    <groupId>modelengine.fit.jade.fel</groupId>
     <artifactId>fel-plugins-parent</artifactId>
     <packaging>pom</packaging>
 

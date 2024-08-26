@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.taskcenter.domain.portal;
 
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;

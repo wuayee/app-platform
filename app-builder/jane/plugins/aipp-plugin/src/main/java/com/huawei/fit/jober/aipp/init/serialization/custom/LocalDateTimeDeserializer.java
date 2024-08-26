@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.init.serialization.custom;
 
-import static com.huawei.fitframework.util.StringUtils.blankIf;
+import static modelengine.fitframework.util.StringUtils.blankIf;
 
 import com.huawei.fit.jober.aipp.init.serialization.AippJacksonObjectSerializer;
 

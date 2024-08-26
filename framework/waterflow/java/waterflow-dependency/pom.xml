@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huawei.fit.jade.waterflow</groupId>
+    <groupId>modelengine.fit.jade.waterflow</groupId>
     <artifactId>waterflow-dependency</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -43,71 +43,71 @@
         <dependencies>
             <!-- FIT -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-api</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-data-repository-service</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
+                <groupId>modelengine.fit.integration</groupId>
                 <artifactId>fit-mybatis</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework.extension</groupId>
+                <groupId>modelengine.fitframework.extension</groupId>
                 <artifactId>fit-schedule</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-service-registry-and-discovery</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework.extension</groupId>
+                <groupId>modelengine.fitframework.extension</groupId>
                 <artifactId>fit-transaction</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- WaterFlow -->
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-bridge-fit-reactor</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-core</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-genericable</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
 
             <!-- Ohscript -->
             <dependency>
-                <groupId>com.huawei.fit.ohscript</groupId>
+                <groupId>modelengine.fit.ohscript</groupId>
                 <artifactId>ohscript</artifactId>
                 <version>${ohscript.version}</version>
             </dependency>
@@ -207,17 +207,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
 </project>

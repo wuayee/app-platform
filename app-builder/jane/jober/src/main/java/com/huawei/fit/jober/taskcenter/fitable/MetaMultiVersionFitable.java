@@ -25,12 +25,13 @@ import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaPropertyConverter;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
-import com.huawei.fitframework.annotation.Alias;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
+
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -210,7 +211,7 @@ public class MetaMultiVersionFitable implements MetaService {
                 ParamUtils.convertToInternalOperationContext(context);
         // 查最新版本 created_time
         // 查询：需要根据attributes进行区分查询 已发布/未发布
-        com.huawei.fitframework.model.RangedResultSet<TaskEntity> taskEntityRangedResultSet =
+        modelengine.fitframework.model.RangedResultSet<TaskEntity> taskEntityRangedResultSet =
                 taskService.listMeta(filter, isLatestOnly, offset, limit, operationContext);
         List<Meta> metaList = taskEntityRangedResultSet.getResults()
                 .stream()
@@ -226,7 +227,7 @@ public class MetaMultiVersionFitable implements MetaService {
             } else {
                 filter = oldDataFilter;
             }
-            com.huawei.fitframework.model.RangedResultSet<TaskEntity> taskEntityRangedResultSet1 =
+            modelengine.fitframework.model.RangedResultSet<TaskEntity> taskEntityRangedResultSet1 =
                     this.taskService.listMeta(filter, isLatestOnly, offset, limit, operationContext);
             metaList.addAll(taskEntityRangedResultSet1.getResults()
                     .stream()

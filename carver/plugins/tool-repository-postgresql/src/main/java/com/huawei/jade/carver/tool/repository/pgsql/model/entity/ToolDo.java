@@ -6,9 +6,9 @@ package com.huawei.jade.carver.tool.repository.pgsql.model.entity;
 
 import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import lombok.AllArgsConstructor;

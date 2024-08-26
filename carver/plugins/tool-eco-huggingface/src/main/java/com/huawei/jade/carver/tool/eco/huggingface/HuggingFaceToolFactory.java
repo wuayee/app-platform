@@ -4,15 +4,15 @@
 
 package com.huawei.jade.carver.tool.eco.huggingface;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
-import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
+import modelengine.fel.service.pipeline.HuggingFacePipelineService;
 
 /**
  * 表示 {@link ToolFactory} 的 HuggingFace 的实现。

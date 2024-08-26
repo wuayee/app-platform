@@ -14,4 +14,4 @@ worker:
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.service'
+    - 'modelengine.fit.service'

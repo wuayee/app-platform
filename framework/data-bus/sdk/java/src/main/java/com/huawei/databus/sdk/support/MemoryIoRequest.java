@@ -5,7 +5,7 @@
 package com.huawei.databus.sdk.support;
 
 import com.huawei.databus.sdk.api.DataBusIoRequest;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import java.time.Duration;
 import java.util.Optional;

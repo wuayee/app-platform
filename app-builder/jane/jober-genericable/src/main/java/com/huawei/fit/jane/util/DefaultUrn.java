@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.util;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import java.util.Arrays;
 import java.util.Objects;

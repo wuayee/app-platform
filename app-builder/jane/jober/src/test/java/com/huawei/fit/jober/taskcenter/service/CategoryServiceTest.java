@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.service;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -20,8 +20,9 @@ import com.huawei.fit.jober.common.ServerInternalException;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.taskcenter.service.impl.CategoryServiceImpl;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
+
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

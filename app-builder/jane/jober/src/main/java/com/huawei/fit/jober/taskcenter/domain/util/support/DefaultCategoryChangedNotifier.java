@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.domain.util.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyCategory;
 import com.huawei.fit.jane.task.domain.TaskProperty;
@@ -17,13 +17,14 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.util.CategoryChangedNotifier;
 import com.huawei.fit.jober.taskcenter.service.CategoryService;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ParsingResult;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;

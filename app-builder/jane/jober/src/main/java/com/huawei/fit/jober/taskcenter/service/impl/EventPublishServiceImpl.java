@@ -5,9 +5,10 @@
 package com.huawei.fit.jober.taskcenter.service.impl;
 
 import com.huawei.fit.jober.taskcenter.service.EventPublishService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.event.Event;
-import com.huawei.fitframework.plugin.Plugin;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.event.Event;
+import modelengine.fitframework.plugin.Plugin;
 
 /**
  * {@link EventPublishService} 的默认实现。

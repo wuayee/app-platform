@@ -4,7 +4,8 @@
 
 package com.huawei.jade.store.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
+
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
