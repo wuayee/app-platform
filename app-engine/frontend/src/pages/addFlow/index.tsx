@@ -5,6 +5,8 @@ import { getAppInfo } from '@/shared/http/aipp';
 import { ConfigFlowIcon } from '@assets/icon';
 import { Message } from '@/shared/utils/message';
 import { FlowContext } from '../aippIndex/context';
+import { setTestTime, setTestStatus } from "@/store/flowTest/flowTest";
+import {useAppDispatch, useAppSelector} from "../../store/hook";
 import LeftMenu from './components/left-menu';
 import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
@@ -14,7 +16,8 @@ import './styles/index.scss';
 
 const AddFlow = (props) => {
   const { t } = useTranslation();
-  const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus,
+  const dispatch = useAppDispatch();
+  const { type, appInfo, addFlowRef,
     showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [dragData, setDragData] = useState([]);
   const [flowInfo, setFlowInfo] = useState({});
@@ -24,8 +27,8 @@ const AddFlow = (props) => {
   const [showDebug, setShowDebug] = useState(false);
   const [showToolFlowChangeWarning, setShowToolFlowChangeWarning] = useState(false);
   const { tenantId, appId } = useParams();
-  const [testStatus, setTestStatus] = useState(null);
-  const [testTime, setTestTime] = useState(0);
+  const testTime = useAppSelector((state) => state.flowTestStore.testTime);
+  const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
   const appRef = useRef(null);
   const flowIdRef = useRef(null);
   const elsaRunningCtl = useRef(null);
@@ -48,8 +51,8 @@ const AddFlow = (props) => {
   }
   useEffect(() => {
     if (!type) return;
-    setFlowTestTime(null);
-    setFlowTestStatus(null);
+    dispatch(setTestTime(null));
+    dispatch(setTestStatus(null));
     elsaRunningCtl.current?.reset();
   }, [props.type])
 
@@ -85,8 +88,7 @@ const AddFlow = (props) => {
             testStatus={testStatus}
             testTime={testTime}
           />}
-        <FlowTest setTestStatus={type ? setFlowTestStatus : setTestStatus}
-          setTestTime={type ? setFlowTestTime : setTestTime}
+        <FlowTest
           setShowDebug={setShowDebug}
           showDebug={showDebug}
           debugTypes={debugTypes}
@@ -114,7 +116,6 @@ const AddFlow = (props) => {
             setDragData={setDragData}
             appRef={appRef}
             flowIdRef={flowIdRef}
-            setTestStatus={type ? setFlowTestStatus : setTestStatus}
             elsaRunningCtl={elsaRunningCtl}
             showFlowChangeWarning={type ? showFlowChangeWarning : showToolFlowChangeWarning}
             setShowFlowChangeWarning={type ? setShowFlowChangeWarning : setShowToolFlowChangeWarning}

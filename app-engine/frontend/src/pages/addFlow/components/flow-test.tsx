@@ -7,11 +7,11 @@ import { Message } from '@/shared/utils/message';
 import { reTestInstance } from '@/shared/http/aipp';
 import { messageProcess } from '../../chatPreview/utils/chat-process';
 import { workflowDebug, getTestVersion } from '@/shared/http/sse';
-import { useAppSelector } from '@/store/hook';
+import { useAppSelector, useAppDispatch } from '@/store/hook';
+import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { EventSourceParserStream } from '@/shared/event-source/stream';
 import RenderFormItem from './render-form-item';
 import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
-import { useAppDispatch } from '@/store/hook';
 import { setDimension } from '@/store/common/common';
 import { pduTypeMap } from '@/pages/chatPreview/common/config';
 import { useTranslation } from 'react-i18next';
@@ -19,8 +19,6 @@ import { useTranslation } from 'react-i18next';
 const Index = (props) => {
   const {
     debugTypes,
-    setTestTime,
-    setTestStatus,
     setShowDebug,
     showDebug,
     elsaRunningCtl,
@@ -47,8 +45,8 @@ const Index = (props) => {
   const handleRunTest = () => {
     setShowFlowChangeWarning(false);
     elsaRunningCtl.current?.reset();
-    setTestStatus(null);
-    setTestTime(0);
+    dispatch(setTestStatus(null));
+    dispatch(setTestTime(0));
     form.validateFields().then((values) => {
       runningStart(values);
     }).catch(() => {
@@ -69,7 +67,7 @@ const Index = (props) => {
     };
     if (chatId) {
       chatParams['chat_id'] = chatId;
-    };
+    }
     handleRun(chatParams);
   };
   // 点击运行
@@ -139,7 +137,7 @@ const Index = (props) => {
   const startDebugMission = (aippId, version, instanceId) => {
     handleCloseDebug();
     elsaRunningCtl.current = window.agent.run();
-    setTestStatus('Running');
+    dispatch(setTestStatus('Running'));
     startTestInstance(aippId, version, instanceId);
   }
   // 测试轮询
@@ -153,16 +151,16 @@ const Index = (props) => {
       if (runtimeData) {
         if (isError(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
-          setTestStatus('Error');
+          dispatch(setTestStatus('Error'));
           elsaRunningCtl.current?.stop();
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
-          setTestStatus('Finished');
+          dispatch(setTestStatus('Finished'));
           elsaRunningCtl.current?.stop();
         }
         elsaRunningCtl.current?.refresh(runtimeData.nodeInfos);
         const time = (runtimeData.executeTime / 1000).toFixed(3);
-        setTestTime(time);
+        dispatch(setTestTime(time));
       }
     }, 3000);
   }
@@ -197,7 +195,7 @@ const Index = (props) => {
           <Spin spinning={loading}>
             <div style={{ textAlign: 'right' }}>
               <span onClick={handleRunTest} className='run-btn'>
-                <RunIcon className='run-icon' />{t('run')}
+                <RunIcon />{t('run')}
               </span>
             </div>
           </Spin>

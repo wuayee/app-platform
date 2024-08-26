@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
+import static com.huawei.fit.jober.aipp.util.AppUtils.replaceAsterisks;
+
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
@@ -63,7 +65,8 @@ public class AppBuilderAppController extends AbstractController {
             com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
             @Value("${app-engine.exclude-names}") List<String> excludeNames) {
         super(authenticator);
-        this.excludeNames = excludeNames;
+        // 需要FIT框架支持exclude-names配置大括号
+        this.excludeNames = replaceAsterisks(excludeNames);
         this.appService = appService;
         this.appGenericable = appGenericable;
     }
