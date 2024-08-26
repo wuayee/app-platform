@@ -16,16 +16,13 @@ import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.protocol.MessageHeaderNames;
 import com.huawei.fit.http.protocol.MimeType;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
-import com.huawei.fitframework.broker.GenericableMetadata;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.tlv.TlvUtils;
@@ -41,22 +38,6 @@ import java.lang.reflect.Type;
  * @since 2023-11-17
  */
 public class HttpClientUtils {
-    private static final Logger log = Logger.get(HttpClientUtils.class);
-
-    /**
-     * 获取 Http 请求中的服务版本号。
-     *
-     * @param request 表示请求的 {@link HttpClassicServerRequest}。
-     * @return 表示请求中的服务版本号的 {@link String}。
-     */
-    public static String getGenericableVersion(HttpClassicServerRequest request) {
-        return request.headers().first(FIT_GENERICABLE_VERSION.value()).orElseGet(() -> {
-            log.warn("No specified FIT-Genericable-Version in headers, use default value instead. "
-                    + "[defaultGenericableVersion={}]", GenericableMetadata.DEFAULT_VERSION);
-            return GenericableMetadata.DEFAULT_VERSION;
-        });
-    }
-
     /**
      * 获取 Http 响应中的 TLV。
      *

@@ -37,7 +37,8 @@ public class DefaultResponseMetadata implements ResponseMetadata {
 
     private DefaultResponseMetadata(int dataFormat, int code, boolean isDegradable, boolean isRetryable, String message,
             TagLengthValues tagLengthValues) {
-        this.dataFormat = between(dataFormat, 0, 0x7F, "The data format is out of range. [dataFormat={0}]", dataFormat);
+        this.dataFormat =
+                between(dataFormat, -1, 0x7F, "The data format is out of range. [dataFormat={0}]", dataFormat);
         this.code = code;
         this.isDegradable = isDegradable;
         this.isRetryable = isRetryable;
