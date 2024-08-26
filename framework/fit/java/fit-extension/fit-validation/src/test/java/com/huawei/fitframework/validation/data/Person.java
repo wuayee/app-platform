@@ -18,22 +18,28 @@ import com.huawei.fitframework.validation.group.PersonGroup;
  */
 public class Person {
     @Range(min = 0, max = 1, message = "嘴巴数量范围只能在0和1！")
-    private final int mouth;
+    private int mouth;
 
     @Range(min = 0, max = 2, message = "眼睛数量范围只能在0和2！")
-    private final int eyes;
+    private int eyes;
 
     @NotBlank(message = "姓名不能为空！")
-    private final String name;
+    private String name;
 
     @NotEmpty(message = "性别不能为空！")
-    private final String sex;
+    private String sex;
 
     @Range(min = 0, max = 150, message = "人类年龄要在0~150之内", groups = {PersonGroup.class})
-    private final int personAge;
+    private int personAge;
 
     @Range(min = 151, max = 200, message = "非人类年龄在151~200之内", groups = {NotPersonGroup.class})
-    private final int notPersonAge;
+    private int notPersonAge;
+
+    /**
+     * Person 类的默认构造函数。
+     *
+     */
+    public Person() {}
 
     public Person(int mouth, int eyes, String name, String sex, int personAge, int notPersonAge) {
         this.mouth = mouth;

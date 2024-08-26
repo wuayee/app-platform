@@ -43,5 +43,14 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-test-framework</artifactId>
+        </dependency>
     </dependencies>
 </project>
