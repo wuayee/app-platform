@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { Icons } from '../icons';
-import { cancelUserCollection, collectionApp } from '@/shared/http/appDev';
-import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { addCollectionApp, removeCollectionApp } from '@/store/collection/collection';
 import { useTranslation } from 'react-i18next';
 import './style.scoped.scss';
 
@@ -20,9 +17,6 @@ export interface CardInfoType {
 const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   const { t } = useTranslation();
   const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const collectionStore = useAppSelector((state: any) => state.collectionStore.value);
-  const dispatch = useAppDispatch();
   const operatorItems: MenuProps['items'] = [
     {
       key: 'delete',
@@ -32,49 +26,6 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   const clickItem = (info: any) => {
     clickMore(info.key, cardInfo.id);
   };
-
-  // 获取当前登录用户名
-  const getLoaclUser = () => {
-    return localStorage.getItem('currentUserIdComplete') ?? '';
-  }
-
-  // 点击收藏
-  const collectionClick = async () => {
-    setLoading(true);
-    await collectionApp({
-      aippId: cardInfo.id,
-      usrInfo: getLoaclUser(),
-      isDefault: false,
-    });
-    // 刷新收藏数
-    dispatch(addCollectionApp(cardInfo.id));
-    setLoading(false);
-  }
-
-  // 取消收藏
-  const cancelCollection = async () => {
-    setLoading(true);
-    await cancelUserCollection({
-      usrInfo: getLoaclUser(),
-      aippId: cardInfo.id,
-    })
-    dispatch(removeCollectionApp(cardInfo.id));
-    setLoading(false);
-  }
-
-  // 
-  const clickCollection = (e: Event) => {
-    if (loading) {
-      // 处于请求状态不允许点击
-    } else {
-      if (collectionStore[cardInfo.id]) {
-        cancelCollection();
-      } else {
-        collectionClick();
-      }
-    }
-    e.stopPropagation();
-  }
 
   useEffect(() => {
     let { likeCount } = cardInfo;
