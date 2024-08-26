@@ -200,6 +200,7 @@ public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeS
         this.validatePluginIds(toDeployPluginIds);
         List<PluginData> deployedPlugins = this.pluginService.getPlugins(DeployStatus.DEPLOYED);
         List<String> deployedPluginIds = deployedPlugins.stream()
+            .filter(pluginData -> !pluginData.getBuiltin())
             .map(PluginData::getPluginId)
             .collect(Collectors.toList());
         List<String> toUnDeployedIds = new ArrayList<>(
