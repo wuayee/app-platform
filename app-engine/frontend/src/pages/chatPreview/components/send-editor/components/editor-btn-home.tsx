@@ -209,10 +209,9 @@ const EditorBtnHome = (props) => {
           <div className={['switch-app', atAppId ? 'switch-active' : null].join(' ')} onClick={onClickShowMore}>
             {atAppId && <span style={{ marginLeft: '6px' }}>{t('chatWith')}</span>}
             <span className='item-name' title={appName}>{appName}</span>
-            {!appInfo.hideHistory && <img src='./src/assets/images/ai/list.png' className='app-menu' />}
             {atAppId && <span style={{ marginLeft: '6px' }}>{t('chat')}</span>}
           </div>
-          <LinkIcon onClick={uploadClick} />
+          {/* <LinkIcon onClick={uploadClick} /> */}
           {(!atAppId && appId === HOME_APP_ID) && <AtIcon onClick={atClick} />}
         </div>
       </div>

@@ -198,10 +198,14 @@ const SendEditor = (props) => {
     }
   }, [showMulti]);
   const resetEditorHeight = (list) => {
+    let listChatDom = document.getElementById('chat-list-dom');
+    let top = recommondRef.current.scrollHeight + editorRef.current.scrollHeight;
     if (list.length > 0) {
-      setRecommondTop(recommondRef.current.scrollHeight + editorRef.current.scrollHeight - 140);
+      setRecommondTop(top - 140);
+      listChatDom.style.marginBottom = `${top - 120}px`;
     } else {
       setRecommondTop(0);
+      listChatDom.style.marginBottom = '25px';
     }
   }
   function plays() {
