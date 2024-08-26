@@ -8,9 +8,11 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fit.serialization.MessageSerializer;
+import com.huawei.fit.serialization.util.MessageSerializerUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Order;
+import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.ArrayUtils;
@@ -32,9 +34,17 @@ import java.util.List;
 @Component
 public class CborMessageSerializer implements MessageSerializer {
     private final ObjectSerializer serializer;
+    private final Config config;
 
-    public CborMessageSerializer(@Fit(alias = "cbor") ObjectSerializer serializer) {
+    /**
+     * 构造一个新的 {@link CborMessageSerializer} 实例。
+     *
+     * @param serializer 表示用于序列化和反序列化实例的 {@link ObjectSerializer}。
+     * @param config 表示配置的 {@link Config}。
+     */
+    public CborMessageSerializer(@Fit(alias = "cbor") ObjectSerializer serializer, Config config) {
         this.serializer = notNull(serializer, "The CBOR serializer cannot be null.");
+        this.config = notNull(config, "The message serializer config cannot be null.");
     }
 
     @Override
@@ -44,6 +54,7 @@ public class CborMessageSerializer implements MessageSerializer {
 
     @Override
     public Object[] deserializeRequest(Type[] argumentTypes, byte[] serialized) {
+        MessageSerializerUtils.isSupportedLength(serialized.length, this.config);
         List<Object> deserialized = this.serializer.deserialize(serialized,
                 UTF_8,
                 TypeUtils.parameterized(List.class, new Type[] {Object.class}));
@@ -64,6 +75,7 @@ public class CborMessageSerializer implements MessageSerializer {
         if (ArrayUtils.isEmpty(serialized)) {
             return null;
         }
+        MessageSerializerUtils.isSupportedLength(serialized.length, this.config);
         return this.serializer.deserialize(serialized, UTF_8, returnType);
     }
 
