@@ -25,6 +25,7 @@ const QuestionClar = (props) => {
   const { RangePicker } = DatePicker;
   const { handleRejectClar, conditionConfirm } = useContext(ChatContext);
   const [loading, setLoading] = useState(false);
+  const [isShowBtn, setIsShowBtn] = useState(false);
 
   useEffect(() => {
     if (!data?.formData) return;
@@ -72,11 +73,16 @@ const QuestionClar = (props) => {
   };
   const [productOptions, setProductOptions] = useState(null);
   useEffect(() => {
+    const showBtn = isShow('needTime') || isShow('needProduct') || isShow('needIndicator') || isShow('groupBy') || ambiguousList.length > 0;
+    setIsShowBtn(showBtn);
     initOptions();
   }, [proType, dataDimension, questionInfo]);
   // 指标和产品调后端接口
   function initOptions() {
-    const name = dataDimension.name === 'ICT P&S' ? 'IRB' : dataDimension.name;
+    let name = '';
+    if (dataDimension?.name) {
+      name = dataDimension.name === 'ICT P&S' ? 'IRB' : dataDimension.name;
+    }
     const data = { name, type: '' };
     if (isShow('needProduct')) {
       getProOptions(data);
@@ -490,7 +496,7 @@ const QuestionClar = (props) => {
             );
           })}
       </div>
-      { mode !== 'history' && confirmCallBack &&
+      { mode !== 'history' && isShowBtn &&
         <div className='footer'>
           <Button className='mr10' type='primary' loading={loading} onClick={confirmClar}>确定</Button>
           <Button onClick={rejectClar}>拒绝澄清</Button>
