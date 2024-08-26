@@ -8,7 +8,7 @@ import { getAppInfoByVersion } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 import './style.scss';
 
-const WorkflowCard = ({ pluginData }: any) => {
+const WorkflowCard = ({ pluginData, type }: any) => {
   const { t } = useTranslation();
   const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
@@ -28,7 +28,7 @@ const WorkflowCard = ({ pluginData }: any) => {
     navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
   }
   return (
-    <div className='plugin-card'
+    <div className={type === 'plugin' ? 'page-plugin-card' : 'plugin-card'}
       onClick={async () => {
         let id = pluginData?.id;
         if (pluginData?.state === 'active') {

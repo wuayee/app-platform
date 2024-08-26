@@ -44,11 +44,7 @@ const Plugin = () => {
         extra={
           <CloseOutlined onClick={() => setOpen(false)} />
         }
-        footer={[
-          <Button onClick={() => setOpen(false)}>
-            {t('close')}
-          </Button>
-        ]}
+        footer={null}
       >
         <DeployMent cancle={() => setOpen(false)} confirm={confirm} />
       </Drawer>

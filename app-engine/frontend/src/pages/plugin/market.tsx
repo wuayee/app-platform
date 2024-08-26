@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, Input, Tag, Button, Spin } from 'antd';
 import Pagination from '@/components/pagination/index';
 import PluginCard from '@/components/plugin-card';
-import { getPlugins } from '@/shared/http/plugin';
+import WorkflowCard from '@/components/plugin-card/workFlowCard';
+import { getPlugins, getPluginWaterFlow } from '@/shared/http/plugin';
 import { Icons } from '@/components/icons';
 import EmptyItem from '@/components/empty/empty-item';
 import { PluginCardTypeE, sourceTabs } from './helper';
 import { debounce } from '@/shared/utils/common';
 import UploadToolDrawer from './upload/uploadTool';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@/store/hook';
 import './styles/market.scss';
 
 const MarketItems = ({ reload }) => {
@@ -21,13 +23,18 @@ const MarketItems = ({ reload }) => {
   const [pluginData, setPluginData] = useState([]);
   const [isOpenPlugin, setIsOpenPlugin] = useState(0);
   const [loading, setLoading] = useState(false);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
 
   useEffect(() => {
+    if (selectedSource === 'MYWATERFLOW') {
+      getWaterFlowList();
+      return
+    }
     getPluginList();
   }, [selectedSource, name, pageNum, pageSize, reload]);
 
   // 获取插件列表
-  const getPluginList = async () => {
+  const getPluginList = () => {
     let params: any = {
       name,
       pageNum: pageNum,
@@ -47,6 +54,26 @@ const MarketItems = ({ reload }) => {
       setLoading(false);
     });
   };
+  // 获取工具列表
+  const getWaterFlowList = () => {
+    getPluginWaterFlow(tenantId, {
+      offset: (pageNum - 1) * pageSize,
+      limit: pageSize,
+      type: 'waterFlow',
+      name,
+    }).then(({ data }) => {
+      const { results, range } = data;
+      const list = results || [];
+      list.forEach(item => {
+        item.mapType = 'waterFlow';
+      })
+      setTotal(range.total || 0);
+      setPluginData(list);
+    }).catch(() => {
+      setTotal(0);
+      setPluginData([]);
+    });
+  }
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
     if (pageNum !== curPage) {
@@ -93,17 +120,19 @@ const MarketItems = ({ reload }) => {
         centered={true}
       />
       <Spin spinning={loading}>
-        {pluginData.length > 0 ?
+        {pluginData && pluginData.length > 0 ?
           <>
             <div className='market-card' >
               {pluginData.map((card: any) => (
-                <PluginCard
-                  key={card.pluginId}
-                  getPluginList={getPluginList}
-                  pluginData={card}
-                  cardType={PluginCardTypeE.MARKET}
-                  pluginId={card.pluginId}
-                />
+                card.mapType === 'waterFlow' ?
+                  <WorkflowCard key={card.uniqueName} pluginData={card} type='plugin' /> :
+                  <PluginCard
+                    key={card.pluginId}
+                    getPluginList={getPluginList}
+                    pluginData={card}
+                    cardType={PluginCardTypeE.MARKET}
+                    pluginId={card.pluginId}
+                  />
               ))}
             </div>
             <div className='market-page'>
