@@ -16,7 +16,7 @@ import modelengine.fitframework.broker.util.AnnotationUtils;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanMetadata;
 import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ReflectionUtils;
 import modelengine.fitframework.util.StringUtils;
 

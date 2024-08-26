@@ -7,7 +7,6 @@ package modelengine.fitframework.schedule.support;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.inspection.Nonnull;
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.schedule.ExecutePolicy;
 import modelengine.fitframework.schedule.Task;
 import modelengine.fitframework.util.LockUtils;
