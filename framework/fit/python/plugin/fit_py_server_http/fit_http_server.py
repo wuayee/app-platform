@@ -8,19 +8,21 @@ import ssl
 import threading
 import time
 from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor
 from http import HTTPStatus
 from queue import Queue, Empty
 from typing import Dict, Optional
-from concurrent.futures import ThreadPoolExecutor
+
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-from fitframework.api.decorators import fit, fitable
+
+from fitframework.api.decorators import fitable, fit
 from fitframework.api.exception import FIT_OK
 from fitframework.api.logging import sys_plugin_logger
 from fitframework.core.exception.fit_exception import InternalErrorCode, FitException
-from fitframework.core.network.http_header import HttpHeader
 from fitframework.core.network.fit_response import FitResponse
+from fitframework.core.network.http_header import HttpHeader
 from fitframework.core.network.metadata.metadata_utils import TagLengthValuesUtil
 from fitframework.core.network.metadata.request_metadata import RequestMetadata, GenericVersion
 from fitframework.core.network.metadata.response_metadata import ResponseMetadata
@@ -125,6 +127,11 @@ class HealthCheckHandler(tornado.web.RequestHandler):
     async def get(self):
         self.set_status(HTTPStatus.OK)
         self.write("OK")
+
+
+@fit("com.huawei.fit.get.all.plugins.ready")
+def get_all_plugins_ready() -> str:
+    pass
 
 
 class PluginsReadyCheckHandler(tornado.web.RequestHandler):
@@ -320,12 +327,19 @@ def init_fit_https_server(port):
 
 
 _executor = ThreadPoolExecutor(get_server_thread_count())
-_app = tornado.web.Application(
-    [(get_context_path() + r"/fit/health", HealthCheckHandler, dict(executor=_executor)),
-     (get_context_path() + r"/fit/pluginsReady", PluginsReadyCheckHandler, dict(executor=_executor)),
-     (get_context_path() + r"/fit/async/await-response", PollingTaskHandler, dict(executor=_executor)),
-     (get_context_path() + r"/fit/([^/]+)/([^/]+)", FitHandler, dict(executor=_executor)),
-     (get_context_path() + r"/fit/websocket/([^/]+)/([^/]+)", WebSocketHandler, dict(executor=_executor))])
+base_patterns = [
+    (r"/fit/health", HealthCheckHandler),
+    (r"/fit/pluginsReady", PluginsReadyCheckHandler),
+    (r"/fit/async/await-response", PollingTaskHandler),
+    (r"/fit/([^/]+)/([^/]+)", FitHandler),
+    (r"/fit/websocket/([^/]+)/([^/]+)", WebSocketHandler)
+]
+
+# 使用列表推导式添加带有 context path 和不带 context path 的路径
+patterns = [(get_context_path() + pattern[0], pattern[1], dict(executor=_executor)) for pattern in base_patterns] + [
+    (pattern[0], pattern[1], dict(executor=_executor)) for pattern in base_patterns]
+
+_app = tornado.web.Application(patterns)
 
 
 def start_all_server():
