@@ -4,15 +4,16 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import modelengine.fit.http.protocol.Address;
-import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
-import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.http.support.DefaultCookieCollection;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
 import com.huawei.fit.jober.aipp.service.AppChatService;
+
+import modelengine.fit.http.protocol.Address;
+import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.support.DefaultCookieCollection;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

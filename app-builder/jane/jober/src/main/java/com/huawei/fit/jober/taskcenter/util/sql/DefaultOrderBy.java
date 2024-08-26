@@ -6,6 +6,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
+
 import modelengine.fitframework.util.StringUtils;
 
 /**

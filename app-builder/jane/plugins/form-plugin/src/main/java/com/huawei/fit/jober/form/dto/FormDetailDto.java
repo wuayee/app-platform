@@ -5,11 +5,11 @@
 package com.huawei.fit.jober.form.dto;
 
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
-import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 表单信息Dto, 字段与{@link DynamicFormDetailEntity}相同, @JSONProperty注解暂无法跨包使用

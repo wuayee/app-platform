@@ -4,9 +4,10 @@
 
 package com.huawei.fit.jober.taskcenter.tianzhou;
 
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.common.exceptions.JobberException;
+
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.util.StringUtils;
 

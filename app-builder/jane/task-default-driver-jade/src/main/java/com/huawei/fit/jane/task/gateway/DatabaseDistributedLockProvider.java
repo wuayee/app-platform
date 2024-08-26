@@ -5,10 +5,10 @@
 package com.huawei.fit.jane.task.gateway;
 
 import com.huawei.fit.jane.dlock.jdbc.DistributedLockClient;
-import modelengine.fitframework.annotation.Alias;
-import modelengine.fitframework.annotation.Component;
 
 import lombok.AllArgsConstructor;
+import modelengine.fitframework.annotation.Alias;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.concurrent.locks.Lock;
 

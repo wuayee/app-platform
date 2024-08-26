@@ -7,6 +7,7 @@ package com.huawei.fit.jober;
 import static com.alibaba.druid.pool.DruidDataSourceFactory.createDataSource;
 
 import com.huawei.fit.jober.common.ServerInternalException;
+
 import modelengine.fitframework.log.Logger;
 
 import org.apache.ibatis.datasource.DataSourceFactory;

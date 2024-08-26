@@ -4,14 +4,13 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import modelengine.fitframework.annotation.Property;
-
 import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * Aipp创建实例响应

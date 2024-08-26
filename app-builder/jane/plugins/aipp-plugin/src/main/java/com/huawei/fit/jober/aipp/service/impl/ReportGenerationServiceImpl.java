@@ -10,10 +10,7 @@ import com.huawei.fit.jober.aipp.service.ReportGenerationService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import modelengine.fitframework.annotation.Component;
-import modelengine.fitframework.annotation.Fitable;
-import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.CollectionUtils;
+
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatModelService;
 import modelengine.fel.chat.ChatOptions;
@@ -22,6 +19,10 @@ import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.operators.models.ChatBlockModel;
 import modelengine.fel.engine.operators.prompts.Prompts;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

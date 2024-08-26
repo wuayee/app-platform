@@ -9,6 +9,7 @@ import com.huawei.fit.jober.taskcenter.dao.po.SourceObject;
 import com.huawei.fit.jober.taskcenter.declaration.SourceDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.SourceType;
+
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;

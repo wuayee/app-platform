@@ -4,9 +4,8 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import modelengine.fitframework.annotation.Property;
-
 import lombok.Data;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 启动aipp请求

@@ -7,6 +7,7 @@ package com.huawei.fit.jober.taskcenter.domain.util.support;
 import com.huawei.fit.jane.task.domain.PropertyCategory;
 import com.huawei.fit.jane.task.domain.TaskProperty;
 import com.huawei.fit.jober.taskcenter.domain.util.CategoryAcceptor;
+
 import modelengine.fitframework.util.ParsingResult;
 
 import java.util.LinkedList;

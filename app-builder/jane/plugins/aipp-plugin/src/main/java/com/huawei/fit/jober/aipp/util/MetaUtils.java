@@ -21,6 +21,7 @@ import com.huawei.fit.jober.aipp.enums.AippSortKeyEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.common.RangedResultSet;
+
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;

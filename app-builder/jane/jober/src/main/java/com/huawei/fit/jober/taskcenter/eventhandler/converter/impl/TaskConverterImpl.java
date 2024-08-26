@@ -19,6 +19,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.domain.TriggerEntity;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
 import com.huawei.fit.jober.taskcenter.util.Enums;
+
 import modelengine.fitframework.annotation.Component;
 
 import java.util.ArrayList;

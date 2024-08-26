@@ -4,8 +4,6 @@
 
 package com.huawei.fit.jober.common.utils;
 
-import modelengine.fitframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.ParserConfig;
@@ -14,6 +12,8 @@ import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializeWriter;
+
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 import java.util.Base64;

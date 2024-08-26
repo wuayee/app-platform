@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.taskcenter.service.impl;
 
 import com.huawei.fit.jober.taskcenter.service.EventPublishService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.event.Event;
 import modelengine.fitframework.plugin.Plugin;

@@ -10,12 +10,12 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
-import modelengine.fitframework.inspection.Validation;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Map;
 

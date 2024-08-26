@@ -24,6 +24,7 @@ import com.huawei.fit.jober.entity.InstanceCategoryChanged;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
+
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapBuilder;
 

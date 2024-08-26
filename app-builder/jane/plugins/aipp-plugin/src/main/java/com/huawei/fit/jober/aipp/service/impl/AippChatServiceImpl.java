@@ -33,6 +33,7 @@ import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fit.jober.common.RangedResultSet;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.util.ObjectUtils;

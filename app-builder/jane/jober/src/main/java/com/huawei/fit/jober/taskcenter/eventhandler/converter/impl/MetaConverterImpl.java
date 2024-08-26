@@ -20,6 +20,7 @@ import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaPropertyConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
 import com.huawei.fit.jober.taskcenter.filter.TaskFilter;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.CollectionUtils;
 

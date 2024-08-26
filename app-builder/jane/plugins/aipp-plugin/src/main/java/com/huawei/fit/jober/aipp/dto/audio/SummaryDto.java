@@ -7,14 +7,14 @@ package com.huawei.fit.jober.aipp.dto.audio;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegUtil;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.LLMUtils;
-import modelengine.fitframework.annotation.Property;
-import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.CollectionUtils;
-import modelengine.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

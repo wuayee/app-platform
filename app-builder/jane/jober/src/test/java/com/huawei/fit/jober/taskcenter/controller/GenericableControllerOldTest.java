@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.common.model.JoberResponse;
 import com.huawei.fit.jober.common.model.TextStringValue;
+
 import modelengine.fit.service.RegistryService;
 import modelengine.fit.service.entity.FitableInfo;
 import modelengine.fit.service.entity.FitableMeta;

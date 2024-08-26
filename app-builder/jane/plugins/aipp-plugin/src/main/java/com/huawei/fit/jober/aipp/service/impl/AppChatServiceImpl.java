@@ -29,6 +29,8 @@ import com.huawei.fit.jober.aipp.util.AippLogUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.ServerInternalException;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.model.Tuple;
@@ -36,8 +38,6 @@ import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

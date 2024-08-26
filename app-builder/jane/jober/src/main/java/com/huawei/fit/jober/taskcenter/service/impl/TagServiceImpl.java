@@ -11,6 +11,8 @@ import com.huawei.fit.jober.taskcenter.service.TagService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.validation.TagValidator;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.transaction.Transaction;
 import modelengine.fitframework.transaction.TransactionException;
@@ -22,8 +24,6 @@ import modelengine.fitframework.transaction.Transactional;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

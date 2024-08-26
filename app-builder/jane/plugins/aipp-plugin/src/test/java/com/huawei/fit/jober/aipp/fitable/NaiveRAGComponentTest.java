@@ -12,8 +12,9 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.aipp.TestUtils;
 import com.huawei.fit.jober.aipp.util.DataUtils;
-import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
+
+import modelengine.fitframework.util.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;

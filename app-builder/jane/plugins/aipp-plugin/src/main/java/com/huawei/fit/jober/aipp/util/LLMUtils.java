@@ -7,15 +7,16 @@ package com.huawei.fit.jober.aipp.util;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.LLMService;
-import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.CollectionUtils;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.StringUtils;
+
 import modelengine.fel.model.openai.client.OpenAiClient;
 import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
 import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
 import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import modelengine.fel.model.openai.entity.chat.message.Role;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Collections;

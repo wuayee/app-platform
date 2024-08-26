@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.init;
 
 import com.huawei.fit.jober.aipp.common.ResourceLoader;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Initialize;
 import modelengine.fitframework.log.Logger;

@@ -11,6 +11,7 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderConfigSerializer;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.CollectionUtils;
 

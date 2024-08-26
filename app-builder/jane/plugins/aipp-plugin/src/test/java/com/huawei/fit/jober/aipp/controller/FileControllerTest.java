@@ -12,14 +12,15 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
+
 import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.FileEntity;
 import modelengine.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.aipp.service.OperatorService;
-import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 
 import org.junit.jupiter.api.Test;
 

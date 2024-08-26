@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AopAippLogService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 

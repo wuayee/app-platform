@@ -6,6 +6,21 @@ package com.huawei.fit.jober.aipp.controller;
 
 import static com.huawei.fit.jober.aipp.enums.FileExtensionEnum.getFileExtension;
 
+import com.huawei.fit.jane.common.controller.AbstractController;
+import com.huawei.fit.jane.common.response.Rsp;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
+import com.huawei.fit.jober.aipp.dto.FileRspDto;
+import com.huawei.fit.jober.aipp.enums.FileExtensionEnum;
+import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
+import com.huawei.fit.jober.aipp.util.HttpUtils;
+
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.PostMapping;
@@ -22,25 +37,10 @@ import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jane.common.controller.AbstractController;
-import com.huawei.fit.jane.common.response.Rsp;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
-import com.huawei.fit.jober.aipp.common.exception.AippException;
-import com.huawei.fit.jober.aipp.dto.FileRspDto;
-import com.huawei.fit.jober.aipp.enums.FileExtensionEnum;
-import com.huawei.fit.jober.aipp.service.OperatorService;
-import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
-import com.huawei.fit.jober.aipp.util.AippFileUtils;
-import com.huawei.fit.jober.aipp.util.AippStringUtils;
-import com.huawei.fit.jober.aipp.util.HttpUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 import org.apache.commons.io.FileUtils;
 

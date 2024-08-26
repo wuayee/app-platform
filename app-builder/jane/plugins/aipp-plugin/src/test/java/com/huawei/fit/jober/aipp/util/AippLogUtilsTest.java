@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
+
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.DisplayName;

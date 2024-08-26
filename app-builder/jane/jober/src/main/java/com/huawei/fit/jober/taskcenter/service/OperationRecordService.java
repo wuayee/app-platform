@@ -8,6 +8,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.declaration.OperationRecordDeclaration;
 import com.huawei.fit.jober.taskcenter.domain.OperationRecordEntity;
 import com.huawei.fit.jober.taskcenter.filter.OperationRecordFilter;
+
 import modelengine.fitframework.model.RangedResultSet;
 
 /**

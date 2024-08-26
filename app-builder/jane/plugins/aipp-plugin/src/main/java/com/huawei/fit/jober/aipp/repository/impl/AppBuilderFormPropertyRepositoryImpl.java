@@ -9,6 +9,7 @@ import com.huawei.fit.jober.aipp.mapper.AppBuilderFormPropertyMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderFormPropertySerializer;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.CollectionUtils;
 

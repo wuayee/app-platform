@@ -4,17 +4,17 @@
 
 package com.huawei.fit.jober.aipp.common.exception;
 
+import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.common.response.Rsp;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.http.annotation.ExceptionHandler;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fit.jane.common.entity.OperationContext;
-import com.huawei.fit.jane.common.response.Rsp;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -4,14 +4,15 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import modelengine.fit.http.annotation.GetMapping;
-import modelengine.fit.http.annotation.PathVariable;
-import modelengine.fit.http.annotation.RequestMapping;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippFlowComponentDto;
 import com.huawei.fit.jober.aipp.dto.AippFormComponentDto;
 import com.huawei.fit.jober.aipp.init.AippComponentInitiator;
+
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fitframework.annotation.Component;
 
 /**

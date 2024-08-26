@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippUploadedFileInfoDto;
 import com.huawei.fit.jober.aipp.mapper.AippUploadedFileMapper;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.schedule.annotation.Scheduled;

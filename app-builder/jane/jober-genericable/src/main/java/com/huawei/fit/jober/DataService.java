@@ -10,6 +10,7 @@ import com.huawei.fit.jober.entity.InstanceChanged;
 import com.huawei.fit.jober.entity.InstanceChangedMessage;
 import com.huawei.fit.jober.entity.Page;
 import com.huawei.fit.jober.entity.TaskEntity;
+
 import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;

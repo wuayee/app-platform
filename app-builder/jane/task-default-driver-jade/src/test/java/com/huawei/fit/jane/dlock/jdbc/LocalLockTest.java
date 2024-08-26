@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.dlock.DatabaseBaseTest;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
+
 import modelengine.fitframework.transaction.DataAccessException;
 import modelengine.fitframework.transaction.TransactionException;
 

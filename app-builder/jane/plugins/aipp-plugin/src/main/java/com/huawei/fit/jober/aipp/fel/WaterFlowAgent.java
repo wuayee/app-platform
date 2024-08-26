@@ -5,11 +5,7 @@
 package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import modelengine.fit.waterflow.domain.context.StateContext;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.CollectionUtils;
-import modelengine.fitframework.util.MapUtils;
-import modelengine.fitframework.util.ObjectUtils;
+
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.ChatModelStreamService;
@@ -22,6 +18,11 @@ import modelengine.fel.engine.operators.models.ChatStreamModel;
 import modelengine.fel.engine.operators.patterns.AbstractAgent;
 import modelengine.fel.tool.ToolCall;
 import modelengine.fel.tool.ToolProvider;
+import modelengine.fit.waterflow.domain.context.StateContext;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.List;

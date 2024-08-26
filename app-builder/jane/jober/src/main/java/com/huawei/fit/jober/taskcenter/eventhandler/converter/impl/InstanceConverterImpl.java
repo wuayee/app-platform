@@ -11,6 +11,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.InstanceConverter;
+
 import modelengine.fitframework.annotation.Component;
 
 import java.util.HashMap;

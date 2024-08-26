@@ -10,6 +10,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceCreatingEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceDeclaringEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceModifyingEvent;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Order;
 import modelengine.fitframework.annotation.Value;

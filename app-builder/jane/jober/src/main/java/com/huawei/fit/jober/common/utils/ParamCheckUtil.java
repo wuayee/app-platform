@@ -7,10 +7,11 @@ package com.huawei.fit.jober.common.utils;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
-import modelengine.fit.http.QueryCollection;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+
+import modelengine.fit.http.QueryCollection;
 import modelengine.fitframework.log.Logger;
 
 import java.io.UnsupportedEncodingException;

@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.taskcenter.declaration;
 
 import com.huawei.fit.jane.task.util.UndefinableValue;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;

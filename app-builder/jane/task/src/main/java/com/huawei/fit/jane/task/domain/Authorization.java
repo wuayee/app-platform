@@ -6,6 +6,7 @@ package com.huawei.fit.jane.task.domain;
 
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jane.task.util.UndefinableValue;
+
 import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;

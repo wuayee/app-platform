@@ -4,11 +4,12 @@
 
 package com.huawei.fit.jane.task.gateway;
 
+import com.huawei.jade.authentication.context.UserContext;
+import com.huawei.jade.authentication.context.UserContextHolder;
+
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
-import com.huawei.jade.authentication.context.UserContext;
-import com.huawei.jade.authentication.context.UserContextHolder;
 
 /**
  * 为 {@link Authenticator} 提供不含sso的a3000默认实现。

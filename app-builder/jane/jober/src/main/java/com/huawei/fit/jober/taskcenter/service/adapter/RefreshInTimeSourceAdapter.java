@@ -29,6 +29,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlValue;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;

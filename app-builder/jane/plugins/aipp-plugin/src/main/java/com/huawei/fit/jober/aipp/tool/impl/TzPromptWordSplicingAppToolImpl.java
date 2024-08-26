@@ -16,6 +16,7 @@ import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
 import com.huawei.fit.jober.aipp.tool.TzPromptWordSplicingAppTool;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;

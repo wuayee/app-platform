@@ -24,6 +24,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
 import com.huawei.fit.jober.taskcenter.validation.AuthorizationValidator;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.model.RangedResultSet;

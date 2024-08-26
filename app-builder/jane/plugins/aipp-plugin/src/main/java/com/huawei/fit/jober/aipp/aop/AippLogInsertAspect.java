@@ -7,6 +7,8 @@ package com.huawei.fit.jober.aipp.aop;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.aop.ProceedingJoinPoint;
 import modelengine.fitframework.aop.annotation.Around;
@@ -14,8 +16,6 @@ import modelengine.fitframework.aop.annotation.Aspect;
 import modelengine.fitframework.aop.annotation.Pointcut;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * 日志插入注解.

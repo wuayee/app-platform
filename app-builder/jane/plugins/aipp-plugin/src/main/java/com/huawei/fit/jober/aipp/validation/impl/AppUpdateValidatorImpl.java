@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.enums.AppState;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
+
 import modelengine.fitframework.annotation.Component;
 
 /**

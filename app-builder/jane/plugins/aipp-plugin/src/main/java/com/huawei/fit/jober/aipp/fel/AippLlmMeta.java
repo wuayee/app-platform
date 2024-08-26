@@ -8,11 +8,11 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.util.DataUtils;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fel.chat.Prompt;
 
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fel.chat.Prompt;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;

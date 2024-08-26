@@ -4,14 +4,15 @@
 
 package com.huawei.fit.jane.common.controller;
 
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.gateway.User;
-import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.authentication.context.HttpRequestUtils;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
+
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 为 Controller 提供工具方法。

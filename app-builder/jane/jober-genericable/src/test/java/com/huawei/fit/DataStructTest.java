@@ -18,6 +18,7 @@ import com.huawei.fit.jane.task.TaskInstanceInfo;
 import com.huawei.fit.jane.task.TaskPropertyInfo;
 import com.huawei.fit.jane.task.TaskSourceInfo;
 import com.huawei.fit.jane.task.TaskTypeInfo;
+
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
 

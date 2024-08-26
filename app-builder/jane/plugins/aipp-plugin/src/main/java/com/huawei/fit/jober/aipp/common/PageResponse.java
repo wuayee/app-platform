@@ -4,11 +4,10 @@
 
 package com.huawei.fit.jober.aipp.common;
 
-import modelengine.fitframework.annotation.Property;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 import java.util.List;
 

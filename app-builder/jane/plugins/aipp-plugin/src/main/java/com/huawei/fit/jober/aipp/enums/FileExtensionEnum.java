@@ -5,9 +5,9 @@
 package com.huawei.fit.jober.aipp.enums;
 
 import com.huawei.fit.jober.aipp.service.OperatorService;
-import modelengine.fitframework.util.StringUtils;
 
 import lombok.Getter;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Optional;
 

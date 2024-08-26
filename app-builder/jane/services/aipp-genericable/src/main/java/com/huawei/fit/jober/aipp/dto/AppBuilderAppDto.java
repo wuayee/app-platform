@@ -4,12 +4,11 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import modelengine.fitframework.annotation.Property;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 import java.time.LocalDateTime;
 import java.util.Map;

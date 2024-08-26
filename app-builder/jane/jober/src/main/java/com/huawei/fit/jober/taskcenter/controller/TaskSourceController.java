@@ -7,6 +7,14 @@ package com.huawei.fit.jober.taskcenter.controller;
 import static com.huawei.fit.jober.taskcenter.controller.Views.declareSource;
 import static com.huawei.fit.jober.taskcenter.controller.Views.viewOf;
 
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jane.task.util.OperationContext;
+import com.huawei.fit.jane.task.util.UndefinableValue;
+import com.huawei.fit.jober.taskcenter.declaration.SourceDeclaration;
+import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
+import com.huawei.fit.jober.taskcenter.domain.TaskType;
+import com.huawei.fit.jober.taskcenter.service.SourceService;
+
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PatchMapping;
@@ -17,13 +25,6 @@ import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fit.jane.task.util.UndefinableValue;
-import com.huawei.fit.jober.taskcenter.declaration.SourceDeclaration;
-import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
-import com.huawei.fit.jober.taskcenter.domain.TaskType;
-import com.huawei.fit.jober.taskcenter.service.SourceService;
 import modelengine.fitframework.annotation.Component;
 
 import java.util.Map;

@@ -12,12 +12,13 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptDto;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
-import modelengine.fitframework.annotation.Component;
-import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

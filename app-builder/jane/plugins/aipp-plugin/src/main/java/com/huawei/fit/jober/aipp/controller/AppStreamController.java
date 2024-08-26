@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
+import com.huawei.fit.jober.aipp.service.AippStreamService;
+
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.websocket.Session;
 import modelengine.fit.http.websocket.annotation.OnClose;
@@ -11,7 +13,6 @@ import modelengine.fit.http.websocket.annotation.OnMessage;
 import modelengine.fit.http.websocket.annotation.OnOpen;
 import modelengine.fit.http.websocket.annotation.TextMessage;
 import modelengine.fit.http.websocket.annotation.WebSocketEndpoint;
-import com.huawei.fit.jober.aipp.service.AippStreamService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;

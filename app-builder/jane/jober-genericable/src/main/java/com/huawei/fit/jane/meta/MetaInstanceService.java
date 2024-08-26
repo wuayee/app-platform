@@ -9,6 +9,7 @@ import com.huawei.fit.jane.meta.instance.Instance;
 import com.huawei.fit.jane.meta.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jane.meta.instance.MetaInstanceFilter;
 import com.huawei.fit.jober.common.RangedResultSet;
+
 import modelengine.fitframework.annotation.Genericable;
 
 /**

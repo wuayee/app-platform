@@ -4,10 +4,9 @@
 
 package com.huawei.fit.dynamicform.condition;
 
+import lombok.Data;
 import modelengine.fit.http.annotation.RequestQuery;
 import modelengine.fitframework.annotation.Property;
-
-import lombok.Data;
 
 /**
  * 表单排序条件

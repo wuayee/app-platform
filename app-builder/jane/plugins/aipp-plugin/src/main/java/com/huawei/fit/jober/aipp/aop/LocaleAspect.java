@@ -7,6 +7,8 @@ package com.huawei.fit.jober.aipp.aop;
 import com.huawei.fit.jober.aipp.service.LocaleService;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.aop.ProceedingJoinPoint;
 import modelengine.fitframework.aop.annotation.Around;
@@ -15,8 +17,6 @@ import modelengine.fitframework.aop.annotation.Pointcut;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

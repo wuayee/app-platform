@@ -8,12 +8,12 @@ import static com.huawei.fit.jober.common.ErrorCodes.EXCEEDED_STATISTICAL_LIMIT_
 import static com.huawei.fit.jober.common.ErrorCodes.ORDER_BY_PROPERTY_NAME_NOT_SUPPORT;
 import static com.huawei.fit.jober.common.ErrorCodes.PROPERTY_NOT_EXIST_IN_ORDER_BY_PARAM;
 import static com.huawei.fit.jober.taskcenter.util.Sqls.longValue;
-import static modelengine.fitframework.util.ObjectUtils.cast;
-import static modelengine.fitframework.util.ObjectUtils.mapIfNotNull;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.mapIfNotNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jane.task.domain.TaskProperty;
@@ -64,6 +64,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
 import com.huawei.fit.jober.taskcenter.validation.InstanceValidator;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.log.Logger;

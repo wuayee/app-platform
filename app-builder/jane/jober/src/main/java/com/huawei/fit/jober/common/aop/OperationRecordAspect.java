@@ -27,6 +27,10 @@ import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.service.OperationRecordService;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
+
+import com.alibaba.fastjson.JSONObject;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Order;
 import modelengine.fitframework.aop.ProceedingJoinPoint;
@@ -37,10 +41,6 @@ import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSONObject;
-
-import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

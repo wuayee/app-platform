@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+
 import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;

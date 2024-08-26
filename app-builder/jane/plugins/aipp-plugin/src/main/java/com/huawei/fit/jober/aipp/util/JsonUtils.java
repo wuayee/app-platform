@@ -8,7 +8,6 @@ import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonEncodeException;
 import com.huawei.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
 import com.huawei.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
-import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
@@ -16,6 +15,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

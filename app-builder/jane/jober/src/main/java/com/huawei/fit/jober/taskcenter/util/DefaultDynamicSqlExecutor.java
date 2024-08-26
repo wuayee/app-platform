@@ -7,6 +7,7 @@ package com.huawei.fit.jober.taskcenter.util;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jober.common.ServerInternalException;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 

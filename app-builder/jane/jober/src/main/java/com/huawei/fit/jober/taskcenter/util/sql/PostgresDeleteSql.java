@@ -7,6 +7,7 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.LinkedList;

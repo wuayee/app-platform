@@ -4,6 +4,9 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.taskcenter.domain.TaskTemplate;
+
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PatchMapping;
@@ -16,8 +19,6 @@ import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.taskcenter.domain.TaskTemplate;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.model.RangedResultSet;
 

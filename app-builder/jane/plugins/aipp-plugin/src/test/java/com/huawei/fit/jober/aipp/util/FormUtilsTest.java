@@ -12,6 +12,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
+
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;

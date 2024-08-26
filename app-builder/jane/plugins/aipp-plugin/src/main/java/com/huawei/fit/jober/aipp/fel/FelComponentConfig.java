@@ -5,13 +5,14 @@
 package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import modelengine.fitframework.annotation.Bean;
-import modelengine.fitframework.annotation.Component;
+
 import modelengine.fel.chat.ChatModelStreamService;
 import modelengine.fel.chat.ChatOptions;
 import modelengine.fel.chat.Prompt;
 import modelengine.fel.engine.operators.patterns.AbstractAgent;
 import modelengine.fel.tool.ToolProvider;
+import modelengine.fitframework.annotation.Bean;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * FelComponentConfig

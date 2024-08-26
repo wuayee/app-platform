@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderRuntimeInfoMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderRuntimeInfoSerializer;
+
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;

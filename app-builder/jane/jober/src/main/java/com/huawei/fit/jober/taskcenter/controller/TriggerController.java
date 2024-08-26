@@ -4,6 +4,11 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.taskcenter.declaration.SourceTriggersDeclaration;
+import com.huawei.fit.jober.taskcenter.domain.TriggerEntity;
+import com.huawei.fit.jober.taskcenter.service.TriggerService;
+
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PatchMapping;
@@ -14,10 +19,6 @@ import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.taskcenter.declaration.SourceTriggersDeclaration;
-import com.huawei.fit.jober.taskcenter.domain.TriggerEntity;
-import com.huawei.fit.jober.taskcenter.service.TriggerService;
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;

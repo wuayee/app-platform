@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.form.dto;
 
 import com.huawei.fit.dynamicform.entity.DynamicFormEntity;
-import modelengine.fitframework.annotation.Property;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 表单信息Dto, 字段与{@link DynamicFormEntity}相同, @JSONProperty注解暂无法跨包使用

@@ -56,6 +56,9 @@ import com.huawei.fit.jober.entity.FlowDefinitionResult;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowNodeFormInfo;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
+import com.huawei.jade.store.entity.transfer.AppData;
+import com.huawei.jade.store.service.AppService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.broker.client.BrokerClient;
@@ -66,8 +69,6 @@ import modelengine.fitframework.model.Tuple;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import com.huawei.jade.store.entity.transfer.AppData;
-import com.huawei.jade.store.service.AppService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

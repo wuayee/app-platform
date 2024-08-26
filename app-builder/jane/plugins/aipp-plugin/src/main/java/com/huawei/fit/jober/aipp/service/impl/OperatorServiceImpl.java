@@ -11,6 +11,7 @@ import com.huawei.fit.jober.aipp.service.OperatorService;
 import com.huawei.fit.jober.aipp.tool.FileExtractor;
 import com.huawei.fit.jober.aipp.util.AippFileUtils;
 import com.huawei.fit.jober.aipp.util.AippStringUtils;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;

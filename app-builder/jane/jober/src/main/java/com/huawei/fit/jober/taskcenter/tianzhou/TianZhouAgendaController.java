@@ -4,6 +4,9 @@
 
 package com.huawei.fit.jober.taskcenter.tianzhou;
 
+import com.huawei.fit.jober.taskcenter.controller.AgendaController;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.RequestMapping;
@@ -11,11 +14,8 @@ import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.jober.taskcenter.controller.AgendaController;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.plugin.Plugin;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 

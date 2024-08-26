@@ -8,6 +8,10 @@ import static com.huawei.fit.jober.taskcenter.controller.Views.declareAuthorizat
 import static com.huawei.fit.jober.taskcenter.controller.Views.filterOfAuthorization;
 import static com.huawei.fit.jober.taskcenter.controller.Views.viewOf;
 
+import com.huawei.fit.jane.task.domain.Authorization;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jane.task.util.OperationContext;
+
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PatchMapping;
@@ -19,9 +23,6 @@ import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.jane.task.domain.Authorization;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jane.task.util.OperationContext;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.model.RangedResultSet;
 

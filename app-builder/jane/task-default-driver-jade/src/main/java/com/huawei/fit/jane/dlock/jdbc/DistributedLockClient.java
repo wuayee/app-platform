@@ -6,6 +6,7 @@ package com.huawei.fit.jane.dlock.jdbc;
 
 import com.huawei.fit.jane.dlock.ExpirableDistributedLockHandler;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 

@@ -4,11 +4,6 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
-import modelengine.fit.http.annotation.DocumentIgnored;
-import modelengine.fit.http.annotation.GetMapping;
-import modelengine.fit.http.annotation.RequestMapping;
-import modelengine.fit.http.annotation.RequestParam;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.gateway.EmployeeVO;
 import com.huawei.fit.jane.task.gateway.PersonService;
@@ -16,10 +11,15 @@ import com.huawei.fit.jane.task.gateway.User;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.common.model.JoberResponse;
-import modelengine.fitframework.annotation.Component;
-import modelengine.fitframework.inspection.Validation;
 
 import lombok.RequiredArgsConstructor;
+import modelengine.fit.http.annotation.DocumentIgnored;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.LinkedHashMap;
 import java.util.List;

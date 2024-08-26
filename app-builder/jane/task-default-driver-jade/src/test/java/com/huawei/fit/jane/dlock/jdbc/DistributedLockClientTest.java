@@ -15,6 +15,7 @@ import com.huawei.fit.jane.common.utils.SleepUtil;
 import com.huawei.fit.jane.dlock.DatabaseBaseTest;
 import com.huawei.fit.jane.dlock.jdbc.persist.mapper.FlowLockMapper;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
+
 import modelengine.fitframework.log.Logger;
 
 import org.junit.jupiter.api.BeforeEach;

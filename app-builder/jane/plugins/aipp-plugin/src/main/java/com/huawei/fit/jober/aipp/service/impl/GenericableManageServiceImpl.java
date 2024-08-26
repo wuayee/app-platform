@@ -9,6 +9,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.FitableInfoDto;
 import com.huawei.fit.jober.aipp.service.GenericableManageService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;

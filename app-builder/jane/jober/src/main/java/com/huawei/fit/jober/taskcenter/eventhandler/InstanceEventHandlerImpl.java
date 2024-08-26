@@ -18,6 +18,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.ViewMode;
 import com.huawei.fit.jober.taskcenter.domain.util.PrimaryValue;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.event.EventHandler;
 import modelengine.fitframework.log.Logger;

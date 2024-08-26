@@ -6,6 +6,7 @@ package com.huawei.fit.jober.aipp.enums;
 
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;

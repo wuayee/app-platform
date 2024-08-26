@@ -4,12 +4,11 @@
 
 package com.huawei.fit.dynamicform.dto;
 
-import modelengine.fitframework.annotation.Property;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 表单请求信息

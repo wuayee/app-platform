@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.common;
 
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.resource.Resource;

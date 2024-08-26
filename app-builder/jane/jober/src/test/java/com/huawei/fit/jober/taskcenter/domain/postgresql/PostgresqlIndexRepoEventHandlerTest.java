@@ -28,6 +28,7 @@ import com.huawei.fit.jober.taskcenter.event.TaskPropertyModifyingEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskPropertyUnindexedEvent;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
+
 import modelengine.fitframework.event.Event;
 import modelengine.fitframework.event.EventPublisher;
 import modelengine.fitframework.plugin.Plugin;

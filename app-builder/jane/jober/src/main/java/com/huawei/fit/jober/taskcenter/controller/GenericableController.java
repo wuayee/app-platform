@@ -4,13 +4,14 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.common.model.TextStringValue;
+
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.common.model.TextStringValue;
 import modelengine.fit.service.RegistryService;
 import modelengine.fit.service.entity.FitableMetaInstance;
 import modelengine.fit.service.entity.GenericableInfo;

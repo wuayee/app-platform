@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.init.serialization.AippJacksonObjectSerializer;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.tool.impl.AppBuilderAppToolImpl;
+
 import modelengine.fitframework.serialization.ObjectSerializer;
 
 import org.junit.jupiter.api.Assertions;

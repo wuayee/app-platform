@@ -21,10 +21,11 @@ import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
 import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
+
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;
-import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
 
 import org.junit.jupiter.api.Test;
 

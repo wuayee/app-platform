@@ -4,6 +4,14 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
+import com.huawei.fit.jane.common.controller.AbstractController;
+import com.huawei.fit.jane.common.response.Rsp;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.dto.FitableInfoDto;
+import com.huawei.fit.jober.aipp.service.GenericableManageService;
+
+import io.opentelemetry.instrumentation.annotations.SpanAttribute;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.PostMapping;
@@ -11,16 +19,8 @@ import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.jane.common.controller.AbstractController;
-import com.huawei.fit.jane.common.response.Rsp;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.aipp.dto.FitableInfoDto;
-import com.huawei.fit.jober.aipp.service.GenericableManageService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.ObjectUtils;
-
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 import java.util.List;
 import java.util.Map;

@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegMeta;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegTask;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegUtil;
 import com.huawei.fit.jober.aipp.service.FfmpegService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 

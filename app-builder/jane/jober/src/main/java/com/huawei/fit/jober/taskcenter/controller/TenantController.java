@@ -6,6 +6,14 @@ package com.huawei.fit.jober.taskcenter.controller;
 
 import static com.huawei.fit.jober.common.ErrorCodes.TENANT_MEMBERS_REQUIRED;
 
+import com.huawei.fit.jane.task.domain.Tenant;
+import com.huawei.fit.jane.task.domain.TenantAccessLevel;
+import com.huawei.fit.jane.task.domain.TenantMember;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jane.task.util.OperationContext;
+import com.huawei.fit.jane.task.util.UndefinableValue;
+import com.huawei.fit.jober.common.exceptions.BadRequestException;
+
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PatchMapping;
@@ -18,13 +26,6 @@ import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jane.task.domain.Tenant;
-import com.huawei.fit.jane.task.domain.TenantAccessLevel;
-import com.huawei.fit.jane.task.domain.TenantMember;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fit.jane.task.util.UndefinableValue;
-import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.model.RangedResultSet;
 import modelengine.fitframework.util.ObjectUtils;

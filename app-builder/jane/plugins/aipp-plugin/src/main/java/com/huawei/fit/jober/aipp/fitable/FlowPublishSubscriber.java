@@ -19,6 +19,7 @@ import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.entity.FlowNodePublishInfo;
 import com.huawei.fit.jober.entity.FlowPublishContext;
 import com.huawei.fit.runtime.entity.Parameter;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;

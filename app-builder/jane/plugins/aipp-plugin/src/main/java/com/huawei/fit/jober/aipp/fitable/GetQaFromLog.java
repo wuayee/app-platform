@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AppInspirationService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;

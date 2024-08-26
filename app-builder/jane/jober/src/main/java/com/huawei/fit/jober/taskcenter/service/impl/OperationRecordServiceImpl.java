@@ -21,6 +21,11 @@ import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.validation.TaskValidator;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.model.RangedResultSet;
@@ -28,11 +33,6 @@ import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.LazyLoader;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
-import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

@@ -5,6 +5,7 @@
 package com.huawei.fit.jober;
 
 import com.huawei.fit.jane.task.gateway.DataSourceProvider;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.ioc.BeanSupplier;
 

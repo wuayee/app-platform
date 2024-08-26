@@ -12,11 +12,11 @@ import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.domain.portal.TaskNode;
-import modelengine.fitframework.model.RangedResultSet;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;
 import java.util.Map;

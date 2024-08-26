@@ -10,11 +10,11 @@ import static com.huawei.fit.jober.common.ErrorCodes.UN_EXCEPTED_ERROR;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fitframework.util.StringUtils;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.po.AppBuilderFormPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;

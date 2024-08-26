@@ -9,6 +9,7 @@ import com.huawei.fit.jane.task.domain.type.DateTimeConverter;
 import com.huawei.fit.jane.task.domain.type.IntegerConverter;
 import com.huawei.fit.jane.task.domain.type.ListTextConverter;
 import com.huawei.fit.jane.task.domain.type.TextConverter;
+
 import modelengine.fitframework.util.ParsingResult;
 import modelengine.fitframework.util.StringUtils;
 

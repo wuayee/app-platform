@@ -8,6 +8,7 @@ import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
+
 import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.Collection;

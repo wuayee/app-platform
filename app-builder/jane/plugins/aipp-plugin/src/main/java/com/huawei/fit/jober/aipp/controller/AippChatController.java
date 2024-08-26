@@ -4,13 +4,6 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import modelengine.fit.http.annotation.DeleteMapping;
-import modelengine.fit.http.annotation.PathVariable;
-import modelengine.fit.http.annotation.PostMapping;
-import modelengine.fit.http.annotation.RequestBody;
-import modelengine.fit.http.annotation.RequestMapping;
-import modelengine.fit.http.annotation.RequestParam;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
@@ -18,10 +11,17 @@ import com.huawei.fit.jober.aipp.dto.chat.CreateChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
 import com.huawei.fit.jober.aipp.service.AippChatService;
-import modelengine.fitframework.annotation.Component;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.Map;

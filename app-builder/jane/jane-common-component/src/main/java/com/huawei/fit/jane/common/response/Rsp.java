@@ -4,9 +4,8 @@
 
 package com.huawei.fit.jane.common.response;
 
-import modelengine.fitframework.annotation.Property;
-
 import lombok.Data;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * HispRsp

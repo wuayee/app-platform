@@ -6,11 +6,12 @@ package com.huawei.fit.jober.aipp.tool.impl;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.tool.RagTool;
+
+import modelengine.fel.retrieve.TextDocument;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.retrieve.TextDocument;
 
 import java.util.ArrayList;
 import java.util.Collections;

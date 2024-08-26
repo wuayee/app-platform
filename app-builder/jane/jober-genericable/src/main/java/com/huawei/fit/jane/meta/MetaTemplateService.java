@@ -11,6 +11,7 @@ import com.huawei.fit.jane.meta.definition.MetaTemplate;
 import com.huawei.fit.jane.meta.definition.MetaTemplateDeclarationInfo;
 import com.huawei.fit.jane.meta.definition.MetaTemplateFilter;
 import com.huawei.fit.jober.common.RangedResultSet;
+
 import modelengine.fitframework.annotation.Genericable;
 
 /**

@@ -5,9 +5,9 @@
 package com.huawei.fit.jober.aipp.common.exception;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
-import modelengine.fitframework.exception.FitException;
 
 import lombok.Getter;
+import modelengine.fitframework.exception.FitException;
 
 import java.text.MessageFormat;
 

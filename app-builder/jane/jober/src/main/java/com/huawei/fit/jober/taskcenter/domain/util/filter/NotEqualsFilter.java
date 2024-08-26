@@ -11,6 +11,7 @@ import com.huawei.fit.jober.taskcenter.domain.util.Filter;
 import com.huawei.fit.jober.taskcenter.domain.util.FilterParser;
 import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.Condition;
+
 import modelengine.fitframework.util.ParsingResult;
 
 import java.util.Arrays;

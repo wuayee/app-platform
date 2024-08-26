@@ -11,6 +11,7 @@ import com.huawei.fit.jane.task.domain.TaskProperty;
 import com.huawei.fit.jober.common.enums.JaneCategory;
 import com.huawei.fit.jober.taskcenter.domain.util.PrimaryValue;
 import com.huawei.fit.jober.taskcenter.domain.util.support.DefaultPrimaryValue;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;

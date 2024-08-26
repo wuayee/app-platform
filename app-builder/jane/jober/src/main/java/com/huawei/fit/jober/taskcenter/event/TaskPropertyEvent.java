@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.taskcenter.event;
 
 import com.huawei.fit.jane.task.domain.TaskProperty;
+
 import modelengine.fitframework.event.Event;
 
 /**

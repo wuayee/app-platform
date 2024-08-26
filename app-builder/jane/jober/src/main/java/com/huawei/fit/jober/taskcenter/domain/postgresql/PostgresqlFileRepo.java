@@ -18,13 +18,13 @@ import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.transaction.Transactional;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

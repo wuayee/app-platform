@@ -7,14 +7,15 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.jade.app.engine.knowledge.dto.KbVectorSearchDto;
+import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import com.huawei.jade.app.engine.knowledge.dto.KbVectorSearchDto;
-import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 
 import org.apache.commons.collections4.CollectionUtils;
 

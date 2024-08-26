@@ -4,7 +4,6 @@
 
 package com.huawei.fit.jober.aipp.service;
 
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
@@ -17,6 +16,8 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
 import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.common.RangedResultSet;
+
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;

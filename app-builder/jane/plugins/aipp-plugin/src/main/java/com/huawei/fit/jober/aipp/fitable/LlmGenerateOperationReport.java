@@ -8,6 +8,7 @@ import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.service.ReportGenerationService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;

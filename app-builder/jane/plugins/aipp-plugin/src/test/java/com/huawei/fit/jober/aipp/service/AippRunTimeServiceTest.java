@@ -16,7 +16,6 @@ import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaItem;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
@@ -50,6 +49,7 @@ import com.huawei.fit.jober.entity.task.TaskProperty;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fit.http.client.HttpClassicClientFactory;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

@@ -18,6 +18,7 @@ import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.impl.AppChatServiceImpl;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.model.Tuple;
 

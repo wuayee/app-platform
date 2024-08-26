@@ -23,6 +23,9 @@ import com.huawei.fit.jober.taskcenter.domain.SourceType;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.Enums;
+
+import com.alibaba.fastjson.TypeReference;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.event.EventHandler;
@@ -30,8 +33,6 @@ import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.StringUtils;
-
-import com.alibaba.fastjson.TypeReference;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;

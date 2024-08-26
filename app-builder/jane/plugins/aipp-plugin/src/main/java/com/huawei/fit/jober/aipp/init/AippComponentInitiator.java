@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.common.ResourceLoader;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Initialize;
 import modelengine.fitframework.log.Logger;

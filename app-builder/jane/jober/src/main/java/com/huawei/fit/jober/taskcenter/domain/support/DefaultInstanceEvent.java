@@ -6,6 +6,7 @@ package com.huawei.fit.jober.taskcenter.domain.support;
 
 import com.huawei.fit.jober.taskcenter.domain.InstanceEvent;
 import com.huawei.fit.jober.taskcenter.domain.InstanceEventType;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;

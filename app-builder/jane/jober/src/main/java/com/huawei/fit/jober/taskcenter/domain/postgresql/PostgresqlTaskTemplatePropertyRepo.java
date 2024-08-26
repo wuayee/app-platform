@@ -21,6 +21,8 @@ import com.huawei.fit.jober.taskcenter.util.sql.DeleteSql;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
 import com.huawei.fit.jober.taskcenter.validation.PropertyValidator;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.transaction.Transactional;
@@ -28,8 +30,6 @@ import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.LazyLoader;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Collections;

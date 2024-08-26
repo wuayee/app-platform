@@ -7,6 +7,7 @@ package com.huawei.fit.jane.task.domain.type;
 import static modelengine.fitframework.util.ObjectUtils.mapIfNotNull;
 
 import com.huawei.fit.jane.task.domain.DataConverter;
+
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.util.ParsingResult;
 import modelengine.fitframework.util.support.DefaultParsingResult;

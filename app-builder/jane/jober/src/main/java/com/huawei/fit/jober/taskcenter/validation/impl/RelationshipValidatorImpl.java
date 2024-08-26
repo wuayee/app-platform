@@ -9,9 +9,9 @@ import com.huawei.fit.jober.common.exceptions.NotFoundException;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.RelationshipValidator;
-import modelengine.fitframework.annotation.Component;
 
 import lombok.AllArgsConstructor;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.ArrayList;
 import java.util.Objects;

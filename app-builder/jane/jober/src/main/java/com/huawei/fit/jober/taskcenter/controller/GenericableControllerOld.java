@@ -4,19 +4,19 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
+import com.huawei.fit.jober.common.model.JoberResponse;
+import com.huawei.fit.jober.common.model.TextStringValue;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fit.http.annotation.DocumentIgnored;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.RequestMapping;
-import com.huawei.fit.jober.common.model.JoberResponse;
-import com.huawei.fit.jober.common.model.TextStringValue;
 import modelengine.fit.service.RegistryService;
 import modelengine.fit.service.entity.FitableMetaInstance;
 import modelengine.fit.service.entity.GenericableInfo;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.broker.GenericableMetadata;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;

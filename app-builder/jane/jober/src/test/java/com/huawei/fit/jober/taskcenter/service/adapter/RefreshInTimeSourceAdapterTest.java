@@ -25,11 +25,12 @@ import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.SourceType;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.MapSerializer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.IoUtils;
 import modelengine.fitframework.util.MapBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -14,6 +14,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 import com.huawei.fit.jober.aipp.vo.MetaVo;
+
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.model.Tuple;
 

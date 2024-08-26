@@ -20,11 +20,7 @@ import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
-import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
-import modelengine.fitframework.broker.client.BrokerClient;
-import modelengine.fitframework.flowable.Choir;
-import modelengine.fitframework.serialization.ObjectSerializer;
-import modelengine.fitframework.util.ObjectUtils;
+
 import modelengine.fel.chat.ChatMessage;
 import modelengine.fel.chat.ChatMessages;
 import modelengine.fel.chat.ChatModelStreamService;
@@ -39,6 +35,11 @@ import modelengine.fel.engine.operators.patterns.AbstractAgent;
 import modelengine.fel.tool.Tool;
 import modelengine.fel.tool.ToolCall;
 import modelengine.fel.tool.ToolProvider;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

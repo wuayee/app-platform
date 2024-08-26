@@ -11,6 +11,7 @@ import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.common.utils.VersionUtils;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.TaskValidator;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.util.StringUtils;

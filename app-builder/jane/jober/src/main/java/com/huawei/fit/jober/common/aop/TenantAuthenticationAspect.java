@@ -9,6 +9,8 @@ import com.huawei.fit.jane.task.domain.TenantAccessLevel;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.aop.ProceedingJoinPoint;
 import modelengine.fitframework.aop.annotation.Around;
@@ -17,8 +19,6 @@ import modelengine.fitframework.aop.annotation.Pointcut;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.util.stream.IntStream;
 

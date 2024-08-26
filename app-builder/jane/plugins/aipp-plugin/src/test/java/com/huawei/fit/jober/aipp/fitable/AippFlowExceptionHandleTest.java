@@ -12,6 +12,7 @@ import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
+
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.DisplayName;

@@ -16,15 +16,15 @@ import com.huawei.fit.jober.aipp.init.ElsaPptInitiator;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
-import modelengine.fitframework.annotation.Component;
-import modelengine.fitframework.annotation.Fitable;
-import modelengine.fitframework.annotation.Value;
-import modelengine.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import lombok.extern.slf4j.Slf4j;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;

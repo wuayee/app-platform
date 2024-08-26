@@ -5,6 +5,7 @@
 package com.huawei.fit.jane.dlock.jdbc.service;
 
 import com.huawei.fit.jane.dlock.jdbc.DistributedLockClient;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;

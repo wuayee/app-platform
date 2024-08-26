@@ -35,6 +35,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlValue;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
 import com.huawei.fit.jober.taskcenter.validation.PropertyValidator;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.event.Event;

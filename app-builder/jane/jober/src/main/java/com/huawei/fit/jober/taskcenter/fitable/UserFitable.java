@@ -8,6 +8,7 @@ import com.huawei.fit.jane.task.gateway.EmployeeDetailVO;
 import com.huawei.fit.jober.UserService;
 import com.huawei.fit.jober.common.utils.UserUtil;
 import com.huawei.fit.jober.entity.user.EmployeeDetail;
+
 import modelengine.fitframework.annotation.Alias;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;

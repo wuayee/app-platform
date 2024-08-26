@@ -6,12 +6,13 @@ package com.huawei.fit.jober.aipp.tool.impl;
 
 import com.huawei.fit.jober.aipp.dto.image.StableDiffusionInput;
 import com.huawei.fit.jober.aipp.tool.StableDiffusionParserTool;
+
+import modelengine.fel.core.formatters.Parser;
+import modelengine.fel.core.formatters.json.JsonOutputParser;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.serialization.ObjectSerializer;
-import modelengine.fel.core.formatters.Parser;
-import modelengine.fel.core.formatters.json.JsonOutputParser;
 
 /**
  * StableDiffusion模型json入参解析器实现

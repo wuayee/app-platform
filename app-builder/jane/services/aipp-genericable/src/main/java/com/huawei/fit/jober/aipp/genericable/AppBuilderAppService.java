@@ -7,6 +7,7 @@ package com.huawei.fit.jober.aipp.genericable;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
+
 import modelengine.fitframework.annotation.Genericable;
 
 /**

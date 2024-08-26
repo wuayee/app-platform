@@ -6,6 +6,7 @@ package com.huawei.fit.jober;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.entity.FlowInfo;
+
 import modelengine.fitframework.annotation.Genericable;
 
 /**

@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.common.aop;
 
 import com.huawei.fit.jober.common.model.LogSubject;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.aop.ProceedingJoinPoint;
 import modelengine.fitframework.aop.annotation.Around;

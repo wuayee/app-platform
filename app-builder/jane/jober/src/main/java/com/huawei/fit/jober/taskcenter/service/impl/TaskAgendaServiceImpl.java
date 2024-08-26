@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.taskcenter.service.impl;
 
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jane.task.domain.TaskProperty;
@@ -33,6 +33,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.ColumnRef;
 import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;

@@ -11,6 +11,7 @@ import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.TriggerValidator;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 

@@ -11,17 +11,6 @@ import static com.huawei.fit.jober.taskcenter.controller.Views.viewOf;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import modelengine.fit.http.annotation.DeleteMapping;
-import modelengine.fit.http.annotation.GetMapping;
-import modelengine.fit.http.annotation.PatchMapping;
-import modelengine.fit.http.annotation.PathVariable;
-import modelengine.fit.http.annotation.PostMapping;
-import modelengine.fit.http.annotation.RequestBody;
-import modelengine.fit.http.annotation.RequestMapping;
-import modelengine.fit.http.annotation.RequestParam;
-import modelengine.fit.http.annotation.ResponseStatus;
-import modelengine.fit.http.protocol.HttpResponseStatus;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jane.task.util.PagedResultSet;
@@ -33,6 +22,18 @@ import com.huawei.fit.jober.taskcenter.domain.ViewMode;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
+
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PatchMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.annotation.ResponseStatus;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 
 import java.time.LocalDateTime;

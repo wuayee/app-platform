@@ -8,6 +8,7 @@ import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jober.taskcenter.util.sql.Condition;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collection;

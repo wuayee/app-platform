@@ -4,8 +4,6 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import modelengine.fitframework.annotation.Property;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import modelengine.fitframework.annotation.Property;
 
 import java.util.List;
 import java.util.Map;

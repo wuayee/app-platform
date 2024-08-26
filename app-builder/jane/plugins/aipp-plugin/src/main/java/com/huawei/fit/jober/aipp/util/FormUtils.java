@@ -16,6 +16,7 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
+
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
 

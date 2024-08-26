@@ -4,6 +4,10 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.taskcenter.domain.OperationRecordEntity;
+import com.huawei.fit.jober.taskcenter.service.OperationRecordService;
+
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.RequestMapping;
@@ -12,9 +16,6 @@ import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.taskcenter.domain.OperationRecordEntity;
-import com.huawei.fit.jober.taskcenter.service.OperationRecordService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.model.RangedResultSet;
 

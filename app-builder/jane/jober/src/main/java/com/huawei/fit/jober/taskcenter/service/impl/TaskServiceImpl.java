@@ -48,6 +48,8 @@ import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.validation.RelationshipValidator;
 import com.huawei.fit.jober.taskcenter.validation.TaskValidator;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
@@ -57,8 +59,6 @@ import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

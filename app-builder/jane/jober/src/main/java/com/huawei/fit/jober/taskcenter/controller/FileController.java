@@ -4,6 +4,14 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
+import com.huawei.fit.jane.task.domain.File;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jane.task.util.OperationContext;
+import com.huawei.fit.jober.common.ErrorCodes;
+import com.huawei.fit.jober.common.exceptions.BadRequestException;
+import com.huawei.fit.jober.common.util.ParamUtils;
+import com.huawei.fit.jober.taskcenter.validation.FileValidator;
+
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.PostMapping;
@@ -13,13 +21,6 @@ import modelengine.fit.http.entity.FileEntity;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jane.task.domain.File;
-import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fit.jober.common.ErrorCodes;
-import com.huawei.fit.jober.common.exceptions.BadRequestException;
-import com.huawei.fit.jober.common.util.ParamUtils;
-import com.huawei.fit.jober.taskcenter.validation.FileValidator;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;

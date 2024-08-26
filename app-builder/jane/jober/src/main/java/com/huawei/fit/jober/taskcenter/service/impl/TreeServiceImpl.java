@@ -23,12 +23,12 @@ import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.ExecutableSql;
 import com.huawei.fit.jober.taskcenter.util.Sqls;
 import com.huawei.fit.jober.taskcenter.validation.TreeValidator;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.model.RangedResultSet;
 import modelengine.fitframework.transaction.Transactional;
 import modelengine.fitframework.util.ObjectUtils;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

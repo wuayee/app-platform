@@ -6,6 +6,7 @@ package com.huawei.fit.dynamicform;
 
 import com.huawei.fit.dynamicform.entity.FormMetaInfo;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
+
 import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;

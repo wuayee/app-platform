@@ -6,13 +6,13 @@ package com.huawei.fit.jober.taskcenter.domain.postgresql;
 
 import static com.huawei.fit.jober.taskcenter.util.Maps.throwingMerger;
 import static com.huawei.fit.jober.taskcenter.util.Sqls.longValue;
-import static modelengine.fitframework.util.ObjectUtils.cast;
-import static modelengine.fitframework.util.ObjectUtils.nullIf;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyDataType;
 import com.huawei.fit.jane.task.domain.TaskProperty;
@@ -41,6 +41,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
 import com.huawei.fit.jober.taskcenter.validation.IndexValidator;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.event.EventHandler;
 import modelengine.fitframework.log.Logger;
