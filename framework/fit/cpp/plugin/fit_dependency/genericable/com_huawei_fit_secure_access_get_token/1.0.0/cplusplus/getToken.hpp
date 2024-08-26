@@ -21,7 +21,7 @@ struct __GetToken {
 
 class GetToken : public ::Fit::Framework::ProxyClient<FitCode(__GetToken::InType, __GetToken::OutType)> {
 public:
-    static constexpr const char *GENERIC_ID = "d1cf7d396a9d4c999d08f0e2205fb71b";
+    static constexpr const char *GENERIC_ID = "matata.registry.secure-access.get-token";
     GetToken() : ::Fit::Framework::ProxyClient<FitCode(__GetToken::InType, __GetToken::OutType)>(GENERIC_ID)
     {}
     explicit GetToken(ContextObj ctx)

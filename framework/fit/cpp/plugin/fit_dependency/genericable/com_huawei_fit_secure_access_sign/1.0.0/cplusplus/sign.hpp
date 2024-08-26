@@ -21,7 +21,7 @@ struct __Sign {
 
 class Sign : public ::Fit::Framework::ProxyClient<FitCode(__Sign::InType, __Sign::OutType)> {
 public:
-    static constexpr const char *GENERIC_ID = "a47083333e1bb92d139e08503aa6cb47";
+    static constexpr const char *GENERIC_ID = "matata.registry.secure-access.sign";
     Sign() : ::Fit::Framework::ProxyClient<FitCode(__Sign::InType, __Sign::OutType)>(GENERIC_ID) {}
     explicit Sign(ContextObj ctx)
         : ::Fit::Framework::ProxyClient<FitCode(__Sign::InType, __Sign::OutType)>(GENERIC_ID, ctx) {}

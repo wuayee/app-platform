@@ -35,15 +35,17 @@ public class DefaultRequestMetadata implements RequestMetadata {
     private final String fitableId;
     private final Version fitableVersion;
     private final TagLengthValues tagValues;
+    private final String accessToken;
 
     private DefaultRequestMetadata(int dataFormat, String genericableId, Version genericableVersion, String fitableId,
-            Version fitableVersion, TagLengthValues tagLengthValues) {
+            Version fitableVersion, TagLengthValues tagLengthValues, String accessToken) {
         this.dataFormat = between(dataFormat, 0, 0x7F, "The data format is out of range. [dataFormat={0}]", dataFormat);
         this.genericableId = genericableId;
         this.genericableVersion = genericableVersion;
         this.fitableId = fitableId;
         this.fitableVersion = fitableVersion;
         this.tagValues = getIfNull(tagLengthValues, TagLengthValues::create);
+        this.accessToken = accessToken;
     }
 
     @Override
@@ -82,6 +84,11 @@ public class DefaultRequestMetadata implements RequestMetadata {
     }
 
     @Override
+    public String accessToken() {
+        return this.accessToken;
+    }
+
+    @Override
     public int hashCode() {
         return Arrays.hashCode(this.serialize());
     }
@@ -114,6 +121,7 @@ public class DefaultRequestMetadata implements RequestMetadata {
         private String fitableId;
         private Version fitableVersion;
         private TagLengthValues tagValues;
+        private String accessToken;
 
         /**
          * 使用已知的远端调用元数据初始化 {@link Builder} 类的新实例。
@@ -128,6 +136,7 @@ public class DefaultRequestMetadata implements RequestMetadata {
                 this.fitableId = metadata.fitableId();
                 this.fitableVersion = metadata.fitableVersion();
                 this.tagValues = metadata.tagValues();
+                this.accessToken = metadata.accessToken();
             }
         }
 
@@ -168,13 +177,20 @@ public class DefaultRequestMetadata implements RequestMetadata {
         }
 
         @Override
+        public Builder accessToken(String accessToken) {
+            this.accessToken = accessToken;
+            return this;
+        }
+
+        @Override
         public RequestMetadata build() {
             return new DefaultRequestMetadata(this.dataFormat,
                     this.genericableId,
                     this.genericableVersion,
                     this.fitableId,
                     this.fitableVersion,
-                    this.tagValues);
+                    this.tagValues,
+                    this.accessToken);
         }
     }
 

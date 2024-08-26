@@ -22,7 +22,7 @@ struct __ApplyToken {
 
 class ApplyToken : public ::Fit::Framework::ProxyClient<FitCode(__ApplyToken::InType, __ApplyToken::OutType)> {
 public:
-    static constexpr const char *GENERIC_ID = "b594c4454da4e532cdb85b9c779a2c81";
+    static constexpr const char *GENERIC_ID = "matata.registry.secure-access.apply-token";
     ApplyToken() : ::Fit::Framework::ProxyClient<FitCode(__ApplyToken::InType, __ApplyToken::OutType)>(GENERIC_ID) {}
     explicit ApplyToken(ContextObj ctx)
         : ::Fit::Framework::ProxyClient<FitCode(__ApplyToken::InType, __ApplyToken::OutType)>(GENERIC_ID, ctx) {}

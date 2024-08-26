@@ -25,7 +25,7 @@ struct __IsAuthorized {
 
 class IsAuthorized : public ::Fit::Framework::ProxyClient<FitCode(__IsAuthorized::InType)> {
 public:
-    static constexpr const char *GENERIC_ID = "2d69e74d58e4acbb14baf961a3975185";
+    static constexpr const char *GENERIC_ID = "matata.registry.secure-access.is-authorized";
     IsAuthorized() : ::Fit::Framework::ProxyClient<FitCode(__IsAuthorized::InType)>(GENERIC_ID)
     {}
     explicit IsAuthorized(ContextObj ctx)

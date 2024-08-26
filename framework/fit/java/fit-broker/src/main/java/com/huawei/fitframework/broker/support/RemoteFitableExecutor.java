@@ -12,6 +12,8 @@ import com.huawei.fit.client.Client;
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.RequestContext;
 import com.huawei.fit.client.Response;
+import com.huawei.fit.service.RegisterAuthService;
+import com.huawei.fit.service.exception.AuthenticationException;
 import com.huawei.fitframework.broker.Endpoint;
 import com.huawei.fitframework.broker.ExceptionInfo;
 import com.huawei.fitframework.broker.FitExceptionCreator;
@@ -20,6 +22,7 @@ import com.huawei.fitframework.broker.FitableExecutor;
 import com.huawei.fitframework.broker.Format;
 import com.huawei.fitframework.broker.InvocationContext;
 import com.huawei.fitframework.broker.Target;
+import com.huawei.fitframework.conf.runtime.MatataConfig;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanFactory;
@@ -34,8 +37,11 @@ import com.huawei.fitframework.util.StringUtils;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -49,6 +55,10 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
 
     private final BeanContainer container;
     private final LazyLoader<FitExceptionCreator> exceptionCreatorLoader = new LazyLoader<>(this::getExceptionCreator);
+    private final LazyLoader<RegisterAuthService> requireRegisterAuthService =
+            new LazyLoader<>(this::requireRegisterAuthService);
+    private LazyLoader<Set<String>> requireMatataGenericables = new LazyLoader<>(this::requireMatataGenericables);
+    private LazyLoader<Boolean> isAccessEnable = new LazyLoader<>(this::isAccessEnable);
 
     RemoteFitableExecutor(BeanContainer container) {
         this.container = container;
@@ -62,6 +72,13 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
         RequestMetadata requestMetadataBytes = this.getRequestMetadataBytes(format, fitable);
         Method method = fitable.genericable().method().method();
         Response response = this.requestResponse(target, context, requestMetadataBytes, args, method);
+        if (this.isTokenValid(response.metadata())) {
+            this.requireRegisterAuthService.get().refreshToken(Instant.now());
+            requestMetadataBytes = requestMetadataBytes.copy()
+                    .accessToken(this.requireRegisterAuthService.get().getToken().getAccessToken().getToken())
+                    .build();
+            response = this.requestResponse(target, context, requestMetadataBytes, args, method);
+        }
         if (this.isSuccess(response.metadata())) {
             log.debug("Invoke remote fitable successfully. [id={}, target={}]", fitable.toUniqueId(), target);
             return response.data();
@@ -100,7 +117,18 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
         return target.formats().iterator().next();
     }
 
-    private RequestMetadata getRequestMetadataBytes(Format format, Fitable fitable) {
+    /**
+     * 获取请求元数据。
+     *
+     * @param format 表示指定的序列化协议的 {@link Format}。
+     * @param fitable 表示指定的泛化接口的 {@link Fitable}。
+     * @return 表示请求元数据的 {@link RequestMetadata}。
+     */
+    protected RequestMetadata getRequestMetadataBytes(Format format, Fitable fitable) {
+        String token =
+                this.isAccessEnable.get() && this.requireMatataGenericables.get().contains(fitable.genericable().id())
+                        ? this.requireRegisterAuthService.get().getToken().getAccessToken().getToken()
+                        : null;
         return RequestMetadata.custom()
                 .dataFormat(valueFormat(format.code()))
                 .genericableId(fitable.genericable().id())
@@ -108,6 +136,7 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
                 .fitableId(fitable.id())
                 .fitableVersion(Version.builder(fitable.version()).build())
                 .tagValues(this.getTlvFromSerializers())
+                .accessToken(token)
                 .build();
     }
 
@@ -126,6 +155,41 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
                         protocol)));
     }
 
+    private RegisterAuthService requireRegisterAuthService() {
+        return this.container.all(RegisterAuthService.class)
+                .stream()
+                .map(BeanFactory::<RegisterAuthService>get)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                        "No supported register token service in container.")));
+    }
+
+    private Set<String> requireMatataGenericables() {
+        return this.container.all(MatataConfig.class)
+                .stream()
+                .map(BeanFactory::<MatataConfig>get)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                        "No supported matata config in container.")))
+                .registry()
+                .authRequiredServices()
+                .stream()
+                .map(MatataConfig.Registry.AvailableService::genericableId)
+                .collect(Collectors.toSet());
+    }
+
+    private boolean isAccessEnable() {
+        MatataConfig.Registry.SecureAccess secureAccess = this.container.all(MatataConfig.class)
+                .stream()
+                .map(BeanFactory::<MatataConfig>get)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                        "No supported matata config in container.")))
+                .registry()
+                .secureAccess();
+        return secureAccess != null && secureAccess.enabled();
+    }
+
     private TagLengthValues getTlvFromSerializers() {
         Map<Integer, byte[]> tlvMaps = Collections.emptyMap();
         TagLengthValues result = TagLengthValues.create();
@@ -135,6 +199,10 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
 
     private boolean isSuccess(ResponseMetadata responseMetadata) {
         return responseMetadata.code() == ResponseMetadata.CODE_OK;
+    }
+
+    private boolean isTokenValid(ResponseMetadata responseMetadata) {
+        return responseMetadata.code() == AuthenticationException.CODE;
     }
 
     private Response requestResponse(Target target, InvocationContext context, RequestMetadata metadata, Object[] args,
