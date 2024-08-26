@@ -19,5 +19,18 @@ export const evaluationEndNodeDrawer = (shape, div, x, y) => {
         </>);
     };
 
+    /**
+     * 评估结束节点header只显示重命名选项
+     *
+     * @override
+     */
+    self.getToolMenus = () => {
+        return [{
+            key: '1', label: "重命名", action: (setEdit) => {
+                setEdit(true);
+            }
+        }];
+    };
+
     return self;
 };

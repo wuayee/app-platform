@@ -17,9 +17,29 @@ export const evaluationEndNodeEnd = (id, x, y, width, height, parent, drawer) =>
     self.width = 461;
     self.deletable = false;
     self.isUnique = true;
+    self.flowMeta = {
+        "triggerMode": "auto",
+        "callback": {
+            "type": "general_callback",
+            "name": "通知回调",
+            "fitables": ["com.huawei.jade.app.engine.task.fitable.EvalTaskFlowEndCallback"],
+            "converter": {
+                "type": "mapping_converter"
+            },
+        }
+    };
 
     /**
-     * 设置E方向没有连接点
+     * 序列化组件信息
+     *
+     * @override
+     */
+    self.serializerJadeConfig = (jadeConfig) => {
+        self.flowMeta.callback.converter.entity = jadeConfig;
+    };
+
+    /**
+     * 评估结束节点设置E方向没有连接点
      *
      * @override
      */
@@ -27,6 +47,15 @@ export const evaluationEndNodeEnd = (id, x, y, width, height, parent, drawer) =>
     self.initConnectors = () => {
         initConnectors.apply(self);
         self.connectors.remove(c => c.direction.key === DIRECTION.E.key);
+    };
+
+    /**
+     * 获取用户自定义组件.
+     *
+     * @override
+     */
+    self.getComponent = () => {
+        return self.graph.plugins[self.componentName](self.flowMeta.callback.converter.entity);
     };
 
     /**
