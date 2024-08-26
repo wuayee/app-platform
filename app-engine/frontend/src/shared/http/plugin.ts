@@ -48,7 +48,7 @@ export function getPluginTool(tenantId, data: { pageNum: number; pageSize: numbe
 // 我的-工具流
 export function getPluginWaterFlow(
   tenantId,
-  data: { offset: number; limit: number; type: string }
+  data: { offset: number; limit: number; type: string, name: string }
 ) {
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/app`;
   return get(url, data);

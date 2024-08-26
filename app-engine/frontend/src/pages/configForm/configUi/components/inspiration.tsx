@@ -342,7 +342,7 @@ const Inspiration = (props) => {
                     </span>
                   </div>
                   <div className='card-prompt'>
-                    {item.prompt}
+                    {item.description}
                   </div>
                 </div>
               ))

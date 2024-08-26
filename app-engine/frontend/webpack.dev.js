@@ -48,9 +48,13 @@ module.exports = merge(common, {
     https: false,
     proxy: {
       '/api': {
-        target: 'http://80.11.128.86:30040',
+        target: 'http://10.243.226.192:30030',
         secure: false,
         changeOrigin: true,
+        pathRewrite: {
+          '^/api/jober': '/api/jober',
+          '^/api': '',
+        },
       },
 
       '/aiApi': {
@@ -62,9 +66,8 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/aippApi': {
-        target: 'http://80.11.128.86:30040',
+        target: 'http://10.243.226.192:30030',
         pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
-        // pathRewrite: { '^/aippApi': '/v1/api' },
         secure: false,
         changeOrigin: true,
       },

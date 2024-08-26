@@ -35,6 +35,7 @@ export const sourceTabs = [
   { key: 'LANGCHAIN', label: 'Langchain' },
   { key: 'LLAMAINDEX', label: 'Llamaindex' },
   { key: 'FAVOURITE', label: i18n.t('myFavorites') },
+  { key: 'MYWATERFLOW', label: i18n.t('myWaterFlow') },
 ];
 
 export const paramsColumns = [

@@ -46,10 +46,11 @@ const Deploy = ({ pluginRef }) => {
   const getDeployData = async () => {
     const response = await getDeployTool('deployed');
     if (response.code === 0) {
-      setPluginData(response.data);
-      setPluginLength(response.data.length);
-      setDeployedData(response.data);
-      pluginList.current = JSON.parse(JSON.stringify(response.data));
+      let list = response.data.filter(item => !item.isBuiltin);
+      setPluginData(list);
+      setPluginLength(list.length);
+      setDeployedData(list);
+      pluginList.current = JSON.parse(JSON.stringify(list));
     }
   };
   // 选中
