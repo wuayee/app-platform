@@ -71,8 +71,8 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
         log.error("Failed to invoke remote fitable. [id={}, target={}, message={}]",
                 fitable.toUniqueId(),
                 target,
-                responseException.getMessage(),
-                responseException);
+                responseException.getMessage());
+        log.debug("Exception: ", responseException);
         throw responseException;
     }
 

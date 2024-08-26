@@ -70,8 +70,8 @@ public class DefaultDispatcher implements Dispatcher {
             log.error("Failed to execute fitable. [genericableId={}, fitableId={}, cause={}]",
                     metadata.genericableId(),
                     metadata.fitableId(),
-                    cause.getMessage(),
-                    cause);
+                    cause.getMessage());
+            log.debug("Exception: ", cause);
             return Response.create(this.getResponseMetadata(cause, metadata));
         } finally {
             log.debug("Prepare to clear global context.");

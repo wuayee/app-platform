@@ -115,8 +115,8 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
                 result = exceptionHandler.handle(request, response, cause);
             } catch (Exception e) {
                 e.addSuppressed(cause);
-                log.error("Failed to handle exception.", e);
-                log.error("The previous exception is below.", cause);
+                log.error("Failed to handle exception.");
+                log.debug("Exception: ", e);
                 result =
                         ErrorResponse.create(INTERNAL_SERVER_ERROR, e.getMessage(), cause.getMessage(), request.path());
             }
@@ -128,7 +128,8 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
                 response.statusCode(exceptionHandler.statusCode());
             }
         } else {
-            log.error("No concrete exception handler to handle exception.", cause);
+            log.error("No concrete exception handler to handle exception.");
+            log.debug("Exception: ", cause);
             ErrorResponse errorResponse;
             if (cause instanceof HttpServerResponseException) {
                 HttpServerResponseException actualException = cast(cause);

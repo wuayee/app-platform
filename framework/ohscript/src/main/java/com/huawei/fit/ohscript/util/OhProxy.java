@@ -119,7 +119,8 @@ public class OhProxy {
                 return method.invoke(base, args);
             }
         } catch (Exception e) {
-            LOG.error("noMethodInvoke error. method:{0}", method.getName(), e);
+            LOG.error("noMethodInvoke error. method:{0}", method.getName());
+            LOG.debug("Exception: ", e);
             throw new ScriptExecutionException(e.getMessage());
         }
     }

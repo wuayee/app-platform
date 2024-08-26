@@ -66,7 +66,8 @@ public class OhFileReader implements CodeReader {
         try {
             this.bufferedReader.close();
         } catch (IOException e) {
-            LOG.error("close file error.", e);
+            LOG.error("close file error.");
+            LOG.debug("Exception: ", e);
         }
         this.closed = true;
     }

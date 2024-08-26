@@ -43,7 +43,8 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
         try {
             this.handler.onError(this.session, cause);
         } catch (Throwable e) {
-            log.error("Failed to handle websocket by netty worker.", e);
+            log.error("Failed to handle websocket by netty worker.");
+            log.debug("Exception: ", e);
             this.session.close(CloseReason.UNEXPECTED_CONDITION);
         }
     }

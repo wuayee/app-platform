@@ -53,7 +53,8 @@ public class ConverseLatch<T> {
             throw new IllegalStateException(exception.getMessage(), exception);
         }
         if (this.throwable != null) {
-            log.error("Conversation latch await throws: ", this.throwable);
+            log.error("Conversation latch await throws exception.");
+            log.debug("Exception: ", this.throwable);
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
         }
         return this.data;
@@ -72,7 +73,8 @@ public class ConverseLatch<T> {
             throw new IllegalStateException(exception.getMessage(), exception);
         }
         if (this.throwable != null) {
-            log.error("Conversation latch await throws: ", this.throwable);
+            log.error("Conversation latch await throws exception.");
+            log.debug("Exception: ", this.throwable);
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
         }
         return this.data;

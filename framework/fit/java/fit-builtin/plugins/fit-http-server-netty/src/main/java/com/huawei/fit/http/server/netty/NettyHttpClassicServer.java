@@ -86,7 +86,10 @@ public class NettyHttpClassicServer implements HttpClassicServer {
     private final ThreadPoolExecutor startServerExecutor = ThreadUtils.singleThreadPool(new DefaultThreadFactory(
             "netty-http-server",
             false,
-            (thread, exception) -> log.error("Failed to start netty http server.", exception)));
+                    (thread, exception) -> {
+                    log.error("Failed to start netty http server.");
+                    log.debug("Exception: ", exception);
+            }));
     private final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     private volatile int httpPort;
     private volatile int httpsPort;
@@ -251,8 +254,11 @@ public class NettyHttpClassicServer implements HttpClassicServer {
     private static EventLoopGroup createBossGroup() {
         return new NioEventLoopGroup(1,
                 new DefaultThreadFactory("netty-boss-group",
-                        false,
-                        (thread, exception) -> log.error("Netty boss group occurs exception.", exception)));
+                    false,
+                        (thread, exception) -> {
+                        log.error("Netty boss group occurs exception.");
+                        log.debug("Exception: ", exception);
+        }));
     }
 
     private EventLoopGroup createWorkerGroup() {
@@ -260,7 +266,10 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         return new NioEventLoopGroup(this.coreThreadNum,
                 new DefaultThreadFactory("netty-worker-group",
                         isDaemon,
-                        (thread, exception) -> log.error("Netty worker group occurs exception.", exception)));
+                        (thread, exception) -> {
+                        log.error("Netty worker group occurs exception.");
+                        log.debug("Exception: ", exception);
+                }));
     }
 
     private SSLContext createSslContext() throws GeneralSecurityException, IOException {

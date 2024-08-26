@@ -30,7 +30,8 @@ public class SleepUtil {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            LOG.error("Sleep get InterruptedException. Cause by : {}", e);
+            LOG.error("Sleep get InterruptedException.");
+            LOG.debug("Cause by : {}", e);
         }
     }
 

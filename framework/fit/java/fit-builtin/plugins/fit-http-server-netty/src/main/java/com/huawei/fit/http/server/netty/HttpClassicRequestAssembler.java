@@ -80,8 +80,10 @@ public class HttpClassicRequestAssembler extends SimpleChannelInboundHandler<Htt
                 .keepAliveTime(60, TimeUnit.SECONDS)
                 .workQueueCapacity(config.queueCapacity())
                 .isDaemonThread(!this.config.isGracefulExit())
-                .exceptionHandler((thread, cause) -> log.error("Failed to handle http request by request assembler.",
-                        cause))
+                .exceptionHandler((thread, cause) -> {
+                    log.error("Failed to handle http request by request assembler.");
+                    log.debug("Exception: ", cause);
+                })
                 .rejectedExecutionHandler(new AbortPolicy())
                 .build();
     }
@@ -101,12 +103,14 @@ public class HttpClassicRequestAssembler extends SimpleChannelInboundHandler<Htt
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("Failed to handle http request by netty worker.", cause);
+        log.error("Failed to handle http request by netty worker.");
+        log.debug("Exception: ", cause);
         this.returnError(ctx, cause, getRequest(ctx));
     }
 
     private void exceptionCaught(ChannelHandlerContext ctx, Throwable cause, NettyHttpServerRequest request) {
-        log.error("Failed to handle http request by request assembler.", cause);
+        log.error("Failed to handle http request by request assembler.");
+        log.debug("Exception: ", cause);
         this.returnError(ctx, cause, request);
     }
 
