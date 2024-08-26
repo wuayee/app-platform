@@ -4,14 +4,14 @@
 
 package modelengine.fel.model.openai.service;
 
+import modelengine.fel.model.openai.client.OpenAiClientSse;
+import modelengine.fel.model.openai.utils.OpenAiMessageUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fel.chat.ChatModelStreamService;
 import modelengine.fel.chat.protocol.ChatCompletion;
 import modelengine.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.model.openai.client.OpenAiClientSse;
-import modelengine.fel.model.openai.utils.OpenAiMessageUtils;
 
 /**
  * FEL 模型流式接口的 OpenAI 实现。

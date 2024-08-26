@@ -15,7 +15,7 @@ import modelengine.fel.embed.EmbedOptions;
 import modelengine.fel.embed.EmbedRequest;
 import modelengine.fel.embed.EmbedResponse;
 import modelengine.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.client.OpenAiClientSse;
+import modelengine.fel.model.openai.client.OpenAiClientSse;
 import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
 import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import modelengine.fit.http.client.HttpClassicClientFactory;

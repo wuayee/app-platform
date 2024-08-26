@@ -4,10 +4,10 @@
 
 package modelengine.fel.model.openai.entity.chat;
 
-import modelengine.fitframework.annotation.Property;
-import com.huawei.fitframework.serialization.annotation.SerializeStrategy;
 import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import modelengine.fel.model.openai.entity.chat.message.tool.OpenAiTool;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.serialization.annotation.SerializeStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

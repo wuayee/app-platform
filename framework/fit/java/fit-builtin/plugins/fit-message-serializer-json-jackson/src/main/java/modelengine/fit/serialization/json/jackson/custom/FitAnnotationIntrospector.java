@@ -6,7 +6,7 @@ package modelengine.fit.serialization.json.jackson.custom;
 
 import modelengine.fitframework.annotation.Aliases;
 import modelengine.fitframework.annotation.Property;
-import com.huawei.fitframework.serialization.annotation.SerializeStrategy;
+import modelengine.fitframework.serialization.annotation.SerializeStrategy;
 import modelengine.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

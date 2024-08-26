@@ -59,7 +59,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
     </dependencies>
