@@ -53,7 +53,7 @@ export const useMergeState = (initialState) => {
 
 
 /**
-* 将传入的文本进行转换处理，去除空格后，如果长度不为0，则进行marked解析和DOMPurify清洁处理，否则返回空字符串
+* 将传入的文本进行转换处理，去除空格后，如果长度不为0，则进行marked解析，否则返回空字符串
 *
 * @param {string} text - 需要进行转换的文本
 * @return {string} 返回处理后的文本，如果文本为空或者为空字符串，则返回空字符串
@@ -201,6 +201,9 @@ export const urlify = (text) => {
     const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     return text.replace(urlRegex, (url) => {
       return `<a href='${url}' target='_blank'>${url}</a>`;
+    })
+    return text.replace(urlRegex, (url) => {
+      return `<a href="${url}" target="_blank">${url}</a>`;
     })
   }
   return text

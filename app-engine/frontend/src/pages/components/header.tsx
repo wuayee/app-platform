@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import { Button } from 'antd';
 import { LeftArrowIcon, UploadIcon } from '@assets/icon';
 import TimeLineDrawer from '@/components/timeLine';
 import PublishModal from './publish-modal';
 import EditModal from './edit-modal';
 import TestStatus from './test-status';
 import TestModal from './test-modal';
-import { useAppDispatch } from '@/store/hook';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { updateChatId } from '@/shared/utils/common';
 import { setChatId, setChatList } from '@/store/chatStore/chatStore';
 import { useTranslation } from 'react-i18next';
@@ -15,12 +16,15 @@ import './styles/header.scss'
 const ChoreographyHead = (props) => {
   const { t } = useTranslation();
   const {
-    showElsa, appInfo,
+    showElsa,
+    appInfo,
     updateAippCallBack,
     mashupClick,
-    openDebug, testTime,
-    testStatus, showTime
+    openDebug,
+    showTime
   } = props;
+  const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
+  const testTime = useAppSelector((state) => state.flowTestStore.testTime);
   const [currentTime, setCurrentTime] = useState('');
   const [open, setOpen] = useState(false);
   let modalRef = React.createRef();
@@ -112,8 +116,19 @@ const ChoreographyHead = (props) => {
             </span>
           </div>
         }
-        {showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>{t('debug')}</span>}
-        <span className='header-btn' onClick={handleUploadApp}><UploadIcon />{t('publish')}</span>
+        {showElsa && <Button
+          className='header-btn test-btn'
+          disabled={testStatus === 'Running'}
+          onClick={handleOpenDebug}>
+          {t('debug')}
+        </Button>}
+        <Button
+          type='primary'
+          className='header-btn publish-btn'
+          disabled={testStatus === 'Running'}
+          onClick={handleUploadApp}>
+          <UploadIcon />{t('publish')}
+        </Button>
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType='app' />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack} />

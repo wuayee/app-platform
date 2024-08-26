@@ -35,7 +35,8 @@ app-engine:
   endpoint: http://80.11.128.66:31111
   pathPrefix:
   exclude-names:
-    - '小海'
+    - 'i18n_appBuilder_*xiaohai*'
+    - '经营小魔方'
 elsa:
   endpoint:
   elsaKey:

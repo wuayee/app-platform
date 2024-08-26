@@ -84,13 +84,6 @@
     }
   }
   .header-btn{
-    display: inline-block;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    color: #fff;
-    background-color: #047bfc;
-    cursor: pointer;
     border-radius: 4px;
     font-size: 14px;
     padding-left: .75rem;
@@ -99,5 +92,14 @@
       .anticon-upload {
         margin-right: 5px;
       }
+  }
+  .publish-btn {
+    color: #fff;
+    background-color: #047bfc;
+  }
+  .publish-btn:disabled {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.25);
+    border-color: #d9d9d9;
   }
 }

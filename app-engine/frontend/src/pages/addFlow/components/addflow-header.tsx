@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { Button } from 'antd';
 import { LeftArrowIcon, UploadIcon } from '@/assets/icon';
 import { updateAppInfo } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
@@ -99,8 +100,21 @@ const AddHeader = (props) => {
               <img src='./src/assets/images/ai/time.png' />
             </span>
           }
-          <span className='header-btn test-btn' onClick={handleDebugClick}>{t('debug')}</span>
-          <span className='header-btn' onClick={handleUploadFlow}><UploadIcon />{t('publish')}</span>
+          <Button
+            className='header-btn test-btn'
+            onClick={handleDebugClick}
+            disabled={testStatus === 'Running'}
+          >
+            {t('debug')}
+          </Button>
+          <Button
+            type='primary'
+            className='header-btn'
+            onClick={handleUploadFlow}
+            disabled={testStatus === 'Running'}
+          >
+            <UploadIcon />{t('publish')}
+          </Button>
         </div>
       </div>
       <PublishModal
