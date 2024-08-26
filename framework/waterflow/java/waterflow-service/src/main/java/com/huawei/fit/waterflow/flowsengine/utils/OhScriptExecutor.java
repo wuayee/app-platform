@@ -19,6 +19,7 @@ import com.huawei.fit.ohscript.script.parser.GrammarBuilder;
 import com.huawei.fit.ohscript.script.parser.ParserBuilder;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -69,10 +70,38 @@ public final class OhScriptExecutor {
         userData.put(BUSINESS_DATA_KEY, businessDataJson);
         userData.put(PASS_DATA, passDataJson);
         parserBuilder.addExternalOh(EXTERNAL_PARAMETER_KEY, userData);
-        String ohScript = CODE_SEGMENT_PREFIX + FlowUtil.formatConditionRule(conditionRule);
+        String formatConditionRule = FlowUtil.formatConditionRule(conditionRule).trim();
+        // 兼容历史 !{{var}}类型，且传入的是字符串类型的true/false
+        boolean isPatternOfNot = false;
+        if (FlowUtil.isPatternOfNot(conditionRule)) {
+            isPatternOfNot = true;
+            formatConditionRule = formatConditionRule.substring(1);
+        }
+        String ohScript = CODE_SEGMENT_PREFIX + formatConditionRule;
         String uuid = UUID.randomUUID().toString();
         log.warn("uuid:{0}, evaluateConditionRule:{1}", uuid, ohScript);
-        Object execResult = "";
+        Object execResult = getExecResult(conditionRule, parserBuilder, ohScript);
+        log.warn("uuid:{0}, execResult:{1}", uuid, execResult);
+        if (execResult instanceof String) {
+            if ("TRUE".equalsIgnoreCase(ObjectUtils.cast(execResult))) {
+                execResult = true;
+            }
+            if ("FALSE".equalsIgnoreCase(ObjectUtils.cast(execResult))) {
+                execResult = false;
+            }
+        }
+        if (!(execResult instanceof Boolean)) {
+            String exceptionMsg = String.format("Unexpected FlowConditionNode OhScript return value. "
+                    + "OhScript Content: \"%s\"; Return Value: %s", ohScript, execResult);
+            log.error("The FlowConditionNode failed to judge the flow condition, error message: {}", exceptionMsg);
+            throw new JobberException(ErrorCodes.TYPE_CONVERT_FAILED);
+        }
+        boolean result = ObjectUtils.cast(execResult);
+        return isPatternOfNot ? !result : result;
+    }
+
+    private static Object getExecResult(String conditionRule, ParserBuilder parserBuilder, String ohScript) {
+        Object execResult;
         try {
             AST ast = parserBuilder.parseString("", ohScript);
             ASTEnv env = new ASTEnv(ast);
@@ -89,13 +118,6 @@ public final class OhScriptExecutor {
                     exceptionMsg, e.getMessage());
             throw new JobberException(ErrorCodes.FLOW_ENGINE_CONDITION_RULE_PARSE_ERROR, conditionRule);
         }
-        log.warn("uuid:{0}, execResult:{1}", uuid, execResult);
-        if (!(execResult instanceof Boolean)) {
-            String exceptionMsg = String.format("Unexpected FlowConditionNode OhScript return value. "
-                    + "OhScript Content: \"%s\"; Return Value: %s", ohScript, execResult);
-            log.error("The FlowConditionNode failed to judge the flow condition, error message: {}", exceptionMsg);
-            throw new JobberException(ErrorCodes.TYPE_CONVERT_FAILED);
-        }
-        return (boolean) execResult;
+        return execResult;
     }
 }

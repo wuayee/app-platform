@@ -115,8 +115,8 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
     }
 
     @Override
-    public List<FlowContext<T>> getByToBatch(String toBatch) {
-        return this.contexts.stream().filter(c -> c.getToBatch().equals(toBatch)).collect(Collectors.toList());
+    public List<FlowContext<T>> getByToBatch(List<String> toBatchIds) {
+        return this.contexts.stream().filter(c -> toBatchIds.contains(c.getToBatch())).collect(Collectors.toList());
     }
 
     @Override

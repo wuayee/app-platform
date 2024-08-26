@@ -21,6 +21,7 @@ import com.huawei.fit.waterflow.edatamate.client.FlowConfiguration;
 import com.huawei.fit.waterflow.edatamate.client.QueryCriteria;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;
 import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
+import com.huawei.fit.waterflow.edatamate.entity.TaskInstanceUpdateInfo;
 import com.huawei.fit.waterflow.edatamate.service.OrchestratorFitService;
 import com.huawei.fit.waterflow.edatamate.service.OrchestratorService;
 import com.huawei.fitframework.annotation.Component;
@@ -402,5 +403,24 @@ public class EDataMateController implements DataCleanClientV2 {
     @Override
     public Map<String, Object> getFlowConfigByIdV2(String flowId, String version, String dataCleanTaskId) {
         return orchestratorFitService.getFlowConfigById(flowId, version, dataCleanTaskId).orElse(null);
+    }
+
+
+    /**
+     * 更新任务实例信息
+     *
+     * @param taskId 任务id
+     * @param instanceId 任务实例id
+     * @param instanceInfo 需要更新的字段
+     */
+    @PostMapping(value = "/tasks/{task_id}/instances/{instance_id}/update")
+    @ResponseStatus(HttpResponseStatus.OK)
+    public void updateTaskInstance(@PathVariable("task_id") String taskId,
+                                   @PathVariable("instance_id") String instanceId,
+                                   @RequestBody TaskInstanceUpdateInfo instanceInfo) {
+        Validation.notBlank(taskId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "task_id"));
+        Validation.notBlank(instanceId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "instanceId"));
+        Validation.notNull(instanceInfo, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "instanceInfo"));
+        orchestratorFitService.updateTaskInstance(taskId, instanceId, instanceInfo);
     }
 }

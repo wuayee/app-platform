@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -84,6 +85,11 @@ public class DefaultTraceOwnerService implements TraceOwnerService {
     }
 
     @Override
+    public boolean isAnyOwn(Set<String> traceIds) {
+        return traceIds.stream().anyMatch(this::isOwn);
+    }
+
+    @Override
     public List<String> getTraces() {
         return new ArrayList<>(this.traceMap.keySet());
     }
@@ -118,7 +124,7 @@ public class DefaultTraceOwnerService implements TraceOwnerService {
 
         private String transId;
 
-        private Lock lock;
+        private final Lock lock;
     }
 
     private static class OwnLockHelper {

@@ -13,6 +13,6 @@ fit:
 jane:
   flowsEngine:
     retry:
-      scheduleRate: 60000
+      scheduleRate: 10000
 
 distributed-lock-provider: databaseDistributedLockProvider

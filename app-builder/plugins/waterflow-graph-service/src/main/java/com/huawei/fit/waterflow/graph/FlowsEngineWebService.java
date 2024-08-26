@@ -40,7 +40,6 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowN
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
@@ -68,7 +67,6 @@ import java.util.stream.Collectors;
  * @author 杨祥宇
  * @since 2023/10/11
  */
-@Component
 public class FlowsEngineWebService implements FlowsEngineService {
     private static final Logger log = Logger.get(FlowsEngineWebService.class);
 

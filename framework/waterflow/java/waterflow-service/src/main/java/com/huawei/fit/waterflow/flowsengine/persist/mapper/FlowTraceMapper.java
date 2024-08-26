@@ -107,7 +107,8 @@ public interface FlowTraceMapper {
     /**
      * 查找正在运行的trace
      *
+     * @param applications 通过applications筛选
      * @return trace列表
      */
-    List<String> findRunningTrace();
+    List<String> findRunningTrace(List<String> applications);
 }

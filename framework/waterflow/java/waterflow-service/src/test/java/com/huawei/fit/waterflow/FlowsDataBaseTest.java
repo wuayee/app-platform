@@ -670,6 +670,14 @@ public abstract class FlowsDataBaseTest {
             }
             businessDataCopy = ObjectUtils.cast(businessDataCopy.get(keys[i]));
         }
+        if (result instanceof String) {
+            if ("TRUE".equalsIgnoreCase(ObjectUtils.cast(result))) {
+                return true;
+            }
+            if ("FALSE".equalsIgnoreCase(ObjectUtils.cast(result))) {
+                return false;
+            }
+        }
         return result;
     }
 }

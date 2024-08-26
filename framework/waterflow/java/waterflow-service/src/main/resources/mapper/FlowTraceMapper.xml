@@ -149,6 +149,10 @@
         <include refid="table"/>
         WHERE
         status = 'RUNNING'
+        AND application_name IN
+        <foreach item="item" index="index" collection="applications" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 
     <delete id="deleteByIdList">

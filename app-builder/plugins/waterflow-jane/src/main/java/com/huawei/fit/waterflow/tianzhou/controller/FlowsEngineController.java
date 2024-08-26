@@ -31,6 +31,7 @@ import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.waterflow.biz.util.ControllerUtil;
 import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.graph.FlowsEngineWebService;
+import com.huawei.fit.waterflow.graph.FlowsEngineWebServiceForDbGraph;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -52,11 +53,11 @@ import java.util.regex.Pattern;
 @Component
 @RequestMapping(value = BASE_URI_PREFIX + "/flows-bff", group = "流程封装接口")
 public class FlowsEngineController {
-    private final FlowsEngineWebService flowsEngineService;
+    private final FlowsEngineWebServiceForDbGraph flowsEngineService;
 
     private final Authenticator authenticator;
 
-    public FlowsEngineController(Authenticator authenticator, FlowsEngineWebService flowsEngineService) {
+    public FlowsEngineController(Authenticator authenticator, FlowsEngineWebServiceForDbGraph flowsEngineService) {
         this.authenticator = authenticator;
         this.flowsEngineService = flowsEngineService;
     }

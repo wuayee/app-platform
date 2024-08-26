@@ -257,8 +257,11 @@ public class FlowContextPersistRepo implements FlowContextRepo<FlowData> {
     }
 
     @Override
-    public List<FlowContext<FlowData>> getByToBatch(String toBatch) {
-        List<FlowContextPO> pos = contextMapper.findByToBatch(toBatch);
+    public List<FlowContext<FlowData>> getByToBatch(List<String> toBatchIds) {
+        if (toBatchIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<FlowContextPO> pos = contextMapper.findByToBatch(toBatchIds);
         return pos.stream().map(this::serializer).collect(Collectors.toList());
     }
 
@@ -645,5 +648,14 @@ public class FlowContextPersistRepo implements FlowContextRepo<FlowData> {
         contextMapper.updateProcessStatus(ids,
                 new FlowContextUpdateInfo(toBatch, status, position, updateAt, archivedAt),
                 CONTEXT_EXCLUSIVE_STATUS_MAP.get(status));
+    }
+
+    @Override
+    public List<FlowContext<String>> getWithoutFlowDataByToBatch(List<String> toBatchIds) {
+        if (toBatchIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<FlowContextPO> pos = contextMapper.findWithoutFlowDataByToBatch(toBatchIds);
+        return pos.stream().map(this::serializerAsString).collect(Collectors.toList());
     }
 }

@@ -345,10 +345,10 @@ public interface FlowContextMapper {
     /**
      * 根据toBatchId查询上下文
      *
-     * @param toBatch toBatch
+     * @param toBatchIds toBatchIds
      * @return 上下文列表
      */
-    List<FlowContextPO> findByToBatch(String toBatch);
+    List<FlowContextPO> findByToBatch(List<String> toBatchIds);
 
     /**
      * 根据traceId获取上下文
@@ -460,4 +460,12 @@ public interface FlowContextMapper {
      * @param exclusiveStatus 独占状态
      */
     void updateProcessStatus(List<String> ids, FlowContextUpdateInfo updateInfo, List<String> exclusiveStatus);
+
+    /**
+     * 根据to batch id列表获取不包含flow data的上下文信息
+     *
+     * @param toBatchIds to batch id 列表
+     * @return 上下文集合
+     */
+    List<FlowContextPO> findWithoutFlowDataByToBatch(List<String> toBatchIds);
 }

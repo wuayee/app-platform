@@ -596,7 +596,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 this.getProcessMode().process(this, pre);
                 return;
             }
+            logFileTest(this, "before", pre);
             List<FlowContext<O>> after = this.getProcessMode().process(this, pre);
+            logFileTest(this, "after", pre);
             if (!isOwnTrace(pre)) {
                 LOG.warn("[AfterProcess] The trace is not belong to this node, traceId={}.",
                         String.join(",", pre.get(0).getTraceId()));
@@ -645,6 +647,15 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      */
     public synchronized void updateConcurrency(int diff) {
         this.curConcurrency += diff;
+    }
+
+    /**
+     * 判断当前节点是否达到最大并发度
+     *
+     * @return 是否达到最大并发度
+     */
+    public boolean isMaxConcurrency() {
+        return this.curConcurrency >= To.MAX_CONCURRENCY;
     }
 
     private List<FlowContext<I>> filterTerminate(List<FlowContext<I>> contexts) {
@@ -973,7 +984,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 if (CollectionUtils.isEmpty(ready)) {
                     return new ArrayList<>();
                 }
-                if (to.curConcurrency + 1 > MAX_CONCURRENCY) {
+                if (to.isMaxConcurrency()) {
                     throw new JobberException(FLOW_NODE_MAX_TASK, to.getId());
                 }
                 to.updateConcurrency(1);
@@ -1005,7 +1016,15 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     .collect(Collectors.toList());
         }
 
-        private <T1, R1> void submit(To<T1, R1> to, List<FlowContext<T1>> ready) {
+        /**
+         * 启动线程处理捞取的context
+         *
+         * @param to 本节点节点类
+         * @param ready 捞取的context
+         * @param <T1> 流程实例执行时的入参数据类型，用于泛型推倒
+         * @param <R1> 流程实例执行时的出参数据类型，用于泛型推倒
+         */
+        public <T1, R1> void submit(To<T1, R1> to, List<FlowContext<T1>> ready) {
             logFileTest(to, "submit", ready);
             FlowExecutors.getThreadPool(StringUtils.join(STREAM_ID_SEPARATOR, to.streamId, to.id), MAX_CONCURRENCY)
                     .submit(PriorityThreadPool.PriorityTask.builder()

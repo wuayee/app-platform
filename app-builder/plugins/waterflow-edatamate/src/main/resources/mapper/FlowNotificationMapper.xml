@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.fit.waterflow.edatamate.dao.FlowNotificationMapper">
+    <resultMap id="objectMap"
+               type="com.huawei.fit.waterflow.edatamate.dao.po.FlowNotificationPo">
+        <id column="id" property="id"/>
+        <result column="fitable_id" property="fitableId"/>
+        <result column="data" property="data"/>
+        <result column="notify_count" property="notifyCount"/>
+        <result column="next_notify_time" property="nextNotifyTime"/>
+    </resultMap>
+
+    <sql id="table">flow_notification_queue</sql>
+
+    <sql id="columns">id, fitable_id, data, notify_count, next_notify_time</sql>
+
+    <insert id="create">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES
+        (#{id}, #{fitableId}, #{data}::jsonb, 0, #{time})
+    </insert>
+
+    <select id="findAll" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+    </select>
+
+    <delete id="delete">
+    DELETE
+    FROM
+        <include refid="table"/>
+    WHERE
+    id = #{id}
+    </delete>
+
+    <select id="findNextNotifyList" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        next_notify_time <![CDATA[ <= ]]> #{time}
+        ORDER BY next_notify_time
+        ASC
+        LIMIT 2
+    </select>
+
+    <update id="update">
+        UPDATE
+        <include refid="table"/>
+        SET
+        next_notify_time = #{nextNotifyTime},
+        notify_count = #{notifyCount}
+        WHERE
+        id = #{notifyId}
+    </update>
+</mapper>

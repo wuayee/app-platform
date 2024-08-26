@@ -27,7 +27,9 @@ import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.entity.FlowNodePublishInfo;
 import com.huawei.fit.jober.entity.FlowPublishContext;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
+import com.huawei.fit.waterflow.common.utils.SleepUtil;
 import com.huawei.fit.waterflow.common.utils.UUIDUtil;
+import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowRetryInfo;
 import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowTransCompletionInfo;
 import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowsErrorInfo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.InterStream;
@@ -59,9 +61,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
 import com.huawei.fit.waterflow.flowsengine.fitable.TraceServiceImpl;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fit.waterflow.flowsengine.utils.FlowExecutors;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
-import com.huawei.fit.waterflow.flowsengine.utils.PriorityThreadPool;
 import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
@@ -81,6 +81,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -105,7 +106,12 @@ public class FlowContextsService {
     /**
      * 重试自动任务的等待间隔时间，防止同一耗时重试对象在短时间内被多次尝试重试
      */
-    private static final long RETRY_WAITING_INTERVAL = 10000L;
+    private static final long RETRY_WAITING_INTERVAL = 15000L;
+
+    /**
+     * 重试任务周期
+     */
+    private static final long RETRY_INTERVAL = 30000L;
 
     private final FlowDefinitionRepo definitionRepo;
 
@@ -126,6 +132,10 @@ public class FlowContextsService {
     private final List<FlowEventCallback> consumers;
 
     private final TraceServiceImpl traceService;
+
+    private final Map<String, FlowRetryInfo> flowRetryMap = new HashMap<>();
+
+    private volatile boolean isRetryRunning = false;
 
     public FlowContextsService(FlowDefinitionRepo definitionRepo,
             @Fit(alias = "flowContextPersistRepo") FlowContextRepo repo,
@@ -495,8 +505,7 @@ public class FlowContextsService {
                 percentage = getPercentage(flowDefinition, contexts) * 100.00D;
             } else {
                 percentage = 0D;
-                LOG.warn("Failed to get flow completeness. flowDefinition not found. streamId:{}",
-                        flowDefinition.getStreamId());
+                LOG.warn("Failed to get flow completeness. flowDefinition not found.");
             }
         }
 
@@ -868,22 +877,107 @@ public class FlowContextsService {
     /**
      * 重试执行所有状态为RETRYABLE的上下文
      */
-    public void retryJober() {
-        try {
-            List<FlowRetry> flowRetryList = retryRepo.filterByNextRetryTime(LocalDateTime.now());
-            Map<String, List<FlowRetry>> retriesByEntityType = flowRetryList.stream()
-                    .collect(Collectors.groupingBy(FlowRetry::getEntityType));
-            for (Map.Entry<String, List<FlowRetry>> entry : retriesByEntityType.entrySet()) {
-                if (entry.getKey().equals(TO_BATCH_KEY)) {
-                    entry.getValue().forEach(this::retryByToBatch);
-                } else {
-                    LOG.error("[retryJober] Retry failed: unsupported flow retry entity type {}", entry.getKey());
+    public void retryTask() {
+        while (true) {
+            try {
+                if (!popRetryTask()) {
+                    return;
                 }
+            } catch (Exception ex) {
+                LOG.error("retry failed, exception: ", ex);
+            } finally {
+                SleepUtil.sleep(RETRY_INTERVAL);
             }
-        } catch (Throwable e) {
-            LOG.error("[retryJober] exception, errorMessage={}.", e.getMessage());
-            LOG.error("[retryJober] exception=", e);
         }
+    }
+
+    /**
+     * 是否拿到重试任务并成功执行
+     *
+     * @return 是否成功执行
+     */
+    public boolean popRetryTask() {
+        LOG.info("Start retry task.");
+        isRetryRunning = true;
+        updateFlowRetryMap();
+        if (flowRetryMap.isEmpty()) {
+            LOG.info("Retry list is empty, retry end.");
+            isRetryRunning = false;
+            return false;
+        }
+        startRetry();
+        return true;
+    }
+
+    private void startRetry() {
+        LOG.info("Retry task size: {}.", flowRetryMap.size());
+        Iterator<FlowRetryInfo> iterator = flowRetryMap.values().iterator();
+        while (iterator.hasNext()) {
+            FlowRetryInfo flowRetryInfo = iterator.next();
+            if (flowRetryInfo.getTo().isMaxConcurrency()) {
+                continue;
+            }
+            retryByToBatch(flowRetryInfo);
+            iterator.remove();
+        }
+    }
+
+    private void updateFlowRetryMap() {
+        LocalDateTime now = LocalDateTime.now();
+        List<FlowRetry> flowRetryList = retryRepo.filterByNextRetryTime(now, new ArrayList<>(flowRetryMap.keySet()))
+                .stream()
+                .filter(flowRetry -> Objects.equals(flowRetry.getEntityType(), TO_BATCH_KEY))
+                .collect(Collectors.toList());
+
+        List<String> toBatchIds = flowRetryList.stream().map(FlowRetry::getEntityId).collect(Collectors.toList());
+        List<FlowContext<String>> contexts = repo.getWithoutFlowDataByToBatch(toBatchIds);
+        cleanFlowRetry(toBatchIds, contexts);
+
+        Map<String, List<FlowContext<String>>> retryContexts = contexts.stream()
+                .filter(context -> traceOwnerService.isAnyOwn(context.getTraceId()))
+                .collect(Collectors.groupingBy(FlowContext::getToBatch));
+        flowRetryList.stream()
+                .filter(flowRetry -> retryContexts.containsKey(flowRetry.getEntityId()))
+                .forEach(flowRetry -> {
+                    Optional<FlowRetryInfo> retryInfo = getFlowRetryInfo(retryContexts, flowRetry);
+                    if (!retryInfo.isPresent()) {
+                        return;
+                    }
+                    flowRetryMap.put(flowRetry.getEntityId(), retryInfo.get());
+                });
+    }
+
+    private void cleanFlowRetry(List<String> toBatchIds, List<FlowContext<String>> contexts) {
+        Map<String, List<FlowContext<String>>> allContext = contexts
+                .stream()
+                .collect(Collectors.groupingBy(FlowContext::getToBatch));
+        List<String> cleanedIds = toBatchIds
+                .stream()
+                .filter(id -> (!allContext.containsKey(id)) || isFinishedContext(allContext.get(id)))
+                .collect(Collectors.toList());
+        retryRepo.delete(cleanedIds);
+    }
+
+    private Optional<FlowRetryInfo> getFlowRetryInfo(Map<String, List<FlowContext<String>>> retryContexts,
+                                                     FlowRetry flowRetry) {
+        FlowRetryInfo retryInfo = FlowRetryInfo
+                .builder()
+                .flowRetry(flowRetry)
+                .flowContexts(retryContexts.get(flowRetry.getEntityId()))
+                .build();
+
+        FlowContext<String> context = retryInfo.getFlowContexts().get(0);
+        String streamId = context.getStreamId();
+        From<FlowData> from = ObjectUtils.cast(WaterFlows.getPublisher(streamId));
+        // 小的并发概率下没有获取到
+        if (from == null) {
+            flowDefinitionCheck(context.getToBatch(), streamId);
+            return Optional.empty();
+        }
+        String position = context.getPosition();
+        To<FlowData, Object> to = from.getSubscriber(position);
+        retryInfo.setTo(to);
+        return Optional.of(retryInfo);
     }
 
     /**
@@ -911,8 +1005,17 @@ public class FlowContextsService {
         repo.updateStatus(contexts, READY.toString(), position);
     }
 
-    private void retryByToBatch(FlowRetry flowRetry) {
-        String lockKey = StringUtils.join(STREAM_ID_SEPARATOR, "retry", flowRetry.getEntityId());
+    /**
+     * 是否在执行重试任务
+     *
+     * @return 重试任务状态
+     */
+    public synchronized boolean isRetryRunning() {
+        return this.isRetryRunning;
+    }
+
+    private void retryByToBatch(FlowRetryInfo flowRetry) {
+        String lockKey = StringUtils.join(STREAM_ID_SEPARATOR, "retry", flowRetry.getFlowRetry().getEntityId());
         Lock lock = locks.getDistributedLock(lockKey);
         boolean isLockAcquired = lock.tryLock();
         if (!isLockAcquired) {
@@ -930,16 +1033,11 @@ public class FlowContextsService {
         }
     }
 
-    private void executeRetry(FlowRetry flowRetry) {
-        String toBatch = flowRetry.getEntityId();
-        List<FlowContext<FlowData>> contexts = repo.getByToBatch(toBatch);
-        if (contexts == null) {
-            retryRepo.delete(Collections.singletonList(toBatch));
-            LOG.error("[executeRetry] Retry failed: cannot find flow contexts for the toBatch {}", toBatch);
-            return;
-        }
+    private void executeRetry(FlowRetryInfo flowRetryInfo) {
+        String toBatch = flowRetryInfo.getFlowRetry().getEntityId();
+        List<FlowContext<String>> contexts = flowRetryInfo.getFlowContexts();
         List<String> traces = this.traceOwnerService.getTraces();
-        List<FlowContext<FlowData>> finalContexts = contexts.stream()
+        List<FlowContext<String>> finalContexts = contexts.stream()
                 .filter(context -> traces.stream().anyMatch(trace -> context.getTraceId().contains(trace)))
                 .collect(Collectors.toList());
         if (unNeedRetry(toBatch, finalContexts)) {
@@ -947,16 +1045,11 @@ public class FlowContextsService {
         }
 
         String streamId = finalContexts.get(0).getStreamId();
-        From<FlowData> from = ObjectUtils.cast(WaterFlows.getPublisher(streamId));
-        // 小的并发概率下没有获取到
-        if (from == null) {
-            flowDefinitionCheck(toBatch, streamId);
-            return;
-        }
         String position = finalContexts.get(0).getPosition();
-        To<FlowData, Object> to = from.getSubscriber(position);
+        To<FlowData, Object> to = flowRetryInfo.getTo();
+
         // 节点流量已经超出，则直接返回
-        if (to.getCurConcurrency() >= To.MAX_CONCURRENCY) {
+        if (to.isMaxConcurrency()) {
             return;
         }
         List<String> traceIds = finalContexts.stream()
@@ -966,15 +1059,9 @@ public class FlowContextsService {
         List<String> contextIds = finalContexts.stream().map(IdGenerator::getId).collect(Collectors.toList());
         LOG.info("Start retrying the jober, toBatch: {}, trace ids: {}, stream id: {}, context ids: {}, "
                 + "position: {}", toBatch, traceIds.toString(), streamId, contextIds.toString(), position);
-        updateRetryStatus(flowRetry, streamId, position, finalContexts, to);
-        FlowExecutors.getThreadPool(StringUtils.join(STREAM_ID_SEPARATOR, streamId, position), To.MAX_CONCURRENCY)
-                .submit(PriorityThreadPool.PriorityTask.builder()
-                        .priority(PriorityThreadPool.PriorityTask.PriorityInfo.builder()
-                                .order(WaterFlows.getNodeOrder(streamId, to.getId()))
-                                .createTime(System.currentTimeMillis())
-                                .build())
-                        .runner(() -> to.onProcess(finalContexts))
-                        .build());
+        List<FlowContext<FlowData>> retryContexts = updateRetryStatus(flowRetryInfo, streamId, position,
+                finalContexts, to);
+        to.getProcessMode().submit(to, retryContexts);
         LOG.info("Retry jober succeeded, toBatch: {}, trace ids: {}, stream id: {}, context ids: {}, " + "position: {}",
                 toBatch, traceIds.toString(), streamId, contextIds.toString(), position);
     }
@@ -988,8 +1075,8 @@ public class FlowContextsService {
         }
     }
 
-    private boolean unNeedRetry(String toBatch, List<FlowContext<FlowData>> finalContexts) {
-        if (finalContexts.stream().anyMatch(context -> FlowNodeStatus.isEndStatus(context.getStatus()))) {
+    private boolean unNeedRetry(String toBatch, List<FlowContext<String>> finalContexts) {
+        if (isFinishedContext(finalContexts)) {
             LOG.warn("[executeRetry] the batch is no need retry, toBatch={}.", toBatch);
             retryRepo.delete(Collections.singletonList(toBatch));
             return true;
@@ -1001,19 +1088,32 @@ public class FlowContextsService {
         return false;
     }
 
-    private void updateRetryStatus(FlowRetry flowRetry, String streamId, String position,
-            List<FlowContext<FlowData>> finalContexts, To<FlowData, Object> to) {
+    private boolean isFinishedContext(List<FlowContext<String>> contexts) {
+        return contexts.stream().anyMatch(context -> FlowNodeStatus.isEndStatus(context.getStatus()));
+    }
+
+    private List<FlowContext<FlowData>> updateRetryStatus(FlowRetryInfo flowRetryInfo, String streamId, String position,
+        List<FlowContext<String>> finalContexts, To<FlowData, Object> to) {
         Lock lock = locks.getDistributedLock(locks.streamNodeLockKey(streamId, position, PROCESS.toString()));
         lock.lock();
+        List<FlowContext<FlowData>> retryContext;
         try {
-            if (to.getCurConcurrency() >= To.MAX_CONCURRENCY) {
+            if (to.isMaxConcurrency()) {
                 throw new JobberException(FLOW_NODE_MAX_TASK, to.getId());
             }
+            String entityId = flowRetryInfo.getFlowRetry().getEntityId();
+            retryContext = repo.getByToBatch(Collections.singletonList(entityId));
+            if (retryContext.isEmpty()) {
+                retryRepo.delete(Collections.singletonList(entityId));
+                LOG.warn("not find retry context by batch id: {}.", entityId);
+                throw new JobberException(FLOW_RETRY_JOBER_UPDATE_DATABASE_FAILED, entityId);
+            }
+            updateDbForRetry(retryContext, position, flowRetryInfo.getFlowRetry());
             to.updateConcurrency(1);
-            updateDbForRetry(finalContexts, position, flowRetry);
         } finally {
             lock.unlock();
         }
+        return retryContext;
     }
 
     /**

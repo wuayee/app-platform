@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,7 +95,8 @@ public class FlowRetryMapperTest extends DatabaseBaseTest {
     @DisplayName("测试flow retry依据时间筛选重试记录成功")
     public void testFlowRetryFilterNextRetryTimeSuccess() {
         executeSqlInFile(sqlFile);
-        List<FlowRetryPO> flowRetryPOList = flowRetryMapper.filterByNextRetryTime(LocalDateTime.now());
+        List<String> retryList = new ArrayList<>();
+        List<FlowRetryPO> flowRetryPOList = flowRetryMapper.filterByNextRetryTime(LocalDateTime.now(), retryList);
         assertNotNull(flowRetryPOList);
         assertEquals(2, flowRetryPOList.size());
         assertEquals("1", flowRetryPOList.get(0).getEntityId());

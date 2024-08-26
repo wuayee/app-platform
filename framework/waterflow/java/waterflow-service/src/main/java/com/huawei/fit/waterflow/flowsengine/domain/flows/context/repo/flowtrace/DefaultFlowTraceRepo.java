@@ -82,8 +82,8 @@ public class DefaultFlowTraceRepo implements FlowTraceRepo {
     }
 
     @Override
-    public List<String> findRunningTrace() {
-        return flowTraceMapper.findRunningTrace();
+    public List<String> findRunningTrace(List<String> applications) {
+        return flowTraceMapper.findRunningTrace(applications);
     }
 
     @Override

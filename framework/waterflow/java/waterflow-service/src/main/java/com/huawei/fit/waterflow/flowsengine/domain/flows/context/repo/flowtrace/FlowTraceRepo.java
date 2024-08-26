@@ -86,9 +86,11 @@ public interface FlowTraceRepo {
     /**
      * findRunningTrace
      *
+     * @param applications 通过applications筛选
      * @return List<String>
      */
-    List<String> findRunningTrace();
+    List<String> findRunningTrace(List<String> applications);
+
 
     /**
      * 根据traceId删除trace
