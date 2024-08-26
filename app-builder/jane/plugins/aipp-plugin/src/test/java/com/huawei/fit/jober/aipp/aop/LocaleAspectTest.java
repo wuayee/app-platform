@@ -11,9 +11,9 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 import com.huawei.fit.jober.aipp.service.LocaleService;
-import com.huawei.fitframework.aop.ProceedingJoinPoint;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
+import modelengine.fitframework.aop.ProceedingJoinPoint;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

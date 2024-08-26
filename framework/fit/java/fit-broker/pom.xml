@@ -47,7 +47,7 @@
             <artifactId>fit-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
 

@@ -2,20 +2,20 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.service.support;
+package modelengine.fit.service.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.security.Decryptor;
-import com.huawei.fit.service.RegisterAuthService;
-import com.huawei.fit.service.TokenService;
-import com.huawei.fit.service.entity.ClientTokenInfo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.LockUtils;
+import modelengine.fit.security.Decryptor;
+import modelengine.fit.service.RegisterAuthService;
+import modelengine.fit.service.TokenService;
+import modelengine.fit.service.entity.ClientTokenInfo;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.LockUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;

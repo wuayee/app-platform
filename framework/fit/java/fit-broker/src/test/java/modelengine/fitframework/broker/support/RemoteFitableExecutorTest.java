@@ -2,23 +2,23 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.broker.support;
+package modelengine.fitframework.broker.support;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.service.RegisterAuthService;
-import com.huawei.fit.service.entity.ClientTokenInfo;
-import com.huawei.fit.service.entity.TokenInfo;
-import com.huawei.fitframework.broker.Format;
-import com.huawei.fitframework.conf.runtime.DefaultAvailableService;
-import com.huawei.fitframework.conf.runtime.DefaultMatata;
-import com.huawei.fitframework.conf.runtime.DefaultRegistry;
-import com.huawei.fitframework.conf.runtime.DefaultSecureAccess;
-import com.huawei.fitframework.conf.runtime.MatataConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.serialization.RequestMetadata;
+import modelengine.fit.service.RegisterAuthService;
+import modelengine.fit.service.entity.ClientTokenInfo;
+import modelengine.fit.service.entity.TokenInfo;
+import modelengine.fitframework.broker.Format;
+import modelengine.fitframework.conf.runtime.DefaultAvailableService;
+import modelengine.fitframework.conf.runtime.DefaultMatata;
+import modelengine.fitframework.conf.runtime.DefaultRegistry;
+import modelengine.fitframework.conf.runtime.DefaultSecureAccess;
+import modelengine.fitframework.conf.runtime.MatataConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.serialization.RequestMetadata;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

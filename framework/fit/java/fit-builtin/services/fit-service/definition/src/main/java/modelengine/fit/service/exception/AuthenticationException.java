@@ -2,10 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.service.exception;
+package modelengine.fit.service.exception;
 
-import com.huawei.fitframework.exception.ErrorCode;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.FitException;
 
 /**
  * 表示注册中心的异常。

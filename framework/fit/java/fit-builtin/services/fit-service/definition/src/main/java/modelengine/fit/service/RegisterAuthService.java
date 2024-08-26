@@ -2,9 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.service;
+package modelengine.fit.service;
 
-import com.huawei.fit.service.entity.ClientTokenInfo;
+import modelengine.fit.service.entity.ClientTokenInfo;
 
 import java.time.Instant;
 

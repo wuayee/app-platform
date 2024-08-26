@@ -2,10 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.service;
+package modelengine.fit.service;
 
-import com.huawei.fit.service.entity.TokenInfo;
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fit.service.entity.TokenInfo;
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 

@@ -2,19 +2,19 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.service.support;
+package modelengine.fit.service.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.service.RegisterAuthService;
-import com.huawei.fit.service.TokenService;
-import com.huawei.fit.service.entity.ClientTokenInfo;
-import com.huawei.fit.service.entity.TokenInfo;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.ioc.BeanContainer;
+import modelengine.fit.service.RegisterAuthService;
+import modelengine.fit.service.TokenService;
+import modelengine.fit.service.entity.ClientTokenInfo;
+import modelengine.fit.service.entity.TokenInfo;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.ioc.BeanContainer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

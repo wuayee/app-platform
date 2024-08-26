@@ -2,33 +2,33 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.client.http.async;
+package modelengine.fit.client.http.async;
 
-import static com.huawei.fit.http.header.HttpHeaderKey.FIT_CODE;
-import static com.huawei.fit.http.header.HttpHeaderKey.FIT_TLV;
+import static modelengine.fit.http.header.HttpHeaderKey.FIT_CODE;
+import static modelengine.fit.http.header.HttpHeaderKey.FIT_TLV;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.client.Address;
-import com.huawei.fit.client.Request;
-import com.huawei.fit.client.RequestContext;
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.protocol.Protocol;
-import com.huawei.fit.serialization.http.HttpUtils;
-import com.huawei.fitframework.broker.CommunicationType;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.conf.runtime.WorkerConfig;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.serialization.RequestMetadata;
-import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fit.client.Address;
+import modelengine.fit.client.Request;
+import modelengine.fit.client.RequestContext;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.protocol.Protocol;
+import modelengine.fit.serialization.http.HttpUtils;
+import modelengine.fitframework.broker.CommunicationType;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.conf.runtime.WorkerConfig;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.serialization.RequestMetadata;
+import modelengine.fitframework.serialization.TagLengthValues;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

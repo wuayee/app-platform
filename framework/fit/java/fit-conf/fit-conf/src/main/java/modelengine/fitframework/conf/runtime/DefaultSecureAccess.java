@@ -2,9 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.conf.runtime;
+package modelengine.fitframework.conf.runtime;
 
-import com.huawei.fitframework.conf.runtime.MatataConfig.Registry.SecureAccess;
+import modelengine.fitframework.conf.runtime.MatataConfig.Registry.SecureAccess;
 
 /**
  * 表示 {@link SecureAccess} 的默认实现。

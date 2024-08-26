@@ -2,20 +2,20 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.client.http.util;
+package modelengine.fit.client.http.util;
 
-import static com.huawei.fit.http.header.HttpHeaderKey.FIT_CODE;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fit.http.header.HttpHeaderKey.FIT_CODE;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.client.Address;
-import com.huawei.fit.client.Request;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
-import com.huawei.fit.http.protocol.Protocol;
+import modelengine.fit.client.Address;
+import modelengine.fit.client.Request;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
+import modelengine.fit.http.protocol.Protocol;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
