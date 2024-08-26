@@ -61,6 +61,9 @@ const jadeFlowAgent = (graph) => {
         return {
             // 刷新流程节点状态.
             refresh: (dataList) => {
+                if (!graph.activePage.isRunning) {
+                    return;
+                }
                 nodes.forEach(node => {
                     const data = dataList.find(d => d.nodeId === node.id);
                     if (data) {
