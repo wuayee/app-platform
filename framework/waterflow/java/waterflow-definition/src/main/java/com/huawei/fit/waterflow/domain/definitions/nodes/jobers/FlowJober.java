@@ -116,7 +116,7 @@ public abstract class FlowJober {
             String fitableString = Optional.ofNullable(fitables).map(Object::toString).orElse("");
             LOG.error("Catch throwable when remote invoke, fitables is {}. Caused by {}.", fitableString,
                     ex.getMessage());
-            LOG.error("Stack: ", ex);
+            LOG.debug("Stack: ", ex);
             throw new WaterflowException(FLOW_EXECUTE_FITABLE_TASK_FAILED, this.name, this.type.getCode(),
                     fitableString, ex.getMessage());
         } finally {

@@ -61,7 +61,8 @@ public class OkHttpClientBuilderFactory {
         try {
             setSslConfig(clientBuilder, config);
         } catch (GeneralSecurityException e) {
-            log.error("Failed to set https config.", e);
+            log.error("Failed to set https config.");
+            log.debug("Exception: ", e);
             throw new IllegalStateException("Failed to set https config.", e);
         }
         return clientBuilder;

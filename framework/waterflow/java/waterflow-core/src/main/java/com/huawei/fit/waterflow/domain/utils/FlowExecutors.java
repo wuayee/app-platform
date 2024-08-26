@@ -40,7 +40,7 @@ public final class FlowExecutors {
                 .exceptionHandler((thread, throwable) -> {
                     LOG.error("The node pool run failed, error cause: {}, message: {}.", throwable.getCause(),
                             throwable.getMessage());
-                    LOG.error("The node pool run failed details: ", throwable);
+                    LOG.debug("The node pool run failed details: ", throwable);
                 })
                 .rejectedExecutionHandler(new AbortPolicy())
                 .build();

@@ -329,9 +329,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             } catch (Exception ex) {
                 ready.forEach( // 如果是数据库或者redis挂了，会死循环，线程不退出等待数据库或者redis恢复
                         r -> LOG.error(
-                                "preprocess main loop exception stream-id: {}, node-id: {}, context-id: {}, errors: {}",
-                                this.streamId, this.id, r.getId(), ex));
-                LOG.error("preprocess main loop exception details: ", ex);
+                                "Preprocess main loop exception stream-id: {}, node-id: {}, context-id: {}.",
+                                this.streamId, this.id, r.getId()));
+                LOG.debug("Preprocess main loop exception details: ", ex);
             } finally {
                 SleepUtil.sleep(SLEEP_MILLS);
             }
@@ -478,9 +478,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             // 处理好数据后对外送数据，驱动其他flow响应
             afterList.forEach(context -> this.emit(context.getData(), context.getSession()));
         } catch (Exception ex) {
-            LOG.error("node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. errors: {}",
+            LOG.error("Node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}, errors: {}.",
                     this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(), ex.getMessage());
-            LOG.error("node process exception details: ", ex);
+            LOG.debug("Node process exception details: ", ex);
             Retryable<I> retryable = new Retryable<>(this.getFlowContextRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
             Optional.ofNullable(this.globalErrorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
@@ -779,9 +779,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 } catch (Exception ex) {
                     // 如果是数据库或者redis挂了，会死循环，线程不退出等待数据库或者redis恢复
                     ready.forEach(r -> LOG.error(
-                            "process main loop exception " + "stream-id: {}, node-id: {}, context-id: {}, errors: {}",
-                            to.streamId, to.id, r.getId(), ex));
-                    LOG.error("process main loop exception details: ", ex);
+                            "Process main loop exception, " + "stream-id: {}, node-id: {}, context-id: {}.",
+                            to.streamId, to.id, r.getId()));
+                    LOG.debug("Process main loop exception details: ", ex);
                 } finally {
                     if (!isSubmitted) {
                         concurrencyHolder.get().release();
