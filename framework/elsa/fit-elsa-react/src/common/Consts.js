@@ -68,3 +68,11 @@ export const OBSERVER_STATUS = {
     ENABLE: "enable",
     DISABLE: "disable"
 };
+
+export const EVALUATION_ALGORITHM_NODE_CONST = {
+    ALGORITHM: "algorithm",
+    UNIQUE_NAME: "uniqueName",
+    PASS_SCORE: "passScore",
+    IS_PASS: "isPass",
+    SCORE: "score"
+};

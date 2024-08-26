@@ -5,6 +5,7 @@ import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
 import {EvaluationInput} from "@/components/evaluation/evaluationAlgorithms/EvaluationInput.jsx";
 import PropTypes from "prop-types";
+import {EVALUATION_ALGORITHM_NODE_CONST} from "@/common/Consts.js";
 import httpUtil from "@/components/util/httpUtil.jsx";
 
 EvaluationAlgorithmsWrapper.propTypes = {
@@ -41,8 +42,11 @@ EvaluationAlgorithmsWrapper.propTypes = {
  */
 export default function EvaluationAlgorithmsWrapper({data, shapeStatus}) {
     const shape = useShapeContext();
-    const selectedAlgorithm = data && (data.algorithm.value.find(item => item.name === "uniqueName")?.value ?? '');
-    const score = data.score.value;
+    const selectedAlgorithm = data && (data.inputParams.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.ALGORITHM)
+        .value.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.UNIQUE_NAME)?.value ?? '');
+    const algorithmInput = data.inputParams.filter(item => item.name !== EVALUATION_ALGORITHM_NODE_CONST.PASS_SCORE && item.name !== EVALUATION_ALGORITHM_NODE_CONST.ALGORITHM);
+    const nodeOutput = data.outputParams[0].value.filter(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.IS_PASS || item.name === EVALUATION_ALGORITHM_NODE_CONST.SCORE);
+    const passScore = data.inputParams.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.PASS_SCORE).value;
     const config = getEvaluationAlgorithmsConfig(shape);
     const [algorithms, setAlgorithms] = useState([]);
 
@@ -67,20 +71,17 @@ export default function EvaluationAlgorithmsWrapper({data, shapeStatus}) {
      */
     const getDescription = () => {
         return <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-            <p>ActualInput: 实际输入</p>
-            <p>ExpectOutput:预期输出</p>
-            <p>ActualOutput:实际输出</p>
             <p>Score:算法评分</p>
             <p>IsPass:是否通过</p>
         </div>;
     };
 
     return (<>
-        <EvaluationInput inputData={data.inputParams} disabled={shapeStatus.disabled}/>
+        <EvaluationInput inputData={algorithmInput} shapeStatus={shapeStatus}/>
         <EvaluationAlgorithmsSelect disabled={shapeStatus.disabled}
                                     algorithms={algorithms}
                                     selectedAlgorithm={selectedAlgorithm}/>
-        <PassingScore disabled={shapeStatus.disabled} score={score}/>
-        <InvokeOutput outputData={data.outputParams} getDescription={getDescription}/>
+        <PassingScore disabled={shapeStatus.disabled} score={passScore}/>
+        <InvokeOutput outputData={nodeOutput} getDescription={getDescription}/>
     </>);
 }
