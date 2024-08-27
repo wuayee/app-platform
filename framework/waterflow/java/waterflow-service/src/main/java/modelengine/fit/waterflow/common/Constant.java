@@ -138,6 +138,11 @@ public final class Constant {
     public static final String INTERNAL_EXECUTE_INFO_KEY = "executeInfo";
 
     /**
+     * 存储系统参数的虚拟节点id
+     */
+    public static final String SYSTEM_PARAMETER_NODE_KEY = "_systemEnv";
+
+    /**
      * 提取用户输出数据需要忽略的key
      */
     public static final Set<String> BUSINESS_DATA_IGNORED_KEYS = new HashSet<>(
