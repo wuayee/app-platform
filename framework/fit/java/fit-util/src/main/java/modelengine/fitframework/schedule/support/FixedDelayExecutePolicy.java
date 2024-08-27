@@ -22,7 +22,8 @@ public class FixedDelayExecutePolicy extends AbstractExecutePolicy {
 
     public FixedDelayExecutePolicy(long delayMillis) {
         this.delayMillis =
-                Validation.greaterThan(delayMillis, 0, "The delay millis must be positive. [delayMillis={0}]", delayMillis);
+                Validation.greaterThan(delayMillis, 0,
+                        "The delay millis must be positive. [delayMillis={0}]", delayMillis);
     }
 
     @Override

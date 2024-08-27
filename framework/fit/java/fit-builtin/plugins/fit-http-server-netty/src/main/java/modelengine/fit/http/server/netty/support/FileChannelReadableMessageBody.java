@@ -7,7 +7,6 @@ package modelengine.fit.http.server.netty.support;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import io.netty.buffer.ByteBuf;
-import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.util.FileUtils;
@@ -21,7 +20,7 @@ import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * {@link ReadableMessageBody} 的 {@link FileChannel} 的实现。
+ * {@link modelengine.fit.http.protocol.ReadableMessageBody} 的 {@link FileChannel} 的实现。
  *
  * @author 季聿阶
  * @since 2023-09-30

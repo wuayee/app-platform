@@ -6,13 +6,11 @@ package modelengine.fit.http.protocol.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.http.protocol.ReadableMessageBody;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 表示 {@link ReadableMessageBody} 的从 {@link InputStream} 中读取消息体的实现。
+ * 表示 {@link modelengine.fit.http.protocol.ReadableMessageBody} 的从 {@link InputStream} 中读取消息体的实现。
  *
  * @author 季聿阶
  * @since 2022-07-14

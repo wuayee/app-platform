@@ -4,7 +4,6 @@
 
 package modelengine.fit.http.server.handler.support;
 
-import modelengine.fit.http.HttpClassicResponse;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.handler.PropertyValueMapper;
 import modelengine.fit.http.server.handler.PropertyValueMapperResolver;
@@ -13,7 +12,7 @@ import modelengine.fitframework.value.PropertyValue;
 import java.util.Optional;
 
 /**
- * 表示解析 {@link HttpClassicResponse} 对象参数的 {@link PropertyValueMapperResolver}。
+ * 表示解析 {@link modelengine.fit.http.HttpClassicResponse} 对象参数的 {@link PropertyValueMapperResolver}。
  *
  * @author 季聿阶
  * @since 2022-08-29

@@ -58,7 +58,9 @@ final class MavenCoordinateReader {
 
     private static boolean isPom(String name) {
         return StringUtils.startsWithIgnoreCase(name, ENTRY_PREFIX) && StringUtils.endsWithIgnoreCase(name,
-                MavenCoordinate.POM_FILE_NAME) && name.charAt(name.length() - MavenCoordinate.POM_FILE_NAME.length() - 1) == JarEntryLocation.ENTRY_PATH_SEPARATOR;
+                MavenCoordinate.POM_FILE_NAME)
+                && name.charAt(name.length() - MavenCoordinate.POM_FILE_NAME.length() - 1)
+                == JarEntryLocation.ENTRY_PATH_SEPARATOR;
     }
 
     static MavenCoordinate read(InputStream in) {

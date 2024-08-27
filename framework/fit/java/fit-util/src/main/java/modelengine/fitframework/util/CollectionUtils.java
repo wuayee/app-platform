@@ -7,7 +7,6 @@ package modelengine.fitframework.util;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.merge.Conflict;
-import modelengine.fitframework.merge.ConflictException;
 import modelengine.fitframework.merge.ConflictResolutionPolicy;
 import modelengine.fitframework.merge.ConflictResolver;
 import modelengine.fitframework.merge.ConflictResolverCollection;
@@ -473,7 +472,7 @@ public final class CollectionUtils {
      * @param defaultPolicy 表示指定的冲突解决策略的 {@link ConflictResolutionPolicy}。
      * @param <E> 表示列表中元素类型的 {@link E}。
      * @return 表示合并后的列表的 {@link List}{@code <}{@link E}{@code >}。
-     * @throws ConflictException 当合并过程中发生异常时。
+     * @throws modelengine.fitframework.merge.ConflictException 当合并过程中发生异常时。
      */
     public static <E> List<E> merge(List<E> first, List<E> second, ConflictResolutionPolicy defaultPolicy) {
         ConflictResolver<Object, List<E>, Conflict<Object>> defaultResolver = ConflictResolver.resolver(defaultPolicy);
@@ -490,7 +489,7 @@ public final class CollectionUtils {
      * @param conflictResolvers 表示指定的冲突处理器集合的 {@link ConflictResolverCollection}。
      * @param <E> 表示列表中元素类型的 {@link E}。
      * @return 表示合并后的列表的 {@link List}{@code <}{@link E}{@code >}。
-     * @throws ConflictException 当合并过程中发生异常时。
+     * @throws modelengine.fitframework.merge.ConflictException 当合并过程中发生异常时。
      */
     public static <E> List<E> merge(List<E> first, List<E> second, ConflictResolverCollection conflictResolvers) {
         ListMerger<E> listMerger = new DefaultListMerger<>(conflictResolvers);

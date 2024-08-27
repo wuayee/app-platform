@@ -46,7 +46,8 @@ public class WithinMatcherTest {
     @CsvSource({
             "within(modelengine.fitframework.aop.interceptor.aspect.test.TestService1)",
             "within(modelengine.fitframework.aop.interceptor..TestService1)",
-            "within(modelengine.fitframework.aop.interceptor..*)", "within(modelengine.fitframework.aop.*.aspect.test.*)",
+            "within(modelengine.fitframework.aop.interceptor..*)",
+            "within(modelengine.fitframework.aop.*.aspect.test.*)",
             "within(modelengine.fitframework.aop..aspect.test.*Service1)",
             "within(modelengine.fitframework.aop.interceptor.aspect.test.TestService*)"
     })
