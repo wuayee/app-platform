@@ -369,7 +369,7 @@
   "default": "默认",
   "knowledgeBaseInputPopover": "输入需要从知识库中匹配的关键信息",
   "reference": "引用",
-  "knowledgeBase": "知识库",
+  "knowledgeBase": "知识库列表",
   "knowledgeBasePopover": "<p>选择需要匹配的知识范围，</p>\n<p>仅从所选知识中调出信息</p>",
   "returnsTheMaximumValue": "返回最大值",
   "returnsTheMaximumValuePopover": "从知识返回到模型的最大段落数。数字越大，返回的内容越多",

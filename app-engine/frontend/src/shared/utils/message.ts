@@ -6,7 +6,8 @@ export const Message = ({ type, content }) => {
     fontSize: '12px',
     marginLeft: isNesting ? null : '-360px'
   }
-  switch(type) {
+  message.destroy();
+  switch (type) {
     case 'info':
       message.warning({
         content,

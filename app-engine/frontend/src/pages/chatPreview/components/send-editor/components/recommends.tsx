@@ -121,21 +121,13 @@ const Recommends = (props) => {
           })
         }
       </div>
-      <Tooltip
-        title={inspirationOpen ? t('collapse') : t('open')}
-        overlayInnerStyle={{ color: '#212121' }}
-        open={visible}
-        zIndex={100}
-        color='white'
+      <div className='list-right'
+        onClick={iconClick}
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
       >
-        <div className='list-right'
-          onClick={iconClick}
-          onMouseEnter={() => setVisible(true)}
-          onMouseLeave={() => setVisible(false)}
-        >
-          {inspirationOpen ? <PanleCloseIcon /> : <PanleIcon />}
-        </div>
-      </Tooltip>
+        {inspirationOpen ? <PanleCloseIcon /> : <PanleIcon />}
+      </div>
     </div>
   </>
 }

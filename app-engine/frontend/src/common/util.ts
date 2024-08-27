@@ -21,3 +21,22 @@ export function uuid(isLong) {
     return firstPart + secondPart;
   }
 };
+export const listFormate = (arr) => {
+  let map: any = {};
+  let res: any = [];
+  for (let i = 0; i < arr.length; i++) {
+    let ai = arr[i];
+    if (!map[ai.parentName]) {
+      map[ai.parentName] = [ai];
+    } else {
+      map[ai.parentName].push(ai);
+    }
+  }
+  Object.keys(map).forEach(key => {
+    res.push({
+      parentName: key,
+      data: map[key]
+    });
+  });
+  return res;
+}

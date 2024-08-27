@@ -5,7 +5,7 @@ import AppLayout from '@/components/layout/index';
 import zhCN from 'antd/lib/locale/zh_CN';
 import enUS from 'antd/lib/locale/en_US';
 import './locale/i18n';
-
+import 'antd/dist/antd.css';
 import '__styles/index.scss';
 import '__styles/common.scss';
 import '__styles/content.scss';
