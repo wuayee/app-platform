@@ -349,7 +349,14 @@ const Inspiration = (props) => {
             }
           </Form.Item>
         </div>
-        <Modal title={t('createInspiration')} open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='1000px'>
+        <Modal
+          title={t('createInspiration')}
+          open={showModal}
+          onOk={handleModalOK}
+          onCancel={handleModalCancel}
+          forceRender
+          maskClosable={false}
+          width='1000px'>
           <div className='inspiration-wrap'>
             <Form
               form={modalForm}
@@ -463,7 +470,14 @@ const Inspiration = (props) => {
             </Form>
           </div>
         </Modal>
-        <Modal title={t('categoryConfiguration')} destroyOnClose open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='1000px'>
+        <Modal
+          title={t('categoryConfiguration')}
+          destroyOnClose
+          open={showCateModal}
+          onOk={handleCateModalOK}
+          onCancel={handleCateModalCancel}
+          maskClosable={false}
+          width='1000px'>
           <TreeComponent tree={treeData}
             nodeList={nodeList}
             updateTreeData={updateTreeData}
