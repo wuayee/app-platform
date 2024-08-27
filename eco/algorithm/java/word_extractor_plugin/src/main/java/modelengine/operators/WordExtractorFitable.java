@@ -6,11 +6,11 @@
 
 package modelengine.operators;
 
-import com.huawei.fit.jober.FlowableService;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
+import modelengine.waterflow.spi.WaterflowTaskHandler;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
 
 import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
@@ -57,7 +57,7 @@ import javax.xml.transform.stream.StreamResult;
  * @since 2024-01-25
  */
 @Component
-public class WordExtractorFitable implements FlowableService {
+public class WordExtractorFitable implements WaterflowTaskHandler {
     /**
      * word抽取算子实现封装的 fitable
      */
