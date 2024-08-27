@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <mirrors>
+        <mirror>
+            <id>huaweicloud</id>
+            <mirrorOf>central</mirrorOf>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/maven-central-repo/</url>
+        </mirror>
+    </mirrors>
+
+    <profiles>
+        <profile>
+            <id>fit-snapshots</id>
+            <repositories>
+                <repository>
+                    <id>fit-snapshots</id>
+                    <url>
+                        https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/
+                    </url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>fit-snapshots</id>
+                    <url>
+                        https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/
+                    </url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
+            <id>fit-releases</id>
+            <repositories>
+                <repository>
+                    <id>fit-releases</id>
+                    <url>
+                        https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/
+                    </url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </releases>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>fit-releases</id>
+                    <url>
+                        https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/
+                    </url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>fit-snapshots</activeProfile>
+        <activeProfile>fit-releases</activeProfile>
+    </activeProfiles>
+</settings>

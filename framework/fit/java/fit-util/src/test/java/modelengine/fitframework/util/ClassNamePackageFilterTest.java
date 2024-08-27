@@ -25,9 +25,9 @@ public class ClassNamePackageFilterTest {
     @DisplayName("Test method: test(String className)")
     class TestTest {
         @Nested
-        @DisplayName("Given class name 'com.huawei.Demo'")
+        @DisplayName("Given class name 'modelengine.demo'")
         class GivenClassName {
-            private final String className = "com.huawei.Demo";
+            private final String className = "modelengine.demo";
 
             @Test
             @DisplayName("Given no packages then return true")
@@ -38,19 +38,19 @@ public class ClassNamePackageFilterTest {
             }
 
             @Test
-            @DisplayName("Given packages are ['com', 'com.huawei.'] then return true")
+            @DisplayName("Given packages are ['modelengine', 'modelengine.demo'] then return true")
             void given2ValidPackagesThenReturnTrue() {
                 Predicate<String> predicate = ClassNamePackageFilter.create(
-                        Stream.of("com", "com.huawei.").collect(Collectors.toList()));
+                        Stream.of("modelengine", "modelengine.demo").collect(Collectors.toList()));
                 boolean actual = predicate.test(this.className);
                 assertThat(actual).isTrue();
             }
 
             @Test
-            @DisplayName("Given packages are ['com.huawei.another'] then return false")
+            @DisplayName("Given packages are ['modelengine.another'] then return false")
             void givenInvalidPackagesThenReturnFalse() {
                 Predicate<String> predicate = ClassNamePackageFilter.create(
-                        Stream.of("com.huawei.another").collect(Collectors.toList()));
+                        Stream.of("modelengine.another").collect(Collectors.toList()));
                 boolean actual = predicate.test(this.className);
                 assertThat(actual).isFalse();
             }

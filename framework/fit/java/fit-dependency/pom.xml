@@ -50,12 +50,12 @@
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.starter</groupId>
+                <groupId>modelengine.fit.starter</groupId>
                 <artifactId>fit-plugins-starter-web</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.starter</groupId>
+                <groupId>modelengine.fit.starter</groupId>
                 <artifactId>fit-services-starter-web</artifactId>
                 <version>${fit.version}</version>
             </dependency>

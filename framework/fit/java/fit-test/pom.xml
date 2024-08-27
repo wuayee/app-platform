@@ -9,7 +9,7 @@
         <version>3.5.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.extension</groupId>
+    <groupId>modelengine.fit.extension</groupId>
     <artifactId>fit-test-parent</artifactId>
     <packaging>pom</packaging>
 
