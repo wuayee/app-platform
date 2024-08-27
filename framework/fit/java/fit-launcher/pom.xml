@@ -49,7 +49,7 @@
                             <mainClass>modelengine.fitframework.launch.DiscreteFitLauncher</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Created-By>FIT lab (Huawei)</Created-By>
+                            <Created-By>FIT Lab</Created-By>
                         </manifestEntries>
                     </archive>
                     <forceCreation>true</forceCreation>
