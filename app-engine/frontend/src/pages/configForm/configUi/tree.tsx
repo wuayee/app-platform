@@ -4,10 +4,11 @@ import { PlusOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined, Ellipsi
 import { uuid } from '@/common/util';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
+import { cloneDeep } from 'lodash';
 
 const TreeComponent = (props) => {
   const { t } = useTranslation();
-  const { setDisabled, category } = props;
+  const { setDisabled, category, tree, updateTreeData, nodeList } = props;
   const [treeData, setTreeData] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [expandedKeys, setExpandedKeys] = useState(['']);
@@ -39,8 +40,8 @@ const TreeComponent = (props) => {
   };
 
   useEffect(() => {
-    setTreeData(props.tree);
-  }, [props.tree]);
+    setTreeData(cloneDeep(tree));
+  }, [tree]);
 
   // 有节点在编辑中不能关闭弹框
   useEffect(() => {
@@ -86,7 +87,7 @@ const TreeComponent = (props) => {
         node.title = value;
         setEditingId(null);
         setTreeData([...treeData]);
-        props.updateTreeData([...treeData]);
+        updateTreeData([...treeData]);
       }
     }
 
@@ -153,7 +154,7 @@ const TreeComponent = (props) => {
         }
       }).filter(Boolean);
       setTreeData(newTreeData);
-      props.updateTreeData(newTreeData);
+      updateTreeData(newTreeData);
     };
 
     /**
@@ -177,7 +178,7 @@ const TreeComponent = (props) => {
     }
 
     const hasInspiration = (value) => {
-      return props.nodeList.includes(value);
+      return nodeList.includes(value);
     }
 
     const hasSelectedNode = (value) => {
@@ -185,7 +186,7 @@ const TreeComponent = (props) => {
         const arr = category.split(':');
         return value === arr[arr.length - 1];
       }
-      return false
+      return false;
     }
 
     const handleDoubleClick = () => {
@@ -266,7 +267,7 @@ const TreeComponent = (props) => {
     }
     setEditingId(id);
     setTreeData([...treeData, newTree]);
-    props.updateTreeData([...treeData, newTree]);
+    updateTreeData([...treeData, newTree]);
   };
 
   return (
