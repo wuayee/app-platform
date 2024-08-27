@@ -21,7 +21,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
         navigate(`/app-develop/${tenantId}/app-detail/add-flow/${res?.data?.id}`);
       }
     } else {
-      navigate(`/plugin/detail/${pluginData.uniqueName}`)
+      navigate(`/plugin/detail/${pluginData.pluginId}`)
     }
   }
   return (

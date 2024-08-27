@@ -65,7 +65,6 @@ const LLM = (props) => {
                   min={0}
                   max={1}
                   controls={true}
-                  changeOnWheel={true}
                   keyboard={true}
                   onChange={(value) => { updateData(value, 'temperature') }}
                   step={0.1}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
-import { Form, Collapse, theme, Switch } from 'antd';
+import { Form, Collapse, Switch } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { debounce } from '@/shared/utils/common';
+import { debounce } from '@shared/utils/common';
 import LLM from './components/llm';
 import Skill from './components/skill';
 import Knowledge from './components/knowledge';
@@ -12,6 +12,7 @@ import { setHistorySwitch } from '@/store/common/common';
 import { MultiConversationContent } from '@fit-elsa/elsa-react';
 import { useTranslation } from 'react-i18next';
 import './index.scoped.scss';
+const { Panel } = Collapse;
 
 function ConfigUI(props) {
   const { t } = useTranslation();
@@ -23,8 +24,6 @@ function ConfigUI(props) {
   const [pluginValue, setPluginValue] = useState([]);
   const [knowledge, setKnowledge] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
-  const { token } = theme.useToken();
-  const renderRef = useRef(false);
   const dispatch = useAppDispatch();
   const historySwitch = useAppSelector((state) => state.commonStore.historySwitch);
   const panelStyle = {
@@ -87,7 +86,7 @@ function ConfigUI(props) {
           <Switch
             className='conversation-switch'
             onChange={(checked, event) => historySwitchChange(checked, event)}
-            value={memoryValues.memorySwitch ? memoryValues.memorySwitch : false}
+            checked={memoryValues.memorySwitch ? memoryValues.memorySwitch : false}
           />
         </div>
       ),
@@ -211,22 +210,28 @@ function ConfigUI(props) {
               <Collapse
                 bordered={false}
                 defaultActiveKey={['1', '2', '3']}
-                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                style={{
-                  background: token.colorBgContainer,
-                }}
-                items={getItems(panelStyle)}
-              />
+                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+                {
+                  getItems(panelStyle).map(item =>
+                    <Panel header={item.label} key={item.key} style={item.style}>
+                      {item.children}
+                    </Panel>)
+                }
+
+              </Collapse>
             ) : (
               <Collapse
                 bordered={false}
                 defaultActiveKey={['4', '5', '6']}
                 expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                style={{
-                  background: token.colorBgContainer,
-                }}
-                items={getItems2(panelStyle)}
-              />
+                items={getItems2(panelStyle)}>
+                {
+                  getItems2(panelStyle).map(item =>
+                    <Panel header={item.label} key={item.key} style={item.style}>
+                      {item.children}
+                    </Panel>)
+                }
+              </Collapse>
             )
         }
       </Form>
