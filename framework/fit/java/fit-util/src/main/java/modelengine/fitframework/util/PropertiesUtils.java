@@ -138,7 +138,8 @@ public class PropertiesUtils {
             SortedMap<String, Object> result) {
         PropertyKey propertyKey = keys.get(index);
         List<SortedMap<String, Object>> currentValues =
-                ObjectUtils.cast(result.computeIfAbsent(propertyKey.getActualKey(), key -> new ArrayList<Map<String, Object>>()));
+                ObjectUtils.cast(result.computeIfAbsent(propertyKey.getActualKey(),
+                        key -> new ArrayList<Map<String, Object>>()));
         if (propertyKey.getArrayIndex() >= currentValues.size()) {
             int gap = propertyKey.getArrayIndex() - currentValues.size() + 1;
             IntStream.range(0, gap).forEach(times -> currentValues.add(new TreeMap<>()));
@@ -160,7 +161,8 @@ public class PropertiesUtils {
     private static void mapFromObjectValue(PropertyKeys keys, int index, String value,
             SortedMap<String, Object> result) {
         SortedMap<String, Object> currentValue =
-                ObjectUtils.cast(result.computeIfAbsent(keys.get(index).getActualKey(), key -> new TreeMap<String, Object>()));
+                ObjectUtils.cast(result.computeIfAbsent(keys.get(index).getActualKey(),
+                        key -> new TreeMap<String, Object>()));
         mapFromPropertyKeys(keys, index + 1, value, currentValue);
     }
 

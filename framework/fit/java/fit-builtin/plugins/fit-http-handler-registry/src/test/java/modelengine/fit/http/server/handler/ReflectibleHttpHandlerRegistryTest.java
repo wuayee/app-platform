@@ -159,7 +159,8 @@ public class ReflectibleHttpHandlerRegistryTest {
             BeanFactory beanFactoryMethodName = mock(BeanFactory.class);
             when(this.container().factory(HttpMethodNameResolverSupplier.class)).thenReturn(Optional.of(
                     beanFactoryMethodName));
-            HttpMethodNameResolverSupplier httpMethodNameResolverSupplier = Mockito.mock(HttpMethodNameResolverSupplier.class);
+            HttpMethodNameResolverSupplier httpMethodNameResolverSupplier =
+                    Mockito.mock(HttpMethodNameResolverSupplier.class);
             when(beanFactoryMethodName.get()).thenReturn(httpMethodNameResolverSupplier);
             HttpMethodNameResolver httpMethodNameResolver = Mockito.mock(HttpMethodNameResolver.class);
             when(httpMethodNameResolverSupplier.get(ReflectibleHttpHandlerRegistryTest.this.container)).thenReturn(

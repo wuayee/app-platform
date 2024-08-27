@@ -7,7 +7,6 @@
 package modelengine.fit.http.server.netty.support;
 
 import io.netty.buffer.ByteBuf;
-import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 import modelengine.fitframework.inspection.Nonnull;
 
@@ -17,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * {@link ReadableMessageBody} 的 {@link ByteBuf} 的实现。
+ * {@link modelengine.fit.http.protocol.ReadableMessageBody} 的 {@link ByteBuf} 的实现。
  *
  * @author 季聿阶
  * @since 2022-07-14

@@ -9,14 +9,13 @@ package modelengine.fit.http.server.netty.support;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
-import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.server.netty.NettyReadableMessageBody;
 import modelengine.fitframework.inspection.Nonnull;
 
 import java.io.IOException;
 
 /**
- * {@link ReadableMessageBody} 的 {@link CompositeByteBuf} 的实现。
+ * {@link modelengine.fit.http.protocol.ReadableMessageBody} 的 {@link CompositeByteBuf} 的实现。
  *
  * @author 王成
  * @since 2024-02-17

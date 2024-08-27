@@ -44,16 +44,19 @@ public final class AggregatedFitLauncher {
     public static final String FIT_ROOT_ENTRY_NAME = "FIT-INF" + JarEntryLocation.ENTRY_PATH_SEPARATOR;
 
     /** 表示类文件的目录的入口名。 */
-    public static final String CLASS_DIRECTORY_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "classes" + JarEntryLocation.ENTRY_PATH_SEPARATOR;
+    public static final String CLASS_DIRECTORY_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "classes"
+            + JarEntryLocation.ENTRY_PATH_SEPARATOR;
 
     /** 表示标准库的目录的入口名。 */
     public static final String LIB_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "lib" + JarEntryLocation.ENTRY_PATH_SEPARATOR;
 
     /** 表示三方库的目录的入口名。 */
-    public static final String THIRD_PARTY_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "third-party" + JarEntryLocation.ENTRY_PATH_SEPARATOR;
+    public static final String THIRD_PARTY_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "third-party"
+            + JarEntryLocation.ENTRY_PATH_SEPARATOR;
 
     /** 表示共享库的目录的入口名。 */
-    public static final String SHARED_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "shared" + JarEntryLocation.ENTRY_PATH_SEPARATOR;
+    public static final String SHARED_ENTRY_NAME = FIT_ROOT_ENTRY_NAME + "shared"
+            + JarEntryLocation.ENTRY_PATH_SEPARATOR;
 
     /** 表示 FIT 的入口类的键。 */
     public static final String MANIFEST_ENTRY_CLASS_KEY = "FIT-Entry-Class";

@@ -33,9 +33,11 @@ public class SystemMethodInterpreters {
             = new HashMap<>();
 
     static {
-        METHODS.put(Constants.ARRAY_SIZE, (args, env, current) -> new ReturnValue(current, TypeExprFactory.createNumber(null),
+        METHODS.put(Constants.ARRAY_SIZE, (args, env, current) ->
+                new ReturnValue(current, TypeExprFactory.createNumber(null),
                 (ObjectUtils.<List>cast(current.getThis().value())).size()));
-        METHODS.put(Constants.ARRAY_REMOVE, (args, env, current) -> new ReturnValue(current, TypeExprFactory.createGeneric(null),
+        METHODS.put(Constants.ARRAY_REMOVE, (args, env, current) ->
+                new ReturnValue(current, TypeExprFactory.createGeneric(null),
                 (ObjectUtils.<List>cast(current.getThis().value())).remove((int) args.get(0).value())));
         METHODS.put(Constants.ARRAY_INSERT, (args, env, current) -> {
             (ObjectUtils.<List>cast(current.getThis().value())).add(ObjectUtils.cast(args.get(0).value()), args.get(1));

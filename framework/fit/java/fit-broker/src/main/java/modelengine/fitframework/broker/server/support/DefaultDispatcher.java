@@ -8,10 +8,13 @@ package modelengine.fitframework.broker.server.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
+import modelengine.fitframework.annotation.Scope;
 import modelengine.fitframework.broker.LocalExecutor;
 import modelengine.fitframework.broker.LocalExecutorFactory;
 import modelengine.fitframework.broker.UniqueFitableId;
 import modelengine.fitframework.broker.server.Dispatcher;
+import modelengine.fitframework.broker.server.GenericableServerFilterChain;
+import modelengine.fitframework.broker.server.GenericableServerFilterManager;
 import modelengine.fitframework.broker.server.Response;
 import modelengine.fitframework.broker.server.ServerLocalExecutorNotFoundException;
 import modelengine.fitframework.conf.runtime.WorkerConfig;
@@ -20,6 +23,7 @@ import modelengine.fitframework.exception.MethodInvocationException;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.serialization.RequestMetadata;
 import modelengine.fitframework.serialization.ResponseMetadata;
 import modelengine.fitframework.serialization.TagLengthValues;
@@ -30,6 +34,7 @@ import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 表示 {@link Dispatcher} 的默认实现。
@@ -42,25 +47,32 @@ public class DefaultDispatcher implements Dispatcher {
 
     private final WorkerConfig workerConfig;
     private final LazyLoader<LocalExecutorFactory> localExecutorFactoryLoader;
+    private final GenericableServerFilterManager genericableServerFilterManager;
 
     /**
      * 通过 Bean 容器和当前进程配置来初始化 {@link DefaultDispatcher} 的新实例。
      *
      * @param container 表示 Bean 容器的 {@link BeanContainer}。
      * @param workerConfig 表示当前进程配置的 {@link WorkerConfig}。
+     * @param genericableServerFilterManager 表示过滤器管理的 {@link GenericableServerFilterManager}。
      */
-    public DefaultDispatcher(BeanContainer container, WorkerConfig workerConfig) {
-        notNull(container, "The bean container cannot be null.");
+    public DefaultDispatcher(BeanContainer container, WorkerConfig workerConfig,
+            GenericableServerFilterManager genericableServerFilterManager) {
         this.workerConfig = notNull(workerConfig, "The worker config cannot be null.");
         this.localExecutorFactoryLoader = new LazyLoader<>(() -> container.factory(LocalExecutorFactory.class)
                 .map(BeanFactory::<LocalExecutorFactory>get)
                 .orElseThrow(() -> new IllegalStateException("No local executor factory.")));
+        this.genericableServerFilterManager =
+                notNull(genericableServerFilterManager, "The genericable server filter manager cannot be null.");
     }
 
     @Override
     public Response dispatch(RequestMetadata metadata, Object[] data) {
         try {
             LocalExecutor executor = this.getLocalExecutor(metadata);
+            GenericableServerFilterChain chain = this.getGenericableServerFilterChain(metadata.genericableId(),
+                    executor.metadata().container().plugin());
+            chain.doFilter(data);
             Object response = executor.execute(data);
             log.debug("Execute fitable successfully. [genericableId={}, fitableId={}]",
                     metadata.genericableId(),
@@ -132,5 +144,13 @@ public class DefaultDispatcher implements Dispatcher {
 
     private static byte valueFormat(int format) {
         return (byte) (format & 0xFF);
+    }
+
+    private GenericableServerFilterChain getGenericableServerFilterChain(String genericableId, Plugin plugin) {
+        return new DefaultGenericableServerFilterChain(genericableId,
+                this.genericableServerFilterManager.get()
+                        .stream()
+                        .filter(filter -> filter.scope() == Scope.GLOBAL || filter.plugin().equals(plugin))
+                        .collect(Collectors.toList()));
     }
 }

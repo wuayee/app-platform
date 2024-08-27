@@ -7,12 +7,11 @@
 package modelengine.fit.client.http.async;
 
 import modelengine.fit.client.Response;
-import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.exception.AsyncTaskExecutionException;
 import modelengine.fitframework.serialization.ResponseMetadata;
 
 /**
- * FIT 异步任务执行结果，封装 {@link HttpClassicClientResponse} 和 {@link ResponseMetadata}。
+ * FIT 异步任务执行结果，封装 {@link modelengine.fit.http.client.HttpClassicClientResponse} 和 {@link ResponseMetadata}。
  * <p>任务执行完毕后，长轮询线程会读取 HTTP 头部并进行解析，而消息体的读取会在客户端调用线程处完成。</p>
  *
  * @author 王成

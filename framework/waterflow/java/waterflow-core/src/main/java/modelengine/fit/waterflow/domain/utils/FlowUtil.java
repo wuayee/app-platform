@@ -101,7 +101,8 @@ public final class FlowUtil {
     private static String replaceFormattedVariable(String conditionRule, Matcher matcher) {
         String formatVariable = matcher.group(0);
         String originalVariable = matcher.group(1);
-        if (!originalVariable.startsWith(Constant.BUSINESS_DATA_KEY) || !originalVariable.startsWith(Constant.PASS_DATA)) {
+        if (!originalVariable.startsWith(Constant.BUSINESS_DATA_KEY)
+                || !originalVariable.startsWith(Constant.PASS_DATA)) {
             originalVariable = Constant.BUSINESS_DATA_KEY + "." + originalVariable;
         }
         return conditionRule.replace(formatVariable, originalVariable);
