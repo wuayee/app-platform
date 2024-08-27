@@ -20,7 +20,9 @@ import modelengine.fitframework.broker.client.support.DefaultInvokerFactory;
 import modelengine.fitframework.broker.client.support.DefaultRouterFactory;
 import modelengine.fitframework.broker.serialization.DefaultSerializationService;
 import modelengine.fitframework.broker.server.Dispatcher;
+import modelengine.fitframework.broker.server.GenericableServerFilterManager;
 import modelengine.fitframework.broker.server.support.DefaultDispatcher;
+import modelengine.fitframework.broker.server.support.DefaultGenericableServerFilterManager;
 import modelengine.fitframework.broker.support.DefaultDynamicRouter;
 import modelengine.fitframework.broker.support.DefaultFitExceptionCreator;
 import modelengine.fitframework.broker.support.DefaultFitableFactory;
@@ -72,6 +74,7 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
     private static final String MATATA_CONFIG_BEAN_NAME = "matataConfig";
     private static final String WORKER_CONFIG_BEAN_NAME = "workerConfig";
     private static final String APPLICATION_CONFIG = "applicationConfig";
+    private static final String GENERICABLE_FILTER_MANAGER_NAME = "genericableServerFilterManager";
 
     private MatataConfig matata;
     private WorkerConfig worker;
@@ -140,7 +143,9 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
         this.container().registry().register(routerFactory, ROUTER_FACTORY_BEAN_NAME);
         BrokerClient brokerClient = new DefaultBrokerClient(routerFactory);
         this.container().registry().register(brokerClient, BROKER_CLIENT_BEAN_NAME);
-        Dispatcher dispatcher = new DefaultDispatcher(this.container(), this.worker);
+        GenericableServerFilterManager genericableServerFilterManager = new DefaultGenericableServerFilterManager();
+        this.container().registry().register(genericableServerFilterManager, GENERICABLE_FILTER_MANAGER_NAME);
+        Dispatcher dispatcher = new DefaultDispatcher(this.container(), this.worker, genericableServerFilterManager);
         this.container().registry().register(dispatcher, DISPATCHER_BEAN_NAME);
     }
 

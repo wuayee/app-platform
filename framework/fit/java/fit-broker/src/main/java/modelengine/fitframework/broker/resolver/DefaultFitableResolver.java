@@ -68,7 +68,8 @@ public class DefaultFitableResolver implements LocalExecutorResolver {
     private static String getGenericableId(Method method, Genericable annotation) {
         return StringUtils.isNotBlank(annotation.id())
                 ? annotation.id()
-                : GenericableUtils.getGenericableId(method.getDeclaringClass(), method.getName(),
+                : GenericableUtils.getGenericableId(method.getDeclaringClass(),
+                        method.getName(),
                         method.getParameterTypes());
     }
 
