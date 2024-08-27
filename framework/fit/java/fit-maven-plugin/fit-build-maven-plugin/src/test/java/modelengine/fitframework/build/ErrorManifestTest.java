@@ -35,7 +35,7 @@ class ErrorManifestTest {
         Document actualDocument;
         Document expectedDocument;
         ErrorManifest file =
-                new ErrorManifest(MapBuilder.<String, Integer>get().put("com.huawei.SampleException", 1).build());
+                new ErrorManifest(MapBuilder.<String, Integer>get().put("modelengine.SampleException", 1).build());
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             file.write(out);
             try (ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray())) {

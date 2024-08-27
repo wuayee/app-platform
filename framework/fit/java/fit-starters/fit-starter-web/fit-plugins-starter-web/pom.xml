@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.starter</groupId>
+        <groupId>modelengine.fit.starter</groupId>
         <artifactId>fit-starter-web</artifactId>
         <version>3.5.0-SNAPSHOT</version>
     </parent>

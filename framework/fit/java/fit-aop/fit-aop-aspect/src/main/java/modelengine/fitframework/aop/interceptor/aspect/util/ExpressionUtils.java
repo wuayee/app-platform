@@ -106,8 +106,8 @@ public class ExpressionUtils {
 
     /**
      * 根据字符串获取相应的类型。
-     * <p>支持 8 种基本类型，void，java.lang包下类型，多维数组，自定义类型</p>
-     * <p>例：int, void, String, int[], com.huawei.aop.AopInterceptor</p>
+     * <p>支持 8 种基本类型，void，java.lang 包下类型，多维数组，自定义类型。</p>
+     * <p>例：int, void, String, int[], {@link modelengine.fitframework.aop.AopInterceptor}。</p>
      *
      * @param content 表示待解析的字符串，自定义类需写全路径的 {@link String}。
      * @param classLoader 表示类加载器的 {@link ClassLoader}。

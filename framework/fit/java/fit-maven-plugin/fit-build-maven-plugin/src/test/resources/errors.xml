@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <errors>
-    <error class="com.huawei.SampleException" code="1"/>
+    <error class="modelengine.SampleException" code="1"/>
 </errors>
