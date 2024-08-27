@@ -475,7 +475,7 @@ export default function IfForm({
                     </Col>
                     <Col span={6}>
                         <Form.Item>
-                            <span className="jade-font-size jade-font-color">条件</span>
+                            <span className="jade-font-size jade-font-color">{t('condition')}</span>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
