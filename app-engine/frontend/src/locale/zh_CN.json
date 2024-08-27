@@ -476,5 +476,9 @@
   "automaticDesc2": "选择不自动执行，灵感大全的提示词会默认填充在对话框，支持修改，由用户自己发送给助手",
   "promptTextarea": "你可以使用{{变量名}}添加变量",
   "invalidTip": "开启后可在界面中作为预置指令库允许快捷操作。建议创建一级分类即可。",
-  "selectPlugin": "选择插件"
+  "selectPlugin": "选择插件",
+  "huggingFace": "HuggingFace",
+  "official": "官方",
+  "langChain": "LangChain",
+  "llamaIndex": "LlamaIndex"
 }
