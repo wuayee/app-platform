@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@fit-elsa/elsa-core": "^0.1.22-alpha.36",
-    "@fit-elsa/elsa-react": "1.0.1-alpha.0",
+    "@fit-elsa/elsa-react": "1.0.1-alpha.1",
     "@reduxjs/toolkit": "^2.2.0",
     "antd": "4.24.13",
     "axios": "1.6.7",
