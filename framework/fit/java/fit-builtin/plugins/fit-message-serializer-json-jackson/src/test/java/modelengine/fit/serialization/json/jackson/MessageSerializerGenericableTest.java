@@ -7,7 +7,6 @@ package modelengine.fit.serialization.json.jackson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import modelengine.fit.serialization.MessageSerializer;
 import modelengine.fit.serialization.MessageSerializerTest;
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.conf.support.PropertiesConfig;
@@ -26,7 +25,7 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 /**
- * {@link MessageSerializer} 的 {@link JacksonMessageSerializer} 实现的基本测试用例。
+ * {@link modelengine.fit.serialization.MessageSerializer} 的 {@link JacksonMessageSerializer} 实现的基本测试用例。
  *
  * @author 季聿阶
  * @since 2022-09-10

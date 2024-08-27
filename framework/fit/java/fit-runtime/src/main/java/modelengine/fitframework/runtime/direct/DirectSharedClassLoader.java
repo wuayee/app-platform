@@ -100,7 +100,8 @@ final class DirectSharedClassLoader extends URLClassLoader {
 
     private static boolean isFrameworkShared(ClassPath classPath) {
         ResourceTree.FileNode
-                node = ObjectUtils.as(classPath.resources().nodeAt("FIT-INF/metadata.xml"), ResourceTree.FileNode.class);
+                node = ObjectUtils.as(classPath.resources().nodeAt("FIT-INF/metadata.xml"),
+                ResourceTree.FileNode.class);
         if (node == null) {
             return false;
         }

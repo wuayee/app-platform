@@ -31,7 +31,8 @@ public class ReschedulableExecution implements ExecutePolicy.Execution {
      * @throws IllegalArgumentException 当 {@code lastScheduledTime} 为 {@code null} 时。
      */
     void updateScheduledTime(Instant lastScheduledTime) {
-        Validation.isTrue(this.status == ExecutePolicy.ExecutionStatus.SCHEDULING || this.status == ExecutePolicy.ExecutionStatus.EXECUTED,
+        Validation.isTrue(this.status == ExecutePolicy.ExecutionStatus.SCHEDULING
+                        || this.status == ExecutePolicy.ExecutionStatus.EXECUTED,
                 "Failed to update scheduled time: The execution status is incorrect. [status={0}]",
                 this.status);
         this.lastScheduledTime = Validation.notNull(lastScheduledTime, "The last scheduled time cannot be null.");

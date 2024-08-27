@@ -66,7 +66,8 @@ public abstract class AbstractSolo<T> implements Solo<T> {
     @Override
     public void subscribe(Consumer<Subscription> onSubscribedAction, BiConsumer<Subscription, T> consumeAction,
             Consumer<Subscription> completeAction, BiConsumer<Subscription, Exception> failAction) {
-        this.subscribe(Subscriber.functional(ObjectUtils.nullIf(onSubscribedAction, FunctionalSubscriber.DEFAULT_ON_SUBSCRIBED_SOLO_ACTION),
+        this.subscribe(Subscriber.functional(
+                ObjectUtils.nullIf(onSubscribedAction, FunctionalSubscriber.DEFAULT_ON_SUBSCRIBED_SOLO_ACTION),
                 ObjectUtils.nullIf(consumeAction, ObjectUtils.cast(FunctionalSubscriber.EMPTY_CONSUME_ACTION)),
                 ObjectUtils.nullIf(completeAction, FunctionalSubscriber.EMPTY_COMPLETE_ACTION),
                 ObjectUtils.nullIf(failAction, FunctionalSubscriber.EMPTY_FAIL_ACTION)));

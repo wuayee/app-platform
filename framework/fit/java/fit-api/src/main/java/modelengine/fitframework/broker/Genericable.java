@@ -4,8 +4,6 @@
 
 package modelengine.fitframework.broker;
 
-import modelengine.fitframework.broker.client.FitableNotFoundException;
-
 import java.util.List;
 
 /**
@@ -29,7 +27,7 @@ public interface Genericable extends GenericableMetadata {
      * @param fitableId 表示指定实现的唯一标识的 {@link String}。
      * @param fitableVersion 表示服务实现的版本号的 {@link String}。
      * @return 表示服务的指定实现的 {@link Fitable}。
-     * @throws FitableNotFoundException 当找不到指定实现时。
+     * @throws modelengine.fitframework.broker.client.FitableNotFoundException 当找不到指定实现时。
      */
     Fitable fitable(String fitableId, String fitableVersion);
 
