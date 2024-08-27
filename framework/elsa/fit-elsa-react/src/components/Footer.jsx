@@ -5,13 +5,26 @@ import LlamaIndexIcon from "./asserts/icon-llamaindex.svg?react";
 import LangChainIcon from "./asserts/icon-langchain.svg?react";
 import {Button} from "antd";
 import {SOURCE_PLATFORM} from "@/common/Consts.js";
+import {useTranslation} from "react-i18next";
 
 // 使用对象字面量来创建图标映射
-const iconMap = {
-    [SOURCE_PLATFORM.OFFICIAL]: <OfficialIcon className="jade-node-footer-icon" style={{height: "20px", width: "50px"}}/>,
-    [SOURCE_PLATFORM.HUGGING_FACE]: <HuggingFaceIcon className="jade-node-footer-icon" style={{height: "20px", width: "100px"}}/>,
-    [SOURCE_PLATFORM.LLAMA_INDEX]: <LlamaIndexIcon className="jade-node-footer-icon" style={{height: "20px", width: "100px"}}/>,
-    [SOURCE_PLATFORM.LANG_CHAIN]: <LangChainIcon className="jade-node-footer-icon" style={{height: "20px", width: "100px"}}/>,
+const footerMap = {
+    [SOURCE_PLATFORM.OFFICIAL]: {
+        icon: <OfficialIcon className="jade-node-footer-icon" style={{height: "20px", width: "20px"}}/>,
+        text: 'official'
+    },
+    [SOURCE_PLATFORM.HUGGING_FACE]: {
+        icon: <HuggingFaceIcon className="jade-node-footer-icon" style={{height: "20px", width: "20px"}}/>,
+        text: 'huggingFace'
+    },
+    [SOURCE_PLATFORM.LLAMA_INDEX]: {
+        icon: <LlamaIndexIcon className="jade-node-footer-icon" style={{height: "16.4px", width: "16.4px"}}/>,
+        text: 'llamaIndex'
+    },
+    [SOURCE_PLATFORM.LANG_CHAIN]: {
+        icon: <LangChainIcon className="jade-node-footer-icon" style={{height: "20px", width: "36px"}}/>,
+        text: 'langChain'
+    },
 };
 
 /**
@@ -21,8 +34,20 @@ const iconMap = {
  * @return {JSX.Element}
  */
 export const Footer = ({shape}) => {
+    const {t} = useTranslation();
+
     const getSourceIcon = (sourcePlatform) => {
-        return iconMap[sourcePlatform] || iconMap[SOURCE_PLATFORM.OFFICIAL];
+        return footerMap[sourcePlatform]?.icon ?? footerMap[SOURCE_PLATFORM.OFFICIAL].icon;
+    };
+
+    /**
+     * 获取footer文本
+     *
+     * @param sourcePlatform 平台
+     * @return {*} 文本
+     */
+    const getFooterText = (sourcePlatform) => {
+        return t(footerMap[sourcePlatform]?.text ?? footerMap[SOURCE_PLATFORM.OFFICIAL].text);
     };
 
     return (<>
@@ -31,6 +56,7 @@ export const Footer = ({shape}) => {
                 <Button disabled={true} className="jade-node-footer-button">
                     {getSourceIcon(shape.sourcePlatform)}
                 </Button>
+                <div className={'jade-footer-text'}>{getFooterText(shape.sourcePlatform)}</div>
             </div>
         </div>
     </>);
