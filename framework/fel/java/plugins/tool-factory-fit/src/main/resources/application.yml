@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.fel.tool.support'
+    - 'modelengine.fel.tool.support'

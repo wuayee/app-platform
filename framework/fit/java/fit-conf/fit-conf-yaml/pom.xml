@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fitframework</groupId>
+        <groupId>modelengine.fitframework</groupId>
         <artifactId>fit-conf-parent</artifactId>
         <version>3.5.0-SNAPSHOT</version>
     </parent>
@@ -19,11 +19,11 @@
     <dependencies>
         <!-- FIT core -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-conf</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
 
@@ -55,7 +55,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -81,7 +81,7 @@
                         <configuration>
                             <outputDirectory>../../target/third-party/</outputDirectory>
                             <includeScope>runtime</includeScope>
-                            <excludeGroupIds>com.huawei.fitframework</excludeGroupIds>
+                            <excludeGroupIds>modelengine.fitframework</excludeGroupIds>
                         </configuration>
                     </execution>
                 </executions>

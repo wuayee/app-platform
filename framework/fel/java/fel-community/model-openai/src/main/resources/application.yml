@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.fel.community.model.openai'
+    - 'modelengine.fel.community.model.openai'

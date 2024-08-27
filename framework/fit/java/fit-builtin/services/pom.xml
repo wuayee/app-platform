@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.builtin</groupId>
+        <groupId>modelengine.fit.builtin</groupId>
         <artifactId>fit-builtin-parent</artifactId>
         <version>3.5.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.service</groupId>
+    <groupId>modelengine.fit.service</groupId>
     <artifactId>fit-service-parent</artifactId>
     <packaging>pom</packaging>
 
@@ -18,13 +18,15 @@
         <module>fit-http-classic</module>
         <module>fit-http-protocol</module>
         <module>fit-message-serializer</module>
+        <module>fit-security</module>
         <module>fit-server</module>
+        <module>fit-service</module>
     </modules>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -37,7 +39,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

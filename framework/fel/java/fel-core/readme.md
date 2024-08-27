@@ -11,10 +11,10 @@ FEL基于Mustache语法，允许开发者将运行时变量绑定到提示模板
 + 键值对是常用的构造模板输入的方式：
 
 ```java
-import com.huawei.jade.fel.core.chat.ChatMessage;
-import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
-import com.huawei.jade.fel.core.template.MessageTemplate;
-import com.huawei.jade.fel.core.util.Tip;
+import modelengine.fel.core.chat.ChatMessage;
+import modelengine.fel.core.template.support.HumanMessageTemplate;
+import modelengine.fel.core.template.MessageTemplate;
+import modelengine.fel.core.util.Tip;
 
 public class DemoApplication {
     public static void main(String[] args) {
@@ -28,10 +28,10 @@ public class DemoApplication {
 + 使用Tip.fromArray可以省略key，相应的需要在模板中用数组下标代替健值。
 
 ```java
-import com.huawei.jade.fel.core.chat.ChatMessage;
-import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
-import com.huawei.jade.fel.core.template.MessageTemplate;
-import com.huawei.jade.fel.core.util.Tip;
+import modelengine.fel.core.chat.ChatMessage;
+import modelengine.fel.core.template.support.HumanMessageTemplate;
+import modelengine.fel.core.template.MessageTemplate;
+import modelengine.fel.core.util.Tip;
 
 public class DemoApplication {
     public static void main(String[] args) {
@@ -47,10 +47,10 @@ public class DemoApplication {
 请注意，输入键值对必须包含所有在模板中使用的占位符，以下代码将无法工作:
 
 ```java
-import com.huawei.jade.fel.core.chat.ChatMessage;
-import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
-import com.huawei.jade.fel.core.template.MessageTemplate;
-import com.huawei.jade.fel.core.util.Tip;
+import modelengine.fel.core.chat.ChatMessage;
+import modelengine.fel.core.template.support.HumanMessageTemplate;
+import modelengine.fel.core.template.MessageTemplate;
+import modelengine.fel.core.util.Tip;
 
 public class DemoApplication {
     public static void main(String[] args) {

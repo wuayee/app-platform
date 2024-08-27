@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fitframework.conf.ConfigLoadException;
-import com.huawei.fitframework.conf.ConfigLoadingResult;
-import com.huawei.fitframework.conf.YamlConfigLoader;
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.conf.ConfigLoadException;
+import modelengine.fitframework.conf.ConfigLoadingResult;
+import modelengine.fitframework.conf.YamlConfigLoader;
+import modelengine.fitframework.resource.Resource;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

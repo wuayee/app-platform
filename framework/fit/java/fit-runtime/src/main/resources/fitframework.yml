@@ -40,9 +40,50 @@ matata:
       fitable-version: '1.0.0'
       formats:
       - 1
+    # 向注册中心申请令牌的接口
+    - genericable-name: 'com.huawei.fit.registry.TokenService.applyToken'
+      genericable-id: 'matata.registry.secure-access.apply-token'
+      genericable-version: '1.0.0'
+      fitable-id: 'apply_token'
+      fitable-version: '1.0.0'
+      formats:
+      - 1
+    # 向注册中心刷新令牌的接口
+    - genericable-name: 'com.huawei.fit.registry.TokenService.refreshToken'
+      genericable-id: 'matata.registry.secure-access.refresh-token'
+      genericable-version: '1.0.0'
+      fitable-id: 'refresh_token_for_registry_server'
+      fitable-version: '1.0.0'
+      formats:
+      - 1
+    auth-required-services: # 将注册中心和心跳相关的服务进行配置，表示其需要认证鉴权
+    # 订阅服务并获取所订阅服务地址的接口
+    - genericable-name: 'com.huawei.fit.registry.RegistryService.subscribeFitables'
+      genericable-id: 'c9aa580f3fa845c99c2c6145a0499e45'
+    # 直接获取服务地址的接口
+    - genericable-name: 'com.huawei.fit.registry.RegistryService.queryFitablesAddresses'
+      genericable-id: '33be4142494e4742aa122555a451d996'
+    # 查询注册中心正在运行的服务实现信息的接口
+    - genericable-name: 'com.huawei.fit.registry.RegistryService.queryRunningFitables'
+      genericable-id: '7c52fb4fdfa243af928f23607fbbee02'
+    # 向注册中心服务端注册服务实现列表
+    - genericable-name: 'com.huawei.fit.registry.RegistryService.registerFitables'
+      genericable-id: '85bdce64cf724589b87cb6b6a950999d'
+    # 向注册中心服务端取消注册服务实现列表
+    - genericable-name: 'com.huawei.fit.registry.RegistryService.unregisterFitables'
+      genericable-id: 'c02af9dafb5b4a609f8c586a8e884710'
+    # 向注册中心服务端取消订阅指定服务实现的实例信息
+    - genericable-name: 'com.huawei.fit.registry.RegistryService.unsubscribeFitables'
+      genericable-id: '087994fc907b4f76b9f9b2a62e07ef2c'
+    # 发送心跳信息
+    - genericable-name: 'com.huawei.fit.heartbeat.sendHeartbeat'
+      genericable-id: 'e12fd1c57fd84f50a673d93d13074082'
+    # 发送停止心跳信息
+    - genericable-name: 'com.huawei.fit.heartbeat.stopHeartbeat'
+      genericable-id: '67e6370725df427ebab9a6a6f1ada60c'
 
 fit:
   beans:
     packages:
-    - 'com.huawei.fitframework'
-    - 'com.huawei.fit'
+    - 'modelengine.fitframework'
+    - 'modelengine.fit'

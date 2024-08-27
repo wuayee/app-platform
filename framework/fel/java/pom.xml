@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huawei.fit.jade</groupId>
+    <groupId>modelengine.fit.jade</groupId>
     <artifactId>jade-fel-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -57,56 +57,56 @@
         <dependencies>
             <!-- FIT -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-api</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-protocol</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-maven-plugin-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- WaterFlow -->
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-core</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-bridge-fit-reactor</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
 
             <!-- FEL -->
             <dependency>
-                <groupId>com.huawei.fit.jade.fel</groupId>
+                <groupId>modelengine.fit.jade.fel</groupId>
                 <artifactId>fel-core</artifactId>
                 <version>${fel.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.jade.fel.service</groupId>
+                <groupId>modelengine.fit.jade.fel.service</groupId>
                 <artifactId>tool-service</artifactId>
                 <version>${fel.version}</version>
             </dependency>
@@ -125,7 +125,7 @@
 
             <!-- Test -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-test-framework</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>
@@ -199,7 +199,7 @@
                 <version>${maven.surefire.version}</version>
             </plugin>
             <plugin>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
