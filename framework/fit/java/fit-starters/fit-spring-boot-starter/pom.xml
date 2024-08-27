@@ -48,13 +48,5 @@
             <artifactId>fit-conf-yaml</artifactId>
             <version>${fit.version}</version>
         </dependency>
-
-        <!-- Plugin -->
-        <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
-            <artifactId>fit-dynamic-plugin-directory</artifactId>
-            <version>${fit.version}</version>
-            <scope>runtime</scope>
-        </dependency>
     </dependencies>
 </project>
