@@ -8,7 +8,9 @@ package modelengine.fit.waterflow.domain.states;
 
 import modelengine.fit.waterflow.domain.enums.SpecialDisplayNode;
 import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.stream.nodes.To;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 
 /**
  * 代表了条件分支的when
@@ -66,8 +68,12 @@ public class MatchToHappen<D, I, F extends Flow<D>> {
      * @return conditions后续的节点
      */
     public <O> State<O, D, ?, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
-        State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
-        }, null).displayAs(SpecialDisplayNode.OTHERS.name()), this.conditions.node.getFlow());
+        Processor<I, I> node = this.conditions.node.publisher().just(any -> {
+        }, null).displayAs(SpecialDisplayNode.OTHERS.name());
+        if (node instanceof To) {
+            ((To<?, ?>) node).setMatch(true);
+        }
+        State<I, D, I, F> branchStart = new State<>(node, this.conditions.node.getFlow());
         return processor.process(branchStart);
     }
 

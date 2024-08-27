@@ -11,6 +11,7 @@ import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.stream.nodes.BlockToken;
@@ -20,10 +21,13 @@ import modelengine.fit.waterflow.domain.stream.reactive.Callback;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
+import modelengine.fit.waterflow.domain.utils.FlowDebug;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +42,6 @@ import java.util.stream.Collectors;
  * @param <F> 表示对应的是处理流，还是生产流，用于泛型推演的 {@link F}。
  * @since 1.0
  */
-
 public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
         implements EmitterListener<O, FlowSession>, Emitter<O, FlowSession> {
     /**
@@ -180,6 +183,19 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @return 表示流程实例的 {@link F}。
      */
     public F close(Operators.Just<Callback<FlowContext<O>>> callback, Operators.ErrorHandler<Object> errHandler) {
+        return this.close(callback, null, errHandler);
+    }
+
+    /**
+     * close 流程，也就是加终止节点，提供session维度的数据消费
+     *
+     * @param callback 走到end节点的session的id和数据
+     * @param sessionComplete 走到end节点的session的系统通知
+     * @param errHandler 走到end节点的session的错误通知
+     * @return F 流程实例
+     */
+    public F close(Operators.Just<Callback<FlowContext<O>>> callback, Operators.Just<FlowSession> sessionComplete,
+            Operators.ErrorHandler<Object> errHandler) {
         getFlow().setEnd(this.processor.close());
         List<Publisher> nodes = this.getFlow()
                 .nodes()
@@ -188,12 +204,56 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
                 .collect(Collectors.toList());
         nodes.add(this.getFlow().start());
         nodes.stream().filter(node -> !node.subscribed()).forEach(node -> node.subscribe(getFlow().end()));
-        getFlow().end().onComplete(callback);
+        getFlow().end().onComplete((Operators.Just<Callback<FlowContext<O>>>) input -> {
+            FlowDebug.log(input.get().getSession(),
+                    "========================end data begin===========================");
+            FlowDebug.log(input.get().getSession(),
+                    getFlow().end().getId() + ":" + "end. data:" + input.get().getData());
+            FlowDebug.log(input.get().getSession(),
+                    "========================end data end===========================");
+            callback.process(input);
+        });
+        if (sessionComplete != null) {
+            getFlow().end().onSessionComplete(session -> {
+                FlowSession session1 = ObjectUtils.cast(session);
+                FlowDebug.log(session1, "========================end session begin===========================");
+                FlowDebug.log(session1, getFlow().end().getId() + ":" + "end. session:" + session1.getId());
+                FlowDebug.log(session1, getFlow().end().getId() + ":" + "end. bound session:" + session1.getInnerState(
+                        FlowBoundedEmitter.BOUNDED_SESSION_ID));
+                FlowDebug.log(session1,
+                        getFlow().end().getId() + ":" + "end. is bounded complete:" + session1.getInnerState(
+                                FlowBoundedEmitter.IS_BOUNDED_COMPLETE));
+                FlowDebug.log(session1,
+                        getFlow().end().getId() + ":" + "end. is session complete:" + session1.getInnerState(
+                                Publisher.IS_SESSION_COMPLETE));
+                FlowDebug.log(session1,
+                        getFlow().end().getId() + ":" + "end. is session error:" + session1.getInnerState(
+                                FlowBoundedEmitter.IS_BOUNDED_ERROR));
+                FlowDebug.log(session1, "========================end session end===========================");
+                sessionComplete.process(session1);
+            });
+        }
         this.getFlow()
                 .nodes()
                 .forEach(node -> node.onGlobalError(this.buildGlobalHandler(errHandler, node.getFlowContextRepo())));
         getFlow().end().onGlobalError(this.buildGlobalHandler(errHandler, getFlow().end().getFlowContextRepo()));
         return this.getFlow();
+    }
+
+    /**
+     * close 流程，也就是加终止节点，提供session维度的数据消费
+     *
+     * @param sessionConsumer 走到end节点的session的id和数据
+     * @param sessionComplete 走到end节点的session的系统通知
+     * @param sessionError 走到end节点的session的错误通知
+     * @return F 流程实例
+     */
+    public F close(BiConsumer<FlowSession, O> sessionConsumer, Consumer<FlowSession> sessionComplete,
+            BiConsumer<FlowSession, Throwable> sessionError) {
+        return this.close(processor -> sessionConsumer.accept(processor.get().getSession(), processor.get().getData()),
+                sessionComplete::accept,
+                (exception, retryable, flowContexts) -> sessionError.accept(flowContexts.get(0).getSession(),
+                        exception));
     }
 
     private Operators.ErrorHandler<Object> buildGlobalHandler(Operators.ErrorHandler<Object> errHandler,

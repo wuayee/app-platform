@@ -7,7 +7,9 @@
 package modelengine.fit.waterflow.domain.context;
 
 import lombok.Getter;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.utils.Tuple;
 
@@ -26,6 +28,9 @@ import java.util.UUID;
 public class WindowToken<I> {
     private final String id;
 
+    @Getter
+    private final Operators.Window window;
+
     private Publisher processor;
 
     private Map<Object, Tuple<FlowSession, Object>> accs = new HashMap<>();
@@ -34,9 +39,6 @@ public class WindowToken<I> {
 
     private List<I> origins = new ArrayList<>();
 
-    @Getter
-    private final Operators.Window window;
-
     public WindowToken(Operators.Window<I> window) {
         this.window = window;
         this.id = UUID.randomUUID().toString();
@@ -44,15 +46,37 @@ public class WindowToken<I> {
 
     /**
      * 判定window是否条件满足，满足则执行window的聚合
+     *
+     * @return 是否触发成功
      */
-    public synchronized void fire() {
+    public synchronized boolean fire() {
         // 如果还有未处理的数据，不能触发累积节点数据流转
         if (this.todo.size() > 0 || !this.fulfilled()) {
-            return;
+            return false;
         }
 
         accs.values().forEach(acc -> processor.offer(acc.second(), acc.first()));
         accs.clear();
+        return true;
+    }
+
+    /**
+     * 判定window是否条件满足，满足则执行window的聚合，判定window是否条件满足，满足则执行window的聚合直接通过系统完成消息触发
+     *
+     * @param processor 触发的节点
+     * @return 是否触发成功
+     */
+    public synchronized boolean fireComplete(Processor processor) {
+        if (this.processor != processor) {
+            return false;
+        }
+        accs.values().forEach(acc -> {
+            FlowSession session = new FlowSession(acc.first());
+            session.clearInnerState(FlowBoundedEmitter.BOUNDED_SESSION_ID);
+            processor.offer(acc.second(), session);
+        });
+        accs.clear();
+        return true;
     }
 
     /**
@@ -83,6 +107,9 @@ public class WindowToken<I> {
      * @return 是否到达
      */
     public boolean fulfilled() {
+        if (this.window == null) {
+            return false;
+        }
         return this.window.fulfilled(this.origins);
     }
 

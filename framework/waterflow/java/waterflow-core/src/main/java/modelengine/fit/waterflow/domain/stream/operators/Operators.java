@@ -165,6 +165,21 @@ public final class Operators {
     }
 
     /**
+     * 包含系统事件的处理，权限较高
+     *
+     * @param <T> 需要加工的原材料类型
+     */
+    @FunctionalInterface
+    public interface SystemProcessor<T> {
+        /**
+         * process
+         *
+         * @param input input
+         */
+        void process(FlowContext<T> input);
+    }
+
+    /**
      * window接口，提供window结束的判定
      *
      * @param <T> window中的数据类型

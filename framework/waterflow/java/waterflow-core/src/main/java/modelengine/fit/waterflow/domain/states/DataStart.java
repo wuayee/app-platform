@@ -8,7 +8,7 @@ package modelengine.fit.waterflow.domain.states;
 
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
-import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.utils.Tuple;
@@ -26,23 +26,23 @@ import java.util.function.Supplier;
  */
 public class DataStart<O, D, I> {
     /**
-     * 数据前置开始节点。
-     */
-    protected DataStart<?, D, ?> start;
-
-    /**
      * 流程开始节点。
      */
     protected final Start<O, D, I, ProcessFlow<D>> state;
 
+    /**
+     * 数据前置开始节点。
+     */
+    protected DataStart<?, D, ?> start;
+
     private final Emitter<D, FlowSession> emitter;
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, D data) {
-        this(state, FlowEmitter.mono(data));
+        this(state, FlowBoundedEmitter.mono(data));
     }
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, D[] data) {
-        this(state, FlowEmitter.flux(data));
+        this(state, FlowBoundedEmitter.flux(data));
     }
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, Emitter<D, FlowSession> emitter) {
@@ -61,7 +61,7 @@ public class DataStart<O, D, I> {
     protected void offer() {
         if (this.emitter != null) {
             this.start.state.getFlow().offer(this.emitter);
-            this.emitter.start(null);
+            this.emitter.start(new FlowSession());
         }
     }
 
@@ -76,6 +76,17 @@ public class DataStart<O, D, I> {
      */
     public DataState<O, D, O> just(Operators.Just<O> processor) {
         return new DataState(this.state.just(processor), this.start);
+    }
+
+    /**
+     * system节点，可处理系统事件，并给出context
+     *
+     * @param processor 事件消费
+     * @return 新的处理节点
+     */
+    public DataState<O, D, O> system(Operators.SystemProcessor<O> processor) {
+        State<O, D, O, ProcessFlow<D>> context = this.state.system(processor);
+        return new DataState(context, this.start);
     }
 
     /**

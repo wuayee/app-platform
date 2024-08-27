@@ -8,15 +8,9 @@ package modelengine.fit.waterflow.domain.stream.nodes;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_NODE_CREATE_ERROR;
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_NODE_MAX_TASK;
-import static modelengine.fit.waterflow.domain.enums.FlowNodeStatus.ARCHIVED;
-import static modelengine.fit.waterflow.domain.enums.FlowNodeStatus.NEW;
-import static modelengine.fit.waterflow.domain.enums.FlowNodeStatus.PENDING;
-import static modelengine.fit.waterflow.domain.enums.FlowNodeStatus.READY;
-import static modelengine.fit.waterflow.domain.enums.ParallelMode.EITHER;
-import static modelengine.fit.waterflow.domain.enums.ProcessType.PRE_PROCESS;
-import static modelengine.fit.waterflow.domain.enums.ProcessType.PROCESS;
 
 import lombok.Getter;
+import lombok.Setter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fit.waterflow.domain.context.FlowContext;
@@ -26,13 +20,21 @@ import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMess
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
+import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
+import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.enums.ProcessType;
 import modelengine.fit.waterflow.domain.stream.callbacks.ToCallback;
+import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
+import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Callback;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
+import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscription;
+import modelengine.fit.waterflow.domain.utils.FlowDebug;
 import modelengine.fit.waterflow.domain.utils.FlowExecutors;
 import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fit.waterflow.domain.utils.Identity;
@@ -53,6 +55,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -139,6 +143,27 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 .collect(Collectors.toList());
     };
 
+    /**
+     * 对于系统节点，将透出系统事件
+     */
+    @Getter
+    @Setter
+    private boolean isSystem = false;
+
+    @Getter
+    @Setter
+    private boolean isDataStart = false;
+
+    @Getter
+    @Setter
+    private boolean isJoin = false;
+
+    private Map<String, AtomicInteger> dataStartCount = new ConcurrentHashMap<>(0);
+
+    @Getter
+    @Setter
+    private boolean isMatch = false;
+
     @Getter
     private ProcessMode processMode;
 
@@ -176,6 +201,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     private Operators.Just<Callback<FlowContext<O>>> callback = any -> {
     };
 
+    private Operators.Just<FlowSession> sessionCompleteCallback = any -> {
+    };
+
     private Operators.ErrorHandler<I> errorHandler = null;
 
     private Operators.ErrorHandler globalErrorHandler = null;
@@ -187,6 +215,10 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     private Thread preProcessT = null;
 
     private Set<EmitterListener> listeners = new HashSet<>();
+
+    @Getter
+    @Setter
+    private FlowConfig flowConfig;
 
     /**
      * 1->1处理节点
@@ -218,8 +250,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * @param locks 流程锁
      * @param nodeType 节点类型
      */
-    public To(String streamId, String nodeId, Operators.Map<FlowContext<I>, O> processor,
-            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
+    public To(String streamId, String nodeId, Operators.Map<FlowContext<I>, O> processor, FlowContextRepo repo,
+            FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
         this(streamId, processor, repo, messenger, locks);
         Optional.ofNullable(nodeId).ifPresent(id -> To.this.id = id);
         this.nodeType = nodeType;
@@ -236,8 +268,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * @param locks 流程锁
      * @param nodeType 节点类型
      */
-    public To(String streamId, String nodeId, Operators.Produce<FlowContext<I>, O> processor,
-            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
+    public To(String streamId, String nodeId, Operators.Produce<FlowContext<I>, O> processor, FlowContextRepo repo,
+            FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
         this(streamId, repo, messenger, locks);
         if (!Optional.ofNullable(processor).isPresent()) {
             throw new WaterflowException(FLOW_NODE_CREATE_ERROR);
@@ -256,6 +288,58 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         this.locks = locks;
     }
 
+    private static boolean isSessionThreadMode(To to) {
+        return Optional.ofNullable(to.getFlowConfig())
+                .map(FlowConfig::getThreadMode)
+                .map(ThreadMode.SESSION::equals)
+                .orElse(false);
+    }
+
+    private static boolean isBoundedCompleteContext(FlowSession session) {
+        return Optional.ofNullable(session)
+                .flatMap(s -> Optional.ofNullable(s.getInnerState(FlowBoundedEmitter.IS_BOUNDED_COMPLETE)))
+                .map(ObjectUtils::<Boolean>cast)
+                .orElse(false);
+    }
+
+    private static boolean isSessionCompleteContext(FlowSession session) {
+        return Optional.ofNullable(session)
+                .flatMap(s -> Optional.ofNullable(s.getInnerState(Publisher.IS_SESSION_COMPLETE)))
+                .map(ObjectUtils::<Boolean>cast)
+                .orElse(false);
+    }
+
+    /**
+     * 增加开始数据计数
+     *
+     * @param sessionId 会话ID
+     * @return 增加后的数据开始计数
+     */
+    public int increaseDataStartCount(String sessionId) {
+        this.dataStartCount.putIfAbsent(sessionId, new AtomicInteger(0));
+        return this.dataStartCount.get(sessionId).incrementAndGet();
+    }
+
+    /**
+     * 减少dataStartCount
+     *
+     * @param sessionId 会话ID
+     * @return 减少后的dataStartCount
+     */
+    public int decreaseDataStartCount(String sessionId) {
+        this.dataStartCount.putIfAbsent(sessionId, new AtomicInteger(0));
+        return this.dataStartCount.get(sessionId).decrementAndGet();
+    }
+
+    /**
+     * 清除指定sessionId的数据开始计数
+     *
+     * @param sessionId 会话ID
+     */
+    public void clearDataStartCount(String sessionId) {
+        this.dataStartCount.remove(sessionId);
+    }
+
     /**
      * 节点接收外部处理事件入口，接收到事件后开始启动执行节点的contexts
      *
@@ -267,15 +351,15 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         if (CollectionUtils.isEmpty(contexts)) {
             return;
         }
-        if (type == PRE_PROCESS && inParallelMode(contexts)) {
+        if (type == ProcessType.PRE_PROCESS && inParallelMode(contexts)) {
             this.preProcess();
             return;
         }
-        if (type == PROCESS && inParallelMode(contexts)) {
-            this.process();
+        if (type == ProcessType.PROCESS && inParallelMode(contexts)) {
+            this.process(contexts);
             return;
         }
-        if (type == PRE_PROCESS && (preProcessT == null || !preProcessRunning)) {
+        if (type == ProcessType.PRE_PROCESS && (preProcessT == null || !preProcessRunning)) {
             preProcessRunning = true;
             String threadName = getThreadName(PRE_PROCESS_T_NAME_PREFIX);
             preProcessT = new Thread(this::preProcess, threadName);
@@ -285,15 +369,21 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             LOG.debug("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
         }
-        if (type == PROCESS && (processT == null || !processRunning)) {
-            processRunning = true;
-            String threadName = getThreadName(PROCESS_T_NAME_PREFIX);
-            processT = new Thread(this::process, threadName);
-            processT.setUncaughtExceptionHandler(
-                    (thread, error) -> LOG.error("run processT error, message:{}", error.getMessage()));
-            processT.start();
-            LOG.debug("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
-                    this.id);
+        if (type == ProcessType.PROCESS) {
+            if (isSessionThreadMode(this)) {
+                this.process(contexts);
+                return;
+            }
+            if (processT == null || !processRunning) {
+                processRunning = true;
+                String threadName = getThreadName(PROCESS_T_NAME_PREFIX);
+                processT = new Thread(() -> process(contexts), threadName);
+                processT.setUncaughtExceptionHandler(
+                        (thread, error) -> LOG.error("run processT error, message:{}", error.getMessage()));
+                processT.start();
+                LOG.debug("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
+                        this.id);
+            }
         }
     }
 
@@ -339,20 +429,21 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         }
     }
 
-    private void process() {
-        this.getProcessMode().request(this);
+    private void process(List<FlowContext<I>> contexts) {
+        this.getProcessMode().request(this, contexts);
     }
 
     private void handlePreProcessConcurrentConflict() {
         List<FlowContext<I>> concurrentConflictContexts = this.preFilter()
                 .process(flowContextRepo.getContextsByPosition(this.streamId,
-                        this.froms.stream().map(Identity::getId).collect(Collectors.toList()), PENDING.toString()));
+                        this.froms.stream().map(Identity::getId).collect(Collectors.toList()),
+                        FlowNodeStatus.PENDING.toString()));
         if (CollectionUtils.isEmpty(concurrentConflictContexts) || inParallelMode(concurrentConflictContexts)) {
             return;
         }
         LOG.info("[{}] preprocess thread conflict happens for stream-id: {}, node-id: {}",
                 this.getThreadName(PRE_PROCESS_T_NAME_PREFIX), this.streamId, this.id);
-        this.accept(PRE_PROCESS, concurrentConflictContexts);
+        this.accept(ProcessType.PRE_PROCESS, concurrentConflictContexts);
     }
 
     /**
@@ -370,7 +461,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         try {
             List<FlowContext<I>> contexts = this.preFilter()
                     .process(flowContextRepo.getContextsByPosition(this.streamId,
-                            this.froms.stream().map(Identity::getId).collect(Collectors.toList()), PENDING.toString()));
+                            this.froms.stream().map(Identity::getId).collect(Collectors.toList()),
+                            FlowNodeStatus.PENDING.toString()));
             contexts = filterTerminate(contexts);
             if (CollectionUtils.isEmpty(contexts)) {
                 return new ArrayList<>();
@@ -466,14 +558,16 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             if (CollectionUtils.isEmpty(preList)) {
                 return;
             }
-            if (preList.size() == 1 && preList.get(0).getData() == null) {
+            if (preList.size() == 1 && preList.get(0).getData() == null && !Publisher.isSystemContext(
+                    preList.get(0).getSession())) {
                 this.afterProcess(preList, new ArrayList<>());
                 return;
             }
             List<FlowContext<O>> afterList = this.getProcessMode().process(this, preList);
             this.afterProcess(preList, afterList);
             if (CollectionUtils.isNotEmpty(afterList)) {
-                feedback(afterList); // 查找一个transaction里的所有数据的都完成了，运行callback给stream外反馈数据
+                // 查找一个transaction里的所有数据的都完成了，运行callback给stream外反馈数据
+                feedback(afterList);
                 this.onNext(afterList.get(0).getBatchId());
             }
             // 处理好数据后对外送数据，驱动其他flow响应
@@ -485,6 +579,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             Retryable<I> retryable = new Retryable<>(this.getFlowContextRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
             Optional.ofNullable(this.globalErrorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
+            preList.get(0).getSession().setError();
         } finally {
             updateConcurrency(preList, -1);
         }
@@ -519,7 +614,18 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     }
 
     private void feedback(List<FlowContext<O>> contexts) {
-        this.callback.process(new ToCallback<>(contexts));
+        List<FlowContext<O>> userContexts = contexts.stream()
+                .filter(context -> !Publisher.isSystemContext(context.getSession()))
+                .collect(Collectors.toList());
+        if (!userContexts.isEmpty()) {
+            this.callback.process(new ToCallback<>(userContexts));
+        }
+        if (this.sessionCompleteCallback != null) {
+            contexts.stream()
+                    .map(FlowContext::getSession)
+                    .filter(To::isSessionCompleteContext)
+                    .forEach(session -> this.sessionCompleteCallback.process(session));
+        }
     }
 
     private synchronized void updateConcurrency(List<FlowContext<I>> ready, int distance) {
@@ -574,7 +680,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         Set<String> traces = new HashSet<>();
         preList.forEach(contest -> {
             traces.addAll(contest.getTraceId());
-            contest.setStatus(ARCHIVED);
+            contest.setStatus(FlowNodeStatus.ARCHIVED);
         });
         afterList.forEach(context -> context.getTraceId().addAll(traces));
 
@@ -616,14 +722,19 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     }
 
     @Override
+    public void onSessionComplete(Operators.Just<FlowSession> sessionCompleteCallback) {
+        this.sessionCompleteCallback = sessionCompleteCallback;
+    }
+
+    @Override
     public Boolean isAuto() {
         return this.isAuto;
     }
 
     @Override
     public List<FlowContext<O>> nextContexts(String batchId) {
-        return ObjectUtils.cast(
-                this.flowContextRepo.getContextsByPosition(this.streamId, this.getId(), batchId, NEW.toString()));
+        return ObjectUtils.cast(this.flowContextRepo.getContextsByPosition(this.streamId, this.getId(), batchId,
+                FlowNodeStatus.NEW.toString()));
     }
 
     @Override
@@ -646,11 +757,11 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     private <T1> void introduceToProcess(List<FlowContext<T1>> contexts) {
         // parallelMode.EITHER模式下，如果有完成的context，则本context处理退出
         contexts.stream()
-                .filter(context -> !context.getParallelMode().equals(EITHER.name()) || context.isJoined()
+                .filter(context -> !context.getParallelMode().equals(ParallelMode.EITHER.name()) || context.isJoined()
                         || !isParallelJoined(context))
                 .forEach(context -> {
                     context.setPosition(this.getId());
-                    context.setStatus(READY);
+                    context.setStatus(FlowNodeStatus.READY);
                 });
     }
 
@@ -693,29 +804,162 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             @Override
             protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
                 return to.flowContextRepo.requestProducingContext(to.streamId,
-                        to.froms.stream().map(Identity::getId).collect(Collectors.toList()),
-                        to.getOverLimitTraceIds(), to.postFilter());
+                        to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.getOverLimitTraceIds(),
+                        to.postFilter());
             }
         },
         MAPPING {
+            private Map<String, Boolean> firedJoinSession = new ConcurrentHashMap<>();
+
             @Override
             public <T1, R1> List<FlowContext<R1>> process(To<T1, R1> to, List<FlowContext<T1>> contexts) {
-                // null数据不处理，用于等待外部处理，或者累积节点等待窗口满足场景
-                return contexts.stream().filter(context -> context.getData() != null).map(context -> {
-                    R1 data = to.map.process(context);
-                    // 给window添加没有完成的数据，window符合条件时判断所有数据是否已经在累积节点（reduce)加工结束，否则不能往下流
-                    WindowToken windowToken = context.getWindowToken();
-                    if (windowToken != null) {
-                        windowToken.removeToDo(context.getData());
-                        if (!context.isAccumulator()) {
-                            windowToken.addToDo(data);
-                        } else {
-                            // 累积节点尝试往下流转，fire会判断是否满足window条件
-                            windowToken.fire();
+                return contexts.stream()
+                        // null数据不处理，用于等待外部处理，或者累积节点等待窗口满足场景
+                        .filter(context -> context.getData() != null || Publisher.isSystemContext(context.getSession()))
+                        .map(context -> generateNewContext(to, context))
+                        .filter(Objects::nonNull)
+                        .filter(context -> context.getData() != null || Publisher.isSystemContext(context.getSession()))
+                        .collect(Collectors.toList());
+            }
+
+            private <T1, R1> FlowContext<R1> generateNewContext(To<T1, R1> to, FlowContext<T1> context) {
+                // 在session模式下，出现错误则直接取消
+                if (ThreadMode.SESSION == to.getFlowConfig().getThreadMode() && context.getSession().isError()) {
+                    FlowDebug.log(context.getSession(), "session error. over");
+                    return null;
+                }
+                FlowDebug.log(context.getSession(), to.getId() + ". data: " + context.getData());
+                WindowToken windowToken = context.getWindowToken();
+                FlowContext<R1> newContext;
+                if (Publisher.isSystemContext(context.getSession())) {
+                    newContext = handleSystemContext(to, context, windowToken);
+                } else {
+                    newContext = handleUserContext(to, context, windowToken);
+                }
+                FlowDebug.log(context.getSession(),
+                        to.getId() + ". generateNewContext. " + "pre: " + context.getData() + ". system: "
+                                + Publisher.isSystemContext(context.getSession()) + " after: " + newContext.getData()
+                                + ". system: " + Publisher.isSystemContext(newContext.getSession()));
+                return newContext;
+            }
+
+            private <T1, R1> FlowContext<R1> handleUserContext(To<T1, R1> to, FlowContext<T1> context,
+                    WindowToken windowToken) {
+                R1 data = to.map.process(context);
+                // 给window添加没有完成的数据，window符合条件时判断所有数据是否已经在累积节点（reduce)加工结束，否则不能往下流
+                if (windowToken != null) {
+                    windowToken.removeToDo(context.getData());
+                    if (!context.isAccumulator()) {
+                        windowToken.addToDo(data);
+                    } else {
+                        // 累积节点尝试往下流转，fire会判断是否满足window条件
+                        boolean isFired = windowToken.fire();
+                        if (isFired && to.isJoin() && context.getSession() != null) {
+                            this.firedJoinSession.put(context.getSession().getId(), true);
                         }
                     }
-                    return context.generate(data, to.getId());
-                }).collect(Collectors.toList());
+                }
+                return context.generate(data, to.getId());
+            }
+
+            private <T1, R1> FlowContext<R1> handleSystemContext(To<T1, R1> to, FlowContext<T1> context,
+                    WindowToken windowToken) {
+                if (to.isSystem()) {
+                    to.map.process(context);
+                    return context.generate((R1) null, to.getId());
+                }
+                FlowSession session = context.getSession();
+                if (this.isBoundedError(session)) {
+                    return this.systemBoundedError(to, context, session);
+                }
+                if (to.isJoin()) {
+                    return this.systemJoin(to, context, session);
+                }
+                if (this.isSessionComplete(session) && to.isDataStart()) {
+                    return this.systemDataStartSessionComplete(to, context, session);
+                }
+                boolean isBoundedComplete = this.isBoundedComplete(session);
+                if (windowToken != null && to instanceof Processor && isBoundedComplete) {
+                    boolean isReduced = windowToken.fireComplete((Processor) to);
+                    if (isReduced) {
+                        session.setInnerState(FlowBoundedEmitter.IS_BOUNDED, false);
+                        session.setInnerState(FlowBoundedEmitter.IS_BOUNDED_COMPLETE, false);
+                    }
+                }
+                return context.generate((R1) null, to.getId());
+            }
+
+            private <T1, R1> FlowContext<R1> systemJoin(To<T1, R1> to, FlowContext<T1> context, FlowSession session) {
+                FlowContext<R1> newContext = context.generate((R1) null, to.getId());
+                if (this.firedJoinSession.containsKey(session.getId())) {
+                    this.firedJoinSession.remove(session.getId());
+                } else {
+                    newContext.getSession().setInnerState(Publisher.IS_SESSION_COMPLETE, false);
+                    newContext.getSession().setInnerState(Publisher.IS_SYSTEM, false);
+                }
+                return newContext;
+            }
+
+            private <T1, R1> FlowContext<R1> systemDataStartSessionComplete(To<T1, R1> to, FlowContext<T1> context,
+                    FlowSession session) {
+                FlowContext<R1> newContext = context.generate((R1) null, to.getId());
+                // 如果遇到了DataStart节点，直接结束当前的系统结束事件，由DataStart产生的结束事件替代系统结束事件
+                if (to.decreaseDataStartCount(session.getId()) == -1) {
+                    to.clearDataStartCount(session.getId());
+                    newContext.getSession().setInnerState(FlowBoundedEmitter.IS_BOUNDED, true);
+                    newContext.getSession().setInnerState(FlowBoundedEmitter.IS_BOUNDED_COMPLETE, true);
+                } else {
+                    newContext.getSession().setInnerState(Publisher.IS_SESSION_COMPLETE, false);
+                    newContext.getSession().setInnerState(Publisher.IS_SYSTEM, false);
+                }
+                return newContext;
+            }
+
+            private <T1, R1> FlowContext<R1> systemBoundedError(To<T1, R1> to, FlowContext<T1> context,
+                    FlowSession session) {
+                session.setError();
+                Retryable<T1> retryable = new Retryable<>(to.getFlowContextRepo(), to);
+                to.getErrorHandlers()
+                        .forEach(handler -> handler.handle(this.getBoundedError(session), retryable,
+                                Collections.singletonList(context)));
+                FlowContext<R1> newContext = context.generate((R1) null, to.getId());
+                newContext.getSession().setInnerState(Publisher.IS_SYSTEM, false);
+                newContext.getSession().setInnerState(FlowBoundedEmitter.IS_BOUNDED_ERROR, false);
+                return newContext;
+            }
+
+            private boolean isSessionComplete(FlowSession session) {
+                return Optional.ofNullable(session.getInnerState(Publisher.IS_SESSION_COMPLETE))
+                        .map(ObjectUtils::<Boolean>cast)
+                        .orElse(false);
+            }
+
+            private boolean isBoundedComplete(FlowSession session) {
+                return Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED))
+                        .map(ObjectUtils::<Boolean>cast)
+                        .filter(i -> i)
+                        .flatMap(
+                                i -> Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED_COMPLETE)))
+                        .map(ObjectUtils::<Boolean>cast)
+                        .orElse(false);
+            }
+
+            private boolean isBoundedError(FlowSession session) {
+                return Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED))
+                        .map(ObjectUtils::<Boolean>cast)
+                        .filter(i -> i)
+                        .flatMap(i -> Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED_ERROR)))
+                        .map(ObjectUtils::<Boolean>cast)
+                        .orElse(false);
+            }
+
+            private Exception getBoundedError(FlowSession session) {
+                return Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED))
+                        .map(ObjectUtils::<Boolean>cast)
+                        .filter(i -> i)
+                        .flatMap(i -> Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.BOUNDED_ERROR)))
+                        .map(ObjectUtils::<Exception>cast)
+                        .orElse(null);
             }
 
             @Override
@@ -747,8 +991,14 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
          * @param <T1> 流程实例执行时的入参数据类型，用于泛型推倒
          * @param <R1> 流程实例执行时的出参数据类型，用于泛型推倒
          * @param to 当前节点
+         * @param contexts 本次传入的contexts
          */
-        public <T1, R1> void request(To<T1, R1> to) {
+        public <T1, R1> void request(To<T1, R1> to, List<FlowContext<T1>> contexts) {
+            if (isSessionThreadMode(to)) {
+                requestBySession(to, contexts);
+                return;
+            }
+            FlowDebug.log("request !isSessionThreadMode:" + to);
             while (true) {
                 Optional<FlowExecutors.ConcurrencyHolder> concurrencyHolder = FlowExecutors.incrementConcurrency();
                 if (!concurrencyHolder.isPresent()) {
@@ -789,6 +1039,21 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     }
                     SleepUtil.sleep(SLEEP_MILLS);
                 }
+            }
+        }
+
+        private <T1, R1> void requestBySession(To<T1, R1> to, List<FlowContext<T1>> contexts) {
+            try {
+                to.introduceToProcess(contexts);
+                to.flowContextRepo.updateStatus(contexts, contexts.get(0).getStatus().toString(),
+                        contexts.get(0).getPosition());
+                to.onProcess(contexts);
+            } catch (Exception ex) {
+                // 如果是数据库或者redis挂了，会死循环，线程不退出等待数据库或者redis恢复
+                contexts.forEach(r -> LOG.error(
+                        "process main loop exception " + "stream-id: {}, node-id: {}, context-id: {}, errors: {}",
+                        to.streamId, to.id, r.getId(), ex));
+                LOG.error("process main loop exception details: ", ex);
             }
         }
 
@@ -833,7 +1098,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
          */
         private <T1, R1> List<FlowContext<T1>> filterReady(To<T1, R1> to, List<FlowContext<T1>> pre) {
             to.introduceToProcess(pre);
-            return pre.stream().filter(context -> context.getStatus() == READY).collect(Collectors.toList());
+            return pre.stream()
+                    .filter(context -> context.getStatus() == FlowNodeStatus.READY)
+                    .collect(Collectors.toList());
         }
 
         private <T1, R1> void submit(To<T1, R1> to, List<FlowContext<T1>> ready,
@@ -846,15 +1113,15 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
         private <T1, R1> void handleProcessConcurrentConflict(To<T1, R1> to) {
             List<FlowContext<T1>> pending = requestAll(to).stream()
-                    .filter(context -> !context.getParallelMode().equals(EITHER.name()) || context.isJoined()
-                            || !to.isParallelJoined(context))
+                    .filter(context -> !context.getParallelMode().equals(ParallelMode.EITHER.name())
+                            || context.isJoined() || !to.isParallelJoined(context))
                     .collect(Collectors.toList());
             if (CollectionUtils.isEmpty(pending) || to.inParallelMode(pending)) {
                 return;
             }
             LOG.info("[{}] process thread conflict happens for stream-id: {}, node-id: {}",
                     to.getThreadName(To.PROCESS_T_NAME_PREFIX), to.streamId, to.id);
-            to.accept(PROCESS, pending);
+            to.accept(ProcessType.PROCESS, pending);
         }
     }
 }

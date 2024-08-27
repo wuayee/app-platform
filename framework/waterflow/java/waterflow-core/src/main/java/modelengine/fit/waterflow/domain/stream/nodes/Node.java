@@ -14,6 +14,7 @@ import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.NodeDisplay;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
@@ -133,8 +134,7 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
-    public Processor<R, R> just(Operators.Just<FlowContext<R>> processor,
-            Operators.Whether<R> whether) {
+    public Processor<R, R> just(Operators.Just<FlowContext<R>> processor, Operators.Whether<R> whether) {
         return this.publisher.just(processor, whether);
     }
 
@@ -231,6 +231,12 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
                 getLocks(), FlowNodeType.END);
         this.subscribe(end);
         return end;
+    }
+
+    @Override
+    public void setFlowConfig(FlowConfig flowConfig) {
+        super.setFlowConfig(flowConfig);
+        this.publisher.setFlowConfig(flowConfig);
     }
 
     @Override

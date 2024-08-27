@@ -6,6 +6,7 @@
 
 package modelengine.fit.waterflow.domain.context;
 
+import lombok.Data;
 import lombok.Setter;
 import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fit.waterflow.domain.utils.UUIDUtil;
@@ -24,6 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 public class FlowSession extends IdGenerator implements StateContext {
+    /**
+     * 所有会话共享的对象的key
+     */
+    public static final String SESSION_INFO = "_sessionInfo";
+
     /**
      * 用户自定义上下文 map。
      */
@@ -49,6 +55,7 @@ public class FlowSession extends IdGenerator implements StateContext {
      * 构造一个 {@link FlowSession} 实例。
      */
     public FlowSession() {
+        this.initSessionInfo();
     }
 
     /**
@@ -58,6 +65,7 @@ public class FlowSession extends IdGenerator implements StateContext {
      */
     public FlowSession(String id) {
         super(id);
+        this.initSessionInfo();
     }
 
     /**
@@ -141,10 +149,50 @@ public class FlowSession extends IdGenerator implements StateContext {
         this.states.get(INNER_STATE).put(key, value);
     }
 
+    /**
+     * 清除指定key的内置上下文数据
+     *
+     * @param key 指定key
+     */
+    public void clearInnerState(String key) {
+        this.states.get(INNER_STATE).remove(key);
+    }
+
+    /**
+     * 设置session出错
+     */
+    public void setError() {
+        ObjectUtils.<SessionInfo>cast(this.getInnerState(SESSION_INFO)).setError(true);
+    }
+
+    /**
+     * 判断session是否出错
+     *
+     * @return 是否出错
+     */
+    public boolean isError() {
+        return ObjectUtils.<SessionInfo>cast(this.getInnerState(SESSION_INFO)).isError();
+    }
+
+    private void initSessionInfo() {
+        this.setInnerState(SESSION_INFO, new SessionInfo());
+    }
+
     private void copyState(FlowSession session) {
         if (session != null) {
             this.states.get(CUSTOM_STATE).putAll(session.states.get(CUSTOM_STATE));
             this.states.get(INNER_STATE).putAll(session.states.get(INNER_STATE));
         }
+    }
+
+    /**
+     * session的信息
+     *
+     * @author xiafei
+     * @since 1.0
+     */
+    @Data
+    public static class SessionInfo {
+        private boolean isError;
     }
 }

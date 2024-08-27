@@ -31,18 +31,29 @@ import java.util.stream.Collectors;
  */
 public class Mermaid {
     private static final String TO_ARROW = "-->";
+
     private static final String DELEGATE_ARROW = "-. delegate .->";
+
     private static final String EMIT_ARROW = "-. emit .->";
+
     private static final String LINE_BREAK = "\n";
+
     private static final String START_DISPLAY = "((Start))";
+
     private static final String END_DISPLAY = "((End))";
+
     private static final String START_NODE = "start";
+
     private static final String END_NODE = "end";
 
     private final String meta;
+
     private final List<String> subscriptions = new ArrayList<>();
+
     private final HashMap<Object, String> named = new HashMap<>();
+
     private final HashMap<Publisher<?>, Subscriber<?, ?>> pairs = new HashMap<>();
+
     private final AtomicInteger counter = new AtomicInteger();
 
     /**

@@ -8,7 +8,9 @@ package modelengine.fit.waterflow.domain.states;
 
 import modelengine.fit.waterflow.domain.enums.SpecialDisplayNode;
 import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.stream.nodes.To;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +48,12 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      */
     public MatchHappen<O, D, I, F> match(Operators.Whether<I> whether,
             Operators.BranchProcessor<O, D, I, F> processor) {
-        State<I, D, I, F> branchStart = new State<>(this.node.publisher().just(any -> {
-        }, whether).displayAs(SpecialDisplayNode.BRANCH.name()), this.node.getFlow());
+        Processor<I, I> processorNode = this.node.publisher().just(any -> {
+        }, whether).displayAs(SpecialDisplayNode.BRANCH.name());
+        if (processorNode instanceof To) {
+            ((To<?, ?>) processorNode).setMatch(true);
+        }
+        State<I, D, I, F> branchStart = new State<>(processorNode, this.node.getFlow());
         State<O, D, ?, F> branch = processor.process(branchStart);
         this.branches.add(branch);
         return this;

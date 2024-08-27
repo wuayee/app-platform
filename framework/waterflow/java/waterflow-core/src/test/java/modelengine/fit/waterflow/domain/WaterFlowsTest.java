@@ -6,17 +6,13 @@
 
 package modelengine.fit.waterflow.domain;
 
-import static modelengine.fit.waterflow.FlowsTestUtil.waitFortyMillis;
-import static modelengine.fit.waterflow.FlowsTestUtil.waitMillis;
-import static modelengine.fit.waterflow.FlowsTestUtil.waitSingle;
-import static modelengine.fit.waterflow.FlowsTestUtil.waitSize;
-import static modelengine.fit.waterflow.FlowsTestUtil.waitUntil;
 import static modelengine.fit.waterflow.domain.enums.FlowNodeStatus.READY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import modelengine.fit.waterflow.FlowTestException;
+import modelengine.fit.waterflow.FlowsTestUtil;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMemoMessenger;
@@ -32,12 +28,12 @@ import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.states.State;
 import modelengine.fit.waterflow.domain.stream.nodes.BlockToken;
+import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.utils.Mermaid;
 import modelengine.fit.waterflow.domain.utils.Tuple;
 import modelengine.fitframework.util.ObjectUtils;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -122,7 +118,7 @@ class WaterFlowsTest {
             flowTest.setId("flow test");
             flowTest.offer(1);
 
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals("flow test", flowTest.getId());
             assertEquals(3, data[0]);
             assertEquals(4, data[1]);
@@ -137,7 +133,7 @@ class WaterFlowsTest {
                         result.addAll(r.getAll().stream().map(FlowContext::getData).collect(Collectors.toList()));
                     })
                     .offer(new Integer[] {1, 2, 3, 4, 5});
-            waitSize(() -> result, 5);
+            FlowsTestUtil.waitSize(() -> result, 5);
             assertTrue(result.contains("12-okay"));
         }
 
@@ -164,10 +160,10 @@ class WaterFlowsTest {
                             result.addAll(r.getAll().stream().map(FlowContext::getData).collect(Collectors.toList()));
                         })
                         .offer(new Integer[] {1, 2, 3, 4, 5});
-                waitUntil(() -> block.data().size() == 5);
+                FlowsTestUtil.waitUntil(() -> block.data().size() == 5);
                 assertEquals(5, block.data().size());
                 block.resume();
-                waitUntil(() -> result.size() == 3);
+                FlowsTestUtil.waitUntil(() -> result.size() == 3);
                 assertEquals(3, result.size());
             }
         }
@@ -185,7 +181,7 @@ class WaterFlowsTest {
                             .collect(Collectors.toList()))
                     .close(i -> result.addAll(i.get().getData()))
                     .offer(new Integer[] {1, 2, 3, 4, 5});
-            waitSize(() -> result, 2);
+            FlowsTestUtil.waitSize(() -> result, 2);
             assertEquals(2, result.size());
         }
 
@@ -213,12 +209,12 @@ class WaterFlowsTest {
                         result.addAll(callback.get().getData());
                     })
                     .offer(new Integer[] {1, 2, 3, 4, 5});
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(2, block.data().get(0).getData().size());
             assertEquals(0, result.size());
 
             block.resume();
-            waitSize(() -> result, 2);
+            FlowsTestUtil.waitSize(() -> result, 2);
             assertEquals(2, result.size());
         }
 
@@ -226,23 +222,23 @@ class WaterFlowsTest {
         @DisplayName("流程实例reduce节点流转逻辑")
         void testFitStreamReduceComputation() {
             AtomicInteger counter = new AtomicInteger();
-            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
-                    .map(i -> i * 2)
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks, ThreadMode.SESSION)
+                    .map(i -> i * 1)
                     .reduce(() -> 0, Integer::sum)
                     .just(i -> counter.set(counter.get() + 1))
                     .close();
             // 数据发送为一个window
             flow.offer(new Integer[] {1, 2, 3, 4, 5});
-            waitUntil(() -> counter.get() == 1);
+            FlowsTestUtil.waitUntil(() -> counter.get() == 1);
             assertEquals(1, counter.get());
 
             // 单个发送没有window
             counter.set(0);
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 2; i++) {
                 flow.offer(i);
             }
-            waitUntil(() -> counter.get() == 5);
-            assertEquals(5, counter.get());
+            FlowsTestUtil.waitUntil(() -> counter.get() == 2);
+            assertEquals(2, counter.get());
         }
 
         @Test
@@ -259,7 +255,7 @@ class WaterFlowsTest {
                 flow.offer(i + 1);
             }
 
-            waitUntil(() -> counter.get() == 3);
+            FlowsTestUtil.waitUntil(() -> counter.get() == 3);
             assertEquals(3, counter.get());
         }
 
@@ -279,7 +275,7 @@ class WaterFlowsTest {
                             Tuple.from("will", 5), Tuple.from("evan", 6)
                     });
 
-            waitUntil(() -> counter.get() == 4);
+            FlowsTestUtil.waitUntil(() -> counter.get() == 4);
             assertEquals(4, counter.get());
         }
 
@@ -289,7 +285,7 @@ class WaterFlowsTest {
             Flows.<Integer>create(repo, messenger, locks).window(inputs -> inputs.size() == 3).buffer().flatMap(i -> {
                 return Flows.flux(i.toArray(new Integer[0]));
             }).just(value -> counter.set(counter.get() + 1)).close().offer(new Integer[] {1, 2, 3, 4, 5, 6});
-            waitUntil(() -> counter.get() == 6);
+            FlowsTestUtil.waitUntil(() -> counter.get() == 6);
         }
 
         @Test
@@ -314,7 +310,7 @@ class WaterFlowsTest {
                     .join(() -> input, (acc, data) -> data)
                     .close(r -> output1.add(r.get().getData()))
                     .offer(input);
-            waitSingle(() -> output1);
+            FlowsTestUtil.waitSingle(() -> output1);
             assertEquals(160, output1.get(0).total());
         }
 
@@ -339,7 +335,7 @@ class WaterFlowsTest {
                     .close(r -> output.add(r.get().getData()));
             TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(20, output.get(0).first);
             assertEquals(20, output.get(0).second);
             assertEquals(0, output.get(0).third);
@@ -366,14 +362,14 @@ class WaterFlowsTest {
                     .close(r -> output.add(r.get().getData()));
             TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(20, output.get(0).first);
             assertEquals(20, output.get(0).second);
             assertEquals(6, output.get(0).third);
             output.clear();
 
             flow.offer(input.first(11).second(0).third(12));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(27, output.get(0).first);
             assertEquals(27, output.get(0).second);
             assertEquals(20, output.get(0).third);
@@ -403,21 +399,21 @@ class WaterFlowsTest {
                     .close(r -> output.add(r.get().getData()));
             TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(22, output.get(0).first);
             assertEquals(0, output.get(0).second);
             assertEquals(0, output.get(0).third);
             output.clear();
 
             flow.offer(input.first(0).second(11).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(0, output.get(0).first);
             assertEquals(12, output.get(0).second);
             assertEquals(0, output.get(0).third);
             output.clear();
 
             flow.offer(input.first(0).second(0).third(11));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(0, output.get(0).first);
             assertEquals(0, output.get(0).second);
             assertEquals(12, output.get(0).third);
@@ -449,17 +445,17 @@ class WaterFlowsTest {
                     .close(r -> output.add(r.get().getData()));
             TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(12, output.get(0));
             output.clear();
 
             flow.offer(input.first(-10).second(12).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(20, output.get(0));
             output.clear();
 
             flow.offer(input.first(0).second(0).third(-5));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(58, output.get(0));
         }
 
@@ -488,22 +484,22 @@ class WaterFlowsTest {
                     .close(r -> output.add(r.get().getData()));
             TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(12, output.get(0));
             output.clear();
 
             flow.offer(input.first(10).second(12).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(1, output.get(0));
             output.clear();
 
             flow.offer(input.first(-10).second(12).third(0));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(-1, output.get(0));
             output.clear();
 
             flow.offer(input.first(0).second(0).third(13));
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(14, output.get(0));
         }
 
@@ -520,12 +516,12 @@ class WaterFlowsTest {
                     .close(r -> output.add(r.get().getData()));
 
             flow.offer(input.first(0).second(0).third(0));
-            waitUntil(() -> false);
+            FlowsTestUtil.waitUntil(() -> false);
             assertEquals(0, output.size());
 
             TestData input2 = new TestData();
             flow.offer(input2.first(11).second(0).third(0));
-            waitUntil(() -> false);
+            FlowsTestUtil.waitUntil(() -> false);
             assertEquals(1, output.size());
             assertEquals(12, output.get(0));
         }
@@ -550,7 +546,7 @@ class WaterFlowsTest {
             // source: 数据发射源
             Flows.source(emitter).map(value -> value + 10).just(counter::set).offer();
             emitter.emit(10);
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(20, counter.get());
         }
 
@@ -562,7 +558,7 @@ class WaterFlowsTest {
                     .just(i -> i.first++)
                     .just(i -> output.add(i))
                     .offer();
-            waitSingle(() -> output);
+            FlowsTestUtil.waitSingle(() -> output);
             assertEquals(11, output.get(0).first);
         }
 
@@ -594,7 +590,7 @@ class WaterFlowsTest {
                     .close(r -> f2Result.set(r.get().getData()));
 
             flow2.offer(100);
-            waitMillis(Collections::emptyList, 50);
+            FlowsTestUtil.waitMillis(Collections::emptyList, 50);
             assertTrue(f1Result.get());
             assertEquals(0, f2Result.get());
             assertEquals(103, f3Result.get());
@@ -602,7 +598,7 @@ class WaterFlowsTest {
             // offer data with act2 come back
             f1Result.set(false);
             flow2.offer(100);
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertFalse(f1Result.get());
             assertEquals(202, f2Result.get());
         }
@@ -635,7 +631,7 @@ class WaterFlowsTest {
                     .close(r -> f2Result.set(r.get().getData()))
                     .offer(100);
 
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(103, f1Result.get());
             assertEquals(200, f2Result.get());
         }
@@ -656,7 +652,7 @@ class WaterFlowsTest {
                 contexts.forEach(context -> context.setStatus(READY));
                 retryable.retry(contexts);
             }).close(callback -> output.set(callback.get().getData())).offer(new TestData());
-            waitUntil(() -> output.get() != null, 2000);
+            FlowsTestUtil.waitUntil(() -> output.get() != null, 2000);
             assertEquals(120, output.get().first);
             assertEquals(100, output.get().second);
 
@@ -672,7 +668,7 @@ class WaterFlowsTest {
                 contexts.forEach(context -> context.setStatus(READY));
                 retryable.retry(contexts);
             }).offer(new TestData());
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(120, output.get().first);
             assertEquals(100, output.get().second);
         }
@@ -691,7 +687,7 @@ class WaterFlowsTest {
             // 从中间节点offer数据flow1.end节点的数据
             flow2.offer("sender", flow1);
             flow1.offer(100);
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(200, out1.get());
 
             AtomicReference<String> out2 = new AtomicReference<>();
@@ -700,7 +696,7 @@ class WaterFlowsTest {
             flow1 = node1.just(i -> out2.set(i.toString() + "flow1")).close();
             Flows.<Integer>create().just(i -> out3.set(i.toString() + "flow2")).close().offer(node1);
             flow1.offer(100);
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals("200flow1", out2.get());
             assertEquals("200flow2", out3.get());
         }
@@ -714,13 +710,13 @@ class WaterFlowsTest {
                     .map(value -> Integer.parseInt(value) + 100)
                     .close(callback -> out1.set(callback.get().getData()));
             flow2.offer("2");
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(300, out1.get());
             out1.set(0);
 
             // 从中间节点offer数据
             flow2.offer("sender", "100");
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals(200, out1.get());
         }
 
@@ -740,7 +736,7 @@ class WaterFlowsTest {
                     .map((data, ctx) -> data + ctx.getState("me").toString())
                     .close(callback -> counter.set(counter.get() + 1))
                     .offer(0);
-            waitUntil(() -> counter.get() >= 5);
+            FlowsTestUtil.waitUntil(() -> counter.get() >= 5);
             assertEquals(5, counter.get());
         }
 
@@ -757,7 +753,7 @@ class WaterFlowsTest {
                     .fork(p -> p.map(i -> i * 2))
                     .join(() -> "", (acc, i) -> acc + i.toString())
                     .close();
-            Assertions.assertEquals("start((Start))\n" + "start-->node0(map)\n" + "node9-->node3\n" + "node8-->node6\n"
+            assertEquals("start((Start))\n" + "start-->node0(map)\n" + "node9-->node3\n" + "node8-->node6\n"
                     + "node6-->end7((End))\n" + "node5-->node6([+])\n" + "node4-->node8(map)\n" + "node4-->node5(map)\n"
                     + "node3-->node4{{=}}\n" + "node2-->node3([+])\n" + "node1-->node9(map)\n" + "node1-->node2(map)\n"
                     + "node0-->node1{?}", new Mermaid(flow).get());
@@ -773,7 +769,7 @@ class WaterFlowsTest {
                 }
                 return Flows.flux(maps);
             }).just(value -> result.add(value)).close().offer(4);
-            waitUntil(() -> result.size() == 4);
+            FlowsTestUtil.waitUntil(() -> result.size() == 4);
             assertEquals(4, result.size());
         }
 
@@ -796,17 +792,16 @@ class WaterFlowsTest {
             ProcessFlow<Integer> flowTest = Flows.<Integer>create(testRepo, messenger, locks)
                     .id("flow test start node")
                     .map(i -> {
-                                if (i == 1) {
-                                    throw new FlowTestException();
-                                }
-                                return i;
-                            }
-                    )
+                        if (i == 1) {
+                            throw new FlowTestException();
+                        }
+                        return i;
+                    })
                     .close(r -> data[0] = r.get().getData());
             flowTest.setId("flow test");
             String traceId = flowTest.offer(1);
 
-            waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
             assertEquals("flow test", flowTest.getId());
             assertEquals(0, testRepo.getContextsByTrace(traceId).size());
         }

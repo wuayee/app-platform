@@ -83,8 +83,8 @@ public class ParallelNode<I> extends Node<I, I> {
      * @param locks 流程锁
      * @return From
      */
-    private static <I> From<I> initFrom(String streamId, ParallelMode mode,
-            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+    private static <I> From<I> initFrom(String streamId, ParallelMode mode, FlowContextRepo repo,
+            FlowContextMessenger messenger, FlowLocks locks) {
         return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {

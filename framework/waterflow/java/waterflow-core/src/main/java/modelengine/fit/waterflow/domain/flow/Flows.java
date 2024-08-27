@@ -17,6 +17,8 @@ import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocksMemo;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.states.DataStart;
 import modelengine.fit.waterflow.domain.states.Start;
+import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
+import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
 
 /**
  * 用于工程师编程交互的Flow API集合
@@ -58,7 +60,19 @@ public final class Flows {
      * @return 处理流头结点
      */
     public static <D> Start<D, D, D, ProcessFlow<D>> create() {
+        return create(ThreadMode.HOLDER);
+    }
+
+    /**
+     * 先建立流程，然后通过offer灌入数据进行处理
+     *
+     * @param <D> 要处理的数据类型
+     * @param threadMode 线程模型
+     * @return 处理流头结点
+     */
+    public static <D> Start<D, D, D, ProcessFlow<D>> create(ThreadMode threadMode) {
         ProcessFlow<D> flow = new ProcessFlow<>(repo, messenger, locks);
+        flow.start.setFlowConfig(FlowConfig.builder().threadMode(threadMode).build());
         return new Start<>(flow.start, flow);
     }
 
@@ -73,7 +87,23 @@ public final class Flows {
      */
     public static <D> Start<D, D, D, ProcessFlow<D>> create(FlowContextRepo repo, FlowContextMessenger messenger,
             FlowLocks locks) {
+        return create(repo, messenger, locks, ThreadMode.HOLDER);
+    }
+
+    /**
+     * 先建立流程，然后通过offer灌入数据进行处理
+     *
+     * @param <D> 要处理的数据类型
+     * @param repo 上下文处理类
+     * @param messenger 事件发送类
+     * @param locks 流程锁
+     * @param threadMode 线程模型
+     * @return 处理流头结点
+     */
+    public static <D> Start<D, D, D, ProcessFlow<D>> create(FlowContextRepo repo, FlowContextMessenger messenger,
+            FlowLocks locks, ThreadMode threadMode) {
         ProcessFlow<D> flow = new ProcessFlow<>(repo, messenger, locks);
+        flow.start.setFlowConfig(FlowConfig.builder().threadMode(threadMode).build());
         return new Start<>(flow.start, flow);
     }
 

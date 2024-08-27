@@ -7,6 +7,7 @@
 package modelengine.fit.waterflow.domain.emitters;
 
 import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.utils.FlowDebug;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,15 +20,28 @@ import java.util.List;
  * @since 1.0
  */
 public class FlowEmitter<D> implements Emitter<D, FlowSession> {
-    private EmitterListener<D, FlowSession> listener;
+    /**
+     * Emitter的监听器
+     */
+    protected List<EmitterListener<D, FlowSession>> listeners = new ArrayList<>();
 
-    private List<D> data = new ArrayList<>();
+    private final List<D> data = new ArrayList<>();
 
-    private FlowEmitter(D data) {
+    /**
+     * 构造单个数据的Emitter
+     *
+     * @param data 单个数据
+     */
+    protected FlowEmitter(D data) {
         this.data.add(data);
     }
 
-    private FlowEmitter(D... data) {
+    /**
+     * 构造一组数据的Emitter
+     *
+     * @param data 一组数据
+     */
+    protected FlowEmitter(D... data) {
         this.data.addAll(Arrays.asList(data));
     }
 
@@ -55,18 +69,18 @@ public class FlowEmitter<D> implements Emitter<D, FlowSession> {
 
     @Override
     public void register(EmitterListener<D, FlowSession> listener) {
-        this.listener = listener;
+        this.listeners.add(listener);
     }
 
     @Override
     public void emit(D data, FlowSession trans) {
-        this.listener.handle(data, trans);
+        FlowDebug.log(trans, "start listeners size: " + listeners.size() + " data:" + data);
+        this.listeners.forEach(listener -> listener.handle(data, trans));
     }
 
     @Override
     public void start(FlowSession trans) {
-        for (D d : this.data) {
-            this.emit(d, trans);
-        }
+        FlowDebug.log(trans, "start data size: " + data.size());
+        data.forEach(obj -> this.emit(obj, trans));
     }
 }

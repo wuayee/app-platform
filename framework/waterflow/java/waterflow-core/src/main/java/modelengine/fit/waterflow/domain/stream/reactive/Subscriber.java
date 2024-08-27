@@ -12,6 +12,7 @@ import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.enums.ProcessType;
 import modelengine.fit.waterflow.domain.stream.nodes.Blocks;
+import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.List;
@@ -111,6 +112,13 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
     void onComplete(Operators.Just<Callback<FlowContext<O>>> callback);
 
     /**
+     * onSessionComplete
+     *
+     * @param sessionCompleteCallback session完成时的callback
+     */
+    void onSessionComplete(Operators.Just<FlowSession> sessionCompleteCallback);
+
+    /**
      * isAuto
      *
      * @return Boolean
@@ -152,4 +160,18 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
      * @return repo
      */
     FlowContextRepo getFlowContextRepo();
+
+    /**
+     * 获取流配置
+     *
+     * @return 流配置
+     */
+    FlowConfig getFlowConfig();
+
+    /**
+     * 设置流配置
+     *
+     * @param flowConfig 流配置
+     */
+    void setFlowConfig(FlowConfig flowConfig);
 }

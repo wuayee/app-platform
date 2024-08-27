@@ -196,8 +196,7 @@ public final class Constant {
      * flowContext 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
      */
     public static final List<String> CONTEXT_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(
-                    FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
+            Arrays.asList(FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
                     FlowNodeStatus.ERROR.toString()));
 
     /**
@@ -224,9 +223,9 @@ public final class Constant {
     /**
      * flowTrace 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
      */
-    public static final List<String> TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
-            FlowTraceStatus.TERMINATE.toString(), FlowTraceStatus.ARCHIVED.toString(),
-            FlowTraceStatus.ERROR.toString()));
+    public static final List<String> TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
+            Arrays.asList(FlowTraceStatus.TERMINATE.toString(), FlowTraceStatus.ARCHIVED.toString(),
+                    FlowTraceStatus.ERROR.toString()));
 
     /**
      * flowTrace 其他状态的互斥状态列表

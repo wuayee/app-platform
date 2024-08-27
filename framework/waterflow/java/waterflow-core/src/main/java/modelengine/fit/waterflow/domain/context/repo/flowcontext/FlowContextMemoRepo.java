@@ -149,7 +149,8 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     private List<FlowContext<T>> getFlowContexts(String streamId, List<String> subscriptions,
             Set<String> excludeTraceIds) {
-        return this.contextsMap.stream().filter(context -> context.getStreamId().equals(streamId))
+        return this.contextsMap.stream()
+                .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> subscriptions.contains(context.getPosition()))
                 .filter(context -> context.getStatus() == FlowNodeStatus.PENDING)
                 .filter(context -> !context.getTraceId().stream().anyMatch(excludeTraceIds::contains))

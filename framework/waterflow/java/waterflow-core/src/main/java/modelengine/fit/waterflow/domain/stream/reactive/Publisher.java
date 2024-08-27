@@ -11,9 +11,12 @@ import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
+import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 数据发布者
@@ -26,6 +29,47 @@ import java.util.List;
  * @since 1.0
  */
 public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSession> {
+    /**
+     * 是否是系统context
+     */
+    String IS_SYSTEM = "_isSystemContext";
+
+    /**
+     * session的traceId，用于追踪session
+     */
+    String SESSION_TRACE_ID = "_sessionTraceId";
+
+    /**
+     * 是否session结束
+     */
+    String IS_SESSION_COMPLETE = "_isSessionComplete";
+
+    /**
+     * 判断指定的session是否是系统上下文
+     *
+     * @param session 指定的session
+     * @return 如果指定的session是系统上下文，则返回true，否则返回false
+     */
+    static boolean isSystemContext(FlowSession session) {
+        return Optional.ofNullable(session)
+                .flatMap(s -> Optional.ofNullable(s.getInnerState(IS_SYSTEM)))
+                .map(ObjectUtils::<Boolean>cast)
+                .orElse(false);
+    }
+
+    /**
+     * 获取session的traceId
+     *
+     * @param session 指定的session
+     * @return 指定session的traceId
+     */
+    static String sessionTraceId(FlowSession session) {
+        return Optional.ofNullable(session)
+                .flatMap(s -> Optional.ofNullable(s.getInnerState(SESSION_TRACE_ID)))
+                .map(ObjectUtils::<String>cast)
+                .orElse("");
+    }
+
     /**
      * 处理数据，即向后续节点offer
      *
@@ -197,4 +241,18 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
      * @return repo
      */
     FlowContextRepo getFlowContextRepo();
+
+    /**
+     * 获取流配置
+     *
+     * @return FlowConfig
+     */
+    FlowConfig getFlowConfig();
+
+    /**
+     * 设置流配置
+     *
+     * @param flowConfig 流配置
+     */
+    void setFlowConfig(FlowConfig flowConfig);
 }

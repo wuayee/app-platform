@@ -47,6 +47,10 @@ public abstract class Flow<D> extends IdGenerator {
 
     private final Map<String, Activity> tagNodes = new HashMap<>();
 
+    private static FlowSession copyFlowSession(FlowSession session) {
+        return (session == null) ? new FlowSession() : new FlowSession(session);
+    }
+
     /**
      * 获取结束节点
      *
@@ -112,9 +116,7 @@ public abstract class Flow<D> extends IdGenerator {
      * @return 提交后该数据对应的trace
      */
     public String offer(D data, FlowSession session) {
-        D[] array = ObjectUtils.cast(new Object[1]);
-        array[0] = data;
-        return this.offer(array, session);
+        return this.start.offer(data, session);
     }
 
     /**
@@ -192,9 +194,5 @@ public abstract class Flow<D> extends IdGenerator {
      */
     public List<Processor<?, ?>> nodes() {
         return this.nodes;
-    }
-
-    private static FlowSession copyFlowSession(FlowSession session) {
-        return (session == null) ? new FlowSession() : new FlowSession(session);
     }
 }

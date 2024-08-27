@@ -12,7 +12,9 @@ import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.stream.nodes.From;
+import modelengine.fit.waterflow.domain.stream.nodes.Node;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.utils.Identity;
 import modelengine.fit.waterflow.domain.utils.Tuple;
@@ -132,6 +134,21 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     public State<O, D, O, F> just(Operators.ProcessJust<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData(), input);
         return new State<>(this.from.just(wrapper, null), this.getFlow());
+    }
+
+    /**
+     * 处理，并转换类型。
+     *
+     * @param processor just转换器
+     * @return 新的处理节点
+     */
+    State<O, D, O, F> system(Operators.SystemProcessor<O> processor) {
+        Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input);
+        Processor<O, O> just = this.from.just(wrapper, null);
+        if (just instanceof Node) {
+            ((Node<O, O>) just).setSystem(true);
+        }
+        return new State<>(just, this.getFlow());
     }
 
     /**
@@ -275,7 +292,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 if (windowToken == null) {
                     return acc;
                 } else {
-                    windowToken.setProcessor(stateWrapper.get().from);
+                    windowToken.setProcessor(stateWrapper.get().processor);
                     // 有window支持情况下不返回，直到window关闭时返回最终累加值
                     return null;
                 }

@@ -80,5 +80,6 @@ public class FlowTrace extends IdGenerator {
 
     public FlowTrace(String id) {
         super(id);
+        contextPool = new HashSet<>();
     }
 }

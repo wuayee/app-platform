@@ -22,8 +22,10 @@ import modelengine.fitframework.util.StringUtils;
 @Getter
 public class NodeDisplay {
     private String name;
+
     @Setter
     private Flow<?> flow;
+
     @Setter
     private String nodeId;
 

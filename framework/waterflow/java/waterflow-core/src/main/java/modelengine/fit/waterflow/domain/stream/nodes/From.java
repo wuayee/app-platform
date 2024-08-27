@@ -8,6 +8,8 @@ package modelengine.fit.waterflow.domain.stream.nodes;
 
 import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_ENGINE_INVALID_MANUAL_TASK;
 
+import lombok.Getter;
+import lombok.Setter;
 import modelengine.fit.waterflow.common.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
@@ -16,17 +18,21 @@ import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
+import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.enums.SpecialDisplayNode;
 import modelengine.fit.waterflow.domain.states.DataStart;
+import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscription;
 import modelengine.fit.waterflow.domain.stream.reactive.When;
+import modelengine.fit.waterflow.domain.utils.FlowDebug;
+import modelengine.fit.waterflow.domain.utils.FlowExecutors;
 import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.inspection.Validation;
@@ -36,8 +42,12 @@ import modelengine.fitframework.util.ObjectUtils;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -70,6 +80,12 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     private final List<Subscription<I>> whens = new ArrayList<>();
 
     private final String streamId;
+
+    private final Map<Object, WindowToken> windowTokens = new HashMap<>();
+
+    @Getter
+    @Setter
+    private FlowConfig flowConfig;
 
     public From(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
         this(null, repo, messenger, locks);
@@ -176,14 +192,47 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         Validation.notNull(processor, "Flat map processor can not be null.");
         AtomicReference<Node<I, O>> processRef = new AtomicReference<>();
         Operators.Map<FlowContext<I>, O> wrapper = input -> {
+            Node<I, O> node = processRef.get();
+            int cnt = node.increaseDataStartCount(input.getSession().getId());
             DataStart<O, O, ?> start = processor.process(input);
-            start.just(data -> processRef.get().offer(data, input.getSession())).offer();
+            FlowDebug.log(input.getSession(), this.getId() + ". afterIncrease: " + cnt + ". data:" + input.getData());
+            start.system(data -> {
+                FlowSession newSession = new FlowSession(data.getSession());
+                // DataStart流程中的SessionInfo与主流程隔离
+                data.getSession().setInnerState(FlowSession.SESSION_INFO, new FlowSession.SessionInfo());
+                FlowDebug.log(newSession, this.getId() + ". data submit. " + data.getData());
+                FlowExecutors.submit(null, newSession.getId(), () -> {
+                    FlowDebug.log(newSession, this.getId() + ". data start. " + data.getData());
+                    if (!Publisher.isSystemContext(newSession)) {
+                        node.offer(data.getData(), newSession);
+                        return;
+                    }
+                    if (!this.isBoundedError(newSession)) {
+                        int afterDecrease = node.decreaseDataStartCount(newSession.getId());
+                        FlowDebug.log(newSession, this.getId() + ". afterDecrease: " + afterDecrease);
+                        if (afterDecrease == -1) {
+                            node.clearDataStartCount(newSession.getId());
+                            newSession.setInnerState(Publisher.IS_SESSION_COMPLETE, true);
+                        }
+                    }
+                    node.offer(data.getData(), newSession);
+                });
+            }).offer();
             return null;
         };
         Node<I, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);
+        node.setDataStart(true);
         processRef.set(node);
         this.subscribe(node, whether);
         return node.displayAs("flat map");
+    }
+
+    private boolean isBoundedError(FlowSession session) {
+        return Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED))
+                .map(ObjectUtils::<Boolean>cast)
+                .flatMap(any -> Optional.ofNullable(session.getInnerState(FlowBoundedEmitter.IS_BOUNDED_ERROR)))
+                .map(ObjectUtils::<Boolean>cast)
+                .orElse(false);
     }
 
     @Override
@@ -199,6 +248,28 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         return node;
     }
 
+    private Boolean isBounded(FlowSession copyflowSession) {
+        return Optional.ofNullable(copyflowSession.getInnerState(FlowBoundedEmitter.IS_BOUNDED))
+                .map(ObjectUtils::<Boolean>cast)
+                .orElse(false);
+    }
+
+    private Boolean isBoundedComplete(FlowSession copyflowSession) {
+        return Optional.ofNullable(copyflowSession.getInnerState(FlowBoundedEmitter.IS_BOUNDED_COMPLETE))
+                .map(ObjectUtils::<Boolean>cast)
+                .orElse(false);
+    }
+
+    private WindowToken<I> getWindowToken(Object tokenKey) {
+        WindowToken<I> windowToken = windowTokens.get(tokenKey);
+        if (windowToken != null) {
+            return windowToken;
+        }
+        windowToken = new WindowToken<>(null);
+        windowTokens.put(tokenKey, windowToken);
+        return windowToken;
+    }
+
     /**
      * 指定session来offer数据
      *
@@ -208,9 +279,30 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public String offer(I data, FlowSession session) {
-        I[] array = ObjectUtils.cast(new Object[1]);
-        array[0] = data;
-        return this.offer(array, session);
+        if (session == null || !isBounded(session)) {
+            I[] array = ObjectUtils.cast(new Object[1]);
+            array[0] = data;
+            return this.offer(array, new FlowSession(session));
+        }
+        FlowSession copyflowSession = new FlowSession(session);
+        FlowTrace trace = new FlowTrace(copyflowSession.getId());
+        Set<String> traceId = new HashSet<>();
+        traceId.add(trace.getId());
+        List<FlowContext<I>> contexts = Collections.singletonList(
+                new FlowContext<>(this.getStreamId(), this.getId(), data, traceId, this.getId()).inFlowTrans(
+                        copyflowSession));
+
+        Object tokenKey = copyflowSession.getId();
+        WindowToken<I> windowToken = this.getWindowToken(tokenKey);
+        contexts.forEach(context -> context.setWindowToken(windowToken));
+
+        if (isBoundedComplete(copyflowSession)) {
+            windowTokens.remove(tokenKey);
+        }
+        FlowExecutors.submit(contexts.get(0).getData(), copyflowSession.getId(), () -> {
+            this.offer(startNodeMarkAsHandled(contexts, trace));
+        });
+        return trace.getId();
     }
 
     /**
@@ -222,12 +314,14 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public String offer(I[] data, FlowSession trans) {
+        FlowDebug.log(trans, this.getId() + ". offer:" + data[0] + ". system:" + Publisher.isSystemContext(trans));
+        FlowSession newSession = Optional.ofNullable(trans).orElse(new FlowSession());
         FlowTrace trace = new FlowTrace();
         Set<String> traceId = new HashSet<>();
         traceId.add(trace.getId());
         List<FlowContext<I>> contexts = Arrays.stream(data)
                 .map(context -> new FlowContext<>(this.getStreamId(), this.getId(), context, traceId,
-                        this.getId()).inFlowTrans(trans))
+                        this.getId()).inFlowTrans(newSession))
                 .collect(Collectors.toList());
         WindowToken<I> windowToken = new WindowToken<>(inputs -> inputs.size() == contexts.size());
         contexts.forEach(context -> {
@@ -235,7 +329,9 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             windowToken.addOrigin(context.getData());
             windowToken.addToDo(context.getData());
         });
-        this.offer(startNodeMarkAsHandled(contexts, trace));
+        FlowExecutors.submit(null, newSession.getId(), () -> {
+            this.offer(startNodeMarkAsHandled(contexts, trace));
+        });
         return trace.getId();
     }
 
@@ -330,6 +426,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(Subscriber<I, O> subscriber) {
+        subscriber.setFlowConfig(this.getFlowConfig());
         this.subscribe(subscriber, any -> true);
     }
 
@@ -342,6 +439,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(Subscriber<I, O> subscriber, Operators.Whether<I> whether) {
+        subscriber.setFlowConfig(this.getFlowConfig());
         // 默认只能将数据发给一个subscriber
         this.whens.add(new When<>(this.streamId, subscriber, whether, repo, messenger));
     }
@@ -355,6 +453,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(String eventId, Subscriber<I, O> subscriber) {
+        subscriber.setFlowConfig(this.getFlowConfig());
         this.subscribe(eventId, subscriber, i -> true);
     }
 
@@ -368,6 +467,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(String eventId, Subscriber<I, O> subscriber, Operators.Whether<I> whether) {
+        subscriber.setFlowConfig(this.getFlowConfig());
         this.whens.add(new When<>(this.streamId, eventId, subscriber, whether, repo, messenger));
     }
 

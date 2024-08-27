@@ -11,6 +11,7 @@ import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.flow.Flow;
+import modelengine.fit.waterflow.domain.stream.nodes.To;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
@@ -92,6 +93,9 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             }
         };
         Processor<O, R> pro = this.forks.get(0).processor.join(wrapper, null);
+        if (pro instanceof To) {
+            ((To<?, ?>) pro).setJoin(true);
+        }
         processWrapper.set(ObjectUtils.cast(pro));
         this.forks.stream().skip(1).forEach(fork -> fork.processor.subscribe(pro));
         return new State<>(pro, this.node.getFlow());
