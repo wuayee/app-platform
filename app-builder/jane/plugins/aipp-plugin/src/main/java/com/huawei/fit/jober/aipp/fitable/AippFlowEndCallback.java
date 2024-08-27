@@ -196,7 +196,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
             // 构造用户历史对话记录并插表
             String resumeDuration =
                     ObjectUtils.cast(businessData.getOrDefault(AippConst.INST_RESUME_DURATION_KEY, "0"));
-            Object createTimeObj = Validation.notNull(businessData.get(AippConst.INST_CREATE_TIME_KEY),
+            Object createTimeObj = Validation.notNull(businessData.get(AippConst.INSTANCE_START_TIME),
                     "The create time cannot be null.");
             LocalDateTime createTime = LocalDateTime.parse(createTimeObj.toString());
             LocalDateTime finishTime = LocalDateTime.now();

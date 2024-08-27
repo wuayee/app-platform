@@ -70,7 +70,7 @@ class AippFlowEndCallbackTest {
         businessData.put(AippConst.BS_AIPP_FINAL_OUTPUT, "tool_data");
         businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
         businessData.put(AippConst.BS_META_VERSION_ID_KEY, "version");
-        businessData.put(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now());
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
         return businessData;
     }
 
