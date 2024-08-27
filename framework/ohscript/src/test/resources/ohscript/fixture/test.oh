@@ -6,7 +6,7 @@ if(type.panic_code()>0){
 
 if(type=="pdf"){
     let context1 = entity{
-        .timeout = 30000; .id = "com.huawei.eDataMate.operators.pdf_extractor_plugin";
+        .timeout = 30000; .id = "modelengine.operators.pdf_extractor_plugin";
     };
     let f1 = fit::handleTask(context1);
     ext::context >> f1
@@ -14,7 +14,7 @@ if(type=="pdf"){
 
 if (type == "word") {
     let context1 = entity{
-        .timeout = 30000; .id = "com.huawei.eDataMate.operators.word_extractor_plugin";
+        .timeout = 30000; .id = "modelengine.operators.word_extractor_plugin";
     };
     let f1 = fit::handleTask(context1);
     ext::context >> f1
@@ -22,7 +22,7 @@ if (type == "word") {
 
 if (type == "md") {
     let context1 = entity{
-        .timeout = 30000; .id = "com.huawei.eDataMate.operators.md_extractor_plugin";
+        .timeout = 30000; .id = "modelengine.operators.md_extractor_plugin";
     };
     let f1 = fit::handleTask(context1);
     ext::context >> f1
@@ -30,7 +30,7 @@ if (type == "md") {
 
 if (type == "xml") {
     let context1 = entity{
-        .timeout = 30000; .id = "com.huawei.eDataMate.operators.xml_extractor_plugin";
+        .timeout = 30000; .id = "modelengine.operators.xml_extractor_plugin";
     };
     let f1 = fit::handleTask(context1);
     ext::context >> f1
@@ -38,7 +38,7 @@ if (type == "xml") {
 
 if (type == "html") {
     let context1 = entity{
-        .timeout = 30000; .id = "com.huawei.eDataMate.operators.html_extractor_plugin";
+        .timeout = 30000; .id = "modelengine.operators.html_extractor_plugin";
     };
     let f1 = fit::handleTask(context1);
     ext::context >> f1
@@ -46,7 +46,7 @@ if (type == "html") {
 
 if (type == "txt") {
     let context1 = entity{
-        .timeout = 30000; .id = "com.huawei.eDataMate.operators.txt_extractor_plugin";
+        .timeout = 30000; .id = "modelengine.operators.txt_extractor_plugin";
     };
     let f1 = fit::handleTask(context1);
     ext::context >> f1

@@ -52,7 +52,7 @@ public final class ProductionCases {
      * 测试import语句语法
      * 这里是一个import语句，引入了一个外部的函数库
      */
-    public static final String IMPORT = "import com.huawei.jober.somefunction;";
+    public static final String IMPORT = "import modelengine.jober.somefunction;";
 
     /**
      * 测试with语句语法
@@ -64,7 +64,7 @@ public final class ProductionCases {
      * 测试namespace语句语法
      * 这里是一个namespace语句，设置了一个命名空间，并在这个命名空间下执行某些代码
      */
-    public static final String NAMESPACE = "namespace com.huawei.jober";
+    public static final String NAMESPACE = "namespace modelengine.jober";
 
     /**
      * 测试实体语句语法
