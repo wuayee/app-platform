@@ -16,6 +16,7 @@ import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.security.Decryptor;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.flowable.Choir;
@@ -69,7 +70,7 @@ public class OpenAiClientSse {
      * @param container 表示 Bean 容器的 {@link BeanContainer}。
      */
     public OpenAiClientSse(@Value("${openai-url}") String baseUrl, Config config,
-            HttpClassicClientFactory httpClientFactory, ObjectSerializer serializer, BeanContainer container) {
+            HttpClassicClientFactory httpClientFactory, @Fit(alias = "json") ObjectSerializer serializer, BeanContainer container) {
         this.baseUrl = baseUrl;
         this.httpClientFactory = httpClientFactory;
         this.config = config;
