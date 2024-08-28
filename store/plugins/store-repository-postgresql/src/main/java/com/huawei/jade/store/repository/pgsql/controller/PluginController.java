@@ -4,21 +4,11 @@
 
 package com.huawei.jade.store.repository.pgsql.controller;
 
+import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
+import static com.huawei.jade.common.Result.calculateOffset;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNegative;
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
-import static com.huawei.jade.common.Result.calculateOffset;
-
-import modelengine.fit.http.annotation.DeleteMapping;
-import modelengine.fit.http.annotation.GetMapping;
-import modelengine.fit.http.annotation.PathVariable;
-import modelengine.fit.http.annotation.PostMapping;
-import modelengine.fit.http.annotation.RequestBody;
-import modelengine.fit.http.annotation.RequestMapping;
-import modelengine.fit.http.annotation.RequestQuery;
-import modelengine.fitframework.annotation.Component;
-import modelengine.fitframework.util.StringUtils;
 
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.common.Result;
@@ -29,8 +19,11 @@ import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.service.PluginToolService;
 
-import io.opentelemetry.instrumentation.annotations.SpanAttribute;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.HashSet;
 import java.util.List;
@@ -57,37 +50,6 @@ public class PluginController {
     public PluginController(PluginToolService pluginToolService, PluginService pluginService) {
         this.pluginToolService = notNull(pluginToolService, "The plugin tool service cannot be null.");
         this.pluginService = notNull(pluginService, "The plugin service cannot be null.");
-    }
-
-    /**
-     * 添加插件。
-     *
-     * @param pluginData 表示 Http 请求的参数的 {@link PluginData}。
-     * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
-     */
-    @WithSpan("operation.plugin.upload")
-    @PostMapping
-    public Result<String> addPlugin(
-        @RequestBody @SpanAttribute("name:$.name,version:$.version") PluginData pluginData) {
-        notNull(pluginData.getPluginToolDataList(), "The plugin tool cannot be null.");
-        return Result.ok(this.pluginService.addPlugin(pluginData), 1);
-    }
-
-    /**
-     * 添加插件工具。
-     *
-     * @param pluginToolData 表示 Http 请求的参数的 {@link PluginToolData}。
-     * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
-     */
-    @PostMapping("/tools")
-    public Result<String> addPluginTool(@RequestBody PluginToolData pluginToolData) {
-        notNull(pluginToolData.getSchema(), "The tool schema cannot be null.");
-        Object name = pluginToolData.getSchema().get("name");
-        notNull(name, "The tool name cannot be null.");
-        if ((name instanceof String) && StringUtils.isBlank((String) name)) {
-            throw new IllegalArgumentException("The tool name cannot be blank.");
-        }
-        return Result.ok(this.pluginToolService.addPluginTool(pluginToolData), 1);
     }
 
     /**
@@ -190,31 +152,5 @@ public class PluginController {
             .build();
         ListResult<PluginData> res = this.pluginService.getPlugins(pluginQuery);
         return Result.ok(res.getData(), res.getCount());
-    }
-
-    /**
-     * 删除插件工具。
-     *
-     * @param uniqueName 表示插件工具的唯一索引的 {@link String}。
-     * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
-     */
-    @WithSpan("operation.plugin.delete")
-    @DeleteMapping("/tools/{uniqueName}")
-    public Result<String> deletePluginTool(@PathVariable("uniqueName") String uniqueName) {
-        notBlank(uniqueName, "The unique name cannot be blank.");
-        return Result.ok(this.pluginToolService.deletePluginTool(uniqueName), 1);
-    }
-
-    /**
-     * 删除插件。
-     *
-     * @param pluginId 表示插件的唯一索引的 {@link String}。
-     * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
-     */
-    @WithSpan("operation.plugin.delete")
-    @DeleteMapping("/{pluginId}")
-    public Result<String> deletePlugin(@PathVariable("pluginId") String pluginId) {
-        notBlank(pluginId, "The plugin id cannot be blank.");
-        return Result.ok(this.pluginService.deletePlugin(pluginId), 1);
     }
 }
