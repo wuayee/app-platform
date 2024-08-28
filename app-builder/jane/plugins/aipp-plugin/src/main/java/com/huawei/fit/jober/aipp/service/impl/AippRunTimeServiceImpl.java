@@ -18,6 +18,7 @@ import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.instance.MetaInstanceFilter;
+import com.huawei.fit.jane.task.domain.type.DateTimeConverter;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.FlowsService;
 import com.huawei.fit.jober.aipp.common.PageResponse;
@@ -232,7 +233,7 @@ public class AippRunTimeServiceImpl
         return InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_NAME_KEY, businessData.getOrDefault(AippConst.INST_NAME_KEY, "无标题"))
                 .putInfo(AippConst.INST_CREATOR_KEY, creator)
-                .putInfo(AippConst.INST_CREATE_TIME_KEY, businessData.get(AippConst.INST_CREATE_TIME_KEY))
+                .putInfo(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.RUNNING.name())
                 .putInfo(AippConst.INST_PROGRESS_KEY, "0")
                 .build();
@@ -347,7 +348,7 @@ public class AippRunTimeServiceImpl
                 RestartModeEnum.OVERWRITE.getMode()));
         businessData.put(AippConst.RESTART_MODE, restartMode);
         // 记录启动时间
-        businessData.put(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now());
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
 
         // 创建meta实例
         String metaVersionId = meta.getVersionId();
@@ -382,7 +383,7 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.RESTART_MODE,
                 businessData.getOrDefault(AippConst.RESTART_MODE, RestartModeEnum.OVERWRITE.getMode()));
         // 记录启动时间
-        businessData.put(AippConst.INST_CREATE_TIME_KEY, LocalDateTime.now());
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
 
         // 创建meta实例
         Instance metaInst = this.metaInstanceService.createMetaInstance(meta.getVersionId(),
@@ -1021,7 +1022,7 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.INST_RESUME_DURATION_KEY, String.valueOf(resumeDuration + duration.toMillis()));
         String createTime = instDetail.getInfo().get(AippConst.INST_CREATE_TIME_KEY);
         if (StringUtils.isNotEmpty(createTime)) {
-            businessData.put(AippConst.INST_CREATE_TIME_KEY, createTime);
+            businessData.put(AippConst.INSTANCE_START_TIME, DateTimeConverter.INSTANCE.fromExternal(createTime));
         }
 
         // 持久化aipp实例表单记录
