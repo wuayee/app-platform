@@ -272,7 +272,7 @@ public class Main {
                 .symbol()
                 .matcher(StringUtils::equalsIgnoreCase) // 忽略大小写匹配
                 .build();
-        SymbolSequence<String> value = SymbolSequence.fromArray(new String[] {"opt", "huawei", "fit", "FIT.yaml"});
+        SymbolSequence<String> value = SymbolSequence.fromArray(new String[] {"opt", "fit", "framework", "FIT.yaml"});
         boolean ret = pattern.matches(value);
         System.out.println(ret); // 输出：true
     }
