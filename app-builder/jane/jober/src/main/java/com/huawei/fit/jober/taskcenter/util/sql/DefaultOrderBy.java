@@ -6,7 +6,8 @@ package com.huawei.fit.jober.taskcenter.util.sql;
 
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 为 {@link OrderBy} 提供默认实现。

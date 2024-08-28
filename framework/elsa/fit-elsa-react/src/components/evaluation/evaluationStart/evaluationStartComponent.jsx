@@ -1,4 +1,5 @@
 import EvaluationStartWrapper from "@/components/evaluation/evaluationStart/EvaluationStartWrapper.jsx";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * 评估开始节点组件
@@ -6,7 +7,7 @@ import EvaluationStartWrapper from "@/components/evaluation/evaluationStart/Eval
  * @param jadeConfig
  */
 export const evaluationStartComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
@@ -21,9 +22,9 @@ export const evaluationStartComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <EvaluationStartWrapper disabled={disabled} data={data}/>
+            <EvaluationStartWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

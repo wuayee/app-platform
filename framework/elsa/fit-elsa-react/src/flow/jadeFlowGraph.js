@@ -25,19 +25,6 @@ import {huggingFaceNodeState} from "@/components/huggingFace/huggingFaceNodeStat
 import {huggingFaceComponent} from "@/components/huggingFace/huggingFaceComponent.jsx";
 import {codeComponent} from "@/components/code/codeComponent.jsx";
 import {codeNodeState} from "@/components/code/codeNodeState.jsx";
-import {jadeEvaluationPage} from "@/flow/jadeEvaluationPage.js";
-import {
-    evaluationAlgorithmsComponent
-} from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsComponent.jsx";
-import {
-    evaluationAlgorithmsNodeState
-} from "@/components/evaluation/evaluationAlgorithms/evaluationAlgorithmsNodeState.jsx";
-import {evaluationStartComponent} from "@/components/evaluation/evaluationStart/evaluationStartComponent.jsx";
-import {evaluationStartNodeStart} from "@/components/evaluation/evaluationStart/evaluationStartNodeStart.jsx";
-import {evaluationTestSetNodeState} from "@/components/evaluation/evaluationTestset/evaluationTestSetNodeState.jsx";
-import {evaluationTestSetComponent} from "@/components/evaluation/evaluationTestset/evaluationTestSetComponent.jsx";
-import {evaluationEndNodeEnd} from "@/components/evaluation/evaluationEnd/evaluationEndNodeEnd.jsx";
-import {evaluationEndComponent} from "@/components/evaluation/evaluationEnd/evaluationEndComponent.jsx";
 
 /**
  * jadeFlow的专用画布.
@@ -78,7 +65,6 @@ export const jadeFlowGraph = (div, title) => {
     const initialize = self.initialize;
     self.initialize = async () => {
         self.registerPlugin("jadeFlowPage", jadeFlowPage);
-        self.registerPlugin("jadeEvaluationPage", jadeEvaluationPage);
         self.registerPlugin("jadeEvent", jadeEvent);
         self.registerPlugin("taskNode", taskNode);
         self.registerPlugin("endNodeEnd", endNodeEnd);
@@ -104,14 +90,6 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("huggingFaceComponent", huggingFaceComponent);
         self.registerPlugin("codeComponent", codeComponent);
         self.registerPlugin("codeNodeState", codeNodeState);
-        self.registerPlugin("evaluationStartComponent", evaluationStartComponent);
-        self.registerPlugin("evaluationStartNodeStart", evaluationStartNodeStart);
-        self.registerPlugin("evaluationAlgorithmsComponent", evaluationAlgorithmsComponent);
-        self.registerPlugin("evaluationAlgorithmsNodeState", evaluationAlgorithmsNodeState);
-        self.registerPlugin("evaluationTestSetComponent", evaluationTestSetComponent);
-        self.registerPlugin("evaluationTestSetNodeState", evaluationTestSetNodeState);
-        self.registerPlugin("evaluationEndComponent", evaluationEndComponent);
-        self.registerPlugin("evaluationEndNodeEnd", evaluationEndNodeEnd);
         return initialize.apply(self);
     };
 
@@ -166,14 +144,30 @@ export const jadeFlowGraph = (div, title) => {
     };
 
     /**
-     * 评估.
-     *
-     * @return {Promise<void>} Promise.
+     * @override
      */
-    self.evaluate = async () => {
-        const pageData = self.getPageData(0);
-        await self.edit(0, self.div, pageData.id);
-        self.activePage.normalize();
+    const edit = self.edit;
+    self.edit = async (index, div, id) => {
+        const pageData = self.getPageData(index);
+        normalizeData(pageData);
+        return edit.apply(self, [index, div, id]);
+    };
+
+    // 数据归一化，当runnable为undefined或为null时，说明是老数据，需要将他们的runnable设置为true.
+    const normalizeData = (pageData) => {
+        pageData.shapes.forEach(shapeData => {
+            if (shapeData.runnable === undefined || shapeData.runnable === null) {
+                shapeData.runnable = true;
+            }
+
+            if (shapeData.type === "conditionNodeCondition") {
+                shapeData.flowMeta.conditionParams.branches.forEach(b => {
+                    if (b.runnable === undefined || b.runnable === null) {
+                        b.runnable = true;
+                    }
+                });
+            }
+        });
     };
 
     return self;

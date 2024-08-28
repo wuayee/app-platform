@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>jade-app-builder-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -14,6 +14,7 @@
 
     <modules>
         <module>flow-graph-db-driver</module>
+        <module>flow-graph-elsa-driver</module>
         <module>flow-graph</module>
         <module>jober</module>
         <module>jane-common</module>

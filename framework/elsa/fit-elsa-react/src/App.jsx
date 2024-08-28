@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {JadeFlow} from "./flow/jadeFlowEntry.jsx";
-import {graphData} from "./testFlowData.js";
+import {evaluationTestData, graphData} from "./testFlowData.js";
 import {Button} from "antd";
 import {CodeDrawer} from "@/components/common/code/CodeDrawer.jsx";
 
@@ -42,17 +42,25 @@ function App() {
         });
         configs.push({
             node: "evaluationAlgorithmsNodeState", urls: {
+                evaluationAlgorithmsUrl: "http://localhost:8080/api/jober/store/tools/search",
+            }
+        });
+        configs.push({
+            node: "evaluationTestSetNodeState", urls: {
                 datasetUrlPrefix: "http://10.245.113.7:8080/eval/",
             }
         });
 
-        JadeFlow.edit(stage, "1111", graphData, configs).then(agent => {
+        JadeFlow.edit(stage, "1111", graphData, configs, null).then(agent => {
             window.agent = agent;
             agent.onModelSelect((onModelSelectedCallback) => {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
             });
+            agent.onCreateButtonClick((callback) => {
+                console.log("============================hahaha", callback);
+            });
             agent.onChange((dirtyAction) => {
-                console.log("dirty action: ", dirtyAction);
+                console.log("=======================dirty action: ", dirtyAction);
             });
         });
     });
@@ -80,7 +88,8 @@ function App() {
                         open={open}
                         languages={["python"]}
                         editorConfig={{
-                            language: "python", code: "async def main(args: Args) -> Output:\n return ret"
+                            language: "python", code: "async def main(args: Args) -> Output:\n return ret",
+                            suggestions: [{label: "zyyyyyyyyyyyy", insertText: "zyyyyyyyyyyyy"}]
                         }}
                         onClose={() => setOpen(false)}
                         onConfirm={(v) => {

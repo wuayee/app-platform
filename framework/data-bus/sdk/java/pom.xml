@@ -7,14 +7,14 @@
 
     <groupId>com.huawei.fit.databus</groupId>
     <artifactId>java-sdk</artifactId>
-    <version>0.2.17</version>
+    <version>0.2.18</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <maven.antrun.version>3.1.0</maven.antrun.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <assertj.version>3.26.3</assertj.version>
+        <assertj.version>3.22.0</assertj.version>
         <junit.version>5.10.3</junit.version>
         <mockito.version>4.11.0</mockito.version>
         <log4j2.version>2.23.1</log4j2.version>
@@ -26,7 +26,7 @@
             <version>23.5.26</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
             <version>3.4.2</version>
         </dependency>
@@ -97,17 +97,4 @@
             </build>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
 </project>

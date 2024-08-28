@@ -9,7 +9,7 @@ import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {DATA_TYPES} from "@/common/Consts.js";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -29,7 +29,7 @@ _JadeObservableOutput.propTypes = {
 function _JadeObservableOutput({disabled, output}) {
     const shape = useShapeContext();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [outputTreeData, setOutputTreeData] = useState(() => [convertToTreeData(output, 1, null)]);
 
     // 组件初始化时注册observable.
@@ -86,7 +86,11 @@ function _JadeObservableOutput({disabled, output}) {
      * @return {JSX.Element}
      */
     const renderTreeNode = (node) => {
-        return <TreeNode node={node} disabled={disabled} shape={shape} dispatch={dispatch} output={output}/>
+        return <TreeNode node={node}
+                         disabled={disabled}
+                         shape={shape}
+                         dispatch={dispatch}
+                         output={output}/>
     };
 
     return (<>
@@ -127,6 +131,7 @@ const TreeNode = ({node, disabled, shape, dispatch, output}) => {
     const dataTypes = Object.values(DATA_TYPES);
     const inputWidth = 140 - (node.level - 1) * 24;
     const {key, title, type, level} = node;
+    const {t} = useTranslation();
     // 输出的最大层数是4
     const maxLevel = 4;
 
@@ -276,10 +281,10 @@ const TreeNode = ({node, disabled, shape, dispatch, output}) => {
                            initialValue={type}
                 >
                     <JadeStopPropagationSelect
-                            style={{borderRadius: 4}}
-                            disabled={disabled}
-                            onChange={(value) => editOutputType(key, 'editOutputType', value)}
-                            options={options}
+                        style={{borderRadius: 4}}
+                        disabled={disabled}
+                        onChange={(value) => editOutputType(key, 'editOutputType', value)}
+                        options={options}
                     />
                 </Form.Item>
             </Col>

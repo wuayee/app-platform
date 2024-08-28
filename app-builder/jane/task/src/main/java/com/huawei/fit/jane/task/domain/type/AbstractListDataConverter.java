@@ -4,12 +4,13 @@
 
 package com.huawei.fit.jane.task.domain.type;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jane.task.domain.DataConverter;
-import com.huawei.fitframework.util.ParsingResult;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.support.DefaultParsingResult;
+
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.support.DefaultParsingResult;
 
 import java.lang.reflect.Array;
 import java.util.Collections;

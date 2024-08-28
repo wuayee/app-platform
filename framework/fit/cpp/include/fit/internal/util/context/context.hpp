@@ -73,6 +73,9 @@ public:
      */
     void SetPolicy(uint8_t policy) noexcept;
 
+    void SetAccessToken(const Fit::string& AccessToken) noexcept;
+    const Fit::string& GetAccessToken() const noexcept;
+
     /**
     * 获取context中指定调用地址
     * @param ctx 上下文对象句柄
@@ -224,6 +227,7 @@ private:
     uint32_t timeout_ {5000};
     // 调用策略
     uint8_t policy_ {0};
+    Fit::string accessToken_ {};
     // 调用地址
     std::unique_ptr<TargetAddress> targetAddressPtr_;
     // global context

@@ -4,15 +4,15 @@
 
 package com.huawei.jade.app.engine.schema;
 
-import static com.huawei.fitframework.util.IoUtils.content;
+import static modelengine.fitframework.util.IoUtils.content;
 import static com.huawei.jade.app.engine.schema.code.SchemaGeneratorRetCode.JSON_INVALID_ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.schema.exception.JsonInvalidException;
 import com.huawei.jade.app.engine.schema.generator.SchemaGenerator;
 import com.huawei.jade.app.engine.schema.generator.SchemaGeneratorImpl;

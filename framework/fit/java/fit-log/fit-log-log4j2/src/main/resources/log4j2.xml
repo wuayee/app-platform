@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="600">
     <Properties>
-        <Property name="CONSOLE_PATTERN">%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %replace{%m}{\r|\n|\x08}{}%n</Property>
-        <Property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSSS} [%t] %5p (%F:%L) %replace{%m}{\r|\n|\x08}{}%n</Property>
+        <Property name="CONSOLE_PATTERN">%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %replace{%m}{\f|\t|\r|\n|\x08}{}%n</Property>
+        <Property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSSS} [%t] %5p (%F:%L) %replace{%m}{\f|\t|\r|\n|\x08}{}%n</Property>
         <Property name="LOG_HOME">/applog</Property>
     </Properties>
     <Appenders>
@@ -21,7 +21,7 @@
             <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
             <!-- 输出日志的格式 -->
             <PatternLayout>
-                <Pattern>"%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %replace{%m}{\r|\n|\x08}{}%n"</Pattern>
+                <Pattern>"%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %replace{%m}{\f|\t|\r|\n|\x08}{}%n"</Pattern>
             </PatternLayout>
         </Console>
         <RollingRandomAccessFile name="framework_appender"
@@ -46,7 +46,7 @@
             <appender-ref ref="framework_appender"/>
         </root>
         <!-- 第三方日志系统 -->
-        <logger name="com.huawei.fitframework" level="info"/>
-        <logger name="com.huawei.fit" level="info"/>
+        <logger name="modelengine.fitframework" level="info"/>
+        <logger name="modelengine.fit" level="info"/>
     </Loggers>
 </Configuration>

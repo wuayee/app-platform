@@ -1,0 +1,59 @@
+{
+    "genericables": {
+        "matata.registry.secure-access.get-token": {
+            "name": "get_token",
+            "fitables": {
+                "apply_token": {}
+            },
+            "route": {
+                "default": "get_token"
+            },
+            "tags": "traceIgnored,trustIgnored,registry,localOnly",
+            "genericable-config-sources": "config_file"
+        },
+        "matata.registry.secure-access.apply-token": {
+            "name": "applyToken",
+            "fitables": {
+                "apply_token": {}
+            },
+            "route": {
+                "default": "apply_token"
+            },
+            "tags": "traceIgnored,trustIgnored,registry",
+            "genericable-config-sources": "config_file"
+        },
+        "matata.registry.secure-access.is-authorized": {
+            "name": "isAuthorized",
+            "fitables": {
+                "is_authorized": {}
+            },
+            "route": {
+                "default": "is_authorized"
+            },
+            "tags": "traceIgnored,trustIgnored,registry",
+            "genericable-config-sources": "config_file"
+        },
+        "matata.registry.secure-access.refresh-token": {
+            "name": "refreshToken",
+            "fitables": {
+                "refresh_token_for_registry_server": {}
+            },
+            "route": {
+                "default": "refresh_token_for_registry_server"
+            },
+            "tags": "traceIgnored,trustIgnored,registry",
+            "genericable-config-sources": "config_file"
+        },
+        "matata.registry.secure-access.sign": {
+            "name": "sign",
+            "fitables": {
+                "sign_for_cpp": {}
+            },
+            "route": {
+                "default": "sign_for_cpp"
+            },
+            "tags": "traceIgnored,trustIgnored,registry",
+            "genericable-config-sources": "config_file"
+        }
+    }
+}

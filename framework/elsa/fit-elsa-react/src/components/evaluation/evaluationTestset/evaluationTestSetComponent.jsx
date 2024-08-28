@@ -23,7 +23,7 @@ export const evaluationTestSetComponent = (jadeConfig) => {
                 value: [
                     {id: uuidv4(), name: 'name', type: 'String', from: 'Input', value: ""},
                     {id: uuidv4(), name: 'id', type: 'String', from: 'Input', value: ""},
-                    {id: uuidv4(), name: 'version', type: 'Integer', from: 'Input', value: ""},
+                    {id: uuidv4(), name: 'version', type: 'String', from: 'Input', value: ""},
                     {
                         id: "quantity_" + uuidv4(),
                         name: "quantity",
@@ -39,9 +39,9 @@ export const evaluationTestSetComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <EvaluationTestSetWrapper disabled={disabled} data={data}/>
+            <EvaluationTestSetWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 

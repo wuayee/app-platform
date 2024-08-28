@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common;
 
-import com.huawei.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.ErrorCode;
 
 /**
  * 服务器内部异常，用于服务器内部报错。

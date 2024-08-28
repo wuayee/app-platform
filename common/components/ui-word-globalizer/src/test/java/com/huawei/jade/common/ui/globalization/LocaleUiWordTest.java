@@ -7,11 +7,11 @@ package com.huawei.jade.common.ui.globalization;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.globalization.StringResource;
-import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.globalization.StringResource;
+import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

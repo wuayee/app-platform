@@ -4,4 +4,4 @@ date-format: 'yyyy-MM-dd'
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.serialization.json.jackson'
+    - 'modelengine.fit.serialization.json.jackson'

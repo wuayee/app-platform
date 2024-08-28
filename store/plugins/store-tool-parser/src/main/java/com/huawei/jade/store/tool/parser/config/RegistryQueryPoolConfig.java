@@ -4,8 +4,8 @@
 
 package com.huawei.jade.store.tool.parser.config;
 
-import com.huawei.fitframework.annotation.AcceptConfigValues;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.AcceptConfigValues;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 注册中心查询线程池配置参数。

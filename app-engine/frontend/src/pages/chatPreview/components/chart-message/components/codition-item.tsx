@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Popover } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import { formatterLabel } from '../utils/chart-condition';
 import ListFilter from './condition-list-form';
 import DateFilter from './condition-date-form';

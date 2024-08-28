@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade.waterflow</groupId>
+        <groupId>modelengine.fit.jade.waterflow</groupId>
         <artifactId>jade-waterflow-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -16,37 +16,37 @@
     <dependencies>
         <!-- Fit -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-data-repository-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.integration</groupId>
+            <groupId>modelengine.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
+            <groupId>modelengine.fit.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
+            <groupId>modelengine.fitframework.extension</groupId>
             <artifactId>fit-transaction</artifactId>
         </dependency>
 
         <!-- Ohscript -->
         <dependency>
-            <groupId>com.huawei.fit.ohscript</groupId>
+            <groupId>modelengine.fit.ohscript</groupId>
             <artifactId>ohscript</artifactId>
         </dependency>
 

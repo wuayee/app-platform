@@ -5,7 +5,8 @@
 package com.huawei.fit.jane.flow.graph.repo;
 
 import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
-import com.huawei.fitframework.model.RangedResultSet;
+
+import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;
 import java.util.Optional;

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huawei.fitframework</groupId>
+    <groupId>modelengine.fitframework</groupId>
     <artifactId>fit-dependency</artifactId>
     <version>3.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -19,7 +19,7 @@
         <fit.version>3.5.0-SNAPSHOT</fit.version>
 
         <!-- Test framework versions -->
-        <assertj.version>3.26.3</assertj.version>
+        <assertj.version>3.22.0</assertj.version>
         <junit.version>5.10.3</junit.version>
         <mockito.version>4.11.0</mockito.version>
     </properties>
@@ -28,140 +28,140 @@
         <dependencies>
             <!-- FIT Maven Plugin -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-maven-plugin-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- FIT Starter -->
             <dependency>
-                <groupId>com.huawei.fitframework.starter</groupId>
+                <groupId>modelengine.fitframework.starter</groupId>
                 <artifactId>fit-starter</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.starter</groupId>
+                <groupId>modelengine.fit.starter</groupId>
                 <artifactId>fit-plugins-starter-web</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.starter</groupId>
+                <groupId>modelengine.fit.starter</groupId>
                 <artifactId>fit-services-starter-web</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- FIT Core -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-aop</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-aop-aspect</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-aop-bytebuddy</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-api</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-broker</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-conf</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-conf-yaml</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-ioc</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-log-console</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-log-log4j2</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-plugin</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-protocol-nestable-jar</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-runtime</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- FIT Extension -->
             <dependency>
-                <groupId>com.huawei.fitframework.extension</groupId>
+                <groupId>modelengine.fitframework.extension</groupId>
                 <artifactId>fit-retry</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework.extension</groupId>
+                <groupId>modelengine.fitframework.extension</groupId>
                 <artifactId>fit-schedule</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework.extension</groupId>
+                <groupId>modelengine.fitframework.extension</groupId>
                 <artifactId>fit-transaction</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework.extension</groupId>
+                <groupId>modelengine.fitframework.extension</groupId>
                 <artifactId>fit-validation</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- Test -->
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-test-framework</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>
@@ -185,7 +185,7 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
+                <groupId>modelengine.fitframework</groupId>
                 <artifactId>fit-service-test-util</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>
@@ -193,172 +193,159 @@
 
             <!-- FIT Service -->
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-client</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-data-repository-service</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-heartbeat</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-protocol</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-message-serializer</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-message-serializer-test</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-security</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-server</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.service</groupId>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-service-registry-and-discovery</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- FIT Plugin -->
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-client-http</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-data-repository</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-dynamic-plugin-directory</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-dynamic-plugin-mvn</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-heartbeat-client</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-http-client-okhttp</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-http-handler-registry</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-http-server-netty</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-message-serializer-cbor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-message-serializer-json-jackson</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-object-serializer-cbor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-server-http</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-service-coordination-locator</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-service-coordination-simple</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-service-registry</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-service-discovery</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.plugin</groupId>
+                <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-value-fastjson</artifactId>
                 <version>${fit.version}</version>
             </dependency>
 
             <!-- FIT Integration -->
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
+                <groupId>modelengine.fit.integration</groupId>
                 <artifactId>fit-druid</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
+                <groupId>modelengine.fit.integration</groupId>
                 <artifactId>fit-mybatis</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.huawei.fit.integration</groupId>
+                <groupId>modelengine.fit.integration</groupId>
                 <artifactId>fit-mybatis-common</artifactId>
                 <version>${fit.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
 </project>

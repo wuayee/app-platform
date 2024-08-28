@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.base.service;
 
-import com.huawei.fitframework.annotation.Genericable;
+import modelengine.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
 
 import java.util.List;

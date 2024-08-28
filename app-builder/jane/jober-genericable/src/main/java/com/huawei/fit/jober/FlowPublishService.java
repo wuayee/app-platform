@@ -5,7 +5,8 @@
 package com.huawei.fit.jober;
 
 import com.huawei.fit.jober.entity.FlowNodePublishInfo;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 流程推送服务Genericable。

@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 
 CodeWrapper.propTypes = {
     data: PropTypes.object.isRequired,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 };
 
 /**
@@ -16,7 +16,7 @@ CodeWrapper.propTypes = {
  * @return {*}
  * @constructor
  */
-export default function CodeWrapper({data, disabled}) {
+export default function CodeWrapper({data, shapeStatus}) {
     const dispatch = useDispatch();
     const output = data.outputParams.find(item => item.name === "output");
     const input = data.inputParams;
@@ -64,13 +64,13 @@ export default function CodeWrapper({data, disabled}) {
     </>);
 
     return (<>
-        <JadeInputForm disabled={disabled}
+        <JadeInputForm shapeStatus={shapeStatus}
                        items={initItems()}
                        addItem={addItem}
                        updateItem={updateItem}
                        deleteItem={deleteItem}
                        content={content}/>
-        <CodePanel disabled={disabled} input={input} dispatch={dispatch}/>
-        <JadeObservableOutput disabled={disabled} output={output}/>
+        <CodePanel disabled={shapeStatus.disabled} input={input} dispatch={dispatch}/>
+        <JadeObservableOutput disabled={shapeStatus.disabled} output={output}/>
     </>);
 }

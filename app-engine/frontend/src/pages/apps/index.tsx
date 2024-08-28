@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Input } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Icons } from '@/components/icons';
-import { queryAppsApi } from '@/shared/http/apps.js';
+import { queryAppsApi } from '@/shared/http/apps';
 import AppCard from '@/components/appCard';
 import { debounce } from '@/shared/utils/common';
 import { useHistory } from 'react-router-dom';
-import { deleteAppApi, getUserCollectionNoDesc } from '@/shared/http/appDev';
-import { setCollectionValue } from '@/store/collection/collection';
-import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { deleteAppApi } from '@/shared/http/appDev';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
@@ -80,24 +79,11 @@ const Apps: React.FC = () => {
       queryApps();
     }
   }
-
-  const count = useAppSelector((state: any) => state.collectionStore.value);
-
-  // 获取当前登录用户名
-  const getLoaclUser = () => {
-    return localStorage.getItem('currentUserIdComplete') ?? '';
-  }
-
-  const dispatch = useAppDispatch();
-
-  // 获取用户收藏列表
-  const getUserCollectionList = async () => {
-    const res = await getUserCollectionNoDesc(getLoaclUser());
-    const collectMap = (res?.data ?? []).reduce((prev: any, next: any) => {
-      prev[next.appId] = true;
-      return prev
-    }, {})
-    dispatch(setCollectionValue(collectMap))
+  // 联机帮助
+  const onlineHelp = () => {
+    if (window.self !== window.top) {
+      window.open(`${window.parent.location.origin}/help/app_market.html`, '_blank');
+    }
   }
 
   useEffect(() => {
@@ -107,6 +93,7 @@ const Apps: React.FC = () => {
     <div className='apps_root'>
       <div className='apps_header'>
         <div className='apps_title'>{t('appMarket')}</div>
+        <QuestionCircleOutlined onClick={onlineHelp} />
       </div>
       <div className='apps_main'>
         <div className='operatorArea'>

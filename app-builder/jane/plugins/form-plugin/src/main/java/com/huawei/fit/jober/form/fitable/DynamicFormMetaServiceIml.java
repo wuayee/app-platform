@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.form.fitable;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.dynamicform.DynamicFormMetaService;
 import com.huawei.fit.dynamicform.entity.DynamicFormEntity;
@@ -19,12 +19,13 @@ import com.huawei.fit.jober.form.dto.ShapesMetaType;
 import com.huawei.fit.jober.form.exception.FormErrCode;
 import com.huawei.fit.jober.form.exception.FormParamException;
 import com.huawei.fit.jober.form.mapper.FormMapper;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Value;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;

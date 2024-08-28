@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Checkbox, Input, Button } from 'antd';
-import { getFinanceOptions } from '@shared/http/aipp';
+import { getFinanceOptions } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 const { Search } = Input;
 

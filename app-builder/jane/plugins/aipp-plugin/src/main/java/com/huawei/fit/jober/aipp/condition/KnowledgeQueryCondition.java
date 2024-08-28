@@ -4,12 +4,11 @@
 
 package com.huawei.fit.jober.aipp.condition;
 
-import com.huawei.fit.http.annotation.RequestQuery;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fit.http.annotation.RequestQuery;
 
 /**
  * 知识库查询条件集

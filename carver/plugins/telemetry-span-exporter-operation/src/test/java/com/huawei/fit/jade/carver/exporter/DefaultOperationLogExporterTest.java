@@ -12,14 +12,14 @@ import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.exporter.OperationLogExporter;
 import com.huawei.jade.carver.exporter.support.DefaultOperationLogExporter;
 import com.huawei.jade.carver.operation.OperationLogLocaleService;

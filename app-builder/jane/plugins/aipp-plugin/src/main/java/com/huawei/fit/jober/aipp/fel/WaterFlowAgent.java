@@ -5,23 +5,24 @@
 package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import com.huawei.fit.waterflow.domain.context.StateContext;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.ChatMessages;
-import com.huawei.jade.fel.chat.ChatModelStreamService;
-import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.engine.flows.AiFlows;
-import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.models.ChatChunk;
-import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
-import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
-import com.huawei.jade.fel.tool.ToolCall;
-import com.huawei.jade.fel.tool.ToolProvider;
+
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.ChatMessages;
+import modelengine.fel.chat.ChatModelStreamService;
+import modelengine.fel.chat.ChatOptions;
+import modelengine.fel.chat.Prompt;
+import modelengine.fel.engine.flows.AiFlows;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.operators.models.ChatChunk;
+import modelengine.fel.engine.operators.models.ChatStreamModel;
+import modelengine.fel.engine.operators.patterns.AbstractAgent;
+import modelengine.fel.tool.ToolCall;
+import modelengine.fel.tool.ToolProvider;
+import modelengine.fit.waterflow.domain.context.StateContext;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.List;

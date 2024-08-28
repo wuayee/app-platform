@@ -2,8 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-import com.huawei.fitframework.globalization.StringResource;
-import com.huawei.fitframework.plugin.Plugin;
+import modelengine.fitframework.globalization.StringResource;
+import modelengine.fitframework.plugin.Plugin;
+
 import com.huawei.jade.common.localemessage.LocaleMessageHandlerImpl;
 
 import org.junit.jupiter.api.Assertions;
@@ -22,6 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 public class LocaleMessageHandlerImplTest {
+    private final String defaultSystemErrorMessageKey = "500";
+
     @Mock
     private Plugin plugin;
 
@@ -45,10 +48,12 @@ public class LocaleMessageHandlerImplTest {
     @DisplayName("测试获取默认信息")
     void shouldSuccessHandleLocaleMessageWhenNoResource() {
         Mockito.when(plugin.sr()).thenReturn(stringResource);
+        Mockito.when(stringResource.getMessage(Mockito.any(), Mockito.eq(defaultSystemErrorMessageKey)))
+            .thenReturn("system default message");
         Mockito.doThrow(new NullPointerException())
             .when(stringResource)
-            .getMessage(Mockito.any(), Mockito.anyString(), Mockito.any(), Mockito.any());
+            .getMessage(Mockito.any(), Mockito.eq("1"), Mockito.any(), Mockito.any());
         String localeMessage = localeMessageHandler.getLocaleMessage("1", "default message");
-        Assertions.assertEquals("default message", localeMessage);
+        Assertions.assertEquals("system default message", localeMessage);
     }
 }

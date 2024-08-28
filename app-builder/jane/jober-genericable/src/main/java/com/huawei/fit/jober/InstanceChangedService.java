@@ -7,7 +7,8 @@ package com.huawei.fit.jober;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
 import com.huawei.fit.jober.entity.task.Task;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.Map;
 

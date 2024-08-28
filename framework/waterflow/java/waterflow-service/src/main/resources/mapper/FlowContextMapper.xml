@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper">
+<mapper namespace="modelengine.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper">
     <resultMap id="objectMap"
-               type="com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO">
+               type="modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO">
         <id column="context_id" property="contextId"/>
         <result column="trace_id" property="traceId"/>
         <result column="trans_id" property="transId"/>
@@ -24,7 +24,7 @@
     </resultMap>
 
     <resultMap id="objectMapWithoutFlowData"
-               type="com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO">
+               type="modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO">
         <id column="context_id" property="contextId"/>
         <result column="trace_id" property="traceId"/>
         <result column="trans_id" property="transId"/>
@@ -540,7 +540,23 @@
         <include refid="columns"/>
         FROM
         <include refid="table"/>
-        WHERE to_batch = #{toBatch}
+        WHERE to_batch
+        IN
+        <foreach item="item" index="index" collection="toBatchIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findWithoutFlowDataByToBatch" resultMap="objectMapWithoutFlowData">
+        SELECT
+        <include refid="columnsWithoutFlowData"/>
+        FROM
+        <include refid="table"/>
+        WHERE to_batch
+        IN
+        <foreach item="item" index="index" collection="toBatchIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 
     <select id="findFinishedContextsPagedByTraceId" resultMap="objectMap">

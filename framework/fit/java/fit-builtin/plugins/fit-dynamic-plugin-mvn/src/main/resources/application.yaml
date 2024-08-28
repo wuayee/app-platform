@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.plugin.dynamic.mvn'
+    - 'modelengine.fit.plugin.dynamic.mvn'

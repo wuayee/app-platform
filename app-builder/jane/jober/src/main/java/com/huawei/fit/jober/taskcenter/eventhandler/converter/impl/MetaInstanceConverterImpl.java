@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.taskcenter.eventhandler.converter.impl;
 
 import static com.huawei.fit.jane.Undefinables.whenDefined;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.Undefinable;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
@@ -16,8 +16,9 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaInstanceConverter;
 import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;

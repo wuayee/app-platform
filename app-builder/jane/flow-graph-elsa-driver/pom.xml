@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>modelengine.fit.jade</groupId>
+        <artifactId>app-builder-jane-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.huawei.fit.jane</groupId>
+    <artifactId>flow-graph-elsa-driver</artifactId>
+    <version>0.1.0</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <fit.version>3.3.10-SNAPSHOT</fit.version>
+        <fit.elsa.version>1.0.5</fit.elsa.version>
+
+        <!-- Maven plugin versions -->
+        <maven.compiler.version>3.11.0</maven.compiler.version>
+        <maven.jar.version>3.3.0</maven.jar.version>
+        <maven.surefire.version>3.0.0</maven.surefire.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>flow-graph</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>jane-common</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-core</artifactId>
+            <version>1.5.26</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.83</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.13</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.integration</groupId>
+            <artifactId>fit-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.integration</groupId>
+            <artifactId>fit-druid</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.service</groupId>
+            <artifactId>fit-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jober</groupId>
+            <artifactId>jober-genericable</artifactId>
+            <version>0.6.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.huawei.fit.elsa</groupId>
+            <artifactId>fit-elsa-interface</artifactId>
+            <version>${fit.elsa.version}</version>
+        </dependency>
+
+        <!-- HTTP -->
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-core</artifactId>
+            <version>1.5.26</version>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>fit-snapshots</id>
+            <name>Fit Snapshots</name>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
+        </snapshotRepository>
+        <repository>
+            <id>fit-releases</id>
+            <name>Fit Releases</name>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.version}</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Created-By>FIT lab (Huawei)</Created-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>modelengine.fitframework</groupId>
+                <artifactId>fit-build-maven-plugin</artifactId>
+                <version>3.5.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>build-plugin</id>
+                        <goals>
+                            <goal>build-plugin</goal>
+                        </goals>
+                        <configuration>
+                            <category>USER</category>
+                            <!-- The driver must be installed before engine. -->
+                            <level>1</level>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>package-plugin</id>
+                        <goals>
+                            <goal>package-plugin</goal>
+                        </goals>
+                        <configuration>
+                            <level>1</level>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

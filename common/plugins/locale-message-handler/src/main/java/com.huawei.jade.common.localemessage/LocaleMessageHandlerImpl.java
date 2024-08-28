@@ -4,13 +4,15 @@
 
 package com.huawei.jade.common.localemessage;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.authentication.context.UserContext;
 import com.huawei.jade.authentication.context.UserContextHolder;
+import com.huawei.jade.common.code.CommonRetCode;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +49,22 @@ public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
 
     @Override
     public String getLocaleMessage(String code, String defaultMsg, Object... params) {
+        Locale locale = getLocale();
+        try {
+            return this.plugin.sr().getMessage(locale, code, defaultMsg, params);
+        } catch (Exception e) {
+            log.warn("Failed to get locale message. [code={}]", code, e);
+            return getDefaultMessage();
+        }
+    }
+
+    @Override
+    public String getDefaultMessage() {
+        Locale locale = getLocale();
+        return plugin.sr().getMessage(locale, String.valueOf(CommonRetCode.INTERNAL_ERROR.getCode()));
+    }
+
+    private Locale getLocale() {
         UserContext userContext = UserContextHolder.get();
         Locale locale;
         if (userContext == null || StringUtils.isEmpty(userContext.getLanguage())) {
@@ -55,11 +73,6 @@ public class LocaleMessageHandlerImpl implements LocaleMessageHandler {
             List<Locale.LanguageRange> list = Locale.LanguageRange.parse(userContext.getLanguage());
             locale = CollectionUtils.isEmpty(list) ? Locale.getDefault() : Locale.lookup(list, LOCALES);
         }
-        try {
-            return this.plugin.sr().getMessage(locale, code, defaultMsg, params);
-        } catch (Exception e) {
-            log.warn("Failed to get locale message. [code={}]", code, e);
-            return defaultMsg;
-        }
+        return locale;
     }
 }

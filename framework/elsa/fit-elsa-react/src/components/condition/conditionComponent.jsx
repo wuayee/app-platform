@@ -1,8 +1,9 @@
 import ConditionFormWrapper from "@/components/condition/ConditionFormWrapper.jsx";
 import {v4 as uuidv4} from "uuid";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 export const conditionComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
@@ -64,13 +65,14 @@ export const conditionComponent = (jadeConfig) => {
     /**
      * 必须.
      */
-    self.getReactComponents = (disabled, data) => {
-        return (<><ConditionFormWrapper data={data} disabled={disabled}/></>);
+    self.getReactComponents = (shapeStatus, data) => {
+        return (<><ConditionFormWrapper data={data} shapeStatus={shapeStatus}/></>);
     };
 
     /**
      * 必须.
      */
+    const reducers = self.reducers;
     self.reducers = (data, action) => {
         // Functions to be used for updating the data
         const changeConditionConfig = () => {
@@ -125,7 +127,7 @@ export const conditionComponent = (jadeConfig) => {
                 return changeConditionConfig();
             }
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [data, action]);
             }
         }
     };

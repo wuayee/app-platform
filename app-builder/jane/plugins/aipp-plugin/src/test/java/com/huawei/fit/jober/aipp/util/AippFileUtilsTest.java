@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
-import com.huawei.fitframework.util.FileUtils;
+import modelengine.fitframework.util.FileUtils;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;

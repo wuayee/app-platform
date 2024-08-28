@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Modal, Button } from 'antd';
 import DeployTable from './deploy-table';
-import { getDeployTool, setDeployTool } from '@shared/http/plugin';
+import { getDeployTool, setDeployTool } from '@/shared/http/plugin';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import '../styles/deployment.scss';
@@ -34,10 +34,6 @@ const DeployMent = ({ cancle, confirm }) => {
     });
     setPluginNum(list.length);
     setDeployedNum(uninstallNum);
-    if (list.length === 0) {
-      Message({ type: 'warning', content: t('noSelectedPlugin') });
-      return;
-    }
     setLoading(false);
     setOpen(true);
   }

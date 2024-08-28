@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.dlock.jdbc.utils;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

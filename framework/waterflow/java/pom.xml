@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huawei.fit.jade.waterflow</groupId>
+    <groupId>modelengine.fit.jade.waterflow</groupId>
     <artifactId>jade-waterflow-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -14,6 +14,7 @@
         <module>waterflow-dependency</module>
         <module>waterflow-genericable</module>
         <module>waterflow-service</module>
+        <module>waterflow-definition</module>
     </modules>
 
     <properties>
@@ -36,26 +37,13 @@
         <maven.dependency.version>3.6.1</maven.dependency.version>
         <maven.jar.version>3.3.0</maven.jar.version>
         <maven.surefire.version>3.2.5</maven.surefire.version>
-        <maven.source.version>3.3.1</maven.source.version>
+        <maven.source.version>3.3.0</maven.source.version>
     </properties>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.huawei.fit.jade.waterflow</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-dependency</artifactId>
                 <version>${waterflow.version}</version>
                 <type>pom</type>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import JSZip from 'jszip';
-import { bytesToSize } from '@/common/utils';
+import { bytesToSize } from '@/common/util';
 import { Message } from '@/shared/utils/message';
 import { fileValidate } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';

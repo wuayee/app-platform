@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.common;
 
-import com.huawei.fitframework.exception.ErrorCode;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fitframework.exception.ErrorCode;
+import modelengine.fitframework.exception.FitException;
 
 /**
  * JoberGenericable指定异常基类，用于SPI实现时异常抛出与透传。

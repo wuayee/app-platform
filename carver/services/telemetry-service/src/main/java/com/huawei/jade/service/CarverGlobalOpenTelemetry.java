@@ -4,9 +4,9 @@
 
 package com.huawei.jade.service;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.LockUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.LockUtils;
 
 import io.opentelemetry.api.OpenTelemetry;
 

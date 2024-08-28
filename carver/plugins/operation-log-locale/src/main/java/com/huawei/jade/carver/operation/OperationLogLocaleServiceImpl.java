@@ -10,13 +10,13 @@ import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP
 import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_RESULT_KEY;
 import static com.huawei.jade.carver.operation.enums.OperationLogConstant.SYS_OP_SUCCEED;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.operation.support.CompositParam;
 import com.huawei.jade.carver.operation.support.OperationLogFields;
-import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
+import modelengine.fel.core.template.support.DefaultStringTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;

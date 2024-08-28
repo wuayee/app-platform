@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.tool;
 
-import com.huawei.fitframework.pattern.builder.BuilderFactory;
+import modelengine.fitframework.pattern.builder.BuilderFactory;
 import com.huawei.jade.carver.tool.support.MethodToolMetadata;
 import com.huawei.jade.carver.tool.support.SchemaToolMetadata;
 

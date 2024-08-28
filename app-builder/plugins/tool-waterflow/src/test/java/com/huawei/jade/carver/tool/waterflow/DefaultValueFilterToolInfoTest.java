@@ -6,7 +6,7 @@ package com.huawei.jade.carver.tool.waterflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.tool.Tool;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

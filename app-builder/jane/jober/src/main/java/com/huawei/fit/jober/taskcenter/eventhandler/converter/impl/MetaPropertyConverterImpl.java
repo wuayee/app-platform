@@ -9,7 +9,8 @@ import com.huawei.fit.jane.task.domain.PropertyCategory;
 import com.huawei.fit.jane.task.domain.TaskProperty;
 import com.huawei.fit.jober.entity.task.TaskPropertyCategory;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.MetaPropertyConverter;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;

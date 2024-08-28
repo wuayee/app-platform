@@ -16,7 +16,8 @@ import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.SourceType;
 import com.huawei.fit.jober.taskcenter.util.DefaultDynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

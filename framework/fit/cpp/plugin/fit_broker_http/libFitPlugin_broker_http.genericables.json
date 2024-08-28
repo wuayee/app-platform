@@ -1,17 +1,17 @@
 {
-  "genericables": {
-    "47a8ec8a3d8f46daa1f2d751ad7d6d16": {
-      "name": "com.huawei.fit.hakuna.kernel.broker.client.requestResponseV4",
-      "tags": "traceIgnored,localOnly",
-      "fitables": {
-        "http": {
-          "aliases": "protocol=2"
+    "genericables": {
+      "6d850898ee6244f8806b7a4be3aa4d8e": {
+        "name": "com.huawei.fit.hakuna.kernel.broker.client.requestResponseV5",
+        "tags": "traceIgnored,localOnly",
+        "fitables": {
+          "http": {
+            "aliases": "protocol=2"
+          },
+          "https": {
+            "aliases": "protocol=4"
+          }
         },
-        "https": {
-          "aliases": "protocol=4"
-        }
-      },
-      "genericable-config-sources": "config_file"
+        "genericable-config-sources": "config_file"
+      }
     }
   }
-}

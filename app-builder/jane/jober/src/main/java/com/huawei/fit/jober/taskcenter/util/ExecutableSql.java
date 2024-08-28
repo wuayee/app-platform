@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.util;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import java.util.List;
 import java.util.Map;

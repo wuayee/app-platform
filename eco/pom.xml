@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
+        <groupId>modelengine.fit.jade</groupId>
         <artifactId>jade-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -13,8 +13,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>connector/milvus</module>
-<!--        <module>connector/redis</module>-->
         <module>model</module>
         <module>model-plugin</module>
         <module>huggingface-pipeline</module>

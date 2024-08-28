@@ -1,18 +1,20 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Dropdown, Form, Input, Tooltip} from "antd";
+import {Button, Dropdown, Form, Input} from "antd";
 import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import PropTypes from "prop-types";
+import TextDisplay from "@/components/common/TextDisplay.jsx";
 
 /**
  * 头部.
  *
  * @param shape 图形.
- * @param disabled 是否禁用.
+ * @param shapeStatus 图形状态集合.
  * @return {JSX.Element}
  * @constructor
  */
-export const Header = ({shape, disabled}) => {
+export const Header = ({shape, shapeStatus}) => {
     const { t } = useTranslation();
     const [edit, setEdit] = useState(false);
     const inputRef = useRef(null);
@@ -68,9 +70,7 @@ export const Header = ({shape, disabled}) => {
                 </Form.Item>
             </>);
         } else {
-            return <Tooltip overlayClassName="custom-tooltip" title={shape.text}><p
-                className={"jade-component-title"} style={{margin: 0}}>
-                <span>{shape.text}</span></p></Tooltip>;
+            return <TextDisplay text={shape.text} lineHeight={19} width={200} fontSize={16} fontWeight={700}/>;
         }
     };
 
@@ -111,7 +111,7 @@ export const Header = ({shape, disabled}) => {
         if (shape.drawer.getToolMenus().length > 0) {
             return (<>
                 <div>
-                    <Dropdown disabled={disabled} menu={getMenu()} trigger="click" placement="bottomRight">
+                    <Dropdown disabled={shapeStatus.disabled} menu={getMenu()} trigger="click" placement="bottomRight">
                         <Button type="text" size="small" className={"react-node-header-button"}>
                             {HEADER_TOOL_MENU_ICON}
                         </Button>
@@ -137,4 +137,9 @@ export const Header = ({shape, disabled}) => {
             <span className="react-node-header-description">{shape.description}</span>
         </div>
     </>);
+};
+
+Header.propTypes = {
+    shape: PropTypes.object,
+    shapeStatus: PropTypes.object
 };

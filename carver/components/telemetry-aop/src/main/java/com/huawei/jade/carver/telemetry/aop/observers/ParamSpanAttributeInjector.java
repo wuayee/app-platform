@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.telemetry.aop.observers;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParser;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributeParserRepository;
 import com.huawei.jade.carver.telemetry.aop.SpanAttributesObserver;

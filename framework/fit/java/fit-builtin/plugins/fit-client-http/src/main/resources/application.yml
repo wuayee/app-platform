@@ -5,4 +5,4 @@ secure:
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.client.http'
+    - 'modelengine.fit.client.http'

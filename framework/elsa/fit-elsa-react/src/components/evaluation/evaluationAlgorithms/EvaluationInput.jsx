@@ -7,17 +7,17 @@ import JadeInputTreeCollapse from "@/components/common/JadeInputTreeCollapse.jsx
 
 _EvaluationInvokeInput.propTypes = {
     inputData: PropTypes.array,
-    disabled: PropTypes.bool
-}
+    shapeStatus: PropTypes.object
+};
 
 /**
  * 评估节点入参展示和入参赋值
  *
  * @param inputData 输入数据
- * @param disabled 是否禁用
+ * @param shapeStatus 图形状态
  * @returns {JSX.Element}
  */
-function _EvaluationInvokeInput({inputData, disabled}) {
+function _EvaluationInvokeInput({inputData, shapeStatus}) {
     const dispatch = useDispatch();
 
     /**
@@ -52,8 +52,8 @@ function _EvaluationInvokeInput({inputData, disabled}) {
     };
 
     return (<>
-        <JadeInputTreeCollapse data={inputData} disabled={disabled}>
-            <JadeInputTree disabled={disabled} data={inputData} updateItem={updateItem} getOptions={getOptions}/>
+        <JadeInputTreeCollapse data={inputData}>
+            <JadeInputTree shapeStatus={shapeStatus} data={inputData} updateItem={updateItem} getOptions={getOptions}/>
         </JadeInputTreeCollapse>
     </>);
 }

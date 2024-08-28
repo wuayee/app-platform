@@ -4,11 +4,11 @@
 
 package com.huawei.jade.common.filter.support;
 
-import com.huawei.fit.http.annotation.ExceptionHandler;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.exception.FitException;
+import modelengine.fit.http.annotation.ExceptionHandler;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.exception.FitException;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.localemessage.LocaleMessageHandler;
 
@@ -41,7 +41,8 @@ public class DefaultHttpExceptionAdvice {
         if (exception instanceof FitException) {
             return this.handleFitException((FitException) exception);
         }
-        return HttpResult.error(HttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(), exception.getMessage());
+        return HttpResult.error(HttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(),
+            localeMessageHandler.getDefaultMessage());
     }
 
     private HttpResult<Void> handleFitException(FitException exception) {

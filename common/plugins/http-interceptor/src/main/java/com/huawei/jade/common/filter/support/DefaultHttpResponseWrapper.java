@@ -4,18 +4,18 @@
 
 package com.huawei.jade.common.filter.support;
 
-import com.huawei.fit.http.entity.Entity;
-import com.huawei.fit.http.entity.ObjectEntity;
-import com.huawei.fit.http.entity.TextEntity;
-import com.huawei.fit.http.server.ErrorResponse;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.http.server.HttpServerFilter;
-import com.huawei.fit.http.server.HttpServerFilterChain;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fit.http.entity.Entity;
+import modelengine.fit.http.entity.ObjectEntity;
+import modelengine.fit.http.entity.TextEntity;
+import modelengine.fit.http.server.ErrorResponse;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.HttpServerFilter;
+import modelengine.fit.http.server.HttpServerFilterChain;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.filter.config.DefaultHttpResponseWrapperConfig;
 

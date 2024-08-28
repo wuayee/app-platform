@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.uid;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
 
 import java.util.concurrent.atomic.AtomicLong;
 

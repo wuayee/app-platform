@@ -4,12 +4,15 @@
 
 package com.huawei.jade.store.tool.parser.support;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.store.entity.transfer.PluginToolData;
+import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
+import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 
 import java.io.File;
 import java.util.Arrays;
@@ -33,6 +36,8 @@ public class FileParser {
     private static final String TAGS = "tags";
     private static final String COMMA = ",";
     private static final String EXTENSIONS = "extensions";
+    private static final String BUILT_IN = "BUILTIN";
+    private static final String FIT = "FIT";
 
     /**
      * 表示基于工具名列表匹配工具数据。
@@ -67,17 +72,25 @@ public class FileParser {
                 "Tool extensions cannot be null.");
             tags = notNull(ObjectUtils.cast(extensions.get(TAGS)), "Tool tags cannot be null.");
         }
-        pluginData.setTags(new HashSet<>(tags));
+        List<String> newTags = tags.stream().map(FileParser::replaceTag).collect(Collectors.toList());
+        pluginData.setTags(new HashSet<>(newTags));
         return pluginData;
     }
 
-    private static String validateSchemaStringField(Map<String, Object> schemaNode, String fieldName) {
-        Object field = notNull(schemaNode.get(fieldName), "Tool schema field value cannot be null. [field={0}]",
-            fieldName);
-        if (field instanceof String) {
-            return notBlank((String) field, "Tool schema field value cannot be blank. [field={0}]", fieldName);
+    private static String replaceTag(String oldTag) {
+        if (StringUtils.equalsIgnoreCase(oldTag, BUILT_IN)) {
+            return oldTag.replace(oldTag, FIT);
         }
-        throw new IllegalArgumentException(
-            StringUtils.format("Failed to obtain the data in schema. [field={0}]", fieldName));
+        return oldTag;
+    }
+
+    private static String validateSchemaStringField(Map<String, Object> schemaNode, String fieldName) {
+        Object field = notNull(schemaNode.get(fieldName),
+            () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
+        if (field instanceof String) {
+            return notBlank((String) field,
+                () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
+        }
+        throw new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName);
     }
 }

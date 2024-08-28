@@ -4,13 +4,19 @@
 
 package com.huawei.fit.jober.aipp.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
 import com.huawei.fit.dynamicform.DynamicFormMetaService;
 import com.huawei.fit.dynamicform.DynamicFormService;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.FlowsService;
@@ -19,11 +25,14 @@ import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.impl.AippRunTimeServiceImpl;
+import com.huawei.fit.jober.common.RangeResult;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowNodeInfo;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.util.MapBuilder;
+
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +46,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -112,6 +122,38 @@ public class AippRuntimeServiceImplTest {
         Map<String, Object> initContext = this.genInitContext();
         Assertions.assertDoesNotThrow(() -> this.aippRunTimeService.createAippInstance("aipp_id",
                 "version", initContext, context));
+    }
+
+    @Test
+    @DisplayName("测试createInstanceByApp方法")
+    void testCreateInstanceByApp() {
+        OperationContext context = new OperationContext();
+        context.setTenantId("testTenantId");
+        context.setOperator("UT 123456");
+
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_APP_ID_KEY, "app1");
+        Meta meta = new Meta();
+        meta.setAttributes(attributes);
+        meta.setVersionId("version1");
+        RangedResultSet<Meta> metaRangedResultSet = new RangedResultSet<>();
+        metaRangedResultSet.setResults(Collections.singletonList(meta));
+        metaRangedResultSet.setRange(new RangeResult(0, 1, 1));
+
+        Instance metaInst = new Instance();
+        metaInst.setId("instId");
+        when(this.metaInstanceService.createMetaInstance(any(), any(), any())).thenReturn(metaInst);
+
+        when(this.metaService.list(any(MetaFilter.class),
+                anyBoolean(),
+                anyLong(),
+                anyInt(),
+                any(OperationContext.class),
+                any(MetaFilter.class))).thenReturn(metaRangedResultSet);
+
+        Map<String, Object> initContext = this.genInitContext();
+        Assertions.assertDoesNotThrow(() -> this.aippRunTimeService.createInstanceByApp("aipp_id",
+                "question", initContext, context, false));
     }
 
     private void mockMetaQuery(String type) {

@@ -13,6 +13,7 @@
 
 #include <fit/stl/string.hpp>
 #include <fit/stl/map.hpp>
+#include <component/com_huawei_fit_hakuna_kernel_broker_shared_fit_metadata/1.0.0/cplusplus/fitMetaData.hpp>
 #include "tlv/tlv_base.hpp"
 #include "fit_version.h"
 
@@ -28,7 +29,8 @@ public:
         uint8_t payload_format,
         fit_version generic_version,
         const Fit::string &generic_id,
-        const Fit::string &fit_id);
+        const Fit::string &fit_id,
+        const Fit::string &access_token);
 
     fit_meta_data();
     ~fit_meta_data() = default;
@@ -42,9 +44,14 @@ public:
     const Fit::string &get_generic_id() const;
 
     const Fit::string &get_fit_id() const;
+    const Fit::string &get_access_token() const;
+
+    static fit::hakuna::kernel::broker::shared::MetaData convert(const fit_meta_data& data);
+    static fit_meta_data from(const fit::hakuna::kernel::broker::shared::MetaData& data);
 
     Fit::string &&move_generic_id();
     Fit::string &&move_fit_id();
+    Fit::string &&move_access_token();
 
 private:
     uint16_t version_;
@@ -52,6 +59,7 @@ private:
     fit_version generic_version_;
     Fit::string generic_id_;
     Fit::string fit_id_;
+    Fit::string access_token_;
 };
 
 #endif // FIT_META_DATA_H

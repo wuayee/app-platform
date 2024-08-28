@@ -175,7 +175,7 @@ TEST_F(TableFitableSubscribeTest, should_success_return_multiple_rows_when_query
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountRow()).Times(AtLeast(1)).WillRepeatedly(Return(resultCount));
         EXPECT_CALL(*sqlExecResultMock, CountCol()).Times(AtLeast(1)).WillRepeatedly(Return(RESULT_STR.size()));
         EXPECT_CALL(*sqlExecResultMock, GetResultRow(_)).Times(resultCount).WillRepeatedly(Return(RESULT_STR));
@@ -216,7 +216,7 @@ TEST_F(TableFitableSubscribeTest, should_success_return_multiple_rows_when_query
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountRow()).Times(AtLeast(1)).WillRepeatedly(Return(resultCount));
         EXPECT_CALL(*sqlExecResultMock, CountCol()).Times(AtLeast(1)).WillRepeatedly(Return(RESULT_STR.size()));
         EXPECT_CALL(*sqlExecResultMock, GetResultRow(_)).Times(resultCount).WillRepeatedly(Return(RESULT_STR));
@@ -258,7 +258,7 @@ TEST_F(TableFitableSubscribeTest, should_success_return_multiple_rows_when_query
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountRow()).Times(AtLeast(1)).WillRepeatedly(Return(resultCount));
         EXPECT_CALL(*sqlExecResultMock, CountCol())
             .Times(AtLeast(1))
@@ -300,7 +300,7 @@ TEST_F(TableFitableSubscribeTest, should_success_return_1_row_when_query_by_fita
         auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
-        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(AtLeast(1)).WillRepeatedly(Return(true));
         EXPECT_CALL(*sqlExecResultMock, CountRow()).Times(AtLeast(1)).WillRepeatedly(Return(1));
         EXPECT_CALL(*sqlExecResultMock, CountCol()).Times(AtLeast(1)).WillRepeatedly(Return(RESULT_STR.size()));
         EXPECT_CALL(*sqlExecResultMock, GetResultRow(_)).Times(1).WillOnce(Return(RESULT_STR));

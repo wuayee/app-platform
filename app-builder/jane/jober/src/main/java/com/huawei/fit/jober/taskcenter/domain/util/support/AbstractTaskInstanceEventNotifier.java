@@ -5,10 +5,11 @@
 package com.huawei.fit.jober.taskcenter.domain.util.support;
 
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
-import com.huawei.fitframework.event.Event;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.CollectionUtils;
+
+import modelengine.fitframework.event.Event;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;

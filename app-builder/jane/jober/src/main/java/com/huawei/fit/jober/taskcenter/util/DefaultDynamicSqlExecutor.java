@@ -4,11 +4,12 @@
 
 package com.huawei.fit.jober.taskcenter.util;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jober.common.ServerInternalException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;

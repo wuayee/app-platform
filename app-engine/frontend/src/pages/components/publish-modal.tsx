@@ -3,10 +3,10 @@ import React, { useState, useImperativeHandle, useRef } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Input, Modal, Button, Select, Form } from 'antd';
 import TextEditor from './text-editor';
-import { Message } from '@shared/utils/message';
-import { httpUrlMap } from '@shared/http/httpConfig';
-import { appPublish, updateFlowInfo } from '@shared/http/aipp';
-import { versionStringCompare } from '@shared/utils/common';
+import { Message } from '@/shared/utils/message';
+import { httpUrlMap } from '@/shared/http/httpConfig';
+import { appPublish, updateFlowInfo } from '@/shared/http/aipp';
+import { versionStringCompare } from '@/shared/utils/common';
 import { updateChatId } from '@/shared/utils/common';
 import { useAppDispatch } from '@/store/hook';
 import { setChatId, setChatList } from '@/store/chatStore/chatStore';
@@ -26,7 +26,7 @@ const PublishModal = (props) => {
   const navigate = useHistory().push;
 
   const tagOptions = [
-    { value: t('development'), label: t('development') },
+    { value: t('programmingDevelopment'), label: t('programmingDevelopment') },
     { value: t('decisionAnalysis'), label: t('decisionAnalysis') },
     { value: t('writingAssistant'), label: t('writingAssistant') }
   ];
@@ -56,7 +56,7 @@ const PublishModal = (props) => {
     try {
       let params = JSON.parse(JSON.stringify(appInfo));
       params.version = formParams.version;
-      params.attributes.app_type = formParams.app_type;
+      params.attributes.app_type = t('programmingDevelopment');
       params.publishedDescription = formParams.description;
       params.publishedUpdateLog = editorRef.current.handleChange();
       const res = await appPublish(tenantId, appId, params);
@@ -158,7 +158,8 @@ const PublishModal = (props) => {
           layout='vertical'
           autoComplete='off'
           className='edit-form-content'
-        > {
+        >
+          {/* {
             publishType === 'app' &&
             <Form.Item
               label={t('classify')}
@@ -167,7 +168,7 @@ const PublishModal = (props) => {
             >
               <Select options={tagOptions} />
             </Form.Item>
-          }
+          } */}
 
           <Form.Item
             label={t('versionName')}

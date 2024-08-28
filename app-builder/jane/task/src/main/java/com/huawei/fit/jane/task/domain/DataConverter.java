@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jane.task.domain;
 
-import com.huawei.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.ParsingResult;
 
 /**
  * 表示数据类型。

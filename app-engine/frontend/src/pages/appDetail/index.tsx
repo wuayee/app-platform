@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Tabs } from 'antd';
 import GoBack from '../../components/go-back/GoBack';
 import AppOverview from './overview';
+import AppAnalyse from './analyse';
+import FeedBack from './feedback';
 import { useTranslation } from 'react-i18next';
 
 const onChange = (key: string) => {
@@ -16,18 +18,16 @@ const AppDetail: React.FC = () => {
       label: t('overview'),
       children: <AppOverview />
     },
-    // {
-    //   key: '2',
-    //   label: t('analyse'),
-    //   disabled: true,
-    //   children: <AppAnalyse />,
-    // },
-    // {
-    //   key: '3',
-    //   label: t('feedback'),
-    //   disabled: true,
-    //   children: <FeedBack />,
-    // },
+    {
+      key: '2',
+      label: t('analyse'),
+      children: <AppAnalyse />,
+    },
+    {
+      key: '3',
+      label: t('feedback'),
+      children: <FeedBack />,
+    },
     // {
     //   key: '4',
     //   label: t('evaluate'),

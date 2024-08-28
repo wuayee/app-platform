@@ -25,11 +25,12 @@ const EditModal = (props) => {
   const [filePath, setFilePath] = useState('');
   const [fileName, setFileName] = useState('');
   const tagOptions = [
-    { value: t('development'), label: t('development') },
+    { value: t('programmingDevelopment'), label: t('programmingDevelopment') },
     { value: t('decisionAnalysis'), label: t('decisionAnalysis') },
     { value: t('writingAssistant'), label: t('writingAssistant') },
   ];
   const showModal = () => {
+    form.resetFields(['name']);
     setIsModalOpen(true);
   };
   useEffect(() => {
@@ -58,7 +59,7 @@ const EditModal = (props) => {
         greeting: formParams.greeting,
         description: formParams.description,
         icon: type === 'add' && filePath ? `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : formParams.icon,
-        app_type: formParams.app_type,
+        app_type: t('programmingDevelopment'),
         type: 'app'
       }
       const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc4', params);
@@ -103,6 +104,11 @@ const EditModal = (props) => {
   }
   const onChange = ({ file }) => {
     let validateResult = fileValidate(file);
+    if (!validateResult) {
+      form.setFieldsValue({
+        icon: appInfo.attributes?.icon || ''
+      })
+    }
     validateResult && pictureUpload(file);
   }
   // 上传图片
@@ -175,13 +181,13 @@ const EditModal = (props) => {
             >
               <TextArea rows={3} showCount maxLength={300} />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label={t('classify')}
               name='app_type'
               rules={[{ required: true, message: t('cannotBeEmpty') }]}
             >
               <Select options={tagOptions} />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label={t('icon')}
               name='icon'

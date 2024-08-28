@@ -1,4 +1,4 @@
-import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
+import {jadeNodeDrawer} from "@/components/base/jadeNodeDrawer.jsx";
 import ManualCheckIcon from "../asserts/icon-manual-check.svg?react"; // 导入背景图片
 
 /**

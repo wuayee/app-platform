@@ -4,10 +4,9 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.task.domain.Authorization;
 import com.huawei.fit.jane.task.domain.DomainObject;
@@ -55,13 +54,15 @@ import com.huawei.fit.jober.taskcenter.filter.TaskTemplateFilter;
 import com.huawei.fit.jober.taskcenter.filter.TriggerFilter;
 import com.huawei.fit.jober.taskcenter.service.PortalService;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.RangeResult;
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.RangeResult;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

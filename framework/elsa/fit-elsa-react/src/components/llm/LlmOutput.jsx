@@ -4,7 +4,7 @@ import {QuestionCircleOutlined} from '@ant-design/icons';
 import "../common/style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
@@ -42,7 +42,7 @@ function _LlmOutput({outputItems}) {
     // const handleSelectClick = (event) => {
     //     event.stopPropagation(); // 阻止事件冒泡
     // };
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const content = (
         <div className={"jade-font-size"}>
@@ -177,4 +177,4 @@ const areEqual = (prevProps, nextProps) => {
     return prevProps.outputItems === nextProps.outputItems;
 };
 
-export const LlmOutput =  React.memo(_LlmOutput, areEqual);
+export const LlmOutput = React.memo(_LlmOutput, areEqual);

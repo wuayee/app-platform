@@ -19,26 +19,27 @@ import com.huawei.fit.jober.aipp.fel.WaterFlowAgent;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
-import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.ChatMessages;
-import com.huawei.jade.fel.chat.ChatModelStreamService;
-import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.character.ToolMessage;
-import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.engine.flows.AiFlows;
-import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
-import com.huawei.jade.fel.tool.Tool;
-import com.huawei.jade.fel.tool.ToolCall;
-import com.huawei.jade.fel.tool.ToolProvider;
+
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.ChatMessages;
+import modelengine.fel.chat.ChatModelStreamService;
+import modelengine.fel.chat.ChatOptions;
+import modelengine.fel.chat.Prompt;
+import modelengine.fel.chat.character.AiMessage;
+import modelengine.fel.chat.character.ToolMessage;
+import modelengine.fel.chat.protocol.FlatChatMessage;
+import modelengine.fel.engine.flows.AiFlows;
+import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.operators.patterns.AbstractAgent;
+import modelengine.fel.tool.Tool;
+import modelengine.fel.tool.ToolCall;
+import modelengine.fel.tool.ToolProvider;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -187,7 +188,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         Mockito.doNothing().when(aippLogStreamService).send(any());
@@ -216,7 +218,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
@@ -238,7 +241,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         AtomicInteger resCnt = new AtomicInteger(0);
 
@@ -285,7 +289,8 @@ public class LlmComponentTest {
                 aippLogService,
                 aippLogStreamService,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -310,7 +315,8 @@ public class LlmComponentTest {
                 aippLogService,
                 null,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService, metaService);
@@ -336,7 +342,8 @@ public class LlmComponentTest {
                 this.aippLogService,
                 null,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -388,7 +395,8 @@ public class LlmComponentTest {
                 this.aippLogService,
                 null,
                 client,
-                serializer, localeUiWord);
+                serializer,
+                localeUiWord);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

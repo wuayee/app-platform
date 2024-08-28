@@ -4,17 +4,17 @@
 
 package com.huawei.jade.carver.tool.support;
 
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBean;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestForm;
-import com.huawei.fit.http.annotation.RequestHeader;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBean;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestForm;
+import modelengine.fit.http.annotation.RequestHeader;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.util.MapBuilder;
 import com.huawei.jade.carver.tool.support.entity.Address;
 import com.huawei.jade.carver.tool.support.entity.Education;
 

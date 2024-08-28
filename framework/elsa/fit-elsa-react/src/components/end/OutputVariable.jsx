@@ -6,26 +6,26 @@ import {OutputVariableRow} from "@/components/end/OutputVariableRow.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
-import { useTranslation, Trans } from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 
 const {Panel} = Collapse;
 
 _OutputVariable.propTypes = {
     inputParams: PropTypes.array.isRequired,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 };
 
 /**
  * 输出变量的组件，包含多条输出变量的条目
  *
  * @param inputParams 入参.
- * @param disabled 是否禁用.
+ * @param shapeStatus 图形状态.
  * @returns {JSX.Element}
  * @constructor
  */
-function _OutputVariable({inputParams, disabled}) {
+function _OutputVariable({inputParams, shapeStatus}) {
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     /**
      * 处理输入发生变化的动作
@@ -40,7 +40,7 @@ function _OutputVariable({inputParams, disabled}) {
 
     const tips =
         <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-            <Trans i18nKey="endOutputPopover" components={{ p: <p /> }} />
+            <Trans i18nKey="endOutputPopover" components={{p: <p/>}}/>
         </div>;
 
     return (
@@ -75,7 +75,7 @@ function _OutputVariable({inputParams, disabled}) {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <OutputVariableRow disabled={disabled}
+                        <OutputVariableRow shapeStatus={shapeStatus}
                                            item={inputParams[0]}
                                            handleItemChange={handleItemChange}/>
                     </div>
@@ -86,7 +86,8 @@ function _OutputVariable({inputParams, disabled}) {
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.inputParams, nextProps.inputParams);
+    return prevProps.shapeStatus === nextProps.shapeStatus
+        && ArrayUtil.isEqual(prevProps.inputParams, nextProps.inputParams);
 };
 
-export const OutputVariable =  React.memo(_OutputVariable, areEqual);
+export const OutputVariable = React.memo(_OutputVariable, areEqual);

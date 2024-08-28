@@ -6,8 +6,8 @@ package com.huawei.fit.jober.taskcenter.domain.postgresql;
 
 import static com.huawei.fit.jober.taskcenter.util.sql.Condition.expectEqual;
 import static com.huawei.fit.jober.taskcenter.util.sql.SqlValue.json;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.PropertyCategory;
 import com.huawei.fit.jane.task.domain.PropertyCategoryDeclaration;
@@ -35,17 +35,18 @@ import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlValue;
 import com.huawei.fit.jober.taskcenter.util.sql.UpdateSql;
 import com.huawei.fit.jober.taskcenter.validation.PropertyValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.event.Event;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.TypeUtils;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.event.Event;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.transaction.Transactional;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.TypeUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;

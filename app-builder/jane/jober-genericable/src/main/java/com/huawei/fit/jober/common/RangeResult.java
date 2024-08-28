@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.common;
 
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.model.Range;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.model.Range;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 批量返回相关统计信息。

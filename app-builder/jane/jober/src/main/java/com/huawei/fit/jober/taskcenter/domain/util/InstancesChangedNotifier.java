@@ -8,7 +8,8 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.util.support.DefaultInstancesChangedNotifier;
-import com.huawei.fitframework.broker.client.BrokerClient;
+
+import modelengine.fitframework.broker.client.BrokerClient;
 
 /**
  * 为任务实例属性变化提供通知程序。

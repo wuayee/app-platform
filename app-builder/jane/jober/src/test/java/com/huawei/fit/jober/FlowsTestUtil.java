@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober;
 
-import com.huawei.fit.waterflow.common.utils.SleepUtil;
+import modelengine.fit.waterflow.common.utils.SleepUtil;
 
 import java.util.List;
 import java.util.function.Supplier;

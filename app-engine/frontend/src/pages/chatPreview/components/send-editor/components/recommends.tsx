@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
-import { Message } from '@shared/utils/message';
-import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
-import { getRecommends } from '@shared/http/chat';
+import { Message } from '@/shared/utils/message';
+import { PanleCloseIcon, PanleIcon, RebotIcon } from '@/assets/icon';
+import { getRecommends } from '@/shared/http/chat';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 // 猜你想问
 const Recommends = (props) => {
   const { t } = useTranslation();
-  const { onSend } = props;
+  const { onSend, resetEditorHeight } = props;
   const [visible, setVisible] = useState(false);
   const [recommendList, setRecommendList] = useState([]);
   const dispatch = useAppDispatch();
@@ -91,52 +91,45 @@ const Recommends = (props) => {
       setRecommendList([]);
     }
   }, []);
+  useEffect(() => {
+    resetEditorHeight(recommendList);
+  }, [recommendList]);
 
-  return <>{(
-    <div className='recommends-inner'>
-      {
-        (recommendList?.length > 0) && (
-          <div className='recommends-top'>
-            <span className='title'>{t('guessAsk')}</span>
-            <RebotIcon onClick={refreshClick} />
-            <span className='refresh' onClick={refreshClick}>{t('changeBatch')}</span>
-          </div>
-        )
-      }
-      <div className='recommends-list'>
-        <div className='list-left'>
-          {
-            recommendList?.map((item, index) => {
-              return (
-                <div
-                  className='recommends-item'
-                  onClick={() => recommendClick(item)}
-                  key={index}
-                >
-                  {item}
-                </div>
-              )
-            })
-          }
+  return <>
+    {
+      (recommendList?.length > 0) && (
+        <div className='recommends-top'>
+          <span className='title'>{t('guessAsk')}</span>
+          <RebotIcon onClick={refreshClick} />
+          <span className='refresh' onClick={refreshClick}>{t('changeBatch')}</span>
         </div>
-        <Tooltip
-          title={inspirationOpen ? t('collapse') : t('open')}
-          overlayInnerStyle={{ color: '#212121' }}
-          open={visible}
-          zIndex={100}
-          color='white'
-        >
-          <div className='list-right'
-            onClick={iconClick}
-            onMouseEnter={() => setVisible(true)}
-            onMouseLeave={() => setVisible(false)}
-          >
-            {inspirationOpen ? <PanleCloseIcon /> : <PanleIcon />}
-          </div>
-        </Tooltip>
+      )
+    }
+    <div className='recommends-list'>
+      <div className='list-left'>
+        {
+          recommendList?.map((item, index) => {
+            return (
+              <div
+                className='recommends-item'
+                onClick={() => recommendClick(item)}
+                key={index}
+              >
+                {item}
+              </div>
+            )
+          })
+        }
+      </div>
+      <div className='list-right'
+        onClick={iconClick}
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+      >
+        {inspirationOpen ? <PanleCloseIcon /> : <PanleIcon />}
       </div>
     </div>
-  )}</>
+  </>
 }
 
 export default Recommends;

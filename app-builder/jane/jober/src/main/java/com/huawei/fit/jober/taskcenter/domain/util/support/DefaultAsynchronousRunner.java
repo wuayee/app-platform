@@ -5,7 +5,8 @@
 package com.huawei.fit.jober.taskcenter.domain.util.support;
 
 import com.huawei.fit.jober.taskcenter.domain.util.AsynchronousRunner;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fitframework.annotation.Component;
 
 import java.util.Objects;
 import java.util.Optional;

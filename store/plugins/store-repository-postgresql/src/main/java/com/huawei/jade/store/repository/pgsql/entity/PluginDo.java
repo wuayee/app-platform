@@ -6,7 +6,8 @@ package com.huawei.jade.store.repository.pgsql.entity;
 
 import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.support.DeployStatus;
 
@@ -43,6 +44,11 @@ public class PluginDo extends CommonDo {
      * 表示插件的部署状态。
      */
     private DeployStatus deployStatus;
+
+    /**
+     * 表示插件是否内置。
+     */
+    private boolean isBuiltin;
 
     /**
      * 用传输层的插件数据 {@link PluginData} 构造 {@link PluginDo}。
@@ -83,6 +89,7 @@ public class PluginDo extends CommonDo {
         if (pluginDo.getDeployStatus() != null) {
             pluginData.setDeployStatus(pluginDo.getDeployStatus().toString());
         }
+        pluginData.setBuiltin(pluginDo.isBuiltin());
         return pluginData;
     }
 }

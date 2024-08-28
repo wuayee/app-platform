@@ -190,11 +190,13 @@ export default function IfForm({
      */
     const renderDeleteIcon = () => {
         if (totalItemNum > 2) {
-            return <Button type="text" className="jade-panel-header-icon-position icon-button"
-                           disabled={disabled}
-                           onClick={() => handleDeleteBranch()}>
-                <MinusCircleOutlined/>
-            </Button>
+            return (<>
+                <Button type="text" className="jade-panel-header-icon-position icon-button"
+                        disabled={disabled}
+                        onClick={() => handleDeleteBranch()}>
+                    <MinusCircleOutlined/>
+                </Button>
+            </>);
         } else {
             return null;
         }
@@ -255,6 +257,7 @@ export default function IfForm({
                     />
                 </>
             case 'Input':
+                form.setFieldsValue({[`value-${item.id}`]: item.value});
                 switch (referenceType) {
                     case 'String':
                     case 'Array<String>':
@@ -386,6 +389,10 @@ export default function IfForm({
     };
 
     const renderCondition = (condition, index) => {
+        // 初始化时，如果condition的值，存在，需要通过form进行设置才会生效.
+        if (condition.condition) {
+            form.setFieldsValue({[`condition-${condition.id}`]: condition.condition});
+        }
         return <Row gutter={16} key={"row-" + index} style={{marginBottom: "6px", marginRight: 0}}>
             <Col span={6}>
                 <JadeReferenceTreeSelect
@@ -479,7 +486,9 @@ export default function IfForm({
                 </Row>
                 {branch.conditions.map((condition, index) => renderCondition(conditionWrapper(condition), index))}
                 <Row gutter={16} style={{marginBottom: "6px", marginRight: 0}}>
-                    <Button type="link" className="icon-button" onClick={() => addCondition(branch.id)}
+                    <Button type="link"
+                            className="icon-button"
+                            onClick={() => addCondition(branch.id)}
                             disabled={disabled}
                             style={{height: "32px", paddingLeft: "8px"}}>
                         <PlusOutlined/>

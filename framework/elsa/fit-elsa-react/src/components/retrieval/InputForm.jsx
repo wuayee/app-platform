@@ -1,7 +1,7 @@
 import {Col, Collapse, Form, Popover, Row} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
-import {useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
+import {useDispatch, useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
@@ -12,19 +12,20 @@ const {Panel} = Collapse;
 
 _InputForm.propTypes = {
     queryData: PropTypes.object.isRequired,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object.isRequired
 };
 
 /**
  * 输入节点组件
  *
  * @param queryData 数据.
- * @param disabled 禁用.
+ * @param shapeStatus 节点状态.
  * @returns {JSX.Element}
  */
-function _InputForm({queryData, disabled}) {
+function _InputForm({queryData, shapeStatus}) {
     const dispatch = useDispatch();
     const form = useFormContext();
+    const shape = useShapeContext();
     const name = `input-${queryData.id}`;
 
     /**
@@ -87,7 +88,7 @@ function _InputForm({queryData, disabled}) {
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
-                            disabled={disabled}
+                            disabled={shape.page.isShapeReferenceDisabled(shapeStatus)}
                             reference={item}
                             onReferencedValueChange={(v) => _onReferencedValueChange(item, v)}
                             onReferencedKeyChange={(e) => _onReferencedKeyChange(item, e)}
@@ -114,7 +115,7 @@ function _InputForm({queryData, disabled}) {
                                initialValue={item.value}
                                validateTrigger="onBlur"
                     >
-                        <JadeInput disabled={disabled}
+                        <JadeInput disabled={shapeStatus.disabled}
                                    className="value-custom jade-input"
                                    placeholder="请输入"
                                    value={item.value}
@@ -127,21 +128,21 @@ function _InputForm({queryData, disabled}) {
         }
     };
 
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const tips = <div className={"jade-font-size"}><p>{t('knowledgeBaseInputPopover')}</p></div>;
 
     return (<div>
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={['Input']}>
             <Panel header={
-                        <div className="panel-header">
-                            <span className="jade-panel-header-font">{t('input')}</span>
-                            <Popover content={tips}>
-                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
-                            </Popover>
-                        </div>
-                    }
-                    className="jade-panel"
-                    key='Input'
+                <div className="panel-header">
+                    <span className="jade-panel-header-font">{t('input')}</span>
+                    <Popover content={tips}>
+                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
+                    </Popover>
+                </div>
+            }
+                   className="jade-panel"
+                   key='Input'
             >
                 <div className={"jade-custom-panel-content"}>
                     <Row>
@@ -163,7 +164,7 @@ function _InputForm({queryData, disabled}) {
                         <Col span={8} style={{paddingRight: 0}}>
                             <Form.Item id={`valueSource`} initialValue={queryData.from}>
                                 <JadeStopPropagationSelect
-                                    disabled={disabled}
+                                    disabled={shapeStatus.disabled}
                                     id={`valueSource-select-${queryData.id}`}
                                     className={"value-source-custom jade-select"}
                                     style={{width: "100%"}}
@@ -179,7 +180,10 @@ function _InputForm({queryData, disabled}) {
                                         handleItemChange(queryData.id, changes);
                                         form.resetFields([`reference-${queryData.id}`, name]);
                                     }}
-                                    options={[{value: 'Reference', label: t('reference')}, {value: 'Input', label: '输入'}]}
+                                    options={[{value: 'Reference', label: t('reference')}, {
+                                        value: 'Input',
+                                        label: '输入'
+                                    }]}
                                     value={queryData.from}
                                 />
                             </Form.Item>
@@ -195,7 +199,8 @@ function _InputForm({queryData, disabled}) {
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.queryData === nextProps.queryData && prevProps.disabled === nextProps.disabled;
+    return prevProps.queryData === nextProps.queryData
+        && prevProps.shapeStatus === nextProps.shapeStatus;
 };
 
-export const InputForm =  React.memo(_InputForm, areEqual);
+export const InputForm = React.memo(_InputForm, areEqual);

@@ -6,3 +6,37 @@ export function bytesToSize(bytes) {
     i = Math.floor(Math.log(bytes) / Math.log(k));
   return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
 }
+
+export function uuid(isLong) {
+  if (isLong) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  } else {
+    let firstPart = (Math.random() * 46656) | 0;
+    let secondPart = (Math.random() * 46656) | 0;
+    firstPart = ("000" + firstPart.toString(36)).slice(-3);
+    secondPart = ("000" + secondPart.toString(36)).slice(-3);
+    return firstPart + secondPart;
+  }
+};
+export const listFormate = (arr) => {
+  let map: any = {};
+  let res: any = [];
+  for (let i = 0; i < arr.length; i++) {
+    let ai = arr[i];
+    if (!map[ai.parentName]) {
+      map[ai.parentName] = [ai];
+    } else {
+      map[ai.parentName].push(ai);
+    }
+  }
+  Object.keys(map).forEach(key => {
+    res.push({
+      parentName: key,
+      data: map[key]
+    });
+  });
+  return res;
+}

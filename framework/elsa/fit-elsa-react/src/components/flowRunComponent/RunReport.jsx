@@ -2,7 +2,8 @@ import {Button} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 import {forwardRef, useEffect, useImperativeHandle, useRef} from "react";
 import SectionFactory from "@/components/flowRunComponent/SectionFactory.jsx";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import TextDisplay from "@/components/common/TextDisplay.jsx";
 
 /**
  * 流程测试详情报告
@@ -15,7 +16,7 @@ import { useTranslation, Trans } from "react-i18next";
  */
 const RunReport = forwardRef(({shape, showResultPanel, handleExpandResult}, ref) => {
     const resultPanelRef = useRef(null);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     useImperativeHandle(ref, () => {
         return {
@@ -44,14 +45,18 @@ const RunReport = forwardRef(({shape, showResultPanel, handleExpandResult}, ref)
         updateResultPanelPosition();
     }, [showResultPanel]);
 
-    return (
-            <div className="result-panel" ref={resultPanelRef}>
-                <div className="result-header">
-                    <div className="header-title">{shape.text} {t('runResult')}</div>
-                    <Button type="link" onClick={handleExpandResult} icon={<CloseOutlined/>}/>
+    return (<>
+        <div className="result-panel" ref={resultPanelRef}>
+            <div className="result-header">
+                <div className="report-title">
+                    <TextDisplay text={shape.text} lineHeight={24} width={400} fontSize={18} fontWeight={600}/>
+                    <div className="fixed-text run-report-font"> {t('runResult')}</div>
                 </div>
-                <SectionFactory shape={shape}/>
-            </div>);
+                <Button type="link" onClick={handleExpandResult} icon={<CloseOutlined/>}/>
+            </div>
+            <SectionFactory shape={shape}/>
+        </div>
+    </>);
 });
 
 export default RunReport;

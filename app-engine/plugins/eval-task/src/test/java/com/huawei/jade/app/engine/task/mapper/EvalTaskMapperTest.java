@@ -6,11 +6,11 @@ package com.huawei.jade.app.engine.task.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.MybatisTest;
-import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.test.domain.db.DatabaseModel;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.MybatisTest;
+import modelengine.fitframework.test.annotation.Sql;
+import modelengine.fitframework.test.domain.db.DatabaseModel;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
 import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
 import com.huawei.jade.app.engine.task.po.EvalTaskPo;
@@ -34,7 +34,7 @@ public class EvalTaskMapperTest {
     private EvalTaskMapper evalTaskMapper;
 
     @Test
-    @DisplayName("插入数据集后，回填主键成功")
+    @DisplayName("插入评估任务后，回填主键成功")
     void shouldOkWhenCreateEvalTask() {
         EvalTaskPo evalTaskPo = new EvalTaskPo();
         evalTaskPo.setName("task1");

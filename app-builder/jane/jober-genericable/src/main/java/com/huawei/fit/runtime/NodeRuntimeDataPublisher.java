@@ -5,7 +5,8 @@
 package com.huawei.fit.runtime;
 
 import com.huawei.fit.runtime.entity.RuntimeData;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
 

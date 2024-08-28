@@ -4,16 +4,17 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.CodeExecuteParamDto;
 import com.huawei.fit.jober.aipp.dto.CodeExecuteResDto;
 import com.huawei.fit.jober.aipp.service.CodeExecuteService;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

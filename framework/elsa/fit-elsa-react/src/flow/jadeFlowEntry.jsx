@@ -1,5 +1,6 @@
 import {jadeFlowGraph} from "./jadeFlowGraph.js";
 import {NODE_STATUS} from "@/common/Consts.js";
+import {jadeEvaluationGraph} from "@/flow/evaluation/jadeEvaluationGraph.js";
 
 /**
  * react流程代码，对外暴露接口，以便对流程进行操作以及获取数据.
@@ -52,53 +53,34 @@ const jadeFlowAgent = (graph) => {
      */
     self.run = () => {
         graph.activePage.isRunning = true;
-        const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
+        const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).filter(s => s.runnable !== false);
         nodes.forEach(n => {
-            n.setRunStatus(NODE_STATUS.UN_RUNNING);
+            n.setStatus({runStatus: NODE_STATUS.UN_RUNNING, disabled: true});
             n.moveable = false;
-            n.drawer.setDisabled(true);
         });
         return {
             // 刷新流程节点状态.
             refresh: (dataList) => {
+                if (!graph.activePage.isRunning) {
+                    return;
+                }
                 nodes.forEach(node => {
                     const data = dataList.find(d => d.nodeId === node.id);
                     if (data) {
-                        node.setRunStatus(data.status);
+                        node.setStatus({runStatus: data.status});
                         node.setRunReportSections(data);
                     } else {
                         const preNodes = node.getDirectPreNodeIds();
                         if (preNodes.every(preNode => _isPreNodeFinished(preNode, dataList))) {
-                            node.setRunStatus(NODE_STATUS.RUNNING);
+                            node.setStatus({runStatus: NODE_STATUS.RUNNING});
                         }
                     }
                 });
             },
             // 重置流程节点装填.
-            reset: () => {
-                nodes.forEach(n => {
-                    n.setRunStatus(NODE_STATUS.DEFAULT);
-                    n.moveable = true;
-                    n.drawer.setDisabled(false);
-                    delete n.output;
-                    delete n.input;
-                    delete n.cost;
-                });
-                graph.activePage.isRunning = false;
-            },
+            reset: () => graph.activePage.resetRunStatus(nodes),
             // 结束运行.
-            stop: () => {
-                nodes.forEach(n => {
-                    // 修改属性会导致dirties事件，并且dirties事件是异步的，因此在触发时，isRunning已是false状态.
-                    // 所以这里需要使用ignoreChange使其不触发dirties事件.
-                    n.ignoreChange(() => {
-                        n.moveable = true;
-                        n.emphasized = false;
-                    });
-                    n.drawer.setDisabled(false);
-                });
-                graph.activePage.isRunning = false;
-            }
+            stop: () => graph.activePage.stopRun(nodes)
         };
     };
 
@@ -132,7 +114,7 @@ const jadeFlowAgent = (graph) => {
     self.createNode = (type, e, metaData) => {
         console.log("call createNode...");
         const position = graph.activePage.calculatePosition(e);
-        graph.activePage.createNew({shapeType: type, x: position.x, y: position.y, metaData: metaData});
+        graph.activePage.createNew(type, position.x, position.y, null, null, null, null, null, metaData);
     };
 
     /**
@@ -155,7 +137,7 @@ const jadeFlowAgent = (graph) => {
      */
     self.createNodeByPosition = (type, position, metaData) => {
         console.log("call createNodeByPosition...");
-        graph.activePage.createNew({shapeType: type, x: position.x, y: position.y, metaData: metaData});
+        graph.activePage.createNew(type, position.x, position.y, null, null, null, null, null, metaData);
     };
 
     /**
@@ -165,7 +147,15 @@ const jadeFlowAgent = (graph) => {
      * @param schemaData schema元数据
      */
     self.createToolByPosition = (position, schemaData) => {
-        graph.activePage.createNew({shapeType: "toolInvokeNodeState", x: position.x, y: position.y, metaData: schemaData});
+        graph.activePage.createNew("toolInvokeNodeState",
+            position.x,
+            position.y,
+            null,
+            null,
+            null,
+            null,
+            null,
+            schemaData);
     };
 
     /**
@@ -199,19 +189,7 @@ const jadeFlowAgent = (graph) => {
      * @return Promise 校验结果
      */
     self.validate = async () => {
-        const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
-        if (nodes.length < 3) {
-            return Promise.reject("流程校验失败，至少需要三个节点");
-        }
-        const validationPromises = nodes.map(s => s.validate().catch(error => error));
-        const results = await Promise.all(validationPromises);
-        // 获取所有校验失败的信息
-        const errors = results.filter(result => result.errorFields);
-        if (errors.length > 0) {
-            return Promise.reject(errors);
-        }
-        // 可选：.then()中可以获取校验的所有节点信息 Promise.resolve(results.filter(result => !errors.includes(result)))
-        return Promise.resolve();
+        return await graph.activePage.validate();
     };
 
     /**
@@ -233,6 +211,15 @@ const jadeFlowAgent = (graph) => {
      */
     self.onModelSelect = (callback) => {
         addSelectEventListener("SELECT_MODEL", callback);
+    };
+
+    /**
+     * 当点击创建测试集按钮时的回调.
+     *
+     * @param callback 回调函数.
+     */
+    self.onCreateButtonClick = (callback) => {
+        addSelectEventListener("CREATE_TEST_SET", callback);
     };
 
     /**
@@ -281,7 +268,7 @@ export const JadeFlow = (() => {
         // 新建的默认创建出start、end和一个连线
         const start = page.createShape("startNodeStart", 100, 100);
         const end = page.createShape("endNodeEnd", start.x + start.width + 200, 100);
-        const jadeEvent = page.createNew({shapeType: "jadeEvent", x: 0, y: 0});
+        const jadeEvent = page.createNew("jadeEvent", 0, 0);
         page.reset();
 
         // reset完成之后进行connect操作.
@@ -303,7 +290,8 @@ export const JadeFlow = (() => {
      */
     self.edit = async (div, tenant, flowConfigData, configs, i18n, importStatements = []) => {
         const graphDom = getGraphDom(div);
-        const g = await createGraph(graphDom, tenant, flowConfigData, configs, i18n, importStatements);
+        const g = jadeFlowGraph(div, "jadeFlow");
+        await configGraph(g, tenant, flowConfigData, configs, i18n, importStatements);
         const pageData = g.getPageData(0);
         await g.edit(0, graphDom, pageData.id);
         await g.activePage.awaitShapesRendered();
@@ -316,21 +304,22 @@ export const JadeFlow = (() => {
      * @param div 待渲染的dom元素.
      * @param tenant 租户.
      * @param flowConfigData 流程元数据.
+     * @param isPublished 是否已发布.
      * @param configs 传入的其他参数列表.
+     * @param i18n 传入的多语言翻译组件.
      * @param importStatements 传入的需要加载的语句.
      * @return {Promise<{}>} JadeFlowAgent代理.
      */
-    self.evaluate = async (div, tenant, flowConfigData, configs, importStatements = []) => {
+    self.evaluate = async (div, tenant, flowConfigData, isPublished, configs, i18n, importStatements = []) => {
         const graphDom = getGraphDom(div);
-        const g = await createGraph(graphDom, tenant, flowConfigData, configs, importStatements);
-        g.pageType = "jadeEvaluationPage";
-        await g.evaluate();
+        const g = jadeEvaluationGraph(graphDom, "jadeEvaluation");
+        await configGraph(g, tenant, flowConfigData, configs, i18n, importStatements);
+        await g.evaluate(flowConfigData, isPublished);
         await g.activePage.awaitShapesRendered();
         return jadeFlowAgent(g);
     };
 
-    const createGraph = async (div, tenant, flowConfigData, configs, i18n, importStatements) => {
-        const g = jadeFlowGraph(div, "jadeFlow");
+    const configGraph = async (g, tenant, flowConfigData, configs, i18n, importStatements) => {
         g.collaboration.mute = true;
         g.configs = configs;
         g.i18n = i18n;

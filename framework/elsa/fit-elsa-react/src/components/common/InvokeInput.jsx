@@ -7,7 +7,7 @@ import JadeInputTreeCollapse from "@/components/common/JadeInputTreeCollapse.jsx
 
 _InvokeInput.propTypes = {
     inputData: PropTypes.array,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 }
 
 /**
@@ -15,7 +15,7 @@ _InvokeInput.propTypes = {
  *
  * @returns {JSX.Element}
  */
-function _InvokeInput({inputData, disabled}) {
+function _InvokeInput({inputData, shapeStatus}) {
     const dispatch = useDispatch();
 
     /**
@@ -29,14 +29,15 @@ function _InvokeInput({inputData, disabled}) {
     };
 
     return (<>
-        <JadeInputTreeCollapse data={inputData} disabled={disabled}>
-            <JadeInputTree disabled={disabled} data={inputData} updateItem={updateItem}/>
+        <JadeInputTreeCollapse data={inputData} disabled={shapeStatus.disabled}>
+            <JadeInputTree shapeStatus={shapeStatus} data={inputData} updateItem={updateItem}/>
         </JadeInputTreeCollapse>
     </>);
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.inputData, nextProps.inputData);
+    return prevProps.shapeStatus === nextProps.shapeStatus
+        && ArrayUtil.isEqual(prevProps.inputData, nextProps.inputData);
 };
 
 export const InvokeInput = React.memo(_InvokeInput, areEqual);

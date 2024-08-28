@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -28,18 +29,22 @@ import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
+import com.huawei.fit.jober.aipp.dto.chat.AppChatRsp;
 import com.huawei.fit.jober.aipp.dummy.OperationContextDummy;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
+import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.impl.AippLogServiceImpl;
 import com.huawei.fit.jober.aipp.service.impl.AopAippLogServiceImpl;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.RangeResult;
 import com.huawei.fit.jober.common.RangedResultSet;
+
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +62,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +83,7 @@ public class AippLogServiceTest {
     private static final String DUMMY_LOG_MSG = "some random log message";
     private static final String DUMMY_W3ACCOUNT = "z00000001";
     private static final String DUMMY_META_VERSION_NEW = "1.0.1";
+    private static final String DUMMY_PATH = "/123";
 
     @InjectMocks
     private AippLogServiceImpl aippLogService;
@@ -84,6 +91,8 @@ public class AippLogServiceTest {
     private AopAippLogServiceImpl aopAippLogService;
     @Mock
     private AippLogMapper aippLogMapperMock;
+    @Mock
+    private AippChatMapper aippChatMapperMock;
     @Mock
     private DynamicFormService dynamicFormServiceMock;
     @Mock
@@ -160,7 +169,6 @@ public class AippLogServiceTest {
     }
 
     @Test
-    @Disabled
     void shouldInsertIntoDbWhenCallInsertLog() {
         AippLogCreateDto dummyCreateDto = AippLogCreateDto.builder()
                 .aippId(DUMMY_ID)
@@ -170,8 +178,10 @@ public class AippLogServiceTest {
                 .logData(DUMMY_LOG_MSG)
                 .logType(AippInstLogType.MSG.name())
                 .createUserAccount(DUMMY_W3ACCOUNT)
+                .path(DUMMY_PATH)
                 .build();
-        this.aopAippLogService.insertLog(dummyCreateDto);
+        String returnedLogId = this.aopAippLogService.insertLog(dummyCreateDto);
+        Assertions.assertEquals(returnedLogId, dummyCreateDto.getLogId());
         verify(aippLogMapperMock, times(1)).insertOne(eq(dummyCreateDto));
     }
 
@@ -466,5 +476,118 @@ public class AippLogServiceTest {
         AippParamException exception = Assertions.assertThrows(AippParamException.class,
                 () -> this.aippLogService.queryLogsByInstanceIdAndLogTypes("", new ArrayList<>()));
         Assertions.assertEquals(AippErrCode.INPUT_PARAM_IS_INVALID.getErrorCode(), exception.getCode());
+    }
+
+    @Test
+    void shouldOkWhenCallDeleteLog() {
+        List<Long> list = new ArrayList<>();
+        list.add(123L);
+        this.aippLogService.deleteLogs(list);
+        verify(aippLogMapperMock, times(1)).deleteInstanceLogs(list);
+    }
+
+    @Test
+    void shouldReturnWhenCallDeleteLogWithNullParam() {
+        List<Long> list = new ArrayList<>();
+        this.aippLogService.deleteLogs(list);
+        verify(aippLogMapperMock, times(0)).deleteInstanceLogs(list);
+    }
+
+    @Test
+    void shouldOkWhenCallQueryChatRecentChatLog() {
+        List<AippInstLog> aippInstLogList = generateAippInstLogList();
+        List<String> instanceIds = new ArrayList<>(Arrays.asList("1", "2", "3"));
+        when(this.aippChatMapperMock.selectInstanceByChat(any(), any())).thenReturn(instanceIds);
+        when(this.aippLogService.queryBatchAndFilterFullLogsByLogType(instanceIds, any())).thenReturn(aippInstLogList);
+
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_APP_ID_KEY, "app1");
+        Meta meta = new Meta();
+        meta.setAttributes(attributes);
+        meta.setVersionId("version1");
+        RangedResultSet<Meta> metaRangedResultSet = new RangedResultSet<>();
+        metaRangedResultSet.setResults(Collections.singletonList(meta));
+        metaRangedResultSet.setRange(new RangeResult(0, 1, 1));
+
+        when(this.metaServiceMock.list(any(MetaFilter.class),
+                anyBoolean(),
+                anyLong(),
+                anyInt(),
+                any(OperationContext.class),
+                any(MetaFilter.class))).thenReturn(metaRangedResultSet);
+        when(this.metaServiceMock.list(any(MetaFilter.class),
+                anyBoolean(),
+                anyLong(),
+                anyInt(),
+                any(OperationContext.class))).thenReturn(metaRangedResultSet);
+
+        List<AippInstLogDataDto> list = this.aippLogService.queryChatRecentChatLog("1", "1", new OperationContext());
+        Assertions.assertEquals(list.get(0).getInstanceId(), "1");
+        Assertions.assertEquals(list.get(1).getInstanceId(), "2");
+        Assertions.assertEquals(list.get(2).getInstanceId(), "3");
+    }
+
+    @Test
+    void testQueryRecentLogsSinceResume() {
+        List<AippInstLog> aippInstLogList = generateAippInstLogList();
+        List<String> instanceIds = new ArrayList<>(Arrays.asList("1", "2", "3"));
+        when(this.aippLogMapperMock.selectRecentAfterResume(any(), any(), any())).thenReturn(instanceIds);
+        when(this.aippLogService.queryBatchAndFilterFullLogsByLogType(instanceIds, any())).thenReturn(aippInstLogList);
+        List<AippInstLogDataDto> list = this.aippLogService
+                .queryRecentLogsSinceResume("1", "1", OperationContextDummy.getDummy());
+        Assertions.assertEquals(list.get(0).getInstanceId(), "1");
+        Assertions.assertEquals(list.get(1).getInstanceId(), "2");
+        Assertions.assertEquals(list.get(2).getInstanceId(), "3");
+    }
+
+    @Test
+    void testQueryAippRecentInstLogAfterSplice() {
+        List<AippInstLog> aippInstLogList = generateAippInstLogList();
+        List<String> instanceIds = new ArrayList<>(Arrays.asList("1", "2", "3"));
+        when(this.aippLogMapperMock.selectRecentInstanceId(any(), any(), any(), any())).thenReturn(instanceIds);
+        when(this.aippLogService.queryBatchAndFilterFullLogsByLogType(instanceIds, any())).thenReturn(aippInstLogList);
+        List<AippInstLogDataDto> list = this.aippLogService
+                .queryAippRecentInstLogAfterSplice("1", "1", 3, OperationContextDummy.getDummy());
+        Assertions.assertEquals(list.get(0).getInstanceId(), "1");
+        Assertions.assertEquals(list.get(1).getInstanceId(), "2");
+        Assertions.assertEquals(list.get(2).getInstanceId(), "3");
+    }
+
+    List<AippInstLog> generateAippInstLogList() {
+        List<AippInstLog> aippInstLogList = new ArrayList<>();
+        AippInstLog aippInstLog1 = AippInstLog.builder().aippId("1").logId(1L).instanceId("1")
+                .logType("MSG").path("/1").createAt(LocalDateTime.now()).build();
+        aippInstLogList.add(aippInstLog1);
+        AippInstLog aippInstLog2 = AippInstLog.builder().aippId("1").logId(2L).instanceId("2")
+                .logType("MSG").path("/2").createAt(LocalDateTime.now().plusMinutes(1)).build();
+        aippInstLogList.add(aippInstLog2);
+        AippInstLog aippInstLog3 = AippInstLog.builder().aippId("1").logId(3L).instanceId("3")
+                .logType("MSG").path("/3").createAt(LocalDateTime.now().plusMinutes(2)).build();
+        aippInstLogList.add(aippInstLog3);
+        return aippInstLogList;
+    }
+
+    @Test
+    void shouldReturnNullWhenCallInsertLogWithInvalidFormData() {
+        AippLogData aippLogData = AippLogData.builder().formId("").build();
+        Map<String, Object> businessData = MapBuilder.get(() -> new HashMap<String, Object>())
+                .put(AippConst.BS_HTTP_CONTEXT_KEY, "{\"w3Account\":\"123\"}")
+                .build();
+        Assertions.assertNull(this.aippLogService.insertLog(AippInstLogType.FORM.name(), aippLogData, businessData));
+    }
+
+    @Test
+    void shouldThrowWhenCallInsertLogWithInvalidMsgData() {
+        AippLogData aippLogData = AippLogData.builder().msg("你好").build();
+        Map<String, Object> businessData = MapBuilder.get(() -> new HashMap<String, Object>())
+                .put(AippConst.BS_HTTP_CONTEXT_KEY, "{\"w3Account\":\"123\"}").build();
+        Assertions.assertThrows(NullPointerException.class,
+                () -> this.aippLogService.insertLog(AippInstLogType.MSG.name(), aippLogData, businessData));
+    }
+
+    @Test
+    void testAppChatRsp() {
+        AppChatRsp appChatRsp = AppChatRsp.builder().logId("123").build();
+        Assertions.assertEquals(appChatRsp.getLogId(), "123");
     }
 }

@@ -7,10 +7,10 @@ package com.huawei.jade.carver.exporter.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.util.ObjectUtils;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.util.ObjectUtils;
 import com.huawei.jade.carver.exporter.repository.stub.SpanExporterSub;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 import com.huawei.jade.service.SpanExporterRepository;

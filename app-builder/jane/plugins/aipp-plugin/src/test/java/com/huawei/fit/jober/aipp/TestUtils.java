@@ -75,6 +75,7 @@ public class TestUtils {
         attribute.put(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.INACTIVE.getCode());
         attribute.put(AippConst.ATTR_FLOW_DEF_ID_KEY, DUMMY_FLOW_DEF_ID);
         expectMeta.setAttributes(attribute);
+        expectMeta.setProperties(Collections.emptyList());
         return expectMeta;
     }
 

@@ -17,13 +17,15 @@ import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
 
+import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
                 .putInfo(AippConst.INST_CURR_FORM_ID_KEY, sheetId)
                 .putInfo(AippConst.INST_CURR_FORM_VERSION_KEY, "1.0.0")
                 .putInfo(AippConst.INST_CURR_NODE_ID_KEY, nodeId)
+                .putInfo(AippConst.INST_SMART_FORM_TIME_KEY, LocalDateTime.now())
                 .build();
 
         this.metaInstanceService.patchMetaInstance(ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY)),

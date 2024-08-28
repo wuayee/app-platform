@@ -4,8 +4,8 @@ import { Button, Checkbox, Drawer, Select, Table, Tag, Spin, Empty, Tooltip } fr
 import { GetProp } from 'antd/lib';
 import { v4 as uuidv4 } from 'uuid';
 import DraggerUpload from '@/components/draggerUpload';
-import { uploadPlugin } from '@shared/http/plugin';
-import { Message } from '@shared/utils/message';
+import { uploadPlugin } from '@/shared/http/plugin';
+import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/locale/i18n';
 import '../style.scoped.scss';
@@ -59,7 +59,10 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const onChangeSpace = (value) => { };
   // 添加数据
   const addFileData = (data, file) => {
-    if (fileData.current.length > 4) return;
+    if (fileData.current.length > 4) {
+      Message({ type: 'warning', content: t('maxUploadTips') })
+      return;
+    };
     fileData.current = [...fileData.current, file];
     setFileList(fileData.current);
     Object.keys(data).forEach(key => {
@@ -121,7 +124,6 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     })
     let fileConfirmList = fileData.current.filter(item => uidArr.includes(item.uid));
     customRequest(fileConfirmList, nameArr);
-    setOpen(false);
   }
   // 上传文件
   const customRequest = (fileArr, nameArr) => {
@@ -238,6 +240,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
             addFileData={addFileData}
             fileList={fileList}
             removeFileData={removeFileData}
+            style={{ margin: '10px 0' }}
           />
           <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
             {

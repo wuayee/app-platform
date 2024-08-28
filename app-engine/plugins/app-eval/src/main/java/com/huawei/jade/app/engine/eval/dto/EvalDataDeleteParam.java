@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.eval.dto;
 
-import com.huawei.fitframework.annotation.Property;
-import com.huawei.fitframework.validation.constraints.NotEmpty;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.validation.constraints.NotEmpty;
 import com.huawei.jade.app.engine.eval.constraint.ValidList;
 
 import lombok.Data;

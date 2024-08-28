@@ -11,9 +11,10 @@ import com.huawei.fit.jober.common.event.entity.SourceMetaData;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.validation.SourceValidator;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.event.EventHandler;
-import com.huawei.fitframework.log.Logger;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.event.EventHandler;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Collections;
 import java.util.HashMap;

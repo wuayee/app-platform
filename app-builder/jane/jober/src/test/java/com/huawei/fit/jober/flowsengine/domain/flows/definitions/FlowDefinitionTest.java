@@ -12,12 +12,12 @@ import static com.huawei.fit.jober.FlowsTestUtil.waitSize;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_ASYNC_JOBER_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_FITABLE_TASK_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ERROR;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PROCESSING;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType.END;
-import static com.huawei.fit.waterflow.flowsengine.utils.WaterFlows.getPublisher;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ERROR;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PROCESSING;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType.END;
+import static modelengine.fit.waterflow.flowsengine.utils.WaterFlows.getPublisher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -31,35 +31,36 @@ import static org.mockito.Mockito.when;
 import com.huawei.fit.jober.FlowsDataBaseTest;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.waterflow.common.utils.UUIDUtil;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoMessenger;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocksMemo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowEchoJober;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.Parser;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Publisher;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Subscriber;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
-import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
-import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.Invoker;
-import com.huawei.fitframework.broker.client.Router;
-import com.huawei.fitframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
+
+import modelengine.fit.waterflow.common.utils.UUIDUtil;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoMessenger;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocksMemo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowEchoJober;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.Parser;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Publisher;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Subscriber;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.From;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
+import modelengine.fit.waterflow.flowsengine.utils.FlowUtil;
+import modelengine.fit.waterflow.graph.util.FlowDefinitionParseUtils;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
+import modelengine.fitframework.util.CollectionUtils;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -488,9 +489,9 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
-            businessData.put("cmc", new HashMap<String, Boolean>() {
+            businessData.put("cmc", new HashMap<String, Object>() {
                 {
-                    put("approved", false);
+                    put("approved", "false");
                 }
             });
             FlowData flowData = getFlowData(businessData, "gsy");
@@ -505,6 +506,32 @@ class FlowDefinitionTest {
                     contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
             assertFlowsExecutorWithConditionNodeFirstFalseBranch(flowData, contexts, all);
+        }
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1包含condition节点的分支1通过{{reject}}字段来进行驳回的场景")
+        void testFlowsExecutorWithConditionNodeRejectBranch() {
+            String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1_reject.json"));
+            FlowDefinition flowDefinition = PARSER.parse(jsonData);
+            Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
+            businessData.put("cmc", new HashMap<String, Object>() {
+                {
+                    put("reject", "true");
+                }
+            });
+            FlowData flowData = getFlowData(businessData, "gsy");
+            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            String streamId = flowDefinition.getStreamId();
+            assertSingleInstance(getPublisher(streamId), from);
+
+            String traceId = from.offer(flowData).getTraceId();
+
+            FlowNode flowNode = flowDefinition.getFlowNode(END);
+            List<FlowContext<FlowData>> contexts = waitSingle(
+                    contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
+            assertEquals(3, this.getContextsByTraceWrapper(REPO, traceId).size());
+            Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
+            assertEquals("success", resultBusinessData.get("approvedResult"));
         }
 
         @Test

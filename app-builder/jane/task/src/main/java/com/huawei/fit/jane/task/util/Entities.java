@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jane.task.util;
 
-import com.huawei.fitframework.model.RangedResultSet;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.model.RangedResultSet;
+import modelengine.fitframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

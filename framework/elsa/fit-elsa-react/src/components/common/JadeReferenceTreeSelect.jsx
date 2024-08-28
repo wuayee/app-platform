@@ -3,7 +3,8 @@ import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useRef, useState} from "react";
 import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {InfoCircleOutlined} from '@ant-design/icons';
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import PropTypes from "prop-types";
 
 /**
  * jade的带引用功能的级联选择框.
@@ -15,7 +16,7 @@ import { useTranslation, Trans } from "react-i18next";
 export const JadeReferenceTreeSelect = (props) => {
     const {reference, onReferencedValueChange, onReferencedKeyChange, rules, className, ...rest} = props;
     const shape = useShapeContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const form = useFormContext();
     const stopObserve = useRef(null);
     const [treeData, setTreeData] = useState([]);
@@ -34,16 +35,9 @@ export const JadeReferenceTreeSelect = (props) => {
         if (!selected) {
             return;
         }
-
-        // 若之前已有监听，则取消之前的监听.
-        if (stopObserve.current) {
-            stopObserve.current();
-        }
-
         const treeMap = new Map(treeData.map(d => [d.id, d]));
         const treeNode = treeMap.get(selected);
         const value = buildValue(treeMap, treeNode);
-        stopObserve.current = shape.observeTo(treeNode.nId, treeNode.value, (args) => _onReferenceValueChange(args.value, args.type));
         form.setFieldsValue({[name]: treeNode.title});
         onReferencedKeyChange({
             referenceNode: treeNode.nId,
@@ -89,18 +83,19 @@ export const JadeReferenceTreeSelect = (props) => {
      * 当dropdown显示时触发，实时获取tree数据.
      */
     const onDropdownVisibleChange = () => {
-        const nodeInfos = shape.getPreNodeInfos();
+        const nodeInfos = shape.getPreReferencableNodeInfos().filter(n => n.observableList.length > 0);
 
-        function getTitle(nodeInfo) {
+        const getTitle = (nodeInfo) => {
             return nodeInfo.id === VIRTUAL_CONTEXT_NODE.id ? <>
                 <div className={"jade-font-size"}>
                     <span>{nodeInfo.name}</span>
-                    <Popover className={"jade-drop-down-popover"} overlayClassName="jade-drop-down-popover-overlay" content={content}>
+                    <Popover className={"jade-drop-down-popover"} overlayClassName="jade-drop-down-popover-overlay"
+                             content={content}>
                         <InfoCircleOutlined/>
                     </Popover>
                 </div>
             </> : nodeInfo.name;
-        }
+        };
 
         const simpleTree = nodeInfos.map(n => {
             const ans = [];
@@ -135,15 +130,24 @@ export const JadeReferenceTreeSelect = (props) => {
 
     // 组件初始化后，若存在引用关系，则进行监听.
     useEffect(() => {
-        if (reference.referenceNode && reference.referenceId) {
-            stopObserve.current = shape.observeTo(reference.referenceNode, reference.referenceId, (args) => _onReferenceValueChange(args.value, args.type));
-        }
-
         // 当组件unmount时，停止监听.
         return () => {
             stopObserve.current && stopObserve.current();
         };
     }, []);
+
+    // reference变化需要重新监听.
+    useEffect(() => {
+        stopObserve.current && stopObserve.current();
+        // disabled为true的状态下，不需要注册监听，只展示即可.
+        if (reference.referenceNode && reference.referenceId && !rest.disabled) {
+            stopObserve.current = shape.observeTo(reference.id,
+                reference.referenceNode,
+                reference.referenceId,
+                (args) => _onReferenceValueChange(args.value, args.type));
+        }
+        form.setFieldsValue({[name]: reference.referenceKey});
+    }, [reference.referenceNode, reference.referenceId, reference.referenceKey, rest.disabled]);
 
     /*
      * 当Form.Item设置了name之后，只能通过form.setFieldValue设置value的值.
@@ -155,24 +159,32 @@ export const JadeReferenceTreeSelect = (props) => {
 
     return (<>
         <Form.Item
-                id={`reference-id-${reference.id}`}
-                name={[name]}
-                initialValue={reference.referenceKey}
-                rules={rules}
-                validateTrigger="onBlur"
+            id={`reference-id-${reference.id}`}
+            name={[name]}
+            initialValue={reference.referenceKey}
+            rules={rules}
+            validateTrigger="onBlur"
         >
             <TreeSelect
-                    {...rest}
-                    className={combinedClassName}
-                    treeDataSimpleMode
-                    dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
-                    placeholder={t('pleaseSelect')}
-                    onChange={onChange}
-                    treeData={treeData}
-                    onDropdownVisibleChange={onDropdownVisibleChange}
-                    treeDefaultExpandAll={false}
-                    style={{minWidth: `${minWidth}`}}
+                {...rest}
+                className={combinedClassName}
+                treeDataSimpleMode
+                dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
+                placeholder={t('pleaseSelect')}
+                onChange={onChange}
+                treeData={treeData}
+                onDropdownVisibleChange={onDropdownVisibleChange}
+                treeDefaultExpandAll={false}
+                style={{minWidth: `${minWidth}`}}
             />
         </Form.Item>
     </>);
+};
+
+JadeReferenceTreeSelect.propTypes = {
+    reference: PropTypes.object,
+    onReferencedValueChange: PropTypes.func,
+    onReferencedKeyChange: PropTypes.func,
+    rules: PropTypes.array,
+    className: PropTypes.string
 };

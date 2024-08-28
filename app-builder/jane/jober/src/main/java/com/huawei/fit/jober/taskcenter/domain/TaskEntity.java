@@ -4,14 +4,15 @@
 
 package com.huawei.fit.jober.taskcenter.domain;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.TaskProperty;
 import com.huawei.fit.jober.common.enums.JaneCategory;
 import com.huawei.fit.jober.taskcenter.domain.util.PrimaryValue;
 import com.huawei.fit.jober.taskcenter.domain.util.support.DefaultPrimaryValue;
-import com.huawei.fitframework.util.StringUtils;
+
+import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

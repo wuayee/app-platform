@@ -4,10 +4,10 @@
 
 package com.huawei.jade.common.test;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.flowable.Choir;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.flowable.Choir;
 import com.huawei.jade.authentication.context.UserContextHolder;
 import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;

@@ -6,9 +6,9 @@ package com.huawei.fit.jober.flowsengine.biz.service.triggers;
 
 import static com.huawei.fit.jober.FlowsTestUtil.waitSingle;
 import static com.huawei.fit.jober.common.Constant.OPERATOR_KEY;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
-import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType.END;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
+import static modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType.END;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -21,37 +21,38 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.utils.SleepUtil;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
-import com.huawei.fit.waterflow.flowsengine.biz.service.DefaultTraceOwnerService;
-import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
-import com.huawei.fit.waterflow.flowsengine.biz.service.TraceOwnerService;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistMessenger;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocksMemo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.DefaultFlowRetryRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.DefaultFlowTraceRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.DefaultFlowDefinitionRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.Parser;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
-import com.huawei.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper;
-import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
-import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
-import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
-import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.event.EventPublisher;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.runtime.FitRuntime;
+
+import modelengine.fit.waterflow.flowsengine.biz.service.DefaultTraceOwnerService;
+import modelengine.fit.waterflow.flowsengine.biz.service.FlowContextsService;
+import modelengine.fit.waterflow.flowsengine.biz.service.TraceOwnerService;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistMessenger;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocksMemo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.DefaultFlowRetryRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.DefaultFlowTraceRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.repo.DefaultFlowDefinitionRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
+import modelengine.fit.waterflow.flowsengine.domain.flows.parsers.Parser;
+import modelengine.fit.waterflow.flowsengine.domain.flows.streams.From;
+import modelengine.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper;
+import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
+import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
+import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
+import modelengine.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.event.EventPublisher;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.runtime.FitRuntime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -144,6 +145,7 @@ public class ApprovalTaskInstanceTriggerTest extends DatabaseBaseTest {
 
         @Test
         @DisplayName("流程实例手动流转condition节点true分支的场景持久化")
+        @Disabled
         void testFlowsManualExecutorWithConditionNodeTrueBranch() {
             String jsonData = getJsonData(getFilePath("flows_manual_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);

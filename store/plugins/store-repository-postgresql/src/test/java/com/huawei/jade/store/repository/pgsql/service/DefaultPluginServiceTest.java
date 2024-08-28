@@ -8,8 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+
 import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
@@ -78,6 +79,7 @@ public class DefaultPluginServiceTest {
         PluginDo pluginDo = new PluginDo();
         pluginDo.setPluginId("testPluginId");
         pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
+        pluginDo.setCreator("system");
         pluginDos.add(pluginDo);
 
         Mockito.when(this.pluginRepository.getPlugins(pluginQuery)).thenReturn(pluginDos);
@@ -93,6 +95,7 @@ public class DefaultPluginServiceTest {
         PluginDo pluginDo = new PluginDo();
         pluginDo.setPluginId("testPluginId");
         pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
+        pluginDo.setCreator("system");
         pluginDos.add(pluginDo);
 
         Mockito.when(this.pluginRepository.getPlugins(deployStatus)).thenReturn(pluginDos);
@@ -123,6 +126,7 @@ public class DefaultPluginServiceTest {
         PluginDo pluginDo = new PluginDo();
         pluginDo.setPluginId(pluginId);
         pluginDo.setDeployStatus(DeployStatus.DEPLOYED);
+        pluginDo.setCreator("system");
         List<PluginToolData> pluginToolDataList = new ArrayList<>();
         Mockito.when(this.pluginRepository.getPluginByPluginId(pluginId)).thenReturn(pluginDo);
         Mockito.when(this.pluginToolService.getPluginTools(pluginId)).thenReturn(pluginToolDataList);

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import {v4 as uuidv4} from "uuid";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
-import {useFormContext} from "@/components/DefaultRoot.jsx";
+import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
 import React from "react";
 import ArrayUtil from "@/components/util/ArrayUtil.js";
@@ -18,7 +18,7 @@ _JadeInputForm.propTypes = {
     addItem: PropTypes.func.isRequired, // 确保 addItem 是一个必需的函数类型
     updateItem: PropTypes.func.isRequired, // 确保 updateItem 是一个必需的函数类型
     deleteItem: PropTypes.func.isRequired, // 确保 deleteItem 是一个必需的函数类型
-    disabled: PropTypes.bool,
+    shapeStatus: PropTypes.object,
     content: PropTypes.element
 };
 
@@ -35,11 +35,11 @@ _JadeInputForm.propTypes = {
  * @param addItem 当添加一个新item时会调用此方法，此方法需要有id入参
  * @param updateItem 当修改一个已有item时会调用此方法，此方法需要有id，修改的key和修改的value组成的对象列表两个入参
  * @param deleteItem 当删除一个已有item时会调用此方法，此方法需要有id入参
- * @param disabled 是否禁用.
  * @param content 输入提示
+ * @param shapeStatus 图形状态集合.
  * @returns {JSX.Element} Jade标准输入表单的DOM
  */
-function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, content}) {
+function _JadeInputForm({items, addItem, updateItem, deleteItem, content, shapeStatus}) {
     /**
      * 示例items,其中id，name，from，value必须，涉及reference时，referenceNode, referenceId, referenceKey必须, value会变为列表
      *
@@ -51,6 +51,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
      */
 
     const form = useFormContext();
+    const shape = useShapeContext();
 
     const { t } = useTranslation();
 
@@ -91,11 +92,11 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
      */
     const handleReferenceKeyChange = (item, e) => {
         updateItem(item.id, [
-                {key: "referenceNode", value: e.referenceNode},
-                {key: "referenceId", value: e.referenceId},
-                {key: "referenceKey", value: e.referenceKey},
-                {key: "value", value: e.value},
-                {key: "type", value: e.type}
+            {key: "referenceNode", value: e.referenceNode},
+            {key: "referenceId", value: e.referenceId},
+            {key: "referenceKey", value: e.referenceKey},
+            {key: "value", value: e.value},
+            {key: "type", value: e.type}
         ]);
     };
 
@@ -113,7 +114,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
-                            disabled={disabled}
+                            disabled={shape.page.isShapeReferenceDisabled(shapeStatus)}
                             rules={[{required: true, message: t('fieldValueCannotBeEmpty')}]}
                             className="value-custom jade-select"
                             reference={item}
@@ -129,7 +130,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                     initialValue={item.value}
                     validateTrigger="onBlur"
                 >
-                    <JadeInput disabled={disabled}
+                    <JadeInput disabled={shapeStatus.disabled}
                                className="value-custom jade-input"
                                value={item.value}
                                onChange={(e) => handleItemChange('value', e.target.value, item.id)}
@@ -148,7 +149,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                         <Popover content={content}>
                             <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
-                        <Button disabled={disabled}
+                        <Button disabled={shapeStatus.disabled}
                                 type="text" className="icon-button jade-panel-header-icon-position"
                                 onClick={(event) => {
                                     handleAdd();
@@ -183,7 +184,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                                            }]}
                                            initialValue={item.name}
                                 >
-                                    <JadeInput disabled={disabled}
+                                    <JadeInput disabled={shapeStatus.disabled}
                                                className="jade-input"
                                                placeholder={t('pleaseInsertFieldName')}
                                                style={{paddingRight: "12px"}}
@@ -195,7 +196,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                             <Col span={6} style={{paddingRight: 0}}>
                                 <Form.Item id={`from-${item.id}`} name={`from-${item.id}`} initialValue={item.from}>
                                     <JadeStopPropagationSelect
-                                            disabled={disabled}
+                                            disabled={shapeStatus.disabled}
                                             id={`from-select-${item.id}`}
                                             className="value-source-custom jade-select"
                                             style={{width: "100%"}}
@@ -211,7 +212,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                             </Col>
                             <Col span={2} style={{paddingLeft: 0}}>
                                 <Form.Item id={`delete-${item.id}`} name={`delete-${item.id}`}>
-                                    <Button disabled={disabled}
+                                    <Button disabled={shapeStatus.disabled}
                                             type="text"
                                             className="icon-button"
                                             style={{height: "100%"}}
@@ -230,7 +231,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.items, nextProps.items);
+    return prevProps.shapeStatus === nextProps.shapeStatus && ArrayUtil.isEqual(prevProps.items, nextProps.items);
 };
 
-export const JadeInputForm =  React.memo(_JadeInputForm, areEqual);
+export const JadeInputForm = React.memo(_JadeInputForm, areEqual);

@@ -4,15 +4,15 @@ mybatis:
 fit:
   beans:
     packages:
-      - 'com.huawei.fit.waterflow'
-      - 'com.huawei.fitframework'
-      - 'com.huawei.fit.integration'
+      - 'modelengine.fit.waterflow'
+      - 'modelengine.fitframework'
+      - 'modelengine.fit.integration'
   messages:
     basename: i18n/messages
 
 jane:
   flowsEngine:
     retry:
-      scheduleRate: 60000
+      scheduleRate: 10000
 
 distributed-lock-provider: databaseDistributedLockProvider

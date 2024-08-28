@@ -1,6 +1,8 @@
 file(GLOB SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/fitablev2/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/subscriber/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/secure_access/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/util/*.cpp
     )
 
 add_library(FitRegistryServerRepositoryMemory SHARED ${SRCS})

@@ -5,7 +5,8 @@
 package com.huawei.fit.jober.common.event;
 
 import com.huawei.fit.jober.common.event.entity.SourceMetaData;
-import com.huawei.fitframework.event.Event;
+
+import modelengine.fitframework.event.Event;
 
 /**
  * 定时任务数据源Event。

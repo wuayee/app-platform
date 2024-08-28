@@ -16,8 +16,9 @@ import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
-import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,6 +83,7 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
                 .status(status)
                 .instanceId(instanceId)
                 .answer(Collections.singletonList(answer))
+                .logId(log.getLogId())
                 .build();
     }
 

@@ -1,22 +1,20 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { Modal, Switch } from 'antd';
-import { Message } from '@shared/utils/message';
+import { Button, Modal, Switch } from 'antd';
+import { Message } from '@/shared/utils/message';
 import { CloseOutlined } from '@ant-design/icons';
 import {
   LinkIcon,
   AtIcon,
   HistoryIcon,
-  ArrowDownIcon,
-  ClearChatIcon,
   ShareIcon,
   NotificationIcon
 } from '@/assets/icon';
-import { clearInstance } from '@shared/http/aipp';
+import { clearInstance } from '@/shared/http/aipp';
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from '../../star-apps';
-import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import {
@@ -50,6 +48,8 @@ const EditorBtnHome = (props) => {
   const dimension = useAppSelector((state) => state.commonStore.dimension);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAt, setShowAt] = useState(false);
+  const [showNotice, setShowNotice] = useState(false);
+  const [notice, setNotice] = useState('');
   const [appName, setAppName] = useState('');
   const [appIcon, setAppIcon] = useState();
   const [openHistorySignal, setOpenHistorySignal] = useState(null);
@@ -85,9 +85,7 @@ const EditorBtnHome = (props) => {
         setShowAt(false);
       }
     };
-
     editorRef.current.addEventListener('input', handleInputAt);
-
     return () => {
       if (editorRef.current) {
         editorRef.current.removeEventListener('input', handleInputAt);
@@ -161,7 +159,6 @@ const EditorBtnHome = (props) => {
   const onMultiConverChange = (checked) => {
     dispatch(setUseMemory(checked));
   }
-
   //点击“新聊天”按钮回调
   const onClickNewChat = () => {
     if (chatRunning) {
@@ -176,13 +173,11 @@ const EditorBtnHome = (props) => {
     dispatch(setAtChatId(null));
     dispatch(setAtAppId(null));
   }
-
   // 点击历史对话图标回调
   const historyChatClick = (e) => {
     if (isChatRunning()) { return; }
     setOpenHistorySignal(e.timeStamp);
   }
-
   // 检验是否正在对话中
   const isChatRunning = () => {
     if (chatRunning) {
@@ -191,13 +186,21 @@ const EditorBtnHome = (props) => {
     }
     return false;
   }
-
   // 点击更多应用按钮回调
   const onClickShowMore = () => {
     if (chatType !== 'active') return;
     showMoreClick();
   }
-
+  // 公告
+  const announcementsClick = () => {
+    let { publishedUpdateLog } = appInfo.attributes;
+    if (publishedUpdateLog && publishedUpdateLog.length) {
+      setNotice(publishedUpdateLog);
+    } else {
+      setNotice(t('noAnnouncement'));
+    }
+    setShowNotice(true);
+  }
   return (
     <div className='btn-inner'>
       <div className='inner-left'>
@@ -206,10 +209,9 @@ const EditorBtnHome = (props) => {
           <div className={['switch-app', atAppId ? 'switch-active' : null].join(' ')} onClick={onClickShowMore}>
             {atAppId && <span style={{ marginLeft: '6px' }}>{t('chatWith')}</span>}
             <span className='item-name' title={appName}>{appName}</span>
-            {!appInfo.hideHistory && <img src='./src/assets/images/ai/list.png' className='app-menu' />}
             {atAppId && <span style={{ marginLeft: '6px' }}>{t('chat')}</span>}
           </div>
-          <LinkIcon onClick={uploadClick} />
+          {/* <LinkIcon onClick={uploadClick} /> */}
           {(!atAppId && appId === HOME_APP_ID) && <AtIcon onClick={atClick} />}
         </div>
       </div>
@@ -223,10 +225,11 @@ const EditorBtnHome = (props) => {
             ) :
             (
               <div className='inner-item'>
+                <NotificationIcon onClick={announcementsClick} />
                 { !appInfo.hideHistory && <HistoryIcon onClick={historyChatClick} />}
                 {showMulti && <div className='multi-conversation-title'>
                   <span>{t('multiTurnConversation')}</span>
-                  <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange} />
+                  <Switch className='multi-conversation-switch' checked={useMemory} onChange={onMultiConverChange} />
                 </div>}
                 <span className='item-clear' onClick={onClickNewChat}>+ {t('newChat')}</span>
               </div>
@@ -237,13 +240,28 @@ const EditorBtnHome = (props) => {
         atClick={showMoreClick}
         searchKey={searchKey}
         setSearchKey={setSearchKey} />}
+      {/* 清空历史记录 */}
       <Modal
         title={t('clearCurrentChat')}
         open={isModalOpen}
-        onOk={(e) => handleOk(e.timeStamp)}
+        onOk={handleOk}
         onCancel={() => setIsModalOpen(false)}
         centered>
         <span>{t('clearCurrentChatContent')}</span>
+      </Modal>
+      {/* 公告 */}
+      <Modal
+        title={t('updateLog')}
+        width={800}
+        open={showNotice}
+        onCancel={() => setShowNotice(false)}
+        footer={null}>
+        <div style={{ maxHeight: '400px', overflow: 'auto' }}>
+          <div dangerouslySetInnerHTML={{ __html: notice }}></div>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button onClick={() => setShowNotice(false)}>{t('gotIt')}</Button>
+        </div>
       </Modal>
       <StarApps
         handleAt={atItemClick}

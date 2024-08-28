@@ -4,21 +4,22 @@
 
 package com.huawei.jade.store.repository.pgsql.controller;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notNegative;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notNegative;
+import static modelengine.fitframework.inspection.Validation.notNull;
 import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
 import static com.huawei.jade.common.Result.calculateOffset;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.StringUtils;
+
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.common.Result;
 import com.huawei.jade.store.entity.query.PluginQuery;
@@ -166,6 +167,7 @@ public class PluginController {
      * @param mode 表示查询工具的标签与和或方式的 {@link String}。
      * @param pageNum 表示页码的 {@code int}。
      * @param pageSize 表示限制的 {@code int}。
+     * @param isBuiltin 表示插件是否内置的 {@link Boolean}。
      * @return 表示格式化的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link PluginToolData}{@code >}{@code >}。
      */
     @GetMapping("/search")
@@ -174,7 +176,8 @@ public class PluginController {
         @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
         @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
         @RequestQuery(value = "pageNum", defaultValue = "1") int pageNum,
-        @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize) {
+        @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize,
+        @RequestQuery(value = "isBuiltin", required = false) Boolean isBuiltin) {
         notNegative(pageNum, "The page number cannot be negative.");
         notNegative(pageSize, "The page size cannot be negative.");
         PluginQuery pluginQuery = new PluginQuery.Builder().toolName(name)
@@ -183,6 +186,7 @@ public class PluginController {
             .mode(validateTagMode(mode))
             .offset(calculateOffset(pageNum, pageSize))
             .limit(pageSize)
+            .isBuiltin(isBuiltin)
             .build();
         ListResult<PluginData> res = this.pluginService.getPlugins(pluginQuery);
         return Result.ok(res.getData(), res.getCount());

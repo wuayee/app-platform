@@ -4,20 +4,20 @@
 
 package com.huawei.jade.carver.exporter.support;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.Entity;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.conf.Config;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.Entity;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.conf.Config;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.LazyLoader;
+import modelengine.fitframework.util.StringUtils;
 import com.huawei.jade.carver.exporter.OperationLogExporter;
 import com.huawei.jade.carver.operation.OperationLogLocaleService;
 import com.huawei.jade.carver.operation.support.CompositParam;

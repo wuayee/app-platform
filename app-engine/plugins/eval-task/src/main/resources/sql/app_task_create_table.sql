@@ -24,6 +24,36 @@ comment on column t_app_engine_eval_task.updated_by is '评估任务最近更新
 comment on column t_app_engine_eval_task.app_id is '应用 ID';
 comment on column t_app_engine_eval_task.workflow_id is '工作流 ID';
 
+create table if not exists t_app_engine_eval_task_case
+(
+    "id"          bigserial primary key not null,
+    "latency"     integer               not null,
+    "outcome"     smallint              not null,
+    "instance_id" bigint                not null
+);
+
+comment on table t_app_engine_eval_task_case is '评估任务用例表';
+comment on column t_app_engine_eval_task_case.id is '主键';
+comment on column t_app_engine_eval_task_case.latency is '评估用例耗时';
+comment on column t_app_engine_eval_task_case.outcome is '评估用例结果';
+comment on column t_app_engine_eval_task_case.instance_id is '评估任务实例 ID';
+
+create table if not exists t_app_engine_eval_record
+(
+    "id"           bigserial primary key not null,
+    "input"        text                  not null,
+    "node_id"      varchar(32)           not null,
+    "score"        real                  not null,
+    "task_case_id" bigint                not null
+);
+
+comment on table t_app_engine_eval_record is '评估任务用例评估结果表';
+comment on column t_app_engine_eval_record.id is '主键';
+comment on column t_app_engine_eval_record.input is '用例输入';
+comment on column t_app_engine_eval_record.node_id is '评估节点 ID';
+comment on column t_app_engine_eval_record.score is '用例评估得分';
+comment on column t_app_engine_eval_record.task_case_id is '评估任务用例 ID';
+
 create table if not exists t_app_engine_eval_instance
 (
     "id"          bigserial primary key                 not null,

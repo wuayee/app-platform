@@ -17,11 +17,12 @@ import com.huawei.fit.jober.taskcenter.domain.ScheduleSourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.SourceType;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.serialization.ObjectSerializer;
 
 import com.alibaba.fastjson.TypeReference;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.serialization.ObjectSerializer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;

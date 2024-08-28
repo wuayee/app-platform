@@ -4,11 +4,11 @@
 
 package com.huawei.jade.carver.tool.eco;
 
-import static com.huawei.fitframework.inspection.Validation.isInstanceOf;
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.isInstanceOf;
+import static modelengine.fitframework.inspection.Validation.isTrue;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.support.AbstractTool;
 
 /**

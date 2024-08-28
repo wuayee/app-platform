@@ -8,7 +8,8 @@ import com.huawei.fit.jober.aipp.domain.AppBuilderFlowGraph;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderFlowGraphMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderFlowGraphSerializer;
-import com.huawei.fitframework.annotation.Component;
+
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

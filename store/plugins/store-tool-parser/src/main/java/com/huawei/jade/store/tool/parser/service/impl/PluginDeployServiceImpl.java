@@ -4,26 +4,10 @@
 
 package com.huawei.jade.store.tool.parser.service.impl;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.entity.FileEntity;
-import com.huawei.fit.http.entity.NamedEntity;
-import com.huawei.fit.service.RegistryService;
-import com.huawei.fit.service.entity.FitableAddressInstance;
-import com.huawei.fit.service.entity.FitableInfo;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.schedule.Task;
-import com.huawei.fitframework.schedule.ThreadPoolExecutor;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.FileUtils;
-import com.huawei.fitframework.util.SecurityUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.ThreadUtils;
+import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
@@ -35,6 +19,25 @@ import com.huawei.jade.store.tool.parser.config.RegistryQueryPoolConfig;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
 import com.huawei.jade.store.tool.parser.service.PluginDeployService;
 import com.huawei.jade.store.tool.parser.support.FileParser;
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.service.RegistryService;
+import modelengine.fit.service.entity.FitableAddressInstance;
+import modelengine.fit.service.entity.FitableInfo;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.schedule.Task;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.SecurityUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +69,7 @@ import java.util.stream.Collectors;
  * @since 2024-8-13
  */
 @Component
-public class PluginDeployServiceImpl implements PluginDeployService {
+public class PluginDeployServiceImpl implements PluginDeployService, FitRuntimeStartedObserver {
     private static final Logger log = Logger.get(PluginDeployServiceImpl.class);
     private static final String TEMPORARY_TOOL_PATH = "/var/temporary/tools";
     private static final String PERSISTENT_PATH = "/opt/fit/tools";
@@ -98,6 +101,9 @@ public class PluginDeployServiceImpl implements PluginDeployService {
     private static final String RUNNABLES = "runnables";
     private static final String EXTENSIONS = "extensions";
     private static final String TAGS = "tags";
+    private static final String USER = "user";
+    private static final String BUILTIN = "BUILTIN";
+    private static final String AND = "AND";
 
     private final PluginService pluginService;
     private final ObjectSerializer serializer;
@@ -140,7 +146,6 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             .exceptionHandler((thread, throwable) -> {})
             .rejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy())
             .build();
-        this.initDeployStatus();
     }
 
     private void initDeployStatus() {
@@ -148,11 +153,23 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             .stream()
             .map(PluginData::getPluginId)
             .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(expiredStatusIds)) {
-            return;
+        if (CollectionUtils.isNotEmpty(expiredStatusIds)) {
+            expiredStatusIds.forEach(this::undeployPlugin);
+            this.pluginService.updateDeployStatus(expiredStatusIds, DeployStatus.UNDEPLOYED);
         }
-        expiredStatusIds.forEach(this::undeployPlugin);
-        this.pluginService.updateDeployStatus(expiredStatusIds, DeployStatus.UNDEPLOYED);
+        // 内置工具修改为已部署
+        PluginQuery pluginQuery = new PluginQuery();
+        pluginQuery.setExcludeTags(new HashSet<>());
+        pluginQuery.setIncludeTags(new HashSet<>(Collections.singletonList(BUILTIN)));
+        pluginQuery.setMode(AND);
+        List<String> builtInPluginIds = this.pluginService.getPlugins(pluginQuery)
+            .getData()
+            .stream()
+            .map(PluginData::getPluginId)
+            .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(builtInPluginIds)) {
+            this.pluginService.updateDeployStatus(builtInPluginIds, DeployStatus.DEPLOYED);
+        }
     }
 
     @Override
@@ -183,6 +200,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         this.validatePluginIds(toDeployPluginIds);
         List<PluginData> deployedPlugins = this.pluginService.getPlugins(DeployStatus.DEPLOYED);
         List<String> deployedPluginIds = deployedPlugins.stream()
+            .filter(pluginData -> !pluginData.getBuiltin())
             .map(PluginData::getPluginId)
             .collect(Collectors.toList());
         List<String> toUnDeployedIds = new ArrayList<>(
@@ -208,7 +226,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         PluginData pluginData = this.pluginService.getPlugin(pluginId);
         if (pluginData.getPluginId() == null) {
             // 无此插件时，返回删除数量为 0
-            log.warn("No plugin found when try to delete. [pluginFile={}]", pluginId);
+            log.warn("No plugin found when try to delete. [pluginId={}]", pluginId);
             return 0;
         }
         this.pluginService.deletePlugin(pluginId);
@@ -217,6 +235,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         FileUtils.delete(deployPath.toFile());
         Path persistentPath = this.generatePersistentPath(pluginData);
         FileUtils.delete(persistentPath.toFile());
+        log.info("Succeeded to delete plugin. [pluginName={}]", pluginData.getPluginName());
         // 正常删除，返回删除数量为 1
         return 1;
     }
@@ -238,7 +257,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         try {
             FileUtils.delete(deployedPath.toFile());
         } catch (IllegalStateException e) {
-            log.error("Failed to delete plugin. [pluginFile={}]", pluginId, e);
+            log.error("Failed to delete plugin. [pluginName={}]", pluginData.getPluginName(), e);
         }
     }
 
@@ -247,7 +266,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         String pluginFullName = this.getPluginFullName(pluginData);
         this.registerQueryThread.execute(Task.builder()
             .runnable(() -> this.deploy(pluginData, pluginFullName, pluginId))
-            .uncaughtExceptionHandler((thread, cause) -> this.exceptionCaught(cause, pluginFullName, pluginId))
+            .uncaughtExceptionHandler(
+                (thread, cause) -> this.exceptionCaught(cause, pluginData.getPluginName(), pluginId))
             .buildDisposable());
     }
 
@@ -314,8 +334,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
         return fitableInfo;
     }
 
-    private void exceptionCaught(Throwable cause, String pluginFullName, String pluginId) {
-        log.error(StringUtils.format("Failed to deploy file. [pluginFile={0}]", pluginFullName), cause);
+    private void exceptionCaught(Throwable cause, String pluginName, String pluginId) {
+        log.error(StringUtils.format("Failed to deploy file. [pluginFile={0}]", pluginName), cause);
         this.undeployPlugin(pluginId);
         pluginService.updateDeployStatus(Collections.singletonList(pluginId), DeployStatus.DEPLOYMENT_FAILED);
     }
@@ -438,6 +458,8 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             generateNewName(FileUtils.ignoreExtension(oldFileName), FileUtils.extension(oldFileName)));
         pluginFile.renameTo(newFile);
         PluginData pluginData = new PluginData();
+        pluginData.setCreator(USER);
+        pluginData.setModifier(USER);
         pluginData.setPluginId(pluginId);
         pluginData.setExtension(this.parseUniquenessData(validationFile, newFile.getName()));
         pluginData.setPluginName(this.getStringInMapObject(
@@ -660,8 +682,7 @@ public class PluginDeployServiceImpl implements PluginDeployService {
                 "the size of required in tools.json cannot be larger than properties size.");
         }
         if (!schema.containsKey(ORDER)) {
-            throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
-                "schema in tools.json should contain key: order.");
+            return;
         }
         List<String> order = cast(schema.get(ORDER));
         if (!order.isEmpty() && order.size() != properties.size()) {
@@ -715,5 +736,10 @@ public class PluginDeployServiceImpl implements PluginDeployService {
             throw new PluginDeployException(PluginDeployRetCode.JSON_PARSE_ERROR,
                 "plugin.json type can only contain python and java.");
         }
+    }
+
+    @Override
+    public void onRuntimeStarted(FitRuntime runtime) {
+        this.initDeployStatus();
     }
 }

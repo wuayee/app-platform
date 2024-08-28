@@ -1,5 +1,6 @@
 import ToolInvokeFormWrapper from "@/components/toolInvokeNode/ToolInvokeFormWrapper.jsx";
 import {updateInput} from "@/components/util/JadeConfigUtils.js";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * 工具调用节点组件
@@ -7,7 +8,7 @@ import {updateInput} from "@/components/util/JadeConfigUtils.js";
  * @param jadeConfig
  */
 export const toolInvokeComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必填
@@ -24,24 +25,24 @@ export const toolInvokeComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <ToolInvokeFormWrapper disabled={disabled} data={data}/>
+            <ToolInvokeFormWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
-
         let newConfig = {...config};
         switch (action.type) {
             case "update":
                 newConfig.inputParams = updateInput(config.inputParams, action.id, action.changes);
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

@@ -6,10 +6,6 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import static com.huawei.fit.jober.aipp.util.HttpUtils.sendHttpRequest;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.entity.ObjectEntity;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
@@ -20,23 +16,27 @@ import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.util.AippFileUtils;
 import com.huawei.fit.jober.aipp.util.HttpUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
-import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
-import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
-import com.huawei.jade.fel.model.openai.entity.chat.message.content.UserContent;
 import com.huawei.jade.voice.service.VoiceService;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fel.model.openai.client.OpenAiClient;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
+import modelengine.fel.model.openai.entity.chat.message.Role;
+import modelengine.fel.model.openai.entity.chat.message.content.UserContent;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.entity.ObjectEntity;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class LLMServiceImpl implements LLMService {
         log.info("get image url: {}", imageUrl);
         UserContent promptContent = UserContent.text(prompt);
         UserContent imageContent = UserContent.image(imageUrl);
-        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER)
+        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER.name())
                 .content(Arrays.asList(promptContent, imageContent)).build();
         OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
                 .model(LlmModelNameEnum.QWEN_VL.getValue()).messages(Collections.singletonList(msg)).build();
@@ -129,7 +129,7 @@ public class LLMServiceImpl implements LLMService {
 
     @Override
     public String askModelWithText(String prompt, LlmModelNameEnum model) throws IOException {
-        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER)
+        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER.name())
                 .content(prompt).build();
         OpenAiChatCompletionRequest requset = OpenAiChatCompletionRequest.builder().model(model.getValue())
                 .messages(Collections.singletonList(promptMsg)).build();
@@ -140,7 +140,7 @@ public class LLMServiceImpl implements LLMService {
     @Override
     public String askModelWithText(String prompt, int maxTokens, double temperature, LlmModelNameEnum model)
             throws IOException {
-        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER)
+        OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER.name())
                 .content(prompt).build();
         OpenAiChatCompletionRequest requset = OpenAiChatCompletionRequest.builder().model(model.getValue())
                 .messages(Collections.singletonList(promptMsg)).temperature(temperature).maxTokens(maxTokens).build();

@@ -4,7 +4,7 @@
 
 package com.huawei.jade.app.engine.base.common.resp;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 import com.huawei.jade.app.engine.base.common.ErrorCode;
 
 import lombok.AllArgsConstructor;

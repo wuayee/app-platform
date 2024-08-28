@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.serialization.cbor'
+    - 'modelengine.fit.serialization.cbor'

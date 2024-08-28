@@ -4,8 +4,8 @@
 
 package com.huawei.jade.app.engine.eval.constraint;
 
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.validation.ConstraintValidator;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.validation.ConstraintValidator;
 
 import java.util.List;
 

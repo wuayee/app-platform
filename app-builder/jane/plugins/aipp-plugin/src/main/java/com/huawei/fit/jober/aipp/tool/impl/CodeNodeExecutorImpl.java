@@ -4,16 +4,17 @@
 
 package com.huawei.fit.jober.aipp.tool.impl;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.jober.aipp.dto.CodeExecuteResDto;
 import com.huawei.fit.jober.aipp.service.CodeExecuteService;
 import com.huawei.fit.jober.aipp.tool.CodeNodeExecutor;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.log.Logger;
 
 import java.util.Map;
 

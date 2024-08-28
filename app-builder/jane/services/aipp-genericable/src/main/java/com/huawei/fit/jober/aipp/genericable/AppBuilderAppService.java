@@ -7,7 +7,8 @@ package com.huawei.fit.jober.aipp.genericable;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * 表示 app 应用相关的 Genericable 接口。

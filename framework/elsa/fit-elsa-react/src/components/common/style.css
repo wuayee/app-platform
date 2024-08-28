@@ -191,6 +191,30 @@
     user-select: none;
 }
 
+.jade-footer-text {
+    position: static;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4;
+    padding: 0px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0px 4px;
+    color: rgb(37, 43, 58);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: 0px;
+    text-align: left;
+}
+
 .jade-code-editor .monaco-editor, .jade-code-editor .monaco-editor .overflow-guard {
     border-radius: 4px
 }
@@ -251,22 +275,6 @@
     line-height: 19px;
     letter-spacing: 0;
     text-align: left;
-}
-
-.custom-tooltip .ant-tooltip-inner {
-    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
-    background-color: white !important;
-    color: rgb(37, 43, 58); /* 可选：设置文本颜色 */
-    white-space: normal; /* 允许换行 */
-    word-break: break-all; /* 在任何字符间换行 */
-}
-
-.jade-component-title span {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
 }
 
 .jade-second-title-text {
@@ -445,4 +453,23 @@
 .jade-custom-multi-item-container {
     max-height: 168px; /* 设置容器的最大高度, 五个item的高度和，每个33.6px 33.6*5 = 168 */
     overflow-y: auto; /* 当内容超出容器时启用垂直滚动条 */
+}
+
+.header-title {
+    user-select: none;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    line-height: 24px;
+    color: rgb(28, 31, 35);
+}
+
+.text-title-tooltip .ant-tooltip-inner {
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    background-color: white !important;
+    color: rgb(37, 43, 58); /* 可选：设置文本颜色 */
+    white-space: normal; /* 允许换行 */
+    word-break: break-all; /* 在任何字符间换行 */
 }

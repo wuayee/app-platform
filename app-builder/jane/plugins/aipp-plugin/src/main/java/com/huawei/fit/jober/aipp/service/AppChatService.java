@@ -6,7 +6,8 @@ package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
-import com.huawei.fitframework.flowable.Choir;
+
+import modelengine.fitframework.flowable.Choir;
 
 import java.util.Map;
 

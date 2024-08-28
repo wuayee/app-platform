@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import { shareDialog } from '@shared/http/aipp';;
-import { toClipboard } from '@shared/utils/common';
+import { shareDialog } from '@/shared/http/aipp';;
+import { toClipboard } from '@/shared/utils/common';
 import { useAppSelector } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
 import '../styles/check-group.scss';
@@ -13,6 +13,7 @@ const CheckGroup = (props) => {
     type,
     setEditorShow,
     checkedList,
+    deleteChat,
     reportClick
   } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,8 +21,8 @@ const CheckGroup = (props) => {
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const textMap = {
-    'share': '分享',
-    'delete': '删除',
+    'share': t('share'),
+    'delete': t('delete'),
     'report': '',
   }
 
@@ -37,16 +38,18 @@ const CheckGroup = (props) => {
   }
   // 处理点击
   const handleShare = (e) => {
-    const result = [];
-    checkedList.map((item, index) => {
-      result.push({ query: JSON.stringify(item) });
+    const resultArr = [];
+    const logIdArr = [];
+    checkedList.forEach((item, index) => {
+      resultArr.push({ query: JSON.stringify(item) });
+      logIdArr.push(item.logId);
     });
     if (type === 'share') {
-      shareConfirm(result);
+      shareConfirm(resultArr);
     } else if (type === 'delete') {
-      console.log(result);
+      deleteChat(logIdArr);
     } else {
-      reportClick(result);
+      reportClick(resultArr);
     }
   }
   // 分享
@@ -70,7 +73,7 @@ const CheckGroup = (props) => {
             type={checkedList.length === 0 ? 'default' : 'primary'}
             disabled={checkedList.length === 0}
             onClick={(e) => handleShare(e)}>
-            {t('ok')}{type === 'share' ? t('share') : ''}
+            {t('ok')}{textMap[type] || ''}
           </Button>
         </div>
       </div>

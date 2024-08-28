@@ -4,28 +4,28 @@
 
 package com.huawei.fit.flow.ohscript;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.common.OhscriptExecuteException;
 import com.huawei.fit.jober.common.TypeNotSupportException;
-import com.huawei.fit.ohscript.external.FitExecutionException;
-import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
-import com.huawei.fit.ohscript.script.lexer.Lexer;
-import com.huawei.fit.ohscript.script.parser.AST;
-import com.huawei.fit.ohscript.script.parser.GrammarBuilder;
-import com.huawei.fit.ohscript.script.parser.ParserBuilder;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapUtils;
-import com.huawei.fitframework.util.ReflectionUtils;
+
+import modelengine.fit.ohscript.external.FitExecutionException;
+import modelengine.fit.ohscript.script.errors.OhPanic;
+import modelengine.fit.ohscript.script.interpreter.ASTEnv;
+import modelengine.fit.ohscript.script.parser.AST;
+import modelengine.fit.ohscript.script.parser.ParserBuilder;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Genericable;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -51,6 +51,8 @@ public class OhScriptTaskHandler implements FlowableService {
 
     private final BrokerClient brokerClient;
 
+    private final BeanContainer beanContainer;
+
     /**
      * OhScriptTaskHandler构造函数
      *
@@ -65,15 +67,15 @@ public class OhScriptTaskHandler implements FlowableService {
         this.genericableId = annotations.getAnnotation(Genericable.class).id();
         log.info("Get genericable id of flowable service. [id={}]", this.genericableId);
         this.brokerClient = notNull(brokerClient, "The broker client cannot be null.");
+        this.beanContainer = container;
     }
 
     @Override
     @Fitable(id = "OhScript")
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        System.gc();
         String code = this.getOhScriptCode(flowData)
                 .orElseThrow(() -> new IllegalArgumentException("No OhScript code."));
-        log.debug("Prepare to execute OhScript. [code=\"{}\"]", code);
+        log.info("Step [OhScriptTaskHandler] [createAstEnv] end, [env.execute] begin");
         ASTEnv env = createAstEnv(flowData, code);
         Object result;
         try {
@@ -84,23 +86,34 @@ public class OhScriptTaskHandler implements FlowableService {
             }
             throw new OhscriptExecuteException(ex.getMessage(), ex.getCause(), ex.getGenericableId(),
                     ex.getFitableId());
+        } catch (OhPanic e) {
+            throw new OhscriptExecuteException(e.getMessage(), e.getCause(), null, null);
         }
         if (!(result instanceof List)) {
             return Collections.emptyList();
         }
+        log.info("Step [OhScriptTaskHandler] [env.execute] end");
         return cast(result);
     }
 
     private ASTEnv createAstEnv(List<Map<String, Object>> flowData, String code) {
-        GrammarBuilder grammarBuilder = new GrammarBuilder();
-        Lexer lexer = new Lexer();
-        ParserBuilder parserBuilder = new ParserBuilder(grammarBuilder, lexer);
-        parserBuilder.addFitOh(GENERICABLE_NAME, this.genericableId, this.genericableMethod.getParameterCount() + 1);
-        parserBuilder.addExternalOh("context", flowData);
-        AST ast = parserBuilder.parseString("", code);
+        AST ast = this.getAst(flowData, code);
         ASTEnv env = new ASTEnv(ast);
-        env.setBrokerClient(this.brokerClient);
+        env.grant("context", flowData);
+        env.setBrokerClient(this.beanContainer, this.brokerClient);
         return env;
+    }
+
+    private AST getAst(List<Map<String, Object>> flowData, String code) {
+        return buildAst(flowData, code, this.genericableId, this.genericableMethod);
+    }
+
+    private static AST buildAst(List<Map<String, Object>> flowData, String code, String genericableId,
+                                Method genericableMethod) {
+        ParserBuilder parserBuilder = new ParserBuilder();
+        parserBuilder.addFitOh(GENERICABLE_NAME, genericableId, genericableMethod.getParameterCount() + 1);
+        parserBuilder.addExternalOh("context", flowData);
+        return parserBuilder.parseString("", code);
     }
 
     private Optional<String> getOhScriptCode(List<Map<String, Object>> flowData) {

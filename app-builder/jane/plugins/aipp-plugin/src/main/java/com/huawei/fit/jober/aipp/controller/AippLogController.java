@@ -4,22 +4,23 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.service.AippLogService;
-import com.huawei.fitframework.annotation.Component;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 
@@ -121,5 +122,17 @@ public class AippLogController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
             @PathVariable("chat_id") String chatId) {
         return Rsp.ok(this.aippLogService.queryChatRecentChatLog(chatId, appId, this.contextOf(httpRequest, tenantId)));
+    }
+
+    /**
+     * 删除指定的应用对话记录
+     *
+     * @param logIds 需要删除的对话记录列表
+     * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}。
+     */
+    @DeleteMapping(path = "/logs", description = "删除指定的应用对话记录")
+    public Rsp<Void> deleteLogs(@RequestBody List<Long> logIds) {
+        this.aippLogService.deleteLogs(logIds);
+        return Rsp.ok();
     }
 }

@@ -19,8 +19,9 @@ import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.ServerInternalException;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
+
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

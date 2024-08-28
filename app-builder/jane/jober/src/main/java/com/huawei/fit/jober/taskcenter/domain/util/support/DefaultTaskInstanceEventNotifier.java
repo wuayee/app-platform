@@ -11,9 +11,10 @@ import com.huawei.fit.jober.taskcenter.domain.util.TaskInstanceEventNotifier;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceCreatedEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceDeletedEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceModifiedEvent;
-import com.huawei.fitframework.event.Event;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.util.MapUtils;
+
+import modelengine.fitframework.event.Event;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.util.MapUtils;
 
 import java.util.Optional;
 

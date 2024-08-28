@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.domain.util.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jane.task.domain.TaskProperty;
 import com.huawei.fit.jane.task.util.OperationContext;
@@ -16,10 +16,11 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 import com.huawei.fit.jober.taskcenter.domain.TriggerEntity;
 import com.huawei.fit.jober.taskcenter.domain.util.InstancesChangedNotifier;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
+
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;

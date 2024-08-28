@@ -5,7 +5,8 @@
 package com.huawei.fit.jober.aipp.genericable;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 import java.util.Map;
 

@@ -24,8 +24,7 @@ export function uploadFile(data, headers) {
 
 // 根据返回的地址获取语音转换的文字信息
 export function voiceToText(tenantId, voicePath, fileName) {
-  let url = process.env.NODE_ENV === 'development' ? 'http://80.11.128.86:30020/api/jober/v1/api' :
-    process.env.NODE_ENV === 'production' ? window.location.origin + AIPP_URL : AIPP_URL
+  let url = window.location.origin + AIPP_URL;
   return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`, { voicePath: `${url}/${tenantId}/file?filePath=${voicePath}`, fileName });
 }
 // 文字转语音
@@ -108,6 +107,10 @@ export function getChatRecentLog(tenantId, chatId, appId) {
 export function clearInstance(tenantId, appId, type) {
   return del(`${AIPP_URL}/${tenantId}/log/app/${appId}?type=${type}`);
 }
+// 用户自勾选删除历史记录
+export function clearChat(appId, list) {
+  return del(`${AIPP_URL}/${appId}/log/logs`, list);
+}
 // 终止当前对话
 export function stopInstance(tenantId, instanceId, params) {
   return put(`${AIPP_URL}/${tenantId}/instances/${instanceId}/terminate`, params);
@@ -184,7 +187,7 @@ export function reSendChat(tenant_id, current_instance_id, data) {
 
 // 获取澄清字段下拉
 export function getClarifyOptions(data) {
-  return post(`${TT_URL}/java-magiccube/magiccube/finance/option-nodes-name`,data);
+  return post(`${TT_URL}/java-magiccube/magiccube/finance/option-nodes-name`, data);
 }
 // 澄清-辅产品
 export function getFuClarifyOptions(params) {

@@ -8,16 +8,19 @@
 #define FIT_RANDOM_H
 #include <unistd.h>
 #include <fcntl.h>
+#include <type_traits>
 namespace Fit {
-static int FitRandom()
+// 通用模板函数 FitRandom
+template<typename T>
+inline T FitRandom()
 {
-    // 安全整改，禁止使用 C 标准库随机数函数
-    int r = 0;
+    static_assert(std::is_integral<T>::value, "FitRandom only supports integer types");
+    T r = 0;
     int fd = open("/dev/random", O_RDONLY);
     if (fd > 0) {
-        read (fd, &r, sizeof(int));
+        read(fd, &r, sizeof(T));
+        close(fd);
     }
-    close (fd);
     return r;
 }
 }

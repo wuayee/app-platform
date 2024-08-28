@@ -4,7 +4,7 @@ import { Input, Button, Checkbox, Empty, Tooltip, Modal } from 'antd';
 import { RightOutlined, CloseOutlined } from '@ant-design/icons';
 import { Icons } from '@/components/icons';
 import Pagination from '@/components/pagination/index';
-import { getPlugins, getDeployTool } from '@shared/http/plugin';
+import { getPlugins, getDeployTool } from '@/shared/http/plugin';
 import { debounce } from '@/shared/utils/common';
 import { PluginStatusTypeE, PluginCnType } from '../helper';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ const Deploy = ({ pluginRef }) => {
   const pluginList = useRef([]);
   // 获取所有列表
   const getData = async () => {
-    const response = await getPlugins({ pageNum, pageSize, excludeTags: 'APP', name });
+    const response = await getPlugins({ pageNum, pageSize, excludeTags: 'APP', name, isBuiltin: false });
     if (response.code === 0) {
       let list = response.data || [];
       list.forEach(item => {
@@ -46,10 +46,11 @@ const Deploy = ({ pluginRef }) => {
   const getDeployData = async () => {
     const response = await getDeployTool('deployed');
     if (response.code === 0) {
-      setPluginData(response.data);
-      setPluginLength(response.data.length);
-      setDeployedData(response.data);
-      pluginList.current = JSON.parse(JSON.stringify(response.data));
+      let list = response.data.filter(item => !item.isBuiltin);
+      setPluginData(list);
+      setPluginLength(list.length);
+      setDeployedData(list);
+      pluginList.current = JSON.parse(JSON.stringify(list));
     }
   };
   // 选中
@@ -141,7 +142,7 @@ const Deploy = ({ pluginRef }) => {
             </div>
           </div>)}
           {tableData.length === 0 && <Empty
-            imageStyle={{ height: 60 }}
+            imageStyle={{ height: 60, margin: '100px 0' }}
             description={<span>{t('noData')}</span>} />}
         </div>
         <div style={{ paddingTop: 16 }}>
@@ -190,7 +191,7 @@ const Deploy = ({ pluginRef }) => {
             </div>
           </div>)}
           {pluginData.length === 0 && <Empty
-            imageStyle={{ height: 60 }}
+            imageStyle={{ height: 60, margin: '100px 0' }}
             description={<span>{t('noData')}</span>} />}
         </div>
       </div>

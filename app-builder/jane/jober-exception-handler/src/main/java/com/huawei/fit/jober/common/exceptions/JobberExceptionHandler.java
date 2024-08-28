@@ -7,21 +7,21 @@ package com.huawei.fit.jober.common.exceptions;
 import static com.huawei.fit.jober.common.ErrorCodes.SERVER_INTERNAL_ERROR;
 import static com.huawei.fit.jober.common.ErrorCodes.UN_EXCEPTED_ERROR;
 
-import com.huawei.fit.http.annotation.ExceptionHandler;
-import com.huawei.fit.http.annotation.ResponseStatus;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.model.JoberResponse;
 import com.huawei.fit.jober.common.util.ParamUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.transaction.DataAccessException;
-import com.huawei.fitframework.transaction.TransactionPreparationException;
-import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
+import modelengine.fit.http.annotation.ExceptionHandler;
+import modelengine.fit.http.annotation.ResponseStatus;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.transaction.DataAccessException;
+import modelengine.fitframework.transaction.TransactionPreparationException;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;

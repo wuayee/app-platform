@@ -4,13 +4,13 @@
 
 package com.huawei.jade.app.engine.task.controller;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestBean;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.validation.Validated;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBean;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.validation.Validated;
 import com.huawei.jade.app.engine.task.convertor.EvalTaskConvertor;
 import com.huawei.jade.app.engine.task.dto.EvalTaskCreateDto;
 import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common.utils;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

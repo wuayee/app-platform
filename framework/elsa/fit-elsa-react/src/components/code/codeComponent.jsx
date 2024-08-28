@@ -1,5 +1,6 @@
 import {v4 as uuidv4} from "uuid";
 import CodeWrapper from "@/components/code/CodeWrapper.jsx";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * code节点组件
@@ -7,7 +8,7 @@ import CodeWrapper from "@/components/code/CodeWrapper.jsx";
  * @param jadeConfig
  */
 export const codeComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
@@ -96,15 +97,16 @@ export const codeComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <CodeWrapper disabled={disabled} data={data}/>
+            <CodeWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         /**
          * 添加一个子项
@@ -326,7 +328,7 @@ export const codeComponent = (jadeConfig) => {
                 _deleteRow();
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

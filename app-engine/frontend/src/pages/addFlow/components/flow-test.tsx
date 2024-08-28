@@ -1,17 +1,17 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Drawer, Form, Alert, Spin } from 'antd';
-import { StartIcon, CloseIcon, RunIcon } from '@assets/icon';
-import { Message } from '@shared/utils/message';
-import { reTestInstance } from '@shared/http/aipp';
+import { StartIcon, CloseIcon, RunIcon } from '@/assets/icon';
+import { Message } from '@/shared/utils/message';
+import { reTestInstance } from '@/shared/http/aipp';
 import { messageProcess } from '../../chatPreview/utils/chat-process';
-import { workflowDebug, getTestVersion } from '@shared/http/sse';
-import { useAppSelector } from '@/store/hook';
-import { EventSourceParserStream } from '@shared/event-source/stream';
+import { workflowDebug, getTestVersion } from '@/shared/http/sse';
+import { useAppSelector, useAppDispatch } from '@/store/hook';
+import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
+import { EventSourceParserStream } from '@/shared/event-source/stream';
 import RenderFormItem from './render-form-item';
 import RuntimeForm from '../../chatPreview/components/receive-box/runtime-form';
-import { useAppDispatch } from '@/store/hook';
 import { setDimension } from '@/store/common/common';
 import { pduTypeMap } from '@/pages/chatPreview/common/config';
 import { useTranslation } from 'react-i18next';
@@ -19,8 +19,6 @@ import { useTranslation } from 'react-i18next';
 const Index = (props) => {
   const {
     debugTypes,
-    setTestTime,
-    setTestStatus,
     setShowDebug,
     showDebug,
     elsaRunningCtl,
@@ -35,6 +33,8 @@ const Index = (props) => {
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   const runningInstanceId = useRef('');
+  // 是否监听sse流式输出
+  const runningParsing = useRef(false);
   const dispatch = useAppDispatch();
 
   // 关闭测试抽屉
@@ -45,11 +45,11 @@ const Index = (props) => {
   const handleRunTest = () => {
     setShowFlowChangeWarning(false);
     elsaRunningCtl.current?.reset();
-    setTestStatus(null);
-    setTestTime(0);
+    dispatch(setTestStatus(null));
+    dispatch(setTestTime(0));
     form.validateFields().then((values) => {
       runningStart(values);
-    }).catch((errorInfo) => {
+    }).catch(() => {
       Message({ type: 'warning', content: t('plsEnterRequiredItem') });
     });
   }
@@ -67,7 +67,7 @@ const Index = (props) => {
     };
     if (chatId) {
       chatParams['chat_id'] = chatId;
-    };
+    }
     handleRun(chatParams);
   };
   // 点击运行
@@ -85,8 +85,9 @@ const Index = (props) => {
   const testStreaming = async (res) => {
     let reader = res?.body?.pipeThrough(new TextDecoderStream())
       .pipeThrough(new EventSourceParserStream()).getReader();
+    runningParsing.current = true;
     let getReady = false;
-    while (true) {
+    while (true && runningParsing.current) {
       const sseResData = await reader?.read();
       const { done, value } = sseResData;
       if (!done) {
@@ -136,7 +137,7 @@ const Index = (props) => {
   const startDebugMission = (aippId, version, instanceId) => {
     handleCloseDebug();
     elsaRunningCtl.current = window.agent.run();
-    setTestStatus('Running');
+    dispatch(setTestStatus('Running'));
     startTestInstance(aippId, version, instanceId);
   }
   // 测试轮询
@@ -150,16 +151,16 @@ const Index = (props) => {
       if (runtimeData) {
         if (isError(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
-          setTestStatus('Error');
+          dispatch(setTestStatus('Error'));
           elsaRunningCtl.current?.stop();
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
-          setTestStatus('Finished');
+          dispatch(setTestStatus('Finished'));
           elsaRunningCtl.current?.stop();
         }
         elsaRunningCtl.current?.refresh(runtimeData.nodeInfos);
         const time = (runtimeData.executeTime / 1000).toFixed(3);
-        setTestTime(time);
+        dispatch(setTestTime(time));
       }
     }, 3000);
   }
@@ -177,11 +178,16 @@ const Index = (props) => {
     Message({ type: 'warning', content: content });
     elsaRunningCtl.current?.stop();
   }
-
   const confirmSetOpen = (res) => {
     setOpen(false);
     testStreaming(res);
   }
+  useEffect(() => {
+    return () => {
+      timerRef.current && clearInterval(timerRef.current);
+      runningParsing.current = false;
+    }
+  }, [])
   return <>{(
     <div>
       <Drawer title={<h5>{t('debugRun')}</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
@@ -189,7 +195,7 @@ const Index = (props) => {
           <Spin spinning={loading}>
             <div style={{ textAlign: 'right' }}>
               <span onClick={handleRunTest} className='run-btn'>
-                <RunIcon className='run-icon' />{t('run')}
+                <RunIcon />{t('run')}
               </span>
             </div>
           </Spin>

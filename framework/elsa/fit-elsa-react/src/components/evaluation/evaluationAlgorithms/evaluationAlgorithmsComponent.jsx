@@ -1,7 +1,9 @@
 import {v4 as uuidv4} from "uuid";
 import EvaluationAlgorithmsWrapper from "@/components/evaluation/evaluationAlgorithms/EvaluationAlgorithmsWrapper.jsx";
-import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
+import {convertParameter} from "@/components/util/MethodMetaDataParser.js";
 import {updateInput} from "@/components/util/JadeConfigUtils.js";
+import {defaultComponent} from "@/components/defaultComponent.js";
+import {EVALUATION_ALGORITHM_NODE_CONST} from "@/common/Consts.js";
 
 /**
  * 评估算法节点组件
@@ -9,44 +11,65 @@ import {updateInput} from "@/components/util/JadeConfigUtils.js";
  * @param jadeConfig
  */
 export const evaluationAlgorithmsComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必须.
      */
     self.getJadeConfig = () => {
         return jadeConfig ? jadeConfig : {
-            inputParams: [],
-            algorithm: {
+            inputParams: [{
                 id: "algorithm_" + uuidv4(),
                 name: "algorithm",
                 type: "Object",
                 from: "Expand",
                 // 保存当前选中的算法信息
                 value: [{id: uuidv4(), name: 'uniqueName', type: 'String', from: 'Input', value: ''}]
-            }, score: {
-                id: "score_" + uuidv4(),
-                name: "score",
+            }, {
+                id: "passScore_" + uuidv4(),
+                name: "passScore",
                 type: "Integer",
                 from: "Input",
                 value: ""
-            },
-            outputParams: []
+            }],
+            outputParams: [{
+                id: "output_" + uuidv4(),
+                name: "output",
+                type: "Object",
+                from: "Expand",
+                value: [
+                    {
+                        id: "isPass_" + uuidv4(),
+                        name: "isPass",
+                        type: "Boolean",
+                        from: "Input",
+                        value: "Boolean"
+                    },
+                    {
+                        id: "score_" + uuidv4(),
+                        name: "score",
+                        type: "Number",
+                        from: "Input",
+                        value: "Number"
+                    }
+                ]
+            }]
         };
     };
 
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
+    self.getReactComponents = (shapeStatus, data) => {
         return (<>
-            <EvaluationAlgorithmsWrapper disabled={disabled} data={data}/>
+            <EvaluationAlgorithmsWrapper shapeStatus={shapeStatus} data={data}/>
         </>);
     };
 
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         /**
          * 切换算法
@@ -55,7 +78,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
          */
         const _changeAlgorithm = () => {
             // 这里action包含了整个接口返回的数据
-            action.value && (newConfig.algorithm.value.find(item => item.name === "uniqueName").value = action.value.uniqueName);
+            action.value && (newConfig.inputParams.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.ALGORITHM).value.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.UNIQUE_NAME).value = action.value.uniqueName);
         };
 
         /**
@@ -64,7 +87,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
          * @private
          */
         const _editScore = () => {
-            newConfig.score.value = action.value;
+            newConfig.inputParams.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.PASS_SCORE).value = action.value;
         };
 
         /**
@@ -73,7 +96,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
          * @private
          */
         const _clearAlgorithm = () => {
-            newConfig.algorithm.value = [];
+            newConfig.inputParams.find(item => item.name === EVALUATION_ALGORITHM_NODE_CONST.ALGORITHM).value = [];
         };
 
         /**
@@ -92,22 +115,8 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
                     property: inputJson.schema.parameters.properties[key]
                 });
             });
-            delete newConfig.inputParams;
-            newConfig.inputParams = convertedParameters;
-        };
-
-        /**
-         * 创建输出
-         *
-         * @private
-         */
-        const _generateOutput = () => {
-            if (!action.value) {
-                return;
-            }
-            const inputJson = action.value;
-            const newOutputParams = convertReturnFormat(inputJson.schema.return);
-            newConfig.outputParams = [newOutputParams];
+            newConfig.inputParams.remove(item => item.name !== EVALUATION_ALGORITHM_NODE_CONST.ALGORITHM && item.name !== EVALUATION_ALGORITHM_NODE_CONST.PASS_SCORE);
+            newConfig.inputParams.push(...convertedParameters);
         };
 
         /**
@@ -117,7 +126,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
          */
         const _clearSchema = () => {
             newConfig.inputParams = [];
-            newConfig.outputParams = [];
+            newConfig.outputParams.remove(item => item.name !== EVALUATION_ALGORITHM_NODE_CONST.IS_PASS && item.name !== EVALUATION_ALGORITHM_NODE_CONST.SCORE);
         };
 
         let newConfig = {...config};
@@ -125,7 +134,6 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
             case 'changeAlgorithm':
                 _changeAlgorithm();
                 _generateInput();
-                _generateOutput();
                 return newConfig;
             case 'editScore':
                 _editScore();
@@ -138,7 +146,7 @@ export const evaluationAlgorithmsComponent = (jadeConfig) => {
                 newConfig.inputParams = updateInput(config.inputParams, action.id, action.changes);
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

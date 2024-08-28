@@ -76,11 +76,13 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
                 self.remove();
             } else {
                 if (self.toShape === "") {
+                    self.page.onShapeOffConnect && self.page.onShapeOffConnect();
                     self.currentToShape && self.currentToShape.offConnect();
                     self.remove();
                 } else {
                     // 在每一次release时，记录当前正连接的toShape.
                     const toShape = self.getToShape();
+                    self.page.onShapeConnect && self.page.onShapeConnect();
                     toShape.onConnect();
                     self.currentToShape = toShape;
                 }
@@ -127,6 +129,7 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
     self.remove = (source) => {
         const toShape = self.getToShape();
         const removed = remove.apply(self, [source]);
+        self.page.onShapeOffConnect && self.page.onShapeOffConnect();
         toShape && toShape.offConnect();
         return removed;
     };

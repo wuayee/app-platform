@@ -4,26 +4,16 @@
 
 package com.huawei.jade.store.tool.parser.service.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.http.HttpMessage;
-import com.huawei.fit.http.entity.Entity;
-import com.huawei.fit.http.entity.FileEntity;
-import com.huawei.fit.http.entity.NamedEntity;
-import com.huawei.fit.http.entity.support.DefaultNamedEntity;
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fit.service.RegistryService;
-import com.huawei.fit.service.entity.ApplicationInstance;
-import com.huawei.fit.service.entity.FitableAddressInstance;
-import com.huawei.fit.service.entity.FitableInfo;
-import com.huawei.fitframework.parameterization.StringFormatException;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.FileUtils;
+import com.huawei.jade.carver.ListResult;
+import com.huawei.jade.store.entity.query.PluginQuery;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.service.PluginService;
@@ -32,6 +22,20 @@ import com.huawei.jade.store.service.support.DeployStatus;
 import com.huawei.jade.store.tool.parser.config.PluginDeployQueryConfig;
 import com.huawei.jade.store.tool.parser.config.RegistryQueryPoolConfig;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
+import modelengine.fit.http.HttpMessage;
+import modelengine.fit.http.entity.Entity;
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.support.DefaultNamedEntity;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fit.service.RegistryService;
+import modelengine.fit.service.entity.ApplicationInstance;
+import modelengine.fit.service.entity.FitableAddressInstance;
+import modelengine.fit.service.entity.FitableInfo;
+import modelengine.fitframework.parameterization.StringFormatException;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.FileUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +86,9 @@ class PluginDeployServiceImplTest {
 
     private PluginDeployServiceImpl pluginDeployServiceImplUnderTest;
 
+    @Mock
+    private FitRuntime fitRuntime;
+
     @BeforeEach
     void setUp() {
         PluginDeployQueryConfig pluginDeployQueryConfig = new PluginDeployQueryConfig();
@@ -119,6 +126,7 @@ class PluginDeployServiceImplTest {
         pluginData.setExtension(extension);
         pluginData.setDeployStatus(DeployStatus.UNDEPLOYED.name());
         pluginData.setPluginToolDataList(Arrays.asList(mockPluginToolData()));
+        pluginData.setBuiltin(false);
         return pluginData;
     }
 
@@ -230,6 +238,14 @@ class PluginDeployServiceImplTest {
     }
 
     @Test
+    @DisplayName("删除无效插件符合预期")
+    void testDeleteInvalidPlugin() {
+        when(mockPluginService.getPlugin("pluginId")).thenReturn(new PluginData());
+        final int result = pluginDeployServiceImplUnderTest.deletePlugin("pluginId");
+        assertThat(result).isEqualTo(0);
+    }
+
+    @Test
     @DisplayName("获取已部署插件数量成功")
     void testQueryCountByDeployStatus() {
         when(mockPluginService.getPluginsCount(DeployStatus.DEPLOYED)).thenReturn(0);
@@ -319,5 +335,20 @@ class PluginDeployServiceImplTest {
         Files.copy(pluginJsonFile, filePath.resolve("plugin.json"), StandardCopyOption.REPLACE_EXISTING);
         assertThatThrownBy(() -> method.invoke(pluginDeployServiceImplUnderTest, filePath.toFile(),
             "add list,add itself")).isInstanceOf(InvocationTargetException.class);
+    }
+
+    private ListResult<PluginData> mockPluginDataResult() {
+        return new ListResult<>(Collections.singletonList(mockPluginData()), 1);
+    }
+
+    @Test
+    @DisplayName("测试初始化插件状态功能正常")
+    void testInitDeployStatus() {
+        when(mockPluginService.getPlugins(Mockito.any(DeployStatus.class))).thenReturn(
+            Collections.singletonList(mockPluginData()));
+        when(mockPluginService.getPlugins(Mockito.any(PluginQuery.class))).thenReturn(mockPluginDataResult());
+        when(mockPluginService.getPlugin(Mockito.anyString())).thenReturn(mockPluginData());
+        pluginDeployServiceImplUnderTest.onRuntimeStarted(fitRuntime);
+        verify(mockPluginService).updateDeployStatus(Mockito.anyList(), eq(DeployStatus.UNDEPLOYED));
     }
 }

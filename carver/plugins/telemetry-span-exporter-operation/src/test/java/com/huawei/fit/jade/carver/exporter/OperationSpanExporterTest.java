@@ -5,18 +5,21 @@
 package com.huawei.fit.jade.carver.exporter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.test.annotation.Mock;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
 import com.huawei.jade.carver.exporter.OperationLogExporter;
 import com.huawei.jade.carver.exporter.OperationSpanExporter;
 
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
+import io.opentelemetry.sdk.common.CompletableResultCode;
 import io.opentelemetry.sdk.trace.data.EventData;
 import io.opentelemetry.sdk.trace.data.SpanData;
 
@@ -101,5 +104,16 @@ public class OperationSpanExporterTest {
             assertThat(map.getSystemAttribute().get(SYS_OP_RESULT_KEY)).isEqualTo(SYS_OP_FAILED);
             return true;
         }));
+    }
+
+    @Test
+    @DisplayName("导出日志抛出异常符合预期。")
+    public void shouldThrowExceptionWhenExportOperationLog() {
+        this.mockSucceedSpanData();
+        doAnswer(invocation -> {
+            throw new IllegalStateException("test illegal state exception");
+        }).when(this.logExporter).succeed(any(), any());
+        assertThat(this.spanExporter.export(Collections.singletonList(this.spanData))).isEqualTo(
+            CompletableResultCode.ofFailure());
     }
 }

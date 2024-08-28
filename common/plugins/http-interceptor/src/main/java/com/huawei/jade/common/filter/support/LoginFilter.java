@@ -4,14 +4,14 @@
 
 package com.huawei.jade.common.filter.support;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.http.server.HttpServerFilter;
-import com.huawei.fit.http.server.HttpServerFilterChain;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Order;
-import com.huawei.fitframework.annotation.Scope;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.HttpServerFilter;
+import modelengine.fit.http.server.HttpServerFilterChain;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Order;
+import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.inspection.Validation;
 import com.huawei.jade.authentication.AuthenticationService;
 import com.huawei.jade.authentication.context.HttpRequestUtils;
 import com.huawei.jade.authentication.context.UserContext;

@@ -25,20 +25,26 @@ import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.conf.runtime.SerializationFormat;
-import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.ioc.BeanFactory;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
+import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
 
+import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.conf.runtime.SerializationFormat;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +66,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final AppBuilderFormRepository formRepository;
     private final BrokerClient brokerClient;
     private final BeanContainer beanContainer;
+    private final ConversationRecordService conversationRecordService;
     private final AppBuilderFormService formService;
     private final AippStreamService aippStreamService;
     private final MetaInstanceService metaInstanceService;
@@ -67,9 +74,9 @@ public class AippFlowEndCallback implements FlowCallbackService {
 
     public AippFlowEndCallback(@Fit MetaService metaService, @Fit AippLogService aippLogService,
             @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
-            @Fit BeanContainer beanContainer, @Fit AppBuilderFormService formService,
-            @Fit AippStreamService aippStreamService, @Fit MetaInstanceService metaInstanceService,
-            @Fit AppChatSseService appChatSseService) {
+            @Fit BeanContainer beanContainer, @Fit ConversationRecordService conversationRecordService,
+            @Fit AppBuilderFormService formService, @Fit AippStreamService aippStreamService,
+            @Fit MetaInstanceService metaInstanceService, @Fit AppChatSseService appChatSseService) {
         this.formService = formService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
@@ -78,6 +85,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer = beanContainer;
         this.aippStreamService = aippStreamService;
         this.metaInstanceService = metaInstanceService;
+        this.conversationRecordService = conversationRecordService;
         this.appChatSseService = appChatSseService;
     }
 
@@ -109,16 +117,17 @@ public class AippFlowEndCallback implements FlowCallbackService {
             Map<String, Object> formDataMap = FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId);
             String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
             String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
+            String returnedLogId = null;
+            if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
+                returnedLogId = this.saveFormToLog(businessData, endFormId, endFormVersion, formDataMap);
+            }
             AppChatRsp appChatRsp = AppChatRsp.builder().chatId(chatId).atChatId(atChatId)
                     .status(FlowTraceStatus.ARCHIVED.name())
                     .answer(Collections.singletonList(AppChatRsp.Answer.builder()
                             .content(formDataMap).type(AippInstLogType.FORM.name()).build()))
-                    .instanceId(aippInstId)
+                    .instanceId(aippInstId).logId(returnedLogId)
                     .build();
             this.appChatSseService.sendToAncestorLastData(aippInstId, appChatRsp);
-            if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
-                this.saveFormToLog(businessData, endFormId, endFormVersion, formDataMap);
-            }
         } else {
             this.logFinalOutput(contexts, businessData, aippInstId);
         }
@@ -147,13 +156,13 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
     }
 
-    private void saveFormToLog(Map<String, Object> businessData, String endFormId, String endFormVersion,
+    private String saveFormToLog(Map<String, Object> businessData, String endFormId, String endFormVersion,
             Map<String, Object> formDataMap) {
         AippLogData logData =
                 FormUtils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
         logData.setFormAppearance(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_APPEARANCE_KEY)));
         logData.setFormData(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_DATA_KEY)));
-        this.aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
+        return this.aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
     }
 
     private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,
@@ -176,6 +185,34 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer.all(AppFlowFinishObserver.class).stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)
                 .forEach(finishObserver -> finishObserver.onFinished(logMsg, this.buildAttributes(aippInstId)));
+
+        // 评估调用接口时不记录历史会话
+        Object isEval = businessData.get(AippConst.IS_EVAL_INVOCATION);
+        if (isEval == null || !ObjectUtils.<Boolean>cast(isEval)) {
+            OperationContext context =
+                    JsonUtils.parseObject(ObjectUtils.cast(businessData.get(AippConst.BS_HTTP_CONTEXT_KEY)),
+                            OperationContext.class);
+
+            // 构造用户历史对话记录并插表
+            String resumeDuration =
+                    ObjectUtils.cast(businessData.getOrDefault(AippConst.INST_RESUME_DURATION_KEY, "0"));
+            Object createTimeObj = Validation.notNull(businessData.get(AippConst.INSTANCE_START_TIME),
+                    "The create time cannot be null.");
+            LocalDateTime createTime = LocalDateTime.parse(createTimeObj.toString());
+            LocalDateTime finishTime = LocalDateTime.now();
+            long realCost = Duration.between(createTime, finishTime).toMillis() - Long.parseLong(resumeDuration);
+            LocalDateTime realFinishTime = (realCost > 0) ? createTime.plus(realCost, ChronoUnit.MILLIS) : finishTime;
+            ConversationRecordPo conversationRecordPo = ConversationRecordPo.builder()
+                    .appId(ObjectUtils.cast(businessData.get(AippConst.ATTR_APP_ID_KEY)))
+                    .question(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_QUESTION_KEY)))
+                    .answer(logMsg)
+                    .createUser(context.getName())
+                    .createTime(createTime)
+                    .finishTime(realFinishTime)
+                    .instanceId(aippInstId)
+                    .build();
+            conversationRecordService.insertConversationRecord(conversationRecordPo);
+        }
     }
 
     private Map<String, Object> buildAttributes(String aippInstId) {

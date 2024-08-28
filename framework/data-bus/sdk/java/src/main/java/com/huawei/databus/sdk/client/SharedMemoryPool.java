@@ -28,9 +28,9 @@ import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.databus.sdk.tools.SeqGenerator;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.StringUtils;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 

@@ -15,11 +15,11 @@ const FormContext = createContext(null);
  *
  * @param shape 图形.
  * @param component 待加载组件.
- * @param disabled 是否禁用.
+ * @param shapeStatus 图形状态.
  * @return {JSX.Element}
  * @constructor
  */
-export const DefaultRoot = forwardRef(function ({shape, component, disabled}, ref) {
+export const DefaultRoot = forwardRef(function ({shape, component, shapeStatus}, ref) {
     const [data, dispatch] = useReducer(component.reducers, component.getJadeConfig());
     const id = "react-root-" + shape.id;
     const [form] = Form.useForm();
@@ -29,7 +29,10 @@ export const DefaultRoot = forwardRef(function ({shape, component, disabled}, re
     useImperativeHandle(ref, () => {
         return {
             getData: () => {
-                return JSON.parse(JSON.stringify(data));
+                return data;
+            },
+            dispatch: (action) => {
+                dispatch(action);
             }
         }
     });
@@ -70,7 +73,9 @@ export const DefaultRoot = forwardRef(function ({shape, component, disabled}, re
         shape.graph.dirtied(null, {action: "jade_node_config_change", shape: shape.id});
     }, [data]);
 
+    // 当前是评估页面，并且runnable为false时，才出现遮盖层
     return (<>
+        {!shape.page.isShapeModifiable(shape) && <div className="jade-cover-level"/>}
         <ConfigProvider theme={{
             components: {
                 Tree: {nodeSelectedBg: "transparent", nodeHoverBg: "transparent"}
@@ -82,14 +87,14 @@ export const DefaultRoot = forwardRef(function ({shape, component, disabled}, re
                       layout="vertical" // 设置全局的垂直布局
                       className={"jade-form"}
                 >
-                    {shape.drawer.getHeaderComponent(disabled)}
+                    {shape.drawer.getHeaderComponent(shapeStatus)}
                     <FormContext.Provider value={form}>
                         <ShapeContext.Provider value={shape}>
                             <DataContext.Provider value={data}>
                                 <DispatchContext.Provider value={dispatch}>
                                     <div className="react-node-content"
                                          style={{borderRadius: shape.borderRadius + "px"}}>
-                                        {component.getReactComponents(disabled, data)}
+                                        {component.getReactComponents(shapeStatus, data)}
                                     </div>
                                 </DispatchContext.Provider>
                             </DataContext.Provider>
@@ -105,7 +110,7 @@ export const DefaultRoot = forwardRef(function ({shape, component, disabled}, re
 DefaultRoot.propTypes = {
     shape: PropTypes.object,
     component: PropTypes.object,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 };
 
 export function useDataContext() {

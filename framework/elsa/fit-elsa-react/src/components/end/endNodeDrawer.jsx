@@ -1,4 +1,4 @@
-import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
+import {jadeNodeDrawer} from "@/components/base/jadeNodeDrawer.jsx";
 import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
 import EndIcon from "../asserts/icon-end.svg?react"; // 导入背景图片
 
@@ -14,8 +14,8 @@ export const endNodeDrawer = (shape, div, x, y) => {
     /**
      * @override
      */
-    self.getHeaderComponent = (disabled) => {
-        return (<EndNodeHeader shape={shape} disabled={disabled}/>);
+    self.getHeaderComponent = (shapeStatus) => {
+        return (<EndNodeHeader shape={shape} shapeStatus={shapeStatus}/>);
     };
 
     /**

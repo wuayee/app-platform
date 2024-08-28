@@ -7,24 +7,24 @@ import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useState} from "react";
 import httpUtil from "../util/httpUtil.jsx";
 import PropTypes from "prop-types";
-import { useTranslation, Trans } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 LlmFormWrapper.propTypes = {
     data: PropTypes.object.isRequired,
-    disabled: PropTypes.bool
+    shapeStatus: PropTypes.object
 };
 
 /**
  * 大模型表单Wrapper
  *
  * @param data 数据.
- * @param disabled 是否禁用.
+ * @param shapeStatus 图形状态集合.
  * @returns {JSX.Element} 大模型表单Wrapper的DOM
  */
-export default function LlmFormWrapper({data, disabled}) {
+export default function LlmFormWrapper({data, shapeStatus}) {
     const dispatch = useDispatch();
     const shape = useShapeContext();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     let config;
     if (!shape || !shape.graph || !shape.graph.configs) {
         console.error('Cannot get shape.graph.configs.');
@@ -39,8 +39,8 @@ export default function LlmFormWrapper({data, disabled}) {
         temperature: data.inputParams.find(item => item.name === "temperature"),
         systemPrompt: data.inputParams.find(item => item.name === "systemPrompt"),
         prompt: data.inputParams.filter(item => item.name === "prompt")
-                .flatMap(item => item.value)
-                .find(item => item.name === "template")
+            .flatMap(item => item.value)
+            .find(item => item.name === "template")
     };
 
     const initItems = () => {
@@ -109,14 +109,14 @@ export default function LlmFormWrapper({data, disabled}) {
 
     return (
         <div>
-            <JadeInputForm disabled={disabled}
+            <JadeInputForm shapeStatus={shapeStatus}
                            items={initItems()}
                            addItem={addItem}
                            updateItem={updateItem}
                            deleteItem={deleteItem}
                            content={content}/>
-            <ModelForm disabled={disabled} modelData={modelData} shapeId={shape.id} modelOptions={modelOptions}/>
-            <SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
+            <ModelForm disabled={shapeStatus.disabled} modelData={modelData} shapeId={shape.id} modelOptions={modelOptions}/>
+            <SkillForm disabled={shapeStatus.disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
             <LlmOutput outputItems={data.outputParams}/>
         </div>
     );

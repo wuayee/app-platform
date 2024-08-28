@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.aipp.fel;
 
-import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.character.HumanMessage;
-import com.huawei.jade.fel.core.memory.Memory;
+import modelengine.fel.chat.ChatMessage;
+import modelengine.fel.chat.character.AiMessage;
+import modelengine.fel.chat.character.HumanMessage;
+import modelengine.fel.core.memory.Memory;
 
 import java.util.ArrayList;
 import java.util.List;

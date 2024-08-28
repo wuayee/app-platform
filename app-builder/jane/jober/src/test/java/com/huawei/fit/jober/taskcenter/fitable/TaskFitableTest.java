@@ -17,7 +17,8 @@ import com.huawei.fit.jober.entity.TaskFilter;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
 import com.huawei.fit.jober.taskcenter.service.TaskService;
-import com.huawei.fitframework.model.RangedResultSet;
+
+import modelengine.fitframework.model.RangedResultSet;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

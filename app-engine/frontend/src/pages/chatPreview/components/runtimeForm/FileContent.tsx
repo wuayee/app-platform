@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Typography } from 'antd';
-import { saveContent } from '@shared/http/appBuilder';
-import { Message } from '@shared/utils/message';
+import { Input, Button } from 'antd';
+import { saveContent } from '@/shared/http/appBuilder';
+import { Message } from '@/shared/utils/message';
 import { useAppSelector } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
 import './styles/file-content.scoped.scss';

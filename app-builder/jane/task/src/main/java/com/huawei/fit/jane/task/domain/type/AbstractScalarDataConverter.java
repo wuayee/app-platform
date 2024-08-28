@@ -4,12 +4,13 @@
 
 package com.huawei.fit.jane.task.domain.type;
 
-import static com.huawei.fitframework.util.ObjectUtils.mapIfNotNull;
+import static modelengine.fitframework.util.ObjectUtils.mapIfNotNull;
 
 import com.huawei.fit.jane.task.domain.DataConverter;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.util.ParsingResult;
-import com.huawei.fitframework.util.support.DefaultParsingResult;
+
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.support.DefaultParsingResult;
 
 /**
  * 为单值类型的数据转换器提供基类。

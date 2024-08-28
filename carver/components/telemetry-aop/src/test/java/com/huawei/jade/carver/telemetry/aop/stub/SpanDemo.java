@@ -4,10 +4,10 @@
 
 package com.huawei.jade.carver.telemetry.aop.stub;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

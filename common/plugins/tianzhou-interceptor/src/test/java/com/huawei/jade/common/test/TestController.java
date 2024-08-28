@@ -4,8 +4,8 @@
 
 package com.huawei.jade.common.test;
 
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.common.code.CommonRetCode;
 import com.huawei.jade.common.filter.HttpResult;
 

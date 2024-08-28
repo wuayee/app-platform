@@ -7,7 +7,7 @@ package com.huawei.databus.sdk.support;
 import com.huawei.databus.sdk.api.DataBusIoResult;
 import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.message.ErrorType;
-import com.huawei.fitframework.inspection.Validation;
+import modelengine.fitframework.inspection.Validation;
 
 import java.util.Optional;
 

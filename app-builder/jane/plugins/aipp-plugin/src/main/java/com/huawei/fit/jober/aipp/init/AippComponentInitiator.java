@@ -7,11 +7,12 @@ package com.huawei.fit.jober.aipp.init;
 import com.huawei.fit.jober.aipp.common.ResourceLoader;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Initialize;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.jade.common.ui.globalization.LocaleUiWord;
+
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Initialize;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,16 +49,16 @@ public class AippComponentInitiator {
     /**
      * 根据语言获取国际化对象。
      *
-     * @param zhKey 表示中文键值的 {@link String}。
      * @param enKey 表示英文键值的 {@link String}。
+     * @param zhKey 表示中文键值的 {@link String}。
      * @param targetClass 表示类的 {@link Class}{@code <}{@link T}{@code >}。
      * @param <T> 表示泛型的 {@code <}{@link T}{@code >}。
      * @return 表示泛型实例的 {@link T}。
      */
-    public static <T> T getLocaleObject(String zhKey, String enKey, Class<T> targetClass) {
+    public static <T> T getLocaleObject(String enKey, String zhKey, Class<T> targetClass) {
         return JsonUtils.parseObject(LocaleUiWord.getLocale().getLanguage().equals(Locale.ENGLISH.getLanguage())
-                ? COMPONENT_DATA.get(zhKey)
-                : COMPONENT_DATA.get(enKey), targetClass);
+                ? COMPONENT_DATA.get(enKey)
+                : COMPONENT_DATA.get(zhKey), targetClass);
     }
 
     @Initialize

@@ -1,6 +1,6 @@
 a3000:
-  tenantId:
+  tenantId: 4b1f59a7ccdd4faf930f29b4f1f946b3
   ownTrace: false
   useLimit: true
   limit: 2
-  operator:
+  operator: com.huawei.a3000

@@ -5,18 +5,26 @@ import ArrayUtil from "@/components/util/ArrayUtil.js";
 import React from "react";
 import {PlusCircleOutlined} from "@ant-design/icons";
 import httpUtil from "@/components/util/httpUtil.jsx";
+import PropTypes from "prop-types";
+
+_EvaluationTestSetSelect.propTypes = {
+    testSets: PropTypes.array,
+    shapeStatus: PropTypes.object,
+    selectedTestSet: PropTypes.array,
+    config: PropTypes.object
+};
 
 /**
  * 测试集选择组件
  *
  * @param testSets 接口获取的数据集列表
- * @param disabled 是否禁用
+ * @param shapeStatus 图形状态集合
  * @param selectedTestSet 选择的测试集
  * @param config 组件配置信息，外部设置
  * @return {JSX.Element} 测试集选择组件
  * @constructor
  */
-function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config}) {
+function _EvaluationTestSetSelect({testSets, shapeStatus, selectedTestSet, config}) {
     const dispatch = useDispatch();
     const shape = useShapeContext();
 
@@ -59,7 +67,7 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
      *
      * @param e 点击事件
      */
-    const triggerSelect = (e) => {
+    const clickCreateButton = (e) => {
         e.preventDefault();
         shape.page.triggerEvent({
             type: "CREATE_TEST_SET",
@@ -80,7 +88,7 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
         httpUtil.get(url, undefined, (response) => {
             // 将数据集的content内容设置到jadeConfig中
             dispatch({type: "parseDataset", value: response.data});
-        }, (error) => {
+        }, () => {
             message.error("数据集详细信息获取失败，请联系系统管理员");
         });
     };
@@ -96,7 +104,7 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
                 validateTrigger="onBlur"
             >
                 <JadeStopPropagationSelect
-                    disabled={disabled}
+                    disabled={shapeStatus.disabled}
                     onClear={() => handleKnowledgeClear()}
                     showSearch
                     allowClear
@@ -113,8 +121,8 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
             <Button
                 type="link"
                 className={"button-create"}
-                disabled={disabled}
-                onClick={e => triggerSelect(e)}>
+                disabled={shapeStatus.disabled}
+                onClick={e => clickCreateButton(e)}>
                 <div className={"button-create-wrapper"}><PlusCircleOutlined/>
                     <div className={"create-button-text"}>新建测试集</div>
                 </div>
@@ -124,7 +132,7 @@ function _EvaluationTestSetSelect({testSets, disabled, selectedTestSet, config})
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.disabled === nextProps.disabled
+    return prevProps.shapeStatus === nextProps.shapeStatus
         && ArrayUtil.isEqual(prevProps.testSets, nextProps.testSets)
         && prevProps.selectedTestSet === nextProps.selectedTestSet
         && prevProps.config === nextProps.config;

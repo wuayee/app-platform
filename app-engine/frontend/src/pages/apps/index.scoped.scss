@@ -1,4 +1,4 @@
-.apps_root{
+.apps_root {
   * {
     box-sizing: border-box;
   }
@@ -6,18 +6,23 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  .apps_header{
+  .apps_header {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-    .apps_title{
+    .apps_title {
       font-size: 20px;
       color: #1a1a1a;
       line-height: 1.5;
       font-weight: normal;
     }
+    >span {
+      font-size: 18px;
+      margin-left: 12px;
+      cursor: pointer;
+    }
   }
-  .apps_main{
+  .apps_main {
     height: calc(100% - 50px);
     min-width: 1400px;
     padding: 24px;
@@ -25,7 +30,7 @@
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    .operatorArea{
+    .operatorArea {
       display: flex;
       align-items: center;
     }
@@ -38,10 +43,10 @@
         width: 24%;
         height: 260px;
         margin-right: 1%;
-        margin-bottom: 16px; 
+        margin-bottom: 16px;
       }
     }
-    .page_box{
+    .page_box {
       padding-top: 10px;
       height: 40px;
       line-height: 40px;

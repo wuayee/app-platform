@@ -4,18 +4,12 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.ObjectEntity;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
@@ -24,6 +18,7 @@ import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.instance.MetaInstanceFilter;
+import com.huawei.fit.jane.task.domain.type.DateTimeConverter;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.FlowsService;
 import com.huawei.fit.jober.aipp.common.PageResponse;
@@ -77,27 +72,35 @@ import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowInstanceResult;
 import com.huawei.fit.jober.entity.FlowStartParameter;
 import com.huawei.fit.jober.entity.task.TaskProperty;
-import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.broker.client.BrokerClient;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
-import com.huawei.fitframework.flowable.Choir;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.model.Tuple;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.ObjectEntity;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.annotation.Fitable;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.model.Tuple;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -390,21 +393,23 @@ public class AippRunTimeServiceImpl
 
         // 持久化日志
         businessData.put(AippConst.BS_AIPP_QUESTION_KEY, question);
-        this.persistAippLog(businessData);
 
-        // 添加文件记录标记, 使用aippId
-        uploadedFileManageService.addFileRecord(meta.getId(),
-                context.getW3Account(),
-                Paths.get(AippFileUtils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
-
-        // 持久化aipp实例表单记录
-        this.persistAippFormLog(meta, businessData);
-
-        // 记录上下文
-        this.recordContext(context, meta, businessData, metaInst);
         return Tuple.duet(metaInst.getId(),
                 Choir.create(emitter -> {
                     this.appChatSSEService.addEmitter(metaInst.getId(), emitter, new CountDownLatch(1));
+
+                    this.persistAippLog(businessData);
+
+                    // 添加文件记录标记, 使用aippId
+                    uploadedFileManageService.addFileRecord(meta.getId(), context.getW3Account(),
+                            Paths.get(AippFileUtils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
+
+                    // 持久化aipp实例表单记录
+                    this.persistAippFormLog(meta, businessData);
+
+                    // 记录上下文
+                    this.recordContext(context, meta, businessData, metaInst);
+
                     this.startFlowWithMemoryOrNot(businessData, meta, context, metaInst);
                     this.appChatSSEService.latchAwait(metaInst.getId());
                 }));
@@ -1007,6 +1012,19 @@ public class AippRunTimeServiceImpl
 
         // 获取旧的实例数据
         Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
+        // 获取人工节点开始时间戳 [记录人工节点时延]
+        String smartFormTimeStr = instDetail.getInfo().get(AippConst.INST_SMART_FORM_TIME_KEY);
+        LocalDateTime smartFormTime =
+                StringUtils.isBlank(smartFormTimeStr) ? LocalDateTime.now() : LocalDateTime.parse(smartFormTimeStr);
+        long resumeDuration =
+                Long.parseLong(instDetail.getInfo().getOrDefault(AippConst.INST_RESUME_DURATION_KEY, "0"));
+        Duration duration = Duration.between(smartFormTime, LocalDateTime.now());
+        businessData.put(AippConst.INST_RESUME_DURATION_KEY, String.valueOf(resumeDuration + duration.toMillis()));
+        String createTime = instDetail.getInfo().get(AippConst.INST_CREATE_TIME_KEY);
+        if (StringUtils.isNotEmpty(createTime)) {
+            businessData.put(AippConst.INSTANCE_START_TIME, DateTimeConverter.INSTANCE.fromExternal(createTime));
+        }
+
         // 持久化aipp实例表单记录
         String formId = instDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = instDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);

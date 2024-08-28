@@ -1,7 +1,7 @@
 {
   "name": "@fit-elsa/elsa-react",
   "private": false,
-  "version": "1.0.0-alpha.97",
+  "version": "1.0.1-alpha.1",
   "type": "module",
   "main": "./build/elsa-react.js",
   "module": "./build/elsa-react.js",
@@ -23,9 +23,8 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
     "@fit-elsa/elsa-core": "0.1.22-alpha.36",
-    "@monaco-editor/react": "^4.6.0",
     "antd": "^5.16.1",
-    "axios": "^1.6.7",
+    "axios": "1.7.4",
     "monaco-editor": "^0.34.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -6,13 +6,13 @@ package com.huawei.jade.common.filter.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.Mock;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.Mock;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.common.filter.HttpResult;
 import com.huawei.jade.common.localemessage.LocaleMessageHandler;
 import com.huawei.jade.common.test.TestController;
@@ -50,7 +50,7 @@ public class DefaultHttpExceptionAdviceTest {
 
     @Test
     @DisplayName("测试拦截 FitException")
-    public void shouldOkWhenInterceptException() {
+    public void shouldOkWhenInterceptFitException() {
         Mockito.when(messageHandler.getLocaleMessage(Mockito.any(), Mockito.any(), Mockito.any()))
             .thenReturn("test error");
         String url = "/nonsupport/exception";
@@ -61,5 +61,15 @@ public class DefaultHttpExceptionAdviceTest {
                 .satisfies(objectEntity -> assertThat(objectEntity.object()).hasFieldOrPropertyWithValue("code", 404)
                         .hasFieldOrPropertyWithValue("msg", "test error")
                         .hasFieldOrPropertyWithValue("data", null));
+    }
+
+    @Test
+    @DisplayName("测试拦截 Exception")
+    void shouldOkWhenInterceptException() {
+        String systemDefaultMessage = "system default message";
+        Mockito.when(messageHandler.getDefaultMessage()).thenReturn(systemDefaultMessage);
+        DefaultHttpExceptionAdvice mockedDefaultHttpExceptionAdvice = new DefaultHttpExceptionAdvice(messageHandler);
+        HttpResult<Void> voidHttpResult = mockedDefaultHttpExceptionAdvice.handleException(new Throwable());
+        assertThat(voidHttpResult.getMsg()).isEqualTo(systemDefaultMessage);
     }
 }

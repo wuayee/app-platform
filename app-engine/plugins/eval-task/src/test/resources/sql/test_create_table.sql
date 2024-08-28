@@ -1,3 +1,6 @@
+drop table if exists t_app_engine_eval_record;
+drop table if exists t_app_engine_eval_task_case;
+drop table if exists t_app_engine_eval_instance;
 drop table if exists t_app_engine_eval_task;
 
 create table if not exists t_app_engine_eval_task
@@ -14,6 +17,22 @@ create table if not exists t_app_engine_eval_task
     "workflow_id" varchar(32)                           not null
 );
 
+create table if not exists t_app_engine_eval_task_case
+(
+    "id"          bigserial primary key not null,
+    "latency"     integer               not null,
+    "outcome"     smallint              not null,
+    "instance_id" bigint                not null
+);
+
+create table if not exists t_app_engine_eval_record
+(
+    "id"           bigserial primary key not null,
+    "input"        text                  not null,
+    "node_id"      varchar(32)           not null,
+    "score"        real                  not null,
+    "task_case_id" bigint                not null
+);
 create table if not exists t_app_engine_eval_instance
 (
     "id"          bigserial primary key                 not null,

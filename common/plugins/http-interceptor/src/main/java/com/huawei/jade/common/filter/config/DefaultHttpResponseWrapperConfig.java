@@ -4,8 +4,8 @@
 
 package com.huawei.jade.common.filter.config;
 
-import com.huawei.fitframework.annotation.AcceptConfigValues;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.AcceptConfigValues;
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

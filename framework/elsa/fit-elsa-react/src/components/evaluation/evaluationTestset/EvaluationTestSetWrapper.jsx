@@ -2,9 +2,14 @@ import React, {useEffect, useState} from "react";
 import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
 import {EvaluationTestSetSelect} from "@/components/evaluation/evaluationTestset/EvaluationTestSetSelect.jsx";
-import {TestQuantity} from "@/components/evaluation/evaluationTestset/TestQuantity.jsx";
 import httpUtil from "@/components/util/httpUtil.jsx";
 import {message} from "antd";
+import PropTypes from "prop-types";
+
+EvaluationTestSetWrapper.propTypes = {
+    data: PropTypes.object,
+    disabled: PropTypes.bool,
+};
 
 /**
  * 获取测试集节点配置数据
@@ -17,21 +22,21 @@ const getEvaluationTestSetConfig = shape => {
         console.error('Cannot get shape.graph.configs.');
         throw new Error('Cannot get shape.graph.configs.');
     } else {
-        return shape.graph.configs.find(node => node.node === "evaluationAlgorithmsNodeState");
+        return shape.graph.configs.find(node => node.node === "evaluationTestSetNodeState");
     }
 };
 
 /**
- * 评估算法节点组件
+ * 评估算法节点组件.
  *
- * @param data 节点数据
- * @param disabled 是否禁用
+ * @param data 节点数据.
+ * @param shapeStatus 图形状态集合.
  * @constructor
  */
-export default function EvaluationTestSetWrapper({data, disabled}) {
+export default function EvaluationTestSetWrapper({data, shapeStatus}) {
     const shape = useShapeContext();
-    const selectedTestSet = data && (data.testSet.value.find(item => item.name === "name")?.value ?? '');
-    // const testQuantity = data && (data.testSet.value.find(item => item.name === "quantity")?.value ?? 0); 暂时注释，后续放开
+    const selectedTestSet = data && (data.inputParams[0].value.find(item => item.name === "name")?.value ?? '');
+    // const testQuantity = data && (data.inputParams[0].value.find(item => item.name === "quantity")?.value ?? 0); 暂时注释，后续放开
     const config = getEvaluationTestSetConfig(shape);
     const [testSets, setTestSets] = useState([]);
 
@@ -51,9 +56,16 @@ export default function EvaluationTestSetWrapper({data, disabled}) {
     }, []); // useEffect 依赖数组为空，表示只在组件挂载时执行一次
 
     return (<>
-        <EvaluationTestSetSelect disabled={disabled} testSets={testSets} selectedTestSet={selectedTestSet}
+        <EvaluationTestSetSelect shapeStatus={shapeStatus}
+                                 testSets={testSets}
+                                 selectedTestSet={selectedTestSet}
                                  config={config}/>
         {/*<TestQuantity disabled={disabled} quantity={testQuantity}/>*/}
         <InvokeOutput outputData={data.outputParams}/>
     </>);
 }
+
+EvaluationTestSetWrapper.propTypes = {
+    data: PropTypes.object,
+    shapeStatus: PropTypes.object
+};

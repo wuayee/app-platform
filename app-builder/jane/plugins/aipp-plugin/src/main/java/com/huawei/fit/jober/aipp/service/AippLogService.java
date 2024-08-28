@@ -115,7 +115,7 @@ public interface AippLogService {
      * @param logData 日志数据
      * @param businessData 业务数据
      */
-    void insertLog(String logType, AippLogData logData, Map<String, Object> businessData);
+    String insertLog(String logType, AippLogData logData, Map<String, Object> businessData);
 
     /**
      * 插入MSG类型的历史记录
@@ -214,4 +214,11 @@ public interface AippLogService {
      * @return 表示查询到的日志列表的 {@link List}{@code <}{@link AippInstLog}{@code >}。
      */
     List<AippInstLog> queryLogsByInstanceIdAndLogTypes(String instanceId, List<String> logTypes);
+
+    /**
+     * 删除指定的对话历史记录。
+     *
+     * @param logIds 表示指定的日志 id 列表的 {@link List}{@code <}{@link Long}{@code >}。
+     */
+    void deleteLogs(List<Long> logIds);
 }

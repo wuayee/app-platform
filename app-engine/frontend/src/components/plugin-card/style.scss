@@ -28,7 +28,6 @@
       display: flex;
       .text {
         margin-bottom: 8px;
-        font-size: 20px;
         max-width: 80%;
         white-space: nowrap;
         overflow: hidden;
@@ -73,6 +72,7 @@
     .footer-icon {
       display: flex;
       justify-content: flex-end;
+      cursor: pointer;
     }
   }
   .footer-type {

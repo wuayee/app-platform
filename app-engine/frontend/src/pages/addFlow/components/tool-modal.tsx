@@ -2,21 +2,20 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
 import AddWaterFlow from './add-waterflow-drawer';
-import { Message } from '@shared/utils/message';
+import { Message } from '@/shared/utils/message';
 import CreateWorkflow from './create-workflow';
 import { getMyPlugin, getPluginTools } from '@/shared/http/plugin';
 import { useAppSelector } from '@/store/hook';
 import { PluginTypeE } from './model';
 import { useTranslation } from 'react-i18next';
 import { deepClone } from '../../chatPreview/utils/chat-process';
-const { Search } = Input;
-const { Option } = Select;
 import '../styles/tool-modal.scss';
 
+const { Search } = Input;
+const { Option } = Select;
 const ToolDrawer = (props) => {
   const { t } = useTranslation();
   const { showModal, setShowModal, checkData, confirmCallBack, type, modalType, toolsConfirm } = props;
@@ -49,7 +48,6 @@ const ToolDrawer = (props) => {
   useEffect(() => {
     type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
   }, [props.checkData]);
-  const items = categoryItems;
   const btnItems = [
     { key: 'tool', label: t('tool') },
     { key: 'workflow', label: t('workflow') },

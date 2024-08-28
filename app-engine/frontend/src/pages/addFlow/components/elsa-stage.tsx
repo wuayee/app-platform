@@ -6,12 +6,13 @@ import { JadeFlow } from '@fit-elsa/elsa-react';
 import AddKnowledge from '../../configForm/configUi/components/add-knowledge';
 import HuggingFaceModal from './hugging-face-modal';
 import ToolModal from './tool-modal';
-import { debounce } from '@shared/utils/common';
-import { updateFlowInfo } from '@shared/http/aipp';
-import { getAddFlowConfig } from '@shared/http/appBuilder';
-import { Message } from '@shared/utils/message';
+import { debounce } from '@/shared/utils/common';
+import { updateFlowInfo } from '@/shared/http/aipp';
+import { getAddFlowConfig } from '@/shared/http/appBuilder';
+import { Message } from '@/shared/utils/message';
 import { useAppDispatch } from '@/store/hook';
 import { setAppInfo } from '@/store/appInfo/appInfo';
+import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +20,7 @@ import i18n from '../../../locale/i18n';
 
 const Stage = (props) => {
   const { t } = useTranslation();
-  const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
+  const { setDragData, showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [showModal, setShowModal] = useState(false);
   const [showTools, setShowTools] = useState(false);
   const [taskName, setTaskName] = useState('');
@@ -52,9 +53,9 @@ const Stage = (props) => {
     CONFIGS[configIndex].params.tenantId = tenantId;
     CONFIGS[configIndex].params.appId = appId;
     const importFiles = [
-      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/fileContentComponent.jsx`),
-      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
-      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/fileContentComponent`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
     ];
@@ -63,7 +64,8 @@ const Stage = (props) => {
       render.current = true;
       agent.onChange((dirtyAction) => {
         if (dirtyAction.action === 'jade_node_config_change') {
-          setTestStatus(null);
+          dispatch(setTestStatus(null));
+          dispatch(setTestTime(0));
           localStorage.getItem('showFlowChangeWarning') !== 'false' && setShowFlowChangeWarning(true);
         }
         handleChange();

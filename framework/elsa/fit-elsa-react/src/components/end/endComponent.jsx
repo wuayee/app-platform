@@ -1,5 +1,6 @@
 import EndNodeWrapper from "@/components/end/EndNodeWrapper.jsx";
 import {v4 as uuidv4} from "uuid";
+import {defaultComponent} from "@/components/defaultComponent.js";
 
 /**
  * 结束节点组件
@@ -7,7 +8,7 @@ import {v4 as uuidv4} from "uuid";
  * @param jadeConfig
  */
 export const endComponent = (jadeConfig) => {
-    const self = {};
+    const self = defaultComponent(jadeConfig);
 
     /**
      * 必填
@@ -33,13 +34,14 @@ export const endComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled, data) => {
-        return (<EndNodeWrapper disabled={disabled} data={data}/>);
+    self.getReactComponents = (shapeStatus, data) => {
+        return (<EndNodeWrapper shapeStatus={shapeStatus} data={data}/>);
     };
 
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
         const _editOutputVariable = () => {
             const finalOutput = newConfig.inputParams.find(item => item.name === "finalOutput");
@@ -90,7 +92,7 @@ export const endComponent = (jadeConfig) => {
                 newConfig.inputParams = _changeMode();
                 return newConfig;
             default: {
-                throw Error('Unknown action: ' + action.type);
+                return reducers.apply(self, [config, action]);
             }
         }
     };

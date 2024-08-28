@@ -4,14 +4,13 @@
 
 package com.huawei.fit.jober.aipp.dto.chat;
 
-import com.huawei.fitframework.annotation.Property;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modelengine.fitframework.annotation.Property;
 
 import java.util.List;
 
@@ -41,6 +40,10 @@ public class AppChatRsp {
     @Property(description = "form instance id")
     @JsonProperty("instance_id")
     private String instanceId;
+
+    @Property(description = "log id")
+    @JsonProperty("log_id")
+    private String logId;
 
     /**
      * Answer

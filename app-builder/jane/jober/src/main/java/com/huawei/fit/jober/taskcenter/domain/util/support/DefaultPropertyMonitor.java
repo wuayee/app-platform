@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.domain.util.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.jober.taskcenter.domain.SourceEntity;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;

@@ -4,17 +4,8 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
-import com.huawei.fit.http.annotation.DeleteMapping;
-import com.huawei.fit.http.annotation.GetMapping;
-import com.huawei.fit.http.annotation.PathVariable;
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.PutMapping;
-import com.huawei.fit.http.annotation.RequestBean;
-import com.huawei.fit.http.annotation.RequestBody;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import static com.huawei.fit.jober.aipp.util.AppUtils.replaceAsterisks;
+
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
@@ -29,12 +20,23 @@ import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.common.RangedResultSet;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.validation.Validated;
 
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import modelengine.fit.http.annotation.DeleteMapping;
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.PutMapping;
+import modelengine.fit.http.annotation.RequestBean;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.annotation.RequestQuery;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.validation.Validated;
 
 import java.util.List;
 
@@ -63,7 +65,8 @@ public class AppBuilderAppController extends AbstractController {
             com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
             @Value("${app-engine.exclude-names}") List<String> excludeNames) {
         super(authenticator);
-        this.excludeNames = excludeNames;
+        // 需要FIT框架支持exclude-names配置大括号
+        this.excludeNames = replaceAsterisks(excludeNames);
         this.appService = appService;
         this.appGenericable = appGenericable;
     }

@@ -5,7 +5,8 @@
 package com.huawei.fit.jober;
 
 import com.huawei.fit.jober.entity.user.EmployeeDetail;
-import com.huawei.fitframework.annotation.Genericable;
+
+import modelengine.fitframework.annotation.Genericable;
 
 /**
  * Jober人员服务Genericable

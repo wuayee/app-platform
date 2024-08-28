@@ -7,6 +7,10 @@ const {Panel} = Collapse;
 
 MultiConversation.propTypes = {
     itemId: PropTypes.string.isRequired, // 确保 itemId 是一个必需的string类型
+    config: PropTypes.object, // 确保 itemId 是一个必需的string类型
+    className: PropTypes.string, // 确保 itemId 是一个必需的string类型
+    disabled: PropTypes.bool, // 确保 itemId 是一个必需的string类型
+    props: PropTypes.object // 确保 itemId 是一个必需的string类型
 };
 
 /**
@@ -46,7 +50,9 @@ export default function MultiConversation({
                     </div>}
                     style={{width: "100%"}}
                 >
-                    <MultiConversationContent itemId={itemId} disabled={!switchValue || disabled} config={config}
+                    <MultiConversationContent itemId={itemId}
+                                              disabled={!switchValue || disabled}
+                                              config={config}
                                               className={`${className}-content`}
                                               props={props}/>
                 </Panel>}

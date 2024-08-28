@@ -5,10 +5,10 @@ import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
-import { getAppInfo } from '@shared/http/aipp';
-import { updateFormInfo } from '@shared/http/aipp';
-import { debounce, getUiD } from '@shared/utils/common';
-import { Message } from '@shared/utils/message';
+import { getAppInfo } from '@/shared/http/aipp';
+import { updateFormInfo } from '@/shared/http/aipp';
+import { debounce, getUiD } from '@/shared/utils/common';
+import { Message } from '@/shared/utils/message';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { getUser } from '../helper';
@@ -22,8 +22,6 @@ const AippIndex = () => {
   const [reloadInspiration, setReloadInspiration] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [messageChecked, setMessageCheck] = useState(false);
-  const [testStatus, setTestStatus] = useState(null);
-  const [testTime, setTestTime] = useState(null);
   const [showFlowChangeWarning, setShowFlowChangeWarning] = useState(false);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
@@ -96,8 +94,6 @@ const AippIndex = () => {
     }
     addFlowRef.current.handleDebugClick();
   }
-  const handleTestStatus = (value) => setTestStatus(value);
-  const handleTestTime = (value) => setTestTime(value);
   const contextProvider = {
     messageChecked,
     setMessageCheck,
@@ -118,8 +114,6 @@ const AippIndex = () => {
             updateAippCallBack={updateAippCallBack}
             mashupClick={elsaChange}
             openDebug={openDebug}
-            testTime={testTime}
-            testStatus={testStatus}
             addFlowRef={addFlowRef}
           />
           <div className='layout-content'>
@@ -128,8 +122,6 @@ const AippIndex = () => {
                 <AddFlow
                   type='edit'
                   addFlowRef={addFlowRef}
-                  setFlowTestStatus={handleTestStatus}
-                  setFlowTestTime={handleTestTime}
                   appInfo={appInfo}
                   showFlowChangeWarning={showFlowChangeWarning}
                   setShowFlowChangeWarning={setShowFlowChangeWarning}

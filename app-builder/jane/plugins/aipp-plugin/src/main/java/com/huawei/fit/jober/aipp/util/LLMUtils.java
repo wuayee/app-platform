@@ -7,15 +7,16 @@ package com.huawei.fit.jober.aipp.util;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.LLMService;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
-import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
-import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
-import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
+
+import modelengine.fel.model.openai.client.OpenAiClient;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import modelengine.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import modelengine.fel.model.openai.entity.chat.message.OpenAiChatMessage;
+import modelengine.fel.model.openai.entity.chat.message.Role;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -163,7 +164,7 @@ public class LLMUtils {
     public static String askModelForSummary(OpenAiClient openAiClient, String prompt, LlmModelNameEnum model,
             int maxTokens) throws IOException {
         log.info("askModelForSummary with prompt: {}", prompt);
-        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER).content(prompt).build();
+        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER.name()).content(prompt).build();
         OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
                 .model(model.getValue())
                 .messages(Collections.singletonList(msg))

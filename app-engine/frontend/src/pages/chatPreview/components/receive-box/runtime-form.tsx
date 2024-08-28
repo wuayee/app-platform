@@ -1,12 +1,12 @@
 
 import React, { useContext } from 'react';
-import InterviewQuestions from '../runtimeForm/InterviewQuestions.jsx';
-import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport.jsx';
+import InterviewQuestions from '../runtimeForm/InterviewQuestions';
+import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport';
 import FileContent from '../runtimeForm/FileContent';
-import QuestionClar from "../runtimeForm/QuestionClar";
+import QuestionClar from '../runtimeForm/QuestionClar';
 import ConditionForm from '../runtimeForm/conditionForm/conditionForm';
-import { setFormReceived } from "@/store/chatStore/chatStore";
-import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { setFormReceived } from '@/store/chatStore/chatStore';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { ChatContext } from '@/pages/aippIndex/context';
 import { useTranslation } from 'react-i18next';
 

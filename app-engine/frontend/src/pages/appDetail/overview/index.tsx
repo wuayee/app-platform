@@ -1,11 +1,11 @@
 import { Button, Divider } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
-import { Message } from '../../../shared/utils/message';
+import { getAppInfo, getAppInfoByVersion } from '@/shared/http/aipp';
+import { Message } from '@/shared/utils/message';
 import { useHistory, useParams } from 'react-router';
-import { AppIcons } from '../../../components/icons/app';
-import { useAppDispatch } from '../../../store/hook';
-import { setAppInfo } from "../../../store/appInfo/appInfo";
+import { AppIcons } from '@/components/icons/app';
+import { useAppDispatch } from '@/store/hook';
+import { setAppInfo } from "@/store/appInfo/appInfo";
 import { useTranslation } from "react-i18next";
 import './style.scoped.scss';
 

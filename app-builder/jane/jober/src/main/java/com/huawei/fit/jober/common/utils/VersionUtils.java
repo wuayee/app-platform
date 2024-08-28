@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.common.utils;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 跟版本相关的工具类方法

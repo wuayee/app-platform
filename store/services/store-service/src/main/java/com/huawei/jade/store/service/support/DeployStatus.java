@@ -4,9 +4,9 @@
 
 package com.huawei.jade.store.service.support;
 
-import com.huawei.fitframework.util.EnumUtils;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.EnumUtils;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.function.Predicate;
 
