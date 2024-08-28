@@ -9,6 +9,8 @@ package modelengine.fit.ohscript.script.parser.nodes;
 import modelengine.fit.ohscript.script.errors.SyntaxError;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
+import modelengine.fit.ohscript.script.parser.nodes.control.ForNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 
 /**
  * 声明表达式节点

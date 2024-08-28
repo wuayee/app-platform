@@ -78,6 +78,11 @@ public class FlowTrace extends IdGenerator {
         contextPool = new HashSet<>();
     }
 
+    /**
+     * 流程的trace
+     *
+     * @param id 指定trace的id
+     */
     public FlowTrace(String id) {
         super(id);
         contextPool = new HashSet<>();

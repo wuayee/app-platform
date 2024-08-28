@@ -8,8 +8,8 @@ package modelengine.fit.ohscript.script.interpreter;
 
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.RuntimeError;
-import modelengine.fit.ohscript.script.parser.nodes.DoubleFunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.DoubleFunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.IgnoredNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;

@@ -8,9 +8,9 @@ package modelengine.fit.ohscript.script.semanticanalyzer;
 
 import modelengine.fit.ohscript.script.errors.SyntaxError;
 import modelengine.fit.ohscript.script.lexer.Terminal;
-import modelengine.fit.ohscript.script.parser.nodes.EntityDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.EntityExtensionNode;
-import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityExtensionNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.ArgumentEntry;

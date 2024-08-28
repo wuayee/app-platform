@@ -14,32 +14,32 @@ import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.lexer.Token;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
-import modelengine.fit.ohscript.script.parser.nodes.ArrayAccessNode;
-import modelengine.fit.ohscript.script.parser.nodes.ArrayDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.AsyncBlockNode;
+import modelengine.fit.ohscript.script.parser.nodes.array.ArrayAccessNode;
+import modelengine.fit.ohscript.script.parser.nodes.array.ArrayDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.async.AsyncBlockNode;
 import modelengine.fit.ohscript.script.parser.nodes.BlockNode;
-import modelengine.fit.ohscript.script.parser.nodes.DoNode;
-import modelengine.fit.ohscript.script.parser.nodes.DoubleFunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.EachNode;
-import modelengine.fit.ohscript.script.parser.nodes.EntityBodyNode;
-import modelengine.fit.ohscript.script.parser.nodes.EntityCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.EntityExtensionNode;
-import modelengine.fit.ohscript.script.parser.nodes.ExternalDataNode;
-import modelengine.fit.ohscript.script.parser.nodes.ForNode;
-import modelengine.fit.ohscript.script.parser.nodes.FunctionCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.IfNode;
+import modelengine.fit.ohscript.script.parser.nodes.control.DoNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.DoubleFunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.control.EachNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityBodyNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityExtensionNode;
+import modelengine.fit.ohscript.script.parser.nodes.java.ExternalDataNode;
+import modelengine.fit.ohscript.script.parser.nodes.control.ForNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.control.IfNode;
 import modelengine.fit.ohscript.script.parser.nodes.ImportNode;
 import modelengine.fit.ohscript.script.parser.nodes.InitialAssignmentNode;
-import modelengine.fit.ohscript.script.parser.nodes.JavaNewNode;
-import modelengine.fit.ohscript.script.parser.nodes.MapDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.MatchStatementNode;
+import modelengine.fit.ohscript.script.parser.nodes.java.JavaNewNode;
+import modelengine.fit.ohscript.script.parser.nodes.map.MapDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.control.MatchStatementNode;
 import modelengine.fit.ohscript.script.parser.nodes.SafeBlockNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.script.parser.nodes.TupleDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.TupleUnPackerNode;
-import modelengine.fit.ohscript.script.parser.nodes.WhileNode;
+import modelengine.fit.ohscript.script.parser.nodes.tuple.TupleDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.tuple.TupleUnPackerNode;
+import modelengine.fit.ohscript.script.parser.nodes.control.WhileNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.BoolTypeExpr;
@@ -120,7 +120,7 @@ public enum Interpreter {
                 return metaResult;
             }
 
-            if (id.lexeme().equals(Constants.NULL)) {
+            if (Constants.NULL.equals(id.lexeme())) {
                 return ReturnValue.NULL;
             }
 

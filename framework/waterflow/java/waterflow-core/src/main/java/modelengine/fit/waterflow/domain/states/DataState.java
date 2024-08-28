@@ -22,6 +22,12 @@ import java.util.function.Consumer;
  * @since 1.0
  */
 public class DataState<O, D, I> extends DataStart<O, D, I> {
+    /**
+     * 数据前置的state节点
+     *
+     * @param state 基于用户的processor的节点数据处理逻辑
+     * @param start 指定的DataStart
+     */
     public DataState(State<O, D, I, ProcessFlow<D>> state, DataStart<D, D, D> start) {
         super(state);
         this.start = start;

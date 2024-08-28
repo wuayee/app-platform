@@ -8,6 +8,7 @@ package modelengine.fit.ohscript.script.parser.nodes;
 
 import modelengine.fit.ohscript.script.errors.SyntaxError;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 

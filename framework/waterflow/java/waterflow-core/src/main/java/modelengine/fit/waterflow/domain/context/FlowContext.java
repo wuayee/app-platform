@@ -156,6 +156,17 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
         this(streamId, rootId, data, traceId, position, "", "");
     }
 
+    /**
+     * 创建一个 {@link FlowContext} 实例。
+     *
+     * @param streamId 表示所处流唯一标识的 {@link String}。
+     * @param rootId 表示数据发起的起始节点唯一标识的 {@link String}。
+     * @param data 表示上下文里所带数据的 {@link T}。
+     * @param traceId 表示路径唯一标识的 {@link Set}{@code <}的{@link String}{@code >}。
+     * @param position 表示上下文当前所处的位置的 {@link String}。
+     * @param parallel 表示并行节点唯一标识的 {@link String}。
+     * @param parallelMode 表示并行模式的 {@link String}。
+     */
     public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position, String parallel,
             String parallelMode) {
         this.streamId = streamId;

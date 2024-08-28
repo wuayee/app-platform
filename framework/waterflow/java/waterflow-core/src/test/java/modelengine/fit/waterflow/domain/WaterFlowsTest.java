@@ -529,7 +529,6 @@ class WaterFlowsTest {
         @Test
         @DisplayName("流程实例source数据源")
         void testDataDrivenSource() {
-            AtomicInteger counter = new AtomicInteger();
             Emitter<Integer, FlowSession> emitter = new Emitter<Integer, FlowSession>() {
                 private EmitterListener<Integer, FlowSession> handler;
 
@@ -543,6 +542,7 @@ class WaterFlowsTest {
                     this.handler.handle(data, trance);
                 }
             };
+            AtomicInteger counter = new AtomicInteger();
             // source: 数据发射源
             Flows.source(emitter).map(value -> value + 10).just(counter::set).offer();
             emitter.emit(10);
@@ -753,10 +753,19 @@ class WaterFlowsTest {
                     .fork(p -> p.map(i -> i * 2))
                     .join(() -> "", (acc, i) -> acc + i.toString())
                     .close();
-            assertEquals("start((Start))\n" + "start-->node0(map)\n" + "node9-->node3\n" + "node8-->node6\n"
-                    + "node6-->end7((End))\n" + "node5-->node6([+])\n" + "node4-->node8(map)\n" + "node4-->node5(map)\n"
-                    + "node3-->node4{{=}}\n" + "node2-->node3([+])\n" + "node1-->node9(map)\n" + "node1-->node2(map)\n"
-                    + "node0-->node1{?}", new Mermaid(flow).get());
+            assertEquals("start((Start))"
+                    + System.lineSeparator() + "start-->node0(map)"
+                    + System.lineSeparator() + "node9-->node3"
+                    + System.lineSeparator() + "node8-->node6"
+                    + System.lineSeparator() + "node6-->end7((End))"
+                    + System.lineSeparator() + "node5-->node6([+])"
+                    + System.lineSeparator() + "node4-->node8(map)"
+                    + System.lineSeparator() + "node4-->node5(map)"
+                    + System.lineSeparator() + "node3-->node4{{=}}"
+                    + System.lineSeparator() + "node2-->node3([+])"
+                    + System.lineSeparator() + "node1-->node9(map)"
+                    + System.lineSeparator() + "node1-->node2(map)"
+                    + System.lineSeparator() + "node0-->node1{?}", new Mermaid(flow).get());
         }
 
         @Test

@@ -15,6 +15,7 @@ import modelengine.fit.ohscript.script.interpreter.ReturnValue;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.lexer.Token;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityBodyNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.IdentifierEntry;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.SymbolEntry;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;

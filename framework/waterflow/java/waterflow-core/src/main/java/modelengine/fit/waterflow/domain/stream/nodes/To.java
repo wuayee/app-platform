@@ -684,7 +684,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         });
         afterList.forEach(context -> context.getTraceId().addAll(traces));
 
-        if ((Objects.isNull(this.nodeType) || !this.nodeType.equals(FlowNodeType.END)) && !afterList.isEmpty()) {
+        if ((Objects.isNull(this.nodeType) || !FlowNodeType.END.equals(this.nodeType)) && !afterList.isEmpty()) {
             this.getFlowContextRepo().updateContextPool(afterList, traces);
             this.getFlowContextRepo().save(afterList);
         }
@@ -703,7 +703,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * @param afterList 当前节点新生产的contexts
      */
     private void updateBatch(List<FlowContext<I>> preList, List<FlowContext<O>> afterList) {
-        if (!Objects.isNull(this.nodeType) && this.nodeType.equals(FlowNodeType.END)) {
+        if (!Objects.isNull(this.nodeType) && FlowNodeType.END.equals(this.nodeType)) {
             return;
         }
         String toBatch = preList.stream()
@@ -824,7 +824,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
             private <T1, R1> FlowContext<R1> generateNewContext(To<T1, R1> to, FlowContext<T1> context) {
                 // 在session模式下，出现错误则直接取消
-                if (ThreadMode.SESSION == to.getFlowConfig().getThreadMode() && context.getSession().isError()) {
+                if (to.getFlowConfig().getThreadMode() == ThreadMode.SESSION && context.getSession().isError()) {
                     FlowDebug.log(context.getSession(), "session error. over");
                     return null;
                 }

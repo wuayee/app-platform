@@ -110,7 +110,7 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
     @Override
     public List<FlowContext<T>> getPendingAndSentByIds(List<String> ids) {
         return this.contextsMap.stream()
-                .filter(context -> context.getStatus().equals(FlowNodeStatus.PENDING))
+                .filter(context -> FlowNodeStatus.PENDING.equals(context.getStatus()))
                 .filter(FlowContext::isSent)
                 .filter(context -> ids.contains(context.getId()))
                 .collect(Collectors.toList());

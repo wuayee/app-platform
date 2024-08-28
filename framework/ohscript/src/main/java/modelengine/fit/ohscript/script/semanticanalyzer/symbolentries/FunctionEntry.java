@@ -6,7 +6,7 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.symbolentries;
 
-import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.Category;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;

@@ -6,7 +6,7 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes;
 
-import modelengine.fit.ohscript.script.parser.nodes.EntityExtensionNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityExtensionNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.Type;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;

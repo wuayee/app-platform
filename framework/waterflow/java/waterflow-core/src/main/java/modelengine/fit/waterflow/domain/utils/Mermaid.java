@@ -36,7 +36,7 @@ public class Mermaid {
 
     private static final String EMIT_ARROW = "-. emit .->";
 
-    private static final String LINE_BREAK = "\n";
+    private static final String LINE_BREAK = System.lineSeparator();
 
     private static final String START_DISPLAY = "((Start))";
 
