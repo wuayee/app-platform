@@ -7,6 +7,7 @@ package modelengine.fit.waterflow.appfactory.fitable;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_ASYNC_JOBER_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
+import static modelengine.fit.waterflow.common.Constant.SYSTEM_PARAMETER_NODE_KEY;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.FlowInstanceService;
@@ -25,6 +26,7 @@ import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowconte
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
 import modelengine.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO;
+import modelengine.fit.waterflow.flowsengine.utils.FlowUtil;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.inspection.Validation;
@@ -74,6 +76,7 @@ public class FlowInstanceServiceImpl implements FlowInstanceService {
                 .businessData(flowStartParameter.getBusinessData())
                 .startTime(LocalDateTime.now())
                 .build();
+        FlowUtil.cacheResultToNode(data.getBusinessData(), SYSTEM_PARAMETER_NODE_KEY);
         String traceId = flowContextsService.startFlows(flowDefinitionId, data,
                 ParamUtils.convertToInternalOperationContext(context)).getTraceId();
         return new FlowInstanceResult(traceId);
