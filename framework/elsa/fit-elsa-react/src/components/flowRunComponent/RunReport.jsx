@@ -3,6 +3,7 @@ import {CloseOutlined} from "@ant-design/icons";
 import {forwardRef, useEffect, useImperativeHandle, useRef} from "react";
 import SectionFactory from "@/components/flowRunComponent/SectionFactory.jsx";
 import {useTranslation} from "react-i18next";
+import TextDisplay from "@/components/common/TextDisplay.jsx";
 
 /**
  * 流程测试详情报告
@@ -44,14 +45,18 @@ const RunReport = forwardRef(({shape, showResultPanel, handleExpandResult}, ref)
         updateResultPanelPosition();
     }, [showResultPanel]);
 
-    return (
+    return (<>
         <div className="result-panel" ref={resultPanelRef}>
             <div className="result-header">
-                <div className="header-title">{shape.text} {t('runResult')}</div>
+                <div className="report-title">
+                    <TextDisplay text={shape.text} lineHeight={24} width={400} fontSize={18} fontWeight={600}/>
+                    <div className="fixed-text run-report-font"> {t('runResult')}</div>
+                </div>
                 <Button type="link" onClick={handleExpandResult} icon={<CloseOutlined/>}/>
             </div>
             <SectionFactory shape={shape}/>
-        </div>);
+        </div>
+    </>);
 });
 
 export default RunReport;
