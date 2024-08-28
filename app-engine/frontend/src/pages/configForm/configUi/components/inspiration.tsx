@@ -360,6 +360,7 @@ const Inspiration = (props) => {
           onCancel={handleModalCancel}
           forceRender
           maskClosable={false}
+          className='inspiration-modal'
           width='1000px'>
           <div className='inspiration-wrap'>
             <Form

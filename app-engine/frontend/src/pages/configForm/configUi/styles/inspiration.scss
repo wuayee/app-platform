@@ -49,3 +49,8 @@
     border-bottom: 1px solid rgb(242, 242, 242);
   }
 }
+.inspiration-modal {
+  .ant-modal-content {
+    border-radius: 0px;
+  }
+}
