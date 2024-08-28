@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import lombok.extern.slf4j.Slf4j;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.util.ObjectUtils;
@@ -59,7 +60,7 @@ public class ReleaseElsaPpt implements FlowableService {
 
     private final String endpoint;
 
-    public ReleaseElsaPpt(MetaInstanceService metaInstanceService, GraphExposeService elsaClient,
+    public ReleaseElsaPpt(MetaInstanceService metaInstanceService, @Fit GraphExposeService elsaClient,
             @Value("${elsa.elsaKey}") String elsaKey, @Value("${elsa.endpoint}") String endpoint) {
         this.metaInstanceService = metaInstanceService;
         this.elsaClient = elsaClient;
