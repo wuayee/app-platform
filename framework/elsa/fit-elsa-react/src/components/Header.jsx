@@ -1,9 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Dropdown, Form, Input, Tooltip} from "antd";
+import {Button, Dropdown, Form, Input} from "antd";
 import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
 import {useTranslation} from "react-i18next";
 import PropTypes from "prop-types";
+import TextDisplay from "@/components/common/TextDisplay.jsx";
 
 /**
  * 头部.
@@ -69,9 +70,7 @@ export const Header = ({shape, shapeStatus}) => {
                 </Form.Item>
             </>);
         } else {
-            return <Tooltip overlayClassName="custom-tooltip" title={shape.text}><p
-                className={"jade-component-title"} style={{margin: 0}}>
-                <span>{shape.text}</span></p></Tooltip>;
+            return <TextDisplay text={shape.text} lineHeight={19} width={200} fontSize={16} fontWeight={700}/>;
         }
     };
 
