@@ -7,12 +7,12 @@ package com.huawei.jade.store.tool.parser.support;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.StringUtils;
-
 import com.huawei.jade.store.entity.transfer.PluginToolData;
 import com.huawei.jade.store.tool.parser.code.PluginDeployRetCode;
 import com.huawei.jade.store.tool.parser.exception.PluginDeployException;
+
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -60,16 +60,20 @@ public class FileParser {
             return pluginData;
         }
         pluginData.setName(methodName);
-        pluginData.setDescription(validateSchemaStringField(schemaNode, DESCRIPTION));
-        Map<String, Object> runnables = notNull(ObjectUtils.cast(toolFile.get(RUNNABLES)),
-            "Tool runnables cannot be null.");
+        Object description = notNull(schemaNode.get(DESCRIPTION),
+                () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, DESCRIPTION));
+        if (description instanceof String) {
+            pluginData.setDescription((String) description);
+        }
+        Map<String, Object> runnables =
+                notNull(ObjectUtils.cast(toolFile.get(RUNNABLES)), "Tool runnables cannot be null.");
         pluginData.setRunnables(runnables);
         List<String> tags;
         if (toolFile.get(TAGS) != null) {
             tags = notNull(ObjectUtils.cast(toolFile.get(TAGS)), "Tool tags cannot be null.");
         } else {
-            Map<String, Object> extensions = notNull(ObjectUtils.cast(toolFile.get(EXTENSIONS)),
-                "Tool extensions cannot be null.");
+            Map<String, Object> extensions =
+                    notNull(ObjectUtils.cast(toolFile.get(EXTENSIONS)), "Tool extensions cannot be null.");
             tags = notNull(ObjectUtils.cast(extensions.get(TAGS)), "Tool tags cannot be null.");
         }
         List<String> newTags = tags.stream().map(FileParser::replaceTag).collect(Collectors.toList());
@@ -86,10 +90,10 @@ public class FileParser {
 
     private static String validateSchemaStringField(Map<String, Object> schemaNode, String fieldName) {
         Object field = notNull(schemaNode.get(fieldName),
-            () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
+                () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
         if (field instanceof String) {
             return notBlank((String) field,
-                () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
+                    () -> new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName));
         }
         throw new PluginDeployException(PluginDeployRetCode.FIELD_ERROR_IN_SCHEMA, fieldName);
     }
