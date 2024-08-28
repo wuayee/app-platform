@@ -67,7 +67,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Created-By>FIT lab (Huawei)</Created-By>
+                            <Created-By>FIT Lab</Created-By>
                         </manifestEntries>
                     </archive>
                 </configuration>
