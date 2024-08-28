@@ -29,6 +29,7 @@ const Inspiration = (props) => {
   const [category, setCategory] = useState(null);
   const [id, setId] = useState('');
   const [disabled, setDisabled] = useState(false);
+  const [type, setType] = useState('');
   const [modalForm] = Form.useForm();
   const { TextArea } = Input;
   let regex = /{{(.*?)}}/g;
@@ -111,6 +112,7 @@ const Inspiration = (props) => {
   }
 
   const clickInspiration = (value) => {
+    setType('edit');
     setShowModal(true);
     setId(value.id);
     setCategory(value.category);
@@ -186,12 +188,14 @@ const Inspiration = (props) => {
         const newInspirationValues = { ...inspirationValues, inspirations: newvalues };
         updateData(newInspirationValues, 'inspiration');
         setInspirationValues(newInspirationValues);
+        setType('');
       })
       .catch((errorInfo) => { });
   }
 
   const handleModalCancel = () => {
     setShowModal(false);
+    setType('');
   }
 
   /**
@@ -350,7 +354,7 @@ const Inspiration = (props) => {
           </Form.Item>
         </div>
         <Modal
-          title={t('createInspiration')}
+          title={type !== 'edit'? t('createInspiration') : t('editInspiration')}
           open={showModal}
           onOk={handleModalOK}
           onCancel={handleModalCancel}
