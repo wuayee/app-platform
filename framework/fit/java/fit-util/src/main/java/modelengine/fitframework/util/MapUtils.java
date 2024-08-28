@@ -7,7 +7,6 @@
 package modelengine.fitframework.util;
 
 import modelengine.fitframework.inspection.Validation;
-import modelengine.fitframework.merge.ConflictException;
 import modelengine.fitframework.merge.ConflictResolutionPolicy;
 import modelengine.fitframework.merge.ConflictResolver;
 import modelengine.fitframework.merge.ConflictResolverCollection;
@@ -164,7 +163,7 @@ public class MapUtils {
      * @param <K> 表示待合并映射的键的类型的 {@link K}。
      * @param <V> 表示待合并映射中值的类型的 {@link V}。
      * @return 表示合并后的映射的 {@link Map}{@code <}{@link K}{@code , }{@link V}{@code >}。
-     * @throws ConflictException 当合并过程中发生异常时。
+     * @throws modelengine.fitframework.merge.ConflictException 当合并过程中发生异常时。
      */
     public static <K, V> Map<K, V> merge(Map<K, V> first, Map<K, V> second) {
         return merge(first, second, ConflictResolutionPolicy.ABORT);
@@ -179,7 +178,7 @@ public class MapUtils {
      * @param <K> 表示待合并映射的键的类型的 {@link K}。
      * @param <V> 表示待合并映射中值的类型的 {@link V}。
      * @return 表示合并后的映射的 {@link Map}{@code <}{@link K}{@code , }{@link V}{@code >}。
-     * @throws ConflictException 当合并过程中发生异常时。
+     * @throws modelengine.fitframework.merge.ConflictException 当合并过程中发生异常时。
      */
     public static <K, V> Map<K, V> merge(Map<K, V> first, Map<K, V> second, ConflictResolutionPolicy defaultPolicy) {
         ConflictResolver<K, V, MapConflict<K, V>> defaultResolver = ConflictResolver.resolver(defaultPolicy);
@@ -199,7 +198,7 @@ public class MapUtils {
      * @param <K> 表示待合并映射的键的类型的 {@link K}。
      * @param <V> 表示待合并映射中值的类型的 {@link V}。
      * @return 表示合并后的映射的 {@link Map}{@code <}{@link K}{@code , }{@link V}{@code >}。
-     * @throws ConflictException 当合并过程中发生异常时。
+     * @throws modelengine.fitframework.merge.ConflictException 当合并过程中发生异常时。
      */
     public static <K, V> Map<K, V> merge(Map<K, V> first, Map<K, V> second,
             ConflictResolverCollection conflictResolvers) {
