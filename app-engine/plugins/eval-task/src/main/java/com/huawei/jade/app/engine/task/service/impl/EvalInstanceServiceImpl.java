@@ -5,9 +5,16 @@
 package com.huawei.jade.app.engine.task.service.impl;
 
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.transaction.Transactional;
+import com.huawei.jade.app.engine.task.dto.EvalInstanceQueryParam;
+import com.huawei.jade.app.engine.task.entity.EvalInstanceEntity;
 import com.huawei.jade.app.engine.task.mapper.EvalInstanceMapper;
 import com.huawei.jade.app.engine.task.po.EvalInstancePo;
 import com.huawei.jade.app.engine.task.service.EvalInstanceService;
+import com.huawei.jade.common.vo.PageVo;
+
+import java.util.List;
 
 /**
  * 表示 {@link EvalInstanceService} 的默认实现。
@@ -33,5 +40,13 @@ public class EvalInstanceServiceImpl implements EvalInstanceService {
         EvalInstancePo po = new EvalInstancePo();
         po.setTaskId(taskId);
         this.taskInstanceMapper.create(po);
+    }
+
+    @Override
+    @Transactional
+    public PageVo<EvalInstanceEntity> listEvalInstance(EvalInstanceQueryParam queryParam) {
+        List<EvalInstanceEntity> instanceEntities = this.taskInstanceMapper.listEvalInstance(queryParam);
+        int instanceCount = this.taskInstanceMapper.countEvalInstance(queryParam);
+        return PageVo.of(instanceCount, instanceEntities);
     }
 }

@@ -4,6 +4,7 @@
 
 package com.huawei.jade.app.engine.task.po;
 
+import com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum;
 import com.huawei.jade.common.po.BasePo;
 
 import lombok.Data;
@@ -29,7 +30,7 @@ public class EvalTaskPo extends BasePo {
     /**
      * 评估任务状态。
      */
-    private String status;
+    private EvalTaskStatusEnum status;
 
     /**
      * 应用唯一标识。
