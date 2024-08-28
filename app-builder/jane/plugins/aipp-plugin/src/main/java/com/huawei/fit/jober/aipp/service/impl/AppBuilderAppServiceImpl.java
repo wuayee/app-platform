@@ -121,6 +121,7 @@ public class AppBuilderAppServiceImpl
     private static final String VERSION_FORMAT = "{0}.{1}.{2}";
     private static final String PUBLISH_UPDATE_DESCRIPTION_KEY = "publishedDescription";
     private static final String PUBLISH_UPDATE_LOG_KEY = "publishedUpdateLog";
+    private static final int VERSION_LENGTH = 8;
 
     private final AppBuilderAppFactory appFactory;
     private final AippFlowService aippFlowService;
@@ -467,7 +468,8 @@ public class AppBuilderAppServiceImpl
         }
         String[] parts = app.getVersion().split("\\.");
         parts[2] = String.valueOf(Integer.parseInt(parts[2]) + 1);
-        return StringUtils.format(VERSION_FORMAT, parts[0], parts[1], parts[2]);
+        String newVersion = StringUtils.format(VERSION_FORMAT, parts[0], parts[1], parts[2]);
+        return newVersion.length() > VERSION_LENGTH ? app.getVersion() : newVersion;
     }
 
     private void validateCreateApp(String name, OperationContext context) {
