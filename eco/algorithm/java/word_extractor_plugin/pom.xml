@@ -40,9 +40,9 @@
             <version>2.0.4</version>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.jober</groupId>
-            <artifactId>jober-genericable</artifactId>
-            <version>${jober.version}</version>
+            <groupId>modelengine.waterflow</groupId>
+            <artifactId>waterflow-genericable</artifactId>
+            <version>${waterflow.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
