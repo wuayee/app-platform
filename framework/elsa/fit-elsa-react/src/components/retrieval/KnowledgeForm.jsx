@@ -54,13 +54,15 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
     };
 
     const getSelectedKnowledgeBases = () => {
-        return knowledge.map(obj => {
-            const innerValue = obj.value;
-            return innerValue.reduce((acc, curr) => {
-                acc[curr.name] = curr.value;
-                return acc;
-            }, {});
-        });
+        return knowledge
+            .map(obj => {
+                const innerValue = obj.value;
+                return innerValue.reduce((acc, curr) => {
+                    acc[curr.name] = curr.value;
+                    return acc;
+                }, {});
+            })
+            .filter(result => Object.keys(result).length > 0);  // 过滤掉空对象
     };
 
     const knowledgeBaseSelectEvent = {
