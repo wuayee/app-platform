@@ -162,6 +162,9 @@ class PollingTaskHandler(tornado.web.RequestHandler):
         tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(self.request.headers.get(HttpHeader.TLV.value)))
         worker_id = tlvs.get(TagLengthValuesUtil.WORKER_ID)
         instance_id = tlvs.get(TagLengthValuesUtil.INSTANCE_ID)
+        is_https = self.request.protocol == "https"
+        sys_plugin_logger.info(f"{'HTTPS' if is_https else 'HTTP'} GET {get_context_path()}/fit/async/await-response, "
+                               f"worker_id={worker_id}, instance_id={instance_id}")
         finished_task_queue = _get_result_queue(worker_id, instance_id)
         if finished_task_queue is None:
             code = InternalErrorCode.ASYNC_TASK_NOT_FOUND.value
@@ -178,7 +181,13 @@ class PollingTaskHandler(tornado.web.RequestHandler):
             response_headers = _build_polling_failed_response_headers(code, message)
             return "", HTTPStatus.OK, response_headers
         with _results_lock:
-            result: AsyncExecuteResult = _results.pop(finished_task_id)
+            result: AsyncExecuteResult = _results.pop(finished_task_id, None)
+        if result is None:  # 此时表示该 task 实际上对应的 worker 已经长时间没有访问过自己，被视为废弃了。
+            code = InternalErrorCode.ASYNC_TASK_NOT_FOUND.value
+            message = "async task not found."
+            response_headers = _build_polling_failed_response_headers(code, message)
+            sys_plugin_logger.warning(f"client resurrection. [worker_id={worker_id}, instance_id={instance_id}]")
+            return "", HTTPStatus.OK, response_headers
         response_headers = _convert_response_meta_and_task_id_to_headers(result.meta, finished_task_id)
         if result.meta.code == FIT_OK:
             global _last_success_time
@@ -248,7 +257,8 @@ class FitHandler(tornado.web.RequestHandler):
         instance_id = request_meta.tlv_data.get(TagLengthValuesUtil.INSTANCE_ID)
         task_id = request_meta.tlv_data.get(TagLengthValuesUtil.TASK_ID)
         sys_plugin_logger.info(f"{'HTTPS' if is_https else 'HTTP'} POST {get_context_path()}/fit/"
-                               f"{genericable_id}/{fitable_id} , worker_id={worker_id}, instance_id={instance_id}")
+                               f"{genericable_id}/{fitable_id} , worker_id={worker_id}, instance_id={instance_id}, "
+                               f"task_id={task_id}")
         if self.is_sync_request(worker_id, instance_id, task_id):
             result = server_response(request_meta, payload)
             response_headers = _convert_response_meta_and_task_id_to_headers(result.metadata, None)
