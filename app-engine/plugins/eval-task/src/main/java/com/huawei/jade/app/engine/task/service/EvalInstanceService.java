@@ -4,6 +4,10 @@
 
 package com.huawei.jade.app.engine.task.service;
 
+import com.huawei.jade.app.engine.task.dto.EvalInstanceQueryParam;
+import com.huawei.jade.app.engine.task.entity.EvalInstanceEntity;
+import com.huawei.jade.common.vo.PageVo;
+
 /**
  * 表示评估任务实例服务。
  *
@@ -17,4 +21,12 @@ public interface EvalInstanceService {
      * @param taskId 表示评估任务业务对象的 {@link Long}。
      */
     void createEvalInstance(Long taskId);
+
+    /**
+     * 分页查询评估任务实例。
+     *
+     * @param queryParam 表示评估任务实例查询参数的 {@link EvalInstanceQueryParam}。
+     * @return 表示评估任务实例查询结果的 {@link PageVo}{@code <}{@link EvalInstanceEntity}{@code >}。
+     */
+    PageVo<EvalInstanceEntity> listEvalInstance(EvalInstanceQueryParam queryParam);
 }

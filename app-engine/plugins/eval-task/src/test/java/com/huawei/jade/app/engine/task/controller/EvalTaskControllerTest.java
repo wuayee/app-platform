@@ -4,6 +4,7 @@
 
 package com.huawei.jade.app.engine.task.controller;
 
+import static com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum.PUBLISHED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -20,12 +21,15 @@ import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.task.dto.EvalTaskCreateDto;
 import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
+import com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum;
 import com.huawei.jade.app.engine.task.service.EvalTaskService;
 import com.huawei.jade.common.vo.PageVo;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +51,13 @@ public class EvalTaskControllerTest {
 
     private HttpClassicClientResponse<?> response;
 
+    @AfterEach
+    void teardown() throws IOException {
+        if (this.response != null) {
+            this.response.close();
+        }
+    }
+
     @Test
     @DisplayName("创建评估任务接口成功")
     void shouldOkWhenCreateEvalTask() {
@@ -55,7 +66,7 @@ public class EvalTaskControllerTest {
         EvalTaskCreateDto evalTaskCreateDto = new EvalTaskCreateDto();
         evalTaskCreateDto.setName("task1");
         evalTaskCreateDto.setDescription("eval task");
-        evalTaskCreateDto.setStatus("published");
+        evalTaskCreateDto.setStatus(PUBLISHED);
         evalTaskCreateDto.setAppId("123456");
         evalTaskCreateDto.setWorkflowId("flow1");
 
@@ -84,7 +95,7 @@ public class EvalTaskControllerTest {
         Long taskId = 1L;
         String name = "task1";
         String description = "eval task";
-        String status = "published";
+        EvalTaskStatusEnum status = PUBLISHED;
         String appId = "123456";
         String workflowId = "flow1";
 

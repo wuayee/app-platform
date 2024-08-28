@@ -4,6 +4,7 @@
 
 package com.huawei.jade.app.engine.task.mapper;
 
+import static com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum.PUBLISHED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fitframework.annotation.Fit;
@@ -39,7 +40,7 @@ public class EvalTaskMapperTest {
         EvalTaskPo evalTaskPo = new EvalTaskPo();
         evalTaskPo.setName("task1");
         evalTaskPo.setDescription("eval task");
-        evalTaskPo.setStatus("published");
+        evalTaskPo.setStatus(PUBLISHED);
         evalTaskPo.setAppId("123456");
         evalTaskPo.setWorkflowId("flow1");
 
@@ -71,7 +72,7 @@ public class EvalTaskMapperTest {
                     .containsExactly(Long.valueOf(i + 1),
                             StringUtils.format("task{0}", i + 1),
                             StringUtils.format("desc{0}", i + 1),
-                            "online",
+                            PUBLISHED,
                             StringUtils.format("user{0}", i + 1),
                             StringUtils.format("user{0}", i + 1),
                             "123456",

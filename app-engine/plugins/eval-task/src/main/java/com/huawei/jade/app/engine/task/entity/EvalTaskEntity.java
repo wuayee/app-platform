@@ -34,7 +34,7 @@ public class EvalTaskEntity {
     /**
      * 评估任务状态。
      */
-    private String status;
+    private EvalTaskStatusEnum status;
 
     /**
      * 评估任务创建人。

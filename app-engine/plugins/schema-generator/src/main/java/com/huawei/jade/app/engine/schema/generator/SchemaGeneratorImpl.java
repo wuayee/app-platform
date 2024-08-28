@@ -40,7 +40,7 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
                         .append("}");
                 break;
             case OBJECT:
-                fieldSchema.append(fieldName).append("\":").append(buildSchema(fieldNode, JsonNodeType.OBJECT));
+                fieldSchema.append(fieldName).append("\":").append(buildSchema(fieldNode));
                 break;
             case STRING:
                 fieldSchema.append(fieldName).append("\":{\"type\":\"string\"}");
@@ -52,7 +52,7 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
         return fieldSchema.toString();
     }
 
-    private static String buildSchema(JsonNode node, JsonNodeType type) throws JsonProcessingException {
+    private static String buildSchema(JsonNode node) throws JsonProcessingException {
         StringBuilder schemaBuilder = new StringBuilder();
 
         schemaBuilder.append("{\"type\":\"object\",\"properties\":{");
@@ -75,8 +75,8 @@ public class SchemaGeneratorImpl implements SchemaGenerator {
     @Fitable(id = "com.huawei.jade.app.engine.schema.generator.SchemaValidatorImpl.generateSchema")
     public String generateSchema(String json) {
         try {
-            JsonNode root = this.OBJECT_MAPPER.readTree(json);
-            return buildSchema(root, JsonNodeType.OBJECT);
+            JsonNode root = OBJECT_MAPPER.readTree(json);
+            return buildSchema(root);
         } catch (JsonProcessingException e) {
             throw new JsonInvalidException(json, e.getMessage(), e);
         }

@@ -4,6 +4,7 @@
 
 package com.huawei.jade.app.engine.task.service.impl;
 
+import static com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum.PUBLISHED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
@@ -17,6 +18,7 @@ import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;
 import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
 import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
+import com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum;
 import com.huawei.jade.app.engine.task.mapper.EvalTaskMapper;
 import com.huawei.jade.app.engine.task.service.EvalTaskService;
 import com.huawei.jade.common.vo.PageVo;
@@ -54,7 +56,7 @@ public class EvalTaskServiceImplTest {
         EvalTaskEntity entity = new EvalTaskEntity();
         entity.setName("task1");
         entity.setDescription("eval task");
-        entity.setStatus("published");
+        entity.setStatus(PUBLISHED);
         entity.setAppId("123456");
         entity.setWorkflowId("flow1");
 
@@ -68,7 +70,7 @@ public class EvalTaskServiceImplTest {
         Long taskId = 1L;
         String name = "task1";
         String description = "eval task";
-        String status = "published";
+        EvalTaskStatusEnum status = PUBLISHED;
         String appId = "123456";
         String workflowId = "flow1";
 

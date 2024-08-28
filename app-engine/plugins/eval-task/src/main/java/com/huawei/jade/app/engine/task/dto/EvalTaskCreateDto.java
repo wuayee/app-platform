@@ -6,7 +6,8 @@ package com.huawei.jade.app.engine.task.dto;
 
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.validation.constraints.NotBlank;
-import modelengine.fitframework.validation.constraints.NotEmpty;
+
+import com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum;
 
 import lombok.Data;
 
@@ -28,8 +29,7 @@ public class EvalTaskCreateDto {
     private String description;
 
     @Property(description = "状态", required = true)
-    @NotEmpty(message = "Status cannot be empty.")
-    private String status;
+    private EvalTaskStatusEnum status;
 
     @Property(description = "应用唯一标识", required = true)
     @NotBlank(message = "The application id cannot be empty.")
