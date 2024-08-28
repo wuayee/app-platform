@@ -4,9 +4,10 @@
 
 package modelengine.fel.model.openai.entity.chat.message;
 
-import modelengine.fel.chat.MessageType;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import modelengine.fel.chat.MessageType;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * OpenAI 消息类型。
@@ -68,5 +69,14 @@ public enum Role {
             default:
                 throw new IllegalArgumentException("Failed to generate OpenAI role: unknown messageType.");
         }
+    }
+
+    /**
+     * 获取角色。
+     *
+     * @return 表示角色的 {@link String}。
+     */
+    public String getValue() {
+        return StringUtils.toLowerCase(this.name());
     }
 }

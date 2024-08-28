@@ -70,7 +70,8 @@ public class OpenAiClientSse {
      * @param container 表示 Bean 容器的 {@link BeanContainer}。
      */
     public OpenAiClientSse(@Value("${openai-url}") String baseUrl, Config config,
-            HttpClassicClientFactory httpClientFactory, @Fit(alias = "json") ObjectSerializer serializer, BeanContainer container) {
+            HttpClassicClientFactory httpClientFactory, @Fit(alias = "json") ObjectSerializer serializer,
+            BeanContainer container) {
         this.baseUrl = baseUrl;
         this.httpClientFactory = httpClientFactory;
         this.config = config;
