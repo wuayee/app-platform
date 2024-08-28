@@ -6,7 +6,7 @@
 
 package modelengine.operators;
 
-import modelengine.waterflow.spi.WaterflowTaskHandler;
+import modelengine.fit.waterflow.spi.WaterflowTaskHandler;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.exception.FitException;
@@ -78,7 +78,7 @@ public class WordExtractorFitable implements WaterflowTaskHandler {
      * @return response 回参
      */
     @Override
-    @Fitable(id = "ModelEngine.operators.word_extractor_plugin")
+    @Fitable(id = "modelengine.operators.word_extractor_plugin")
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
         List<Map<String, Object>> response = new ArrayList<>(flowData.size());
         for (Map<String, Object> flowDatum : flowData) {

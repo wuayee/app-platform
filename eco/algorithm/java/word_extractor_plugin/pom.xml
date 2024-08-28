@@ -12,7 +12,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jober.version>0.2.0-SNAPSHOT</jober.version>
+        <waterflow.version>1.0.0-SNAPSHOT</waterflow.version>
         <fit.version>3.5.0-SNAPSHOT</fit.version>
         <fastjson.version>1.2.83</fastjson.version>
         <slf4j.version>1.7.36</slf4j.version>
@@ -40,7 +40,7 @@
             <version>2.0.4</version>
         </dependency>
         <dependency>
-            <groupId>modelengine.waterflow</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-genericable</artifactId>
             <version>${waterflow.version}</version>
         </dependency>
