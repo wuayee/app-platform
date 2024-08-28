@@ -1,11 +1,14 @@
 import {jadeFlowPage} from "@/flow/jadeFlowPage.js";
 import {NODE_STATUS} from "@";
 import {createProcessor} from "@/flow/evaluation/runableProcessors.js";
+import {eventDecorator} from "@/flow/evaluation/decorators/eventDecorator.js";
 
 const DISTANCE = 20;
 const EVALUATION_START_NODE = "evaluationStartNodeStart";
 const EVALUATION_END_NODE = "evaluationEndNodeEnd";
 const EVALUATION_NODE = "evaluationNode";
+
+const DECORATORS = [eventDecorator()];
 
 /**
  * 评估页面.
@@ -217,6 +220,21 @@ export const jadeEvaluationPage = (div, graph, name, id) => {
             return Promise.reject("评估流程不存在.");
         }
         return await validate.apply(self);
+    };
+
+    /**
+     * 图形创建之后对其进行装饰.
+     *
+     * @override
+     */
+    const shapeCreated = self.shapeCreated;
+    self.shapeCreated = shape => {
+        shapeCreated.apply(self, [shape]);
+        DECORATORS.forEach(d => {
+            if (d.isMatch(shape)) {
+                d.decorate(shape);
+            }
+        });
     };
 
     return self;
