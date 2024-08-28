@@ -412,6 +412,7 @@
   "runResult": "运行结果",
   "invalidCategory": "存在不合法的类目，请先修改",
   "createInspiration": "创建新灵感",
+  "editInspiration": "修改灵感",
   "promptName": "提示词",
   "promptHolder": "输入一段提示词，可以给应用预设身份",
   "additions": "添加",

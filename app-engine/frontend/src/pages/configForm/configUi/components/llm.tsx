@@ -37,6 +37,7 @@ const LLM = (props) => {
                 <Select
                   className={'no-right-radius full-border'}
                   placeholder={t('selectLlm')}
+                  style={{ width: '300px' }}
                   allowClear
                   options={models}
                   onDropdownVisibleChange={(open) => handleGetModels(open)}
