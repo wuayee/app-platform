@@ -481,5 +481,6 @@
   "huggingFace": "HuggingFace",
   "official": "官方",
   "langChain": "LangChain",
-  "llamaIndex": "LlamaIndex"
+  "llamaIndex": "LlamaIndex",
+  "nodeTextDuplicate": "节点名称不能重复"
 }
