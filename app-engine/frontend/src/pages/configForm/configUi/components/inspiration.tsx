@@ -134,13 +134,13 @@ const Inspiration = (props) => {
   }
 
   const onPromptChange = (event) => {
-    let result = [];
+    let result = new Set();
     let match;
     while (match = regex.exec(event.target.value)) {
-      result.push(match[1]);
+      result.add(match[1]);
     }
     setCachePromptVar(promptVar);
-    setPromptVar(result);
+    setPromptVar([...result]);
   }
 
   const handleTableChange = (checked, record, key) => {
@@ -256,6 +256,7 @@ const Inspiration = (props) => {
       return;
     }
     const newVar = promptVar.filter(item => !cachePromptVar.includes(item));
+    const saveVar = promptVar.filter(item => cachePromptVar.includes(item));
     const data = newVar.map((item) => {
       return {
         key: uuid(),
@@ -266,7 +267,7 @@ const Inspiration = (props) => {
         multiple: false
       }
     });
-    setPromptVarData([...promptVarData, ...data]);
+    setPromptVarData([...promptVarData.filter(item => saveVar.includes(item.var)), ...data]);
   }, [promptVar]);
 
   useEffect(() => {
@@ -408,22 +409,21 @@ const Inspiration = (props) => {
                   onBlur={onPromptChange}
                 />
               </Form.Item>
-              <Form.Item
-                name='promptTemplate'
-                label={t('prompt')}
-                rules={[
-                  {
-                    required: false,
-                  }
-                ]}
-                style={{ marginBottom: '16px' }}
-              >
-                <TextArea
-                  placeholder={t('plsEnter')}
-                  rows={6}
-                  onBlur={onPromptChange}
-                />
-              </Form.Item>
+              {/*<Form.Item*/}
+              {/*  name='promptTemplate'*/}
+              {/*  label={t('prompt')}*/}
+              {/*  rules={[*/}
+              {/*    {*/}
+              {/*      required: false,*/}
+              {/*    }*/}
+              {/*  ]}*/}
+              {/*  style={{ marginBottom: '16px' }}*/}
+              {/*>*/}
+              {/*  <TextArea*/}
+              {/*    placeholder={t('plsEnter')}*/}
+              {/*    rows={6}*/}
+              {/*  />*/}
+              {/*</Form.Item>*/}
               <Form.Item
                 name='promptVarData'
                 label={t('promptVar')}
