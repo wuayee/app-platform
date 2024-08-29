@@ -5,6 +5,8 @@
 package com.huawei.fit.jober.aipp.service;
 
 import static com.huawei.fit.jober.aipp.constants.AippConst.ATTR_APP_ID_KEY;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,6 +69,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -500,5 +504,19 @@ public class AppBuilderAppServiceImplTest {
             meta.setAttributes(attr);
             return meta;
         }
+    }
+
+    @Test
+    @DisplayName("测试生成版本号符合预期")
+    public void testGenerateVersion() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = AppBuilderAppServiceImpl.class.getDeclaredMethod("buildVersion", AppBuilderApp.class,
+            boolean.class);
+        method.setAccessible(true);
+        AppBuilderApp appBuilderApp = mockApp();
+        appBuilderApp.setVersion("10.99.99");
+        Object result = method.invoke(appBuilderAppService, appBuilderApp, true);
+        assertThat(result).isInstanceOf(String.class);
+        String resAfterCast = cast(result);
+        assertThat(resAfterCast).isEqualTo("10.99.99");
     }
 }
