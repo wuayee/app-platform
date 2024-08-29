@@ -28,6 +28,7 @@ _ModelForm.propTypes = {
 function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const [form] = Form.useForm();
     const model = modelData.model;
     const temperature = modelData.temperature;
     const systemPrompt = modelData.systemPrompt;
@@ -85,14 +86,18 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
         if (required && e.target.value === "") {
             return;
         }
-        let originValue = e.target.value;
+        let originValue = parseFloat(e.target.value); // 将输入值转换为浮点数
+        // 如果转换后的值不是数字（NaN），则将其设为 0
+        if (isNaN(originValue)) {
+            originValue = 0;
+        }
         let changeValue;
         if (originValue <= 0.0) {
             changeValue = 0;
         } else if (originValue >= 1.0) {
             changeValue = 1;
         } else {
-            changeValue = originValue;
+            changeValue = Math.round(originValue*10)/10; // 保留小数点后一位
         }
         dispatch({actionType: actionType, id: id, value: changeValue});
     };
@@ -147,6 +152,8 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
                                          formatter={formatter}
                                          className="jade-input"
                                          style={{width: "100%"}}
+                                         type="number"
+                                         precision={1}
                                          min={0}
                                          max={1}
                                          step={0.1}

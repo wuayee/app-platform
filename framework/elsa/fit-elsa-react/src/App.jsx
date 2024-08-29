@@ -53,6 +53,7 @@ function App() {
 
         JadeFlow.edit(stage, "1111", graphData, configs, null).then(agent => {
             window.agent = agent;
+            agentRef.current = agent;
             agent.onModelSelect((onModelSelectedCallback) => {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
             });
