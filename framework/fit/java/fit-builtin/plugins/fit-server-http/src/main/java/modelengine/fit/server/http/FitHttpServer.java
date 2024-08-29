@@ -63,7 +63,7 @@ public class FitHttpServer implements FitServer, FitRuntimeStartedObserver {
     public FitHttpServer(HttpClassicServer httpServer, FitHttpHandlerRegistry registry, HttpConfig httpConfig) {
         this.httpServer = notNull(httpServer, "The http server cannot be null.");
         this.registry = notNull(registry, "The http handler registry cannot be null.");
-        this.httpsOpen = httpConfig.secure().map(ServerConfig.Secure::isProtocolEnabled).orElse(false);
+        this.httpsOpen = httpConfig.secure().map(ServerConfig.Secure::isProtocolEnabled).orElse(true);
         if (this.httpsOpen) {
             Optional<ServerConfig.Secure> secure = httpConfig.secure();
             this.httpsPort = secure.flatMap(ServerConfig.Secure::port).orElse(DEFAULT_HTTPS_PORT);
