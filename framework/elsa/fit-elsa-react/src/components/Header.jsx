@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Dropdown, Form, Input} from "antd";
+import {Button, Dropdown, Form, Input, message} from "antd";
 import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
 import {useTranslation} from "react-i18next";
@@ -15,7 +15,7 @@ import TextDisplay from "@/components/common/TextDisplay.jsx";
  * @constructor
  */
 export const Header = ({shape, shapeStatus}) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [edit, setEdit] = useState(false);
     const inputRef = useRef(null);
     const [, setEndNodeCount] = useState(0);
@@ -37,6 +37,10 @@ export const Header = ({shape, shapeStatus}) => {
 
     const onInputBlur = () => {
         if (inputRef.current.input.value === "") {
+            return;
+        }
+        if (shape.page.shapes.filter(s => s.id !== shape.id).some(s => s.text === inputRef.current.input.value)) {
+            message.error(t('nodeTextDuplicate'));
             return;
         }
         shape.text = inputRef.current.input.value;
@@ -61,7 +65,8 @@ export const Header = ({shape, shapeStatus}) => {
     const getTitle = () => {
         if (edit) {
             return (<>
-                <Form.Item name="title" rules={[{required: true, message: t('pleaseInsertName')}]} initialValue={shape.text}>
+                <Form.Item name="title" rules={[{required: true, message: t('pleaseInsertName')}]}
+                           initialValue={shape.text}>
                     <Input onBlur={(e) => onInputBlur(e)}
                            ref={inputRef}
                            onMouseDown={(e) => e.stopPropagation()}
