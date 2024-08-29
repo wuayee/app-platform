@@ -73,6 +73,6 @@ export const httpUrlMap = {
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
     CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
-    TT_URL: 'https://https://tianzhou-beta.huawei.com',
+    TT_URL: 'https://tianzhou-beta.huawei.com',
   },
 };
