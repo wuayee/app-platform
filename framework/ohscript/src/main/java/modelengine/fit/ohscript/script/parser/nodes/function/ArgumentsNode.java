@@ -32,7 +32,7 @@ public class ArgumentsNode extends NonTerminalNode {
     }
 
     @Override
-    protected boolean isNodeIgnored() {
+    public boolean isNodeIgnored() {
         if (this.childCount() == 0) {
             ArgumentNode arg = new ArgumentNode();
             this.addChild(arg);

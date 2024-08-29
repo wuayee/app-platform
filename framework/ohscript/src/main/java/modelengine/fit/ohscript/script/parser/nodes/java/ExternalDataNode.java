@@ -37,7 +37,7 @@ public class ExternalDataNode extends NonTerminalNode {
     }
 
     @Override
-    protected boolean isNodeIgnored() {
+    public boolean isNodeIgnored() {
         return false;
     }
 }

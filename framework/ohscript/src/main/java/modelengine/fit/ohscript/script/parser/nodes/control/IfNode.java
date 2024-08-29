@@ -92,7 +92,7 @@ public class IfNode extends NonTerminalNode {
         }
         for (IfBranch branch : this.branches) {
             if (branch.child(1) instanceof BlockNode) {
-                branch.child(1).returnAble = true;
+                branch.child(1).setReturnAble(true);
             }
         }
         this.refreshChildren(new ArrayList<>(this.branches));

@@ -6,6 +6,7 @@
 
 package modelengine.fit.ohscript.script.parser.nodes;
 
+import lombok.Getter;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
@@ -27,6 +28,7 @@ public abstract class NonTerminalNode extends SyntaxNode {
     /**
      * 非终结符类型
      */
+    @Getter
     protected NonTerminal nodeType;
 
     /**
@@ -144,7 +146,7 @@ public abstract class NonTerminalNode extends SyntaxNode {
      *
      * @return 是否被忽略
      */
-    protected boolean isNodeIgnored() {
+    public boolean isNodeIgnored() {
         return this.childCount() == 0;
     }
 

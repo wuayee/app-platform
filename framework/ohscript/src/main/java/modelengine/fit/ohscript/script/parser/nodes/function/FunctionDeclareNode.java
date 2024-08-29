@@ -66,7 +66,7 @@ public class FunctionDeclareNode extends NonTerminalNode {
     @Override
     public void addChild(SyntaxNode child, int index) {
         if (child instanceof NonTerminalNode) {
-            child.scope = 0; // function first level child is block which doesn't have his own scope
+            child.setScope(0); // function first level child is block which doesn't have his own scope
         }
         super.addChild(child, index);
     }

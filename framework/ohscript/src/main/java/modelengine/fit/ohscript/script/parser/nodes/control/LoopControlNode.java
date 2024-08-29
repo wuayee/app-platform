@@ -32,7 +32,7 @@ public class LoopControlNode extends NonTerminalNode {
     public void semanticCheck() {
         NonTerminalNode parent = ObjectUtils.cast(this.parent());
         while (!(parent instanceof ScriptNode) && !(parent instanceof FunctionDeclareNode)) {
-            if (parent.nodeType.loopAble()) {
+            if (parent.getNodeType().loopAble()) {
                 return;
             }
             parent = ObjectUtils.cast(parent.parent());
