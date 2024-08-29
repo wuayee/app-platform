@@ -29,7 +29,7 @@ public class TestFitRuntime extends AbstractFitRuntime {
     private final TestContextConfiguration configuration;
 
     public TestFitRuntime(Class<?> clazz, TestContextConfiguration configuration, int port) {
-        super(clazz, new String[] {"server.http.port=" + port});
+        super(clazz, new String[] {"server.http.port=" + port, "server.http.secure.enabled=false"});
         this.configuration = configuration;
     }
 
