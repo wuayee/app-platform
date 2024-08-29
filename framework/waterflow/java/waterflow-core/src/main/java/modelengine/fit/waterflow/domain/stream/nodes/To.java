@@ -73,7 +73,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     /**
      * 最大流量，也就是该节点可以处理的最大数据量
-     * TODO xiangyu 节点支持并发的配置，即解析后给该变量赋值
      */
     private static final int MAX_CONCURRENCY = 1;
 
@@ -477,8 +476,10 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             // 处理好数据后对外送数据，驱动其他flow响应
             afterList.forEach(context -> this.emit(context.getData(), context.getSession()));
         } catch (Exception ex) {
-            LOG.error("Node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}, errors: {}.",
-                    this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(), ex.getMessage());
+            LOG.error("Node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. caused by: {}",
+                    this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(),
+                    ex.getClass().getName());
+            LOG.debug("Error, message: {}.", ex.getMessage());
             LOG.debug("Node process exception details: ", ex);
             Retryable<I> retryable = new Retryable<>(this.getFlowContextRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
