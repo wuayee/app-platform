@@ -28,6 +28,7 @@ export const httpUrlMap = {
     COLLECT_URL: '/appengine/api/jober/aipp',
     APP_URL: '/appengine/api/jober',
     KNOWLEDGE_URL: '/appengine/api/jober/knowledge',
+    TT_URL: 'https://tianzhou.huawei.com',
   },
   gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
@@ -42,7 +43,7 @@ export const httpUrlMap = {
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
     CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
-    TT_URL: 'https://finance-gamma.magiccube.huawei.com',
+    TT_URL: 'https://tianzhou-gamma.huawei.com',
   },
   beta: {
     JANE_URL: 'https://jane-beta.huawei.com/api',
@@ -57,7 +58,7 @@ export const httpUrlMap = {
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
     CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
-    TT_URL: 'https://finance-beta.magiccube.huawei.com',
+    TT_URL: 'https://tianzhou-beta.huawei.com',
   },
   alpha: {
     JANE_URL: 'https://jane-alpha.huawei.com/api',
@@ -72,6 +73,6 @@ export const httpUrlMap = {
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
     CONDITION_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1',
-    TT_URL: 'https://finance-beta.magiccube.huawei.com',
+    TT_URL: 'https://tianzhou-beta.huawei.com',
   },
 };
