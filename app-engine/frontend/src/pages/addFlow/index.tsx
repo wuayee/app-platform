@@ -6,7 +6,7 @@ import { ConfigFlowIcon } from '@assets/icon';
 import { Message } from '@/shared/utils/message';
 import { FlowContext } from '../aippIndex/context';
 import { setTestTime, setTestStatus } from "@/store/flowTest/flowTest";
-import {useAppDispatch, useAppSelector} from "../../store/hook";
+import { useAppDispatch } from "@/store/hook";
 import LeftMenu from './components/left-menu';
 import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
@@ -27,8 +27,6 @@ const AddFlow = (props) => {
   const [showDebug, setShowDebug] = useState(false);
   const [showToolFlowChangeWarning, setShowToolFlowChangeWarning] = useState(false);
   const { tenantId, appId } = useParams();
-  const testTime = useAppSelector((state) => state.flowTestStore.testTime);
-  const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
   const appRef = useRef(null);
   const flowIdRef = useRef(null);
   const elsaRunningCtl = useRef(null);
@@ -85,8 +83,6 @@ const AddFlow = (props) => {
             handleDebugClick={handleDebugClick}
             showDebug={showDebug}
             setShowDebug={setShowDebug}
-            testStatus={testStatus}
-            testTime={testTime}
           />}
         <FlowTest
           setShowDebug={setShowDebug}

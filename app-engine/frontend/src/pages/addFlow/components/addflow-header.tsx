@@ -12,16 +12,20 @@ import TestModal from '../../components/test-modal';
 import TestStatus from '../../components/test-status';
 import TimeLineDrawer from '@/components/timeLine';
 import { useTranslation } from 'react-i18next';
+import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
+import { useAppSelector, useAppDispatch } from "@/store/hook";
 
 const AddHeader = (props) => {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { handleDebugClick, testTime, testStatus } = props;
+  const { handleDebugClick } = props;
   const { appInfo, showTime, setFlowInfo } = useContext(FlowContext);
   const [open, setOpen] = useState(false);
   const { tenantId, appId } = useParams();
   let editRef: any = useRef(null);
   let modalRef: any = useRef(null);
   let testRef: any = useRef(null);
+  const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
 
   const navigate = useHistory().push;
   // 发布工具流
@@ -38,6 +42,10 @@ const AddHeader = (props) => {
   }
   // 返回上一页
   const handleBackClick = () => {
+    if (testStatus) {
+      dispatch(setTestStatus(null));
+      dispatch(setTestTime(0));
+    }
     window.history.back();
   }
   const getCurrentTime = () => {
@@ -91,7 +99,7 @@ const AddHeader = (props) => {
               )
           }
           {showTime && <span>{t('autoSave')}：{getCurrentTime()}</span>}
-          <TestStatus testTime={testTime} testStatus={testStatus} />
+          <TestStatus />
         </div>
         <div className='header-grid'>
           {

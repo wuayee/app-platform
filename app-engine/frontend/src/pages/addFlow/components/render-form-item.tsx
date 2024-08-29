@@ -51,7 +51,11 @@ const RenderFormItem = (props) => {
         ]}
         className='debug-form-item'
       >
-        <Input.TextArea placeholder={`${t('plsEnter')}${name}`} rows={3} />
+        <Input.TextArea
+          placeholder={`${t('plsEnter')}${name}`}
+          maxLength={20000}
+          showCount
+          rows={3} />
       </Form.Item>
     }
     {type === 'Integer' &&

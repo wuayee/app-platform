@@ -9,6 +9,7 @@ import TestStatus from './test-status';
 import TestModal from './test-modal';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { updateChatId } from '@/shared/utils/common';
+import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { setChatId, setChatList } from '@/store/chatStore/chatStore';
 import { useTranslation } from 'react-i18next';
 import './styles/header.scss'
@@ -24,7 +25,6 @@ const ChoreographyHead = (props) => {
     showTime
   } = props;
   const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
-  const testTime = useAppSelector((state) => state.flowTestStore.testTime);
   const [currentTime, setCurrentTime] = useState('');
   const [open, setOpen] = useState(false);
   let modalRef = React.createRef();
@@ -51,6 +51,10 @@ const ChoreographyHead = (props) => {
   }
   // 返回编排页面
   const backClick = () => {
+    if (testStatus) {
+      dispatch(setTestStatus(null));
+      dispatch(setTestTime(0));
+    }
     if (showElsa) {
       mashupClick();
     } else {
@@ -101,7 +105,7 @@ const ChoreographyHead = (props) => {
             )
         }
         {showTime && <span>{t('autoSave')}：{currentTime}</span>}
-        {showElsa && <TestStatus testTime={testTime} testStatus={testStatus} />}
+        {showElsa && <TestStatus />}
       </div>
       <div className='header-grid'>
         {
