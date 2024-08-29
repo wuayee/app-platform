@@ -272,7 +272,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
     }
 
     private SSLContext createSslContext() throws GeneralSecurityException, IOException {
-        notNull(this.httpsConfig, "The https config cannot be null.");
+        notNull(this.httpsConfig, "Https server enabled by default, but https is not configured correctly.");
         String trustStorePassword = this.httpsConfig.trustStorePassword().orElse(StringUtils.EMPTY);
         String keyStorePassword = this.httpsConfig.keyStorePassword().orElse(StringUtils.EMPTY);
         boolean isSecureRandomEnabled = this.httpsConfig.secureRandomEnabled();
