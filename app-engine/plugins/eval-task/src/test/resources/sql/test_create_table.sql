@@ -17,6 +17,17 @@ create table if not exists t_app_engine_eval_task
     "workflow_id" varchar(32)                           not null
 );
 
+create table if not exists t_app_engine_eval_report
+(
+    "id"               bigserial primary key not null,
+    "node_name"        varchar(64)           not null,
+    "algorithm_schema" text                  not null,
+    "pass_score"       real                  not null,
+    "average_score"    real                  not null,
+    "histogram"        varchar(512)          not null,
+    "instance_id"      bigint                not null
+);
+
 create table if not exists t_app_engine_eval_task_case
 (
     "id"          bigserial primary key not null,
@@ -33,6 +44,7 @@ create table if not exists t_app_engine_eval_record
     "score"        real                  not null,
     "task_case_id" bigint                not null
 );
+
 create table if not exists t_app_engine_eval_instance
 (
     "id"          bigserial primary key                 not null,

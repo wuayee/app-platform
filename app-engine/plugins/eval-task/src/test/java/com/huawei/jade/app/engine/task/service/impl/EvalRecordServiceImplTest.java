@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 
 import com.huawei.jade.app.engine.task.entity.EvalRecordEntity;
 import com.huawei.jade.app.engine.task.mapper.EvalRecordMapper;
+
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;

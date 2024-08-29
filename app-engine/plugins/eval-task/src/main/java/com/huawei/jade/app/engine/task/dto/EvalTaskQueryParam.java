@@ -4,11 +4,11 @@
 
 package com.huawei.jade.app.engine.task.dto;
 
-import modelengine.fitframework.annotation.Property;
-import modelengine.fitframework.validation.constraints.NotBlank;
 import com.huawei.jade.common.query.PageQueryParam;
 
 import lombok.Data;
+import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.validation.constraints.NotBlank;
 
 /**
  * 表示评估任务询参数。

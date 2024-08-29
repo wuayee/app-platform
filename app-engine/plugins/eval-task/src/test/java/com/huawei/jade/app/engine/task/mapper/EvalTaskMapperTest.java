@@ -7,14 +7,15 @@ package com.huawei.jade.app.engine.task.mapper;
 import static com.huawei.jade.app.engine.task.entity.EvalTaskStatusEnum.PUBLISHED;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
+import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
+import com.huawei.jade.app.engine.task.po.EvalTaskPo;
+
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.MybatisTest;
 import modelengine.fitframework.test.annotation.Sql;
 import modelengine.fitframework.test.domain.db.DatabaseModel;
 import modelengine.fitframework.util.StringUtils;
-import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
-import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
-import com.huawei.jade.app.engine.task.po.EvalTaskPo;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

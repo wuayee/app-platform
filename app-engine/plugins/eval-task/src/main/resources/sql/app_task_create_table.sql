@@ -24,6 +24,26 @@ comment on column t_app_engine_eval_task.updated_by is '评估任务最近更新
 comment on column t_app_engine_eval_task.app_id is '应用 ID';
 comment on column t_app_engine_eval_task.workflow_id is '工作流 ID';
 
+create table if not exists t_app_engine_eval_report
+(
+    "id"               bigserial primary key not null,
+    "node_name"        varchar(64)           not null,
+    "algorithm_schema" text                  not null,
+    "pass_score"       real                  not null,
+    "average_score"    real                  not null,
+    "histogram"        varchar(512)          not null,
+    "instance_id"      bigint                not null
+);
+
+comment on table t_app_engine_eval_report is '评估报告表';
+comment on column t_app_engine_eval_report.id is '主键';
+comment on column t_app_engine_eval_report.node_name is '评估节点命名';
+comment on column t_app_engine_eval_report.algorithm_schema is '评估算法格式规范';
+comment on column t_app_engine_eval_report.pass_score is '评估报告算法及格分';
+comment on column t_app_engine_eval_report.average_score is '评估报告算法平均得分';
+comment on column t_app_engine_eval_report.histogram is '评估报告直方图';
+comment on column t_app_engine_eval_report.instance_id is '评估任务实例 ID';
+
 create table if not exists t_app_engine_eval_task_case
 (
     "id"          bigserial primary key not null,

@@ -4,9 +4,8 @@
 
 package com.huawei.jade.app.engine.task.entity;
 
-import modelengine.fitframework.annotation.Property;
-
 import lombok.Data;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 表示评估任务单用例执行结果传输对象。
