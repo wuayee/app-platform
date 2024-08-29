@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { getUser } from '../helper';
 import { useTranslation } from 'react-i18next';
+import { setTestStatus } from "@/store/flowTest/flowTest";
 
 const AippIndex = () => {
   const { t } = useTranslation();
@@ -64,6 +65,7 @@ const AippIndex = () => {
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
       if (res.code === 0) {
+        dispatch(setTestStatus(null));
         Message({ type: 'success', content: t('saveConfigSuccess') });
         getAippDetails();
         if (inspirationRefresh.current) {

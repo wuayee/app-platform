@@ -18,6 +18,39 @@ const LLM = (props) => {
     })
   }
 
+  // 温度输入框formatter
+  const formatter = (newValue) => {
+    const value = parseFloat(newValue);
+    if (value === 0.0) {
+      return 0;
+    }
+    if (value >= 1) {
+      return 1;
+    }
+    return value;
+  }
+
+  // 温度输入框失焦回调
+  const handleTemperBlur = (e) => {
+    if (e.target.value === '') {
+      return;
+    }
+    let originValue = parseFloat(e.target.value);
+    if (isNaN(originValue)) {
+      originValue = 0;
+    }
+    let changeValue;
+    if (originValue <= 0.0) {
+      changeValue = 0;
+    } else if (originValue >= 1.0) {
+      changeValue = 1;
+    } else {
+      // 保留一位小数
+      changeValue = Math.round(originValue * 10) / 10;
+    }
+    setTimeout(() => updateData(changeValue, 'temperature'), 100);
+  }
+
   useEffect(() => {
     handleGetModels(true);
   }, [])
@@ -38,7 +71,6 @@ const LLM = (props) => {
                   className={'no-right-radius full-border'}
                   placeholder={t('selectLlm')}
                   style={{ width: '300px' }}
-                  allowClear
                   options={models}
                   onDropdownVisibleChange={(open) => handleGetModels(open)}
                   onChange={(value) => { updateData(value, 'model') }}
@@ -67,14 +99,11 @@ const LLM = (props) => {
                   max={1}
                   controls={true}
                   keyboard={true}
-                  onChange={(value) => { updateData(value, 'temperature') }}
+                  precision={1}
+                  onBlur={(e) => { handleTemperBlur(e); }}
                   step={0.1}
-                  formatter={(value) => {
-                    if (value === 0.0) {
-                      return 0;
-                    }
-                    return value;
-                  }}
+                  type="number"
+                  formatter={formatter}
                 />
               </Form.Item>
             </div>

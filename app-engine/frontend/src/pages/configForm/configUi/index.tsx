@@ -103,6 +103,7 @@ function ConfigUI(props) {
             onChange: onValueChange
           }
         }}
+        i18n={t}
       />,
       style: panelStyle,
     },
