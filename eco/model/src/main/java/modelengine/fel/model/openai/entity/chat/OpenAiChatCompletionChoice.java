@@ -11,6 +11,7 @@ import modelengine.fitframework.annotation.Aliases;
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import lombok.Data;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 模型响应中的回答选择，每个选择中包含一条消息。
@@ -26,5 +27,6 @@ public class OpenAiChatCompletionChoice {
      */
     @Aliases(@Alias("delta"))
     @JsonAlias("delta")
+    @Property(name = "delta")
     private OpenAiChatMessage message;
 }

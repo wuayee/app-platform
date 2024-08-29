@@ -164,7 +164,7 @@ public class LLMUtils {
     public static String askModelForSummary(OpenAiClient openAiClient, String prompt, LlmModelNameEnum model,
             int maxTokens) throws IOException {
         log.info("askModelForSummary with prompt: {}", prompt);
-        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER.name()).content(prompt).build();
+        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER.getValue()).content(prompt).build();
         OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
                 .model(model.getValue())
                 .messages(Collections.singletonList(msg))

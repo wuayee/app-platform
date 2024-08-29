@@ -66,7 +66,7 @@ public class OpenAiChatMessage {
      */
     @ConstructorProperties({"role", "content", "tool_calls"})
     public OpenAiChatMessage(Role role, String content, List<OpenAiToolCall> toolCalls) {
-        this.role = role.name();
+        this.role = role.getValue();
         this.content = content;
         this.toolCalls = ObjectUtils.getIfNull(toolCalls, Collections::emptyList);
     }

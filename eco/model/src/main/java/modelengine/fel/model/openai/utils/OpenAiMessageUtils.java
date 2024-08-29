@@ -95,7 +95,7 @@ public class OpenAiMessageUtils {
             toolCallId = inputMessage.getId();
         }
         Object content = getMessageContent(inputMessage);
-        return OpenAiChatMessage.builder().role(Role.generateRole(inputMessage.type()).name())
+        return OpenAiChatMessage.builder().role(Role.generateRole(inputMessage.type()).getValue())
                 .content(content)
                 .toolCallId(toolCallId)
                 .toolCalls(toolCalls)
