@@ -190,6 +190,7 @@ const ToolDrawer = (props) => {
             </Button>
           </div>
         }
+        className='tool-modal'
       >
         <div className='tool-modal-search'>
           <Search

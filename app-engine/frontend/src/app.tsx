@@ -11,6 +11,7 @@ import '__styles/common.scss';
 import '__styles/content.scss';
 import '__styles/workSpace.scss';
 import '__styles/global.scss';
+import '__styles/antStyle.scss';
 import {getCookie, setCookie} from "./shared/utils/common";
 
 localStorage.getItem('currentUser') || localStorage.setItem('currentUser', '');

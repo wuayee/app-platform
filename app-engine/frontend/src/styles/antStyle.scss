@@ -1,0 +1,15 @@
+.ant-collapse-borderless {
+  background-color: #fff;
+}
+.ant-btn {
+  border-radius: 4px;
+}
+.ant-modal-content {
+  border-radius: 4px;
+}
+.ant-input-group-addon {
+  border-radius: 20px;
+}
+.ant-input-search > .ant-input-group > .ant-input-group-addon:last-child .ant-input-search-button {
+  border-radius: 0px 20px 20px 0px;
+}

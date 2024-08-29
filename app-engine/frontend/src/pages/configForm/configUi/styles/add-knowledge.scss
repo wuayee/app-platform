@@ -33,6 +33,9 @@
         margin: 0;
       }
     }
+    .ant-btn {
+      border-radius: 23px;
+    }
   }
   .knowledge-check-info {
     margin: 20px 0;
@@ -168,6 +171,7 @@
   .tool-modal-search {
     >button {
       margin: 0 5px;
+      border-radius: 23px;
     }
   }
 }

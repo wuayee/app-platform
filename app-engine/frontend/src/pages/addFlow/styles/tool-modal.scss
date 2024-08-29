@@ -181,3 +181,14 @@
     }
   }
 }
+.tool-modal{
+  .ant-pagination {
+    .ant-pagination-item{
+      border: none;
+    }
+    .ant-pagination-prev .ant-pagination-item-link, .ant-pagination-next .ant-pagination-item-link {
+      margin: 0;
+      border: none;
+    }
+  }
+}
