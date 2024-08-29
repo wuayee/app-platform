@@ -112,19 +112,14 @@ public class ConditionsNode<I> extends Node<I, I> {
                     .filter(context -> Publisher.isSystemContext(context.getSession()))
                     .peek(systemContexts::add)
                     .forEach(context -> {
-                        try {
-                            String sessionId = getSessionId(context);
-                            if (sessionId == null) {
-                                return;
-                            }
-                            Optional.ofNullable(this.sessionSubscription.remove(sessionId)).ifPresent(subscriptions -> {
-                                subscriptions.forEach((id, subscription) -> {
-                                    subscription.cache(Collections.singletonList(context));
-                                });
-                            });
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        String sessionId = getSessionId(context);
+                        if (sessionId == null) {
+                            return;
                         }
+                        Optional.ofNullable(this.sessionSubscription.remove(sessionId))
+                                .ifPresent(subscriptions ->
+                                        subscriptions.forEach((id, subscription) ->
+                                                subscription.cache(Collections.singletonList(context))));
                     });
             contexts.removeAll(systemContexts);
         }

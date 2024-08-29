@@ -196,28 +196,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             int cnt = node.increaseDataStartCount(input.getSession().getId());
             DataStart<O, O, ?> start = processor.process(input);
             FlowDebug.log(input.getSession(), this.getId() + ". afterIncrease: " + cnt + ". data:" + input.getData());
-            start.system(data -> {
-                FlowSession newSession = new FlowSession(data.getSession());
-                // DataStart流程中的SessionInfo与主流程隔离
-                data.getSession().setInnerState(FlowSession.SESSION_INFO, new FlowSession.SessionInfo());
-                FlowDebug.log(newSession, this.getId() + ". data submit. " + data.getData());
-                FlowExecutors.submit(null, newSession.getId(), () -> {
-                    FlowDebug.log(newSession, this.getId() + ". data start. " + data.getData());
-                    if (!Publisher.isSystemContext(newSession)) {
-                        node.offer(data.getData(), newSession);
-                        return;
-                    }
-                    if (!this.isBoundedError(newSession)) {
-                        int afterDecrease = node.decreaseDataStartCount(newSession.getId());
-                        FlowDebug.log(newSession, this.getId() + ". afterDecrease: " + afterDecrease);
-                        if (afterDecrease == -1) {
-                            node.clearDataStartCount(newSession.getId());
-                            newSession.setInnerState(Publisher.IS_SESSION_COMPLETE, true);
-                        }
-                    }
-                    node.offer(data.getData(), newSession);
-                });
-            }).offer();
+            start.system(data -> this.offerToOrigin(data, node)).offer();
             return null;
         };
         Node<I, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);
@@ -225,6 +204,29 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         processRef.set(node);
         this.subscribe(node, whether);
         return node.displayAs("flat map");
+    }
+
+    private <O> void offerToOrigin(FlowContext<O> data, Node<I, O> node) {
+        FlowSession newSession = new FlowSession(data.getSession());
+        // DataStart流程中的SessionInfo与主流程隔离
+        data.getSession().setInnerState(FlowSession.SESSION_INFO, new FlowSession.SessionInfo());
+        FlowDebug.log(newSession, this.getId() + ". data submit. " + data.getData());
+        FlowExecutors.submit(null, newSession.getId(), () -> {
+            FlowDebug.log(newSession, this.getId() + ". data start. " + data.getData());
+            if (!Publisher.isSystemContext(newSession)) {
+                node.offer(data.getData(), newSession);
+                return;
+            }
+            if (!this.isBoundedError(newSession)) {
+                int afterDecrease = node.decreaseDataStartCount(newSession.getId());
+                FlowDebug.log(newSession, this.getId() + ". afterDecrease: " + afterDecrease);
+                if (afterDecrease == -1) {
+                    node.clearDataStartCount(newSession.getId());
+                    newSession.setInnerState(Publisher.IS_SESSION_COMPLETE, true);
+                }
+            }
+            node.offer(data.getData(), newSession);
+        });
     }
 
     private boolean isBoundedError(FlowSession session) {

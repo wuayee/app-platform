@@ -19,6 +19,7 @@ import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.flowable.Publisher;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +50,7 @@ class FitBoundedEmitterTest {
         /**
          * 通过数据发布者和有限流数据构造器初始化 {@link TestEmitter}{@code <}{@link O}{@code , }{@link D}{@code >}。
          *
+         * @param flowSession 表示数据归属的 {@link FlowSession}{@code <}{@link O}{@code >}。
          * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
          * @param builder 表示有限流数据构造器的 {@link Function}{@code <}{@link O}{@code ,
          * }{@link D}{@code >}。
@@ -101,8 +103,9 @@ class FitBoundedEmitterTest {
         FlowSession flowSession = new FlowSession(session);
         flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
         flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID, UUIDUtil.uuid());
-        flow.offer((Integer) null, flowSession);
+        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID,
+                UUIDUtil.uuid());
+        flow.offer(ObjectUtils.<Integer>cast(null), flowSession);
         waitUntil(end::get, 1000);
         assertEquals(3, result.size());
         assertTrue(end.get());
@@ -136,8 +139,9 @@ class FitBoundedEmitterTest {
         FlowSession flowSession = new FlowSession(session);
         flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
         flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID, UUIDUtil.uuid());
-        flow.offer((Integer) null, flowSession);
+        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID,
+                UUIDUtil.uuid());
+        flow.offer(ObjectUtils.<Integer>cast(null), flowSession);
         waitUntil(end::get, 10000);
         assertTrue(end.get());
         assertEquals(1, result.size());
@@ -153,7 +157,7 @@ class FitBoundedEmitterTest {
                 .id("redo")
                 .flatMap(input -> {
                     Choir<Integer> publisher = Choir.create(emitter -> {
-                        IntStream.range(0, input).map(i -> i + input * 10).peek(i-> FlowDebug.log("i:" + i)).forEach(emitter::emit);
+                        IntStream.range(0, input).map(i -> i + input * 10).forEach(emitter::emit);
                         emitter.complete();
                     });
                     TestBoundedEmitterDataBuilder<Integer> builder = new TestBoundedEmitterDataBuilder<>();
@@ -162,27 +166,20 @@ class FitBoundedEmitterTest {
                     return Flows.source(emitter);
                 })
                 .conditions()
-                .matchTo(i -> i.getData() < 15, node -> node.reduce(() -> 0, (acc, i) -> {
-                    FlowDebug.log("reduce: " + acc);
-                    return acc + i.getData();
-                }).map(i -> 2).to("redo"))
+                .matchTo(i -> i.getData() < 15,
+                        node -> node.reduce(() -> 0, (acc, i) -> acc + i.getData()).map(i -> 2).to("redo"))
                 .others(i -> i)
-                .reduce(() -> 0, (acc, i) -> {
-                    return acc + i.getData();
-                })
+                .reduce(() -> 0, (acc, i) -> acc + i.getData())
                 .close((sessionId, data) -> {
                     result.add(data);
-                }, sessionId -> {
-                    FlowDebug.log("complete!");
-                    end.set(true);
-                }, (sessionId, error) -> {});
-        FlowDebug.log("session:" + session.getId());
+                }, sessionId -> end.set(true), (sessionId, error) -> {});
         flow.offer(0, session);
         FlowSession flowSession = new FlowSession(session);
         flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
         flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID, UUIDUtil.uuid());
-        flow.offer((Integer) null, flowSession);
+        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID,
+                UUIDUtil.uuid());
+        flow.offer(ObjectUtils.<Integer>cast(null), flowSession);
         waitUntil(end::get, 10000);
         assertTrue(end.get());
         assertEquals(1, result.size());

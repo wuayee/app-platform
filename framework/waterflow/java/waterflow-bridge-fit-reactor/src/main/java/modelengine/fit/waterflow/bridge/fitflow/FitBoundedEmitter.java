@@ -113,7 +113,8 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
     }
 
     @Override
-    public void start(FlowSession session) {}
+    public void start(FlowSession session) {
+    }
 
     /**
      * 订阅FIT响应式数据流的数据发射器
