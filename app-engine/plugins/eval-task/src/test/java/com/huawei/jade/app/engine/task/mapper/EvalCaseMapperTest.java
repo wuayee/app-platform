@@ -7,6 +7,7 @@ package com.huawei.jade.app.engine.task.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.jade.app.engine.task.po.EvalCasePo;
+
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.MybatisTest;
 import modelengine.fitframework.test.annotation.Sql;

@@ -4,10 +4,9 @@
 
 package com.huawei.jade.app.engine.task.dto;
 
+import lombok.Data;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.validation.constraints.Range;
-
-import lombok.Data;
 
 /**
  * 表示评估任务实例创建传输对象。

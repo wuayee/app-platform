@@ -4,7 +4,6 @@
 
 package com.huawei.jade.app.engine.task.service.impl;
 
-import modelengine.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.task.convertor.EvalTaskConvertor;
 import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
 import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
@@ -12,6 +11,8 @@ import com.huawei.jade.app.engine.task.mapper.EvalTaskMapper;
 import com.huawei.jade.app.engine.task.po.EvalTaskPo;
 import com.huawei.jade.app.engine.task.service.EvalTaskService;
 import com.huawei.jade.common.vo.PageVo;
+
+import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
 

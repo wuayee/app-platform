@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.task.mapper.EvalReportMapper">
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_report (node_name, pass_score, algorithm_schema, average_score, histogram, instance_id) VALUES
+            (#{nodeName}, #{passScore}, #{algorithmSchema}, #{averageScore}, #{histogram}, #{instanceId})
+    </insert>
+</mapper>

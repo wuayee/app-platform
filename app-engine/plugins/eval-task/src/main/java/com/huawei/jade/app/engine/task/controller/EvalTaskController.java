@@ -4,6 +4,13 @@
 
 package com.huawei.jade.app.engine.task.controller;
 
+import com.huawei.jade.app.engine.task.convertor.EvalTaskConvertor;
+import com.huawei.jade.app.engine.task.dto.EvalTaskCreateDto;
+import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
+import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
+import com.huawei.jade.app.engine.task.service.EvalTaskService;
+import com.huawei.jade.common.vo.PageVo;
+
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PostMapping;
 import modelengine.fit.http.annotation.RequestBean;
@@ -11,12 +18,6 @@ import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.validation.Validated;
-import com.huawei.jade.app.engine.task.convertor.EvalTaskConvertor;
-import com.huawei.jade.app.engine.task.dto.EvalTaskCreateDto;
-import com.huawei.jade.app.engine.task.dto.EvalTaskQueryParam;
-import com.huawei.jade.app.engine.task.entity.EvalTaskEntity;
-import com.huawei.jade.app.engine.task.service.EvalTaskService;
-import com.huawei.jade.common.vo.PageVo;
 
 /**
  * 表示评估任务管理接口集。
