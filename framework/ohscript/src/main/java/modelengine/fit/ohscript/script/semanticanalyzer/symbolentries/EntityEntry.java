@@ -6,8 +6,8 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.symbolentries;
 
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
+import modelengine.fit.ohscript.script.parser.nodes.entity.EntityDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.Category;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.EntityTypeExpr;
 import modelengine.fitframework.util.ObjectUtils;

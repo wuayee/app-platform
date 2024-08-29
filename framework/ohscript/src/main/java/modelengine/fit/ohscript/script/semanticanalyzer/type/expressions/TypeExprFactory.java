@@ -6,12 +6,12 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.type.expressions;
 
+import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.entity.EntityDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.entity.EntityExtensionNode;
 import modelengine.fit.ohscript.script.parser.nodes.function.FunctionCallNode;
 import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.map.MapDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.tuple.TupleDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.abstracts.GenericFunctionTypeExpr;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.abstracts.GenericTypeExpr;

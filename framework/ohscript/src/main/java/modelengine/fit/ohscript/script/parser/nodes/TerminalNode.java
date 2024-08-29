@@ -37,6 +37,7 @@ import java.util.Objects;
  */
 public class TerminalNode extends SyntaxNode implements Serializable {
     private static final long serialVersionUID = 2942191759739959915L;
+
     private static final String MEMBER_FLAG = ".";
 
     /**

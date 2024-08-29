@@ -1121,14 +1121,11 @@ class InterpreterTest {
         String code = "let businessData = ext::util.stringToJson(ext::userData.get(\"businessData\"));  "
                 + "let passData = ext::util.stringToJson(ext::userData.get(\"passData\")); "
                 + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
-                + ".get(\"needTime\") == false) "
-                + "&& "
+                + ".get(\"needTime\") == false) " + "&& "
                 + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
-                + ".get(\"needProduct\") == false) "
-                + "&& "
+                + ".get(\"needProduct\") == false) " + "&& "
                 + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
-                + ".get(\"needIndicator\") == false) "
-                + "&& "
+                + ".get(\"needIndicator\") == false) " + "&& "
                 + "(businessData.get(\"_internal\").get(\"outputScope\").get(\"jadea0rbki\").get(\"output\")"
                 + ".get(\"groupBy\") == null)";
         AST ast = newParserBuilder.parseString("", code);

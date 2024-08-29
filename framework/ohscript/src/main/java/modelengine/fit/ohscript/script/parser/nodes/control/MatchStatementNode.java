@@ -15,7 +15,6 @@ import modelengine.fit.ohscript.script.parser.nodes.LetStatementNode;
 import modelengine.fit.ohscript.script.parser.nodes.NonTerminalNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.IfNode;
 import modelengine.fit.ohscript.util.Pair;
 import modelengine.fit.ohscript.util.Tool;
 

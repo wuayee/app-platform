@@ -8,9 +8,9 @@ package modelengine.fit.ohscript.script.parser.nodes.array;
 
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
-import modelengine.fit.ohscript.script.parser.nodes.map.MapDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.NonTerminalNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
+import modelengine.fit.ohscript.script.parser.nodes.map.MapDeclareNode;
 
 /**
  * 数组或者Map的声明节点

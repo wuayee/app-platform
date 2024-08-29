@@ -53,8 +53,7 @@ public class PredictTable {
         Map<Grammar, Production> productions = table.get(terminal);
         String lineSeparator = System.lineSeparator();
         if (productions == null) {
-            Tool.grammarError(
-                    "`" + terminal.text() + "` is not found in predict table" + lineSeparator + line);
+            Tool.grammarError("`" + terminal.text() + "` is not found in predict table" + lineSeparator + line);
         }
         Production production = productions.get(grammar);
         if (production == null) {
@@ -64,8 +63,8 @@ public class PredictTable {
             }
             Tool.grammarError("token: " + terminal.name() + ":" + token.lexeme()
                     + " doesn't match any ohScript grammar definition at line: " + token.line() + ", position from "
-                    + token.start() + " to " + token.end() + lineSeparator + line
-                    + lineSeparator + " the possible productions should be matched would be:" + sb);
+                    + token.start() + " to " + token.end() + lineSeparator + line + lineSeparator
+                    + " the possible productions should be matched would be:" + sb);
         }
         return production;
     }

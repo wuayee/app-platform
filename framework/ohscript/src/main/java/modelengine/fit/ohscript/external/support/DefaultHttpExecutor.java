@@ -78,8 +78,8 @@ public class DefaultHttpExecutor implements HttpExecutor {
         if (!args.containsKey(REQUEST_HEADERS)) {
             return;
         }
-        Map<String, ReturnValue> headerValues =
-                getIfNull(cast(args.get(REQUEST_HEADERS).value()), Collections::emptyMap);
+        Map<String, ReturnValue> headerValues = getIfNull(cast(args.get(REQUEST_HEADERS).value()),
+                Collections::emptyMap);
         for (Map.Entry<String, ReturnValue> entry : headerValues.entrySet()) {
             request.headers().add(ValueUtils.getActualKey(entry.getKey()), String.valueOf(entry.getValue().value()));
         }
@@ -89,8 +89,8 @@ public class DefaultHttpExecutor implements HttpExecutor {
         if (!args.containsKey(REQUEST_ENTITY)) {
             return;
         }
-        Map<String, ReturnValue> entityValues =
-                getIfNull(cast(args.get(REQUEST_ENTITY).value()), Collections::emptyMap);
+        Map<String, ReturnValue> entityValues = getIfNull(cast(args.get(REQUEST_ENTITY).value()),
+                Collections::emptyMap);
         if (!entityValues.containsKey(REQUEST_ENTITY_DATA)) {
             return;
         }
@@ -136,8 +136,8 @@ public class DefaultHttpExecutor implements HttpExecutor {
                 TextEntity textEntity = cast(entity);
                 result.put(RESPONSE_ENTITY, textEntity.content());
             } else {
-                String message =
-                        StringUtils.format("Not supported content type. [contentType={0}]", entity.resolvedMimeType());
+                String message = StringUtils.format("Not supported content type. [contentType={0}]",
+                        entity.resolvedMimeType());
                 throw new ScriptExecutionException(message);
             }
         });
