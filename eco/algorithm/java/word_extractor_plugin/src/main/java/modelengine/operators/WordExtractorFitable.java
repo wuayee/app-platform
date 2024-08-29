@@ -6,15 +6,14 @@
 
 package modelengine.operators;
 
+import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 import modelengine.fit.waterflow.spi.WaterflowTaskHandler;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.exception.FitException;
 import modelengine.fitframework.log.Logger;
-
-import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
-import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
-import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.PicturesManager;
