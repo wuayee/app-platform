@@ -2,10 +2,12 @@ import React from 'react';
 import { CheckCircleFilled, CloseCircleFilled, LoadingOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import './styles/test-status.scss';
+import { useAppSelector } from "@/store/hook";
 
 const TestStatus = (props) => {
   const { t } = useTranslation();
-  const { testStatus, testTime } = props;
+  const testTime = useAppSelector((state) => state.flowTestStore.testTime);
+  const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
   return <>
     { testStatus && <span className={[
       'header-time',
