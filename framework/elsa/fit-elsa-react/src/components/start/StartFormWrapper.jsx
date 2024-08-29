@@ -12,7 +12,7 @@ import {Trans, useTranslation} from "react-i18next";
 const {Panel} = Collapse;
 
 StartFormWrapper.propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     shapeStatus: PropTypes.object
 };
 
