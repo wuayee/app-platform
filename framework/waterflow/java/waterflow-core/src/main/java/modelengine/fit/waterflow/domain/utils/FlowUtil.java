@@ -59,7 +59,7 @@ public final class FlowUtil {
      * @return 替换后的值
      */
     public static Object replace(String variable, Map<String, Object> valueMap) {
-        LOG.info("[FlowUtil] replace variables for variable: [{}], value map: [{}]", variable, valueMap);
+        LOG.debug("[FlowUtil] replace variables for variable: [{}]", variable);
         if (StringUtils.isEmpty(variable)) {
             return variable;
         }
@@ -81,7 +81,7 @@ public final class FlowUtil {
      * @return 格式化后的条件规则
      */
     public static String formatConditionRule(String conditionRule) {
-        LOG.info("[FlowUtil] format condition rule: [{}]", conditionRule);
+        LOG.debug("[FlowUtil] format condition rule: [{}]", conditionRule);
         if (StringUtils.isEmpty(conditionRule)) {
             return conditionRule;
         }
