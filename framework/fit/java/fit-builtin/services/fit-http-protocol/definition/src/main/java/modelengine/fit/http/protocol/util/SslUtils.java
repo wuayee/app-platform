@@ -82,10 +82,7 @@ public class SslUtils {
             boolean isSecureRandomEnabled, String secureProtocol)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance(secureProtocol);
-        long seed = System.currentTimeMillis();
-        SecureRandom secureRandom = isSecureRandomEnabled
-                ? SecureRandom.getInstanceStrong()
-                : new SecureRandom(Long.toString(seed).getBytes());
+        SecureRandom secureRandom = isSecureRandomEnabled ? SecureRandom.getInstanceStrong() : new SecureRandom();
         sslContext.init(keyManagers, trustManagers, secureRandom);
         return sslContext;
     }
