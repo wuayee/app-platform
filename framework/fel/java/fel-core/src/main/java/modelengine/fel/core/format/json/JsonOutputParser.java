@@ -29,7 +29,7 @@ public interface JsonOutputParser<O> extends OutputParser<O> {
      * @return 表示默认 json 解析器的 {@link OutputParser}。
      */
     static <E> OutputParser<E> create(ObjectSerializer serializer, Type type) {
-        OutputParser<E> outputParser = new DefaultJsonOutputParser<>(serializer, type, null);
+        OutputParser<E> outputParser = new BeanJsonOutputParser<>(serializer, type, null);
         return new MarkdownCompatibleParser<>(outputParser, "json");
     }
 
@@ -43,7 +43,7 @@ public interface JsonOutputParser<O> extends OutputParser<O> {
      */
     static <E> OutputParser<E> createPartial(ObjectSerializer serializer, Type type) {
         OutputParser<E> outputParser =
-                new PartialJsonOutputParser<>(new DefaultJsonOutputParser<>(serializer, type, null));
+                new PartialJsonOutputParser<>(new BeanJsonOutputParser<>(serializer, type, null));
         return new MarkdownCompatibleParser<>(outputParser, "json");
     }
 }

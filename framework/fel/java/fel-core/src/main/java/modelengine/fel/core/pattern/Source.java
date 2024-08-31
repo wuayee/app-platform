@@ -11,7 +11,7 @@ import modelengine.fel.core.document.Document;
 import java.util.List;
 
 /**
- * 表示数据源的实体。
+ * 表示数据源的实体，用于加载文档。
  *
  * @param <I> 表示输入参数的泛型。
  * @author 易文渊

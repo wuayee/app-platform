@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.engine.operators;
 
@@ -19,6 +21,7 @@ import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.flows.Conversation;
+import modelengine.fel.engine.operators.models.ChatFlowModel;
 import modelengine.fel.engine.operators.patterns.AbstractAgent;
 import modelengine.fel.engine.operators.prompts.Prompts;
 import modelengine.fitframework.flowable.Choir;
@@ -71,7 +74,9 @@ public class AgentTest {
         }
 
         private AbstractAgent getStreamAgent(ChatModel model) {
-            return new AbstractAgent(model, ChatOption.custom().model("model").stream(true).temperature(0.8).build()) {
+            ChatFlowModel chatFlowModel =
+                    new ChatFlowModel(model, ChatOption.custom().model("model").stream(true).temperature(0.8).build());
+            return new AbstractAgent(chatFlowModel) {
                 @Override
                 protected Prompt doToolCall(List<ToolCall> toolCall) {
                     if (CollectionUtils.isEmpty(toolCall)) {

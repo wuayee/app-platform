@@ -41,7 +41,7 @@ public @interface ToolMethod {
      *
      * @return 表示工具方法的描述信息的 {@link String}。
      */
-    String description() default StringUtils.EMPTY;
+    String description();
 
     /**
      * 获取工具方法的额外参数名。

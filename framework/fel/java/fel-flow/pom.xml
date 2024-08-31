@@ -32,6 +32,10 @@
             <groupId>modelengine.fit.jade.fel</groupId>
             <artifactId>fel-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.fel.service</groupId>
+            <artifactId>tool-service</artifactId>
+        </dependency>
 
         <!-- WaterFlow -->
         <dependency>

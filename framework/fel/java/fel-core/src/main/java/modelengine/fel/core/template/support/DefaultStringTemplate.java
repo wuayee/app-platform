@@ -56,9 +56,9 @@ public class DefaultStringTemplate implements StringTemplate {
      *
      * @param key 表示占位符的 {@link String}。
      * @param value 表示静态值的 {@link String}。
-     * @return 返回表示当前实例的 {@link StringTemplate}。
+     * @return 返回表示当前实例的 {@link DefaultStringTemplate}。
      */
-    public StringTemplate partial(String key, String value) {
+    public DefaultStringTemplate partial(String key, String value) {
         Validation.notBlank(value, "The input value cannot be blank");
         return this.partial(key, () -> value);
     }
@@ -68,9 +68,9 @@ public class DefaultStringTemplate implements StringTemplate {
      *
      * @param key 表示占位符的 {@link String}。
      * @param supplier 表示提供参数的 {@link Supplier}{@code <}{@link String}{@code >}。
-     * @return 返回表示当前实例的 {@link StringTemplate}。
+     * @return 返回表示当前实例的 {@link DefaultStringTemplate}。
      */
-    public StringTemplate partial(String key, Supplier<String> supplier) {
+    public DefaultStringTemplate partial(String key, Supplier<String> supplier) {
         Validation.isTrue(this.placeholder.contains(key), "The template not contained '{0}'", key);
         this.placeholder.remove(key);
         this.builtin.put(key, supplier);

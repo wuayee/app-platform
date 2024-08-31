@@ -42,6 +42,9 @@ public class ChatMessages implements Prompt {
      * @return 表示创建成功的 {@link ChatMessages}。
      */
     public static ChatMessages from(Prompt prompt) {
+        if (prompt == null) {
+            return new ChatMessages();
+        }
         if (prompt instanceof ChatMessages) {
             return cast(prompt);
         }

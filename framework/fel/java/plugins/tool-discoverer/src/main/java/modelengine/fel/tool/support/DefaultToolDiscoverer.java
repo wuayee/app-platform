@@ -15,7 +15,6 @@ import modelengine.fel.tool.service.ToolRepository;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.plugin.Plugin;
-import modelengine.fitframework.plugin.PluginCategory;
 import modelengine.fitframework.plugin.PluginStartedObserver;
 import modelengine.fitframework.plugin.PluginStoppingObserver;
 import modelengine.fitframework.resource.Resource;
@@ -61,24 +60,14 @@ public class DefaultToolDiscoverer implements PluginStartedObserver, PluginStopp
 
     @Override
     public void onPluginStarted(Plugin plugin) {
-        if (shouldSkipPlugin(plugin)) {
-            return;
-        }
         this.scanTools(plugin).forEach(this.toolRepository::addTool);
     }
 
     @Override
     public void onPluginStopping(Plugin plugin) {
-        if (shouldSkipPlugin(plugin)) {
-            return;
-        }
         List<ToolEntity> toolEntities = this.scanTools(plugin);
         isTrue(toolEntities.size() < this.maxToolNum, "The tool num in plugin must less than {}", this.maxToolNum);
         toolEntities.forEach(tool -> this.toolRepository.deleteTool(tool.namespace(), tool.name()));
-    }
-
-    private static boolean shouldSkipPlugin(Plugin plugin) {
-        return plugin.metadata().category() != PluginCategory.USER;
     }
 
     private List<ToolEntity> scanTools(Plugin plugin) {
