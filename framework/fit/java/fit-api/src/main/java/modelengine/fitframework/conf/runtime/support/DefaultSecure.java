@@ -218,7 +218,7 @@ public class DefaultSecure implements Secure {
 
     @Override
     public boolean secureRandomEnabled() {
-        return this.secureRandomEnabled != null ? this.secureRandomEnabled : false;
+        return this.secureRandomEnabled != null ? this.secureRandomEnabled : true;
     }
 
     @Override
