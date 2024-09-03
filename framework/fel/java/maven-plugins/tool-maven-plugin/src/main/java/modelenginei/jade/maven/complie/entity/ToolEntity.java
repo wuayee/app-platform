@@ -38,7 +38,7 @@ public class ToolEntity {
     private String returnDescription;
     private String returnType;
     private String returnConvertor;
-    private Map<String, String> extensions;
+    private Map<String, Object> extensions;
 
     /**
      * 设置 Genericable Id 值。
@@ -133,9 +133,9 @@ public class ToolEntity {
     /**
      * 设置扩展属性。
      *
-     * @param extensions 表示扩展属性的 {@link Map}{@code <}{@link String}{@code ,}{@link String}{@code >}。
+     * @param extensions 表示扩展属性的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      */
-    public void setExtensions(Map<String, String> extensions) {
+    public void setExtensions(Map<String, Object> extensions) {
         this.extensions = extensions;
     }
 

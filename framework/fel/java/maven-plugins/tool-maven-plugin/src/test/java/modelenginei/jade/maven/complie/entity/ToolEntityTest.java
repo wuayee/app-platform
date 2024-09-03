@@ -38,7 +38,7 @@ class ToolEntityTest {
         toolEntity.setGenericableId("genericableId123");
         toolEntity.setReturnConvertor("");
         toolEntity.setExtraParameters(Collections.emptyList());
-        toolEntity.setExtensions(MapBuilder.<String, String>get().put("k1", "v1").put("k2", "v2").build());
+        toolEntity.setExtensions(MapBuilder.<String, Object>get().put("k1", "v1").put("k2", "v2").build());
 
         Map<String, Object> result = toolEntity.normalize();
         Map<String, Object> schema = ObjectUtils.cast(result.get("schema"));
