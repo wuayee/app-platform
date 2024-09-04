@@ -28,7 +28,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,6 +43,7 @@ import java.util.stream.Stream;
  */
 public class ToolPluginCompiler extends AbstractCompiler {
     private static final Logger log = Logger.get(ToolPluginCompiler.class);
+    private static final String TOOLS = "tools";
 
     ToolPluginCompiler(MavenProject project, Log log) {
         super(project, log, null);
@@ -87,8 +90,9 @@ public class ToolPluginCompiler extends AbstractCompiler {
             return;
         }
         File jsonFile = Paths.get(outputDirectory, ToolSchema.TOOL_MANIFEST).toFile();
-        JsonUtils.OBJECT_MAPPER.writeValue(jsonFile,
-                toolEntities.stream().map(ToolEntity::normalize).collect(Collectors.toList()));
+        Map<String, Object> toolMap = new HashMap<>();
+        toolMap.put(TOOLS, toolEntities.stream().map(ToolEntity::normalize).collect(Collectors.toList()));
+        JsonUtils.OBJECT_MAPPER.writeValue(jsonFile, toolMap);
         log.info("Write tool json successfully. [file={}]", jsonFile.getName());
     }
 }
