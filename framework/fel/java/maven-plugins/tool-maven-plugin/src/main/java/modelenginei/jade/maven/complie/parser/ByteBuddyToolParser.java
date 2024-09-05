@@ -42,8 +42,6 @@ import java.util.Optional;
  */
 public class ByteBuddyToolParser implements ToolParser {
     private static final String DOT = ".";
-    private static final String TAG = "tag";
-    private static final String TAGS = "tags";
 
     private final TypePool typePool;
     private final String rootPath;
@@ -158,18 +156,19 @@ public class ByteBuddyToolParser implements ToolParser {
         return Optional.empty();
     }
 
-    private Map<String, Object> parseAttributes(ToolMethod toolMethod) {
-        Map<String, Object> attributes = new HashMap<>();
-        List<String> tagList = new ArrayList<>();
+    private Map<String, List<String>> parseAttributes(ToolMethod toolMethod) {
+        Map<String, List<String>> attributes = new HashMap<>();
         for (Attribute attribute : toolMethod.extensions()) {
-            if (TAG.equals(attribute.key())) {
-                tagList.add(attribute.value());
+            String key = attribute.key();
+            String value = attribute.value();
+
+            if (attributes.containsKey(key)) {
+                attributes.get(key).add(value);
             } else {
-                attributes.put(attribute.key(), attribute.value());
+                List<String> values = new ArrayList<>();
+                values.add(value);
+                attributes.put(key, values);
             }
-        }
-        if (!tagList.isEmpty()) {
-            attributes.put(TAGS, tagList);
         }
         return attributes;
     }

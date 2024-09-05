@@ -22,8 +22,9 @@ public class WeatherServiceImpl implements WeatherService {
     @Fitable("default")
     @ToolMethod(namespace = "example", name = "get_current_temperature", description = "获取指定城市的当前温度",
             extensions = {
-                    @Attribute(key = "tag", value = "FIT"), @Attribute(key = "tag", value = "TEST"),
-                    @Attribute(key = "attribute", value = "nothing")
+                    @Attribute(key = "tags", value = "FIT"), @Attribute(key = "tags", value = "TEST"),
+                    @Attribute(key = "attribute", value = "nothing"),
+                    @Attribute(key = "attribute", value = "nothing two")
             })
     public String getCurrentTemperature(@Property(description = "城市名称", required = true) String location,
             @Property(description = "使用的温度单位，可选：Celsius，Fahrenheit", defaultValue = "Celsius") String unit) {
