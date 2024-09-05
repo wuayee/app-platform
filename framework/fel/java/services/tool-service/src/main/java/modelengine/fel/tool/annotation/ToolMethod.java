@@ -27,7 +27,7 @@ public @interface ToolMethod {
      *
      * @return 表示工具方法命名空间的 {@link String}。
      */
-    String namespace();
+    String namespace() default "Common";
 
     /**
      * 获取工具方法的名。

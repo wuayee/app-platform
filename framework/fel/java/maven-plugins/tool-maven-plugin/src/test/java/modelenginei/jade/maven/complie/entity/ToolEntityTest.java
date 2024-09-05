@@ -14,7 +14,9 @@ import modelengine.fitframework.util.ObjectUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,14 +40,18 @@ class ToolEntityTest {
         toolEntity.setGenericableId("genericableId123");
         toolEntity.setReturnConvertor("");
         toolEntity.setExtraParameters(Collections.emptyList());
-        toolEntity.setExtensions(MapBuilder.<String, String>get().put("k1", "v1").put("k2", "v2").build());
+        List<String> list1 = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        list1.add("v1");
+        list2.add("v2");
+        toolEntity.setExtensions(MapBuilder.<String, List<String>>get().put("k1", list1).put("k2", list2).build());
 
         Map<String, Object> result = toolEntity.normalize();
         Map<String, Object> schema = ObjectUtils.cast(result.get("schema"));
         assertEquals("testMethod", schema.get("name"));
         assertEquals("This is a test method.", schema.get("description"));
 
-        Map<String, Object> runnable = ObjectUtils.cast(result.get("runnable"));
+        Map<String, Object> runnable = ObjectUtils.cast(result.get("runnables"));
         Map<String, Object> fit = ObjectUtils.cast(runnable.get("FIT"));
         assertEquals("fitableId123", fit.get("fitableId"));
         assertEquals("genericableId123", fit.get("genericableId"));
@@ -56,7 +62,7 @@ class ToolEntityTest {
         assertEquals("string", returns.get("type"));
 
         Map<String, Object> extensions = ObjectUtils.cast(result.get("extensions"));
-        assertEquals("v1", extensions.get("k1"));
-        assertEquals("v2", extensions.get("k2"));
+        assertEquals(list1, extensions.get("k1"));
+        assertEquals(list2, extensions.get("k2"));
     }
 }

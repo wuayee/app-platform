@@ -27,11 +27,11 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 基于 {@link net.bytebuddy.ByteBuddy} 对于 {@link ToolMethod} 注解的工具解析器。
@@ -80,8 +80,9 @@ public class ByteBuddyToolParser implements ToolParser {
             tool.setNamespace(toolMethod.namespace());
             tool.setName(toolMethod.name());
             tool.setDescription(toolMethod.description());
-            tool.setReturnType(Validation.notNull(JacksonTypeParser.getParameterSchema(
-                    methodDescription.getReturnType()), "The return type cannot be null.").toString());
+            tool.setReturnType(
+                    Validation.notNull(JacksonTypeParser.getParameterSchema(methodDescription.getReturnType()),
+                            "The return type cannot be null.").toString());
             tool.setExtraParameters(Arrays.asList(toolMethod.extraParams()));
             tool.setReturnConvertor(toolMethod.returnConverter());
             tool.setExtensions(parseAttributes(toolMethod));
@@ -155,7 +156,20 @@ public class ByteBuddyToolParser implements ToolParser {
         return Optional.empty();
     }
 
-    private Map<String, String> parseAttributes(ToolMethod toolMethod) {
-        return Arrays.stream(toolMethod.extensions()).collect(Collectors.toMap(Attribute::key, Attribute::value));
+    private Map<String, List<String>> parseAttributes(ToolMethod toolMethod) {
+        Map<String, List<String>> attributes = new HashMap<>();
+        for (Attribute attribute : toolMethod.extensions()) {
+            String key = attribute.key();
+            String value = attribute.value();
+
+            if (attributes.containsKey(key)) {
+                attributes.get(key).add(value);
+            } else {
+                List<String> values = new ArrayList<>();
+                values.add(value);
+                attributes.put(key, values);
+            }
+        }
+        return attributes;
     }
 }

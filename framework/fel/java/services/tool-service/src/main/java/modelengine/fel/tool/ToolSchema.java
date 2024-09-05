@@ -26,7 +26,7 @@ public interface ToolSchema {
     /**
      * 表示工具的运行规范描述。
      */
-    String RUNNABLE = "runnable";
+    String RUNNABLE = "runnables";
 
     /**
      * 表示工具的扩展属性。
