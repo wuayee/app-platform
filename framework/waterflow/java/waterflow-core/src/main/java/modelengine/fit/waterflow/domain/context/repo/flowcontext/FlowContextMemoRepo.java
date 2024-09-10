@@ -15,7 +15,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
@@ -123,8 +122,8 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions,
-            Set<String> excludeTraceIds, Operators.Filter<T> filter, Operators.Validator<T> validator) {
-        List<FlowContext<T>> all = getFlowContexts(streamId, subscriptions, excludeTraceIds);
+            Operators.Filter<T> filter, Operators.Validator<T> validator) {
+        List<FlowContext<T>> all = requestContext(streamId, subscriptions);
         List<FlowContext<T>> flowContexts = filter.process(all);
         return flowContexts.stream()
                 .filter(context -> validator.check(context, flowContexts))
@@ -133,9 +132,8 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
-            Set<String> excludeTraceIds, Operators.Filter<T> filter) {
-        List<FlowContext<T>> all = getFlowContexts(streamId, subscriptions, excludeTraceIds);
-        return filter.process(all);
+            Operators.Filter<T> filter) {
+        return filter.process(requestContext(streamId, subscriptions));
     }
 
     @Override
@@ -147,13 +145,11 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
         save(contexts);
     }
 
-    private List<FlowContext<T>> getFlowContexts(String streamId, List<String> subscriptions,
-            Set<String> excludeTraceIds) {
+    private List<FlowContext<T>> requestContext(String streamId, List<String> subscriptions) {
         return this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> subscriptions.contains(context.getPosition()))
                 .filter(context -> context.getStatus() == FlowNodeStatus.PENDING)
-                .filter(context -> !context.getTraceId().stream().anyMatch(excludeTraceIds::contains))
                 .collect(Collectors.toList());
     }
 
