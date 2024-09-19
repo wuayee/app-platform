@@ -66,11 +66,9 @@ public abstract class BlockToken<T> extends IdGenerator {
     /**
      * 设置
      *
-     * @param publisher 需要中断的目标节点
      * @param data block的data
      */
-    public void setHost(Publisher<T> publisher, FlowContext<T> data) {
-        this.publisher = publisher;
+    public void setHost(FlowContext<T> data) {
         this.data.add(data);
     }
 
@@ -81,5 +79,14 @@ public abstract class BlockToken<T> extends IdGenerator {
      */
     public List<FlowContext<T>> data() {
         return this.data;
+    }
+
+    /**
+     * 设置publisher
+     *
+     * @param publisher publisher
+     */
+    public void setPublisher(Publisher<T> publisher) {
+        this.publisher = publisher;
     }
 }
