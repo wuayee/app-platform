@@ -12,6 +12,7 @@ import modelengine.fit.waterflow.domain.utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,11 @@ public abstract class BlockToken<T> extends IdGenerator {
                         .batchId(context.getBatchId()))
                 .collect(Collectors.toList());
         this.publisher.getFlowContextRepo().save(cloned);
-        this.publisher.offer(cloned);
+        cloned.stream()
+                .collect(Collectors.groupingBy(item -> item.getSession().getId(), LinkedHashMap::new,
+                        Collectors.toList()))
+                .values()
+                .forEach(this.publisher::offer);
     }
 
     /**
