@@ -9,6 +9,7 @@ package modelengine.fit.waterflow.domain.flow;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.states.Activity;
+import modelengine.fit.waterflow.domain.states.Start;
 import modelengine.fit.waterflow.domain.states.State;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
@@ -95,7 +96,12 @@ public abstract class Flow<D> extends IdGenerator {
      * @param publisher 外部数据源
      */
     public void offer(String id, Emitter publisher) {
-        ObjectUtils.<State>cast(this.tagNodes.get(id)).offer(publisher);
+        Activity baseNode = this.tagNodes.get(id);
+        if (baseNode instanceof State) {
+            ObjectUtils.<State>cast(baseNode).offer(publisher);
+            return;
+        }
+        ObjectUtils.<Start>cast(baseNode).offer(publisher);
     }
 
     /**

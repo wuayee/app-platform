@@ -9,6 +9,8 @@ package modelengine.fit.waterflow.domain.states;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.WindowToken;
+import modelengine.fit.waterflow.domain.emitters.Emitter;
+import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.stream.nodes.From;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
  * @param <D> 表示这个节点对应流的初始数据类型。
  * @since 1.0
  */
-public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
+public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements EmitterListener<O, FlowSession> {
     /**
      * 表示节点起点的 {@link From}{@code <}{@link O}{@code >}。
      */
@@ -356,5 +358,10 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      */
     public <R> State<List<R>, D, ?, F> produce(Operators.Produce<O, R> processor) {
         return this.buffer().map(contexts -> processor.process(contexts));
+    }
+
+    @Override
+    public void handle(O data, FlowSession trans) {
+        this.from.handle(data, trans);
     }
 }
