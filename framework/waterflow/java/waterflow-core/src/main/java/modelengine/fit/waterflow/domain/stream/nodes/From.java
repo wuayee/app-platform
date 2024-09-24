@@ -25,6 +25,7 @@ import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.enums.SpecialDisplayNode;
 import modelengine.fit.waterflow.domain.states.DataStart;
 import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
+import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
@@ -211,7 +212,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         // DataStart流程中的SessionInfo与主流程隔离
         data.getSession().setInnerState(FlowSession.SESSION_INFO, new FlowSession.SessionInfo());
         FlowDebug.log(newSession, this.getId() + ". data submit. " + data.getData());
-        FlowExecutors.submit(null, newSession.getId(), () -> {
+        submit(() -> {
             FlowDebug.log(newSession, this.getId() + ". data start. " + data.getData());
             if (!Publisher.isSystemContext(newSession)) {
                 node.offer(data.getData(), newSession);
@@ -226,7 +227,15 @@ public class From<I> extends IdGenerator implements Publisher<I> {
                 }
             }
             node.offer(data.getData(), newSession);
-        });
+        }, newSession);
+    }
+
+    private void submit(Runnable runnable, FlowSession session) {
+        if (ThreadMode.HOLDER.equals(this.getFlowConfig().getThreadMode())) {
+            runnable.run();
+        } else {
+            FlowExecutors.submit(null, session.getId(), runnable);
+        }
     }
 
     private boolean isBoundedError(FlowSession session) {
@@ -301,9 +310,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         if (isBoundedComplete(copyflowSession)) {
             windowTokens.remove(tokenKey);
         }
-        FlowExecutors.submit(contexts.get(0).getData(), copyflowSession.getId(), () -> {
-            this.offer(startNodeMarkAsHandled(contexts, trace));
-        });
+        submit(() -> this.offer(this.startNodeMarkAsHandled(contexts, trace)), copyflowSession);
         return trace.getId();
     }
 
@@ -331,9 +338,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             windowToken.addOrigin(context.getData());
             windowToken.addToDo(context.getData());
         });
-        FlowExecutors.submit(null, newSession.getId(), () -> {
-            this.offer(startNodeMarkAsHandled(contexts, trace));
-        });
+        submit(() -> this.offer(this.startNodeMarkAsHandled(contexts, trace)), newSession);
         return trace.getId();
     }
 
