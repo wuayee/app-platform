@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 工具
@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.0
  */
 public class Tool {
-    private static AtomicInteger id = new AtomicInteger(); // remove static
+    private static AtomicLong id = new AtomicLong(1); // remove static
 
     /**
      * 打印警告信息
@@ -54,7 +54,31 @@ public class Tool {
      * @return 返回生成的唯一ID
      */
     public static long newId() {
-        return id.incrementAndGet();
+        long result = id.incrementAndGet();
+        // 不能为非正数，有特殊含义
+        if (result <= 0) {
+            initId();
+            return newId();
+        }
+        return result;
+    }
+
+    /**
+     * set id
+     *
+     * @param value value
+     */
+    protected static void setId(long value) {
+        id.set(value);
+    }
+
+    /**
+     * 初始化id，只有在id为非正数时生效
+     */
+    private static synchronized void initId() {
+        if (id.get() <= 0) {
+            setId(1);
+        }
     }
 
     /**
