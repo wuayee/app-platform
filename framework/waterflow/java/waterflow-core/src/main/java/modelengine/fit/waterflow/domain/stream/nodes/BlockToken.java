@@ -12,6 +12,7 @@ import modelengine.fit.waterflow.domain.utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,11 @@ public abstract class BlockToken<T> extends IdGenerator {
                         .batchId(context.getBatchId()))
                 .collect(Collectors.toList());
         this.publisher.getFlowContextRepo().save(cloned);
-        this.publisher.offer(cloned);
+        cloned.stream()
+                .collect(Collectors.groupingBy(item -> item.getSession().getId(), LinkedHashMap::new,
+                        Collectors.toList()))
+                .values()
+                .forEach(this.publisher::offer);
     }
 
     /**
@@ -61,11 +66,9 @@ public abstract class BlockToken<T> extends IdGenerator {
     /**
      * 设置
      *
-     * @param publisher 需要中断的目标节点
      * @param data block的data
      */
-    public void setHost(Publisher<T> publisher, FlowContext<T> data) {
-        this.publisher = publisher;
+    public void setHost(FlowContext<T> data) {
         this.data.add(data);
     }
 
@@ -76,5 +79,14 @@ public abstract class BlockToken<T> extends IdGenerator {
      */
     public List<FlowContext<T>> data() {
         return this.data;
+    }
+
+    /**
+     * 设置publisher
+     *
+     * @param publisher publisher
+     */
+    public void setPublisher(Publisher<T> publisher) {
+        this.publisher = publisher;
     }
 }

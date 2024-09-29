@@ -10,6 +10,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.schedule.ThreadPoolExecutor;
+import modelengine.fitframework.thread.DefaultThreadFactory;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -41,6 +42,7 @@ public final class FlowExecutors {
                 .maximumPoolSize(MAX_THREAD_COUNT)
                 .workQueueCapacity(0)
                 .keepAliveTime(60L, SECONDS)
+                .isDaemonThread(true)
                 .exceptionHandler((thread, throwable) -> {
                     LOG.error("The node pool run failed, error cause: {}, message: {}.", throwable.getCause(),
                             throwable.getMessage());
@@ -126,7 +128,10 @@ public final class FlowExecutors {
             this.executors = new ExecutorService[poolSize];
 
             for (int i = 0; i < poolSize; i++) {
-                this.executors[i] = Executors.newSingleThreadExecutor();
+                this.executors[i] = Executors.newSingleThreadExecutor(
+                        new DefaultThreadFactory("flow-fixed-key", true, (thread, ex) -> {
+                            LOG.error("The node pool run failed, ex: {}, message: {}.", ex, ex.getMessage());
+                        }));
             }
         }
 

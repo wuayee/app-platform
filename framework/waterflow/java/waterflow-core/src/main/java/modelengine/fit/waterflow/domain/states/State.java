@@ -130,15 +130,15 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      *         {@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     public State<O, D, O, F> block(BlockToken<O> block) {
-        AtomicReference<State<O, D, O, F>> state = new AtomicReference<>();
-        state.set(new State<>(this.from.map(new Operators.Map<FlowContext<O>, O>() {
+        State<O, D, O, F> state = new State<>(this.from.map(new Operators.Map<FlowContext<O>, O>() {
             @Override
             public O process(FlowContext<O> input) {
-                block.setHost(state.get().from, input);
+                block.setHost(input);
                 return null;
             }
-        }, null), this.getFlow()));
-        return state.get();
+        }, null), this.getFlow());
+        block.setPublisher(state.from);
+        return state;
     }
 
     /**
