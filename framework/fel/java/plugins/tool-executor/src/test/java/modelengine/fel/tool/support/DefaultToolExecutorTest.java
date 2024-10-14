@@ -76,7 +76,7 @@ public class DefaultToolExecutorTest {
         when(tool.metadata().returnConverter()).thenReturn(StringUtils.EMPTY);
         ToolExecuteService toolExecutor =
                 new DefaultToolExecutor(this.toolRepository, this.toolFactoryRepository, this.serializer);
-        assertThat(toolExecutor.execute("test", toolEntity.name(), "test")).isEqualTo("hello");
+        assertThat(toolExecutor.execute("test", toolEntity.name(), "test")).isEqualTo("\"hello\"");
     }
 
     @Test

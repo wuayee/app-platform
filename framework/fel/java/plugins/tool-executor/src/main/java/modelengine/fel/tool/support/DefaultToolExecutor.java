@@ -16,6 +16,7 @@ import modelengine.fel.tool.ToolFactoryRepository;
 import modelengine.fel.tool.service.ToolExecuteService;
 import modelengine.fel.tool.service.ToolRepository;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.StringUtils;
@@ -45,7 +46,7 @@ public class DefaultToolExecutor implements ToolExecuteService {
      * @throws IllegalArgumentException 当 {@code toolRepository}、{@code toolFactoryRepository} 为 {@code null} 时。
      */
     public DefaultToolExecutor(ToolRepository toolRepository, ToolFactoryRepository toolFactoryRepository,
-            ObjectSerializer serializer) {
+            @Fit(alias = "json") ObjectSerializer serializer) {
         this.toolRepository = notNull(toolRepository, "The tool repository cannot be null.");
         this.toolFactoryRepository = notNull(toolFactoryRepository, "The tool factory repository cannot be null.");
         this.serializer = notNull(serializer, "The serializer cannot be null.");
@@ -84,7 +85,7 @@ public class DefaultToolExecutor implements ToolExecuteService {
 
     private String convertOutput(String group, String convertor, Object output) {
         if (StringUtils.isBlank(convertor)) {
-            return output.getClass() == String.class ? cast(output) : serializer.serialize(output);
+            return serializer.serialize(output);
         }
         Tool convertorTool = this.getTool(group, convertor);
         return convertorTool.execute(output).toString();
