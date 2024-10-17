@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -57,8 +58,10 @@ public class FitToolTest {
         });
         ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
         List<ToolEntity> toolEntities =
-                serializer.deserialize(IoUtils.content(this.getClass().getClassLoader(), ToolSchema.TOOL_MANIFEST),
-                        TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class}));
+                serializer.<Map<String, List<ToolEntity>>>deserialize(IoUtils.content(this.getClass().getClassLoader(), ToolSchema.TOOL_MANIFEST),
+                        TypeUtils.parameterized(Map.class, new Type[] {
+                                String.class, TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class})
+                        })).get("tools");
         ToolEntity testEntity = toolEntities.get(0);
         ToolFactory toolFactory = new FitToolFactory(client, serializer);
         this.tool = toolFactory.create(testEntity, Tool.Metadata.from(testEntity.schema()));

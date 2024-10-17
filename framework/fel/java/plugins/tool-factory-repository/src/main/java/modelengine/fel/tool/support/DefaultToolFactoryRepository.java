@@ -47,7 +47,7 @@ public class DefaultToolFactoryRepository implements ToolFactoryRepository {
     }
 
     @Override
-    public Optional<ToolFactory> match(Set<String> runnable) {
-        return runnable.stream().filter(this.factoryCache::containsKey).map(this.factoryCache::get).findFirst();
+    public Optional<ToolFactory> match(Set<String> runnables) {
+        return runnables.stream().filter(this.factoryCache::containsKey).map(this.factoryCache::get).findFirst();
     }
 }

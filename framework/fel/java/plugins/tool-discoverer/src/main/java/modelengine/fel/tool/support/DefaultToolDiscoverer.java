@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DefaultToolDiscoverer implements PluginStartedObserver, PluginStoppingObserver {
+    private static final String TOOLS = "tools";
     private final ToolRepository toolRepository;
     private final ObjectSerializer serializer;
     private final int maxToolNum;
@@ -86,7 +88,10 @@ public class DefaultToolDiscoverer implements PluginStartedObserver, PluginStopp
 
     private List<ToolEntity> parseTools(Resource resource) {
         try (InputStream in = resource.read()) {
-            return serializer.deserialize(in, TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class}));
+            return this.serializer.<Map<String, List<ToolEntity>>>deserialize(in,
+                    TypeUtils.parameterized(Map.class, new Type[] {
+                            String.class, TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class})
+                    })).get(TOOLS);
         } catch (IOException exception) {
             return Collections.emptyList();
         }

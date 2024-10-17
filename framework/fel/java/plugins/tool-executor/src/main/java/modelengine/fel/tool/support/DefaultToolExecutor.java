@@ -73,11 +73,11 @@ public class DefaultToolExecutor implements ToolExecuteService {
                 () -> new IllegalStateException(StringUtils.format("The tool cannot be found. [group={0}, tool={1}]",
                         group,
                         toolName)));
-        Set<String> runnable = tool.runnable().keySet();
-        Optional<ToolFactory> factory = this.toolFactoryRepository.match(runnable);
+        Set<String> runnables = tool.runnables().keySet();
+        Optional<ToolFactory> factory = this.toolFactoryRepository.match(runnables);
         if (!factory.isPresent()) {
-            throw new IllegalStateException(StringUtils.format("No tool factory to create tool. [runnable={0}]",
-                    runnable));
+            throw new IllegalStateException(StringUtils.format("No tool factory to create tool. [runnables={0}]",
+                    runnables));
         }
         Tool.Metadata metadata = Tool.Metadata.from(tool.schema());
         return factory.get().create(tool, metadata);

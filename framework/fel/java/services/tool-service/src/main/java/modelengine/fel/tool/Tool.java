@@ -80,7 +80,7 @@ public interface Tool {
          *
          * @return 表示工具的格式规范描述的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
          */
-        Map<String, Object> runnable();
+        Map<String, Object> runnables();
     }
 
     /**

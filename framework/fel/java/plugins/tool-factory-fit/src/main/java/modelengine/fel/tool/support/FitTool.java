@@ -52,13 +52,13 @@ public class FitTool extends AbstractTool {
 
     @Override
     public Object execute(Object... args) {
-        Map<String, Object> runnable = cast(this.info().runnable().get(TYPE));
-        if (MapUtils.isEmpty(runnable)) {
-            throw new IllegalStateException("No runnable info. [type=FIT]");
+        Map<String, Object> runnables = cast(this.info().runnables().get(TYPE));
+        if (MapUtils.isEmpty(runnables)) {
+            throw new IllegalStateException("No runnables info. [type=FIT]");
         }
-        String genericableId = notBlank(cast(runnable.get("genericableId")), "No genericable id in runnable info.");
+        String genericableId = notBlank(cast(runnables.get("genericableId")), "No genericable id in runnables info.");
         Router router = this.brokerClient.getRouter(genericableId);
-        String fitableId = cast(runnable.get("fitableId"));
+        String fitableId = cast(runnables.get("fitableId"));
         Router.Filter filter = null;
         if (StringUtils.isNotBlank(fitableId)) {
             filter = new FitableIdFilter(fitableId);
