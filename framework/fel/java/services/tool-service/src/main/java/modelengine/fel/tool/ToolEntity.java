@@ -22,7 +22,7 @@ import java.util.Map;
 public class ToolEntity implements Tool.Info {
     private String namespace;
     private Map<String, Object> schema;
-    private Map<String, Object> runnable;
+    private Map<String, Object> runnables;
     private Map<String, Object> extensions;
 
     /**
@@ -35,14 +35,14 @@ public class ToolEntity implements Tool.Info {
      *
      * @param namespace 表示工具命名空间的 {@link String}。
      * @param schema 表示工具格式规范描述的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
-     * @param runnable 表示工具运行规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @param runnables 表示工具运行规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      * @param extensions 表示工具额外参数规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
-    public ToolEntity(String namespace, Map<String, Object> schema, Map<String, Object> runnable,
+    public ToolEntity(String namespace, Map<String, Object> schema, Map<String, Object> runnables,
             Map<String, Object> extensions) {
         this.namespace = notNull(namespace, "The namespace cannot be null.");
         this.schema = notNull(schema, "The schema cannot be null.");
-        this.runnable = notNull(runnable, "The runnable cannot be null.");
+        this.runnables = notNull(runnables, "The runnables cannot be null.");
         this.extensions = notNull(extensions, "The extensions cannot be null.");
     }
 
@@ -82,7 +82,7 @@ public class ToolEntity implements Tool.Info {
     }
 
     @Override
-    public Map<String, Object> runnable() {
-        return this.runnable;
+    public Map<String, Object> runnables() {
+        return this.runnables;
     }
 }

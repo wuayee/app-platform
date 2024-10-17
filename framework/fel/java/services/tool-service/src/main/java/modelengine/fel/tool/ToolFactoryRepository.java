@@ -33,8 +33,8 @@ public interface ToolFactoryRepository {
     /**
      * 根据运行规范标签匹配一个工厂。
      *
-     * @param runnable 表示运行规范集合的 {@link Set}{@code <}{@link String}{@code >}。
+     * @param runnables 表示运行规范集合的 {@link Set}{@code <}{@link String}{@code >}。
      * @return 表示返回的工厂的 {@link Optional}{@code <}{@link ToolFactory}{@code >}，否则为 {@link Optional#empty()}。
      */
-    Optional<ToolFactory> match(Set<String> runnable);
+    Optional<ToolFactory> match(Set<String> runnables);
 }

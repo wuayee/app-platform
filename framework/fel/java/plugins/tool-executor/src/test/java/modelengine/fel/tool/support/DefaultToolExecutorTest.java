@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -106,8 +107,10 @@ public class DefaultToolExecutorTest {
 
     private ToolEntity getTestEntity() throws IOException {
         List<ToolEntity> toolEntities =
-                this.serializer.deserialize(IoUtils.content(this.getClass().getClassLoader(), ToolSchema.TOOL_MANIFEST),
-                        TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class}));
+                this.serializer.<Map<String, List<ToolEntity>>>deserialize(IoUtils.content(this.getClass().getClassLoader(), ToolSchema.TOOL_MANIFEST),
+                        TypeUtils.parameterized(Map.class, new Type[] {
+                                String.class, TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class})
+                        })).get("tools");
         return toolEntities.get(0);
     }
 }

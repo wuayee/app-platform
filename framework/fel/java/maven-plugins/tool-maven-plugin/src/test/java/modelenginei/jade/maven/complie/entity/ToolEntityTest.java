@@ -51,8 +51,8 @@ class ToolEntityTest {
         assertEquals("testMethod", schema.get("name"));
         assertEquals("This is a test method.", schema.get("description"));
 
-        Map<String, Object> runnable = ObjectUtils.cast(result.get("runnables"));
-        Map<String, Object> fit = ObjectUtils.cast(runnable.get("FIT"));
+        Map<String, Object> runnables = ObjectUtils.cast(result.get("runnables"));
+        Map<String, Object> fit = ObjectUtils.cast(runnables.get("FIT"));
         assertEquals("fitableId123", fit.get("fitableId"));
         assertEquals("genericableId123", fit.get("genericableId"));
 
