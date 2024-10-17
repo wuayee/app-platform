@@ -88,10 +88,14 @@ public class DefaultToolDiscoverer implements PluginStartedObserver, PluginStopp
 
     private List<ToolEntity> parseTools(Resource resource) {
         try (InputStream in = resource.read()) {
-            return this.serializer.<Map<String, List<ToolEntity>>>deserialize(in,
-                    TypeUtils.parameterized(Map.class, new Type[] {
+            Map<String, List<ToolEntity>> toolEntityMap =
+                    this.serializer.deserialize(in, TypeUtils.parameterized(Map.class, new Type[] {
                             String.class, TypeUtils.parameterized(List.class, new Type[] {ToolEntity.class})
-                    })).get(TOOLS);
+                    }));
+            if (toolEntityMap == null) {
+                return Collections.emptyList();
+            }
+            return toolEntityMap.get(TOOLS);
         } catch (IOException exception) {
             return Collections.emptyList();
         }
