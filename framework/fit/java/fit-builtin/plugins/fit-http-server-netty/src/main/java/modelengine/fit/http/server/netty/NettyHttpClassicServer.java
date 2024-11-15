@@ -43,13 +43,18 @@ import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.thread.DefaultThreadFactory;
+import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.ThreadUtils;
 import modelengine.fitframework.value.ValueFetcher;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
@@ -311,6 +316,41 @@ public class NettyHttpClassicServer implements HttpClassicServer {
     }
 
     private static class ChannelInitializerHandler extends ChannelInitializer<SocketChannel> {
+        private static final Map<String, List<String>> defaultCipherSuites = MapBuilder.<String, List<String>>get()
+                .put("TLSv1.2",
+                        Arrays.asList("TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+                                "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+                                "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256",
+                                "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384",
+                                "TLS_PSK_WITH_AES_256_GCM_SHA384",
+                                "TLS_DHE_PSK_WITH_AES_128_GCM_SHA256",
+                                "TLS_DHE_PSK_WITH_AES_256_GCM_SHA384",
+                                "TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256",
+                                "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+                                "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+                                "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                                "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+                                "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+                                "TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256",
+                                "TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256",
+                                "TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384",
+                                "TLS_ECDHE_PSK_WITH_AES_128_CCM_SHA256",
+                                "TLS_DHE_RSA_WITH_AES_128_CCM",
+                                "TLS_DHE_RSA_WITH_AES_256_CCM",
+                                "TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+                                "TLS_PSK_WITH_AES_256_CCM",
+                                "TLS_DHE_PSK_WITH_AES_128_CCM",
+                                "TLS_DHE_PSK_WITH_AES_256_CCM",
+                                "TLS_ECDHE_ECDSA_WITH_AES_128_CCM",
+                                "TLS_ECDHE_ECDSA_WITH_AES_256_CCM",
+                                "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256"))
+                .put("TLSv1.3",
+                        Arrays.asList("TLS_AES_128_GCM_SHA256",
+                                "TLS_AES_256_GCM_SHA384",
+                                "TLS_CHACHA20_POLY1305_SHA256",
+                                "TLS_AES_128_CCM_SHA256"))
+                .build();
+
         private final int httpsPort;
         private final SSLContext sslContext;
         private final ServerConfig.Secure httpsConfig;
@@ -330,16 +370,27 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         protected void initChannel(SocketChannel ch) {
             ChannelPipeline pipeline = ch.pipeline();
             if (ch.localAddress().getPort() == this.httpsPort && this.sslContext != null) {
-                SSLEngine sslEngine = this.sslContext.createSSLEngine();
-                sslEngine.setUseClientMode(false);
-                sslEngine.setNeedClientAuth(this.httpsConfig.needClientAuth());
-                pipeline.addLast(new SslHandler(sslEngine));
+                pipeline.addLast(new SslHandler(this.buildSslEngine(this.sslContext, this.httpsConfig)));
                 pipeline.addLast(new HttpServerCodec());
                 pipeline.addLast(this.secureAssembler);
             } else {
                 pipeline.addLast(new HttpServerCodec());
                 pipeline.addLast(this.assembler);
             }
+        }
+
+        private SSLEngine buildSslEngine(SSLContext sslContext, ServerConfig.Secure httpsConfig) {
+            SSLEngine sslEngine = sslContext.createSSLEngine();
+            sslEngine.setUseClientMode(false);
+            sslEngine.setNeedClientAuth(httpsConfig.needClientAuth());
+            List<String> configuredCipherSuite = CollectionUtils.isNotEmpty(httpsConfig.sslCiphers())
+                    ? httpsConfig.sslCiphers()
+                    : defaultCipherSuites.getOrDefault(sslContext.getProtocol(), Collections.emptyList());
+            // 指定的加密套件与支持的加密套件取交集，保证可用。
+            String[] enabledCipherSuite = CollectionUtils.intersect(configuredCipherSuite,
+                    Arrays.asList(sslEngine.getSupportedCipherSuites())).toArray(new String[0]);
+            sslEngine.setEnabledCipherSuites(enabledCipherSuite);
+            return sslEngine;
         }
     }
 }

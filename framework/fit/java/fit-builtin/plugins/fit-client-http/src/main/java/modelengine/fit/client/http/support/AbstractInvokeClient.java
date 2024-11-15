@@ -107,10 +107,13 @@ public abstract class AbstractInvokeClient implements InvokeClient {
                     .ifPresent(keyStore -> config.put(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE, keyStore));
             secure.trustStoreFile()
                     .ifPresent(trustStore -> config.put(HttpsConstants.CLIENT_SECURE_TRUST_STORE_FILE, trustStore));
+            secure.secureProtocol()
+                    .ifPresent(protocol -> config.put(HttpsConstants.CLIENT_SECURE_SECURITY_PROTOCOL, protocol));
             config.put(HttpsConstants.CLIENT_SECURE_IGNORE_TRUST, String.valueOf(secure.ignoreTrust()));
             config.put(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, String.valueOf(secure.ignoreHostName()));
             config.put(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD, keyStorePassword);
             config.put(HttpsConstants.CLIENT_SECURE_TRUST_STORE_PASSWORD, trustStorePassword);
+            config.put(HttpsConstants.CLIENT_SECURE_STRONG_RANDOM, String.valueOf(secure.secureRandomEnabled()));
         }
         int timeout = this.getTimeout(request);
         return this.factory.create(HttpClassicClientFactory.Config.builder()
