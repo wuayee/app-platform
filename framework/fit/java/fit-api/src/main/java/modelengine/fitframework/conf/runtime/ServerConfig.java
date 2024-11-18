@@ -6,6 +6,7 @@
 
 package modelengine.fitframework.conf.runtime;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -132,5 +133,12 @@ public interface ServerConfig {
          * @return 表示安全通信协议的 {@link Optional}{@code <}{@link String}{@link >}。
          */
         Optional<String> secureProtocol();
+
+        /**
+         * 获取 ssl 加密套件。
+         *
+         * @return 表示 ssl 加密套件的 {@link List}{@code <}{@link String}{@code >}。
+         */
+        List<String> sslCiphers();
     }
 }

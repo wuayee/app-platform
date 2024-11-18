@@ -73,7 +73,8 @@ public class OkHttpClientBuilderFactory {
             throws GeneralSecurityException {
         String keyStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE));
         String keyStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD));
-        Boolean isStrongRandom = cast(config.custom().getOrDefault(HttpsConstants.CLIENT_SECURE_STRONG_RANDOM, true));
+        boolean isStrongRandom = Boolean.parseBoolean(String.valueOf(config.custom()
+                .getOrDefault(HttpsConstants.CLIENT_SECURE_STRONG_RANDOM, true)));
         String secureProtocol = cast(config.custom()
                 .getOrDefault(HttpsConstants.CLIENT_SECURE_SECURITY_PROTOCOL, SECURE_DEFAULT_PROTOCOL));
         KeyManager[] keyManagers;

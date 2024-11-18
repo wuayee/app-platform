@@ -8,6 +8,7 @@ package modelengine.fitframework.conf.runtime.support;
 
 import modelengine.fitframework.conf.runtime.ServerConfig.Secure;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,6 +72,11 @@ public class DefaultSecure implements Secure {
      * 配置项：{@code 'secure-protocol'}。
      */
     private String secureProtocol;
+
+    /**
+     * 配置项：{@code 'ssl-ciphers'}。
+     */
+    private List<String> sslCiphers;
 
     /**
      * 设置端口是否打开的标志。
@@ -171,6 +177,15 @@ public class DefaultSecure implements Secure {
         this.secureProtocol = secureProtocol;
     }
 
+    /**
+     * 设置 ssl 加密套件。
+     *
+     * @param sslCiphers 表示 ssl 加密套件的 {@link List}{@code <}{@link String}{@code >}。
+     */
+    public void setSslCiphers(List<String> sslCiphers) {
+        this.sslCiphers = sslCiphers;
+    }
+
     @Override
     public boolean isProtocolEnabled() {
         return this.isEnabled != null ? this.isEnabled : this.port != null;
@@ -224,5 +239,10 @@ public class DefaultSecure implements Secure {
     @Override
     public Optional<String> secureProtocol() {
         return Optional.ofNullable(this.secureProtocol);
+    }
+
+    @Override
+    public List<String> sslCiphers() {
+        return this.sslCiphers;
     }
 }

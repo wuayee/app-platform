@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 /**
  * {@link DefaultSecure} 的测试类。
  *
@@ -24,7 +26,9 @@ public class DefaultSecureTest {
         DefaultSecure secure = new DefaultSecure();
         secure.setSecureRandomEnabled(true);
         secure.setSecureProtocol("TLSv1.2");
+        secure.setSslCiphers(Arrays.asList("test"));
         Assertions.assertTrue(secure.secureRandomEnabled());
         Assertions.assertEquals("TLSv1.2", secure.secureProtocol().get());
+        Assertions.assertEquals(secure.sslCiphers(), Arrays.asList("test"));
     }
 }
