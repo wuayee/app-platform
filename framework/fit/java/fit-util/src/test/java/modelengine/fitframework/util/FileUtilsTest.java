@@ -230,7 +230,7 @@ public class FileUtilsTest {
         @Test
         @DisplayName("Input is not exist directory, execution has no exception")
         void givenNotExistDirectoryThenReturnNoException() {
-            File directory = new File("/a");
+            File directory = new File("src/test/resources/not-exist");
             directory.deleteOnExit();
             assertThatNoException().isThrownBy(() -> FileUtils.ensureDirectory(directory));
         }
