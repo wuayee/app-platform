@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 
 /**
  * 表示 REST 请求的异常处理器。
+ * <p>该注解仅在公开（public）方法下才会生效。</p>
  *
  * @author 季聿阶
  * @since 2023-01-09

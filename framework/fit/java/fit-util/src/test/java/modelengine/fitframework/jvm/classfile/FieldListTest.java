@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.jvm.classfile.attribute.ConstantValueAttribute;
 import modelengine.fitframework.jvm.classfile.constant.ClassInfo;
+import modelengine.fitframework.jvm.classfile.constant.StringInfo;
 import modelengine.fitframework.jvm.classfile.constant.Utf8Info;
 import modelengine.fitframework.jvm.classfile.lang.U2;
 import modelengine.fitframework.jvm.test.AttributeTarget;
@@ -130,7 +131,7 @@ class FieldListTest {
     void givenClassFileThenReturnFieldString() throws IOException {
         AccessFlag[] accessFlags = {AccessFlag.ACC_PRIVATE, AccessFlag.ACC_FINAL};
         int accessFlag = this.getAccessFlag(accessFlags);
-        this.matchType("strTest", accessFlag, "Ljava/lang/String;", "[tag=8, string_index=111]");
+        this.matchType("strTest", accessFlag, "Ljava/lang/String;", "aaaa");
     }
 
     @Test
@@ -182,7 +183,14 @@ class FieldListTest {
         // 声明值比较，暂时不支持数组类型的获取值
         if (!FieldType.startsWith("[")) {
             ConstantValueAttribute lookup = ConstantValueAttribute.lookup(fieldJvm.attributes());
-            String valueJvm = lookup.toString();
+            Constant constant = this.constantPool.get(lookup.constantValueIndex());
+            String valueJvm;
+            if (constant instanceof StringInfo) {
+                U2 strIndex = ((StringInfo) constant).stringIndex();
+                valueJvm = this.constantPool.get(strIndex).toString();
+            } else {
+                valueJvm = lookup.toString();
+            }
             assertThat(valueJvm).isEqualTo(value);
         }
     }

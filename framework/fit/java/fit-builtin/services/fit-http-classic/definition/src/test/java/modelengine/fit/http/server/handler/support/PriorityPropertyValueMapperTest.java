@@ -31,8 +31,8 @@ class PriorityPropertyValueMapperTest {
     @Test
     @DisplayName("选取第一个成功获取的结果")
     void shouldReturnFirstResult() {
-        final QueryFetcher queryFetcher1 = new QueryFetcher(URI_KEY);
-        final QueryFetcher queryFetcher2 = new QueryFetcher("notExistKey");
+        final QueryFetcher queryFetcher1 = new QueryFetcher(ParamValue.custom().name(URI_KEY).build());
+        final QueryFetcher queryFetcher2 = new QueryFetcher(ParamValue.custom().name("notExistKey").build());
         UniqueSourcePropertyValueMapper mapper1 = new UniqueSourcePropertyValueMapper(queryFetcher1, false);
         UniqueSourcePropertyValueMapper mapper2 = new UniqueSourcePropertyValueMapper(queryFetcher2, false);
         final List<PropertyValueMapper> mappers = Arrays.asList(mapper1, mapper2);

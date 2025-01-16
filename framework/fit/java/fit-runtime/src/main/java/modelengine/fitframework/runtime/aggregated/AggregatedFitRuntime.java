@@ -9,13 +9,12 @@ package modelengine.fitframework.runtime.aggregated;
 import modelengine.fitframework.plugin.RootPlugin;
 import modelengine.fitframework.protocol.jar.JarLocation;
 import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.shared.SharedUrlClassLoader;
 import modelengine.fitframework.runtime.support.AbstractFitRuntime;
 import modelengine.fitframework.util.ClassUtils;
 import modelengine.fitframework.util.FileUtils;
-import modelengine.fitframework.util.ObjectUtils;
 
 import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * 为 FIT 运行时提供聚合启动场景的实现。
@@ -43,9 +42,9 @@ public final class AggregatedFitRuntime extends AbstractFitRuntime {
     }
 
     @Override
-    protected URLClassLoader obtainSharedClassLoader() {
-        // FitRuntime 在 fit-api 包中，因此该类的类加载器可以作为共享的类加载器
-        return ObjectUtils.cast(FitRuntime.class.getClassLoader());
+    protected SharedUrlClassLoader obtainSharedClassLoader() {
+        // FitRuntime 在 fit-api 包中，因此该类的类加载器可以作为共享的类加载器。
+        return new SharedUrlClassLoader(new URL[0], FitRuntime.class.getClassLoader());
     }
 
     @Override

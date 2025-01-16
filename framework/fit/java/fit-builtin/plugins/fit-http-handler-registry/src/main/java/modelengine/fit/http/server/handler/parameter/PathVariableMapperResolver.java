@@ -10,6 +10,7 @@ import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.server.handler.PropertyValueMapperResolver;
 import modelengine.fit.http.server.handler.SourceFetcher;
+import modelengine.fit.http.server.handler.support.ParamValue;
 import modelengine.fit.http.server.handler.support.PathVariableFetcher;
 import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
 import modelengine.fitframework.value.PropertyValue;
@@ -45,6 +46,11 @@ public class PathVariableMapperResolver extends AbstractRequestParamMapperResolv
 
     @Override
     protected SourceFetcher createSourceFetcher(RequestParam requestParam) {
-        return new PathVariableFetcher(requestParam.name());
+        return new PathVariableFetcher(ParamValue.custom()
+                .name(requestParam.name())
+                .in(requestParam.in())
+                .defaultValue(requestParam.defaultValue())
+                .required(requestParam.required())
+                .build());
     }
 }

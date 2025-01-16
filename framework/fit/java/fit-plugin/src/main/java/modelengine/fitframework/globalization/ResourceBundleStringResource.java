@@ -6,7 +6,9 @@
 
 package modelengine.fitframework.globalization;
 
+import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Enumeration;
@@ -43,7 +45,24 @@ final class ResourceBundleStringResource implements StringResource {
     }
 
     @Override
-    public String getMessage(Locale locale, String key, String defaultMessage, Object[] args) {
+    public String getMessageWithDefault(Locale locale, String key, String defaultMessage, Object[] args) {
+        String message = this.getMessageWithDefault(locale, key, defaultMessage);
+        if (ArrayUtils.isNotEmpty(args)) {
+            message = StringUtils.format(message, args);
+        }
+        return message;
+    }
+
+    @Override
+    public String getMessageWithDefault(Locale locale, String key, String defaultMessage, Map<String, Object> args) {
+        String message = this.getMessageWithDefault(locale, key, defaultMessage);
+        if (MapUtils.isNotEmpty(args)) {
+            message = StringUtils.format(message, args);
+        }
+        return message;
+    }
+
+    private String getMessageWithDefault(Locale locale, String key, String defaultMessage) {
         ResourceBundle bundle = this.bundles.computeIfAbsent(locale, this::loadBundle);
         String message;
         try {
@@ -53,9 +72,6 @@ final class ResourceBundleStringResource implements StringResource {
         }
         if (StringUtils.isBlank(message) && StringUtils.isNotBlank(defaultMessage)) {
             message = defaultMessage;
-        }
-        if (ArrayUtils.isNotEmpty(args)) {
-            message = StringUtils.format(message, args);
         }
         return message;
     }
@@ -72,11 +88,12 @@ final class ResourceBundleStringResource implements StringResource {
         static final Empty INSTANCE = new Empty();
 
         @Override
-        protected Object handleGetObject(String key) {
+        protected Object handleGetObject(@Nonnull String key) {
             return null;
         }
 
         @Override
+        @Nonnull
         public Enumeration<String> getKeys() {
             return new Enumeration<String>() {
                 @Override

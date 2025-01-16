@@ -11,16 +11,15 @@ import static modelengine.fitframework.inspection.Validation.notNull;
 import modelengine.fitframework.conf.Config;
 import modelengine.fitframework.plugin.RootPlugin;
 import modelengine.fitframework.runtime.FitRuntimeStartupException;
+import modelengine.fitframework.runtime.shared.SharedUrlClassLoader;
 import modelengine.fitframework.runtime.support.AbstractFitRuntime;
 import modelengine.fitframework.util.ArrayUtils;
 import modelengine.fitframework.util.ClassUtils;
 import modelengine.fitframework.util.FileUtils;
-import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * 为 FIT 运行时提供离散启动场景的实现。
@@ -55,8 +54,8 @@ public class DiscreteFitRuntime extends AbstractFitRuntime {
     }
 
     @Override
-    protected URLClassLoader obtainSharedClassLoader() {
-        return ObjectUtils.cast(DiscreteFitRuntime.class.getClassLoader().getParent());
+    protected SharedUrlClassLoader obtainSharedClassLoader() {
+        return new SharedUrlClassLoader(new URL[0], DiscreteFitRuntime.class.getClassLoader().getParent());
     }
 
     @Override

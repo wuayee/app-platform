@@ -14,7 +14,9 @@ import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.type.ParameterizedTypeResolver;
 import modelengine.fitframework.type.ParameterizedTypeResolvingResult;
 import modelengine.fitframework.type.TypeMatcher;
+import modelengine.fitframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,30 +34,38 @@ final class PluginEventPublisher implements EventPublisher {
 
     @Override
     public <E extends Event> void publishEvent(E event) {
-        RuntimeException exception = null;
         List<BeanFactory> factories = this.plugin.container().factories(EventHandler.class);
+        List<RuntimeException> exceptions = new ArrayList<>();
         for (BeanFactory factory : factories) {
             if (handleable(factory, event)) {
                 EventHandler<E> handler = factory.get();
                 try {
                     handler.handleEvent(event);
                 } catch (RuntimeException ex) {
-                    if (exception == null) {
-                        exception = ex;
-                    } else {
-                        exception.addSuppressed(ex);
-                    }
+                    exceptions.add(ex);
                 }
             }
         }
-        if (exception != null) {
-            throw exception;
+        this.processExceptions(exceptions);
+    }
+
+    private void processExceptions(List<RuntimeException> exceptions) {
+        if (CollectionUtils.isEmpty(exceptions)) {
+            return;
         }
+        if (exceptions.size() == 1) {
+            throw exceptions.get(0);
+        }
+        IllegalStateException combinedException = new IllegalStateException(exceptions.get(0));
+        for (int i = 1; i < exceptions.size(); i++) {
+            combinedException.addSuppressed(exceptions.get(i));
+        }
+        throw combinedException;
     }
 
     private static <E extends Event> boolean handleable(BeanFactory factory, E event) {
-        ParameterizedTypeResolvingResult result = ParameterizedTypeResolver.resolve(
-                factory.metadata().type(), EventHandler.class);
+        ParameterizedTypeResolvingResult result =
+                ParameterizedTypeResolver.resolve(factory.metadata().type(), EventHandler.class);
         return result.resolved() && TypeMatcher.match(event.getClass(), result.parameters().get(0));
     }
 }

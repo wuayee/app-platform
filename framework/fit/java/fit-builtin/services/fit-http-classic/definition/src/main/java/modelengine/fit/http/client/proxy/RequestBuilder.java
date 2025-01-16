@@ -122,6 +122,23 @@ public interface RequestBuilder {
     RequestBuilder jsonEntity(String propertyValuePath, Object value);
 
     /**
+     * 设置 Http 请求的鉴权类型。
+     *
+     * @param authorization 表示 Http 请求的鉴权信息结构的 {@link Authorization}。
+     * @return 表示客户端请求参数的建造者 {@link RequestBuilder}。
+     */
+    RequestBuilder authorization(Authorization authorization);
+
+    /**
+     * 设置 Http 请求的鉴权信息。
+     *
+     * @param key 表示 Http 鉴权信息的参数键值的 {@link String}。
+     * @param value 表示鉴权信息的值的 {@link Object}。
+     * @return 表示客户端请求参数的建造者 {@link RequestBuilder}。
+     */
+    RequestBuilder authorizationInfo(String key, Object value);
+
+    /**
      * 构建客户端的请求参数。
      *
      * @return 表示返回构建完成的客户端的请求参数 {@link HttpClassicClientRequest}。

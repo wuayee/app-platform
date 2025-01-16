@@ -13,6 +13,8 @@ import modelengine.fitframework.flowable.choir.IterableChoir;
 import modelengine.fitframework.flowable.choir.PublisherChoirAdapter;
 import modelengine.fitframework.flowable.subscriber.EmptySubscriber;
 import modelengine.fitframework.flowable.util.OnSubscribedObserver;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
+import modelengine.fitframework.schedule.ThreadPoolExecutors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -261,6 +263,14 @@ public interface Choir<T> extends Publisher<T> {
      */
     void subscribe(Consumer<Subscription> onSubscribedAction, BiConsumer<Subscription, T> consumeAction,
             Consumer<Subscription> completeAction, BiConsumer<Subscription, Exception> failAction);
+
+    /**
+     * 在指定的执行器之上执行订阅、订阅响应和元素请求操作。
+     *
+     * @param executor 表示执行器的 {@link ThreadPoolExecutor}，可通过 {@link ThreadPoolExecutors} 获取或创建执行器。
+     * @return 表示订阅、订阅响应和元素请求操作在指定的执行器之上执行的响应式流的 {@link Choir}。
+     */
+    Choir<T> subscribeOn(ThreadPoolExecutor executor);
 
     /**
      * 订阅响应式流，并阻塞等待所有结果。

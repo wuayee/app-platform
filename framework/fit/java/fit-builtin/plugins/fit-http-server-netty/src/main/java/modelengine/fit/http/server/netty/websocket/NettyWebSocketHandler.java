@@ -20,6 +20,10 @@ import modelengine.fit.http.websocket.CloseReason;
 import modelengine.fit.http.websocket.Session;
 import modelengine.fit.http.websocket.server.WebSocketHandler;
 import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.schedule.Task;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 表示 Netty 用于处理 WebSocket 消息的处理器。
@@ -32,11 +36,24 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
 
     private final WebSocketHandler handler;
     private final Session session;
+    private final ThreadPoolExecutor executor;
 
-    public NettyWebSocketHandler(ChannelHandlerContext ctx, WebSocketHandler handler,
-            HttpClassicServerRequest request) {
+    public NettyWebSocketHandler(ChannelHandlerContext ctx, WebSocketHandler handler, HttpClassicServerRequest request,
+            boolean isGracefulExit) {
         this.handler = notNull(handler, "The websocket handler cannot be null.");
         this.session = new NettyWebSocketSession(ctx, request);
+        this.executor = ThreadPoolExecutor.custom()
+                .threadPoolName("netty-websocket-handler-" + ctx.name())
+                .awaitTermination(3, TimeUnit.SECONDS)
+                .isImmediateShutdown(!isGracefulExit)
+                .corePoolSize(1)
+                .maximumPoolSize(1)
+                .keepAliveTime(60, TimeUnit.SECONDS)
+                .workQueueCapacity(Integer.MAX_VALUE)
+                .isDaemonThread(!isGracefulExit)
+                .exceptionHandler((thread, cause) -> this.exceptionCaught(ctx, cause))
+                .rejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy())
+                .build();
     }
 
     @Override
@@ -44,47 +61,44 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
         try {
             this.handler.onError(this.session, cause);
         } catch (Throwable e) {
-            log.error("Failed to handle websocket by netty worker.");
-            log.debug("Exception: ", e);
+            cause.addSuppressed(e);
             this.session.close(CloseReason.UNEXPECTED_CONDITION);
         }
+        log.error("Failed to handle netty websocket.", cause);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame msg) {
         if (msg instanceof TextWebSocketFrame) {
             TextWebSocketFrame frame = (TextWebSocketFrame) msg;
-            try {
-                this.handler.onMessage(this.session, frame.text());
-            } catch (Throwable e) {
-                this.handler.onError(this.session, e);
-            }
+            String text = frame.text();
+            this.executor.execute(Task.builder()
+                    .runnable(() -> this.handler.onMessage(this.session, text))
+                    .buildDisposable());
             return;
         }
         if (msg instanceof BinaryWebSocketFrame) {
             BinaryWebSocketFrame frame = (BinaryWebSocketFrame) msg;
-            try {
-                ByteBuf byteBuf = frame.content();
-                byte[] binMsg = new byte[byteBuf.readableBytes()];
-                byteBuf.readBytes(binMsg);
+            ByteBuf byteBuf = frame.content();
+            byte[] binMsg = new byte[byteBuf.readableBytes()];
+            byteBuf.readBytes(binMsg);
+            this.executor.execute(Task.builder().runnable(() -> {
                 this.handler.onMessage(this.session, binMsg);
-            } catch (Throwable e) {
-                this.handler.onError(this.session, e);
-            }
+            }).buildDisposable());
         }
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
-            this.handler.onOpen(this.session);
+            this.executor.execute(Task.builder().runnable(() -> this.handler.onOpen(this.session)).buildDisposable());
         }
         super.userEventTriggered(ctx, evt);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        this.handler.onClose(this.session);
+        this.executor.execute(Task.builder().runnable(() -> this.handler.onClose(this.session)).buildDisposable());
         super.channelInactive(ctx);
     }
 }

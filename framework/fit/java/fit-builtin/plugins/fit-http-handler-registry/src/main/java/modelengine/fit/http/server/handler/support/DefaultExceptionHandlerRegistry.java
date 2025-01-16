@@ -14,6 +14,7 @@ import modelengine.fit.http.server.handler.AbstractHandlerResolver;
 import modelengine.fit.http.server.handler.ExceptionHandlerRegistry;
 import modelengine.fit.http.server.handler.HttpExceptionHandler;
 import modelengine.fit.http.server.handler.PropertyValueMapper;
+import modelengine.fit.http.server.handler.comparator.ClassComparator;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Scope;
 import modelengine.fitframework.ioc.BeanContainer;
@@ -33,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,7 +52,7 @@ public class DefaultExceptionHandlerRegistry extends AbstractHandlerResolver imp
      * <p>其中外层 map 的键为需要处理器需要处理的异常，值为每个插件所对应的全局处理器；内层 map 的键为插件名，值为该插件所含有的全局异常处理器。</p>
      */
     private final Map<Class<Throwable>, Map<String, HttpExceptionHandler>> globalExceptionHandlers =
-            new ConcurrentHashMap<>();
+            new ConcurrentSkipListMap<>(ClassComparator.INSTANCE);
 
     public DefaultExceptionHandlerRegistry(BeanContainer beanContainer) {
         super(beanContainer);
@@ -79,7 +80,7 @@ public class DefaultExceptionHandlerRegistry extends AbstractHandlerResolver imp
 
     @Override
     public Map<Class<Throwable>, Map<String, HttpExceptionHandler>> getGlobalExceptionHandlers() {
-        return this.globalExceptionHandlers;
+        return Collections.unmodifiableMap(this.globalExceptionHandlers);
     }
 
     @Override

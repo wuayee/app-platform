@@ -12,6 +12,7 @@ import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.entity.MultiValueEntity;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.handler.SourceFetcher;
+import modelengine.fit.http.server.handler.exception.RequestParamFetchException;
 import modelengine.fitframework.util.ObjectUtils;
 
 /**
@@ -23,8 +24,22 @@ import modelengine.fitframework.util.ObjectUtils;
 public class FormUrlEncodedEntityFetcher extends EntityFetcher {
     private final String key;
 
+    /**
+     * 用参数的键来实例化 {@link FormUrlEncodedEntityFetcher}。
+     *
+     * @param key 表示参数的键的 {@link String}。
+     */
     public FormUrlEncodedEntityFetcher(String key) {
-        this.key = notBlank(key, "The key cannot be blank.");
+        this.key = notBlank(key, () -> new RequestParamFetchException("The key cannot be blank."));
+    }
+
+    /**
+     * 用参数元数据来实例化 {@link FormUrlEncodedEntityFetcher}。
+     *
+     * @param paramValue 表示参数元数据的 {@link ParamValue}。
+     */
+    public FormUrlEncodedEntityFetcher(ParamValue paramValue) {
+        this.key = notBlank(paramValue.name(), () -> new RequestParamFetchException("The key cannot be blank."));
     }
 
     @Override

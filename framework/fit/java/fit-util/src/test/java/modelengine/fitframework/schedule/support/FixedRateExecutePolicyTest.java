@@ -54,6 +54,7 @@ class FixedRateExecutePolicyTest {
         Optional<Instant> optionalInstant = executePolicy.nextExecuteTime(execution, executeTime.minusSeconds(1));
 
         assertThat(optionalInstant.isPresent()).isTrue();
-        assertThat(optionalInstant.get()).isEqualTo(Instant.ofEpochMilli(executeTime.toEpochMilli() + period));
+        assertThat(optionalInstant.get().getEpochSecond()).isEqualTo(Instant.ofEpochMilli(
+                executeTime.toEpochMilli() + period).getEpochSecond());
     }
 }

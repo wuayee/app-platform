@@ -8,18 +8,14 @@ package modelengine.fit.http.server.handler.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.http.annotation.DefaultValue;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.handler.PropertyValueMapper;
-import modelengine.fit.http.server.handler.RequestMappingException;
 import modelengine.fitframework.serialization.ObjectSerializer;
-import modelengine.fitframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 表示类型转换的 {@link PropertyValueMapper}。
@@ -31,8 +27,6 @@ import java.util.Objects;
 public class TypeTransformationPropertyValueMapper implements PropertyValueMapper {
     private final PropertyValueMapper mapper;
     private final Type type;
-    private final boolean isRequired;
-    private final Object defaultValue;
 
     /**
      * 通过另一个 Http 参数映射器、目标类型、数据是否必须的标记和数据默认值来实例化 {@link
@@ -40,30 +34,18 @@ public class TypeTransformationPropertyValueMapper implements PropertyValueMappe
      *
      * @param mapper 表示另一个 Http 参数映射器的 {@link PropertyValueMapper}。
      * @param type 表示目标数据类型的 {@link Type}。
-     * @param isRequired 表示来源数据是否必须的标记的 {@code boolean}。
-     * @param defaultValue 表示数据默认值的 {@link Object}。
      * @throws IllegalArgumentException 当 {@code mapper} 为 {@code null} 时。
      * @throws IllegalArgumentException 当 {@code type} 为 {@code null} 时。
      */
-    public TypeTransformationPropertyValueMapper(PropertyValueMapper mapper, Type type, boolean isRequired,
-            Object defaultValue) {
+    public TypeTransformationPropertyValueMapper(PropertyValueMapper mapper, Type type) {
         this.mapper = notNull(mapper, "The http mapper cannot be null.");
         this.type = notNull(type, "The target type cannot be null.");
-        this.isRequired = isRequired;
-        this.defaultValue = defaultValue;
     }
 
     @Override
     public Object map(HttpClassicServerRequest request, HttpClassicServerResponse response,
             Map<String, Object> context) {
         Object source = this.mapper.map(request, response, context);
-        if (source == null && !Objects.equals(this.defaultValue, DefaultValue.VALUE)) {
-            source = this.defaultValue;
-        }
-        if (source == null && this.isRequired) {
-            throw new RequestMappingException(StringUtils.format("No source values. [type={0}]",
-                    this.type.getTypeName()));
-        }
         if (source instanceof String && this.type == String.class) {
             return source;
         }

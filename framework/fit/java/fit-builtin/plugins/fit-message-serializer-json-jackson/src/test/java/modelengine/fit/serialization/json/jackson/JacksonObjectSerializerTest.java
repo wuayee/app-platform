@@ -8,7 +8,13 @@ package modelengine.fit.serialization.json.jackson;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import modelengine.fit.serialization.test.enums.Gender;
+import modelengine.fit.serialization.test.person.Person;
 import modelengine.fit.serialization.test.person.PersonAlias;
+import modelengine.fit.serialization.test.person.PersonConstruct;
+import modelengine.fit.serialization.test.person.PersonGender;
+import modelengine.fit.serialization.test.person.PersonName;
+import modelengine.fit.serialization.test.person.PersonTransient;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.MapBuilder;
 
@@ -187,8 +193,8 @@ public class JacksonObjectSerializerTest {
     @DisplayName("当输入为字符串时，反序列化为字符串")
     void givenStringThenResultIsString() {
         String expected = "123";
-        String serialize = JacksonObjectSerializerTest.this.jsonSerializer.serialize(expected);
-        Object actual = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(serialize, String.class);
+        String serialize = this.jsonSerializer.serialize(expected);
+        Object actual = this.jsonSerializer.deserialize(serialize, String.class);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -196,7 +202,7 @@ public class JacksonObjectSerializerTest {
     @DisplayName("当存在别名时，反序列化成功")
     void givenAliasJsonThenDeserializeOk() {
         String json = "{\"first_name\":\"foo\"}";
-        PersonAlias personAlias = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(json, PersonAlias.class);
+        PersonAlias personAlias = this.jsonSerializer.deserialize(json, PersonAlias.class);
         assertThat(personAlias.firstName()).isEqualTo("foo");
     }
 
@@ -206,23 +212,81 @@ public class JacksonObjectSerializerTest {
         String expect = "{\"lastName\":null,\"first_name\":\"foo\",\"person_name\":null}";
         PersonAlias personAlias = new PersonAlias();
         personAlias.firstName("foo");
-        assertThat(JacksonObjectSerializerTest.this.jsonSerializer.serialize(personAlias)).isEqualTo(expect);
+        assertThat(this.jsonSerializer.serialize(personAlias)).isEqualTo(expect);
     }
 
     @Test
     @DisplayName("当使用原生注解，存在别名时，反序列化成功")
     void givenJsonPropertyThenDeserializeOriginOk() {
         String json = "{\"lastName\":\"bar\"}";
-        PersonAlias personAlias = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(json, PersonAlias.class);
+        PersonAlias personAlias = this.jsonSerializer.deserialize(json, PersonAlias.class);
         assertThat(personAlias.lastName()).isEqualTo("bar");
     }
 
     @Test
-    @DisplayName("当使用原生注解，存在别名时，反序列化成功")
+    @DisplayName("当使用原生注解，存在别名时，序列化成功")
     void givenJsonPropertyThenSerializeOriginOk() {
         String expect = "{\"lastName\":\"bar\",\"first_name\":null,\"person_name\":null}";
         PersonAlias personAlias = new PersonAlias();
         personAlias.lastName("bar");
-        assertThat(JacksonObjectSerializerTest.this.jsonSerializer.serialize(personAlias)).isEqualTo(expect);
+        assertThat(this.jsonSerializer.serialize(personAlias)).isEqualTo(expect);
+    }
+
+    @Test
+    @DisplayName("当使用枚举时，存在别名，反序列化成功")
+    void givenEnumThenDeserializeOk() {
+        String json = "{\"name\":\"bar\", \"gender\": \"man\"}";
+        PersonGender person = this.jsonSerializer.deserialize(json, PersonGender.class);
+        assertThat(person).extracting(PersonGender::name, PersonGender::gender).containsExactly("bar", Gender.MAN);
+    }
+
+    @Test
+    @DisplayName("当使用枚举时，存在别名，序列化成功")
+    void givenEnumThenSerializeOk() {
+        String expect = "{\"name\":\"foo\",\"gender\":\"woman\"}";
+        PersonGender person = new PersonGender();
+        person.name("foo");
+        person.gender(Gender.WOMAN);
+        assertThat(this.jsonSerializer.serialize(person)).isEqualTo(expect);
+    }
+
+    @Test
+    @DisplayName("当不存在默认构造函数时，反序列化成功")
+    void giveAllConstructorThenDeserializeOk() {
+        String json = "{\"name\":\"bar\", \"age\": \"18\"}";
+        PersonConstruct person = this.jsonSerializer.deserialize(json, PersonConstruct.class);
+        assertThat(person).hasFieldOrPropertyWithValue("name", "bar").hasFieldOrPropertyWithValue("age", 18);
+    }
+
+    @Test
+    @DisplayName("当存在 transient 字段时，忽略该字段")
+    void giveTransientFiledThenSerializeOk() {
+        String expect = "{\"name\":\"bar\"}";
+        PersonTransient person = new PersonTransient();
+        person.setName("bar");
+        person.setAge(18);
+        assertThat(this.jsonSerializer.serialize(person)).isEqualTo(expect);
+    }
+
+    @Test
+    @DisplayName("当存在 unwrap 注解时，序列化对象展开")
+    void giveUnwrappedFiledThenSerializeOk() {
+        String expect = "{\"first\":\"1\",\"middle\":\"2\",\"last\":\"3\"}";
+        Person person = new Person();
+        PersonName personName = new PersonName();
+        personName.setFirst("1");
+        personName.setMiddle("2");
+        personName.setLast("3");
+        person.setName(personName);
+        assertThat(this.jsonSerializer.serialize(person)).isEqualTo(expect);
+    }
+
+    @Test
+    @DisplayName("当存在 unwrap 注解时，反序列化对象打包")
+    void giveUnwrappedFiledThenDeserializeOk() {
+        String json = "{\"first\":\"1\",\"middle\":\"2\",\"last\":\"3\"}";
+        Person person = this.jsonSerializer.deserialize(json, Person.class);
+        assertThat(person.getName()).extracting(PersonName::getFirst, PersonName::getMiddle, PersonName::getLast)
+                .containsExactly("1", "2", "3");
     }
 }

@@ -15,8 +15,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.LastHttpContent;
 import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
 import modelengine.fit.http.protocol.ConfigurableStatusLine;
 import modelengine.fit.http.protocol.HttpVersion;
@@ -38,14 +42,16 @@ public class NettyHttpServerResponse implements ServerResponse {
     private final ConfigurableStatusLine startLine;
     private final ConfigurableMessageHeaders headers;
     private final ChannelHandlerContext ctx;
+    private final boolean keepAlive;
     private final ServerResponseBody body;
     private boolean hasAddedClosedListener;
     private boolean isClosed;
 
-    public NettyHttpServerResponse(ChannelHandlerContext ctx) {
+    public NettyHttpServerResponse(ChannelHandlerContext ctx, NettyHttpServerRequest nettyRequest) {
         this.startLine = ConfigurableStatusLine.create(HttpVersion.HTTP_1_1, 0, StringUtils.EMPTY);
         this.headers = ConfigurableMessageHeaders.create();
         this.ctx = notNull(ctx, "The channel handler context cannot be null.");
+        this.keepAlive = HttpUtil.isKeepAlive(nettyRequest.getNettyRequest());
         this.body = new ServerResponseBody(this);
     }
 
@@ -80,7 +86,12 @@ public class NettyHttpServerResponse implements ServerResponse {
         for (String headerName : this.headers().names()) {
             response.headers().set(headerName, this.headers().all(headerName));
         }
-        this.ctx.write(response);
+        if (this.keepAlive) {
+            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+        } else {
+            response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+        }
+        this.ctx.writeAndFlush(response);
     }
 
     @Override
@@ -91,20 +102,15 @@ public class NettyHttpServerResponse implements ServerResponse {
     @Override
     public void writeBody(byte[] bytes, int off, int len) throws IOException {
         this.checkIfClosed();
-        HttpContent httpContent = new DefaultHttpContent(Unpooled.wrappedBuffer(bytes, off, len));
-        ChannelFuture channelFuture = this.ctx.writeAndFlush(httpContent);
-        try {
-            channelFuture.sync();
-        } catch (InterruptedException e) {
-            throw new IllegalStateException("Failed to write body.", e);
-        }
+        HttpContent httpContent = new DefaultHttpContent(Unpooled.copiedBuffer(bytes, off, len));
+        this.ctx.writeAndFlush(httpContent);
     }
 
     @Override
     public void flush() throws IOException {
         this.checkIfClosed();
-        ChannelFuture channelFuture = this.ctx.writeAndFlush(Unpooled.EMPTY_BUFFER);
-        if (!this.hasAddedClosedListener) {
+        ChannelFuture channelFuture = this.ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+        if (!this.keepAlive && !this.hasAddedClosedListener) {
             channelFuture.addListener(ChannelFutureListener.CLOSE);
             this.hasAddedClosedListener = true;
         }

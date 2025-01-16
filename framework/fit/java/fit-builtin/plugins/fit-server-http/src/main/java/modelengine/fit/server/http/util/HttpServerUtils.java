@@ -30,6 +30,7 @@ import modelengine.fitframework.broker.server.Response;
 import modelengine.fitframework.conf.runtime.SerializationFormat;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.resource.UrlUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -71,7 +72,7 @@ public class HttpServerUtils {
         response.headers()
                 .set(FIT_DATA_FORMAT.value(), String.valueOf(result.metadata().dataFormat()))
                 .set(FIT_CODE.value(), String.valueOf(result.metadata().code()))
-                .set(FIT_MESSAGE.value(), result.metadata().message())
+                .set(FIT_MESSAGE.value(), UrlUtils.encodePath(result.metadata().message()))
                 .set(FIT_TLV.value(), HttpUtils.encode(result.metadata().tagValues().serialize()));
     }
 

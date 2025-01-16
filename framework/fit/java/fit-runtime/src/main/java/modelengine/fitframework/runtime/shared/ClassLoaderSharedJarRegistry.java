@@ -9,11 +9,7 @@ package modelengine.fitframework.runtime.shared;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.plugin.SharedJarRegistry;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.ReflectionUtils;
-import modelengine.fitframework.util.StringUtils;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -24,29 +20,20 @@ import java.net.URLClassLoader;
  * @since 2022-06-27
  */
 public class ClassLoaderSharedJarRegistry implements SharedJarRegistry {
-    private final URLClassLoader loader;
-    private final Method method;
+    private final SharedUrlClassLoader loader;
 
     /**
      * 使用类加载程序创建 {@link ClassLoaderSharedJarRegistry} 类的新实例。
      *
-     * @param loader 表示将JAR注册到的类加载程序的 {@link ClassLoader}。
+     * @param loader 表示将JAR注册到的类加载程序的 {@link SharedUrlClassLoader}。
      * @throws IllegalArgumentException {@code loader} 为 {@code null} 或不是 {@link URLClassLoader}。
      */
-    public ClassLoaderSharedJarRegistry(ClassLoader loader) {
-        if (notNull(loader, "The class loader to register JARs cannot be null.") instanceof URLClassLoader) {
-            this.loader = ObjectUtils.cast(loader);
-            this.method = ReflectionUtils.getDeclaredMethod(URLClassLoader.class, "addURL", URL.class);
-            this.method.setAccessible(true);
-        } else {
-            throw new IllegalArgumentException(StringUtils.format(
-                    "The class loader to register JARs is not a URL class loader. [loader={0}]",
-                    loader.getClass().getName()));
-        }
+    public ClassLoaderSharedJarRegistry(SharedUrlClassLoader loader) {
+        this.loader = notNull(loader, "The shared URL class loader cannot be null.");
     }
 
     @Override
     public void register(URL jar) {
-        ReflectionUtils.invoke(this.loader, this.method, jar);
+        this.loader.addURL(jar);
     }
 }

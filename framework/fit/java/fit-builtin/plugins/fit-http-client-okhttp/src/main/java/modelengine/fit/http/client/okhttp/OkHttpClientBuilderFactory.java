@@ -14,7 +14,6 @@ import modelengine.fit.client.http.HttpsConstants;
 import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.protocol.util.SslUtils;
 import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.LockUtils;
 import modelengine.fitframework.util.StringUtils;
 import okhttp3.OkHttpClient;
 
@@ -35,8 +34,6 @@ import javax.net.ssl.X509TrustManager;
 public class OkHttpClientBuilderFactory {
     private static final Logger log = Logger.get(OkHttpClientBuilderFactory.class);
     private static final String SECURE_DEFAULT_PROTOCOL = "TLSv1.2";
-    private static volatile OkHttpClient.Builder okHttpClientBuilder;
-    private static final Object LOCK = LockUtils.newSynchronizedLock();
 
     private OkHttpClientBuilderFactory() {}
 
@@ -47,23 +44,11 @@ public class OkHttpClientBuilderFactory {
      * @return 表示工厂创建实例的 {@link OkHttpClient.Builder}。
      */
     public static OkHttpClient.Builder getOkHttpClientBuilder(HttpClassicClientFactory.Config config) {
-        if (okHttpClientBuilder == null) {
-            synchronized (LOCK) {
-                if (okHttpClientBuilder == null) {
-                    okHttpClientBuilder = getClientBuilder(config);
-                }
-            }
-        }
-        return okHttpClientBuilder;
-    }
-
-    private static OkHttpClient.Builder getClientBuilder(HttpClassicClientFactory.Config config) {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         try {
             setSslConfig(clientBuilder, config);
         } catch (GeneralSecurityException e) {
-            log.error("Failed to set https config.");
-            log.debug("Exception: ", e);
+            log.error("Failed to set https config.", e);
             throw new IllegalStateException("Failed to set https config.", e);
         }
         return clientBuilder;
@@ -71,59 +56,71 @@ public class OkHttpClientBuilderFactory {
 
     private static void setSslConfig(OkHttpClient.Builder clientBuilder, HttpClassicClientFactory.Config config)
             throws GeneralSecurityException {
-        String keyStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE));
-        String keyStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD));
         boolean isStrongRandom = Boolean.parseBoolean(String.valueOf(config.custom()
                 .getOrDefault(HttpsConstants.CLIENT_SECURE_STRONG_RANDOM, true)));
         String secureProtocol = cast(config.custom()
                 .getOrDefault(HttpsConstants.CLIENT_SECURE_SECURITY_PROTOCOL, SECURE_DEFAULT_PROTOCOL));
-        KeyManager[] keyManagers;
-        if (StringUtils.isNotBlank(keyStoreFile) && StringUtils.isNotBlank(keyStorePassword)) {
-            keyManagers = getKeyManagers(keyStoreFile, keyStorePassword);
-        } else {
-            keyManagers = null;
-        }
-
-        TrustManager[] trustManagers;
         boolean isIgnoreTrust = Boolean.parseBoolean(String.valueOf(config.custom()
                 .getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_TRUST, false)));
-        if (isIgnoreTrust) {
-            trustManagers = getIgnoreTrustManagers();
-        } else {
-            String trustStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_TRUST_STORE_FILE));
-            String trustStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_TRUST_STORE_PASSWORD));
-            if (StringUtils.isNotBlank(trustStoreFile) && StringUtils.isNotBlank(trustStorePassword)) {
-                trustManagers = getTrustManagers(trustStoreFile, trustStorePassword);
-            } else {
-                trustManagers = null;
-            }
-        }
+
+        KeyManager[] keyManagers = getKeyManagersConfig(config, isIgnoreTrust);
+        TrustManager[] trustManagers = getTrustManagersConfig(config, isIgnoreTrust);
 
         SSLContext sslContext = SslUtils.getSslContext(keyManagers, trustManagers, isStrongRandom, secureProtocol);
-        if (trustManagers != null && trustManagers[0] instanceof X509TrustManager) {
+        if (isIgnoreTrust || isTrustManagerSet(trustManagers)) {
             clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagers[0]);
         }
-        boolean isIgnoreHostname = Boolean.parseBoolean(String.valueOf(config.custom()
-                .getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, false)));
-        if (isIgnoreHostname) {
+        if (isIgnoreTrust || isHostnameVerificationIgnored(trustManagers, config)) {
             clientBuilder.hostnameVerifier((hostname, session) -> true);
         }
     }
 
-    private static TrustManager[] getIgnoreTrustManagers() {
-        return new TrustManager[] {
-                new X509TrustManager() {
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
+    private static KeyManager[] getKeyManagersConfig(HttpClassicClientFactory.Config config, boolean isIgnoreTrust)
+            throws GeneralSecurityException {
+        String keyStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE));
+        String keyStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD));
+        if (StringUtils.isNotBlank(keyStoreFile) && StringUtils.isNotBlank(keyStorePassword) && !isIgnoreTrust) {
+            return getKeyManagers(keyStoreFile, keyStorePassword);
+        }
+        return null;
+    }
 
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+    private static TrustManager[] getTrustManagersConfig(HttpClassicClientFactory.Config config, boolean isIgnoreTrust)
+            throws GeneralSecurityException {
+        if (isIgnoreTrust) {
+            return getTrustAllCerts();
+        }
+        String trustStoreFile = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_TRUST_STORE_FILE));
+        String trustStorePassword = cast(config.custom().get(HttpsConstants.CLIENT_SECURE_TRUST_STORE_PASSWORD));
+        if (StringUtils.isNotBlank(trustStoreFile) && StringUtils.isNotBlank(trustStorePassword)) {
+            return getTrustManagers(trustStoreFile, trustStorePassword);
+        }
+        return null;
+    }
 
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-                }
+    private static boolean isTrustManagerSet(TrustManager[] trustManagers) {
+        return trustManagers != null && trustManagers.length > 0 && trustManagers[0] instanceof X509TrustManager;
+    }
+
+    private static boolean isHostnameVerificationIgnored(TrustManager[] trustManagers,
+            HttpClassicClientFactory.Config config) {
+        return trustManagers != null && Boolean.parseBoolean(String.valueOf(config.custom()
+                .getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, false)));
+    }
+
+    private static TrustManager[] getTrustAllCerts() {
+        X509TrustManager x509TrustManager = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[] {};
+            }
         };
+        return new TrustManager[] {x509TrustManager};
     }
 }

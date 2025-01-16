@@ -18,9 +18,11 @@ import modelengine.fitframework.flowable.publisher.FlatMapPublisherDecorator;
 import modelengine.fitframework.flowable.publisher.MapPublisherDecorator;
 import modelengine.fitframework.flowable.publisher.ReducePublisherDecorator;
 import modelengine.fitframework.flowable.publisher.SkipPublisherDecorator;
+import modelengine.fitframework.flowable.publisher.SubscribeOnPublisherDecorator;
 import modelengine.fitframework.flowable.subscriber.BlockAllSubscriber;
 import modelengine.fitframework.flowable.subscriber.FunctionalSubscriber;
 import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.HashSet;
@@ -86,6 +88,11 @@ public abstract class AbstractChoir<T> implements Choir<T> {
     }
 
     @Override
+    public Choir<T> subscribeOn(ThreadPoolExecutor executor) {
+        return Choir.fromPublisher(new SubscribeOnPublisherDecorator<>(this, executor, true));
+    }
+
+    @Override
     public Solo<T> reduce(BinaryOperator<T> reducer) {
         return Solo.fromPublisher(new ReducePublisherDecorator<>(this, reducer));
     }
@@ -108,8 +115,8 @@ public abstract class AbstractChoir<T> implements Choir<T> {
     @Override
     public void subscribe(Consumer<Subscription> onSubscribedAction, BiConsumer<Subscription, T> consumeAction,
             Consumer<Subscription> completeAction, BiConsumer<Subscription, Exception> failAction) {
-        this.subscribe(Subscriber.functional(
-                ObjectUtils.nullIf(onSubscribedAction, FunctionalSubscriber.DEFAULT_ON_SUBSCRIBED_CHOIR_ACTION),
+        this.subscribe(Subscriber.functional(ObjectUtils.nullIf(onSubscribedAction,
+                        FunctionalSubscriber.DEFAULT_ON_SUBSCRIBED_CHOIR_ACTION),
                 ObjectUtils.nullIf(consumeAction, ObjectUtils.cast(FunctionalSubscriber.EMPTY_CONSUME_ACTION)),
                 ObjectUtils.nullIf(completeAction, FunctionalSubscriber.EMPTY_COMPLETE_ACTION),
                 ObjectUtils.nullIf(failAction, FunctionalSubscriber.EMPTY_FAIL_ACTION)));

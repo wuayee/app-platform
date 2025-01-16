@@ -9,7 +9,9 @@ package modelengine.fitframework.plugin.support;
 import modelengine.fitframework.jvm.scan.PackageScanner;
 import modelengine.fitframework.jvm.scan.support.ClassLoaderPackageScanner;
 import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -28,7 +30,14 @@ public class PluginClassLoaderScanner extends ClassLoaderPackageScanner {
     protected Enumeration<URL> getPackageResources(String basePackage, String resourceName) {
         if (this.getLoader() instanceof PluginClassLoader) {
             PluginClassLoader pluginClassLoader = ObjectUtils.cast(this.getLoader());
-            return pluginClassLoader.findResources(resourceName);
+            try {
+                return pluginClassLoader.findResources(resourceName);
+            } catch (IOException e) {
+                throw new IllegalStateException(StringUtils.format(
+                        "Failed to obtain resources for package. [package={0}, resource={1}]",
+                        basePackage,
+                        resourceName), e);
+            }
         } else {
             return super.getPackageResources(basePackage, resourceName);
         }

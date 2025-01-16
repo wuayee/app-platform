@@ -8,6 +8,7 @@ package modelengine.fit.http.server.handler.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,7 +16,10 @@ import modelengine.fit.http.annotation.ExceptionHandler;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.http.server.HttpServerResponseException;
+import modelengine.fit.http.server.handler.HttpExceptionHandler;
+import modelengine.fit.http.server.handler.comparator.ClassComparator;
 import modelengine.fitframework.annotation.Scope;
+import modelengine.fitframework.exception.FitException;
 import modelengine.fitframework.exception.MethodInvocationException;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
@@ -25,6 +29,8 @@ import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
 import modelengine.fitframework.merge.ConflictException;
 import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.ReflectionUtils;
 import modelengine.fitframework.util.TypeUtils;
 
@@ -32,11 +38,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * 表示 {@link DefaultExceptionHandlerRegistry} 的单元测试。
@@ -115,5 +124,33 @@ public class ExceptionHandlerSupplierTest {
                     .getMessage()
                     .startsWith("Conflict in merge map process.")).isTrue();
         }
+    }
+
+    @Test
+    @DisplayName("获取全局异常处理器，返回不可修改的 Map")
+    void getGlobalExceptionHandlersThenReturnUnmodifiableMap() {
+        Map<Class<Throwable>, Map<String, HttpExceptionHandler>> globalExceptionHandlers =
+                this.exceptionHandlerResolver.getGlobalExceptionHandlers();
+        assertThrows(UnsupportedOperationException.class,
+                () -> globalExceptionHandlers.put(Throwable.class,
+                        MapBuilder.<String, HttpExceptionHandler>get()
+                                .put("1", Mockito.mock(HttpExceptionHandler.class))
+                                .build()));
+    }
+
+    @Test
+    @DisplayName("获取全部键时，返回按照期望排序")
+    void shouldOkWhenGetSortedKeySet() {
+        Map<Class<Throwable>, String> myMap = new ConcurrentSkipListMap<>(ClassComparator.INSTANCE);
+        myMap.put(ObjectUtils.cast(IllegalArgumentException.class), "1");
+        myMap.put(ObjectUtils.cast(IllegalAccessException.class), "1");
+        myMap.put(ObjectUtils.cast(RuntimeException.class), "1");
+        myMap.put(ObjectUtils.cast(FitException.class), "1");
+        myMap.put(ObjectUtils.cast(ReflectiveOperationException.class), "1");
+        assertThat(myMap.keySet()).containsExactly(ObjectUtils.cast(IllegalAccessException.class),
+                ObjectUtils.cast(IllegalArgumentException.class),
+                ObjectUtils.cast(ReflectiveOperationException.class),
+                ObjectUtils.cast(FitException.class),
+                ObjectUtils.cast(RuntimeException.class));
     }
 }

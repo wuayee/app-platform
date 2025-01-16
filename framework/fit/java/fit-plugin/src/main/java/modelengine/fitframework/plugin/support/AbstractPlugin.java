@@ -30,6 +30,7 @@ import modelengine.fitframework.plugin.PluginStoppedObserver;
 import modelengine.fitframework.plugin.PluginStoppingObserver;
 import modelengine.fitframework.resource.Resource;
 import modelengine.fitframework.resource.ResourceResolver;
+import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.LockUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.support.AbstractDisposable;
@@ -234,9 +235,11 @@ public abstract class AbstractPlugin extends AbstractDisposable implements Plugi
      */
     protected void scanBeans() {
         this.container().registry().subscribe(this::onBeanRegistered);
-        Set<String> basePackages = this.config()
-                .list(BASE_PACKAGE_KEY, String.class)
-                .stream()
+        List<String> configs = this.config().list(BASE_PACKAGE_KEY, String.class);
+        if (CollectionUtils.isEmpty(configs)) {
+            return;
+        }
+        Set<String> basePackages = configs.stream()
                 .map(basePackage -> StringUtils.split(basePackage, ','))
                 .flatMap(Stream::of)
                 .map(StringUtils::trim)

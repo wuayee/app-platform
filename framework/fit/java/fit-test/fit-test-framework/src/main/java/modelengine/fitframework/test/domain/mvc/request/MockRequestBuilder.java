@@ -26,7 +26,7 @@ import java.util.Map;
  * @since 2024-04-09
  */
 public class MockRequestBuilder implements RequestBuilder {
-    private static final String BASE_URL = "http://localhost:";
+    private static final String BASE_URL = "http://127.0.0.1:";
 
     private final HttpRequestMethod method;
     private final MultiValueMap<String, String> params = MultiValueMap.create();

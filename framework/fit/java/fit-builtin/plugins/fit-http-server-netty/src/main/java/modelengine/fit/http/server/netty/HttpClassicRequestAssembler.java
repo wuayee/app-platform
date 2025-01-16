@@ -81,10 +81,8 @@ public class HttpClassicRequestAssembler extends SimpleChannelInboundHandler<Htt
                 .keepAliveTime(60, TimeUnit.SECONDS)
                 .workQueueCapacity(config.queueCapacity())
                 .isDaemonThread(!this.config.isGracefulExit())
-                .exceptionHandler((thread, cause) -> {
-                    log.error("Failed to handle http request by request assembler.");
-                    log.debug("Exception: ", cause);
-                })
+                .exceptionHandler((thread, cause) -> log.error("Failed to handle http request by request assembler.",
+                        cause))
                 .rejectedExecutionHandler(new AbortPolicy())
                 .build();
     }
@@ -104,14 +102,12 @@ public class HttpClassicRequestAssembler extends SimpleChannelInboundHandler<Htt
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("Failed to handle http request by netty worker.");
-        log.debug("Exception: ", cause);
+        log.error("Failed to handle http request by netty worker.", cause);
         this.returnError(ctx, cause, getRequest(ctx));
     }
 
     private void exceptionCaught(ChannelHandlerContext ctx, Throwable cause, NettyHttpServerRequest request) {
-        log.error("Failed to handle http request by request assembler.");
-        log.debug("Exception: ", cause);
+        log.error("Failed to handle http request by request assembler.", cause);
         this.returnError(ctx, cause, request);
     }
 
@@ -164,7 +160,7 @@ public class HttpClassicRequestAssembler extends SimpleChannelInboundHandler<Htt
     private void doHttpRequest(ChannelHandlerContext ctx, NettyHttpServerRequest request) {
         request.setExecuteThread(Thread.currentThread());
         try (HttpClassicServerRequest classicRequest = HttpClassicServerRequest.create(this.server, request);
-             NettyHttpServerResponse response = new NettyHttpServerResponse(ctx);
+             NettyHttpServerResponse response = new NettyHttpServerResponse(ctx, request);
              HttpClassicServerResponse classicResponse = HttpClassicServerResponse.create(this.server, response)) {
             HttpHandler handler = this.server.httpDispatcher().dispatch(classicRequest, classicResponse);
             classicRequest.attributes().set(PATH_PATTERN.key(), handler.pathPattern());

@@ -10,6 +10,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import modelengine.fitframework.flowable.subscriber.RecordSubscriber;
+import modelengine.fitframework.schedule.ThreadPoolExecutor;
+import modelengine.fitframework.schedule.ThreadPoolExecutors;
+import modelengine.fitframework.util.ThreadUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 表示 {@link Choir} 的单元测试。
@@ -327,6 +332,83 @@ public class ChoirTest {
                 assertThat(subscriber.getElements()).hasSize(3).containsSequence(4, 5, 6);
                 assertThat(subscriber.receivedCompleted()).isTrue();
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("测试 subscribeOn 方法")
+    class TestSubscribeOn {
+        @Test
+        @DisplayName("当在数据流转换操作执行之后通过 subscribeOn 方法切换执行器时，结果符合预期")
+        void shouldFinishSubscribeImmediatelyWhenSubscribeOnAfterMap() {
+            RecordSubscriber<Integer> subscriber = new RecordSubscriber<>();
+            Semaphore semaphore = new Semaphore(0);
+            Choir.just(1).map(integer -> {
+                try {
+                    semaphore.acquire();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                return integer;
+            }).subscribeOn(ThreadPoolExecutors.newSingle("single", true)).subscribe(subscriber);
+            assertThat(subscriber.isCompleted()).isFalse();
+            semaphore.release();
+        }
+
+        @Test
+        @DisplayName("当在数据流转换操作执行之前通过 subscribeOn 方法切换执行器时，结果符合预期")
+        void shouldFinishSubscribeImmediatelyWhenSubscribeOnBeforeMap() {
+            RecordSubscriber<Integer> subscriber = new RecordSubscriber<>();
+            Semaphore semaphore = new Semaphore(0);
+            Choir.just(1).subscribeOn(ThreadPoolExecutors.newSingle("single", true)).map(integer -> {
+                try {
+                    semaphore.acquire();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                return integer;
+            }).subscribe(subscriber);
+            assertThat(subscriber.isCompleted()).isFalse();
+            semaphore.release();
+        }
+
+        @Test
+        @DisplayName("当时响应式流经过两次 subscribeOn 操作切换执行器时，结果符合预期")
+        void shouldUseFrontExecutorWhenSubscribeOnTwice() {
+            ThreadPoolExecutor front = ThreadPoolExecutors.newParallel("front", 2, true);
+            ThreadPoolExecutor back = ThreadPoolExecutors.newParallel("back", 2, true);
+            Subscriber<Integer> subscriber = new RecordSubscriber<>();
+            AtomicReference<String> threadName = new AtomicReference<>();
+            Choir.just(1, 2, 3).subscribeOn(front).map(integer -> {
+                threadName.set(Thread.currentThread().getName());
+                return integer;
+            }).subscribeOn(back).subscribe(subscriber);
+            while (threadName.get() == null) {
+                ThreadUtils.sleep(1);
+            }
+            assertThat(threadName.get().startsWith("front")).isTrue();
+        }
+
+        @Test
+        @DisplayName("当两个响应式流分别通过 subscribeOn 操作切换到同一个执行器时，结果符合预期")
+        void shouldUseSameThreadWhenSubscribeOnSameExecutor() {
+            RecordSubscriber<Integer> subscriber1 = new RecordSubscriber<>();
+            RecordSubscriber<Integer> subscriber2 = new RecordSubscriber<>();
+            AtomicReference<String> threadName1 = new AtomicReference<>();
+            AtomicReference<String> threadName2 = new AtomicReference<>();
+            ThreadPoolExecutor executor = ThreadPoolExecutors.newSingle("single-for-test", true);
+            Choir.just(1, 2, 3).subscribeOn(executor).map(integer -> {
+                threadName1.set(Thread.currentThread().getName());
+                return integer;
+            }).subscribe(subscriber1);
+            Choir.just(1, 2, 3).subscribeOn(executor).map(integer -> {
+                threadName2.set(Thread.currentThread().getName());
+                return integer;
+            }).subscribe(subscriber2);
+            while (threadName1.get() == null || threadName2.get() == null) {
+                ThreadUtils.sleep(1);
+            }
+            assertThat(threadName1.get()).isEqualTo(threadName2.get());
         }
     }
 }

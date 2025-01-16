@@ -39,7 +39,7 @@ public final class U4 implements Comparable<U4> {
      */
     public static final U4 TWO = U4.of(2);
 
-    private static List<U4> cache;
+    private static volatile List<U4> cache;
 
     private final int value;
 

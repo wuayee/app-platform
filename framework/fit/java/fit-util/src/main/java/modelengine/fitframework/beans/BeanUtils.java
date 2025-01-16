@@ -7,8 +7,10 @@
 package modelengine.fitframework.beans;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 
 import java.util.Set;
 
@@ -37,5 +39,20 @@ public class BeanUtils {
             Object value = srcAccessor.get(source, property);
             dstAccessor.set(target, property, value);
         }
+    }
+
+    /**
+     * 提供目标类型，将来源对象的属性拷贝到目标对象中去。
+     *
+     * @param source 表示来源对象的 {@link Object}。
+     * @param type 表示目标对象的 {@link Class}。
+     * @return 表示目标对象的实例。
+     * @throws IllegalArgumentException 当 {@code source} 或 {@code target} 为 {@code null} 时。
+     */
+    public static <T> T copyProperties(Object source, Class<T> type) {
+        notNull(type, "The target type cannot be null.");
+        Object target = ReflectionUtils.instantiate(type);
+        BeanUtils.copyProperties(source, target);
+        return cast(target);
     }
 }

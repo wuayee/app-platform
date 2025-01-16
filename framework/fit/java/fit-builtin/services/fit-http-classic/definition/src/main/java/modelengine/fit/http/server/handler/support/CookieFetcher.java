@@ -11,7 +11,10 @@ import static modelengine.fitframework.inspection.Validation.notBlank;
 import modelengine.fit.http.Cookie;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.handler.RequestMappingException;
 import modelengine.fit.http.server.handler.SourceFetcher;
+import modelengine.fit.http.server.handler.exception.RequestParamFetchException;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示从 Cookie 中获取值的 {@link SourceFetcher}。
@@ -19,7 +22,7 @@ import modelengine.fit.http.server.handler.SourceFetcher;
  * @author 季聿阶
  * @since 2022-08-28
  */
-public class CookieFetcher implements SourceFetcher {
+public class CookieFetcher extends AbstractSourceFetcher {
     private final String cookieName;
 
     /**
@@ -29,11 +32,30 @@ public class CookieFetcher implements SourceFetcher {
      * @throws IllegalArgumentException 当 {@code cookieName} 为 {@code null} 或空白字符串时。
      */
     public CookieFetcher(String cookieName) {
-        this.cookieName = notBlank(cookieName, "The cookie name cannot be blank.");
+        super(false, null);
+        this.cookieName =
+                notBlank(cookieName, () -> new RequestParamFetchException("The cookie name cannot be blank."));
+    }
+
+    /**
+     * 通过 Cookie 的参数元数据来实例化 {@link CookieFetcher}。
+     *
+     * @param paramValue 表示参数元数据的 {@link ParamValue}。
+     * @throws IllegalArgumentException 当 {@code cookieName} 为 {@code null} 或空白字符串时。
+     */
+    public CookieFetcher(ParamValue paramValue) {
+        super(paramValue.required(), paramValue.defaultValue());
+        this.cookieName =
+                notBlank(paramValue.name(), () -> new RequestParamFetchException("The cookie name cannot be blank."));
     }
 
     @Override
     public Object get(HttpClassicServerRequest request, HttpClassicServerResponse response) {
-        return request.cookies().get(this.cookieName).map(Cookie::value).orElse(null);
+        try {
+            return this.resolveValue(request.cookies().get(this.cookieName).map(Cookie::value).orElse(null));
+        } catch (RequestMappingException e) {
+            throw new RequestMappingException(StringUtils.format("Invalid cookie param. [cookieName={0}]",
+                    this.cookieName), e);
+        }
     }
 }

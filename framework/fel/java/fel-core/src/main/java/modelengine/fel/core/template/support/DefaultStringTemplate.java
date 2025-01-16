@@ -28,7 +28,8 @@ import java.util.stream.Collectors;
  * @since 2024-04-25
  */
 public class DefaultStringTemplate implements StringTemplate {
-    private static final ParameterizedStringResolver FORMATTER = ParameterizedStringResolver.create("{{", "}}", '/');
+    private static final ParameterizedStringResolver FORMATTER =
+            ParameterizedStringResolver.create("{{", "}}", '/', false);
 
     private final ParameterizedString parameterizedString;
 
@@ -81,8 +82,9 @@ public class DefaultStringTemplate implements StringTemplate {
     public String render(Map<String, String> values) {
         Map<String, String> builtinValues =
                 this.builtin.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()));
-        return parameterizedString.format(MapUtils.merge(values, builtinValues, ConflictResolutionPolicy.OVERRIDE),
-                false);
+        return this.parameterizedString.format(MapUtils.merge(values,
+                builtinValues,
+                ConflictResolutionPolicy.OVERRIDE));
     }
 
     @Override

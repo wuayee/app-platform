@@ -12,6 +12,8 @@ import modelengine.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 /**
  * Jdk 动态代理的回调。
@@ -20,6 +22,8 @@ import java.lang.reflect.Method;
  * @since 2022-05-25
  */
 public class JdkDynamicProxy extends AbstractAopProxy implements InvocationHandler {
+    private static final String TO_STRING = "toString";
+
     /**
      * 使用拦截支持信息实例化 {@link JdkDynamicProxy}。
      *
@@ -31,12 +35,20 @@ public class JdkDynamicProxy extends AbstractAopProxy implements InvocationHandl
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return invoke(proxy, method, args, methodInvocation -> {
+        return this.invoke(proxy, method, args, methodInvocation -> {
             try {
+                if (methodInvocation.getTarget() == null && isToString(method)) {
+                    return "$fit$" + this.getTargetClass().getName() + "#" + TO_STRING + "()";
+                }
                 return ReflectionUtils.invoke(methodInvocation.getTarget(), method, methodInvocation.getArguments());
             } catch (MethodInvocationException e) {
                 throw e.getCause();
             }
         });
+    }
+
+    private static boolean isToString(Method method) {
+        return !Modifier.isStatic(method.getModifiers()) && Objects.equals(method.getName(), TO_STRING)
+                && method.getParameterCount() == 0;
     }
 }

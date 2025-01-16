@@ -15,10 +15,10 @@ import modelengine.fit.http.protocol.ClientResponse;
 import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
 import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.protocol.HttpVersion;
-import modelengine.fit.http.protocol.MessageHeaderNames;
 import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.WritableMessageBody;
 import modelengine.fit.http.protocol.support.ClientRequestBody;
+import modelengine.fitframework.exception.TimeoutException;
 import modelengine.fitframework.model.MultiValueMap;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,6 +27,7 @@ import okhttp3.Response;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -65,9 +66,7 @@ public class OkHttpClientRequest implements ClientRequest {
             throw new IllegalStateException("The url is incorrect.", e);
         }
         this.headers = ConfigurableMessageHeaders.create();
-        this.headers.set(MessageHeaderNames.HOST, this.url.getHost());
         this.body = new ClientRequestBody(this);
-
         this.clientBuilder = OkHttpClientBuilderFactory.getOkHttpClientBuilder(this.config);
     }
 
@@ -108,7 +107,7 @@ public class OkHttpClientRequest implements ClientRequest {
     }
 
     @Override
-    public void flush() throws IOException {}
+    public void flush() {}
 
     @Override
     public ClientResponse readResponse() throws IOException {
@@ -121,7 +120,12 @@ public class OkHttpClientRequest implements ClientRequest {
                     .writeTimeout(this.config.socketTimeout(), TimeUnit.MILLISECONDS);
         }
         OkHttpClient client = this.clientBuilder.build();
-        Response response = client.newCall(this.requestBuilder.build()).execute();
+        Response response;
+        try {
+            response = client.newCall(this.requestBuilder.build()).execute();
+        } catch (SocketTimeoutException e) {
+            throw new TimeoutException("Failed to read response: timeout.", e);
+        }
         try {
             if (response.body() != null) {
                 return ClientResponse.create(response.code(),

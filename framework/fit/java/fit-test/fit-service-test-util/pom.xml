@@ -14,7 +14,7 @@
 
     <properties>
         <!-- Third-party versions -->
-        <junit5.version>5.10.3</junit5.version>
+        <junit5.version>5.9.2</junit5.version>
     </properties>
 
     <dependencies>
@@ -28,7 +28,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit5.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

@@ -6,14 +6,24 @@
 
 package modelengine.fitframework.test.domain.listener;
 
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.TextEntity;
+import modelengine.fitframework.exception.ClientException;
 import modelengine.fitframework.test.annotation.EnableMockMvc;
 import modelengine.fitframework.test.domain.TestContext;
+import modelengine.fitframework.test.domain.mvc.MockController;
 import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
+import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import modelengine.fitframework.test.domain.resolver.TestContextConfiguration;
 import modelengine.fitframework.test.domain.util.AnnotationUtils;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,8 +53,11 @@ public class MockMvcListener implements TestListener {
         if (!AnnotationUtils.getAnnotation(clazz, EnableMockMvc.class).isPresent()) {
             return Optional.empty();
         }
-        TestContextConfiguration configuration =
-                TestContextConfiguration.custom().testClass(clazz).scannedPackages(DEFAULT_SCAN_PACKAGES).build();
+        TestContextConfiguration configuration = TestContextConfiguration.custom()
+                .testClass(clazz)
+                .includeClasses(new Class[] {MockController.class})
+                .scannedPackages(DEFAULT_SCAN_PACKAGES)
+                .build();
         return Optional.of(configuration);
     }
 
@@ -56,5 +69,24 @@ public class MockMvcListener implements TestListener {
         }
         MockMvc mockMvc = new MockMvc(this.port);
         context.plugin().container().registry().register(mockMvc);
+        boolean started = this.isStarted(mockMvc);
+        while (!started) {
+            ThreadUtils.sleep(100);
+            started = this.isStarted(mockMvc);
+        }
+    }
+
+    private boolean isStarted(MockMvc mockMvc) {
+        MockRequestBuilder builder = MockMvcRequestBuilders.get(MockController.PATH).responseType(String.class);
+        try (HttpClassicClientResponse<String> response = mockMvc.perform(builder)) {
+            String content = response.textEntity()
+                    .map(TextEntity::content)
+                    .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                            "Failed to start mock http server. [port={0}]",
+                            this.port)));
+            return Objects.equals(content, MockController.OK);
+        } catch (IOException | ClientException e) {
+            return false;
+        }
     }
 }

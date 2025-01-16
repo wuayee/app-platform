@@ -25,6 +25,7 @@ import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
+import modelengine.fitframework.util.LazyLoader;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
@@ -41,12 +42,14 @@ public class DefaultLoadBalancer implements LoadBalancer {
     private static final Logger log = Logger.get(DefaultLoadBalancer.class);
 
     private final BeanContainer container;
+    private final LazyLoader<List<Client>> clientsLoader;
     private final SerializationService serializationService;
     private final TargetLocator targetLocator;
 
     public DefaultLoadBalancer(BeanContainer container, SerializationService serializationService,
             TargetLocator targetLocator) {
         this.container = notNull(container, "The bean container cannot be null.");
+        this.clientsLoader = new LazyLoader<>(this::getClients);
         this.serializationService = notNull(serializationService, "The serialization service cannot be null.");
         this.targetLocator = notNull(targetLocator, "The target locator cannot be null.");
     }
@@ -70,7 +73,7 @@ public class DefaultLoadBalancer implements LoadBalancer {
     }
 
     private Invoker.Filter getProtocolAndFormatSupportedFilter(InvocationContext context) {
-        return new ProtocolAndFormatSupportedFilter(this.getClients(),
+        return new ProtocolAndFormatSupportedFilter(this.clientsLoader.get(),
                 this.serializationService,
                 context.protocol(),
                 context.format());

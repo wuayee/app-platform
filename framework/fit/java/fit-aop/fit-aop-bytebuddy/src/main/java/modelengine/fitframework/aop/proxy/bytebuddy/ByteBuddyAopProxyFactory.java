@@ -12,8 +12,9 @@ import modelengine.fitframework.annotation.Order;
 import modelengine.fitframework.aop.proxy.AopProxyFactory;
 import modelengine.fitframework.aop.proxy.FitProxy;
 import modelengine.fitframework.aop.proxy.InterceptSupport;
-import modelengine.fitframework.aop.proxy.support.ReflectionFactoryInstantiator;
+import modelengine.fitframework.aop.proxy.support.JdkDynamicProxy;
 import modelengine.fitframework.aop.util.ClassLoaderUtils;
+import modelengine.fitframework.beans.support.ReflectionFactoryInstantiator;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
@@ -59,7 +60,7 @@ public class ByteBuddyAopProxyFactory implements AopProxyFactory {
                 .implement(FitProxy.class)
                 .name(support.getTargetClass().getName() + "$$Fit$ByteBuddy$$" + RandomString.make(8))
                 .method(ElementMatchers.isMethod())
-                .intercept(InvocationHandlerAdapter.of(new ByteBuddyProxy(support)))
+                .intercept(InvocationHandlerAdapter.of(new JdkDynamicProxy(support)))
                 .make()
                 .load(classLoader, Default.INJECTION)
                 .getLoaded();

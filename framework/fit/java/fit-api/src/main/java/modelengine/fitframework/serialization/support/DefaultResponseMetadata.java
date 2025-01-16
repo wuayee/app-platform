@@ -9,6 +9,7 @@ package modelengine.fitframework.serialization.support;
 import static modelengine.fitframework.inspection.Validation.between;
 import static modelengine.fitframework.inspection.Validation.notNull;
 import static modelengine.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
 import modelengine.fitframework.serialization.ByteSerializer;
 import modelengine.fitframework.serialization.CommunicationVersion;
@@ -44,7 +45,7 @@ public class DefaultResponseMetadata implements ResponseMetadata {
         this.code = code;
         this.isDegradable = isDegradable;
         this.isRetryable = isRetryable;
-        this.message = message;
+        this.message = nullIf(message, StringUtils.EMPTY);
         this.tagValues = getIfNull(tagLengthValues, TagLengthValues::create);
     }
 

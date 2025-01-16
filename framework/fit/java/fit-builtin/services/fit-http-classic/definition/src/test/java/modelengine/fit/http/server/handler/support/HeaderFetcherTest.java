@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  */
 @DisplayName("测试 HeaderFetcher 类")
 class HeaderFetcherTest {
-    private final HeaderFetcher headerFetcher = new HeaderFetcher("name");
+    private final HeaderFetcher headerFetcher = new HeaderFetcher(ParamValue.custom().name("name").build());
 
     @Test
     @DisplayName("判断来源数据的常用格式是否是数组")

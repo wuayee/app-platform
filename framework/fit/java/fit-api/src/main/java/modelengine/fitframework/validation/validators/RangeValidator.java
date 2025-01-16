@@ -46,4 +46,9 @@ public class RangeValidator implements ConstraintValidator<Range, Object> {
             throw new UnsupportedOperationException("Failed to validate value: invalid value.");
         }
     }
+
+    @Override
+    public Object[] args() {
+        return new Object[] {this.min, this.max};
+    }
 }

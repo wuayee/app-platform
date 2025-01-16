@@ -102,7 +102,7 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
         if (MapUtils.isEmpty(handlers)) {
             return Optional.empty();
         }
-        String path = UrlUtils.decodeValue(request.path());
+        String path = UrlUtils.decodePath(request.path());
         HttpHandler handler = handlers.get(path);
         return Optional.ofNullable(handler);
     }
@@ -112,7 +112,7 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
         if (mappingTree == null) {
             return Optional.empty();
         }
-        String path = UrlUtils.decodeValue(request.path());
+        String path = UrlUtils.decodePath(request.path());
         return mappingTree.search(path);
     }
 
@@ -121,7 +121,7 @@ public class DefaultHttpDispatcher implements HttpDispatcher {
         if (MapUtils.isEmpty(handlers)) {
             return Optional.empty();
         }
-        String path = UrlUtils.decodeValue(request.path());
+        String path = UrlUtils.decodePath(request.path());
         for (Map.Entry<String, HttpHandler> entry : handlers.entrySet()) {
             PathPattern pattern = Pattern.forPath(entry.getKey(), PATH_SEPARATOR);
             if (pattern.matches(path)) {

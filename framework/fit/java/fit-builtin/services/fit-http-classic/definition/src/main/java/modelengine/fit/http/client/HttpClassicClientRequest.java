@@ -65,6 +65,8 @@ public interface HttpClassicClientRequest extends HttpClassicRequest {
      * 发送当前 Http 请求，交换 Http 响应。
      *
      * @return 表示交换回来的 Http 响应的 {@link HttpClassicClientResponse}。
+     * @throws modelengine.fitframework.exception.TimeoutException 当发生客户端超时异常时。
+     * @throws modelengine.fitframework.exception.ClientException 当发生客户端异常时。
      */
     HttpClassicClientResponse<Object> exchange();
 
@@ -74,6 +76,8 @@ public interface HttpClassicClientRequest extends HttpClassicRequest {
      * @param responseType 表示期待的返回值类型的 {@link Type}。
      * @param <T> 表示期待的返回值类型的 {@link T}。
      * @return 表示交换回来的 Http 响应的 {@link HttpClassicClientResponse}。
+     * @throws modelengine.fitframework.exception.TimeoutException 当发生客户端超时异常时。
+     * @throws modelengine.fitframework.exception.ClientException 当发生客户端异常时。
      */
     <T> HttpClassicClientResponse<T> exchange(Type responseType);
 

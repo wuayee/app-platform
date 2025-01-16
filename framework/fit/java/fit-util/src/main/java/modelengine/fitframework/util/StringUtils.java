@@ -6,6 +6,9 @@
 
 package modelengine.fitframework.util;
 
+import static modelengine.fitframework.util.ObjectUtils.getIfNull;
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
+
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.io.ByteReader;
 import modelengine.fitframework.parameterization.ParameterizedString;
@@ -17,6 +20,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,6 +48,8 @@ public final class StringUtils {
     public static final String[] EMPTY_ARRAY = new String[0];
 
     private static final ParameterizedStringResolver FORMATTER = ParameterizedStringResolver.create("{", "}", '/');
+    private static final ParameterizedStringResolver NON_STRICT_FORMATTER =
+            ParameterizedStringResolver.create("{", "}", '/', false);
 
     /**
      * 隐藏默认构造方法，避免工具类被实例化。
@@ -228,23 +234,58 @@ public final class StringUtils {
 
     /**
      * 使用指定的格式化字符串对参数进行格式化，并返回格式化后的字符串。
-     * <p><b>注意：{@code format} 中如果含有如下特殊字符（{@code '\u007b'}，{@code '\u007d'}，{@code '/'}），需要在该字符前增加转义字符
-     * {@code '/'} 进行转义。</b></p>
+     * <p>采用严格校验模式。</p>
      *
      * @param format 表示格式化字符串的 {@link String}。
      * @param args 表示用以格式化字符串的参数的 {@link Object}{@code []}。如果参数中存在 {@code null}，其对应的格式化后会变成空字符串。
      * @return 表示格式化得到的字符串的 {@link String}。
-     * @throws modelengine.fitframework.parameterization.StringFormatException 所提供的格式化字符串与格式化参数不匹配。
+     * @throws modelengine.fitframework.parameterization.StringFormatException 当所提供的格式化字符串与格式化参数不匹配时。
+     * @see #format(String, boolean, Map)
      */
     public static String format(String format, Object... args) {
+        Object[] actual = getIfNull(args, () -> new Object[0]);
+        Map<String, Object> params = new HashMap<>(actual.length);
+        for (int i = 0; i < actual.length; i++) {
+            params.put(Integer.toString(i), actual[i]);
+        }
+        return format(format, params);
+    }
+
+    /**
+     * 使用指定的格式化字符串对参数进行格式化，并返回格式化后的字符串。
+     * <p>采用严格校验模式。</p>
+     *
+     * @param format 表示格式化字符串的 {@link String}。
+     * @param args 表示用以格式化字符串的参数的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。如果参数中存在
+     * {@code null}，其对应的格式化后会变成空字符串。
+     * @return 表示格式化得到的字符串的 {@link String}。
+     * @throws modelengine.fitframework.parameterization.StringFormatException 当所提供的格式化字符串与格式化参数不匹配时。
+     * @see #format(String, boolean, Map)
+     */
+    public static String format(String format, Map<String, Object> args) {
+        return format(format, true, args);
+    }
+
+    /**
+     * 使用指定的格式化字符串对参数进行格式化，并返回格式化后的字符串。
+     * <p><b>注意：{@code format} 中如果含有如下特殊字符（{@code '\u007b'}，{@code '\u007d'}，{@code '/'}），需要在该字符前增加转义字符
+     * {@code '/'} 进行转义。</b></p>
+     * <p>严格校验模式：格式化字符串中的占位符需要和传入的变量一一对应。</p>
+     *
+     * @param format 表示格式化字符串的 {@link String}。
+     * @param isStrict 表示是否采用严格校验模式的 {@code boolean}。
+     * @param args 表示用以格式化字符串的参数的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。如果参数中存在
+     * {@code null}，其对应的格式化后会变成空字符串。
+     * @return 表示格式化得到的字符串的 {@link String}。
+     * @throws modelengine.fitframework.parameterization.StringFormatException 当所提供的格式化字符串与格式化参数不匹配时。
+     */
+    public static String format(String format, boolean isStrict, Map<String, Object> args) {
         if (isBlank(format)) {
             return format;
         }
-        ParameterizedString parameterizedString = FORMATTER.resolve(format);
-        Map<String, Object> params = new HashMap<>(args.length);
-        for (int i = 0; i < args.length; i++) {
-            params.put(Integer.toString(i), args[i]);
-        }
+        Map<String, Object> params = nullIf(args, Collections.emptyMap());
+        ParameterizedStringResolver resolver = isStrict ? FORMATTER : NON_STRICT_FORMATTER;
+        ParameterizedString parameterizedString = resolver.resolve(format);
         return parameterizedString.format(params);
     }
 
@@ -393,7 +434,7 @@ public final class StringUtils {
     public static <T> String join(String separator, Function<T, String> mapper, Iterator<T> iterator) {
         StringBuilder builder = new StringBuilder();
         if (iterator != null && iterator.hasNext()) {
-            Function<T, String> actualMapper = ObjectUtils.nullIf(mapper, ObjectUtils::toNormalizedString);
+            Function<T, String> actualMapper = nullIf(mapper, ObjectUtils::toNormalizedString);
             builder.append(actualMapper.apply(iterator.next()));
             while (iterator.hasNext()) {
                 builder.append(separator).append(actualMapper.apply(iterator.next()));
@@ -520,7 +561,7 @@ public final class StringUtils {
      * @see ObjectUtils#toNormalizedString(Object)
      */
     public static String normalize(String source) {
-        return ObjectUtils.nullIf(source, EMPTY);
+        return nullIf(source, EMPTY);
     }
 
     /**
@@ -747,7 +788,7 @@ public final class StringUtils {
         Validation.notNull(source, "The string to be split cannot be null.");
         Validation.notNull(collectionSupplier, "The collectionSupplier cannot be null.");
         C parts = collectionSupplier.get();
-        Predicate<String> actualPartPredicator = ObjectUtils.nullIf(partPredicate, value -> true);
+        Predicate<String> actualPartPredicator = nullIf(partPredicate, value -> true);
         if (StringUtils.isEmpty(separator)) {
             return splitWithEmptySeparator(source, collectionSupplier, actualPartPredicator);
         }
@@ -971,7 +1012,7 @@ public final class StringUtils {
      * @return 表示转换为全小写表现形式的字符串的 {@link String}。
      */
     public static String toLowerCase(String source, Locale locale) {
-        return isBlank(source) ? source : source.toLowerCase(ObjectUtils.nullIf(locale, Locale.ROOT));
+        return isBlank(source) ? source : source.toLowerCase(nullIf(locale, Locale.ROOT));
     }
 
     /**
@@ -994,7 +1035,7 @@ public final class StringUtils {
      * @return 表示转换为全大写表现形式的字符串的 {@link String}。
      */
     public static String toUpperCase(String source, Locale locale) {
-        return isBlank(source) ? source : source.toUpperCase(ObjectUtils.nullIf(locale, Locale.ROOT));
+        return isBlank(source) ? source : source.toUpperCase(nullIf(locale, Locale.ROOT));
     }
 
     /**

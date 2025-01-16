@@ -23,7 +23,7 @@ import java.util.Optional;
 @AcceptConfigValues("server.http")
 public class DefaultHttpConfig implements HttpConfig {
     /**
-     * 配置项：{@code 'is-enabled'}。
+     * 配置项：{@code 'enabled'}。
      */
     private Boolean isEnabled;
 

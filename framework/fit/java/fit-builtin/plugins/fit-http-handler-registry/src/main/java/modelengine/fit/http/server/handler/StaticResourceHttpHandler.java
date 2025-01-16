@@ -18,6 +18,8 @@ import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.ResourceNotFoundException;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.plugin.Plugin;
 import modelengine.fitframework.plugin.PluginStartedObserver;
 import modelengine.fitframework.plugin.PluginStoppingObserver;
@@ -47,10 +49,12 @@ public class StaticResourceHttpHandler implements PluginStartedObserver, PluginS
     private final Map<ClassLoader, List<String>> staticLocationsMapping = new HashMap<>();
     private final FileHttpResolver fileHttpResolver = new FileHttpResolver();
     private final ResourceHttpResolver resourceHttpResolver = new ResourceHttpResolver();
+    private final BeanContainer beanContainer;
 
     public StaticResourceHttpHandler(@Value("${server.http.context-path}") String contextPath,
-            @Value("${server.http.file-locations}") List<String> customFileLocations) {
+            @Value("${server.http.file-locations}") List<String> customFileLocations, BeanContainer beanContainer) {
         this.contextPath = nullIf(contextPath, StringUtils.EMPTY);
+        this.beanContainer = beanContainer;
         this.customFileLocations = getIfNull(customFileLocations, Collections::emptyList);
     }
 
@@ -83,6 +87,14 @@ public class StaticResourceHttpHandler implements PluginStartedObserver, PluginS
     public FileEntity handle(
             @RequestQuery(name = "position", required = false, defaultValue = "inline") String positionName,
             HttpClassicServerRequest request, HttpClassicServerResponse response) {
+        List<BeanFactory> beanFactories = this.beanContainer.all(CustomResourceHandler.class);
+        for (BeanFactory beanFactory : beanFactories) {
+            CustomResourceHandler handler = beanFactory.get();
+            if (!handler.canHandle(positionName, request)) {
+                continue;
+            }
+            return handler.handle(positionName, request, response);
+        }
         FileEntity.Position position = FileEntity.Position.from(positionName);
         String path = this.getResourcePath(request);
         return this.getFromClassLoaders(path, response, position)

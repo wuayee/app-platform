@@ -92,6 +92,11 @@ final class PluginCompiler extends AbstractCompiler {
             return null;
         } else if (isService(dependency) || this.isShared(dependency)) {
             return "shared";
+        } else if (isPlugin(dependency)) {
+            throw new MojoExecutionException(StringUtils.format(
+                    "Plugin cannot depend on another plugin. [groupId={0}, artifactId={1}]",
+                    dependency.getGroupId(),
+                    dependency.getArtifactId()));
         } else {
             return "third-party";
         }

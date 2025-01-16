@@ -6,7 +6,12 @@
 
 package modelengine.fitframework.globalization;
 
+import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.StringUtils;
+
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * 为 {@link StringResource} 提供空实现。
@@ -26,7 +31,20 @@ final class EmptyStringResource implements StringResource {
     private EmptyStringResource() {}
 
     @Override
-    public String getMessage(Locale locale, String key, String defaultMessage, Object... args) {
-        return null;
+    public String getMessageWithDefault(Locale locale, String key, String defaultMessage, Object... args) {
+        if (ArrayUtils.isEmpty(args)) {
+            return defaultMessage;
+        } else {
+            return StringUtils.format(defaultMessage, args);
+        }
+    }
+
+    @Override
+    public String getMessageWithDefault(Locale locale, String key, String defaultMessage, Map<String, Object> args) {
+        if (MapUtils.isEmpty(args)) {
+            return defaultMessage;
+        } else {
+            return StringUtils.format(defaultMessage, args);
+        }
     }
 }

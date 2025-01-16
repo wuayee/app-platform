@@ -13,10 +13,12 @@ import modelengine.fitframework.aop.interceptor.MethodInterceptorResolver;
 import modelengine.fitframework.aop.interceptor.async.AsyncInterceptorResolver;
 import modelengine.fitframework.aop.interceptor.cache.CacheInterceptorResolver;
 import modelengine.fitframework.aop.interceptor.support.MethodInterceptorComparator;
+import modelengine.fitframework.aop.proxy.AopProxyFactories;
 import modelengine.fitframework.aop.proxy.AopProxyFactory;
 import modelengine.fitframework.aop.proxy.InterceptSupport;
 import modelengine.fitframework.aop.proxy.support.DefaultInterceptSupport;
 import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.ioc.BeanMetadata;
 import modelengine.fitframework.ioc.lifecycle.bean.BeanLifecycle;
 import modelengine.fitframework.ioc.lifecycle.bean.BeanLifecycleInterceptor;
@@ -38,17 +40,26 @@ import java.util.stream.Collectors;
 public class AopInterceptor implements BeanLifecycleInterceptor {
     private final BeanContainer container;
     private final LazyLoader<List<MethodInterceptorResolver>> methodInterceptorResolversLoader;
-    private final List<AopProxyFactory> aopProxyFactories = AopProxyFactory.all();
+    private final List<AopProxyFactory> factories;
     private final MethodInterceptorComparator methodInterceptorComparator = new MethodInterceptorComparator();
 
+    /**
+     * 通过 Bean 容器来初始化 {@link AopInterceptor} 的新实例。
+     *
+     * @param container 表示 Bean 容器的 {@link BeanContainer}。
+     */
     public AopInterceptor(BeanContainer container) {
         this.container = notNull(container, "The bean container cannot be null.");
+        AopProxyFactories aopProxyFactories = this.container.lookup(AopProxyFactories.class)
+                .map(BeanFactory::<AopProxyFactories>get)
+                .orElseThrow(() -> new IllegalStateException("No aop proxy factories."));
+        this.factories = aopProxyFactories.getAll();
         this.methodInterceptorResolversLoader = new LazyLoader<>(this::getMethodInterceptorResolvers);
     }
 
     @Override
     public boolean isInterceptionRequired(BeanMetadata metadata) {
-        // 只有所有的方法拦截器的解析器都能解析，才能进行 AOP
+        // 只有所有的方法拦截器的解析器都能解析，才能进行 AOP。
         return this.methodInterceptorResolversLoader.get().stream().noneMatch(resolver -> resolver.eliminate(metadata));
     }
 
@@ -84,7 +95,7 @@ public class AopInterceptor implements BeanLifecycleInterceptor {
     }
 
     private Object createAopProxy(InterceptSupport support) {
-        for (AopProxyFactory proxyFactory : this.aopProxyFactories) {
+        for (AopProxyFactory proxyFactory : this.factories) {
             if (proxyFactory.support(support.getTargetClass())) {
                 return proxyFactory.createProxy(support);
             }

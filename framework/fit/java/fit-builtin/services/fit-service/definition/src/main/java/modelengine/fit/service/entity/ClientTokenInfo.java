@@ -130,7 +130,7 @@ public class ClientTokenInfo {
      * @return 表示刷新令牌是否无效的 {@code boolean}。
      */
     public boolean isRefreshTokenInvalid() {
-        return StringUtils.isBlank(this.accessToken.getToken()) || StringUtils.equals(this.refreshToken.getStatus(),
+        return StringUtils.isBlank(this.refreshToken.getToken()) || StringUtils.equals(this.refreshToken.getStatus(),
                 INVALID_STATUS);
     }
 

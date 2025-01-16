@@ -24,6 +24,7 @@ import modelengine.fit.http.server.handler.support.FormUrlEncodedEntityFetcher;
 import modelengine.fit.http.server.handler.support.HeaderFetcher;
 import modelengine.fit.http.server.handler.support.MultiSourcesPropertyValueMapper;
 import modelengine.fit.http.server.handler.support.ObjectEntityFetcher;
+import modelengine.fit.http.server.handler.support.ParamValue;
 import modelengine.fit.http.server.handler.support.PathVariableFetcher;
 import modelengine.fit.http.server.handler.support.QueryFetcher;
 import modelengine.fit.http.server.handler.support.SourceFetcherInfo;
@@ -66,8 +67,8 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
                     .put(RequestQuery.class, (propertyValue -> List.class.isAssignableFrom(propertyValue.getType())))
                     .put(RequestParam.class, (propertyValue -> List.class.isAssignableFrom(propertyValue.getType())))
                     .build();
-    private static final Map<Source, Function<String, SourceFetcher>> SOURCE_FETCHER_MAPPING =
-            MapBuilder.<Source, Function<String, SourceFetcher>>get()
+    private static final Map<Source, Function<ParamValue, SourceFetcher>> SOURCE_FETCHER_MAPPING =
+            MapBuilder.<Source, Function<ParamValue, SourceFetcher>>get()
                     .put(Source.QUERY, QueryFetcher::new)
                     .put(Source.HEADER, HeaderFetcher::new)
                     .put(Source.COOKIE, CookieFetcher::new)
@@ -100,7 +101,7 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
             AnnotationMetadata annotationMetadata) {
         List<SourceFetcherInfo> propertyValueMappers = this.getSourceFetcherInfos(propertyValue, StringUtils.EMPTY);
         return Optional.of(new TypeTransformationPropertyValueMapper(new MultiSourcesPropertyValueMapper(
-                propertyValueMappers), propertyValue.getType(), false, null));
+                propertyValueMappers), propertyValue.getType()));
     }
 
     private List<SourceFetcherInfo> getSourceFetcherInfos(PropertyValue propertyValue, String destinationName) {
@@ -120,7 +121,8 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
             SourceFetcher sourceFetcher;
             boolean isArrayType;
             if (annotationMetadata.isAnnotationNotPresent(RequestParam.class)) {
-                sourceFetcher = SOURCE_FETCHER_MAPPING.get(Source.QUERY).apply(field.getName());
+                sourceFetcher = SOURCE_FETCHER_MAPPING.get(Source.QUERY)
+                        .apply(ParamValue.custom().name(field.getName()).build());
                 isArrayType = SchemaTypeUtils.isArrayType(field.getType());
             } else {
                 RequestParam annotation = annotationMetadata.getAnnotation(RequestParam.class);
@@ -144,7 +146,12 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
     }
 
     private SourceFetcher getSourceFetcher(RequestParam requestParam) {
-        Function<String, SourceFetcher> function = SOURCE_FETCHER_MAPPING.get(requestParam.in());
-        return function.apply(requestParam.name());
+        Function<ParamValue, SourceFetcher> function = SOURCE_FETCHER_MAPPING.get(requestParam.in());
+        return function.apply(ParamValue.custom()
+                .name(requestParam.name())
+                .in(requestParam.in())
+                .defaultValue(requestParam.defaultValue())
+                .required(requestParam.required())
+                .build());
     }
 }

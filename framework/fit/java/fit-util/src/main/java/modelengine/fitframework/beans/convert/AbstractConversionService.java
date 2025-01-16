@@ -222,7 +222,7 @@ public abstract class AbstractConversionService implements ConversionService {
             String enumValue = ObjectUtils.cast(this.as(value, String.class));
             return toEnum(actualType, enumValue);
         }
-        Object actual = this.transform(value);
+        Object actual = this.transform(value, type);
         if (actual == null) {
             return null;
         }
@@ -248,9 +248,10 @@ public abstract class AbstractConversionService implements ConversionService {
      * <p>默认不转换，但是如果需要，允许做值内容的转换。</p>
      *
      * @param value 表示转换前指的 {@link Object}。
+     * @param type 表示指定类型的 {@link Class}{@code <?>}。
      * @return 表示转换后值的 {@link Object}。
      */
-    protected Object transform(Object value) {
+    protected Object transform(Object value, Class<?> type) {
         return value;
     }
 
@@ -298,9 +299,9 @@ public abstract class AbstractConversionService implements ConversionService {
 
     private Set<?> toSet(Object source, Type elementType) {
         List<?> actual = this.listOf(source);
-        Set<Object> list = new HashSet<>(actual.size());
-        this.accept(actual, elementType, list::add);
-        return list;
+        Set<Object> set = new HashSet<>(actual.size());
+        this.accept(actual, elementType, set::add);
+        return set;
     }
 
     private List<?> listOf(Object value) {

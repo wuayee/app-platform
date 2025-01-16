@@ -28,7 +28,8 @@ import org.junit.jupiter.api.Test;
  */
 @DisplayName("测试 ObjectEntityFetcher 类")
 class ObjectEntityFetcherTest {
-    private final ObjectEntityFetcher objectEntityFetcher = new ObjectEntityFetcher("/a");
+    private final ObjectEntityFetcher objectEntityFetcher =
+            new ObjectEntityFetcher(ParamValue.custom().name("/a").build());
 
     @Test
     @DisplayName("从 Http 请求中获取数据")

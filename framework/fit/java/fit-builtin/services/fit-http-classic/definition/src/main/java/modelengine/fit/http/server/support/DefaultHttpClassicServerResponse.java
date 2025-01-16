@@ -57,6 +57,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DefaultHttpClassicServerResponse extends AbstractHttpClassicResponse implements HttpClassicServerResponse {
     private static final String FILENAME_PARAMETER_KEY = "filename";
     private static final String FILENAME_STAR_PARAMETER_KEY = "filename*";
+    private static final String ZERO = "0";
 
     private final ServerResponse serverResponse;
     private Entity entity;
@@ -120,7 +121,7 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
         if (isAscii) {
             return ParameterCollection.create().set(FILENAME_PARAMETER_KEY, "\"" + fileEntity.filename() + "\"");
         } else {
-            String encodedFilename = UrlUtils.encodeValue(fileEntity.filename());
+            String encodedFilename = UrlUtils.encodePath(fileEntity.filename());
             return ParameterCollection.create().set(FILENAME_STAR_PARAMETER_KEY, "UTF-8''" + encodedFilename);
         }
     }
@@ -142,6 +143,7 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
         try {
             Charset charset = this.contentType().flatMap(ContentType::charset).orElse(StandardCharsets.UTF_8);
             if (this.entity == null) {
+                this.headers().set(CONTENT_LENGTH, ZERO);
                 this.serverResponse.writeStartLineAndHeaders();
             } else if (this.entity instanceof ReadableBinaryEntity) {
                 if (this.entity instanceof FileEntity) {
@@ -162,6 +164,7 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
             } else if (this.entity instanceof TextEventStreamEntity) {
                 this.headers().set(CACHE_CONTROL, NO_CACHE);
                 this.headers().set(CONNECTION, KEEP_ALIVE);
+                this.headers().set(TRANSFER_ENCODING, CHUNKED);
                 this.serverResponse.writeStartLineAndHeaders();
                 this.sendTextEventStream(cast(this.entity));
             } else {
@@ -189,11 +192,12 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
                     } catch (IOException e) {
                         subscription.cancel();
                         exception.set(e);
+                        latch.countDown();
                     }
-                }, subscription -> latch.countDown(), ((ignore, e) -> {
+                }, subscription -> latch.countDown(), (ignore, e) -> {
                     exception.set(e);
                     latch.countDown();
-                }));
+                });
         try {
             latch.await();
         } catch (InterruptedException e) {

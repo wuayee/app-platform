@@ -98,9 +98,9 @@ public class MapUtils {
 
     private static void flat(Map<String, Object> map, Map<String, String> flattenedMap, Deque<String> keys,
             String connector) {
-        for (String key : map.keySet()) {
-            keys.addLast(key);
-            Object value = map.get(key);
+        for (Map.Entry<String, Object> e : map.entrySet()) {
+            keys.addLast(e.getKey());
+            Object value = e.getValue();
             if (value instanceof Map) {
                 Map<String, Object> nextMap = ObjectUtils.<Map<?, ?>>cast(value)
                         .entrySet()

@@ -44,4 +44,9 @@ public class MinValidator implements ConstraintValidator<Min, Object> {
             throw new UnsupportedOperationException("Failed to validate value: invalid value.");
         }
     }
+
+    @Override
+    public Object[] args() {
+        return new Object[] {this.min};
+    }
 }

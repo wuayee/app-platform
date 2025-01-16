@@ -30,7 +30,8 @@ class UniqueSourcePropertyValueMapperTest {
         final MockHttpClassicServerRequest serverRequest = new MockHttpClassicServerRequest();
         final DefaultHttpClassicServerRequest request = serverRequest.getRequest();
         UniqueSourcePropertyValueMapper mapper =
-                new UniqueSourcePropertyValueMapper(new HeaderFetcher(HEADER_KEY), false);
+                new UniqueSourcePropertyValueMapper(new HeaderFetcher(ParamValue.custom().name(HEADER_KEY).build()),
+                        false);
         final Object value = mapper.map(request, null, null);
         assertThat(value).isEqualTo(HEADER_VALUE);
     }

@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
@@ -294,10 +295,8 @@ public class IoUtils {
      * @param clazz 表示待加载资源的类型的 {@link Class}{@code <}{@link Object}{@code >}。
      * @param resourceKey 表示资源的键的 {@link String}。
      * @return 表示加载到的属性集的 {@link Properties}。
-     * @throws IllegalArgumentException 当 {@code clazz} 为 {@code null} 时。
-     * @throws IllegalArgumentException 当 {@code resourceKey} 为 {@code null} 或空白字符串时。
-     * @throws IllegalStateException 当不存在指定名称的资源时。
-     * @throws IllegalStateException 当读取资源失败时。
+     * @throws IllegalArgumentException 当 {@code clazz} 为 {@code null} 时，或 {@code resourceKey} 为 {@code null} 或空白字符串时。
+     * @throws IllegalStateException 当不存在指定名称的资源，或读取资源失败时。
      * @see #properties(ClassLoader, String)
      */
     public static Properties properties(Class<?> clazz, String resourceKey) {
@@ -308,6 +307,30 @@ public class IoUtils {
             throw new IllegalStateException(StringUtils.format(
                     "Failed to read properties from embedded resource. [resourceKey={0}]",
                     resourceKey), e);
+        }
+        return properties;
+    }
+
+    /**
+     * 从指定类的类加载器中使用指定编码读取指定名称的资源，并将其加载为一个属性集。
+     *
+     * @param clazz 表示待加载资源的类型的 {@link Class}{@code <}{@link Object}{@code >}。
+     * @param resourceKey 表示资源的键的 {@link String}。
+     * @param charset 表示资源编码的 {@link String}。
+     * @return 表示加载到的属性集的 {@link Properties}。
+     * @throws IllegalArgumentException 当 {@code clazz} 为 {@code null} 时，或 {@code resourceKey} 为 {@code null} 或空白字符串时。
+     * @throws IllegalStateException 当不存在指定名称的资源，或读取资源失败时。
+     * @see #properties(ClassLoader, String)
+     */
+    public static Properties properties(Class<?> clazz, String resourceKey, Charset charset) {
+        Properties properties = new Properties();
+        try (InputStream in = resource(clazz, resourceKey);
+             InputStreamReader reader = new InputStreamReader(in, charset)) {
+            properties.load(reader);
+        } catch (IOException e) {
+            throw new IllegalStateException(StringUtils.format(
+                    "Failed to read properties from embedded resource. [resourceKey={0}, charset={1}]",
+                    resourceKey, charset), e);
         }
         return properties;
     }
@@ -338,6 +361,18 @@ public class IoUtils {
 
     /**
      * 使用指定类加载指定资源，并读取其中存储的文本信息。
+     * <pre>
+     * src
+     * +- main
+     * |  \- java
+     * |     \- resources
+     * |        \- demo
+     * |           \- hello.txt
+     * +- test
+     * |  \- java
+     * \- README.md
+     * </pre>
+     * <p>样例中的 {@code hello.txt} 文件对应 {@code resourceName} 参数值为 {@code /demo/hello.txt}。</p>
      *
      * @param clazz 表示用以加载资源的类的 {@link Class}{@code <}{@link Object}{@code >}。
      * @param resourceName 表示待加载资源的名称的 {@link String}。
@@ -354,6 +389,18 @@ public class IoUtils {
 
     /**
      * 使用指定类加载器加载指定资源，并读取其中存储的文本信息。
+     * <pre>
+     * src
+     * +- main
+     * |  \- java
+     * |     \- resources
+     * |        \- demo
+     * |           \- hello.txt
+     * +- test
+     * |  \- java
+     * \- README.md
+     * </pre>
+     * <p>样例中的 {@code hello.txt} 文件对应 {@code resourceName} 参数值为 {@code demo/hello.txt}。</p>
      *
      * @param classLoader 表示用以加载资源的类加载器的 {@link ClassLoader}。
      * @param resourceName 表示待加载资源的名称的 {@link String}，不能以 {@code /} 开头。

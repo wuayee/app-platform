@@ -7,8 +7,7 @@
 package modelengine.fit.serialization.test.person;
 
 import lombok.Data;
-
-import java.util.List;
+import modelengine.fitframework.serialization.annotation.Unwrapped;
 
 /**
  * 为单元测试提供人的信息定义。
@@ -18,6 +17,6 @@ import java.util.List;
  */
 @Data
 public class Person {
+    @Unwrapped
     private PersonName name;
-    private List<String> inventions;
 }

@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractAopProxy implements FitProxy {
     private final LazyLoader<Object> targetSupplier;
     private final List<MethodInterceptor> methodInterceptors;
+    private final Class<?> targetClass;
     private final Method interceptMethod;
     private final Method getActualClassMethod;
 
@@ -43,6 +44,7 @@ public abstract class AbstractAopProxy implements FitProxy {
     protected AbstractAopProxy(InterceptSupport support) {
         this.targetSupplier = new LazyLoader<>(support::getTarget);
         this.methodInterceptors = support.getMethodInterceptors();
+        this.targetClass = support.getTargetClass();
         try {
             this.interceptMethod = MethodInterceptor.class.getDeclaredMethod("intercept", MethodJoinPoint.class);
             this.getActualClassMethod = FitProxy.class.getDeclaredMethod("$fit$getActualClass");
@@ -117,5 +119,14 @@ public abstract class AbstractAopProxy implements FitProxy {
     @Nullable
     private Object getTarget() {
         return this.targetSupplier.get();
+    }
+
+    /**
+     * 获取代理对象的定义类型。
+     *
+     * @return 表示代理对象定义的类型的 {@link Class}{@code <?>}。
+     */
+    protected Class<?> getTargetClass() {
+        return this.targetClass;
     }
 }

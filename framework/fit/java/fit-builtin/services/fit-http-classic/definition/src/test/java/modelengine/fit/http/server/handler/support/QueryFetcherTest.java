@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  */
 @DisplayName("测试 QueryFetcher 类")
 class QueryFetcherTest {
-    private final QueryFetcher queryFetcher = new QueryFetcher("name");
+    private final QueryFetcher queryFetcher = new QueryFetcher(ParamValue.custom().name("name").build());
 
     @Test
     @DisplayName("判断来源数据的常用格式是否是数组")

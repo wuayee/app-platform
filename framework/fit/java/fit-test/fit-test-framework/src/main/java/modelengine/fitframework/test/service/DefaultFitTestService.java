@@ -20,6 +20,7 @@ import modelengine.fitframework.test.domain.listener.SqlExecuteListener;
 import modelengine.fitframework.test.domain.listener.TestListener;
 import modelengine.fitframework.test.domain.resolver.TestContextConfiguration;
 import modelengine.fitframework.test.domain.util.TestUtils;
+import modelengine.fitframework.util.ThreadUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -66,6 +67,8 @@ public class DefaultFitTestService implements FitTestService {
         this.runtime = new TestFitRuntime(clazz, configuration, port);
         this.runtime.start();
         this.testContext = new TestContext(clazz, this.runtime.root(), listeners);
+        // 启动服务器后需要稍作等待，确保服务端口启动成功。
+        ThreadUtils.sleep(100);
     }
 
     @Override

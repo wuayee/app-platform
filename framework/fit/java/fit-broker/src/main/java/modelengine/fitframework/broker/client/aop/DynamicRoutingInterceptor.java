@@ -59,7 +59,7 @@ public class DynamicRoutingInterceptor extends AbstractMethodInterceptor {
     }
 
     @Override
-    public Object intercept(@Nonnull MethodJoinPoint methodJoinPoint) throws Throwable {
+    public Object intercept(@Nonnull MethodJoinPoint methodJoinPoint) {
         Method method = methodJoinPoint.getProxiedInvocation().getMethod();
         GenericableInfo genericableInfo = this.getGenericableId(method);
         Router.Filter filter;

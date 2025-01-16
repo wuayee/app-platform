@@ -15,6 +15,8 @@
 
     <modules>
         <module>fit-client</module>
+        <module>fit-data-repository-service</module>
+        <module>fit-heartbeat</module>
         <module>fit-http-classic</module>
         <module>fit-http-protocol</module>
         <module>fit-message-serializer</module>

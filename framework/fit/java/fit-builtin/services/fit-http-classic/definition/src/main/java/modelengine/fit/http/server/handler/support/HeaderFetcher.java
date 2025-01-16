@@ -10,7 +10,10 @@ import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
+import modelengine.fit.http.server.handler.RequestMappingException;
 import modelengine.fit.http.server.handler.SourceFetcher;
+import modelengine.fit.http.server.handler.exception.RequestParamFetchException;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 表示从消息头中获取值的 {@link SourceFetcher}。
@@ -18,7 +21,7 @@ import modelengine.fit.http.server.handler.SourceFetcher;
  * @author 季聿阶
  * @since 2022-08-28
  */
-public class HeaderFetcher implements SourceFetcher {
+public class HeaderFetcher extends AbstractSourceFetcher {
     private final String headerName;
 
     /**
@@ -28,7 +31,21 @@ public class HeaderFetcher implements SourceFetcher {
      * @throws IllegalArgumentException 当 {@code headerName} 为 {@code null} 或空白字符串时。
      */
     public HeaderFetcher(String headerName) {
-        this.headerName = notBlank(headerName, "The header name cannot be null.");
+        super(false, null);
+        this.headerName =
+                notBlank(headerName, () -> new RequestParamFetchException("The header name cannot be blank."));
+    }
+
+    /**
+     * 通过参数元数据来实例化 {@link HeaderFetcher}。
+     *
+     * @param paramValue 表示参数元数据的 {@link String}。
+     * @throws IllegalArgumentException 当 {@code headerName} 为 {@code null} 或空白字符串时。
+     */
+    public HeaderFetcher(ParamValue paramValue) {
+        super(paramValue.required(), paramValue.defaultValue());
+        this.headerName =
+                notBlank(paramValue.name(), () -> new RequestParamFetchException("The header name cannot be blank."));
     }
 
     @Override
@@ -38,6 +55,11 @@ public class HeaderFetcher implements SourceFetcher {
 
     @Override
     public Object get(HttpClassicServerRequest request, HttpClassicServerResponse response) {
-        return request.headers().all(this.headerName);
+        try {
+            return this.resolveValue(request.headers().all(this.headerName));
+        } catch (RequestMappingException e) {
+            throw new RequestMappingException(StringUtils.format("Invalid header param. [headerName={0}]",
+                    this.headerName), e);
+        }
     }
 }

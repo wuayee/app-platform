@@ -9,6 +9,7 @@ package modelengine.fitframework.runtime.support;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fitframework.aop.AopInterceptor;
+import modelengine.fitframework.aop.proxy.AopProxyFactories;
 import modelengine.fitframework.broker.DynamicRouter;
 import modelengine.fitframework.broker.FitExceptionCreator;
 import modelengine.fitframework.broker.FitableFactory;
@@ -60,6 +61,7 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
 
     private static final String FRAMEWORK_CONFIG_PREFIX = "fitframework";
     private static final String FIT_RUNTIME_BEAN_NAME = "fitRuntime";
+    private static final String AOP_PROXY_FACTORIES_BEAN_NAME = "aopProxyFactories";
     private static final String AOP_INTERCEPTOR_BEAN_NAME = "aopInterceptor";
     private static final String SERIALIZATION_SERVICE_BEAN_NAME = "serializationService";
     private static final String DYNAMIC_ROUTER_BEAN_NAME = "dynamicRouter";
@@ -77,6 +79,8 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
     private static final String WORKER_CONFIG_BEAN_NAME = "workerConfig";
     private static final String APPLICATION_CONFIG = "applicationConfig";
     private static final String GENERICABLE_FILTER_MANAGER_NAME = "genericableServerFilterManager";
+    private static final int LEVEL_MAX = 7;
+    private static final int LEVEL_MIN = 1;
 
     private MatataConfig matata;
     private WorkerConfig worker;
@@ -113,6 +117,7 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
     }
 
     private void registerAopBeans() {
+        this.container().registry().register(new AopProxyFactories(), AOP_PROXY_FACTORIES_BEAN_NAME);
         this.container().registry().register(new AopInterceptor(this.container()), AOP_INTERCEPTOR_BEAN_NAME);
     }
 
@@ -163,7 +168,19 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
     protected void onStarted() {
         this.obtainChildrenForStartup(PluginCategory.SYSTEM).forEach(Plugin::start);
         super.onStarted();
-        this.obtainChildrenForStartup(PluginCategory.USER).forEach(Plugin::start);
+        List<Plugin> userPlugins = this.obtainChildrenForStartup(PluginCategory.USER);
+        for (int level = LEVEL_MIN; level <= LEVEL_MAX; level++) {
+            List<Plugin> levelPlugins = this.obtainPluginsByLevel(userPlugins, level);
+            levelPlugins.forEach(Plugin::initialize);
+            levelPlugins.forEach(Plugin::start);
+        }
+    }
+
+    private List<Plugin> obtainPluginsByLevel(List<Plugin> plugins, int level) {
+        return plugins.stream()
+                .filter(userPlugin -> userPlugin.metadata().level() == level)
+                .sorted(AbstractRootPlugin::sortPlugins)
+                .collect(Collectors.toList());
     }
 
     /**

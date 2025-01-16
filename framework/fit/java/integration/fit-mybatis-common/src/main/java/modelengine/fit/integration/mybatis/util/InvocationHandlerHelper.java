@@ -10,7 +10,7 @@ import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import modelengine.fit.integration.mybatis.MapperInvocationHandler;
 import modelengine.fitframework.aop.proxy.FitProxy;
-import sun.reflect.ReflectionFactory;
+import modelengine.fitframework.beans.ObjectInstantiator;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
@@ -18,8 +18,6 @@ import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.utility.RandomString;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 
 /**
@@ -58,22 +56,6 @@ public class InvocationHandlerHelper {
                 .make()
                 .load(mapperClass.getClassLoader(), ClassLoadingStrategy.Default.INJECTION)
                 .getLoaded();
-        Constructor<Object> objectConstructor = getObjectConstructor();
-        ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
-        Constructor<M> constructor =
-                cast(reflectionFactory.newConstructorForSerialization(proxiedClass, objectConstructor));
-        try {
-            return constructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static Constructor<Object> getObjectConstructor() {
-        try {
-            return Object.class.getConstructor((Class<?>[]) null);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        }
+        return cast(ObjectInstantiator.standard(proxiedClass).newInstance());
     }
 }

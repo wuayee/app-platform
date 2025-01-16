@@ -13,6 +13,7 @@ import modelengine.fit.http.client.HttpClassicClient;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.client.HttpClientException;
+import modelengine.fit.http.client.proxy.Authorization;
 import modelengine.fit.http.client.proxy.HttpEmitter;
 import modelengine.fit.http.client.proxy.PropertyValueApplier;
 import modelengine.fit.http.client.proxy.RequestBuilder;
@@ -36,6 +37,7 @@ public class DefaultHttpEmitter implements HttpEmitter {
     private final String protocol;
     private final String domain;
     private final String pathPattern;
+    private final Authorization authorization;
 
     /**
      * 表示提供 Http 客户端的代理执行者的默认实现的构造。
@@ -46,15 +48,17 @@ public class DefaultHttpEmitter implements HttpEmitter {
      * @param protocol 表示 Http 请求的协议的 {@link String}。
      * @param domain 表示 Http 请求域名的 {@link String}。
      * @param pathPattern 表示 Http 请求的路径模板的 {@link String}。
+     * @param authorization 表示 Http 请求的鉴权信息的 {@link Authorization}。
      */
     public DefaultHttpEmitter(List<PropertyValueApplier> appliers, HttpClassicClient client, HttpRequestMethod method,
-            String protocol, String domain, String pathPattern) {
+            String protocol, String domain, String pathPattern, Authorization authorization) {
         this.appliers = notNull(appliers, "The emitter cannot be null.");
         this.client = notNull(client, "The client cannot be null.");
         this.method = notNull(method, "The method cannot be null.");
         this.protocol = notBlank(protocol, "The protocol cannot be null.");
         this.domain = notBlank(domain, "The domain cannot be null.");
         this.pathPattern = notBlank(pathPattern, "The path pattern cannot be null.");
+        this.authorization = authorization;
     }
 
     @Override
@@ -71,7 +75,8 @@ public class DefaultHttpEmitter implements HttpEmitter {
                 .method(this.method)
                 .protocol(this.protocol)
                 .domain(this.domain)
-                .pathPattern(this.pathPattern);
+                .pathPattern(this.pathPattern)
+                .authorization(this.authorization);
 
         for (int i = 0; i < args.length; ++i) {
             this.appliers.get(i).apply(requestBuilder, args[i]);

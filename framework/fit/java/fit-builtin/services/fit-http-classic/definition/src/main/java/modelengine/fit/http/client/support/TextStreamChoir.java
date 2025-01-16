@@ -24,7 +24,6 @@ import modelengine.fitframework.util.LockUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -93,15 +92,21 @@ public class TextStreamChoir<T> extends AbstractChoir<T> implements Choir<T> {
 
         private void exchange() {
             try (HttpClassicClientResponse<T> response = this.request.exchange(this.responseType)) {
-                if (!ObjectUtils.between(response.statusCode(), HTTP_SUCCESS_CODE_MIN, HTTP_SUCCESS_CODE_MAX,
-                        true, false)) {
-                    throw new IllegalStateException(
-                            StringUtils.format("Http response error. [statusCode={0}]", response.statusCode()));
+                if (!ObjectUtils.between(response.statusCode(),
+                        HTTP_SUCCESS_CODE_MIN,
+                        HTTP_SUCCESS_CODE_MAX,
+                        true,
+                        false)) {
+                    throw new IllegalStateException(StringUtils.format(
+                            "Failed to exchange text event stream. [uri={0}, statusCode={1}, reason={2}]",
+                            this.request.requestUri(),
+                            response.statusCode(),
+                            response.reasonPhrase()));
                 }
                 TextEventStreamEntity entity = response.textEventStreamEntity()
                         .orElseThrow(() -> new IllegalStateException("No text event stream entity."));
                 Worker.create(this, entity.stream().map(this::convert)).run();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 this.onWorkerFailed(e);
             }
         }
@@ -145,11 +150,21 @@ public class TextStreamChoir<T> extends AbstractChoir<T> implements Choir<T> {
         public void onWorkerFailed(Exception cause) {
             this.completed.set(true);
             this.error = cause;
+            synchronized (this.lock) {
+                if (this.buffer.isEmpty()) {
+                    this.handleBufferIsEmpty();
+                }
+            }
         }
 
         @Override
         public void onWorkerCompleted() {
             this.completed.set(true);
+            synchronized (this.lock) {
+                if (this.buffer.isEmpty()) {
+                    this.handleBufferIsEmpty();
+                }
+            }
         }
     }
 }

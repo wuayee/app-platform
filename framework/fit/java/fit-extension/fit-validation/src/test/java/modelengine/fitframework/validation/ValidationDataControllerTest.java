@@ -14,7 +14,7 @@ import modelengine.fitframework.test.annotation.MvcTest;
 import modelengine.fitframework.test.domain.mvc.MockMvc;
 import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
-import modelengine.fitframework.validation.data.Person;
+import modelengine.fitframework.validation.data.Car;
 import modelengine.fitframework.validation.data.Product;
 import modelengine.fitframework.validation.data.ValidationDataController;
 
@@ -46,45 +46,41 @@ public class ValidationDataControllerTest {
     }
 
     @Test
-    @DisplayName("合法 Person 对象校验")
-    void shouldOKWhenCreateValidPerson() {
-        Person validPerson = new Person(1, 1, "Mike", "male", -1, -1);
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/validation/person/default")
-                .jsonEntity(validPerson)
-                .responseType(Void.class);
+    @DisplayName("合法 Car 对象校验")
+    void shouldOKWhenCreateValidCar() {
+        Car validCar = new Car(1, 1, "brand", "model", -1, -1);
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/validation/car/default").jsonEntity(validCar).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
 
     @Test
-    @DisplayName("不合法 Person 对象校验")
-    void shouldFailedWhenCreateInvalidPerson() {
-        Person invalidPerson = new Person(0, 3, "", "abd", -1, -1);
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/validation/person/default")
-                .jsonEntity(invalidPerson)
-                .responseType(Void.class);
+    @DisplayName("不合法 Car 对象校验")
+    void shouldFailedWhenCreateInvalidCar() {
+        Car invalidCar = new Car(0, 3, "", "abd", -1, -1);
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/validation/car/default").jsonEntity(invalidCar).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }
 
     @Test
-    @DisplayName("自定义分组校验 Person 对象")
-    void shouldOKWhenCreateValidPersonWithPersonGroup() {
-        Person invalidPerson = new Person(0, 3, "", "abd", 50, -1);
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/validation/person/personGroup")
-                .jsonEntity(invalidPerson)
-                .responseType(Void.class);
+    @DisplayName("自定义分组校验 Car 对象")
+    void shouldOKWhenCreateValidCarWithCarGroup() {
+        Car invalidCar = new Car(0, 2, "", "abd", 2000, -1);
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/validation/car/carGroup").jsonEntity(invalidCar).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
 
     @Test
-    @DisplayName("自定义分组校验 Person 对象")
-    void shouldFailedWhenCreateInvalidPersonWithPersonGroup() {
-        Person invalidPerson = new Person(0, 3, "", "abd", -1, -1);
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/validation/person/personGroup")
-                .jsonEntity(invalidPerson)
-                .responseType(Void.class);
+    @DisplayName("自定义分组校验 Car 对象")
+    void shouldFailedWhenCreateInvalidCarWithCarGroup() {
+        Car invalidCar = new Car(0, 3, "", "abd", -1, -1);
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/validation/car/carGroup").jsonEntity(invalidCar).responseType(Void.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(500);
     }

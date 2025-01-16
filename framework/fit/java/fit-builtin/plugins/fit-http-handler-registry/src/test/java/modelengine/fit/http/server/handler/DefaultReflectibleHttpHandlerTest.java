@@ -6,9 +6,10 @@
 
 package modelengine.fit.http.server.handler;
 
-import static com.sun.jmx.mbeanserver.Util.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +26,7 @@ import modelengine.fit.http.protocol.MessageHeaders;
 import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.ServerRequest;
 import modelengine.fit.http.protocol.ServerResponse;
+import modelengine.fit.http.protocol.support.DefaultHttpResponse;
 import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
 import modelengine.fit.http.protocol.support.DefaultRequestLine;
 import modelengine.fit.http.protocol.support.DefaultStatusLine;
@@ -39,6 +41,8 @@ import modelengine.fit.http.server.support.DefaultHttpClassicServerRequest;
 import modelengine.fit.http.server.support.DefaultHttpClassicServerResponse;
 import modelengine.fitframework.annotation.Scope;
 import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +56,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -198,8 +203,8 @@ public class DefaultReflectibleHttpHandlerTest {
     }
 
     @Test
-    @DisplayName("给定 Throwable 值为 异常处理器中包含的值，直接返回对应的 value 值")
-    void givenThrowableIsContainsInTheExceptionHandlerThenReturnTheValue() {
+    @DisplayName("给定 Throwable 值为插件异常处理器中包含的值，直接返回对应的 value 值")
+    void givenThrowableIsContainsInPluginExceptionHandlerThenReturnValue() {
         Map<Class<Throwable>, HttpExceptionHandler> exceptionHandlers = new HashMap<>();
         Class<Throwable> exceptionClass = cast(Exception.class);
         exceptionHandlers.put(exceptionClass, Mockito.mock(HttpExceptionHandler.class));
@@ -220,6 +225,60 @@ public class DefaultReflectibleHttpHandlerTest {
                 httpServerResponseException);
         Optional<Entity> entity = this.response.entity();
         assertThat(entity).isPresent().get().isExactlyInstanceOf(DefaultObjectEntity.class);
+    }
+
+    @Test
+    @DisplayName("给定 Throwable 值为插件异常处理器中不包含的值，返回最小父级")
+    void givenThrowableNotInPluginHandlerThenReturnClosestSuperclass() {
+        Map<Class<Throwable>, HttpExceptionHandler> exceptionHandlers = new HashMap<>();
+        Class<Throwable> throwableClass = cast(Throwable.class);
+        Class<Throwable> exceptionClass = cast(Exception.class);
+        HttpExceptionHandler throwableHandler = Mockito.mock(HttpExceptionHandler.class);
+        HttpExceptionHandler exceptionHandler = Mockito.mock(HttpExceptionHandler.class);
+        when(throwableHandler.handle(any(), any(), any())).thenReturn(new DefaultHttpResponse(HttpResponseStatus.OK,
+                "Throwable handler"));
+        when(exceptionHandler.handle(any(), any(), any())).thenReturn(new DefaultHttpResponse(HttpResponseStatus.OK,
+                "Exception handler"));
+        exceptionHandlers.put(throwableClass, throwableHandler);
+        exceptionHandlers.put(exceptionClass, exceptionHandler);
+        this.defaultReflectMappingHandler.addPluginExceptionHandler(exceptionHandlers);
+        this.defaultReflectMappingHandler.handleException(this.request,
+                this.response,
+                this.args,
+                new RuntimeException());
+        Optional<Entity> entity = this.response.entity();
+        assertThat(entity).isPresent().get().isExactlyInstanceOf(DefaultTextEntity.class);
+        DefaultTextEntity text = ObjectUtils.cast(this.response.entity().get());
+        assertThat(text.content()).isEqualTo("Exception handler");
+    }
+
+    @Test
+    @DisplayName("给定 Throwable 值为全局异常处理器中不包含的值，返回最小父级")
+    void givenThrowableNotInGlobalHandlerThenReturnClosestSuperclass() {
+        // 使用 LinkHashMap 来模拟有排序的全局异常处理器。
+        Map<Class<Throwable>, Map<String, HttpExceptionHandler>> exceptionHandlers = new LinkedHashMap<>();
+        Class<Throwable> throwableClass = cast(Throwable.class);
+        Class<Throwable> exceptionClass = cast(Exception.class);
+        HttpExceptionHandler throwableHandler = Mockito.mock(HttpExceptionHandler.class);
+        HttpExceptionHandler exceptionHandler = Mockito.mock(HttpExceptionHandler.class);
+        when(throwableHandler.handle(any(), any(), any())).thenReturn(new DefaultHttpResponse(HttpResponseStatus.OK,
+                "Throwable handler"));
+        when(exceptionHandler.handle(any(), any(), any())).thenReturn(new DefaultHttpResponse(HttpResponseStatus.OK,
+                "Exception handler"));
+        exceptionHandlers.put(exceptionClass,
+                MapBuilder.<String, HttpExceptionHandler>get().put("2", exceptionHandler).build());
+        exceptionHandlers.put(throwableClass,
+                MapBuilder.<String, HttpExceptionHandler>get().put("1", throwableHandler).build());
+
+        this.defaultReflectMappingHandler.setGlobalExceptionHandler(exceptionHandlers);
+        this.defaultReflectMappingHandler.handleException(this.request,
+                this.response,
+                this.args,
+                new RuntimeException());
+        Optional<Entity> entity = this.response.entity();
+        assertThat(entity).isPresent().get().isExactlyInstanceOf(DefaultTextEntity.class);
+        DefaultTextEntity text = ObjectUtils.cast(this.response.entity().get());
+        assertThat(text.content()).isEqualTo("Exception handler");
     }
 
     @Nested

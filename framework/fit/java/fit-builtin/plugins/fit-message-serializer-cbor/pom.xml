@@ -35,11 +35,6 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
-            <artifactId>fit-object-serializer-cbor</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-service-test-util</artifactId>
             <scope>test</scope>

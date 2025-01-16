@@ -19,9 +19,14 @@ import java.util.Optional;
  */
 public class DefaultSecure implements Secure {
     /**
-     * 配置项：{@code 'is-enabled'}。
+     * 配置项：{@code 'enabled'}。
      */
     private Boolean isEnabled;
+
+    /**
+     * 配置项：{@code 'is-ssl-enabled'}。
+     */
+    private Boolean isSslEnabled;
 
     /**
      * 配置项：{@code 'need-client-auth'}。
@@ -85,6 +90,15 @@ public class DefaultSecure implements Secure {
      */
     public void setEnabled(Boolean isEnabled) {
         this.isEnabled = isEnabled;
+    }
+
+    /**
+     * 设置 ssl 是否启用的标志。
+     *
+     * @param isSslEnabled 表示 ssl 是否启用的标志的 {@link Boolean}。
+     */
+    public void setIsSslEnabled(Boolean isSslEnabled) {
+        this.isSslEnabled = isSslEnabled;
     }
 
     /**
@@ -189,6 +203,11 @@ public class DefaultSecure implements Secure {
     @Override
     public boolean isProtocolEnabled() {
         return this.isEnabled != null ? this.isEnabled : this.port != null;
+    }
+
+    @Override
+    public boolean isSslEnabled() {
+        return this.isSslEnabled != null ? this.isSslEnabled : true;
     }
 
     @Override

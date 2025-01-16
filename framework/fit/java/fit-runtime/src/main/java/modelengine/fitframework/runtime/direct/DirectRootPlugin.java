@@ -32,8 +32,6 @@ final class DirectRootPlugin extends AbstractRootPlugin {
     private static final String APP_NAME_CONFIG_KEY = "application.name";
     private static final String APP_VERSION_CONFIG_KEY = "application.version";
 
-    private static final String UNKNOWN_APP_PROPERTY = "<unknown>";
-
     private final FitRuntime runtime;
     private final PluginMetadata metadata;
 

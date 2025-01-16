@@ -102,12 +102,6 @@
         </dependency>
         <dependency>
             <groupId>modelengine.fit.plugin</groupId>
-            <artifactId>fit-object-serializer-cbor</artifactId>
-            <version>${fit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-message-serializer-cbor</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>

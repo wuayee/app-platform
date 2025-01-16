@@ -14,6 +14,7 @@ import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.handler.RequestMappingException;
 import modelengine.fit.http.server.handler.SourceFetcher;
+import modelengine.fit.http.server.handler.exception.RequestParamFetchException;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.StringUtils;
 
@@ -41,7 +42,19 @@ public class PathVariableFetcher implements SourceFetcher {
      * @throws IllegalArgumentException 当 {@code variableName} 为 {@code null} 或空白字符串时。
      */
     public PathVariableFetcher(String variableName) {
-        this.variableName = notBlank(variableName, "The path variable cannot be blank.");
+        this.variableName =
+                notBlank(variableName, () -> new RequestParamFetchException("The path variable cannot be blank."));
+    }
+
+    /**
+     * 通过路径变量参数元数据来实例化 {@link PathVariableFetcher}。
+     *
+     * @param paramValue 表示路径变量参数元数据的 {@link String}。
+     * @throws IllegalArgumentException 当 {@code variableName} 为 {@code null} 或空白字符串时。
+     */
+    public PathVariableFetcher(ParamValue paramValue) {
+        this.variableName =
+                notBlank(paramValue.name(), () -> new RequestParamFetchException("The path variable cannot be blank."));
     }
 
     @Override

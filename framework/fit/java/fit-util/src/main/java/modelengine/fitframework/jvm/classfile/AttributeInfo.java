@@ -47,7 +47,7 @@ public final class AttributeInfo {
      *
      * @return 表示属性所属的属性列表的 {@link AttributeList}。
      */
-    public final AttributeList list() {
+    public AttributeList list() {
         return this.list;
     }
 
@@ -56,7 +56,7 @@ public final class AttributeInfo {
      *
      * @return 表示属性所属的类文件的 {@link ClassFile}。
      */
-    public final ClassFile file() {
+    public ClassFile file() {
         return this.list().file();
     }
 
@@ -65,7 +65,7 @@ public final class AttributeInfo {
      *
      * @return 表示属性名字的下标序号的 {@link U2}。
      */
-    public final U2 attributeNameIndex() {
+    public U2 attributeNameIndex() {
         return this.attributeNameIndex;
     }
 
@@ -74,7 +74,7 @@ public final class AttributeInfo {
      *
      * @return 表示属性内容长度的 {@link U4}。
      */
-    public final U4 attributeLength() {
+    public U4 attributeLength() {
         return this.attributeLength;
     }
 
@@ -84,7 +84,7 @@ public final class AttributeInfo {
      * @return 表示包含属性内容的输入流的 {@link InputStream}。
      * @throws IOException 当读取过程中发生 IO 异常时。
      */
-    public final InputStream read() throws IOException {
+    public InputStream read() throws IOException {
         return new ByteArrayInputStream(this.content);
     }
 }
