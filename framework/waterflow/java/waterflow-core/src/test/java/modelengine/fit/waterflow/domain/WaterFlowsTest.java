@@ -15,6 +15,7 @@ import modelengine.fit.waterflow.FlowTestException;
 import modelengine.fit.waterflow.FlowsTestUtil;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMemoMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMemoRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
@@ -24,16 +25,17 @@ import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocksMemo;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
+import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.states.State;
 import modelengine.fit.waterflow.domain.stream.nodes.BlockToken;
-import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.utils.Mermaid;
+import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fit.waterflow.domain.utils.Tuple;
 import modelengine.fitframework.util.ObjectUtils;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -108,33 +110,69 @@ class WaterFlowsTest {
 
         @Test
         @DisplayName("流程实例map节点流转逻辑")
-        void testFitStreamMapComputation() {
+        void test_map_with_single_data() {
             long[] data = {1, 0};
+            List<String> result = new ArrayList<>();
             ProcessFlow<Integer> flowTest = Flows.<Integer>create(repo, messenger, locks)
-                    .id("flow test start node")
                     .map(i -> i + data[0]++)
                     .map(i -> i + data[0]++)
-                    .close(r -> data[1] = r.get().getData());
+                    .close(r -> {
+                        data[1] = r.get().getData();
+                        result.add(r.get().getData().toString());
+                    });
             flowTest.setId("flow test");
             flowTest.offer(1);
 
-            FlowsTestUtil.waitFortyMillis(Collections::emptyList);
+            FlowsTestUtil.waitUntil(() -> result.size() == 5);
             assertEquals("flow test", flowTest.getId());
             assertEquals(3, data[0]);
             assertEquals(4, data[1]);
+        }
 
+        @Test
+        void test_map_with_array_data() {
             List<String> result = new ArrayList<>();
             Flows.<Integer>create(repo, messenger, locks)
                     .map(i -> i + 1)
                     .map(i -> i * 2)
                     .map(i -> i.toString() + "-okay")
                     .close(r -> {
-                        result.clear();
                         result.addAll(r.getAll().stream().map(FlowContext::getData).collect(Collectors.toList()));
                     })
                     .offer(new Integer[] {1, 2, 3, 4, 5});
-            FlowsTestUtil.waitSize(() -> result, 5);
+            FlowsTestUtil.waitUntil(() -> result.size() == 5);
             assertTrue(result.contains("12-okay"));
+        }
+
+        @Test
+        void test_map_with_preserved_order() {
+            List<Integer> result = new ArrayList<>();
+            AtomicReference<String> sessionId = new AtomicReference<>();
+            //应该乱序
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks).id("start")
+                    .map(i -> {
+                        SleepUtil.sleep((6 - i) * 20);
+                        return i * 10;
+                    })
+                    .map(i -> i + 10)
+                    .close(r -> result.add(r.get().getData()))
+                    .onComplete(id -> sessionId.set(id));
+            FlowSession session = new FlowSession(true);
+            Window window = session.begin();
+            for (int i = 1; i < 6; i++) {
+                flow.offer(i, session);
+                SleepUtil.sleep(10);
+            }
+            SleepUtil.sleep(100);
+            window.complete();
+
+            FlowsTestUtil.waitUntil(() -> result.size() == 5, 10000);
+            assertEquals(session.getId(), sessionId.get());
+            assertEquals(20, result.get(0));
+            assertEquals(30, result.get(1));
+            assertEquals(40, result.get(2));
+            assertEquals(50, result.get(3));
+            assertEquals(60, result.get(4));
         }
 
         @Test
@@ -156,7 +194,6 @@ class WaterFlowsTest {
                         .block(block)
                         .map(i -> i.toString() + "-okay")
                         .close(r -> {
-                            result.clear();
                             result.addAll(r.getAll().stream().map(FlowContext::getData).collect(Collectors.toList()));
                         })
                         .offer(new Integer[] {1, 2, 3, 4, 5});
@@ -222,7 +259,7 @@ class WaterFlowsTest {
         @DisplayName("流程实例reduce节点流转逻辑")
         void testFitStreamReduceComputation() {
             AtomicInteger counter = new AtomicInteger();
-            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks, ThreadMode.SESSION)
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
                     .map(i -> i * 1)
                     .reduce(() -> 0, Integer::sum)
                     .just(i -> counter.set(counter.get() + 1))
@@ -237,55 +274,210 @@ class WaterFlowsTest {
             for (int i = 0; i < 2; i++) {
                 flow.offer(i);
             }
-            FlowsTestUtil.waitUntil(() -> counter.get() == 2);
-            assertEquals(2, counter.get());
+            flow.complete();
+            FlowsTestUtil.waitUntil(() -> counter.get() == 1);
+            assertEquals(1, counter.get());
         }
 
         @Test
-        void test_reduce_with_window() {
+        void test_reduce_with_complete_event() throws InterruptedException {
             AtomicInteger counter = new AtomicInteger();
-            Operators.Window<Integer> window = inputs -> inputs.size() == 2;
+            AtomicInteger result = new AtomicInteger();
 
             ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
-                    .window(window)
-                    .reduce(() -> "", (acc, value) -> acc + value.toString())
-                    .just(i -> counter.set(counter.get() + 1))
+                    .reduce(() -> 0, (acc, value) -> acc + value)
+                    .just(i -> {
+                        result.set(i);
+                        counter.set(counter.get() + 1);
+                    })
                     .close();
+            FlowSession session = new FlowSession();
+            Window window = session.begin();
             for (int i = 0; i < 6; i++) {
-                flow.offer(i + 1);
+                flow.offer(i + 1, session);
             }
+            Thread.sleep(400);
+            window.complete();
 
-            FlowsTestUtil.waitUntil(() -> counter.get() == 3);
-            assertEquals(3, counter.get());
+            FlowsTestUtil.waitUntil(() -> counter.get() == 1, 1000);
+            assertEquals(21, result.get());
+            FlowsTestUtil.waitUntil(() -> counter.get() == 1);
+            assertEquals(1, counter.get());
+        }
+
+        @Test
+        void test_reduce_with_complete_event_and_window() throws InterruptedException {
+            List<Integer> result = new ArrayList<>();
+
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
+                    .window(2)
+                    .reduce(() -> 0, (acc, value) -> acc + 1)
+                    .just(i -> result.add(i))
+                    .close();
+            FlowSession session = new FlowSession();
+            Window window = session.begin();
+            for (int i = 0; i < 5; i++) {
+                flow.offer(i + 1, session);
+                Thread.sleep(10);
+            }
+            Thread.sleep(500);//todo:注意这里延迟有时错误 （for xiafei）
+            window.complete();
+
+            FlowsTestUtil.waitUntil(() -> result.size() == 5);
+            assertEquals(3, result.size());
+            assertEquals(5, result.stream().reduce(0, (acc, i) -> acc + i));
         }
 
         @Test
         void test_reduce_with_window_and_keyBy() {
-            AtomicInteger counter = new AtomicInteger();
-            Operators.Window<Tuple<String, Tuple<String, Integer>>> window = inputs -> inputs.size() == 3;
+            final List<Tuple<String, Integer>> reduced = new ArrayList<>();
             Flows.<Tuple<String, Integer>>create(repo, messenger, locks)
                     .keyBy(Tuple::first)
-                    .window(window)
+                    .window(2)
                     .reduce(() -> ObjectUtils.<Tuple<String, Integer>>cast(Tuple.from("", 0)),
                             (acc, data) -> Tuple.from(data.first(), acc.second() + data.second().second()))
-                    .just(data -> counter.set(counter.get() + 1))
+                    .just(data -> {
+                        synchronized (reduced) {
+                            reduced.add(ObjectUtils.cast(data));
+                        }
+                    })
                     .close()
                     .offer(new Tuple[] {
                             Tuple.from("will", 1), Tuple.from("evan", 2), Tuple.from("will", 3), Tuple.from("evan", 4),
                             Tuple.from("will", 5), Tuple.from("evan", 6)
                     });
 
-            FlowsTestUtil.waitUntil(() -> counter.get() == 4);
-            assertEquals(4, counter.get());
+            FlowsTestUtil.waitUntil(() -> reduced.size() == 4);
+
+            assertEquals(4, reduced.size());
+            assertEquals(4, reduced.get(0).second());
+            assertEquals(6, reduced.get(1).second());
+            assertEquals(5, reduced.get(2).second());
+            assertEquals(6, reduced.get(3).second());
+        }
+
+        @Test
+        void test_reduce_with_window_and_keyBy_complete_event() {
+            final List<Tuple<String, Integer>> reduced = new ArrayList<>();
+            Flow flow = Flows.<Tuple<String, Integer>>create(repo, messenger, locks)
+                    .keyBy(Tuple::first)
+                    .window(3)
+                    .reduce(() -> ObjectUtils.<Tuple<String, Integer>>cast(Tuple.from("", 0)),
+                            (acc, data) -> Tuple.from(data.first(), acc.second() + data.second().second()))
+                    .just(data -> {
+                        reduced.add((Tuple<String, Integer>) data);
+                    })
+                    .close();
+            FlowSession session = new FlowSession();
+            Window token = session.begin();
+            flow.offer(Tuple.from("will", 1), session);
+            flow.offer(Tuple.from("evan", 2), session);
+            flow.offer(Tuple.from("will", 3), session);
+            flow.offer(Tuple.from("evan", 4), session);
+            flow.offer(Tuple.from("will", 5), session);
+            token.complete();
+            FlowsTestUtil.waitUntil(() -> reduced.size() == 2);
+            assertEquals(9, reduced.stream().filter(t -> t.first().equals("will")).findAny().get().second());
+            assertEquals(6, reduced.stream().filter(t -> t.first().equals("evan")).findAny().get().second());
+        }
+
+        @Test
+        void test_reduce_under_preserved_order() {
+            StringBuilder result = new StringBuilder();
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
+                    .map(i -> {
+                        SleepUtil.sleep((6 - i) * 20);
+                        return i * 10;
+                    })
+                    .reduce(() -> "", (acc, i) -> acc + "|" + i)
+                    .map(i -> i.substring(1))
+                    .map(i -> i + "|reduce resuming")
+                    .close(r -> result.append(r.get().getData()));
+            FlowSession session = new FlowSession(true);
+            Window token = session.begin();
+            for (int i = 1; i < 6; i++) {
+                flow.offer(i, session);
+                SleepUtil.sleep(10);
+            }
+            SleepUtil.sleep(100);
+            token.complete();
+
+            FlowsTestUtil.waitUntil(() -> result.length() == 14, 1000);
+            assertEquals("10|20|30|40|50|reduce resuming", result.toString());
+        }
+
+        @Test
+        void test_unified_reduce() {
+            List<Integer> result = new ArrayList<>();
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
+                    .reduce((acc, i) -> acc + i)
+                    .unify()//go back to unbounded stream
+                    .window(2)
+                    .reduce((acc, i) -> acc + i)
+                    .just(i -> result.add(i))
+                    .close();
+            flow.offer(new Integer[] {1, 1, 1, 1});
+            flow.offer(new Integer[] {2, 20, 200, 2000});
+            flow.offer(new Integer[] {3, 30, 300, 3000});
+            flow.offer(new Integer[] {4, 40, 400, 4000});
+            FlowsTestUtil.waitUntil(() -> result.size() == 4, 1000);
+            //            waitUntil(() -> result.size()==2, 1000);
+            assertEquals(2226, result.get(0));
+            assertEquals(7777, result.get(1));
+        }
+
+        @Test
+        void test_nested_reduce() {
+            List<Integer> result = new ArrayList<>();
+            ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
+                    .window(2)
+                    .reduce((acc, i) -> acc + i)
+                    .window(2)
+                    .reduce((acc, i) -> acc + i)
+                    .just(i -> result.add(i))
+                    .close();
+            flow.offer(new Integer[] {1, 1, 2, 2, 3, 3, 4, 4, 5});
+            FlowsTestUtil.waitUntil(() -> result.size() == 3, 1000);
+            assertEquals(6, result.get(0));
+            assertEquals(14, result.get(1));
+            assertEquals(5, result.get(2));
         }
 
         @Test
         void test_buffer() {
             AtomicInteger counter = new AtomicInteger();
-            Flows.<Integer>create(repo, messenger, locks).window(inputs -> inputs.size() == 3).buffer().flatMap(i -> {
-                return Flows.flux(i.toArray(new Integer[0]));
-            }).just(value -> counter.set(counter.get() + 1)).close().offer(new Integer[] {1, 2, 3, 4, 5, 6});
+            Flows.<Integer>create(repo, messenger, locks)
+                    .window(3)
+                    .buffer()
+                    .flatMap(i -> {
+                        return Flows.flux(i.toArray(new Integer[0]));
+                    })
+                    .just(value -> counter.set(counter.get() + 1))
+                    .close()
+                    .offer(new Integer[] {1, 2, 3, 4, 5, 6});
             FlowsTestUtil.waitUntil(() -> counter.get() == 6);
+        }
+
+        @Test
+        @Disabled("暂不支持")
+        void should_return_one_result_when_reduce_given_multi_flatmap_data() {
+            AtomicInteger counter = new AtomicInteger();
+            Flows.<Integer>create(repo, messenger, locks)
+                    .flatMap(i -> {
+                        return Flows.flux(i * 10, i * 10 + 1);
+                    })
+                    .reduce(() -> 0, (acc, value) -> {
+                        System.out.println("reduce value=" + value + ", acc=" + (acc + value));
+                        return acc + value;
+                    })
+                    .just(value -> {
+                        System.out.println("value=" + value);
+                    })
+                    .close(r -> counter.set(r.get().getData()))
+                    .offer(new Integer[] {1, 2});
+            FlowsTestUtil.waitUntil(() -> counter.get() != 0);
+
+            Assertions.assertEquals(62, counter.get());
         }
 
         @Test
@@ -763,8 +955,10 @@ class WaterFlowsTest {
                     + System.lineSeparator() + "node4-->node5(map)"
                     + System.lineSeparator() + "node3-->node4{{=}}"
                     + System.lineSeparator() + "node2-->node3([+])"
+                    + System.lineSeparator() + "node10-->node3"
                     + System.lineSeparator() + "node1-->node9(map)"
                     + System.lineSeparator() + "node1-->node2(map)"
+                    + System.lineSeparator() + "node1-->node10(map)"
                     + System.lineSeparator() + "node0-->node1{?}", new Mermaid(flow).get());
         }
 
@@ -782,7 +976,7 @@ class WaterFlowsTest {
             assertEquals(4, result.size());
         }
 
-        private <T> Supplier<List<FlowContext<T>>> contextSupplier(FlowContextRepo<T> repo, String traceId,
+        private <T> Supplier<List<FlowContext<T>>> contextSupplier(FlowContextRepo repo, String traceId,
                 String metaId, FlowNodeStatus status) {
             return () -> {
                 List<FlowContext<T>> all = repo.getContextsByTrace(traceId);

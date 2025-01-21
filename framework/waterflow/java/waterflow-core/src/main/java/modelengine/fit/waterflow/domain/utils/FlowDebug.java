@@ -7,7 +7,6 @@
 package modelengine.fit.waterflow.domain.utils;
 
 import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fitframework.log.Logger;
 
 /**
@@ -18,6 +17,7 @@ import modelengine.fitframework.log.Logger;
  */
 public class FlowDebug {
     private static final Logger LOG = Logger.get(FlowDebug.class);
+
     private static boolean isOpen = false;
 
     /**
@@ -42,7 +42,8 @@ public class FlowDebug {
         if (!isOpen) {
             return;
         }
-        LOG.debug("Thread:{0}. Session:[{1},{2}]. {3}", Thread.currentThread().getId(),
-                Publisher.isSystemContext(session), Publisher.sessionTraceId(session), msg);
+        LOG.debug("Thread:{0}. tokenCount:{1}, getTosSize={2}, isComplete={3}. msg={4}", Thread.currentThread().getId(),
+                session.getWindow().tokenCount(), session.getWindow().getTosSize(), session.getWindow().isComplete(),
+                msg);
     }
 }

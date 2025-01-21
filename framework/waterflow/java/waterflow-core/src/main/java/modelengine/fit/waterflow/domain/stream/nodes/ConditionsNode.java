@@ -7,18 +7,14 @@
 package modelengine.fit.waterflow.domain.stream.nodes;
 
 import modelengine.fit.waterflow.domain.context.FlowContext;
-import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
-import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
-import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscription;
+import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +85,6 @@ public class ConditionsNode<I> extends Node<I, I> {
 
         @Override
         public void offer(List<FlowContext<I>> contexts) {
-            this.offerSystemContexts(contexts);
             this.offerUserContexts(contexts);
         }
 
@@ -106,24 +101,6 @@ public class ConditionsNode<I> extends Node<I, I> {
             });
         }
 
-        private void offerSystemContexts(List<FlowContext<I>> contexts) {
-            List<FlowContext<I>> systemContexts = new ArrayList<>();
-            contexts.stream()
-                    .filter(context -> Publisher.isSystemContext(context.getSession()))
-                    .peek(systemContexts::add)
-                    .forEach(context -> {
-                        String sessionId = getSessionId(context);
-                        if (sessionId == null) {
-                            return;
-                        }
-                        Optional.ofNullable(this.sessionSubscription.remove(sessionId))
-                                .ifPresent(subscriptions ->
-                                        subscriptions.forEach((id, subscription) ->
-                                                subscription.cache(Collections.singletonList(context))));
-                    });
-            contexts.removeAll(systemContexts);
-        }
-
         private void record(Subscription<I> subscription, FlowContext<I> context) {
             String sessionId = getSessionId(context);
             if (sessionId == null) {
@@ -137,13 +114,7 @@ public class ConditionsNode<I> extends Node<I, I> {
         }
 
         private String getSessionId(FlowContext<I> context) {
-            FlowSession session = context.getSession();
-            if (session == null) {
-                return null;
-            }
-            String sessionId = context.getSession().getInnerState(FlowBoundedEmitter.BOUNDED_SESSION_ID);
-            sessionId = Optional.ofNullable(sessionId).orElse(session.getId());
-            return sessionId;
+            return Optional.ofNullable(context.getSession()).map(IdGenerator::getId).orElse(null);
         }
     }
 }

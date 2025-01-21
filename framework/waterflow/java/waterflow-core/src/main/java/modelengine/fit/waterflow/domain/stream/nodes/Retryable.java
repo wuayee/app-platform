@@ -20,11 +20,11 @@ import java.util.List;
  * @since 1.0
  */
 public class Retryable<I> {
-    private final FlowContextRepo<I> repo;
+    private final FlowContextRepo repo;
 
     private final Subscriber<I, ?> to;
 
-    public Retryable(FlowContextRepo<I> repo, Subscriber<I, ?> to) {
+    public Retryable(FlowContextRepo repo, Subscriber<I, ?> to) {
         this.repo = repo;
         this.to = to;
     }
@@ -46,6 +46,6 @@ public class Retryable<I> {
      */
     public void retry(List<FlowContext<I>> contexts) {
         this.process(contexts);
-        to.onProcess(contexts);
+        to.onProcess(null, contexts, false);
     }
 }

@@ -4,19 +4,17 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-package modelengine.fit.waterflow.domain.stream.objects;
-
-import lombok.Builder;
-import lombok.Data;
+package modelengine.fit.waterflow.domain.emitters;
 
 /**
- * 流程的配置信息
+ * 完成能力的接口定义
  *
- * @author xiafei
+ * @author 宋永坦
  * @since 1.0
  */
-@Data
-@Builder
-public class FlowConfig {
-    private ThreadMode threadMode;
+public interface Completable {
+    /**
+     * 完成事件的通知方法
+     */
+    void complete();
 }

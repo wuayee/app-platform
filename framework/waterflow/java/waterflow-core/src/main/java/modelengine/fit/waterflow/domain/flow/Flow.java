@@ -6,6 +6,7 @@
 
 package modelengine.fit.waterflow.domain.flow;
 
+import lombok.Getter;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.states.Activity;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * FitStream外的一层flow wrapper
@@ -46,10 +48,21 @@ public abstract class Flow<D> extends IdGenerator {
      */
     protected Subscriber end;
 
+    /**
+     * 无界流控制session
+     * offer数据没有传输session则默认为在使用默认无界流
+     */
+    @Getter
+    protected FlowSession defaultSession;
+
     private final Map<String, Activity> tagNodes = new HashMap<>();
 
-    private static FlowSession copyFlowSession(FlowSession session) {
-        return (session == null) ? new FlowSession() : new FlowSession(session);
+    private Consumer<String> completeListener;
+
+    protected Flow() {
+        // default session for unbound stream
+        this.defaultSession = new FlowSession();
+        this.defaultSession.begin();
     }
 
     /**
@@ -111,7 +124,7 @@ public abstract class Flow<D> extends IdGenerator {
      * @return 流程实例事务ID
      */
     public String offer(D data) {
-        return this.start.offer(data);
+        return this.start.offer(data, this.defaultSession);
     }
 
     /**
@@ -122,7 +135,9 @@ public abstract class Flow<D> extends IdGenerator {
      * @return 提交后该数据对应的trace
      */
     public String offer(D data, FlowSession session) {
-        return this.start.offer(data, session);
+        D[] array = ObjectUtils.cast(new Object[1]);
+        array[0] = data;
+        return this.offer(array, session);
     }
 
     /**
@@ -143,8 +158,7 @@ public abstract class Flow<D> extends IdGenerator {
      * @return 流程实例事务ID
      */
     public String offer(D[] data, FlowSession session) {
-        FlowSession flowSession = copyFlowSession(session);
-        return this.start.offer(data, flowSession);
+        return this.start.offer(data, session);
     }
 
     /**
@@ -179,8 +193,7 @@ public abstract class Flow<D> extends IdGenerator {
      * @return 返回注入后的traceid
      */
     public String offer(String id, Object[] data, FlowSession session) {
-        FlowSession flowSession = copyFlowSession(session);
-        return ObjectUtils.<State>cast(this.tagNodes.get(id)).publisher().offer(data, flowSession);
+        return ObjectUtils.<State>cast(this.tagNodes.get(id)).publisher().offer(data, session);
     }
 
     /**
@@ -200,5 +213,28 @@ public abstract class Flow<D> extends IdGenerator {
      */
     public List<Processor<?, ?>> nodes() {
         return this.nodes;
+    }
+
+    /**
+     * 一个session结束整流操作后将触发onComplete事件
+     *
+     * @param consumer 结束事件的消费者
+     * @param <F> 类型
+     * @return 返回自身
+     */
+    public <F extends Flow<D>> F onComplete(Consumer<String> consumer) {
+        this.completeListener = consumer;
+        return (F) this;
+    }
+
+    /**
+     * 完成session
+     *
+     * @param id session的id
+     */
+    public void completeSession(String id) {
+        if (this.completeListener != null) {
+            this.completeListener.accept(id);
+        }
     }
 }

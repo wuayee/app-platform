@@ -84,7 +84,9 @@ public class Blocks {
          */
         @Override
         public void process(List<FlowContext<I>> contexts) {
-            this.getTarget().setValidator((context, all) -> validator == null || validator.check(context, all));
+            if (this.validator != null) {
+                this.getTarget().setValidator(this.validator);
+            }
             super.process(contexts);
         }
     }

@@ -6,12 +6,14 @@
 
 package modelengine.fit.waterflow.domain.states;
 
+import modelengine.fit.waterflow.domain.common.Constants;
+import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 /**
  * 数据前置的state节点
@@ -34,23 +36,33 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
     }
 
     /**
-     * 完成流程定义，并发射一个数据，提供一个callback用于接受数据
-     *
-     * @param callback 数据消费方
-     */
-    public void offer(Consumer<O> callback) {
-        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state)
-                .close(dataCallback -> callback.accept(dataCallback.get().getData()));
-        this.start.offer();
-    }
-
-    /**
      * 完成流程定义，并发射一个数据
      */
     @Override
     public void offer() {
+        this.offer(new FlowSession());
+    }
+
+    /**
+     * 指定session的offer
+     *
+     * @param session 指定的session
+     */
+    public void offer(FlowSession session) {
         ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).close();
-        this.start.offer();
+        this.start.offer(session);
+    }
+
+    /**
+     * 指定window的offer
+     *
+     * @param window 指定的window
+     */
+    public void offer(Window window) {
+        FlowSession session = new FlowSession();
+        session.setWindow(window);
+        session.setId(Constants.FROM_FLATMAP);
+        this.offer(session);
     }
 
     /**

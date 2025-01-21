@@ -32,8 +32,7 @@ import modelengine.fel.engine.operators.patterns.FlowPattern;
 import modelengine.fel.engine.operators.patterns.SimpleFlowPattern;
 import modelengine.fel.engine.operators.prompts.PromptTemplate;
 import modelengine.fel.engine.util.AiFlowSession;
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
+import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.states.Start;
@@ -175,7 +174,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     /**
      * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
      * <p>如果流程是批量注入数据，那么聚合节点会将同一批次的数据聚合。</p>
-     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.Window)} 表达式使用，才会聚合数据。</p>
+     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.WindowCondition)} 表达式使用，才会聚合数据。</p>
      *
      * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}，当 {@code init} 为 {@code null}
      * 时，表示聚合之后的数据类型还是原数据类型。
@@ -193,7 +192,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     /**
      * 生成一个数据聚合节点， 将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。处理器内可消费自定义上下文。
      * <p>如果流程是批量注入数据，那么聚合节点会将同一批次的数据聚合。</p>
-     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.Window)} 表达式使用，才会聚合数据。</p>
+     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.WindowCondition)} 表达式使用，才会聚合数据。</p>
      *
      * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}，当 {@code init} 为 {@code null}
      * 时，表示聚合之后的数据类型还是原数据类型。
@@ -213,18 +212,31 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * 形成一个窗口节点。需要与数据聚合节点配合使用，窗口节点单独使用不生效。
      * <p>当窗口节点中的数据满足条件后，窗口关闭，后续的数据聚合节点才会将聚合的数据往下发送，在此之前， 数据聚合节点将持续聚合数据。</p>
      *
-     * @param window 表示窗口处理器的 {@link Operators.Window}{@code <}{@link O}{@code >}。
+     * @param windowCondition 表示窗口处理器的 {@link Operators.WindowCondition}{@code <}{@link O}{@code >}。
      * @return 表示窗口节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code window} 为 {@code null} 时。
      */
-    public AiState<O, D, O, RF, F> window(Operators.Window<O> window) {
-        Validation.notNull(window, "Window operator cannot be null.");
-        return new AiState<>(this.start.window(window), this.flow());
+    public AiState<O, D, O, RF, F> window(Operators.WindowCondition windowCondition) {
+        Validation.notNull(windowCondition, "Window operator cannot be null.");
+        return new AiState<>(this.start.window(windowCondition), this.flow());
     }
 
     /**
-     * 设置分组聚合的键，需要配合 {@link AiStart#window(Operators.Window)}、
+     * 形成一个按照数量处理的窗口节点。需要与数据聚合节点配合使用，窗口节点单独使用不生效。
+     * <p>当窗口节点中的数据满足条件后，窗口关闭，后续的数据聚合节点才会将聚合的数据往下发送，在此之前， 数据聚合节点将持续聚合数据。</p>
+     *
+     * @param count 表示窗口大小。
+     * @return 表示窗口节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code window} 为 {@code null} 时。
+     */
+    public AiState<O, D, O, RF, F> window(int count) {
+        return this.window(arg -> arg.countToNow() == count);
+    }
+
+    /**
+     * 设置分组聚合的键，需要配合 {@link AiStart#window(Operators.WindowCondition)}、
      * {@link AiStart#reduce(Supplier, Operators.Reduce)} 和 {@link AiStart#reduce(Supplier, Operators.ProcessReduce)}
      * 使用，后续的聚合操作按指定的键分组处理。
      *
@@ -249,7 +261,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<List<O>, D, O, RF, F> buffer(int size) {
         Validation.isTrue(size > 0, "Buffer size must be greater than 0.");
-        return this.window(inputs -> inputs.size() == size).reduce(null, (acc, input) -> {
+        return this.window(size).reduce(null, (acc, input) -> {
             acc = ObjectUtils.getIfNull(acc, ArrayList::new);
             acc.add(input);
             return acc;
@@ -410,7 +422,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(pattern, "Pattern operator cannot be null.");
         FlowPattern<O, R> flowPattern = this.castFlowPattern(pattern);
         Processor<O, R> orProcessor = this.publisher().flatMap(input -> {
-            FlowBoundedEmitter<R> cachedEmitter = FlowBoundedEmitter.from(flowPattern);
+            FlowEmitter<R> cachedEmitter = FlowEmitter.from(flowPattern);
             AiFlowSession.applyPattern(flowPattern, input.getData(), input.getSession());
             return Flows.source(cachedEmitter);
         }, null);
@@ -532,8 +544,6 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <M extends ChatMessage> AiState<ChatMessage, D, O, RF, F> generate(FlowModel<O, M> model) {
         Validation.notNull(model, "Streaming Model operator cannot be null.");
         Processor<O, ChatMessage> processor = this.publisher().flatMap(input -> {
-            FlowSession session = input.getSession();
-            input.setKeyBy(session.getId());
             return Flows.source(AiFlowSession.applyPattern(model, input.getData(), input.getSession()));
         }, null).displayAs("generate");
         return new AiState<>(new State<>(processor, this.flow().origin()), this.flow());

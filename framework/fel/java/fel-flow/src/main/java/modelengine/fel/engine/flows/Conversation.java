@@ -6,10 +6,6 @@
 
 package modelengine.fel.engine.flows;
 
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE;
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM;
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID;
-
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.memory.Memory;
 import modelengine.fel.engine.activities.AiStart;
@@ -17,7 +13,6 @@ import modelengine.fel.engine.activities.FlowCallBack;
 import modelengine.fel.engine.util.StateKey;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
-import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.inspection.Validation;
 
 import java.util.List;
@@ -51,6 +46,7 @@ public class Conversation<D, R> {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
         this.session =
                 (session == null) ? this.setConverseListener(new FlowSession()) : this.setSubConverseListener(session);
+        this.session.begin();
         this.callBackBuilder = FlowCallBack.builder();
     }
 
@@ -66,12 +62,7 @@ public class Conversation<D, R> {
         ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.start().offer(data, newSession);
-
-        FlowSession flowSession = new FlowSession(newSession);
-        flowSession.setInnerState(IS_SESSION_COMPLETE, true);
-        flowSession.setInnerState(IS_SYSTEM, true);
-        flowSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
-        this.flow.start().offer((D) null, flowSession);
+        newSession.getWindow().complete();
         return latch;
     }
 
@@ -89,12 +80,7 @@ public class Conversation<D, R> {
         ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
-
-        FlowSession flowSession = new FlowSession(newSession);
-        flowSession.setInnerState(IS_SESSION_COMPLETE, true);
-        flowSession.setInnerState(IS_SYSTEM, true);
-        flowSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
-        this.flow.origin().offer(nodeId, null, flowSession);
+        newSession.getWindow().complete();
         return latch;
     }
 
