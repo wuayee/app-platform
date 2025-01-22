@@ -2,7 +2,7 @@
 
 ## 简介
 
-2024年 Snowflake 峰会开发者日上，人工智能领域的领军人物吴恩达发表了题为“AI 代理工作流及其推动 AI 进展的潜力的演讲，为我们揭开了
+2024 年 Snowflake 峰会开发者日上，人工智能领域的领军人物吴恩达发表了题为“AI 代理工作流及其推动 AI 进展的潜力的演讲，为我们揭开了
 Agentic AI 的神秘面纱，并指出这可能是比下一代基础模型更具潜力的 AI 发展方向。零样本 (Zero-shot) 模式下的 GPT-4 在
 HumanEval (代码生成测评数据集) 上的准确率也只有 67.0%，但经过 Agent 加持的 GPT-3.5 准确率能飙升到惊人的 95.1%。也就是说，Agent
 能带来显著的效果提升。
@@ -120,10 +120,9 @@ example:
 
 3. 定义工具
 
-定义天气相关的工具服务，同时使用 @ToolMethod 定义工具元数据。
+定义天气相关的工具服务，同时使用 @ToolMethod 定义工具元数据。相关接口如下：
 
 ```java
-interface:
 public interface WeatherService {
     @Genericable("modelengine.example.weather.temperature")
     String getCurrentTemperature(String location, String unit);
@@ -131,8 +130,10 @@ public interface WeatherService {
     @Genericable("modelengine.example.weather.rain")
     String getRainProbability(String location);
 }
+```
 
-service:
+service 层如下：
+```
 @Component
 public class WeatherServiceImpl implements WeatherService {
     @Override
@@ -155,8 +156,6 @@ public class WeatherServiceImpl implements WeatherService {
 4. 使用默认 agent 进行调度：
 
 ```java
-controller:
-
 @RequestMapping("/ai/example")
 public class AgentExampleController {
     private final AiProcessFlow<String, ChatMessage> agentFlow;
@@ -196,5 +195,5 @@ public class AgentExampleController {
   "content": "北京下雨的概率是6%。",
   "toolCalls": []
 }
-
+```
 可以看到，大模型根据工具返回的概率进行回答。
