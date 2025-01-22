@@ -47,7 +47,6 @@ public interface Memory {
 1. 在项目 pom.xml 加入以下依赖：
 
 ```xml
-
 <dependencies>
     <dependency>
         <groupId>modelengine.fit.starter</groupId>
@@ -98,6 +97,7 @@ controller:
 public class ChatMemoryExampleController {
     private final ChatModel chatModel;
     private final Memory memory = new CacheMemory();
+    
     @Value("${example.model}")
     private String modelName;
 

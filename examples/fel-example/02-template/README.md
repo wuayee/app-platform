@@ -54,13 +54,13 @@ public class ChatMessages implements Prompt {
    @enduml
 ```
 
-`AbstractChatMessage`和它的实现包括了4种消息类型。
+`AbstractChatMessage`和它的实现包括了 4 种消息类型。
 
 消息类型主要用于定义发出消息的一方的身份：
-`system`：表示系统消息，用于指导大模型的行为和输出规范，可以定义表达风格或者制定规则来影响模型的回应方式和输出。
-`human`：表示人类消息，用于给大模型提问题，发指令或是陈述需求，人类消息通常占据对话的一方。
-`ai`：表示ai消息，用于返回大模型的输出，构成了对话的另一方。
-`tool`：表示工具消息，用于返回大模型调用工具后的结果输出。一些大模型支持工具的调用，工具消息可以满足大模型与工具之间的交互。
+- `system`：表示系统消息，用于指导大模型的行为和输出规范，可以定义表达风格或者制定规则来影响模型的回应方式和输出。
+- `human`：表示人类消息，用于给大模型提问题，发指令或是陈述需求，人类消息通常占据对话的一方。
+- `ai`：表示 ai 消息，用于返回大模型的输出，构成了对话的另一方。
+- `tool`：表示工具消息，用于返回大模型调用工具后的结果输出。一些大模型支持工具的调用，工具消息可以满足大模型与工具之间的交互。
 
 ```java
 public enum MessageType {
@@ -83,7 +83,6 @@ public enum MessageType {
         return RELATIONSHIP.getOrDefault(role, MessageType.HUMAN);
     }
 }
-
 ```
 
 ## 模板
@@ -100,11 +99,11 @@ public interface GenericTemplate<I, O> {
 ```
 
 - `O render(I values)`：根据输入参数渲染模板，生成结果。
-- `Set<String> placeholder()`：用于换区模板占位符集合
+- `Set<String> placeholder()`：用于获取模板占位符集合。
 
 ### 字符串模板
 
-字符串模板基于 [mustache](https://mustache.github.io/) 语法的文本模板引擎，输入从字符串到字符串的映射用于填充模板占位符，输出为字符串。字符串模板支持完全填充和部分填充，，。
+字符串模板基于 [mustache](https://mustache.github.io/) 语法的文本模板引擎，输入从字符串到字符串的映射用于填充模板占位符，输出为字符串。字符串模板支持完全填充和部分填充。
 
 ```java
 public interface StringTemplate extends GenericTemplate<Map<String, String>, String> {}
@@ -206,8 +205,6 @@ example:
 3. 添加如下代码：
 
 ```java
-controller:
-
 @Component
 @RequestMapping("/ai/example")
 public class ChatTemplateExampleController {

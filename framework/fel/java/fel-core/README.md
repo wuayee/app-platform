@@ -1,12 +1,12 @@
 # Prompt
 
-Prompt最初是 NLP 研究者为下游任务设计出来的一种任务专属的输入形式或模板，
+Prompt 最初是 NLP 研究者为下游任务设计出来的一种任务专属的输入形式或模板，
 在 ChatGPT 引发大语言模型新时代之后，Prompt 即成为与大模型交互输入的代称。
 即我们一般将给大模型的输入称为 Prompt，将大模型返回的输出称为 Completion。
 
 ## 创建单条消息模板
 
-FEL基于Mustache语法，允许开发者将运行时变量绑定到提示模板中。
+FEL 基于 Mustache 语法，允许开发者将运行时变量绑定到提示模板中。
 
 + 键值对是常用的构造模板输入的方式：
 
@@ -25,7 +25,7 @@ public class DemoApplication {
 }
 ```
 
-+ 使用Tip.fromArray可以省略key，相应的需要在模板中用数组下标代替健值。
++ 使用 Tip.fromArray 可以省略 key，相应地需要在模板中用数组下标代替健值。
 
 ```java
 import modelengine.fel.core.chat.ChatMessage;

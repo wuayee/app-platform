@@ -66,8 +66,6 @@ example:
 3. 添加如下代码：
 
 ```java
-controller:
-
 @Component
 public class ChatModelExampleController {
     private final ChatModel chatModel;
@@ -84,7 +82,6 @@ public class ChatModelExampleController {
         return this.chatModel.generate(ChatMessages.from(new HumanMessage(query)), option).blockAll().get(0);
     }
 }
-
 ```
 
 4. 让模型返回流式输出：

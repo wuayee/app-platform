@@ -1,6 +1,6 @@
-LLM产生结构化输出的能力对于依赖可靠解析输出值的下游应用程序非常重要。开发人员希望将AI模型的结果快速转换为数据类型，例如Java类，这些数据类型可以传递给其他应用程序的函数和方法。
+LLM 产生结构化输出的能力对于依赖可靠解析输出值的下游应用程序非常重要。开发人员希望将 AI 模型的结果快速转换为数据类型，例如 Java 类，这些数据类型可以传递给其他应用程序的函数和方法。
 
-FEL输出解释器可以将 LLM 输出转换为结构化格式。接口如下：
+FEL 输出解释器可以将 LLM 输出转换为结构化格式。接口如下：
 
 ```java
 public interface OutputParser<O> extends Formatter, Parser<String, O> {}
@@ -52,7 +52,7 @@ System.out.println(joke.getSetup())
 System.out.println(joke.getPunchline())
 ```
 
-```plaintext
+````plaintext
 The output should be formatted as a JSON instance that conforms to the JSON schema below.
 Here is the output schema:
 ```
@@ -60,7 +60,7 @@ Here is the output schema:
 ```
 有一只鲨鱼吃下了一颗绿豆，结果它变成了什么？
 绿豆沙
-```
+````
 
 2. 部分解析
 
@@ -130,14 +130,13 @@ example:
 3. 添加如下代码：
 
 ```java
-controller:
-
 @Component
 @RequestMapping("/ai/example")
 public class OutputParserExampleController {
     private final ChatModel chatModel;
     private final OutputParser<Demo> outputParser;
     private final MessageTemplate template;
+    
     @Value("${example.model}")
     private String modelName;
 
