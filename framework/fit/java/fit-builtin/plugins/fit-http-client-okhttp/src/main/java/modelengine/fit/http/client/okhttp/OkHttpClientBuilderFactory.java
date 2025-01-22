@@ -19,6 +19,7 @@ import okhttp3.OkHttpClient;
 
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -45,6 +46,7 @@ public class OkHttpClientBuilderFactory {
      */
     public static OkHttpClient.Builder getOkHttpClientBuilder(HttpClassicClientFactory.Config config) {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        setTimeout(clientBuilder, config);
         try {
             setSslConfig(clientBuilder, config);
         } catch (GeneralSecurityException e) {
@@ -52,6 +54,16 @@ public class OkHttpClientBuilderFactory {
             throw new IllegalStateException("Failed to set https config.", e);
         }
         return clientBuilder;
+    }
+
+    private static void setTimeout(OkHttpClient.Builder clientBuilder, HttpClassicClientFactory.Config config) {
+        if (config.connectTimeout() >= 0) {
+            clientBuilder.connectTimeout(config.connectTimeout(), TimeUnit.MILLISECONDS);
+        }
+        if (config.socketTimeout() >= 0) {
+            clientBuilder.readTimeout(config.socketTimeout(), TimeUnit.MILLISECONDS)
+                    .writeTimeout(config.socketTimeout(), TimeUnit.MILLISECONDS);
+        }
     }
 
     private static void setSslConfig(OkHttpClient.Builder clientBuilder, HttpClassicClientFactory.Config config)

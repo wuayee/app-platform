@@ -7,11 +7,9 @@
 package modelengine.fit.http.client.okhttp;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import modelengine.fit.http.Serializers;
 import modelengine.fit.http.client.HttpClassicClient;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.client.okhttp.websocket.OkHttpWebSocketSession;
@@ -22,6 +20,7 @@ import modelengine.fit.http.websocket.Session;
 import modelengine.fit.http.websocket.client.WebSocketClassicListener;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.value.ValueFetcher;
+import okhttp3.OkHttpClient;
 
 import java.lang.reflect.Type;
 
@@ -32,25 +31,24 @@ import java.lang.reflect.Type;
  * @since 2024-04-08
  */
 public class OkHttpClassicClient extends AbstractHttpClassicClient {
-    private final HttpClassicClientFactory.Config config;
+    private final OkHttpClient okHttpClient;
 
     /**
      * 创建 {@link HttpClassicClient} 的 OkHttp 实现对象。
      *
      * @param serializers 表示序列化器集合的 {@link Serializers}。
      * @param valueFetcher 表示值的获取工具的 {@link ValueFetcher}。
-     * @param config 表示配置的 {@link HttpClassicClientFactory.Config}。
+     * @param okHttpClient 表示底层使用的 OkHttp 客户端的 {@link OkHttpClient}。
      */
-    public OkHttpClassicClient(Serializers serializers, ValueFetcher valueFetcher,
-            HttpClassicClientFactory.Config config) {
+    public OkHttpClassicClient(Serializers serializers, ValueFetcher valueFetcher, OkHttpClient okHttpClient) {
         super(serializers, valueFetcher);
-        this.config = getIfNull(config, () -> HttpClassicClientFactory.Config.builder().build());
+        this.okHttpClient = notNull(okHttpClient, "The okhttp client cannot be null.");
     }
 
     @Override
     public HttpClassicClientRequest createRequest(HttpRequestMethod method, String url) {
-        OkHttpClientRequest clientRequest = new OkHttpClientRequest(method, url, this.config);
-        return new DefaultHttpClassicClientRequest(this, clientRequest, this.config);
+        OkHttpClientRequest clientRequest = new OkHttpClientRequest(method, url, this.okHttpClient);
+        return new DefaultHttpClassicClientRequest(this, clientRequest);
     }
 
     @Override

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import modelengine.fit.http.HttpResource;
 import modelengine.fit.http.Serializers;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.entity.ObjectEntity;
 import modelengine.fit.http.entity.TextEntity;
@@ -87,9 +86,7 @@ public class DefaultHttpClassicClientResponseTest {
             Class<?> responseType = String.class;
             DefaultHttpClassicClientResponseTest.this.defaultHttpClassicClientResponse =
                     new DefaultHttpClassicClientResponse<>(DefaultHttpClassicClientResponseTest.this.httpResource,
-                            DefaultHttpClassicClientResponseTest.this.clientResponse,
-                            responseType,
-                            HttpClassicClientFactory.Config.builder().build());
+                            DefaultHttpClassicClientResponseTest.this.clientResponse, responseType);
             Optional<Entity> entity =
                     DefaultHttpClassicClientResponseTest.this.defaultHttpClassicClientResponse.entity();
             assertThat(entity).isExactlyInstanceOf(Optional.class);
@@ -105,8 +102,7 @@ public class DefaultHttpClassicClientResponseTest {
         Class<?> responseType = String.class;
         this.defaultHttpClassicClientResponse = new DefaultHttpClassicClientResponse<>(this.httpResource,
                 this.clientResponse,
-                responseType,
-                HttpClassicClientFactory.Config.builder().build());
+                responseType);
         Optional<? extends ObjectEntity<?>> objectEntity = this.defaultHttpClassicClientResponse.objectEntity();
         assertThat(objectEntity).isPresent();
     }
@@ -120,9 +116,7 @@ public class DefaultHttpClassicClientResponseTest {
                 new DefaultClientResponse(this.statusCode, this.reasonPhrase, this.headers, this.responseStream);
         Class<?> responseType = String.class;
         this.defaultHttpClassicClientResponse = new DefaultHttpClassicClientResponse<>(this.httpResource,
-                this.clientResponse,
-                responseType,
-                HttpClassicClientFactory.Config.builder().build());
+                this.clientResponse, responseType);
         Optional<TextEntity> textEntity = this.defaultHttpClassicClientResponse.textEntity();
         TextEntity expectEntity = null;
         if (this.defaultHttpClassicClientResponse.entity().isPresent()) {
