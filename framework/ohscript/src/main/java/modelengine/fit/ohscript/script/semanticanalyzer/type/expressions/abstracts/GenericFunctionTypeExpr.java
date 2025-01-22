@@ -6,8 +6,8 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.abstracts;
 
+import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.SyntaxException;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.FunctionTypeExpr;

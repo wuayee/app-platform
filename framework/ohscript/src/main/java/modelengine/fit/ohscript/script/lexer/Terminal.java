@@ -121,7 +121,7 @@ public enum Terminal implements NodeType, Serializable {
     ID("(\\b[a-z_]\\w*)"),
     NUMBER("(?:\\b|(?<=[\\=\\<\\>])\\s*-\\s*)\\d+(?:\\.\\d+)?(?![\\.])\\b"),
     STRING_COLON("(\\\"[^\"]*\\\"\\s*\\:(?!\\:))"),
-    STRING("(\\\"[^\"]*\\\")"),
+    STRING("(\\\"(?:[^\"\\\\]|\\\\.)*\\\")"),
     // others
     COLON("\\:"),
     EOL("$"),
@@ -220,6 +220,9 @@ public enum Terminal implements NodeType, Serializable {
             String name = type.tokenName();
             String value = matcher.group(name);
             if (value != null) {
+                if (type == STRING) {
+                    value = value.replaceAll("\\\\\"", "\"");
+                }
                 return new Token(type, value, lineNum, matcher.start(name), matcher.end(name));
             }
         }

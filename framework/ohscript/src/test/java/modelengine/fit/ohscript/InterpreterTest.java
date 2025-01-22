@@ -8,6 +8,7 @@ package modelengine.fit.ohscript;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -169,6 +170,14 @@ class InterpreterTest {
         ast = this.parserBuilder.parseString("", "var a=[1,2,3,8]; a.size()");
         env = new ASTEnv(ast);
         assertEquals(4, env.execute());
+
+        ast = this.parserBuilder.parseString("", "var a=[]; a.isEmpty()");
+        env = new ASTEnv(ast);
+        assertEquals(true, env.execute());
+
+        ast = this.parserBuilder.parseString("", "var a=[1,2,3,8]; a.isEmpty()");
+        env = new ASTEnv(ast);
+        assertEquals(false, env.execute());
     }
 
     @Test
@@ -207,10 +216,60 @@ class InterpreterTest {
     }
 
     @Test
-    void test_map() throws OhPanic {
-        AST ast = this.parserBuilder.parseString("", "var a=[:]; a.put(\"name\",\"will\"); a.get(\"name\")");
+    void test_and_or() throws OhPanic {
+        this.testBoolExpression("true && true", true);
+        this.testBoolExpression("true && false", false);
+        this.testBoolExpression("false && true", false);
+        this.testBoolExpression("false && false", false);
+        this.testBoolExpression("true && true && true", true);
+        this.testBoolExpression("true && true && false", false);
+        this.testBoolExpression("true && true && true && true", true);
+        this.testBoolExpression("true && true && true && false", false);
+        this.testBoolExpression("(true && true) && true", true);
+        this.testBoolExpression("true && (true && false)", false);
+        this.testBoolExpression("true && (true && true) && true", true);
+        this.testBoolExpression("true && true && (true && false)", false);
+        this.testBoolExpression("true && true && (true && false)", false);
+        this.testBoolExpression("true && (false && true) && true", false);
+
+        this.testBoolExpression("true || true", true);
+        this.testBoolExpression("true || false", true);
+        this.testBoolExpression("false || true", true);
+        this.testBoolExpression("false || false", false);
+        this.testBoolExpression("(false || false) || true", true);
+        this.testBoolExpression("false || (false || false)", false);
+        this.testBoolExpression("false || (false || false) || true", true);
+        this.testBoolExpression("false || false || (false || false)", false);
+        this.testBoolExpression("false || false || false || false", false);
+
+        this.testBoolExpression("(true && true) || true", true);
+        this.testBoolExpression("true && (true || false)", true);
+        this.testBoolExpression("true && (true || true) && true", true);
+        this.testBoolExpression("true && true || (true && false)", true);
+        this.testBoolExpression("true && false || (true && false)", false);
+        this.testBoolExpression("true && false || (true && true)", true);
+        this.testBoolExpression("true && (false || true) && true", true);
+        this.testBoolExpression("(false && false) || true", true);
+        this.testBoolExpression("false || (false && false)", false);
+        this.testBoolExpression("false || (true && false)", false);
+        this.testBoolExpression("true || (true && false)", true);
+        this.testBoolExpression("false || (true && true)", true);
+        this.testBoolExpression("false || (false && false) || true", true);
+        this.testBoolExpression("false || false && (false || false)", false);
+        this.testBoolExpression("false || false || false && false", false);
+    }
+
+    private void testBoolExpression(String expression, boolean expected) throws OhPanic {
+        AST ast = this.parserBuilder.parseString("", expression);
         ASTEnv env = new ASTEnv(ast);
-        assertEquals("will", env.execute());
+        assertEquals(expected, env.execute());
+    }
+
+    @Test
+    void test_map() throws OhPanic {
+        AST ast = this.parserBuilder.parseString("", "var a=[:]; a.put(\"name\",\"wi\\\"1\\\"ll\"); a.get(\"name\")");
+        ASTEnv env = new ASTEnv(ast);
+        assertEquals("wi\"1\"ll", env.execute());
 
         ast = this.parserBuilder.parseString("",
                 "var a=[:]; a.put(\"will\",[:]); a.get(\"will\").put(\"age\",47); a.get(\"will\").get(\"age\")");
@@ -611,7 +670,7 @@ class InterpreterTest {
         this.parserBuilder.addExternalOh("source", source);
         this.parserBuilder.addExternalOh("target", target);
         ast = this.parserBuilder.parseString("",
-                "let source = ext::source, target = ext::target; var i=0; while(i<source.size()){target.add1(source"
+                "let source = ext::source, target = ext::target; var i=0; while(i<source.size()){target.add(source"
                         + ".get(i)); i++;} target.get(1)");
         env = new ASTEnv(ast);
         assertEquals("zhang", env.execute());
@@ -690,10 +749,18 @@ class InterpreterTest {
         List<String> target = new ArrayList<>();
         this.parserBuilder.addExternalOh("source", source);
         this.parserBuilder.addExternalOh("target", target);
-        AST ast = this.parserBuilder.parseString("",
-                "let source = ext::source, target = ext::target; var i=0; while(i<source.size()){target.add1(source"
-                        + ".get(i)); i++;} target.get(1)");
+        AST ast = this.parserBuilder.parseString("", "let source = ext::source; source.isEmpty()");
         ASTEnv env = new ASTEnv(ast);
+        assertEquals(false, env.execute());
+
+        ast = this.parserBuilder.parseString("", "let target = ext::target; target.isEmpty()");
+        env = new ASTEnv(ast);
+        assertEquals(true, env.execute());
+
+        ast = this.parserBuilder.parseString("",
+                "let source = ext::source, target = ext::target; var i=0; while(i<source.size()){target.add(source"
+                        + ".get(i)); i++;} target.get(1)");
+        env = new ASTEnv(ast);
         assertEquals("zhang", env.execute());
     }
 
@@ -887,8 +954,6 @@ class InterpreterTest {
             fail();
         } catch (OhPanic ex) {
             assertTrue(true);
-            System.out.println(ex.node());
-            System.out.println(ex.getLocalizedMessage());
         }
     }
 
@@ -1148,6 +1213,34 @@ class InterpreterTest {
         assertNullEquals(newParserBuilder, true, "\"aa\" != ext::map.get(\"abc\")");
     }
 
+    @Test
+    void test_compare_with_null() throws OhPanic {
+        ParserBuilder newParserBuilder = new ParserBuilder(new GrammarBuilder(), new Lexer());
+        Map<String, Object> map = new HashMap<>();
+        map.put("abc", null);
+        newParserBuilder.addExternalOh("map", map);
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "3 > ext::map.get(\"abc\")"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "3 >= ext::map.get(\"abc\")"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "3 < ext::map.get(\"abc\")"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "3 <= ext::map.get(\"abc\")"));
+
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "ext::map.get(\"abc\") > 3"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "ext::map.get(\"abc\") >= 3"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "ext::map.get(\"abc\") < 3"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "ext::map.get(\"abc\") <= 3"));
+
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "-3 > ext::map.get(\"abc\")"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "-3 >= ext::map.get(\"abc\")"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "-3 < ext::map.get(\"abc\")"));
+        assertThrowsExactly(OhPanic.class, () -> runCompareWithNull(newParserBuilder, "-3 <= ext::map.get(\"abc\")"));
+    }
+
+    private void runCompareWithNull(ParserBuilder newParserBuilder, String code) throws OhPanic {
+        AST ast = newParserBuilder.parseString("", code);
+        ASTEnv env = new ASTEnv(ast);
+        env.execute();
+    }
+
     private void assertNullEquals(ParserBuilder newParserBuilder, boolean expected, String code) throws OhPanic {
         AST ast = newParserBuilder.parseString("", code);
         ASTEnv env = new ASTEnv(ast);
@@ -1178,7 +1271,130 @@ class InterpreterTest {
     }
 
     @Test
+    void test_number_compare() throws OhPanic {
+        Map<String, Object> businessData = new HashMap<>();
+        String testInt = "testInt";
+        String testFloat10 = "testFloat1.0";
+        String testFloat11 = "testFloat1.1";
+        String testDouble10 = "testDouble1.0";
+        String testDouble11 = "testDouble1.1";
+        businessData.put(testInt, 1);
+        businessData.put(testFloat10, 1.0F);
+        businessData.put(testFloat11, 1.1F);
+        businessData.put(testDouble10, 1.0D);
+        businessData.put(testDouble11, 1.1D);
+
+        String userDataKey = "userData";
+        String businessDataKey = "businessData";
+        Map<String, Object> userData = new HashMap<>();
+        userData.put(businessDataKey, JSONObject.toJSONString(businessData));
+
+        ParserBuilder newParserBuilder = new ParserBuilder(new GrammarBuilder(), new Lexer());
+        newParserBuilder.addExternalOh(userDataKey, userData);
+
+        this.compareNumberTrue(newParserBuilder, testInt, testFloat10, testDouble10);
+        this.compareNumberFalse(newParserBuilder, testInt, testFloat11, testDouble11, testFloat10);
+    }
+
+    private void compareNumberFalse(ParserBuilder newParserBuilder, String testInt, String testFloat11,
+            String testDouble11, String testFloat10) throws OhPanic {
+        compareTwoJsonNumber(newParserBuilder, testInt, testFloat11, false);
+        compareTwoJsonNumber(newParserBuilder, testInt, testDouble11, false);
+        compareTwoJsonNumber(newParserBuilder, testFloat11, testInt, false);
+        compareTwoJsonNumber(newParserBuilder, testFloat10, testDouble11, false);
+        compareTwoJsonNumber(newParserBuilder, testDouble11, testInt, false);
+        compareTwoJsonNumber(newParserBuilder, testDouble11, testFloat10, false);
+        compareLeftJsonNumber(newParserBuilder, testInt, "1.1", false);
+        compareLeftJsonNumber(newParserBuilder, testFloat11, "1", false);
+        compareLeftJsonNumber(newParserBuilder, testFloat11, "1.0", false);
+        compareLeftJsonNumber(newParserBuilder, testDouble11, "1", false);
+        compareLeftJsonNumber(newParserBuilder, testDouble11, "1.0", false);
+        compareRightJsonNumber(newParserBuilder, "1.1", testInt, false);
+        compareRightJsonNumber(newParserBuilder, "1", testFloat11, false);
+        compareRightJsonNumber(newParserBuilder, "1.0", testFloat11, false);
+        compareRightJsonNumber(newParserBuilder, "1", testDouble11, false);
+        compareRightJsonNumber(newParserBuilder, "1.0", testDouble11, false);
+        compareNumber(newParserBuilder, "1", "1.1", false);
+        compareNumber(newParserBuilder, "1.1", "1", false);
+        compareNumber(newParserBuilder, "1.0", "1.1", false);
+        compareNumber(newParserBuilder, "1.1", "1.0", false);
+    }
+
+    private void compareNumberTrue(ParserBuilder newParserBuilder, String testInt, String testFloat10,
+            String testDouble10) throws OhPanic {
+        compareTwoJsonNumber(newParserBuilder, testInt, testFloat10, true);
+        compareTwoJsonNumber(newParserBuilder, testInt, testDouble10, true);
+        compareTwoJsonNumber(newParserBuilder, testFloat10, testInt, true);
+        compareTwoJsonNumber(newParserBuilder, testFloat10, testDouble10, true);
+        compareTwoJsonNumber(newParserBuilder, testDouble10, testInt, true);
+        compareTwoJsonNumber(newParserBuilder, testDouble10, testFloat10, true);
+        compareLeftJsonNumber(newParserBuilder, testInt, "1", true);
+        compareLeftJsonNumber(newParserBuilder, testInt, "1.0", true);
+        compareLeftJsonNumber(newParserBuilder, testFloat10, "1", true);
+        compareLeftJsonNumber(newParserBuilder, testFloat10, "1.0", true);
+        compareLeftJsonNumber(newParserBuilder, testDouble10, "1", true);
+        compareLeftJsonNumber(newParserBuilder, testDouble10, "1.0", true);
+        compareRightJsonNumber(newParserBuilder, "1", testInt, true);
+        compareRightJsonNumber(newParserBuilder, "1.0", testInt, true);
+        compareRightJsonNumber(newParserBuilder, "1", testFloat10, true);
+        compareRightJsonNumber(newParserBuilder, "1.0", testFloat10, true);
+        compareRightJsonNumber(newParserBuilder, "1", testDouble10, true);
+        compareRightJsonNumber(newParserBuilder, "1.0", testDouble10, true);
+        compareNumber(newParserBuilder, "1", "1", true);
+        compareNumber(newParserBuilder, "1", "1.0", true);
+        compareNumber(newParserBuilder, "1.0", "1", true);
+    }
+
+    private void compareRightJsonNumber(ParserBuilder newParserBuilder, String left, String right, boolean expected)
+            throws OhPanic {
+        compareNumber(newParserBuilder, left, "businessDataJson.get(\"" + right + "\")", expected);
+    }
+
+    private void compareLeftJsonNumber(ParserBuilder newParserBuilder, String left, String right, boolean expected)
+            throws OhPanic {
+        compareNumber(newParserBuilder, "businessDataJson.get(\"" + left + "\")", right, expected);
+    }
+
+    private void compareTwoJsonNumber(ParserBuilder newParserBuilder, String left, String right, boolean expected)
+            throws OhPanic {
+        compareNumber(newParserBuilder, "businessDataJson.get(\"" + left + "\")",
+                "businessDataJson.get(\"" + right + "\")", expected);
+    }
+
+    private void compareNumber(ParserBuilder newParserBuilder, String left, String right, boolean expected)
+            throws OhPanic {
+        String code = "let businessDataJson = ext::util.stringToJson(ext::userData.get(\"businessData\"));" + left
+                + " == " + right;
+        AST ast = newParserBuilder.parseString("", code);
+        ASTEnv env = new ASTEnv(ast);
+        Object execute = env.execute();
+        assertEquals(expected, execute);
+
+        code = "let businessDataJson = ext::util.stringToJson(ext::userData.get(\"businessData\"));" + left
+                + " != " + right;
+        ast = newParserBuilder.parseString("", code);
+        env = new ASTEnv(ast);
+        execute = env.execute();
+        assertEquals(!expected, execute);
+    }
+
+    @Test
     void test_string_methods_from_json() throws OhPanic {
+        Map<String, String> map = new HashMap<>();
+        map.put("testString", "testString");
+        this.parserBuilder.addExternalOh("context", JSONObject.toJSONString(map));
+
+        assertExecution(true, "json.get(\"testString\").contains(\"stStr\")");
+        assertExecution(false, "json.get(\"testString\").contains(\"gni\")");
+        assertExecution(10, "json.get(\"testString\").len()");
+        assertExecution(true, "json.get(\"testString\").starts_with(\"testS\")");
+        assertExecution(false, "json.get(\"testString\").starts_with(\"estSt\")");
+        assertExecution(true, "json.get(\"testString\").ends_with(\"tring\")");
+        assertExecution(false, "json.get(\"testString\").ends_with(\"Strin\")");
+    }
+
+    @Test
+    void test_array_methods_from_json() throws OhPanic {
         Map<String, String> map = new HashMap<>();
         map.put("testString", "testString");
         this.parserBuilder.addExternalOh("context", JSONObject.toJSONString(map));

@@ -95,13 +95,11 @@ public class DefaultFitExecutor implements FitExecutor {
             log.debug("Invoke genericable by OhScript successfully. [result={}]", result);
             return result;
         } catch (FitException e) {
-            log.error("Failed to execute by FIT. [genericableId={}]", genericableId);
-            log.debug("Exception: ", e);
+            log.error("Failed to execute by FIT. [genericableId={}]", genericableId, e);
             throw new FitExecutionException(e.associatedGenericableId(), e.associatedFitableId(),
                     StringUtils.format("Failed to execute by FIT. [genericableId={0}]", genericableId), e);
         } catch (Throwable e) {
-            log.error("Failed to execute by FIT. [genericableId={}]", genericableId);
-            log.debug("Exception: ", e);
+            log.error("Failed to execute by FIT. [genericableId={}]", genericableId, e);
             throw new FitExecutionException(genericableId,
                     StringUtils.format("Failed to execute by FIT. [genericableId={0}]", genericableId), e);
         }

@@ -11,12 +11,12 @@ import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 import modelengine.fit.ohscript.script.interpreter.ActivationContext;
 import modelengine.fit.ohscript.script.interpreter.ReturnValue;
+import modelengine.fit.ohscript.script.parser.nodes.ArgumentNode;
 import modelengine.fit.ohscript.script.parser.nodes.BlockNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.ArgumentNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
+import modelengine.fitframework.beans.ObjectInstantiator;
 import modelengine.fitframework.util.ObjectUtils;
-import sun.misc.Unsafe;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
@@ -24,11 +24,9 @@ import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -98,7 +96,7 @@ public class Tool {
      * @return 返回生成的UUID
      */
     public static String uuid() {
-        return UUID.randomUUID().toString();
+        return UUIDUtil.fastUuid();
     }
 
     /**
@@ -106,13 +104,9 @@ public class Tool {
      *
      * @param clazz 类型
      * @return 返回创建的实例
-     * @throws Exception 抛出的异常
      */
-    public static <T> T createInstance(Class<T> clazz) throws Exception {
-        Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-        unsafeField.setAccessible(true);
-        Unsafe unsafe = ObjectUtils.cast(unsafeField.get(null));
-        return (T) unsafe.allocateInstance(clazz);
+    public static <T> T createInstance(Class<T> clazz) {
+        return ObjectInstantiator.standard(clazz).newInstance();
     }
 
     /**
@@ -157,9 +151,8 @@ public class Tool {
         DynamicType.Builder builder = new ByteBuddy().subclass(clazz).method(ElementMatchers.any()) // 匹配所有方法
                 .intercept(MethodDelegation.to(new MethodInterceptor(interceptor)));
 
-        Class<? extends T> proxyClass = builder.make()
-                .load(Tool.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
-                .getLoaded();
+        Class<? extends T> proxyClass =
+                builder.make().load(Tool.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER).getLoaded();
 
         return createInstance(proxyClass);
     }

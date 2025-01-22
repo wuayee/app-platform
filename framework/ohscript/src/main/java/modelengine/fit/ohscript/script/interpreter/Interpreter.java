@@ -14,32 +14,32 @@ import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.lexer.Token;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
+import modelengine.fit.ohscript.script.parser.nodes.ArrayAccessNode;
+import modelengine.fit.ohscript.script.parser.nodes.ArrayDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.AsyncBlockNode;
 import modelengine.fit.ohscript.script.parser.nodes.BlockNode;
+import modelengine.fit.ohscript.script.parser.nodes.DoNode;
+import modelengine.fit.ohscript.script.parser.nodes.DoubleFunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.EachNode;
+import modelengine.fit.ohscript.script.parser.nodes.EntityBodyNode;
+import modelengine.fit.ohscript.script.parser.nodes.EntityCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.EntityExtensionNode;
+import modelengine.fit.ohscript.script.parser.nodes.ExternalDataNode;
+import modelengine.fit.ohscript.script.parser.nodes.ForNode;
+import modelengine.fit.ohscript.script.parser.nodes.FunctionCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.IfNode;
 import modelengine.fit.ohscript.script.parser.nodes.ImportNode;
 import modelengine.fit.ohscript.script.parser.nodes.InitialAssignmentNode;
+import modelengine.fit.ohscript.script.parser.nodes.JavaNewNode;
+import modelengine.fit.ohscript.script.parser.nodes.MapDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.MatchStatementNode;
 import modelengine.fit.ohscript.script.parser.nodes.SafeBlockNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.script.parser.nodes.array.ArrayAccessNode;
-import modelengine.fit.ohscript.script.parser.nodes.array.ArrayDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.async.AsyncBlockNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.DoNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.EachNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.ForNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.IfNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.MatchStatementNode;
-import modelengine.fit.ohscript.script.parser.nodes.control.WhileNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityBodyNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityExtensionNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.DoubleFunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.java.ExternalDataNode;
-import modelengine.fit.ohscript.script.parser.nodes.java.JavaNewNode;
-import modelengine.fit.ohscript.script.parser.nodes.map.MapDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.tuple.TupleDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.tuple.TupleUnPackerNode;
+import modelengine.fit.ohscript.script.parser.nodes.TupleDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.TupleUnPackerNode;
+import modelengine.fit.ohscript.script.parser.nodes.WhileNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.BoolTypeExpr;
@@ -120,7 +120,7 @@ public enum Interpreter {
                 return metaResult;
             }
 
-            if (Constants.NULL.equals(id.lexeme())) {
+            if (id.lexeme().equals(Constants.NULL)) {
                 return ReturnValue.NULL;
             }
 
@@ -435,15 +435,21 @@ public enum Interpreter {
             if (op.nodeType() == Terminal.EXACT_TYPE_OF) {
                 return this.createValue(x.typeExpr().is(y.typeExpr()), node, current);
             }
-            ReturnValue equalsResult = this.compareEquals(node, current, x, y, op);
-            if (equalsResult != null) {
-                return equalsResult;
+            if (op.nodeType() == Terminal.EQUAL_EQUAL || op.nodeType() == Terminal.BANG_EQUAL) {
+                ReturnValue equalsResult = this.compareEquals(node, current, x, y, op);
+                if (equalsResult != null) {
+                    return equalsResult;
+                }
             }
             if (op.nodeType() == Terminal.AND_AND) {
                 return this.createValue(this.andAndResult(x, y), node, current);
             }
             if (op.nodeType() == Terminal.OR_OR) {
                 return this.createValue(this.orOrResult(x, y), node, current);
+            }
+            // 只有大小比较了
+            if (x.value() == null || y.value() == null) {
+                throw new OhPanic("can not compare with null", Constants.UNKNOWN_ERROR);
             }
             if (!(x.typeExpr() instanceof NumberTypeExpr || y.typeExpr() instanceof NumberTypeExpr)) {
                 return this.createValue(false, node, current);
@@ -464,13 +470,58 @@ public enum Interpreter {
                                 .orElseGet(() -> this.createValue(false, node, current)));
             }
             if (op.nodeType() == Terminal.EQUAL_EQUAL) {
-                return this.createValue(x.value().equals(y.value()), node, current);
+                return this.createValue(this.compareReturnNumberValue(x, y), node, current);
             }
             if (op.nodeType() == Terminal.BANG_EQUAL) {
-                return this.createValue(!x.value().equals(y.value()), node, current);
+                return this.createValue(!this.compareReturnNumberValue(x, y), node, current);
             }
             // 不是null且不是判定 != 或 == 的操作
             return null;
+        }
+
+        private Boolean compareReturnNumberValue(ReturnValue x, ReturnValue y) {
+            Object xValue = x.value();
+            Object yValue = y.value();
+            Boolean result = this.compareNumber(xValue, yValue);
+            if (result == null) {
+                result = xValue.equals(yValue);
+            }
+            return result;
+        }
+
+        private Boolean compareNumber(Object xValue, Object yValue) {
+            Boolean result = this.compareNumerOnBigDecimal(xValue, yValue);
+            if (result != null) {
+                return result;
+            }
+            result = this.compareNumerOnBigDecimal(yValue, xValue);
+            if (result != null) {
+                return result;
+            }
+            if (!(xValue instanceof Number)) {
+                return null;
+            }
+            if (!(yValue instanceof Number)) {
+                return false;
+            }
+            return Double.compare(((Number) xValue).doubleValue(), ((Number) yValue).doubleValue()) == 0;
+        }
+
+        private Boolean compareNumerOnBigDecimal(Object first, Object second) {
+            if (!(first instanceof BigDecimal)) {
+                return null;
+            }
+            if (second instanceof BigDecimal) {
+                return first.equals(second);
+            }
+            if (!(second instanceof Integer)) {
+                return null;
+            }
+            try {
+                return ((BigDecimal) first).intValueExact() == ObjectUtils.<Integer>cast(second);
+            } catch (ArithmeticException e) {
+                return false;
+            }
         }
 
         private ReturnValue compareBangEqualsOnNull(SyntaxNode node, ActivationContext current, ReturnValue x,
@@ -1227,6 +1278,12 @@ public enum Interpreter {
         @Override
         public ReturnValue interpret(SyntaxNode node, ASTEnv env, ActivationContext current) throws OhPanic {
             return SystemMethodInterpreters.interpret(node, env, current);
+        }
+    },
+    ERROR_NOT_FOUND_IGNORE {
+        @Override
+        public ReturnValue interpret(SyntaxNode node, ASTEnv env, ActivationContext current) throws OhPanic {
+            return ReturnValue.IGNORE;
         }
     };
 

@@ -11,11 +11,11 @@ import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 import modelengine.fit.ohscript.script.interpreter.ActivationContext;
 import modelengine.fit.ohscript.script.interpreter.ReturnValue;
+import modelengine.fit.ohscript.script.parser.nodes.EntityCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.FunctionCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.MemberNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.MemberNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionCallNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 import modelengine.fitframework.log.Logger;
@@ -121,8 +121,7 @@ public class OhProxy {
                 return method.invoke(base, args);
             }
         } catch (Exception e) {
-            LOG.error("noMethodInvoke error. method:{0}", method.getName());
-            LOG.debug("Exception: ", e);
+            LOG.error("noMethodInvoke error. method:{0}", method.getName(), e);
             throw new ScriptExecutionException(e.getMessage());
         }
     }

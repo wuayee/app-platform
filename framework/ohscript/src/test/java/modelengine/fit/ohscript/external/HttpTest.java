@@ -10,8 +10,6 @@ import static modelengine.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fit.http.client.HttpClassicClient;
-import modelengine.fit.http.client.HttpClassicClientFactory;
-import modelengine.fit.http.client.okhttp.OkHttpClassicClientFactory;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 import modelengine.fit.ohscript.script.interpreter.Oh;
@@ -66,8 +64,6 @@ public class HttpTest {
                 .put("json", jsonSerializer)
                 .build();
         ValueFetcher valueFetcher = new FastJsonValueHandler();
-        HttpClassicClientFactory okHttpFactory = new OkHttpClassicClientFactory(serializers, valueFetcher);
-        this.httpClient = okHttpFactory.create();
     }
 
     @AfterEach
