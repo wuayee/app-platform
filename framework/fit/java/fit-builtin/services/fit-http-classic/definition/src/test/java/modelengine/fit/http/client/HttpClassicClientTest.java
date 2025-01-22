@@ -86,8 +86,7 @@ public class HttpClassicClientTest {
                 when(TestExchangeForEntity.this.clientRequest.readResponse()).thenReturn(clientResponse);
                 TestExchangeForEntity.this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(
                         TestExchangeForEntity.this.httpResource,
-                        TestExchangeForEntity.this.clientRequest,
-                        HttpClassicClientFactory.Config.builder().build());
+                        TestExchangeForEntity.this.clientRequest);
             }
 
             @Test
@@ -115,9 +114,7 @@ public class HttpClassicClientTest {
             ClientResponse clientResponse =
                     new DefaultClientResponse(401, this.reasonPhrase, this.headers, this.responseStream);
             when(this.clientRequest.readResponse()).thenReturn(clientResponse);
-            this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource,
-                    this.clientRequest,
-                    HttpClassicClientFactory.Config.builder().build());
+            this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource, this.clientRequest);
             HttpClientErrorException httpClientErrorException =
                     catchThrowableOfType(() -> this.httpClassicClient.exchangeForEntity(this.httpClassicClientRequest,
                             Integer.class), HttpClientErrorException.class);
@@ -130,9 +127,7 @@ public class HttpClassicClientTest {
             ClientResponse clientResponse =
                     new DefaultClientResponse(501, this.reasonPhrase, this.headers, this.responseStream);
             when(this.clientRequest.readResponse()).thenReturn(clientResponse);
-            this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource,
-                    this.clientRequest,
-                    HttpClassicClientFactory.Config.builder().build());
+            this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource, this.clientRequest);
             HttpServerErrorException httpServerErrorException =
                     catchThrowableOfType(() -> this.httpClassicClient.exchangeForEntity(this.httpClassicClientRequest,
                             Integer.class), HttpServerErrorException.class);
@@ -146,9 +141,8 @@ public class HttpClassicClientTest {
             ClientResponse clientResponse =
                     new DefaultClientResponse(statusCode, this.reasonPhrase, this.headers, this.responseStream);
             when(this.clientRequest.readResponse()).thenReturn(clientResponse);
-            this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource,
-                    this.clientRequest,
-                    HttpClassicClientFactory.Config.builder().build());
+            this.httpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource, this.clientRequest);
+            HttpClassicClientFactory.Config.builder().build();
             HttpClientResponseException httpClientResponseException =
                     catchThrowableOfType(() -> this.httpClassicClient.exchangeForEntity(this.httpClassicClientRequest,
                             Integer.class), HttpClientResponseException.class);

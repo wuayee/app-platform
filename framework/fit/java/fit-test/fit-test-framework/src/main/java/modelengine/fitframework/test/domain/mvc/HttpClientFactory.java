@@ -24,6 +24,9 @@ import java.util.Map;
  * @since 2024-04-09
  */
 public class HttpClientFactory {
+    // 测试框架的默认 Config - OkHttpClient 的缓存数量。
+    private static final int DEFAULT_CLIENT_CACHE_MAX_SIZE = 1;
+
     /**
      * 为模拟的 MVC 创建客户端。
      *
@@ -34,7 +37,8 @@ public class HttpClientFactory {
         Map<String, ObjectSerializer> serializers =
                 MapBuilder.<String, ObjectSerializer>get().put("json", jsonSerializer).build();
         ValueFetcher valueFetcher = new FastJsonValueHandler();
-        HttpClassicClientFactory jdkFactory = new OkHttpClassicClientFactory(serializers, valueFetcher);
+        HttpClassicClientFactory jdkFactory =
+                new OkHttpClassicClientFactory(serializers, valueFetcher, DEFAULT_CLIENT_CACHE_MAX_SIZE);
         return jdkFactory.create();
     }
 }

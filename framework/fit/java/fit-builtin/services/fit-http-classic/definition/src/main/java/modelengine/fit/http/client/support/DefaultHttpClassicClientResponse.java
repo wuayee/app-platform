@@ -7,10 +7,8 @@
 package modelengine.fit.http.client.support;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import modelengine.fit.http.HttpResource;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.entity.EntityReadException;
@@ -42,7 +40,6 @@ import java.util.Optional;
  */
 public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResponse
         implements HttpClassicClientResponse<T> {
-    private final HttpClassicClientFactory.Config config;
     private final ClientResponse clientResponse;
     private final LazyLoader<byte[]> entityBytesLoader = new LazyLoader<>(this::actualEntityBytes);
     private final LazyLoader<Optional<Entity>> entityLoader = new LazyLoader<>(this::actualEntity);
@@ -54,14 +51,12 @@ public class DefaultHttpClassicClientResponse<T> extends AbstractHttpClassicResp
      * @param httpResource 表示 Http 的资源的 {@link HttpResource}。
      * @param clientResponse 表示客户端的 Http 响应的 {@link ClientResponse}。
      * @param responseType 表示响应类型的 {@link Type}。
-     * @param config 表示 Http 客户端工厂的配置的 {@link HttpClassicClientFactory.Config}。
      */
-    public DefaultHttpClassicClientResponse(HttpResource httpResource, ClientResponse clientResponse, Type responseType,
-            HttpClassicClientFactory.Config config) {
+    public DefaultHttpClassicClientResponse(HttpResource httpResource, ClientResponse clientResponse,
+            Type responseType) {
         super(httpResource,
                 notNull(clientResponse, "The client response cannot be null.").startLine(),
                 clientResponse.headers());
-        this.config = getIfNull(config, () -> HttpClassicClientFactory.Config.builder().build());
         this.clientResponse = clientResponse;
         this.responseType = responseType;
         this.commit();

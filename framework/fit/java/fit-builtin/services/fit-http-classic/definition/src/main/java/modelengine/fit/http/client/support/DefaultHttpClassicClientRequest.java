@@ -12,10 +12,8 @@ import static modelengine.fit.http.protocol.MessageHeaderNames.TRANSFER_ENCODING
 import static modelengine.fit.http.protocol.MessageHeaderValues.CHUNKED;
 import static modelengine.fitframework.inspection.Validation.notNull;
 import static modelengine.fitframework.util.ObjectUtils.cast;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
 import modelengine.fit.http.HttpResource;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.Entity;
@@ -45,7 +43,6 @@ import java.util.Optional;
  * @since 2022-11-25
  */
 public class DefaultHttpClassicClientRequest extends AbstractHttpClassicRequest implements HttpClassicClientRequest {
-    private final HttpClassicClientFactory.Config config;
     private final ClientRequest clientRequest;
     private Entity entity;
 
@@ -54,14 +51,11 @@ public class DefaultHttpClassicClientRequest extends AbstractHttpClassicRequest 
      *
      * @param httpResource 表示 Http 的资源的 {@link HttpResource}。
      * @param clientRequest 表示客户端的 Http 请求的 {@link ClientRequest}。
-     * @param config 表示 Http 客户端工厂的配置的 {@link HttpClassicClientFactory.Config}。
      */
-    public DefaultHttpClassicClientRequest(HttpResource httpResource, ClientRequest clientRequest,
-            HttpClassicClientFactory.Config config) {
+    public DefaultHttpClassicClientRequest(HttpResource httpResource, ClientRequest clientRequest) {
         super(httpResource,
                 notNull(clientRequest, "The client request cannot be null.").startLine(),
                 clientRequest.headers());
-        this.config = getIfNull(config, () -> HttpClassicClientFactory.Config.builder().build());
         this.clientRequest = clientRequest;
     }
 
@@ -138,10 +132,7 @@ public class DefaultHttpClassicClientRequest extends AbstractHttpClassicRequest 
                 this.clientRequest.writeBody(entityBytes);
             }
             ClientResponse clientResponse = this.clientRequest.readResponse();
-            return new DefaultHttpClassicClientResponse<>(this.httpResource(),
-                    clientResponse,
-                    responseType,
-                    this.config);
+            return new DefaultHttpClassicClientResponse<>(this.httpResource(), clientResponse, responseType);
         } catch (IOException e) {
             throw new ClientException("Failed to exchange response.", e);
         } finally {

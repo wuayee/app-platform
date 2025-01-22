@@ -7,7 +7,6 @@
 package modelengine.fit.http.client.okhttp.websocket;
 
 import modelengine.fit.http.HttpResource;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.client.support.DefaultHttpClassicClientResponse;
 import modelengine.fit.http.protocol.ClientResponse;
@@ -69,10 +68,7 @@ public class WebSocketListenerAdapter extends WebSocketListener {
                 MultiValueMap.create(response.headers().toMultimap()),
                 null);
         HttpClassicClientResponse<Object> classicClientResponse =
-                new DefaultHttpClassicClientResponse<>(this.httpResource,
-                        clientResponse,
-                        Object.class,
-                        HttpClassicClientFactory.Config.builder().build());
+                new DefaultHttpClassicClientResponse<>(this.httpResource, clientResponse, Object.class);
         this.session.setResponse(classicClientResponse);
         this.listener.onOpen(this.session);
     }

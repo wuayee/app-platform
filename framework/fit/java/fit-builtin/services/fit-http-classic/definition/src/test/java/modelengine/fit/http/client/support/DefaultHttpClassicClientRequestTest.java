@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.HttpResource;
 import modelengine.fit.http.QueryCollection;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.entity.FileEntity;
@@ -68,8 +67,7 @@ public class DefaultHttpClassicClientRequestTest {
         ClientResponse clientResponse = new DefaultClientResponse(200, reasonPhrase, this.headers, this.responseStream);
         when(this.clientRequest.readResponse()).thenReturn(clientResponse);
         this.defaultHttpClassicClientRequest = new DefaultHttpClassicClientRequest(this.httpResource,
-                this.clientRequest,
-                HttpClassicClientFactory.Config.builder().build());
+                this.clientRequest);
     }
 
     @AfterEach
@@ -236,8 +234,7 @@ public class DefaultHttpClassicClientRequestTest {
             when(DefaultHttpClassicClientRequestTest.this.clientRequest.startLine()).thenReturn(startLine);
             DefaultHttpClassicClientRequestTest.this.defaultHttpClassicClientRequest =
                     new DefaultHttpClassicClientRequest(DefaultHttpClassicClientRequestTest.this.httpResource,
-                            DefaultHttpClassicClientRequestTest.this.clientRequest,
-                            HttpClassicClientFactory.Config.builder().build());
+                            DefaultHttpClassicClientRequestTest.this.clientRequest);
             String path = DefaultHttpClassicClientRequestTest.this.defaultHttpClassicClientRequest.path();
             assertThat(path).isEqualTo("testRequestUri");
         }
