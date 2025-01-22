@@ -39,6 +39,16 @@ public class SymbolTable implements Serializable {
     }
 
     /**
+     * 根据scopeId清理scope
+     *
+     * @param scopeId 待清理的scopeId
+     * @return 被清理的scope
+     */
+    public SymbolScope removeScope(long scopeId) {
+        return scopes.remove(scopeId);
+    }
+
+    /**
      * 添加一个新的符号作用域
      *
      * @param scope 新的符号作用域

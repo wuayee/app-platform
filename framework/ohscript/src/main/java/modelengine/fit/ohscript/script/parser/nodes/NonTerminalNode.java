@@ -6,7 +6,6 @@
 
 package modelengine.fit.ohscript.script.parser.nodes;
 
-import lombok.Getter;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.ScriptExecutionException;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
@@ -18,6 +17,8 @@ import modelengine.fit.ohscript.util.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 非终结节点
@@ -25,10 +26,11 @@ import java.util.List;
  * @since 1.0
  */
 public abstract class NonTerminalNode extends SyntaxNode {
+    private static final Map<String, Interpreter> interpreterMap = new ConcurrentHashMap<>();
+
     /**
      * 非终结符类型
      */
-    @Getter
     protected NonTerminal nodeType;
 
     /**
@@ -146,7 +148,7 @@ public abstract class NonTerminalNode extends SyntaxNode {
      *
      * @return 是否被忽略
      */
-    public boolean isNodeIgnored() {
+    protected boolean isNodeIgnored() {
         return this.childCount() == 0;
     }
 
@@ -212,11 +214,26 @@ public abstract class NonTerminalNode extends SyntaxNode {
      * @return 解释器实例
      */
     private Interpreter getInterpreter() {
-        Interpreter interpreter;
-        try {
-            interpreter = Interpreter.valueOf(this.nodeType.name());
-        } catch (Exception e) {
-            interpreter = Interpreter.GENERAL;
+        return this.getInterpreter(this.nodeType.name());
+    }
+
+    /**
+     * 通过名称获取解释器，增加了缓存
+     *
+     * @param name 解释器名称
+     * @return 解释器
+     */
+    private Interpreter getInterpreter(String name) {
+        Interpreter interpreter = interpreterMap.get(name);
+        if (interpreter == null) {
+            Interpreter result;
+            try {
+                result = Interpreter.valueOf(name);
+            } catch (IllegalArgumentException e) {
+                result = Interpreter.GENERAL;
+            }
+            interpreter = result;
+            interpreterMap.put(name, interpreter);
         }
         return interpreter;
     }

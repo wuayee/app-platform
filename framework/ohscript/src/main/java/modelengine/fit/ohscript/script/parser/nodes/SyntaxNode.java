@@ -6,8 +6,6 @@
 
 package modelengine.fit.ohscript.script.parser.nodes;
 
-import lombok.Getter;
-import lombok.Setter;
 import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.errors.SyntaxError;
 import modelengine.fit.ohscript.script.interpreter.ASTEnv;
@@ -57,15 +55,11 @@ public abstract class SyntaxNode implements Interpretable, Serializable {
     /**
      * 表示该节点所在的作用域编号，用于语义分析和变量作用域的管理
      */
-    @Getter
-    @Setter
     protected long scope = 0L;
 
     /**
      * 标识该节点是否可返回值，例如在函数或方法节点中设置为 true
      */
-    @Getter
-    @Setter
     protected boolean returnAble = false;
 
     /**

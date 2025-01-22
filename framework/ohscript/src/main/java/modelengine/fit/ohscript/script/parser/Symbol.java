@@ -17,7 +17,7 @@ import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.No
  * IGNORE could have different name with format:  ***'
  *
  * @author 张群辉
- * @since 2023-05-01
+ * @since  2023-05-01
  */
 public class Symbol<T extends NodeType> {
     /**

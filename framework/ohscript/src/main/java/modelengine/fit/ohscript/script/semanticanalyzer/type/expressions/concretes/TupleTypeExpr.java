@@ -6,7 +6,7 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes;
 
-import modelengine.fit.ohscript.script.parser.nodes.tuple.TupleDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.TupleDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 
 import java.util.Map;
