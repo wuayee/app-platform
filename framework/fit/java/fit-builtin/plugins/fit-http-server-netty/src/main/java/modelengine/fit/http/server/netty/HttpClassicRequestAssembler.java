@@ -125,11 +125,11 @@ public class HttpClassicRequestAssembler extends SimpleChannelInboundHandler<Htt
 
     private void stopExecution(ChannelHandlerContext ctx) {
         NettyHttpServerRequest request = getRequest(ctx);
-        if (request == null) {
-            return;
+        if (request != null) {
+            request.interruptExecution();
+            clearRequest(ctx);
         }
-        request.interruptExecution();
-        clearRequest(ctx);
+        ctx.close();
     }
 
     @Override
