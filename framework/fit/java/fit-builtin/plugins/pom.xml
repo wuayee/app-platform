@@ -16,7 +16,6 @@
     <modules>
         <module>fit-actuator</module>
         <module>fit-client-http</module>
-        <module>fit-data-repository</module>
         <module>fit-dynamic-plugin-directory</module>
         <module>fit-dynamic-plugin-mvn</module>
         <module>fit-heartbeat-client</module>

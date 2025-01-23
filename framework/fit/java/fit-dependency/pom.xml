@@ -209,11 +209,6 @@
             </dependency>
             <dependency>
                 <groupId>modelengine.fit.service</groupId>
-                <artifactId>fit-data-repository-service</artifactId>
-                <version>${fit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-heartbeat</artifactId>
                 <version>${fit.version}</version>
             </dependency>
@@ -257,11 +252,6 @@
             <dependency>
                 <groupId>modelengine.fit.plugin</groupId>
                 <artifactId>fit-client-http</artifactId>
-                <version>${fit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>modelengine.fit.plugin</groupId>
-                <artifactId>fit-data-repository</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
