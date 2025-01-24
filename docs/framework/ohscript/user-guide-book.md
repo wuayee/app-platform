@@ -26,7 +26,7 @@ let test = {age:10}; # 创建为 object
 
 ### 数据类型
 
-支持不同数据类型的常用方法，实现见 `framework/ohscript/src/main/java/com/huawei/fit/ohscript/script/parser/nodes/ScriptNode.java`。
+支持不同数据类型的常用方法，实现见 `src/main/java/modelengine/fit/ohscript/script/parser/nodes/ScriptNode.java`。
 
 #### Number
 
@@ -170,7 +170,7 @@ will.get() # 48
 ```xml
 <!-- OhScript -->
 <dependency>
-    <groupId>com.huawei.fit.ohscript</groupId>
+    <groupId>modelengine.fit.ohscript</groupId>
     <artifactId>ohscript</artifactId>
     <version>0.0.3.6-SNAPSHOT</version>
 </dependency>
@@ -179,9 +179,9 @@ will.get() # 48
 **main**：
 
 ```java
-import com.huawei.fit.ohscript.script.engine.OhScript;
-import com.huawei.fit.ohscript.script.errors.OhPanic;
-import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
+import modelengine.fit.ohscript.script.engine.OhScript;
+import modelengine.fit.ohscript.script.errors.OhPanic;
+import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 
 public class TestOhScript {
     private static OhScript ohScript = new OhScript();

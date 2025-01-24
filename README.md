@@ -22,7 +22,7 @@
 - 开发环境：`IntelliJ IDEA`
 - Java 17
 - 代码格式化文件：[CodeFormatterFromIdea.xml](CodeFormatterFromIdea.xml)
-- `Maven` 配置：推荐版本 Maven 3.8+
+- `Maven` 配置：推荐版本 Maven 3.8.8+
 
  **构建命令**
 ```
