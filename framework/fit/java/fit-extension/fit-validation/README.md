@@ -2,7 +2,7 @@
 
 # 核心类图
 
-```plantuml
+``` plantuml
 
 @startuml
 hide empty members
@@ -57,7 +57,7 @@ ValidationHandler o-- Validator
 @enduml
 ```
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -139,7 +139,7 @@ Range .up.> RangeValidator
 
 考虑一下例子： 首先，需要定义一个分组接口：
 
-```java
+``` java
 public interface GroupA {}
 
 public interface GroupB {}
@@ -147,7 +147,7 @@ public interface GroupB {}
 
 然后，在需要进行校验的类中，使用`@Validated`注解指定需要校验的分组：
 
-```java
+``` java
 public class User {
     @NotBlank(message = "用户名不能为空", groups = {GroupA.class})
     private String username;
@@ -161,7 +161,7 @@ public class User {
 
 在Controller中，使用`@Validated`注解指定需要校验的分组：
 
-```java
+``` java
 public class UserController {
     @PostMapping("/login")
     public String login(@Validated(GroupA.class) User user) {

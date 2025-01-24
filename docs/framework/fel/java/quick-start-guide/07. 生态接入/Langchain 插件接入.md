@@ -6,7 +6,7 @@ Python 中的插件以 `Runnable` 的形式被注册和调用，而 `Langchain` 
 
 ## Langchain 插件
 
-```python
+``` python
 # 省略 import 和加载数据库的函数实现
 
 def langchain_sql_list(kwargs: dict) -> BaseTool:
@@ -115,7 +115,7 @@ curl --location --request POST 'http://localhost:9666/fit/langchain.tool/sql_db_
 
 下面我们用一个很简单的例子来展示怎么把 `Langchain` 已经开发的链路快速简单的放进一个插件。下面使用 `Langchian` 编写了一个基于大模型翻译文本的链路，输入是目标语言和需要翻译的文本，输出是对象语言的文本。
 
-```python
+``` python
 import getpass
 import os
 
@@ -125,7 +125,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 ```
 
-```python
+``` python
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 model = ChatOpenAI(model="gpt-4")
 
@@ -141,7 +141,7 @@ chain.invoke({"language": "french", "text": "hi"})
 
 可以看到我们基本保留了全部的 `Langchain` 代码，只有在构建模型的时候使用了外部输入的参数。
 
-```python
+``` python
 def translator(kwargs) -> RunnableSerializable[str, str]:
     system_template = "Translate the following into {language}:"
     prompt_template = ChatPromptTemplate.from_messages(

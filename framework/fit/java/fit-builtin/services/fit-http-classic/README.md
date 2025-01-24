@@ -1,6 +1,6 @@
 # Http High Level Messages
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2
@@ -109,7 +109,7 @@ Entity ..> HttpMessage
 
 # Http Entities
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2

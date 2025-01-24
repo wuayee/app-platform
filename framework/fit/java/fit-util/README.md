@@ -22,7 +22,7 @@
 
 ## 示例
 
-```java
+``` java
 import modelengine.fitframework.model.tree.Tree;
 import modelengine.fitframework.model.tree.TreeNode;
 
@@ -55,7 +55,7 @@ public class Demo {
 
 `Resource`用以定义一个资源，这个资源可以用来描述`ClassPath`中包含的嵌入资源，也可以用以描述一个外部资源。
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC
@@ -235,7 +235,7 @@ DefaultClassScanner *-down-> ClassPath
 
 - **字符串模式匹配**
 
-```java
+``` java
 import modelengine.fitframework.util.wildcard.CharSequencePattern;
 import modelengine.fitframework.util.wildcard.Pattern;
 
@@ -251,7 +251,7 @@ public class Main {
 
 - **路径模式匹配**
 
-```java
+``` java
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.wildcard.Pattern;
 import modelengine.fitframework.util.wildcard.SymbolSequence;
@@ -281,7 +281,7 @@ public class Main {
 
 - **树形结构匹配**
 
-```java
+``` java
 import modelengine.fitframework.util.wildcard.Pattern;
 import modelengine.fitframework.util.wildcard.SymbolSequence;
 import modelengine.fitframework.util.wildcard.SymbolType;
@@ -354,7 +354,7 @@ Jar In Jar解析过程耗时较多，其原因集中在读取JAR文件数据的�
 
 优化后的类图如下：
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC
@@ -567,7 +567,7 @@ end note
 
 ### 类型扫描
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC

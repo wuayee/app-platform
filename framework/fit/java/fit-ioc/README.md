@@ -58,7 +58,7 @@
 > - 当定义了注解A时，即认为定义了注解B
 > - 当设置了注解A的X属性时，即认为设置了注解B的Y属性
 > 例如：
-> ```java
+> ``` java
 > public @interface Fitable {}
 > 
 > @Fitable
@@ -180,7 +180,7 @@
 
 # 异常结构
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC

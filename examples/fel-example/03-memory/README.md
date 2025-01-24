@@ -5,7 +5,7 @@
 大语言模型提供无状态推理接口，其基于用户传入的上下文进行推理，然而一个更复杂的系统需要有一个不断更新的世界模型，这允许它做一些事情，比如维护实体及其关系的信息。我们把这种储存过去互动信息的能力称为“记忆”。在
 FEL 中，我们使用 `Memory` 保存对话的历史记录，包括先前的输入和输出，这样模型可以根据之前的对话内容生成更相关的回应。
 
-```java
+``` java
 public interface Memory {
     /**
      * 插入一条历史记录。
@@ -46,7 +46,7 @@ public interface Memory {
 
 1. 在项目 pom.xml 加入以下依赖：
 
-```xml
+``` xml
 <dependencies>
     <dependency>
         <groupId>modelengine.fit.starter</groupId>
@@ -89,7 +89,7 @@ example:
 
 3. 添加如下代码：
 
-```java
+``` java
 controller:
 
 @Component

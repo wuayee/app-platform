@@ -2,7 +2,7 @@ LLM 产生结构化输出的能力对于依赖可靠解析输出值的下游应�
 
 FEL 输出解释器可以将 LLM 输出转换为结构化格式。接口如下：
 
-```java
+``` java
 public interface OutputParser<O> extends Formatter, Parser<String, O> {}
 ```
 
@@ -12,13 +12,13 @@ public interface OutputParser<O> extends Formatter, Parser<String, O> {}
 
 实现接口如下：
 
-```java
+``` java
 public interface Formatter {
     String instruction();
 }
 ```
 
-```java
+``` java
 public interface Parser<I, R> {
     R parse(I input);
 }
@@ -28,7 +28,7 @@ public interface Parser<I, R> {
 
 通过在目标 Java 类中添加 `@Property` 注解，其中 `description`、`defaultValue`、`required` 等参数来扩充指引。
 
-```java
+``` java
 static class Joke{
         @Property(description = "question to set up a joke", required = True, defaultValue: "等病好了我就去看医生。")
         private String setup;
@@ -42,7 +42,7 @@ static class Joke{
 
 1. 完整解析
 
-```java
+``` java
 ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
 OutputParser<Test> outputParser = JsonOutputParser.create(serializer, Test.class);
 String json = "{\"setup\": \"有一只鲨鱼吃下了一颗绿豆，结果它变成了什么？\",\"punchline\": \"绿豆沙\"}";
@@ -66,7 +66,7 @@ Here is the output schema:
 
 当被解析的 json 不完整时，可以使用 partial 解析器进行修复，这在流式输出场景非常有用：
 
-```java
+``` java
 OutputParser<Test> outputParser = JsonOutputParser.createPartial(serializer, Test.class);
 String json = "{\"setup\": \"有一只鲨鱼吃下了一颗绿豆，结果它变成了什么？\", \"punchline\":}";
 Joke joke = outputParser.parse(json);
@@ -84,7 +84,7 @@ null
 
 1. 在项目 pom.xml 加入以下依赖：
 
-```xml
+``` xml
 
 <dependencies>
     <dependency>
@@ -129,7 +129,7 @@ example:
 
 3. 添加如下代码：
 
-```java
+``` java
 @Component
 @RequestMapping("/ai/example")
 public class OutputParserExampleController {

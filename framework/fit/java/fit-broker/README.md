@@ -10,7 +10,7 @@
 
 ## 调用链路
 
-```plantuml
+``` plantuml
 @startuml
 
 hide empty members

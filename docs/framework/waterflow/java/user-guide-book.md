@@ -16,7 +16,7 @@
 
 **方法签名**：
 
-```java
+``` java
 Start<D, D, D, ProcessFlow<D>> create()
 Start<D, D, D, ProcessFlow<D>> create(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks)
 ```
@@ -34,7 +34,7 @@ Start<D, D, D, ProcessFlow<D>> create(FlowContextRepo repo, FlowContextMessenger
 
 **示例**：
 
-```java
+``` java
 ProcessFlow<TestData> flow = Flows.<TestData>create();
 ```
 
@@ -46,7 +46,7 @@ ProcessFlow<TestData> flow = Flows.<TestData>create();
 
 **方法签名**：
 
-```java
+``` java
 DataStart<D, D, D> mono(D data)
 ```
 
@@ -61,7 +61,7 @@ DataStart<D, D, D> mono(D data)
 
 **示例**：
 
-```java
+``` java
 Flows.mono(new Person().name("Alice").age(30));
 ```
 
@@ -73,7 +73,7 @@ Flows.mono(new Person().name("Alice").age(30));
 
 **方法签名**：
 
-```java
+``` java
 DataStart<D, D, D> flux(D... data)
 ```
 
@@ -88,7 +88,7 @@ DataStart<D, D, D> flux(D... data)
 
 **示例**：
 
-```java
+``` java
 String[] data = new String[]{"a", "b", "c"};
 Flows.flux(data);
 ```
@@ -101,7 +101,7 @@ Flows.flux(data);
 
 **方法签名**：
 
-```java
+``` java
 DataStart<D, D, D> source(Emitter<D, FlowSession> emitter)
 ```
 
@@ -116,7 +116,7 @@ DataStart<D, D, D> source(Emitter<D, FlowSession> emitter)
 
 **示例**：
 
-```java
+``` java
 Emitter<Integer, FlowSession> emitter = new Emitter<Integer, FlowSession>() {
     private EmitterListener<Integer, FlowSession> handler;
 
@@ -145,7 +145,7 @@ emitter.emit(2);
 
 **方法签名**：
 
-```java
+``` java
 F close()
 F close(Operators.Just<Callback<FlowContext<O>>> callback)
 F close(Operators.Just<Callback<FlowContext<O>>> callback, Operators.ErrorHandler<Object> errHandler)
@@ -163,7 +163,7 @@ F close(Operators.Just<Callback<FlowContext<O>>> callback, Operators.ErrorHandle
 
 **示例一**：
 
-```java
+``` java
 Flows.<Integer>create()
         .map(i -> i + 1)
         .close(result -> System.out.println(result.get().getData())) // 输出：2
@@ -172,7 +172,7 @@ Flows.<Integer>create()
 
 **示例二**：
 
-```java
+``` java
 Flows.<Integer>create()
         .map(i -> {
             if (i == 1) {
@@ -199,7 +199,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<O, D, I, F> id(String id)
 ```
 
@@ -217,7 +217,7 @@ State<O, D, I, F> id(String id)
 
 **示例**：
 
-```java
+``` java
 // 为just(data -> System.out.println(data.toString()))节点指定id为justPrint
 Flows.<Integer>create()
         .just(data -> System.out.println(data.toString())).id("justPrint");
@@ -237,7 +237,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 MatchHappen<O, D, I, F> match(Operators.Whether<I> whether, Operators.BranchProcessor<O, D, I, F> processor)
 ```
 
@@ -256,7 +256,7 @@ MatchHappen<O, D, I, F> match(Operators.Whether<I> whether, Operators.BranchProc
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .conditions()
         .match(i -> i < 5, node -> node.map(i -> "branch1"))
@@ -278,7 +278,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 MatchToHappen<D, I, F> matchTo(Operators.Whether<I> whether, Operators.BranchToProcessor<D, I, F> navigator)
 ```
 
@@ -296,7 +296,7 @@ MatchToHappen<D, I, F> matchTo(Operators.Whether<I> whether, Operators.BranchToP
 
 **示例**：
 
-```java
+``` java
 // 条件满足时，跳转到该流程中节点id为mapNode的节点继续执行
 Flows.<Integer>create()
         .map(i -> i + 3).id("mapNode")
@@ -316,7 +316,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 void to(String id)
 ```
 
@@ -332,7 +332,7 @@ void to(String id)
 
 **方法签名**：
 
-```java
+``` java
 // 无参时，没有命中前序match条件的数据将被丢弃
 State<O, D, O, F> others()
 // 兜底处理没有命中前序match条件的数据 类似default
@@ -353,7 +353,7 @@ State<O, D, O, F> others(Operators.BranchProcessor<O, D, I, F> processor)
 
 **示例**：
 
-```javaFlows.create()
+``` javaFlows.create()
         .conditions()
         .match(i -> i < 5, node -> node.map(i -> "branch1"))
         .others(node -> node.map(i -> "branch else"))
@@ -370,7 +370,7 @@ State<O, D, O, F> others(Operators.BranchProcessor<O, D, I, F> processor)
 
 **方法签名**：
 
-```java
+``` java
 Parallel<D, O, F> parallel()
 ```
 
@@ -386,7 +386,7 @@ Parallel<D, O, F> parallel()
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .parallel()
         .fork(node -> node.map(i -> i * 10)) // 10
@@ -405,7 +405,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 Fork<O, D, I, F> fork(Operators.BranchProcessor<O, D, I, F> processor)
 ```
 
@@ -423,7 +423,7 @@ Fork<O, D, I, F> fork(Operators.BranchProcessor<O, D, I, F> processor)
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .parallel()
         .fork(node -> node.map(i -> i * 10)) // 10
@@ -442,7 +442,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<R, D, O, F> join(Supplier<R> init, Operators.Reduce<O, R> processor)
 ```
 
@@ -461,7 +461,7 @@ State<R, D, O, F> join(Supplier<R> init, Operators.Reduce<O, R> processor)
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .parallel()
         .fork(node -> node.map(i -> i * 10)) // 10
@@ -480,7 +480,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<O, D, O, F> block(BlockToken<O> block)
 ```
 
@@ -497,7 +497,7 @@ State<O, D, O, F> block(BlockToken<O> block)
 
 **示例**：
 
-```java
+``` java
 BlockToken<Integer> block = new BlockToken<Integer>() {
     @Override
     public boolean verify(Integer data) {
@@ -521,13 +521,13 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 void resume()
 ```
 
 **示例**：
 
-```java
+``` java
 BlockToken<Integer> block = new BlockToken<Integer>() {
     @Override
     public boolean verify(Integer data) {
@@ -555,7 +555,7 @@ block.resume(); // 此时停留在block节点的数据才会往后续节点执�
 
 **方法签名**：
 
-```java
+``` java
 State<O, D, O, F> just(Operators.Just<O> processor)
 ```
 
@@ -571,7 +571,7 @@ State<O, D, O, F> just(Operators.Just<O> processor)
 
 **示例**：
 
-```java
+``` java
 ProcessFlow<Integer> flow = Flows.<Integer>create()
         .just(i -> System.out.println(i)) // 输出：1
         .close()
@@ -586,7 +586,7 @@ ProcessFlow<Integer> flow = Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<R, D, O, F> map(Operators.Map<O, R> processor)
 // 包含上下文的map处理
 State<R, D, O, F> map(Operators.ProcessMap<O, R> processor)
@@ -606,7 +606,7 @@ State<R, D, O, F> map(Operators.ProcessMap<O, R> processor)
 
 **示例一**：
 
-```java
+``` java
 Flows.<Integer>create()
         .map(i -> "num=" + i.toString())
         .just(i -> System.out.println(i)) // 输出：num=1
@@ -616,7 +616,7 @@ Flows.<Integer>create()
 
 **示例二**：
 
-```java
+``` java
 Flows.<Integer>create()
         .map((value, ctx) -> {
             Integer value1 = ctx.getState("userKey1"); // 从上下文获取流程运行实例的共享数据
@@ -634,7 +634,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<R, D, O, F> flatMap(Operators.FlatMap<O, R> processor)
 ```
 
@@ -652,7 +652,7 @@ State<R, D, O, F> flatMap(Operators.FlatMap<O, R> processor)
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .flatMap(i -> {
             Integer[] data = new Integer[i];
@@ -674,7 +674,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<List<R>, D, ?, F> produce(Operators.Produce<O, R> processor)
 ```
 
@@ -692,7 +692,7 @@ State<List<R>, D, ?, F> produce(Operators.Produce<O, R> processor)
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .produce(list -> list.stream()
                 .limit(2) // 只保留前两个数据
@@ -711,7 +711,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<List<O>, D, O, F> buffer()
 ```
 
@@ -729,7 +729,7 @@ State<List<O>, D, O, F> buffer()
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .window(inputs -> inputs.size() == 3)
         .buffer()
@@ -746,7 +746,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<Tuple<R, O>, D, O, F> keyBy(Operators.Map<O, R> keyGetter)
 ```
 
@@ -766,7 +766,7 @@ State<Tuple<R, O>, D, O, F> keyBy(Operators.Map<O, R> keyGetter)
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .keyBy(i -> i) // 相同数据分组
         .reduce(() -> 0, (acc, data) -> { // 同组数据求和
@@ -785,7 +785,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<O, D, O, F> window(Operators.Window<O> window)
 ```
 
@@ -802,7 +802,7 @@ State<O, D, O, F> window(Operators.Window<O> window)
 
 **示例**：
 
-```java
+``` java
 Flows.<Integer>create()
         .window(inputs -> inputs.size() == 2); // 通过大小控制窗口大小，每2个一个窗口
         .reduce(() -> 0, (acc, data) -> { // 窗口内求和
@@ -821,7 +821,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 State<R, D, O, F> reduce(Supplier<R> init, Operators.Reduce<O, R> processor)
 // processor中能够对上下文操作的方法
 State<R, D, O, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> processor)
@@ -842,7 +842,7 @@ State<R, D, O, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> process
 
 **示例一**：
 
-```java
+``` java
 Flows.<Integer>create()
         .reduce(() -> 0, (acc, data) -> {
             return acc + data;
@@ -856,7 +856,7 @@ Flows.<Integer>create()
 
 结合上下文传递共享数据
 
-```java
+``` java
 FlowSession flowSession = new FlowSession();
 // 设置上下文数据
 flowSession.setState("key1", 10);
@@ -882,7 +882,7 @@ Flows.<Integer>create()
 
 **方法签名**：
 
-```java
+``` java
 // 通过mono、flux、source创建的flow无需参数
 String offer()
 // 通过create创建的flow通过offer提供单个数据
@@ -913,7 +913,7 @@ String offer(T data, FlowSession session)
 
 **示例**：
 
-```java
+``` java
 ProcessFlow<Integer> flow = Flows.<Integer>create()
         .reduce(() -> 0, (acc, data) -> {
             return acc + data;
@@ -941,7 +941,7 @@ flow.offer(new Integer[] {1, 2, 3, 4});
 
 接口定义如下：
 
-```java
+``` java
 public interface StateContext {
     /**
      * 获取指定key的上下文数据
@@ -981,7 +981,7 @@ public interface StateContext {
 
 使用节点：`just`
 
-```java
+``` java
 public interface Just<T> {
     /**
      * process
@@ -1016,7 +1016,7 @@ public interface ProcessJust<T> {
 
 使用节点：`map`
 
-```java
+``` java
 public interface Map<T, R> {
     /**
      * process
@@ -1034,7 +1034,7 @@ public interface Map<T, R> {
 
 使用节点：`map`
 
-```java
+``` java
 public interface ProcessMap<T, R> {
     /**
      * process
@@ -1053,7 +1053,7 @@ public interface ProcessMap<T, R> {
 
 使用节点：`flatMap`
 
-```java
+``` java
 public interface FlatMap<T, R> {
     /**
      * process
@@ -1071,7 +1071,7 @@ public interface FlatMap<T, R> {
 
 使用节点：`reduce`
 
-```java
+``` java
 public interface Reduce<T, R> {
     /**
      * process
@@ -1090,7 +1090,7 @@ public interface Reduce<T, R> {
 
 使用节点：`reduce`
 
-```java
+``` java
 public interface ProcessReduce<T, R> {
     /**
      * process
@@ -1110,7 +1110,7 @@ public interface ProcessReduce<T, R> {
 
 使用节点：`produce`
 
-```java
+``` java
 public interface Produce<T, R> {
     /**
      * process
@@ -1128,7 +1128,7 @@ public interface Produce<T, R> {
 
 使用节点：[`window`](#window)
 
-```java
+``` java
 public interface Window<T> {
     /**
      * 判断窗口是否完结
@@ -1146,7 +1146,7 @@ public interface Window<T> {
 
 使用节点：`close`、`error`
 
-```java
+``` java
 public interface ErrorHandler<T> {
     /**
      * handle
@@ -1165,7 +1165,7 @@ public interface ErrorHandler<T> {
 
 使用节点：`match`、`matchTo`
 
-```java
+``` java
 public interface Whether<T> {
     /**
      * is
@@ -1183,7 +1183,7 @@ public interface Whether<T> {
 
 使用节点：`match`、`matchTo`、`fork`
 
-```java
+``` java
 public interface BranchProcessor<O, D, I, F extends Flow<D>> {
     /**
      * process

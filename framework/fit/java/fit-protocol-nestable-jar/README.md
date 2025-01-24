@@ -156,7 +156,7 @@ precision.
 
 ## 建模
 
-```plantuml
+``` plantuml
 component DataBlock
 component Jar
 component JarEntry
@@ -175,7 +175,7 @@ Jar - JarEntry
 >
 > `Jar`可能使用`DataBlock`作为数据源，此时二者间的嵌套关系可能存在差异。
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC
@@ -445,7 +445,7 @@ NestableJarFile "1" *-> "n" NestableJarFile$Entry
 - 当一个缓存节点关联多个引用时，其应使用同一个 JAR 实例
 - 当一个缓存节点未关联任何引用，且其不存在任何子节点时，应释放该节点，回收资源
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC

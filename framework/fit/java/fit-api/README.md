@@ -5,7 +5,7 @@
 FIT 编程框架内的异常是能够跨语言跨进程传递的，核心异常有 3 个，分别是`FitException`、`DegradableException`
 和`RetryableException`，他们的关系如下：
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2

@@ -6,7 +6,7 @@
 
 配置的优先级原则为**外部配置**的优先级大于**内部配置**的优先级。即外部配置更优先被使用，只有当外部配置不存在时，才使用内部配置（默认配置）。
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -52,7 +52,7 @@ Client --> StartupConfig
 # 架构设计
 
 ## 核心类图
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -336,7 +336,7 @@ ReadonlyMapConfig -up-|> AbstractConfig
 
 #### 类型转换
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -464,7 +464,7 @@ BuiltinScalarConverters .left.> MethodScalarConverter : implements
 > 此时若将**对象**与**标量**合并形成一个列表，会影响配置的实际结构，因此不能将二者合并。
 
 ## 使用方
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -515,7 +515,7 @@ end note
 - Bean Config
 
 ### Global Config
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -560,7 +560,7 @@ BuiltinConfigs -down-> ImportedConfigs
 - Environment Variables，直接通过`System.getenv()`所获取的环境变量生成配置。
 
 ### Plugin Config
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -598,7 +598,7 @@ ImportedConfigs -down->BuiltinConfigs
 ```
 
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -687,7 +687,7 @@ BMCP .left.> PER : inherit
 @enduml
 ```
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 

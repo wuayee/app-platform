@@ -6,7 +6,7 @@ FEL 中内置了 6 个 RAG 相关的 Llamaindex 工具，他们分别是`Similar
 
 ## Llamaindex 插件
 
-```python
+``` python
 # 省略 import
 
 @unique
@@ -44,7 +44,7 @@ def llm_choice_selector(choice: List[str], query_str: str, **kwargs) -> List[Sin
 
 注册插件
 
-```python
+``` python
 tool = (llm_choice_selector, ["model_name", "api_key", "api_base", "prompt", "mode"], "The selected choice.")
 
 func = tool[0]
