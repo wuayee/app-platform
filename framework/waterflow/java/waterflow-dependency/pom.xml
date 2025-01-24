@@ -110,23 +110,6 @@
                 <version>${ohscript.version}</version>
             </dependency>
 
-            <!-- Jane -->
-            <dependency>
-                <groupId>com.huawei.fit.jane</groupId>
-                <artifactId>task</artifactId>
-                <version>${task.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.huawei.fit.jober</groupId>
-                <artifactId>jober-genericable</artifactId>
-                <version>${jober.genericable.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.huawei.fit.jober</groupId>
-                <artifactId>jober-multiversion-genericable</artifactId>
-                <version>${jober.multiversion.genericable.version}</version>
-            </dependency>
-
             <!-- Third-party -->
             <dependency>
                 <groupId>com.alibaba</groupId>
