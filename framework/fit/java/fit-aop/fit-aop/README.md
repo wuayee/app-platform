@@ -2,7 +2,7 @@
 
 ## 方法拦截器 <sub>切面事件</sub>
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2
@@ -73,7 +73,7 @@ MethodMatcherCollection o--> MethodMatcher
 
 ## 方法拦截器提供者 <sub>解析用户自定义切面事件</sub>
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2
@@ -152,7 +152,7 @@ DemoMethodInterceptorResolver --> MethodMatcher
 
 ## AOP 代理创建
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2

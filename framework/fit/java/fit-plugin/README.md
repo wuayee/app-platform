@@ -4,7 +4,7 @@
 
 # 元数据
 
-```xml
+``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <plugin>
   <group>fit.hakuna</group>
@@ -66,7 +66,7 @@ FIT体系结构中使用的ClassLoader主要有三个：
 
 ## Plugin Metadata File
 
-```xml
+``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <plugin name="my-plugin">
     <category>user</category>

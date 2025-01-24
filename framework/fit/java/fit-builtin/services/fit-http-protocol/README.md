@@ -1,6 +1,6 @@
 # Http Low Level Messages
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2
@@ -60,7 +60,7 @@ Message <|-- ServerResponse
 
 # Http Protocol
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2

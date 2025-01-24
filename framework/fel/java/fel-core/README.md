@@ -10,7 +10,7 @@ FEL 基于 Mustache 语法，允许开发者将运行时变量绑定到提示模
 
 + 键值对是常用的构造模板输入的方式：
 
-```java
+``` java
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.template.support.HumanMessageTemplate;
 import modelengine.fel.core.template.MessageTemplate;
@@ -27,7 +27,7 @@ public class DemoApplication {
 
 + 使用 Tip.fromArray 可以省略 key，相应地需要在模板中用数组下标代替健值。
 
-```java
+``` java
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.template.support.HumanMessageTemplate;
 import modelengine.fel.core.template.MessageTemplate;
@@ -46,7 +46,7 @@ public class DemoApplication {
 **Note**
 请注意，输入键值对必须包含所有在模板中使用的占位符，以下代码将无法工作:
 
-```java
+``` java
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.template.support.HumanMessageTemplate;
 import modelengine.fel.core.template.MessageTemplate;

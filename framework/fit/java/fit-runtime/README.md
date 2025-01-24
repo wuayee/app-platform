@@ -75,7 +75,7 @@
 
 ## 框架配置
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -120,7 +120,7 @@ end note
 @enduml
 ```
 
-```plantuml
+``` plantuml
 @startuml
 hide empty members
 
@@ -143,7 +143,7 @@ skinparam ClassFontName Consolas
 
 # 核心类图
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC

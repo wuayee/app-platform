@@ -10,7 +10,7 @@ FIT通过Maven插件提供FIT插件、应用的打包、发布等能力。
 
 例如，通过以下配置，可构建`AllInOne`模式的FIT插件，该FIT插件的名称为`my-plugin`，是加载级别为`3`的系统插件。
 
-```xml
+``` xml
 <plugin>
     <groupId>modelengine.fitframework</groupId>
     <artifactId>fit-build-maven-plugin</artifactId>
@@ -35,7 +35,7 @@ FIT通过Maven插件提供FIT插件、应用的打包、发布等能力。
 
 通过以下配置，可构建`AllInOne`模式的FIT应用。
 
-```xml
+``` xml
 <plugin>
     <groupId>modelengine.fitframework</groupId>
     <artifactId>fit-build-maven-plugin</artifactId>

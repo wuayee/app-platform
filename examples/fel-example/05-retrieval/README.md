@@ -12,7 +12,7 @@ RAG：将检索的能力集成到 LLM 文本生成中。它结合了检索系统
 
 - 针对数据入库阶段，抽象出以下算子：
 
-```java
+``` java
 @FunctionalInterface
 public interface Source<I> extends Pattern<I, List<Document>> {
     /**
@@ -47,7 +47,7 @@ public interface Store<D> extends Pattern<D, Void> {
 
 - 检索阶段，抽象出以下算子：
 
-```java
+``` java
 public interface Retriever<I, O extends Measurable> extends Pattern<I, List<O>> {
     /**
      * 根据用户输入进行检索。
@@ -87,7 +87,7 @@ public interface Synthesizer<I> extends Pattern<I, Content> {
 
 1. 在项目 pom.xml 加入以下依赖：
 
-```xml
+``` xml
 
 <dependencies>
     <dependency>
@@ -140,7 +140,7 @@ example:
 
 - 定义预料入库流程
 
-```java
+``` java
 DocumentEmbedModel documentEmbedModel =
         new DefaultDocumentEmbedModel(embedModel, EmbedOption.custom().model(embedModelName).build());
 AiProcessFlow<File, List<Document>> indexFlow = AiFlows.<File>create()
@@ -161,7 +161,7 @@ node0-->node1(index)
 
 - 定义知识检索流程
 
-```java
+``` java
 AiProcessFlow<Tip, Content> retrieveFlow = AiFlows.<Tip>create()
         .runnableParallel(history(), passThrough())
         .conditions()
@@ -199,7 +199,7 @@ node0-->node1(map)
 
 - 定义 `RAG` 主流程
 
-```java
+``` java
 AiProcessFlow<String, ChatMessage> ragFlow = AiFlows.<String>create()
       .map(query -> Tip.from("query", query))
       .runnableParallel(value("context", retrieveFlow), passThrough())

@@ -19,7 +19,7 @@ FIT 函数平台是一套支持多语言融合编程、插件化开发、聚散�
 #### 0. 依赖
 在系统生成的 pom 文件中，添加 Web 相关的依赖，如下所示：
 
-```xml
+``` xml
 <dependencies>
     <dependency>
         <groupId>modelengine.fit.starter</groupId>
@@ -40,7 +40,7 @@ FIT 函数平台是一套支持多语言融合编程、插件化开发、聚散�
 ```
 #### 1. 创建启动器
 通过 FitStarter 类的静态方法 start 去启动整个应用，使 FIT 框架对启动类进行识别，示例如下：
-```java
+``` java
 package modelengine.fit.demo1;
  
 import modelengine.fitframework.annotation.Component;
@@ -54,7 +54,7 @@ public class DemoApplication {
 ```
 #### 2. 创建控制器
 在该应用程序中，HTTP 请求由控制器处理。我们可以创建相应的控制器和方法来进行处理，示例如下：
-```java
+``` java
 package modelengine.fit.demo1.controller;
  
 import modelengine.fit.http.annotation.GetMapping;

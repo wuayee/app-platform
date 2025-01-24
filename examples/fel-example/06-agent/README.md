@@ -25,7 +25,7 @@ HumanEval (代码生成测评数据集) 上的准确率也只有 67.0%，但经�
 
 1. 在项目 pom.xml 加入以下依赖：
 
-```xml
+``` xml
 <dependencies>
     <dependency>
         <groupId>modelengine.fit.starter</groupId>
@@ -122,7 +122,7 @@ example:
 
 定义天气相关的工具服务，同时使用 @ToolMethod 定义工具元数据。相关接口如下：
 
-```java
+``` java
 public interface WeatherService {
     @Genericable("modelengine.example.weather.temperature")
     String getCurrentTemperature(String location, String unit);
@@ -155,7 +155,7 @@ public class WeatherServiceImpl implements WeatherService {
 
 4. 使用默认 agent 进行调度：
 
-```java
+``` java
 @RequestMapping("/ai/example")
 public class AgentExampleController {
     private final AiProcessFlow<String, ChatMessage> agentFlow;
