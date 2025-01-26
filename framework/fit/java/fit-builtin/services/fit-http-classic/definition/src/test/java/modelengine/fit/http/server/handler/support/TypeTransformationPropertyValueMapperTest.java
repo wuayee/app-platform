@@ -36,8 +36,10 @@ class TypeTransformationPropertyValueMapperTest {
     @Test
     @DisplayName("当提供处理器不能处理的参数，类型是字符串，默认值不为空，返回默认值")
     void givenCanNotResolvedParameterAndTypeIsStringAndNotRequireThenReturnDefault() {
+        SourceFetcher headerFetcher =
+                new HeaderFetcher(ParamValue.custom().name("k1").defaultValue("default").required(true).build());
         TypeTransformationPropertyValueMapper typeTransformationHttpMapper =
-                this.getTypeTransformationParameterMapper(String.class, "default");
+                this.getTypeTransformationParameterMapper(String.class, headerFetcher);
         final Object value = typeTransformationHttpMapper.map(this.request, null, null);
         assertThat(value).isEqualTo("default");
     }
@@ -45,8 +47,13 @@ class TypeTransformationPropertyValueMapperTest {
     @Test
     @DisplayName("当提供处理器不能处理的参数，类型是字符串，默认值为空字符串，抛出异常")
     void givenCanNotResolvedParameterAndTypeIsStringAndNotRequireThenReturnDefault1() {
+        SourceFetcher headerFetcher = new HeaderFetcher(ParamValue.custom()
+                .name("k1")
+                .defaultValue(DefaultValue.VALUE)
+                .required(true)
+                .build());
         TypeTransformationPropertyValueMapper typeTransformationHttpMapper =
-                this.getTypeTransformationParameterMapper(String.class, DefaultValue.VALUE);
+                this.getTypeTransformationParameterMapper(String.class, headerFetcher);
         assertThatThrownBy(() -> typeTransformationHttpMapper.map(this.request, null, null)).isInstanceOf(
                 RequestMappingException.class);
     }
@@ -54,18 +61,19 @@ class TypeTransformationPropertyValueMapperTest {
     @Test
     @DisplayName("当提供处理器不能处理的参数，类型是布尔，默认值不为空，抛出异常")
     void givenCanNotResolvedParameterAndTypeIsStringAndRequireThenReturnDefault() {
+        SourceFetcher headerFetcher =
+                new HeaderFetcher(ParamValue.custom().name("k1").defaultValue("default").required(true).build());
         TypeTransformationPropertyValueMapper typeTransformationHttpMapper =
-                this.getTypeTransformationParameterMapper(boolean.class, "default");
+                this.getTypeTransformationParameterMapper(boolean.class, headerFetcher);
         assertThatThrownBy(() -> typeTransformationHttpMapper.map(this.request, null, null)).isInstanceOf(
                 IllegalStateException.class);
     }
 
     private TypeTransformationPropertyValueMapper getTypeTransformationParameterMapper(Class<?> clazz,
-            Object defaultValue) {
-        SourceFetcher headerFetcher = new HeaderFetcher("k1");
-        PropertyValueMapper mapper = new UniqueSourcePropertyValueMapper(headerFetcher, false);
+            SourceFetcher sourceFetcher) {
+        PropertyValueMapper mapper = new UniqueSourcePropertyValueMapper(sourceFetcher, false);
         final Parameter parameter = mock(Parameter.class);
         when(parameter.getParameterizedType()).thenAnswer(ans -> clazz);
-        return new TypeTransformationPropertyValueMapper(mapper, parameter.getParameterizedType(), true, defaultValue);
+        return new TypeTransformationPropertyValueMapper(mapper, parameter.getParameterizedType());
     }
 }

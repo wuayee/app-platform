@@ -48,12 +48,14 @@ public class BuilderInvocationHandler implements InvocationHandler {
             } else {
                 throw new IllegalStateException(String.format(Locale.ROOT,
                         "Method to write property must have only one parameter. [class=%s, name=%s]",
-                        method.getDeclaringClass().getName(), method.getName()));
+                        method.getDeclaringClass().getName(),
+                        method.getName()));
             }
         } else if (args.length > 1) {
             throw new IllegalStateException(String.format(Locale.ROOT,
                     "Method to write property must contains only one parameter. [class=%s, name=%s]",
-                    method.getDeclaringClass().getName(), method.getName()));
+                    method.getDeclaringClass().getName(),
+                    method.getName()));
         } else {
             this.fields.put(method.getName(), args[0]);
             return proxy;
@@ -69,7 +71,7 @@ public class BuilderInvocationHandler implements InvocationHandler {
     }
 
     private void validateFields() {
-        for (Method method : objectClass.getMethods()) {
+        for (Method method : this.objectClass.getMethods()) {
             Nonnull annotation = method.getAnnotation(Nonnull.class);
             if (annotation != null && this.fields.get(method.getName()) == null) {
                 throw new IllegalStateException(StringUtils.format("The {0} cannot be null.", method.getName()));

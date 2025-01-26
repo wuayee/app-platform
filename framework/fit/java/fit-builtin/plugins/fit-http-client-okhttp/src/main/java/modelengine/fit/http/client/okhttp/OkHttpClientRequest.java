@@ -7,15 +7,12 @@
 package modelengine.fit.http.client.okhttp;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
-import static modelengine.fitframework.util.ObjectUtils.getIfNull;
 
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.protocol.ClientRequest;
 import modelengine.fit.http.protocol.ClientResponse;
 import modelengine.fit.http.protocol.ConfigurableMessageHeaders;
 import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.protocol.HttpVersion;
-import modelengine.fit.http.protocol.MessageHeaderNames;
 import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.WritableMessageBody;
 import modelengine.fit.http.protocol.support.ClientRequestBody;
@@ -29,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 表示 {@link ClientRequest} 的使用 OkHttp 实现。
@@ -43,9 +39,8 @@ public class OkHttpClientRequest implements ClientRequest {
     private final ConfigurableMessageHeaders headers;
     private final WritableMessageBody body;
     private boolean isClosed;
-    private final OkHttpClient.Builder clientBuilder;
+    private final OkHttpClient okHttpClient;
     private final okhttp3.Request.Builder requestBuilder;
-    private final HttpClassicClientFactory.Config config;
     private final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     /**
@@ -53,11 +48,11 @@ public class OkHttpClientRequest implements ClientRequest {
      *
      * @param method 表示指定的 Http 方法的 {@link HttpRequestMethod}。
      * @param url 表示 Http 请求地址的 {@link String}。
-     * @param config 表示配置的 {@link HttpClassicClientFactory.Config}。
+     * @param okHttpClient 表示 OkHttp 客户端的 {@link OkHttpClient}。
      */
-    public OkHttpClientRequest(HttpRequestMethod method, String url, HttpClassicClientFactory.Config config) {
-        this.config = getIfNull(config, () -> HttpClassicClientFactory.Config.builder().build());
+    public OkHttpClientRequest(HttpRequestMethod method, String url, OkHttpClient okHttpClient) {
         this.method = notNull(method, "The request method cannot be null.");
+        this.okHttpClient = notNull(okHttpClient, "The okhttp client cannot be null.");
         try {
             this.url = new URL(url);
             this.requestBuilder = new Request.Builder().url(this.url);
@@ -65,10 +60,7 @@ public class OkHttpClientRequest implements ClientRequest {
             throw new IllegalStateException("The url is incorrect.", e);
         }
         this.headers = ConfigurableMessageHeaders.create();
-        this.headers.set(MessageHeaderNames.HOST, this.url.getHost());
         this.body = new ClientRequestBody(this);
-
-        this.clientBuilder = OkHttpClientBuilderFactory.getOkHttpClientBuilder(this.config);
     }
 
     @Override
@@ -108,31 +100,17 @@ public class OkHttpClientRequest implements ClientRequest {
     }
 
     @Override
-    public void flush() throws IOException {}
+    public void flush() {}
 
     @Override
     public ClientResponse readResponse() throws IOException {
         this.checkIfClosed();
-        if (this.config.connectTimeout() >= 0) {
-            this.clientBuilder.connectTimeout(this.config.connectTimeout(), TimeUnit.MILLISECONDS);
-        }
-        if (this.config.socketTimeout() >= 0) {
-            this.clientBuilder.readTimeout(this.config.socketTimeout(), TimeUnit.MILLISECONDS)
-                    .writeTimeout(this.config.socketTimeout(), TimeUnit.MILLISECONDS);
-        }
-        OkHttpClient client = this.clientBuilder.build();
-        Response response = client.newCall(this.requestBuilder.build()).execute();
-        try {
-            if (response.body() != null) {
-                return ClientResponse.create(response.code(),
-                        response.message(),
-                        MultiValueMap.create(response.headers().toMultimap()),
-                        response.body().byteStream());
-            }
-            throw new IllegalStateException("The response body is null.");
-        } finally {
-            client.dispatcher().executorService().shutdown();
-        }
+        Response response = this.okHttpClient.newCall(this.requestBuilder.build()).execute();
+        notNull(response.body(), () -> new IllegalStateException("The response body cannot be null."));
+        return ClientResponse.create(response.code(),
+                response.message(),
+                MultiValueMap.create(response.headers().toMultimap()),
+                response.body().byteStream());
     }
 
     @Override

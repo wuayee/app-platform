@@ -47,8 +47,10 @@ import java.util.jar.JarFile;
  * @since 2020-07-24
  */
 public class UrlUtilsTest {
-    private final String origin = "你好";
-    private final String encoded = "%E4%BD%A0%E5%A5%BD";
+    private final String originForm = "你 好";
+    private final String originPath = "name=Jack Ma";
+    private final String encodedForm = "%E4%BD%A0+%E5%A5%BD";
+    private final String encodedPath = "name%3DJack%20Ma";
 
     @Nested
     @DisplayName("Test method: combine(String base, String path)")
@@ -104,10 +106,17 @@ public class UrlUtilsTest {
         @DisplayName("Expected scenario")
         class TestExpectedScenario {
             @Test
-            @DisplayName("Given encoded string then return origin string")
-            void givenEncodedStringThenReturnOriginString() {
-                String actual = UrlUtils.decodeValue(UrlUtilsTest.this.encoded);
-                assertThat(actual).isEqualTo(UrlUtilsTest.this.origin);
+            @DisplayName("Given encoded form string then return origin form string")
+            void givenEncodedStringThenReturnOriginFormString() {
+                String actual = UrlUtils.decodeForm(UrlUtilsTest.this.encodedForm);
+                assertThat(actual).isEqualTo(UrlUtilsTest.this.originForm);
+            }
+
+            @Test
+            @DisplayName("Given encoded path string then return origin path string")
+            void givenEncodedStringThenReturnOriginPathString() {
+                String actual = UrlUtils.decodePath(UrlUtilsTest.this.encodedPath);
+                assertThat(actual).isEqualTo(UrlUtilsTest.this.originPath);
             }
         }
 
@@ -118,10 +127,10 @@ public class UrlUtilsTest {
             @DisplayName("Given decode with exception then throw IllegalStateException")
             void givenDecodeWithExceptionThenThrowException() {
                 try (MockedStatic<URLDecoder> mocked = mockStatic(URLDecoder.class)) {
-                    mocked.when(() -> URLDecoder.decode(eq(UrlUtilsTest.this.encoded),
+                    mocked.when(() -> URLDecoder.decode(eq(UrlUtilsTest.this.encodedForm),
                             eq(StandardCharsets.UTF_8.toString()))).thenThrow(new UnsupportedEncodingException());
                     IllegalStateException exception =
-                            catchThrowableOfType(() -> UrlUtils.decodeValue(UrlUtilsTest.this.encoded),
+                            catchThrowableOfType(() -> UrlUtils.decodeForm(UrlUtilsTest.this.encodedForm),
                                     IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Unsupported decoding type: UTF-8.")
@@ -139,10 +148,17 @@ public class UrlUtilsTest {
         @DisplayName("Expected scenario")
         class TestExpectedScenario {
             @Test
-            @DisplayName("Given origin string then return encoded string")
+            @DisplayName("Given origin form string then return encoded form string")
             void givenOriginStringThenReturnEncodedString() {
-                String actual = UrlUtils.encodeValue(UrlUtilsTest.this.origin);
-                assertThat(actual).isEqualTo(UrlUtilsTest.this.encoded);
+                String actual = UrlUtils.encodeForm(UrlUtilsTest.this.originForm);
+                assertThat(actual).isEqualTo(UrlUtilsTest.this.encodedForm);
+            }
+
+            @Test
+            @DisplayName("Given origin path string then return encoded path string")
+            void givenOriginStringThenReturnEncodedPathString() {
+                String actual = UrlUtils.encodePath(UrlUtilsTest.this.originPath);
+                assertThat(actual).isEqualTo(UrlUtilsTest.this.encodedPath);
             }
         }
 
@@ -153,10 +169,10 @@ public class UrlUtilsTest {
             @DisplayName("Given encode with exception then throw IllegalStateException")
             void givenEncodeWithExceptionThenThrowException() {
                 try (MockedStatic<URLEncoder> mocked = mockStatic(URLEncoder.class)) {
-                    mocked.when(() -> URLEncoder.encode(eq(UrlUtilsTest.this.origin),
+                    mocked.when(() -> URLEncoder.encode(eq(UrlUtilsTest.this.originForm),
                             eq(StandardCharsets.UTF_8.toString()))).thenThrow(new UnsupportedEncodingException());
                     IllegalStateException exception =
-                            catchThrowableOfType(() -> UrlUtils.encodeValue(UrlUtilsTest.this.origin),
+                            catchThrowableOfType(() -> UrlUtils.encodeForm(UrlUtilsTest.this.originForm),
                                     IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Unsupported encoding type: UTF-8.")

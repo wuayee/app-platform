@@ -50,7 +50,7 @@ public class FormUrlEncodedEntitySerializer implements EntitySerializer<MultiVal
         try {
             byte[] bytes = BodyUtils.readBody(in, httpMessage.headers());
             String content = new String(bytes, charset);
-            return new DefaultMultiValueEntity(httpMessage, HttpUtils.parseQueryOrForm(content));
+            return new DefaultMultiValueEntity(httpMessage, HttpUtils.parseForm(content));
         } catch (IOException e) {
             throw new EntityReadException(
                     "Failed to deserialize entity. [mimeType='application/x-www-form-urlencoded']", e);

@@ -69,6 +69,7 @@ public interface ClientRequest extends Message<RequestLine, ConfigurableMessageH
      *
      * @return 表示 Http 响应的 {@link ClientResponse}。
      * @throws IOException 当发生 I/O 异常时。
+     * @throws modelengine.fitframework.exception.TimeoutException 当发生超时异常时。
      */
     ClientResponse readResponse() throws IOException;
 }

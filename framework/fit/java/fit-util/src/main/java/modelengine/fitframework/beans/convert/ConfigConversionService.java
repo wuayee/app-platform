@@ -48,13 +48,15 @@ final class ConfigConversionService extends AbstractConversionService {
     }
 
     @Override
-    protected Object transform(Object value) {
+    protected Object transform(Object value, Class<?> type) {
+        if (type == Object.class) {
+            return value;
+        }
         if (value instanceof List) {
             List<?> list = cast(value);
             return list.isEmpty() ? null : list.get(0);
-        } else {
-            return value;
         }
+        return value;
     }
 
     @Override

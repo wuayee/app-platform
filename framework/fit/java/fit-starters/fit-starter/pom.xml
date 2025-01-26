@@ -11,11 +11,6 @@
 
     <artifactId>fit-starter</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>modelengine.fitframework</groupId>
@@ -59,6 +54,11 @@
         <dependency>
             <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-log-console</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-reactor</artifactId>
             <version>${fit.version}</version>
         </dependency>
     </dependencies>

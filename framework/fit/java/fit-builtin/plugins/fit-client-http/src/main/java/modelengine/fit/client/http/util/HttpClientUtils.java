@@ -26,6 +26,7 @@ import modelengine.fitframework.conf.runtime.SerializationFormat;
 import modelengine.fitframework.conf.runtime.WorkerConfig;
 import modelengine.fitframework.flowable.Publisher;
 import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.resource.UrlUtils;
 import modelengine.fitframework.serialization.ResponseMetadata;
 import modelengine.fitframework.serialization.TagLengthValues;
 import modelengine.fitframework.serialization.tlv.TlvUtils;
@@ -157,7 +158,8 @@ public class HttpClientUtils {
     }
 
     private static String getResponseMessage(HttpClassicClientResponse<Object> clientResponse) {
-        return clientResponse.headers().first(FIT_MESSAGE.value()).orElse(StringUtils.EMPTY);
+        String encodedMessage = clientResponse.headers().first(FIT_MESSAGE.value()).orElse(StringUtils.EMPTY);
+        return UrlUtils.decodePath(encodedMessage);
     }
 
     /**

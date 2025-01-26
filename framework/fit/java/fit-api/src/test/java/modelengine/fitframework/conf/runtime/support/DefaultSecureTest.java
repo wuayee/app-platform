@@ -6,7 +6,8 @@
 
 package modelengine.fitframework.conf.runtime.support;
 
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,9 +27,11 @@ public class DefaultSecureTest {
         DefaultSecure secure = new DefaultSecure();
         secure.setSecureRandomEnabled(true);
         secure.setSecureProtocol("TLSv1.2");
+        secure.setIsSslEnabled(true);
         secure.setSslCiphers(Arrays.asList("test"));
-        Assertions.assertTrue(secure.secureRandomEnabled());
-        Assertions.assertEquals("TLSv1.2", secure.secureProtocol().get());
-        Assertions.assertEquals(secure.sslCiphers(), Arrays.asList("test"));
+        assertThat(secure.secureRandomEnabled()).isTrue();
+        assertThat(secure.secureProtocol().get()).isEqualTo("TLSv1.2");
+        assertThat(secure.isSslEnabled()).isTrue();
+        assertThat(secure.sslCiphers()).isEqualTo(Arrays.asList("test"));
     }
 }

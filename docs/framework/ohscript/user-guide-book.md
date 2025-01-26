@@ -26,13 +26,13 @@ let test = {age:10}; # 创建为 object
 
 ### 数据类型
 
-支持不同数据类型的常用方法，实现见 `framework/ohscript/src/main/java/com/huawei/fit/ohscript/script/parser/nodes/ScriptNode.java`。
+支持不同数据类型的常用方法，实现见 `src/main/java/modelengine/fit/ohscript/script/parser/nodes/ScriptNode.java`。
 
 #### Number
 
 支持 `.to_int`，`.to_float`，`.floor`，`.ceil`，`.round`，`.to_str`，实现见方法 `addNumberMethods`。
 
-```python
+``` python
 let a=1.0; a.to_int() # 1L
 let a=1; a.to_float() # 1.0D
 let a=1.7; a.floor() # 1L
@@ -85,7 +85,7 @@ Ohscript 使用 `[]` 创建数组，`[]` 代表空数组。
 - 支持 `.forEach`，`.parallel`，`.map`，`.filter`，实现见方法 `addArrayMethods`。
 - 支持 `.size`，`.insert`，`.push`，`.remove`，实现见 `ParserBuilder` 类中的 `loadSystemCode` 方法。
 
-```python
+``` python
 var b=[1,2,3,4]; b[0]=2; # b: [2, 2, 3, 4]
 var b=[[1,[2,3]],4]; b[0][1][0] # 2
 
@@ -107,7 +107,7 @@ Ohscript 使用 `[:]` 创建 map，`[:]` 代表空 map。
 - 支持 `.put` 和 `.get`，实现见方法 `addMapMethods`。
 - 暂不支持 `.forEach`。
 
-```python
+``` python
 var a=[:]; a.put("name","will"); a.get("name") # "will"
 ```
 
@@ -120,7 +120,7 @@ Ohscript 支持元组（tuple）这种数据结构，元组可以将多个不同
 - T1 到 TN 可以是不同类型，用 `,` 连接
 - 元组至少是二元以上
 
-```python
+``` python
 let a=(10,20,30,40); a.0 # 10
 
 let a=(10,20,30,40), (_,b,_,d) = a; b+d # 60
@@ -137,7 +137,7 @@ a.1 # Oh
 
 对象中可以定义变量和函数，通过 `.` 访问对象中的成员：
 
-```python
+``` python
 let will = {
     age:48,
     get:()=>this.age
@@ -167,10 +167,10 @@ will.get() # 48
 
 **pom**：在 `dependencies` 中新增
 
-```xml
+``` xml
 <!-- OhScript -->
 <dependency>
-    <groupId>com.huawei.fit.ohscript</groupId>
+    <groupId>modelengine.fit.ohscript</groupId>
     <artifactId>ohscript</artifactId>
     <version>0.0.3.6-SNAPSHOT</version>
 </dependency>
@@ -178,10 +178,10 @@ will.get() # 48
 
 **main**：
 
-```java
-import com.huawei.fit.ohscript.script.engine.OhScript;
-import com.huawei.fit.ohscript.script.errors.OhPanic;
-import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
+``` java
+import modelengine.fit.ohscript.script.engine.OhScript;
+import modelengine.fit.ohscript.script.errors.OhPanic;
+import modelengine.fit.ohscript.script.interpreter.ASTEnv;
 
 public class TestOhScript {
     private static OhScript ohScript = new OhScript();
@@ -210,7 +210,7 @@ public class TestOhScript {
 - `expression`
 - `return expression;`
 
-```python
+``` python
 let a=1; a # 返回 1
 let a=1; a; # 无返回值
 let a=1; return a; # 返回 1
@@ -240,7 +240,7 @@ let age = {let age=10;}; age
 
 如果代码块内外定义了名字相同的变量，优先使用块内变量。
 
-```python
+``` python
 # 运行结果为 11
 let a=1; func f(x){let a=10; a+x} f(a)
 ```
@@ -293,7 +293,7 @@ f1(4, 5)
 
 当传参个数少于函数声明时的参数个数时，返回的是特化函数。
 
-```python
+``` python
 # 运行结果为 "40abc"
 func func1(x,y,z,w) {
     x+y+z+w
@@ -315,7 +315,7 @@ r3
 
 #### 闭包
 
-```python
+``` python
 # 运行结果为 3
 func f() {
     var count=1;
@@ -336,7 +336,7 @@ a()
 
 - `export a, b;`
 
-```java
+``` java
 @Test
 void test_import_and_export() throws OhPanic {
     this.parserBuilder.begin();
@@ -385,7 +385,7 @@ for (i=0; i<10; i++){}
 
 **each 循环**（针对 array）：`each (index, i) in expression {}`
 
-```python
+``` python
 let a=[1,2,3,4]; var c=0; each (b,i) in a {c+=b+i;} c # 16
 ```
 
@@ -409,7 +409,7 @@ match value {
 
 **示例**：
 
-```python
+``` python
 # 运行结果为 102
 let value = 2;
 var result = 1;
@@ -438,7 +438,7 @@ Ohscript 中的管道符为 `>>`，用于将一个表达式的结果传递给下
 
 - `var` 必须为已初始化的变量，或者直接传值（可以为字符串、数字或布尔值）
 
-```python
+``` python
 let a=1; func f1(x){x+1}; a>>f1 # 结果为 2
 func f1(x){x+1}; func f2(x){x+2}; 1>>f1>>f2 # 结果为 4
 ```
@@ -447,7 +447,7 @@ func f1(x){x+1}; func f2(x){x+2}; 1>>f1>>f2 # 结果为 4
 
 Ohscript 中的 `this` 与 Java 一致，指向对象。
 
-```python
+``` python
 # 运行结果为 12
 let will={
     age:10,
@@ -463,7 +463,7 @@ will.getAge()
 
 在 Ohscript 中，`::` 用于**对象继承**，并且可以覆写继承的对象中的方法。
 
-```python
+``` python
 # 运行结果为58; son.age 为48
 let will = {
     age:48,
@@ -537,7 +537,7 @@ func f1(){}; f1()<:unit
 
 Ohscript 支持异常处理，用法类似 `try-catch`：
 
-```python
+``` python
 # 会打印日志 result: 100
 let result = safe{100};
 if(!result.panic_code()) {
@@ -642,7 +642,7 @@ get result.
 
 #### 创建新映射和新列表
 
-```python
+``` python
 var map = ext::util.newMap(); # 创建为 HashMap，且支持 Map 的方法，比如 Map::put、Map::get 等
 var list = ext::util.newList(); # 创建为 ArrayList，且支持 List 的方法，比如 List::add、List::get 等
 ```
@@ -663,7 +663,7 @@ error("error test");
 
 提供了 `stringToJson`、`jsonToString` 和 `jsonToEntity` 三种 JSON 相关的处理函数。
 
-```python
+``` python
 # 运行结果为 {"test":"abc"}
 let json = ext::util.stringToJson("{'test':'abc'}"); ext::util.jsonToString(json)
 
@@ -685,7 +685,7 @@ Ohscript 是一门为 Java 定制的脚本语言。
 
 假设宿主应用中有接口 `Human` 和 `Female` 类：
 
-```java
+``` java
 public interface Human {
     Integer getAge();
 
@@ -741,7 +741,7 @@ public class Female implements Human {
 
 示例一：
 
-```java
+``` java
 @Test
 void testExternalSourceTarget() throws OhPanic {
     List<String> source = new ArrayList<>(Arrays.asList("will", "zhang"));
@@ -765,7 +765,7 @@ var i=0; while(i<sourceOut.size()){target.add1(source.get(i)); i++;} target.get(
 
 示例二：（Ohscript 中的新对象可以覆写原始 Java 类中的方法）
 
-```java
+``` java
 @Test
 void test() throws Exception {
     this.ohScript.grant("Woman", Female.class);
@@ -779,7 +779,7 @@ void test() throws Exception {
 
 ### Java 宿主程序得到 Ohscript 中的对象
 
-```java
+``` java
 @Test
 void test() throws OhPanic {
     this.ohScript.grant("Female", Female.class);
@@ -794,7 +794,7 @@ void test() throws OhPanic {
 
 假设类 `Female` 中有个静态方法 `create`（其余方法省略）：
 
-```java
+``` java
 public class Female implements Human {
     // ...
     public static Female create(Integer age, String name){
@@ -805,7 +805,7 @@ public class Female implements Human {
 
 Ohscript 支持调用 Java 静态方法：
 
-```java
+``` java
 @Test
 void test_java_static_call() throws OhPanic {
     this.ohScript.grant("Female", Female.class);
@@ -822,7 +822,7 @@ Ohscript 脚本引擎支持 `implement` Java 接口或类。`implement` 是提�
 
 示例一：implement Interface
 
-```java
+``` java
 @Test
 void test_implement() throws Exception {
     // Ohscript实现了Human，但只实现了 getAge，没有实现 getName
@@ -835,7 +835,7 @@ void test_implement() throws Exception {
 
 示例二：覆盖类中的方法
 
-```java
+``` java
 @Test
 void test_implement() throws Exception {
     this.ohScript.grant("Woman", Female.class);
@@ -850,7 +850,7 @@ void test_implement() throws Exception {
 
 Ohscript 扩展了一个 Female 对象，使用 Female 的原有成员属性，并且可以覆写原方法。
 
-```java
+``` java
 @Test
 void test_extend() throws Exception {
     Human ivy = this.ohScript.extend(new Female(), "{getAge:()=>300}");
@@ -861,7 +861,7 @@ void test_extend() throws Exception {
 
 ### 读取流中的数据
 
-```java
+``` java
 @Test
 void test_load_file() throws IOException, OhPanic {
     this.parserBuilder.begin();

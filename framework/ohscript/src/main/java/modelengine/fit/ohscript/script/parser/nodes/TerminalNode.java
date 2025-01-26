@@ -15,7 +15,6 @@ import modelengine.fit.ohscript.script.interpreter.ReturnValue;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.lexer.Token;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityBodyNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.IdentifierEntry;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.SymbolEntry;
 import modelengine.fit.ohscript.script.semanticanalyzer.symbolentries.UnknownSymbolEntry;
@@ -26,7 +25,9 @@ import modelengine.fit.ohscript.util.Constants;
 import modelengine.fitframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 语法树中的终结节点
@@ -36,6 +37,8 @@ import java.util.Objects;
  * @since 2023-05-01
  */
 public class TerminalNode extends SyntaxNode implements Serializable {
+    private static final Map<String, Interpreter> interpreterMap = new ConcurrentHashMap<>();
+
     private static final long serialVersionUID = 2942191759739959915L;
 
     private static final String MEMBER_FLAG = ".";
@@ -285,11 +288,32 @@ public class TerminalNode extends SyntaxNode implements Serializable {
     @Override
     public ReturnValue interpret(ASTEnv env, ActivationContext current) throws OhPanic {
         try {
-            return Interpreter.valueOf(this.nodeType.name()).interpret(this, env, current);
+            return this.getInterpreter(this.nodeType.name()).interpret(this, env, current);
         } catch (OhPanic p) {
             throw p;
         } catch (Exception e) {
             return ReturnValue.IGNORE;
         }
+    }
+
+    /**
+     * 通过名称获取解释器，增加了缓存
+     *
+     * @param name 解释器名称
+     * @return 解释器
+     */
+    private Interpreter getInterpreter(String name) {
+        Interpreter interpreter = interpreterMap.get(name);
+        if (interpreter == null) {
+            Interpreter result;
+            try {
+                result = Interpreter.valueOf(name);
+            } catch (IllegalArgumentException e) {
+                result = Interpreter.ERROR_NOT_FOUND_IGNORE;
+            }
+            interpreter = result;
+            interpreterMap.put(name, interpreter);
+        }
+        return interpreter;
     }
 }

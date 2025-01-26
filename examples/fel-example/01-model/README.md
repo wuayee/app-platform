@@ -4,7 +4,7 @@
 
 聊天模型是 FEL 的核心组件，其使用聊天消息作为输出，并返回聊天消息作为输出。为方便集成不同模型提供商（openai、qwen等）提供的模型服务，FEL 抽象了一个标准接口来进行交互。
 
-```java
+``` java
 public interface ChatModel {
     /**
      * 调用聊天模型生成结果。
@@ -22,7 +22,7 @@ public interface ChatModel {
 
 1. 在项目 pom.xml 加入以下依赖：
 
-```xml
+``` xml
     <dependencies>
         <dependency>
             <groupId>modelengine.fit.starter</groupId>
@@ -65,9 +65,7 @@ example:
 
 3. 添加如下代码：
 
-```java
-controller:
-
+``` java
 @Component
 public class ChatModelExampleController {
     private final ChatModel chatModel;
@@ -84,12 +82,11 @@ public class ChatModelExampleController {
         return this.chatModel.generate(ChatMessages.from(new HumanMessage(query)), option).blockAll().get(0);
     }
 }
-
 ```
 
 4. 让模型返回流式输出：
 
-```java
+``` java
     @GetMapping("/chat-stream")
     public Choir<ChatMessage> chatStream(@RequestParam("query") String query) {
         ChatOption option = ChatOption.custom().model(this.modelName).stream(false).build();
@@ -144,7 +141,7 @@ data:{"content":"袜","toolCalls":[]}
 
 ## 配置项说明
 
-```java
+``` java
 public interface ChatOption {
     /**
      * 获取调用模型的名字。

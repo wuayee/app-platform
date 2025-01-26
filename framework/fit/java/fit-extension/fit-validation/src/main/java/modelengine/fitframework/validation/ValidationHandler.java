@@ -29,14 +29,19 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 校验入口类。
@@ -89,7 +94,7 @@ public class ValidationHandler {
             if (this.hasValidatedAnnotation(parameters[index])) {
                 Class<?>[] validationGroups = this.getValidationGroups(parameters[index], classGroups);
                 PropertyValue parameterValue = PropertyValue.createParameterValue(parameters[index]);
-                validationMetadataList.addAll(this.getValidationFields(parameterValue,
+                validationMetadataList.addAll(this.getValidationFields(parameterValue.getParameterizedType(),
                         args[index],
                         method,
                         validationGroups));
@@ -120,19 +125,64 @@ public class ValidationHandler {
         return AnnotationUtils.getAnnotation(this.container, element, Constraint.class).isPresent();
     }
 
-    private List<ValidationMetadata> getValidationFields(PropertyValue validationObject, Object validationValue,
+    private List<ValidationMetadata> getValidationFields(Type validationObject, Object validationValue, Method method,
+            Class<?>[] validationGroups) {
+        if (validationObject instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = ObjectUtils.cast(validationObject);
+            if (Collection.class.isAssignableFrom(ObjectUtils.cast(parameterizedType.getRawType()))) {
+                return this.handleCollection(parameterizedType.getActualTypeArguments(),
+                        ObjectUtils.cast(validationValue),
+                        method,
+                        validationGroups);
+            }
+            if (Map.class.isAssignableFrom(ObjectUtils.cast(parameterizedType.getRawType()))) {
+                return this.handleMap(parameterizedType.getActualTypeArguments(),
+                        ObjectUtils.cast(validationValue),
+                        method,
+                        validationGroups);
+            }
+        }
+        if (validationObject instanceof Class) {
+            Field[] fields = new Field[0];
+            Map<String, Object> fieldNameValues = Collections.emptyMap();
+            if (!isSimpleClass(ObjectUtils.cast(validationObject))) {
+                fields = ReflectionUtils.getDeclaredFields(ObjectUtils.cast(validationObject), true);
+                fieldNameValues = Arrays.stream(fields)
+                        .collect(HashMap::new,
+                                (map, field) -> map.put(field.getName(),
+                                        validationValue == null
+                                                ? null
+                                                : ReflectionUtils.getField(validationValue, field)),
+                                HashMap::putAll);
+            }
+            List<ValidationMetadata> constraintFieldMetadata =
+                    this.getConstraintFieldMetadata(method, validationGroups, fields, fieldNameValues);
+            List<ValidationMetadata> validatedFieldMetadata =
+                    this.getValidatedFieldMetadata(method, validationGroups, fields, fieldNameValues);
+            return CollectionUtils.merge(constraintFieldMetadata, validatedFieldMetadata);
+        }
+        return Collections.emptyList();
+    }
+
+    private List<ValidationMetadata> handleCollection(Type[] actualTypeArgs, Collection<?> validationValueCollection,
             Method method, Class<?>[] validationGroups) {
-        Field[] fields = ReflectionUtils.getDeclaredFields(validationObject.getType());
-        Map<String, Object> fieldNameValues = Arrays.stream(fields)
-                .collect(HashMap::new,
-                        (map, field) -> map.put(field.getName(),
-                                validationValue == null ? null : ReflectionUtils.getField(validationValue, field)),
-                        HashMap::putAll);
-        List<ValidationMetadata> constraintFieldMetadata =
-                this.getConstraintFieldMetadata(method, validationGroups, fields, fieldNameValues);
-        List<ValidationMetadata> validatedFieldMetadata =
-                this.getValidatedFieldMetadata(method, validationGroups, fields, fieldNameValues);
-        return CollectionUtils.merge(constraintFieldMetadata, validatedFieldMetadata);
+        Validation.equals(actualTypeArgs.length, 1, "The collection must have exactly 1 parameterized type.");
+        return validationValueCollection.stream()
+                .flatMap(element -> this.getValidationFields(actualTypeArgs[0], element, method, validationGroups)
+                        .stream())
+                .collect(Collectors.toList());
+    }
+
+    private List<ValidationMetadata> handleMap(Type[] actualTypeArgs, Map<?, ?> validationValueMap, Method method,
+            Class<?>[] validationGroups) {
+        Validation.equals(actualTypeArgs.length, 2, "The map must have exactly 2 parameterized types.");
+        return validationValueMap.entrySet()
+                .stream()
+                .flatMap(entry -> Stream.concat(
+                        this.getValidationFields(actualTypeArgs[0], entry.getKey(), method, validationGroups).stream(),
+                        this.getValidationFields(actualTypeArgs[1], entry.getValue(), method, validationGroups).stream()
+                ))
+                .collect(Collectors.toList());
     }
 
     private List<ValidationMetadata> getConstraintFieldMetadata(Method method, Class<?>[] validationGroups,
@@ -150,7 +200,7 @@ public class ValidationHandler {
             Field[] fields, Map<String, Object> fieldNameValues) {
         return Arrays.stream(fields)
                 .filter(this::hasValidatedAnnotation)
-                .flatMap(field -> this.getValidationFields(PropertyValue.createFieldValue(field),
+                .flatMap(field -> this.getValidationFields(PropertyValue.createFieldValue(field).getParameterizedType(),
                         fieldNameValues.get(field.getName()),
                         method,
                         validationGroups).stream())
@@ -167,7 +217,8 @@ public class ValidationHandler {
                     .stream()
                     .filter(validator -> !validator.isValid(validationMetadata.value()))
                     .forEach((validator) -> violations.add(this.buildConstraintViolation(validationMetadata,
-                            annotation)));
+                            annotation,
+                            validator.args())));
         }
         return violations;
     }
@@ -197,7 +248,8 @@ public class ValidationHandler {
         return validator;
     }
 
-    private ConstraintViolation buildConstraintViolation(ValidationMetadata validationMetadata, Annotation annotation) {
+    private ConstraintViolation buildConstraintViolation(ValidationMetadata validationMetadata, Annotation annotation,
+            Object[] args) {
         String message =
                 String.valueOf(this.getAnnotationPropertyValue(annotation, "message").orElse(StringUtils.EMPTY));
         return ConstraintViolation.builder()
@@ -205,6 +257,7 @@ public class ValidationHandler {
                 .propertyName(validationMetadata.name())
                 .propertyValue(validationMetadata.value())
                 .validationMethod(validationMetadata.getValidationMethod())
+                .args(args)
                 .build();
     }
 
@@ -241,6 +294,11 @@ public class ValidationHandler {
         } catch (NoSuchMethodException e) {
             return Optional.empty();
         }
+    }
+
+    private boolean isSimpleClass(Class<?> validationClass) {
+        return validationClass.isPrimitive() || ReflectionUtils.isPrimitiveWrapper(validationClass)
+                || validationClass == String.class;
     }
 
     /**

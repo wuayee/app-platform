@@ -49,10 +49,7 @@ public class HttpClientErrorExceptionTest {
             ClientResponse clientResponse =
                     new DefaultClientResponse(this.statusCode, this.reasonPhrase, headers, responseStream);
             Class<?> responseType = String.class;
-            this.httpClassicClientResponse = new DefaultHttpClassicClientResponse<>(mock,
-                    clientResponse,
-                    responseType,
-                    HttpClassicClientFactory.Config.builder().build());
+            this.httpClassicClientResponse = new DefaultHttpClassicClientResponse<>(mock, clientResponse, responseType);
         }
     }
 

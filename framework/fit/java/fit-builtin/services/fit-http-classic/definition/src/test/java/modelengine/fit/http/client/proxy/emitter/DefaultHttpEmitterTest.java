@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import modelengine.fit.http.client.HttpClassicClient;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.client.proxy.Authorization;
 import modelengine.fit.http.client.proxy.PropertyValueApplier;
 import modelengine.fit.http.client.proxy.RequestBuilder;
 import modelengine.fit.http.protocol.HttpRequestMethod;
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 为 {@link  DefaultHttpEmitter} 提供单元测试。
@@ -40,6 +43,7 @@ class DefaultHttpEmitterTest {
     private HttpRequestMethod method;
     private String pathPattern;
     private HttpClassicClient client;
+    private Authorization authorization;
 
     @BeforeEach
     void setup() {
@@ -48,6 +52,13 @@ class DefaultHttpEmitterTest {
         this.pathPattern = "/fit/{gid}";
         this.method = HttpRequestMethod.POST;
         this.client = mock(HttpClassicClient.class);
+        this.authorization = this.buildAuthorization();
+    }
+
+    private Authorization buildAuthorization() {
+        Map<String, Object> auth = new HashMap<>();
+        auth.put("type", "ApiKey");
+        return Authorization.create(auth);
     }
 
     @Test
@@ -61,7 +72,8 @@ class DefaultHttpEmitterTest {
                 this.method,
                 this.protocol,
                 this.domain,
-                this.pathPattern);
+                this.pathPattern,
+                this.authorization);
 
         Object[] args = {"test_args"};
         HttpClassicClientResponse<?> response = emitter.emit(args);

@@ -9,14 +9,13 @@ package modelengine.fitframework.test.domain;
 import static modelengine.fitframework.inspection.Validation.notBlank;
 
 import modelengine.fitframework.plugin.RootPlugin;
+import modelengine.fitframework.runtime.shared.SharedUrlClassLoader;
 import modelengine.fitframework.runtime.support.AbstractFitRuntime;
 import modelengine.fitframework.test.domain.resolver.TestContextConfiguration;
-import modelengine.fitframework.util.ObjectUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * 为测试框架提供运行时环境。
@@ -46,8 +45,8 @@ public class TestFitRuntime extends AbstractFitRuntime {
     }
 
     @Override
-    protected URLClassLoader obtainSharedClassLoader() {
-        return ObjectUtils.cast(TestFitRuntime.class.getClassLoader().getParent());
+    protected SharedUrlClassLoader obtainSharedClassLoader() {
+        return new SharedUrlClassLoader(new URL[0], TestFitRuntime.class.getClassLoader().getParent());
     }
 
     @Override

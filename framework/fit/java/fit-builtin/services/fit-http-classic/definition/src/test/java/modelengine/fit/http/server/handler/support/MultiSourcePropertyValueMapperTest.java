@@ -34,7 +34,9 @@ public class MultiSourcePropertyValueMapperTest {
         final MockHttpClassicServerRequest serverRequest = new MockHttpClassicServerRequest();
         final DefaultHttpClassicServerRequest request = serverRequest.getRequest();
         List<SourceFetcherInfo> sourceFetcherInfos =
-                Collections.singletonList(new SourceFetcherInfo(new HeaderFetcher(HEADER_KEY), "a.b", false));
+                Collections.singletonList(new SourceFetcherInfo(new HeaderFetcher(ParamValue.custom()
+                        .name(HEADER_KEY)
+                        .build()), "a.b", false));
         PropertyValueMapper mapper = new MultiSourcesPropertyValueMapper(sourceFetcherInfos);
         final Object value = mapper.map(request, null, null);
         Map<String, Map<?, ?>> map = ObjectUtils.cast(value);

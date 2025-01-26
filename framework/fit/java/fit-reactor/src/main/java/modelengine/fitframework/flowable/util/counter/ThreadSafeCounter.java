@@ -87,19 +87,22 @@ public class ThreadSafeCounter implements Counter {
                 synchronized (this.observers) {
                     observersToNotify = new ArrayList<>(this.observers);
                 }
-                for (CounterValueChangedObserver observer : observersToNotify) {
-                    try {
-                        observer.onValueChanged(this, from, to);
-                    } catch (Exception cause) {
-                        log.warn(StringUtils.format("Failed to observe value changed. [from={0}, to={1}]", from, to),
-                                cause);
-                    }
-                }
+                this.observerNotify(observersToNotify, from, to);
                 changed = Math.abs(to - from);
                 break;
             }
         }
         return changed;
+    }
+
+    private void observerNotify(List<CounterValueChangedObserver> observersToNotify, long from, long to) {
+        for (CounterValueChangedObserver observer : observersToNotify) {
+            try {
+                observer.onValueChanged(this, from, to);
+            } catch (Exception cause) {
+                log.warn(StringUtils.format("Failed to observe value changed. [from={0}, to={1}]", from, to), cause);
+            }
+        }
     }
 
     private static long calculateTarget(long changed, long from, long to) {

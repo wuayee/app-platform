@@ -9,9 +9,6 @@ package modelengine.fitframework.build.support;
 import modelengine.fitframework.build.util.ArtifactDownloader;
 import modelengine.fitframework.build.util.VersionHelper;
 import modelengine.fitframework.maven.MavenCoordinate;
-import modelengine.fitframework.parameterization.ParameterizedString;
-import modelengine.fitframework.parameterization.ParameterizedStringResolver;
-import modelengine.fitframework.parameterization.ResolvedParameter;
 import modelengine.fitframework.plugin.maven.support.AbstractExecutor;
 import modelengine.fitframework.plugin.maven.support.SharedDependency;
 import modelengine.fitframework.protocol.jar.Jar;
@@ -33,9 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -148,24 +143,6 @@ public abstract class AbstractRepackager extends AbstractExecutor {
         }
     }
 
-    private String replacePlaceholders(Jar.Entry entry, String value) {
-        if (!isConfig(entry)) {
-            return value;
-        }
-        ParameterizedStringResolver resolver = ParameterizedStringResolver.create("${", "}", '\0');
-        ParameterizedString template = resolver.resolve(value);
-        List<ResolvedParameter> parameters = template.getParameters();
-        Map<String, String> arguments = new HashMap<>(parameters.size());
-        for (ResolvedParameter parameter : parameters) {
-            String argumentValue = System.getProperty(parameter.getName());
-            if (StringUtils.isBlank(argumentValue)) {
-                argumentValue = this.project().getProperties().getProperty(parameter.getName());
-            }
-            arguments.put(parameter.getName(), argumentValue);
-        }
-        return template.format(arguments);
-    }
-
     private static boolean isConfig(Jar.Entry entry) {
         return StringUtils.endsWithIgnoreCase(entry.name(), YML) || StringUtils.endsWithIgnoreCase(entry.name(), YAML);
     }
@@ -221,8 +198,6 @@ public abstract class AbstractRepackager extends AbstractExecutor {
      * @throws MojoExecutionException 当获取文本内容过程发生异常时。
      */
     protected String getEntryContent(Jar.Entry entry) throws MojoExecutionException {
-        String content = contentOf(entry);
-        content = this.replacePlaceholders(entry, content);
-        return content;
+        return contentOf(entry);
     }
 }

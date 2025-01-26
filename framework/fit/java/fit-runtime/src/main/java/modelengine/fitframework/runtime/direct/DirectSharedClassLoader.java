@@ -10,6 +10,7 @@ import modelengine.fitframework.jvm.ClassDeclaration;
 import modelengine.fitframework.jvm.classfile.ClassFile;
 import modelengine.fitframework.resource.ClassPath;
 import modelengine.fitframework.resource.ResourceTree;
+import modelengine.fitframework.runtime.shared.SharedUrlClassLoader;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.XmlUtils;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +32,7 @@ import java.util.Set;
  * @author 梁济时
  * @since 2023-02-08
  */
-final class DirectSharedClassLoader extends URLClassLoader {
+final class DirectSharedClassLoader extends SharedUrlClassLoader {
     private final ClassLoader frameworkClassLoader;
     private final Set<String> redirectedClassNames;
 
@@ -40,15 +40,6 @@ final class DirectSharedClassLoader extends URLClassLoader {
         super(new URL[0], frameworkClassLoader.getParent());
         this.frameworkClassLoader = frameworkClassLoader;
         this.redirectedClassNames = new HashSet<>();
-    }
-
-    /**
-     * 将指定的 URL 添加到类路径中。
-     *
-     * @param url 表示路径的 {@link URL}。
-     */
-    public void add(URL url) {
-        super.addURL(url);
     }
 
     /**
@@ -76,7 +67,7 @@ final class DirectSharedClassLoader extends URLClassLoader {
         for (ClassPath classPath : classPaths) {
             if (isSharedClassPath(classPath)) {
                 try {
-                    sharedClassLoader.add(classPath.url());
+                    sharedClassLoader.addURL(classPath.url());
                 } catch (MalformedURLException ex) {
                     throw new IllegalStateException(StringUtils.format(
                             "Failed to obtain URL of class path. [classpath={0}]",
@@ -101,9 +92,8 @@ final class DirectSharedClassLoader extends URLClassLoader {
     }
 
     private static boolean isFrameworkShared(ClassPath classPath) {
-        ResourceTree.FileNode
-                node = ObjectUtils.as(classPath.resources().nodeAt("FIT-INF/metadata.xml"),
-                ResourceTree.FileNode.class);
+        ResourceTree.FileNode node =
+                ObjectUtils.as(classPath.resources().nodeAt("FIT-INF/metadata.xml"), ResourceTree.FileNode.class);
         if (node == null) {
             return false;
         }

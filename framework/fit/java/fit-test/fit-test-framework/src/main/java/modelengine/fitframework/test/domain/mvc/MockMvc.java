@@ -56,4 +56,13 @@ public final class MockMvc {
         RequestParam requestParam = builder.port(this.port).client(httpClassicClient).build();
         return httpClassicClient.exchangeStream(requestParam.getRequest(), requestParam.getResponseType());
     }
+
+    /**
+     * 获取测试插件启动端口。
+     *
+     * @return 表示插件启动端口的 {@code int}。
+     */
+    public int getPort() {
+        return this.port;
+    }
 }

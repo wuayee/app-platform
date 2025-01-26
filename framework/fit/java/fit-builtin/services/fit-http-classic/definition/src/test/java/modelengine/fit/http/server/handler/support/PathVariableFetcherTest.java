@@ -32,7 +32,8 @@ class PathVariableFetcherTest {
     void shouldReturnDataFromRequest() {
         final HttpClassicServerRequest serverRequest = mock(HttpClassicServerRequest.class);
         final AttributeCollection attributeCollection = mock(AttributeCollection.class);
-        final PathVariableFetcher variableFetcher = new PathVariableFetcher("demo1");
+        final PathVariableFetcher variableFetcher =
+                new PathVariableFetcher(ParamValue.custom().name(("demo1")).build());
         when(serverRequest.attributes()).thenReturn(attributeCollection);
         when(attributeCollection.get(anyString())).thenReturn(Optional.of("{demo1}"));
         when(serverRequest.path()).thenReturn("demo1");

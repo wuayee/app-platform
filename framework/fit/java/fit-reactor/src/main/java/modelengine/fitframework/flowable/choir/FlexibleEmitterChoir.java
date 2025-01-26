@@ -72,7 +72,11 @@ public class FlexibleEmitterChoir<T> extends AbstractChoir<T> implements OnSubsc
         Emitter<T> emitter = notNull(this.emitterSupplier.get(), "The result of emitter supplier cannot be null.");
         emitter.observe(this.subscription);
         this.subscriber.onSubscribed(this.subscription);
-        this.emitterConsumer.accept(emitter);
+        try {
+            this.emitterConsumer.accept(emitter);
+        } catch (Exception ex) {
+            emitter.fail(ex);
+        }
     }
 
     private static class FlexibleEmitterChoirSubscription<T> extends AbstractSubscription

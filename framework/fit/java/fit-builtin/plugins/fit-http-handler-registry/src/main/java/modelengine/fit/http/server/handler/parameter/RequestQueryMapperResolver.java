@@ -10,6 +10,7 @@ import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.annotation.RequestQuery;
 import modelengine.fit.http.server.handler.PropertyValueMapperResolver;
 import modelengine.fit.http.server.handler.SourceFetcher;
+import modelengine.fit.http.server.handler.support.ParamValue;
 import modelengine.fit.http.server.handler.support.QueryFetcher;
 import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
 
@@ -40,6 +41,11 @@ public class RequestQueryMapperResolver extends AbstractRequestParamMapperResolv
 
     @Override
     protected SourceFetcher createSourceFetcher(RequestParam requestParam) {
-        return new QueryFetcher(requestParam.name());
+        return new QueryFetcher(ParamValue.custom()
+                .name(requestParam.name())
+                .required(requestParam.required())
+                .defaultValue(requestParam.defaultValue())
+                .in(requestParam.in())
+                .build());
     }
 }

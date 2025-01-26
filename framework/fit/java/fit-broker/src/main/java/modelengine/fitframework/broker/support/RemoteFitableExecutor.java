@@ -59,8 +59,8 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
     private final LazyLoader<FitExceptionCreator> exceptionCreatorLoader = new LazyLoader<>(this::getExceptionCreator);
     private final LazyLoader<RegisterAuthService> requireRegisterAuthService =
             new LazyLoader<>(this::requireRegisterAuthService);
-    private LazyLoader<Set<String>> requireMatataGenericables = new LazyLoader<>(this::requireMatataGenericables);
-    private LazyLoader<Boolean> isAccessEnable = new LazyLoader<>(this::isAccessEnable);
+    private final LazyLoader<Set<String>> requireMatataGenericables = new LazyLoader<>(this::requireMatataGenericables);
+    private final LazyLoader<Boolean> isAccessEnable = new LazyLoader<>(this::isAccessEnable);
 
     RemoteFitableExecutor(BeanContainer container) {
         this.container = container;
@@ -91,7 +91,6 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
                 fitable.toUniqueId(),
                 target,
                 responseException.getMessage());
-        log.debug("Exception: ", responseException);
         throw responseException;
     }
 

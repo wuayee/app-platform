@@ -43,6 +43,9 @@ public class ParameterizedStringResolverTest {
     /** 表示用以测试的转义符。 */
     private static final char ESCAPE_CHARACTER = '/';
 
+    /** 表示用以测试的空白转义符。 */
+    private static final char EMPTY_ESCAPE_CHARACTER = '\0';
+
     /** 表示用以测试的源字符串。 */
     private static final String SOURCE_STRING = "Variable test. [variable=${/variable}]/${";
 
@@ -117,10 +120,8 @@ public class ParameterizedStringResolverTest {
     @Test
     public void should_return_formatted_string_when_only_parameters() {
         final String originalString = "${start}${end}";
-        Map<String, Object> parameters = MapBuilder.<String, Object>get()
-                .put("start", "MyStartParameter")
-                .put("end", "MyEndParameter")
-                .build();
+        Map<String, Object> parameters =
+                MapBuilder.<String, Object>get().put("start", "MyStartParameter").put("end", "MyEndParameter").build();
         final String resolvedString = "MyStartParameterMyEndParameter";
         ParameterizedString parameterizedString = getParameterizedString(originalString);
         String result = parameterizedString.format(parameters);
@@ -247,10 +248,8 @@ public class ParameterizedStringResolverTest {
     @Test
     public void should_return_formatted_xml() throws IOException {
         String parameterizedString = IoUtils.content(ParameterizedStringResolverTest.class, "/ParameterizedString.xml");
-        Map<String, String> params = MapBuilder.<String, String>get()
-                .put("namespace", "my-namespace")
-                .put("resultMap", "my-result")
-                .build();
+        Map<String, String> params =
+                MapBuilder.<String, String>get().put("namespace", "my-namespace").put("resultMap", "my-result").build();
         parameterizedString = parameterizedString.replace("/", "//");
         ParameterizedString format = getParameterizedString(parameterizedString);
         String result = format.format(params);
@@ -268,9 +267,9 @@ public class ParameterizedStringResolverTest {
             @DisplayName("当参数中不包含格式化字符串所需要的变量时，抛出 StringFormatException")
             void givenArgsNotContainsRequiredVariableThenThrowStringFormatException() {
                 ParameterizedString format = getParameterizedString("${required}");
-                StringFormatException exception = catchThrowableOfType(
-                        () -> format.format(MapBuilder.get().put("someOther", "value").build()),
-                        StringFormatException.class);
+                StringFormatException exception =
+                        catchThrowableOfType(() -> format.format(MapBuilder.get().put("someOther", "value").build()),
+                                StringFormatException.class);
                 assertThat(exception).isNotNull().hasMessage("Parameter 'required' required but not supplied.");
             }
         }
@@ -288,5 +287,21 @@ public class ParameterizedStringResolverTest {
             assertThat(format.toString()).isEqualTo(
                     "[originalString=${required}, variables=[[position=0, variable=required]]]");
         }
+    }
+
+    @Test
+    @DisplayName("当字符串包含${}{}时，输出正确的字符串")
+    void shouldOkWhenSpaceHolderWithBrackets() {
+        ParameterizedStringResolver resolver =
+                ParameterizedStringResolver.create(PREFIX, SUFFIX, EMPTY_ESCAPE_CHARACTER, false);
+        String input = "a:\n" + "  c: '{\"2\" : \"3\"}'\n" + "  d: '${hello} : ${bye} : {ok}'\n" + "  n: ${hello}\n"
+                + "  x: '{\"name\":\"bob\"}'\n" + "  y: '{\"1\" : 2, \"2\" : ${hello}}'";
+        Map<String, String> params =
+                MapBuilder.<String, String>get().put("hi", "嗨").put("hello", "你好").put("bye", "再见").build();
+        ParameterizedString parameterizedString = resolver.resolve(input);
+        String actual = parameterizedString.format(params);
+        String except = "a:\n" + "  c: '{\"2\" : \"3\"}'\n" + "  d: '你好 : 再见 : {ok}'\n" + "  n: 你好\n"
+                + "  x: '{\"name\":\"bob\"}'\n" + "  y: '{\"1\" : 2, \"2\" : 你好}'";
+        assertThat(actual).isEqualTo(except);
     }
 }

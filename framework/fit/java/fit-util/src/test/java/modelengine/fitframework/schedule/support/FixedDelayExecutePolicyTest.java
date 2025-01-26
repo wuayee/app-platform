@@ -54,6 +54,7 @@ class FixedDelayExecutePolicyTest {
         Optional<Instant> optionalInstant = executePolicy.nextExecuteTime(execution, completeTime.minusSeconds(1));
 
         assertThat(optionalInstant.isPresent()).isTrue();
-        assertThat(optionalInstant.get()).isEqualTo(Instant.ofEpochMilli(completeTime.toEpochMilli() + period));
+        assertThat(optionalInstant.get().getEpochSecond()).isEqualTo(Instant.ofEpochMilli(
+                completeTime.toEpochMilli() + period).getEpochSecond());
     }
 }

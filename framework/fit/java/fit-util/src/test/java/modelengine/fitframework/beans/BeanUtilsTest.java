@@ -33,5 +33,15 @@ public class BeanUtilsTest {
             BeanUtils.copyProperties(o1, o2);
             assertThat(o2).returns("Hello", Object2::getF1).returns(1, Object2::getF2);
         }
+
+        @Test
+        @DisplayName("提供原实例与目标类，拷贝属性成功")
+        void givenTheSourceInstanceAndTargetClassThenCopyCorrectly() {
+            Object1 o1 = new Object1();
+            o1.setF1("Hello");
+            o1.setF2(1);
+            Object2 o2 = BeanUtils.copyProperties(o1, Object2.class);
+            assertThat(o2).returns("Hello", Object2::getF1).returns(1, Object2::getF2);
+        }
     }
 }

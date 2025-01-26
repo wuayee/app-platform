@@ -14,6 +14,7 @@ import modelengine.fitframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -38,7 +39,7 @@ public class DefaultQueryCollection implements QueryCollection {
      * @param queryString 表示整个查询参数的 {@link String}。
      */
     public DefaultQueryCollection(String queryString) {
-        this.queries = HttpUtils.parseQueryOrForm(queryString);
+        this.queries = HttpUtils.parseQuery(queryString);
     }
 
     @Override
@@ -64,10 +65,10 @@ public class DefaultQueryCollection implements QueryCollection {
     @Override
     public String queryString() {
         List<String> keyValues = new ArrayList<>();
-        for (String key : this.queries.keySet()) {
-            List<String> values = this.queries.get(key);
+        for (Map.Entry<String, List<String>> entry : this.queries.entrySet()) {
+            List<String> values = entry.getValue();
             for (String value : values) {
-                keyValues.add(key + "=" + value);
+                keyValues.add(entry.getKey() + "=" + value);
             }
         }
         return String.join("&", keyValues);

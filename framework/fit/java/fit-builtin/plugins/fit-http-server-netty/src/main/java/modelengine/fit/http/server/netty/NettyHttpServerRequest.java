@@ -184,26 +184,35 @@ public class NettyHttpServerRequest implements ServerRequest, OnHttpContentRecei
     }
 
     /**
+     * 获取 Netty 原始的 Http 请求消息。
+     *
+     * @return 表示 Netty 原始的 Http 请求消息的 {@link HttpRequest}。
+     */
+    HttpRequest getNettyRequest() {
+        return this.request;
+    }
+
+    /**
      * 设置当前请求的执行线程。
      *
      * @param thread 表示当前请求的执行线程的 {@link Thread}。
      * @throws IllegalArgumentException 当 {@code thread} 为 {@code null} 时。
      */
-    public void setExecuteThread(Thread thread) {
+    void setExecuteThread(Thread thread) {
         this.executeThread = notNull(thread, "The execute thread cannot be null.");
     }
 
     /**
      * 清除当前请求的执行线程。
      */
-    public void removeExecuteThread() {
+    void removeExecuteThread() {
         this.executeThread = null;
     }
 
     /**
      * 中断当前请求。
      */
-    public void interruptExecution() {
+    void interruptExecution() {
         if (this.executeThread != null) {
             this.executeThread.interrupt();
         }

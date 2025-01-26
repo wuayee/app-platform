@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.aop.AopInterceptor;
 import modelengine.fitframework.aop.interceptor.aspect.interceptor.AspectInterceptorResolver;
+import modelengine.fitframework.aop.proxy.AopProxyFactories;
 import modelengine.fitframework.aop.proxy.bytebuddy.ByteBuddyAopProxyFactory;
 import modelengine.fitframework.aop.proxy.support.JdkDynamicAopProxyFactory;
 import modelengine.fitframework.ioc.BeanContainer;
@@ -79,6 +80,7 @@ class TransactionalTest {
         TransactionManager transactionManager = new DefaultTransactionManager(container);
         container.registry().register(container);
 
+        container.registry().register(new AopProxyFactories());
         container.registry().register(new AopInterceptor(container));
         container.registry().register(AspectInterceptorResolver.class);
         container.registry().register(new JdkDynamicAopProxyFactory());

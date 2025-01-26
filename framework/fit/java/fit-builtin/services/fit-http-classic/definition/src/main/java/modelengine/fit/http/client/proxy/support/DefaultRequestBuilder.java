@@ -9,6 +9,7 @@ package modelengine.fit.http.client.proxy.support;
 import modelengine.fit.http.Cookie;
 import modelengine.fit.http.client.HttpClassicClient;
 import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.proxy.Authorization;
 import modelengine.fit.http.client.proxy.RequestBuilder;
 import modelengine.fit.http.entity.Entity;
 import modelengine.fit.http.protocol.HttpRequestMethod;
@@ -43,6 +44,7 @@ public class DefaultRequestBuilder implements RequestBuilder {
     private String domain;
     private String pathPattern;
     private Entity entity;
+    private Authorization authorization;
 
     @Override
     public RequestBuilder method(HttpRequestMethod method) {
@@ -145,31 +147,45 @@ public class DefaultRequestBuilder implements RequestBuilder {
     }
 
     @Override
+    public RequestBuilder authorization(Authorization authorization) {
+        this.authorization = authorization;
+        return this;
+    }
+
+    @Override
+    public RequestBuilder authorizationInfo(String key, Object value) {
+        if (this.authorization == null) {
+            return this;
+        }
+        this.authorization.set(key, value);
+        return this;
+    }
+
+    @Override
     public HttpClassicClientRequest build() {
         StringBuilder url = new StringBuilder(this.protocol);
         url.append("://").append(this.domain);
         if (!this.pathVariables.isEmpty()) {
-            this.pathVariables.forEach((key, value) -> {
-                this.pathPattern = this.pathPattern.replace("{" + key + "}", value);
-            });
+            this.pathVariables.forEach((key, value) -> this.pathPattern =
+                    this.pathPattern.replace("{" + key + "}", value));
         }
         url.append(this.pathPattern);
-
+        if (this.authorization != null) {
+            this.authorization.assemble(this);
+        }
         if (!this.queries.isEmpty()) {
             url.append("?");
-            this.queries.forEach((key, values) -> {
-                values.forEach(value -> url.append(key).append("=").append(value).append("&"));
-            });
+            this.queries.forEach((key, values) -> values.forEach(value -> url.append(key)
+                    .append("=")
+                    .append(value)
+                    .append("&")));
             url.setLength(url.length() - 1);
         }
-
         HttpClassicClientRequest request = this.httpClassicClient.createRequest(this.method, url.toString());
         if (!this.headers.isEmpty()) {
-            this.headers.entrySet().forEach(header -> request.headers().set(header.getKey(), header.getValue()));
+            this.headers.forEach((key, value) -> request.headers().set(key, value));
         }
-
         this.cookies.forEach((name, value) -> request.cookies().add(Cookie.builder().name(name).value(value).build()));
-
         if (this.entity != null) {
             request.entity(this.entity);
         } else if (this.jsonObject != null) {
@@ -177,7 +193,6 @@ public class DefaultRequestBuilder implements RequestBuilder {
         } else if (!this.formEntity.isEmpty()) {
             request.formEntity(formEntity);
         }
-
         return request;
     }
 }

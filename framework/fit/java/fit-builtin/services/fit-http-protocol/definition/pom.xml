@@ -15,6 +15,10 @@
         <!-- FIT core -->
         <dependency>
             <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
 

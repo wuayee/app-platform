@@ -393,6 +393,18 @@ public class IoUtilsTest {
                 }
 
                 @Test
+                @DisplayName("Given resource exist in different charset")
+                void givenResourceInMultipleCharsetThenReturnCorrectProperties() {
+                    Properties actual = IoUtils.properties(IoUtilsTest.class,
+                            "/property/charset.properties",
+                            StandardCharsets.UTF_8);
+                    assertThat(actual).isNotNull()
+                            .hasSize(2)
+                            .containsEntry("code1", "测试")
+                            .containsEntry("code2", "测试");
+                }
+
+                @Test
                 @DisplayName("Given load resource error then throw IllegalStateException")
                 void givenLoadResourceErrorThenThrowException() throws IOException {
                     try (MockedStatic<IoUtils> mocked = mockStatic(IoUtils.class)) {

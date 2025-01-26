@@ -212,7 +212,16 @@ public class Unzip extends AbstractZip<Unzip> {
         if (!target.isAbsolute()) {
             actual = new File(this.getTargetDirectory(), target.getPath());
         }
-        return FileUtils.canonicalize(actual);
+        actual = FileUtils.canonicalize(actual);
+        if (this.security.isCrossPath()) {
+            return actual;
+        }
+        File targetDirectory = FileUtils.canonicalize(this.getTargetDirectory());
+        if (!actual.getPath().startsWith(targetDirectory.getPath())) {
+            throw new SecurityException(
+                    StringUtils.format("Detected a potential path traversal attack. [path={0}]", target.getPath()));
+        }
+        return actual;
     }
 
     private File getTargetDirectory() {
@@ -274,32 +283,55 @@ public class Unzip extends AbstractZip<Unzip> {
         /**
          * 表示默认的安全配置。
          * <ul>
-         *     <li>解包后的总大小不能超过100MB；</li>
-         *     <li>包含的文件数量不能超过1024个。</li>
+         *     <li>解包后的总大小不能超过 100MB。</li>
+         *     <li>包含的文件数量不能超过 1024 个。</li>
+         *     <li>不支持跨路径解压。</li>
          * </ul>
          */
-        public static final Security DEFAULT = new Security(0x6400000, 1024);
+        public static final Security DEFAULT = new Security(0x6400000, 1024, false);
 
         private final long compressedTotalSize;
         private final long entryMaxCount;
+        private final boolean isCrossPath;
 
         /**
          * 使用解包到的最大尺寸及文件最大数量初始化 {@link Unzip.Security} 类的新实例。
          *
-         * @param compressedTotalSize 表示允许解包到的最大尺寸的64位整数。
-         * @param entryMaxCount 表示允许解包到的文件的最大数量的64位整数。
+         * @param compressedTotalSize 表示允许解包到的最大尺寸的 64 位整数的 {@code long}。
+         * @param entryMaxCount 表示允许解包到的文件的最大数量的 64 位整数 {@code long}。
+         * @param isCrossPath 表示是否支持跨路径解压包 {@code boolean}。
          */
-        public Security(long compressedTotalSize, long entryMaxCount) {
+        public Security(long compressedTotalSize, long entryMaxCount, boolean isCrossPath) {
             this.compressedTotalSize = compressedTotalSize;
             this.entryMaxCount = entryMaxCount;
+            this.isCrossPath = isCrossPath;
         }
 
+        /**
+         * 表示获取解包的最大尺寸。
+         *
+         * @return 允许解包到的最大尺寸的 64 位整数的 {@code long}。
+         */
         public long getCompressedTotalSize() {
             return this.compressedTotalSize;
         }
 
+        /**
+         * 表示获取解压包的文件的最大数量。
+         *
+         * @return 允许解包到的文件的最大数量的 64 位整数 {@code long}。
+         */
         public long getEntryMaxCount() {
             return this.entryMaxCount;
+        }
+
+        /**
+         * 表示获取是否支持跨路径解压包。
+         *
+         * @return 是否支持跨路径解压包 {@code boolean}。
+         */
+        public boolean isCrossPath() {
+            return this.isCrossPath;
         }
 
         @Override

@@ -25,7 +25,7 @@ class CookieFetcherTest {
     @DisplayName("当请求和响应中没有 cookie 名称时，返回 null")
     void givenEntityImplThenReturnParameterMapper() {
         final MockHttpClassicServerRequest serverRequest = new MockHttpClassicServerRequest();
-        final CookieFetcher cookieFetcher = new CookieFetcher("notExistCookieName");
+        final CookieFetcher cookieFetcher = new CookieFetcher(ParamValue.custom().name("notExistCookieName").build());
         final Object obj = cookieFetcher.get(serverRequest.getRequest(), null);
         assertThat(obj).isNull();
     }
@@ -33,7 +33,7 @@ class CookieFetcherTest {
     @Test
     @DisplayName("判断来源数据的常用格式是否是数组")
     void shouldReturnIsArrayAble() {
-        final CookieFetcher cookieFetcher = new CookieFetcher("notExistCookieName");
+        final CookieFetcher cookieFetcher = new CookieFetcher(ParamValue.custom().name("notExistCookieName").build());
         final boolean isArrayAble = cookieFetcher.isArrayAble();
         assertThat(isArrayAble).isFalse();
     }

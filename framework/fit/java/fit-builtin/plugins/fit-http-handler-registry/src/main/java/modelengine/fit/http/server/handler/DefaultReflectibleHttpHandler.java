@@ -22,6 +22,7 @@ import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.HttpHandler;
 import modelengine.fit.http.server.HttpServerResponseException;
+import modelengine.fit.http.server.handler.comparator.ClassComparator;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.serialization.ObjectSerializer;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * 表示 {@link AbstractReflectibleHttpHandler} 的默认实现。
@@ -43,7 +45,8 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
     private static final Logger log = Logger.get(DefaultReflectibleHttpHandler.class);
 
     private Map<Class<Throwable>, Map<String, HttpExceptionHandler>> globalExceptionHandlers = new HashMap<>();
-    private final Map<Class<Throwable>, HttpExceptionHandler> pluginExceptionHandlers = new HashMap<>();
+    private final Map<Class<Throwable>, HttpExceptionHandler> pluginExceptionHandlers =
+            new ConcurrentSkipListMap<>(ClassComparator.INSTANCE);
     private EntitySerializer<ObjectEntity<Object>> customJsonEntitySerializer;
     private ObjectSerializer customJsonSerializer;
 
@@ -68,6 +71,7 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
      * <}{@link Throwable}{@code >}{@code , }{@link HttpExceptionHandler}{@code >}。
      */
     public void addPluginExceptionHandler(Map<Class<Throwable>, HttpExceptionHandler> exceptionHandlers) {
+        // TODO 此处未考虑插件卸载逻辑。
         this.pluginExceptionHandlers.putAll(ObjectUtils.getIfNull(exceptionHandlers, Collections::emptyMap));
     }
 
@@ -117,8 +121,8 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
                 result = exceptionHandler.handle(request, response, cause);
             } catch (Exception e) {
                 e.addSuppressed(cause);
-                log.error("Failed to handle exception.");
-                log.debug("Exception: ", e);
+                log.error("Failed to handle exception.", e);
+                log.error("The previous exception is below.", cause);
                 result =
                         ErrorResponse.create(INTERNAL_SERVER_ERROR, e.getMessage(), cause.getMessage(), request.path());
             }
@@ -130,8 +134,7 @@ public class DefaultReflectibleHttpHandler extends AbstractReflectibleHttpHandle
                 response.statusCode(exceptionHandler.statusCode());
             }
         } else {
-            log.error("No concrete exception handler to handle exception.");
-            log.debug("Exception: ", cause);
+            log.error("No concrete exception handler to handle exception.", cause);
             ErrorResponse errorResponse;
             if (cause instanceof HttpServerResponseException) {
                 HttpServerResponseException actualException = cast(cause);

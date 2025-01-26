@@ -8,7 +8,7 @@
 
 ## build-app
 
-```plantuml
+``` plantuml
 hide empty members
 
 skinparam backgroundColor #EEEBDC

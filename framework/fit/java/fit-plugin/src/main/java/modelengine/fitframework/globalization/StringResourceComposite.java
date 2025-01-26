@@ -7,11 +7,13 @@
 package modelengine.fitframework.globalization;
 
 import modelengine.fitframework.util.ArrayUtils;
+import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * 为 {@link StringResource} 提供组合模式的实现。
@@ -27,7 +29,7 @@ final class StringResourceComposite implements StringResource {
     }
 
     @Override
-    public String getMessage(Locale locale, String key, String defaultMessage, Object... args) {
+    public String getMessageWithDefault(Locale locale, String key, String defaultMessage, Object... args) {
         for (StringResource provider : this.providers) {
             String message = provider.getMessage(locale, key, args);
             if (message != null) {
@@ -35,6 +37,21 @@ final class StringResourceComposite implements StringResource {
             }
         }
         if (ArrayUtils.isEmpty(args)) {
+            return defaultMessage;
+        } else {
+            return StringUtils.format(defaultMessage, args);
+        }
+    }
+
+    @Override
+    public String getMessageWithDefault(Locale locale, String key, String defaultMessage, Map<String, Object> args) {
+        for (StringResource provider : this.providers) {
+            String message = provider.getMessage(locale, key, args);
+            if (message != null) {
+                return message;
+            }
+        }
+        if (MapUtils.isEmpty(args)) {
             return defaultMessage;
         } else {
             return StringUtils.format(defaultMessage, args);

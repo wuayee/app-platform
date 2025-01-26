@@ -61,7 +61,7 @@ public interface ServerResponse
     void writeBody(byte[] bytes, int off, int len) throws IOException;
 
     /**
-     * 强制已经写入的数据执行写出，也就是说将之前写入到缓冲区的数据全部对外输出。
+     * 强制已经写入的数据执行写出，也就是说将之前写入到缓冲区的数据全部对外输出；同时发送响应结束标识符。
      *
      * @throws IOException 当发生 I/O 异常时。
      */

@@ -32,8 +32,12 @@ public final class UrlUtils {
     /** 表示路径上的分隔符。 */
     public static final char PATH_SEPARATOR = '/';
 
-    private static final String JAR_FILE_EXTENSION = ".jar";
+    /** {@code 'application/x-www-form-urlencoded'} 规范编码空格为 {@code '+'}。 */
+    private static final String FORM_ENCODED_SPACE = "+";
 
+    /** {@code 'RFC 3986'} 规范编码空格为 {@code '%20'}。 */
+    private static final String PATH_ENCODED_SPACE = "%20";
+    private static final String JAR_FILE_EXTENSION = ".jar";
     private static final String JAVA_HOME = "java.home";
     private static final String DECODED_JAVA_HOME;
 
@@ -75,7 +79,8 @@ public final class UrlUtils {
     }
 
     /**
-     * 对 URL 中的表单部分进行解码，解码格式为 application/x-www-form-urlencoded，字符集为 {@link StandardCharsets#UTF_8}。
+     * 对 URL 中的表单部分进行解码，遵守的解码规范为 {@code 'application/x-www-form-urlencoded'}，字符集为
+     * {@link StandardCharsets#UTF_8}。
      *
      * @param form 表示待解码的字符串的 {@link String}。
      * @return 表示解码后的字符串的 {@link String}。
@@ -83,17 +88,34 @@ public final class UrlUtils {
      * @throws IllegalStateException 当系统不支持 UTF-8 编码时。
      * @see URLDecoder#decode(String, String)
      */
-    public static String decodeValue(String form) {
+    public static String decodeForm(String form) {
         notNull(form, "To decode string cannot be null.");
         try {
-            return URLDecoder.decode(form, StandardCharsets.UTF_8.toString());
+            return URLDecoder.decode(form, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unsupported decoding type: UTF-8.", e);
         }
     }
 
     /**
-     * 对 URL 中的表单部分进行编码，编码格式为 application/x-www-form-urlencoded，字符集为 {@link StandardCharsets#UTF_8}。
+     * 对 URL 路径解码，遵守的解码规范为 {@code 'RFC 3986'}，字符集为 {@link StandardCharsets#UTF_8}。
+     * <p>{@code 'RFC 3986'} 规范将空格编码为 {@code '%20'}，{@code 'application/x-www-form-urlencoded'}
+     * 规范将空格编码为 {@code '+'}，{@link URLDecoder#decode(String, String)} 方法支持解码 {@code '+'} 或者 {@code '%20'}
+     * 为空格，为了减少重复代码，这里复用 {@link UrlUtils#decodeForm(String)} 方法。</p>
+     *
+     * @param path 表示待解码的字符串的 {@link String}。
+     * @return 表示解码后的字符串的 {@link String}。
+     * @throws IllegalArgumentException 当 {@code toDecode} 为 {@code null} 时。
+     * @throws IllegalStateException 当系统不支持 UTF-8 编码时。
+     * @see URLDecoder#decode(String, String)
+     */
+    public static String decodePath(String path) {
+        return UrlUtils.decodeForm(path);
+    }
+
+    /**
+     * 对 URL 中的表单部分进行编码，遵守的编码规范为 {@code 'application/x-www-form-urlencoded'}，字符集为
+     * {@link StandardCharsets#UTF_8}。
      *
      * @param form 表示待编码的字符串的 {@link String}。
      * @return 表示编码后的字符串的 {@link String}。
@@ -101,10 +123,29 @@ public final class UrlUtils {
      * @throws IllegalStateException 当系统不支持 UTF-8 编码时。
      * @see URLEncoder#encode(String, String)
      */
-    public static String encodeValue(String form) {
+    public static String encodeForm(String form) {
         notNull(form, "To encode string cannot be null.");
         try {
             return URLEncoder.encode(form, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Unsupported encoding type: UTF-8.", e);
+        }
+    }
+
+    /**
+     * 对 URL 路径进行编码，遵守的编码规范为 {@code 'RFC 3986'}，字符集为 {@link StandardCharsets#UTF_8}。
+     *
+     * @param path 表示待编码的字符串的 {@link String}。
+     * @return 表示编码后的字符串的 {@link String}。
+     * @throws IllegalArgumentException 当 {@code toEncode} 为 {@code null} 时。
+     * @throws IllegalStateException 当系统不支持 UTF-8 编码时。
+     * @see URLEncoder#encode(String, String)
+     */
+    public static String encodePath(String path) {
+        notNull(path, "To encode string cannot be null.");
+        try {
+            String encodedMessage = URLEncoder.encode(path, StandardCharsets.UTF_8.name());
+            return encodedMessage.replace(FORM_ENCODED_SPACE, PATH_ENCODED_SPACE);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unsupported encoding type: UTF-8.", e);
         }
@@ -187,7 +228,7 @@ public final class UrlUtils {
         if (url == null || DECODED_JAVA_HOME == null) {
             return false;
         }
-        return decodeValue(StringUtils.toLowerCase(url.toString())).contains(DECODED_JAVA_HOME);
+        return decodePath(StringUtils.toLowerCase(url.toString())).contains(DECODED_JAVA_HOME);
     }
 
     /**

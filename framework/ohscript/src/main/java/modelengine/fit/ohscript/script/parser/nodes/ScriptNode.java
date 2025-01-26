@@ -13,11 +13,6 @@ import modelengine.fit.ohscript.script.interpreter.ActivationContext;
 import modelengine.fit.ohscript.script.interpreter.ReturnValue;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.parser.NonTerminal;
-import modelengine.fit.ohscript.script.parser.nodes.array.ArrayDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.DoubleFunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionCallNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.Type;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.abstracts.GenericTypeExpr;
@@ -77,6 +72,9 @@ public class ScriptNode extends NonTerminalNode {
         }
         return result;
     };
+
+    private static final OhFunction<ArrayList<ReturnValue>, Boolean> IS_ARRAY_EMPTY = (host, value, env, context) ->
+            host.isEmpty();
 
     private static final OhFunction<ArrayList<ReturnValue>, List> FILTER = (host, value, env, context) -> {
         FunctionDeclareNode function = ObjectUtils.cast(value.get(0).value());
@@ -255,6 +253,7 @@ public class ScriptNode extends NonTerminalNode {
         addArrayParallelMethod(start);
         addArrayMapMethod(start);
         addArrayFilterMethod(start);
+        addArrayIsEmptyMethod(start);
     }
 
     private static void addArrayForEachMethod(ScriptNode start) {
@@ -287,6 +286,11 @@ public class ScriptNode extends NonTerminalNode {
 
     private static void addArrayMapMethod(ScriptNode start) {
         addArrayMethod(start, new MethodInfo(".map", 0, MAP, TypeExprFactory.createArray(new ArrayDeclareNode())));
+    }
+
+    private static void addArrayIsEmptyMethod(ScriptNode start) {
+        addArrayMethod(start,
+                new MethodInfo(".isEmpty", 0, IS_ARRAY_EMPTY, TypeExprFactory.createArray(new ArrayDeclareNode())));
     }
 
     private static void addArrayFilterMethod(ScriptNode start) {

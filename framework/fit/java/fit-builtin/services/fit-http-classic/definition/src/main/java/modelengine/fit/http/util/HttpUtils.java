@@ -13,6 +13,7 @@ import modelengine.fit.http.header.ParameterCollection;
 import modelengine.fit.http.header.support.DefaultHeaderValue;
 import modelengine.fit.http.header.support.DefaultParameterCollection;
 import modelengine.fitframework.model.MultiValueMap;
+import modelengine.fitframework.resource.UrlUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.net.MalformedURLException;
@@ -22,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Http 协议相关的工具类。
@@ -78,15 +80,31 @@ public class HttpUtils {
     }
 
     /**
-     * 将 Http 查询参数或表单参数的内容解析成为一个键和多值的映射。
-     * <p>该映射的实现默认为 {@link LinkedHashMap}，即键是有序的。</p>
-     * <p>查询参数和表单参数的格式是一个的，都为 {@code k1=v1&k2=v2} 的样式。</p>
+     * 将 Http 查询参数的内容解析成为一个键和多值的映射。
+     * <p>该映射的实现默认为 {@link LinkedHashMap}，即键是有序的。查询参数的样式为 {@code k1=v1&k2=v2}。</p>
      *
      * @param keyValues 表示待解析的查询参数或表单参数的 {@link String}。
      * @return 表示解析后的键与多值的映射的 {@link MultiValueMap}{@code <}{@link String}{@code ,
      * }{@link String}{@code >}。
      */
-    public static MultiValueMap<String, String> parseQueryOrForm(String keyValues) {
+    public static MultiValueMap<String, String> parseQuery(String keyValues) {
+        return HttpUtils.parseQueryOrForm(keyValues, UrlUtils::decodePath);
+    }
+
+    /**
+     * 将 Http 表单参数的内容解析成为一个键和多值的映射。
+     * <p>该映射的实现默认为 {@link LinkedHashMap}，即键是有序的。表单参数的样式为 {@code k1=v1&k2=v2}。</p>
+     *
+     * @param keyValues 表示待解析的查询参数或表单参数的 {@link String}。
+     * @return 表示解析后的键与多值的映射的 {@link MultiValueMap}{@code <}{@link String}{@code ,
+     * }{@link String}{@code >}。
+     */
+    public static MultiValueMap<String, String> parseForm(String keyValues) {
+        return HttpUtils.parseQueryOrForm(keyValues, UrlUtils::decodeForm);
+    }
+
+    private static MultiValueMap<String, String> parseQueryOrForm(String keyValues,
+            Function<String, String> decodeMethod) {
         MultiValueMap<String, String> map = MultiValueMap.create(LinkedHashMap::new);
         if (StringUtils.isBlank(keyValues)) {
             return map;
@@ -98,8 +116,8 @@ public class HttpUtils {
             if (index <= 0) {
                 continue;
             }
-            String key = keyValuePair.substring(0, index);
-            String value = keyValuePair.substring(index + 1);
+            String key = decodeMethod.apply(keyValuePair.substring(0, index));
+            String value = decodeMethod.apply(keyValuePair.substring(index + 1));
             map.add(key, value);
         }
         return map;

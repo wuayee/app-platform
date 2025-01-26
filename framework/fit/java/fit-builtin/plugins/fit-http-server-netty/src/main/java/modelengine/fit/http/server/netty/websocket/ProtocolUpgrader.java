@@ -39,11 +39,13 @@ public class ProtocolUpgrader extends ChannelInboundHandlerAdapter {
     private final HttpClassicServer server;
     private final boolean secure;
     private final long largeBodySize;
+    private final boolean isGracefulExit;
 
-    public ProtocolUpgrader(HttpClassicServer server, boolean secure, long largeBodySize) {
+    public ProtocolUpgrader(HttpClassicServer server, boolean secure, long largeBodySize, boolean isGracefulExit) {
         this.server = notNull(server, "The http server cannot be null.");
         this.secure = secure;
         this.largeBodySize = largeBodySize;
+        this.isGracefulExit = isGracefulExit;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class ProtocolUpgrader extends ChannelInboundHandlerAdapter {
                 // 再动态添加 WebSocket 的处理器
                 ctx.pipeline().addLast(new HttpObjectAggregator(MAX_CONTENT_LENGTH));
                 ctx.pipeline().addLast(new WebSocketServerProtocolHandler(path));
-                ctx.pipeline().addLast(new NettyWebSocketHandler(ctx, handler, classicRequest));
+                ctx.pipeline().addLast(new NettyWebSocketHandler(ctx, handler, classicRequest, this.isGracefulExit));
                 // 最后将当前处理器移除，因为一个通道只会发生一次 Http 协议升级
                 ctx.pipeline().remove(this);
             }

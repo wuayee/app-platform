@@ -29,4 +29,13 @@ public interface ConstraintValidator<A extends Annotation, T> {
      * @return 表示校验对象是否合法的 {@code boolean}。
      */
     boolean isValid(T value);
+
+    /**
+     * 获取校验器的参数。
+     *
+     * @return 表示校验器参数的 {@link Object}{@code []}。
+     */
+    default Object[] args() {
+        return new Object[] {};
+    }
 }

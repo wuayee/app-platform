@@ -8,6 +8,7 @@ package modelengine.fitframework.runtime.direct;
 
 import modelengine.fitframework.plugin.RootPlugin;
 import modelengine.fitframework.runtime.FitStarter;
+import modelengine.fitframework.runtime.shared.SharedUrlClassLoader;
 import modelengine.fitframework.runtime.support.AbstractFitRuntime;
 import modelengine.fitframework.util.ClassUtils;
 import modelengine.fitframework.util.StringUtils;
@@ -15,7 +16,6 @@ import modelengine.fitframework.util.StringUtils;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * @since 2023-02-07
  */
 public final class DirectFitRuntime extends AbstractFitRuntime {
-    private final URLClassLoader sharedClassLoader;
+    private final SharedUrlClassLoader sharedClassLoader;
 
     /**
      * 使用入口类和命令行参数来初始化 {@link AbstractFitRuntime} 类的新实例。
@@ -81,7 +81,7 @@ public final class DirectFitRuntime extends AbstractFitRuntime {
     }
 
     @Override
-    protected URLClassLoader obtainSharedClassLoader() {
+    protected SharedUrlClassLoader obtainSharedClassLoader() {
         return this.sharedClassLoader;
     }
 

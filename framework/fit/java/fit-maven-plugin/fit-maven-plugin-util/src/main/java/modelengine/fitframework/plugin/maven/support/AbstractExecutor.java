@@ -70,6 +70,18 @@ public abstract class AbstractExecutor {
     }
 
     /**
+     * 判断指定依赖是否为插件。
+     *
+     * @param artifact 表示指定依赖的 {@link Artifact}。
+     * @return 如果指定服务为插件，则返回 {@code true}，否则，返回 {@code false}。
+     * @throws MojoExecutionException 当解析依赖过程中发生异常时。
+     */
+    protected static boolean isPlugin(Artifact artifact) throws MojoExecutionException {
+        return AbstractExecutor.hasSpecifiedFile(artifact,
+                FIT_ROOT_DIRECTORY + JarEntryLocation.ENTRY_PATH_SEPARATOR + "plugin.xml");
+    }
+
+    /**
      * 判断指定依赖是否为共享的。
      *
      * @param artifact 表示指定依赖的 {@link Artifact}。

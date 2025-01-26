@@ -7,6 +7,7 @@
 package modelengine.fitframework.parameterization.support;
 
 import modelengine.fitframework.parameterization.ParameterizedString;
+import modelengine.fitframework.parameterization.ParameterizedStringResolver;
 import modelengine.fitframework.parameterization.ResolvedParameter;
 import modelengine.fitframework.parameterization.StringFormatException;
 import modelengine.fitframework.util.CollectionUtils;
@@ -35,25 +36,28 @@ class DefaultParameterizedString implements ParameterizedString {
     private static final BiFunction<Map<?, ?>, Long, Boolean> RELAXED_CHECK =
             (map, count) -> MapUtils.count(map) >= count;
 
-    private final DefaultParameterizedStringResolver resolver;
+    private final ParameterizedStringResolver resolver;
     private final String originalString;
     private String escapedString;
     private final List<DefaultResolvedParameter> parameters;
+    private final boolean isStrict;
 
     /**
      * 使用源字符串及解析到的参数信息的集合初始化 {@link DefaultParameterizedString} 类的新实例。
      *
      * @param resolver 表示解析得到当前参数化字符串的解析器的 {@link DefaultParameterizedStringResolver}。
      * @param originalString 表示源字符串的 {@link String}。
+     * @param isStrict 表示是否采用严格校验模式的 {@code boolean}。
      */
-    private DefaultParameterizedString(DefaultParameterizedStringResolver resolver, String originalString) {
+    private DefaultParameterizedString(ParameterizedStringResolver resolver, String originalString, boolean isStrict) {
         this.resolver = resolver;
         this.originalString = originalString;
         this.parameters = new ArrayList<>();
+        this.isStrict = isStrict;
     }
 
     @Override
-    public DefaultParameterizedStringResolver getResolver() {
+    public ParameterizedStringResolver getResolver() {
         return this.resolver;
     }
 
@@ -68,10 +72,10 @@ class DefaultParameterizedString implements ParameterizedString {
     }
 
     @Override
-    public String format(Map<?, ?> args, boolean isStrict) {
+    public String format(Map<?, ?> args) {
         Map<?, ?> actualArgs = ObjectUtils.nullIf(args, Collections.EMPTY_MAP);
         long count = this.getParameters().stream().map(ResolvedParameter::getName).distinct().count();
-        BiFunction<Map<?, ?>, Long, Boolean> countCheck = isStrict ? STRICT_CHECK : RELAXED_CHECK;
+        BiFunction<Map<?, ?>, Long, Boolean> countCheck = this.isStrict ? STRICT_CHECK : RELAXED_CHECK;
         if (!countCheck.apply(actualArgs, count)) {
             throw new StringFormatException("The provided args is not match the required args.");
         }
@@ -92,11 +96,6 @@ class DefaultParameterizedString implements ParameterizedString {
             builder.append(this.escapedString.substring(index));
             return builder.toString();
         }
-    }
-
-    @Override
-    public String format(Map<?, ?> args) {
-        return this.format(args, true);
     }
 
     /**
@@ -144,12 +143,15 @@ class DefaultParameterizedString implements ParameterizedString {
      *
      * @param resolver 表示用以解析字符串的解析器的 {@link DefaultParameterizedStringResolver}。
      * @param originalString 表示待解析的字符串的 {@link String}。
+     * @param isStrict 表示是否采用严格校验模式的 {@code boolean}。
      * @return 表示解析后得到的参数化字符串的 {@link ParameterizedString}。
-     * @throws StringFormatException 源字符串格式不满足解析器的要求。
+     * @throws StringFormatException 当源字符串格式不满足解析器的要求时。
      */
-    static DefaultParameterizedString resolve(DefaultParameterizedStringResolver resolver, String originalString) {
-        DefaultParameterizedString parameterizedString = new DefaultParameterizedString(resolver, originalString);
-        parameterizedString.new Resolver().resolve();
+    static DefaultParameterizedString resolve(DefaultParameterizedStringResolver resolver, String originalString,
+            boolean isStrict) {
+        DefaultParameterizedString parameterizedString =
+                new DefaultParameterizedString(resolver, originalString, isStrict);
+        parameterizedString.new Resolver(isStrict).resolve();
         return parameterizedString;
     }
 
@@ -163,15 +165,19 @@ class DefaultParameterizedString implements ParameterizedString {
      */
     private class Resolver {
         private final StringBuilder escaped;
+        private final boolean isStrict;
         private int position;
         private StringBuilder parameter;
         private int parameterEscapedCharacters;
 
         /**
          * 初始化一个 {@link Resolver} 类的新实例。
+         *
+         * @param isStrict 表示是否采用严格校验模式的 {@code boolean}。
          */
-        Resolver() {
+        Resolver(boolean isStrict) {
             this.escaped = new StringBuilder(this.getOriginalString().length());
+            this.isStrict = isStrict;
         }
 
         /**
@@ -227,9 +233,9 @@ class DefaultParameterizedString implements ParameterizedString {
         /**
          * 获取所属的解析器。根据所属参数化字符串向上查找。
          *
-         * @return 表示解析器的 {@link DefaultParameterizedStringResolver}。
+         * @return 表示解析器的 {@link ParameterizedStringResolver}。
          */
-        private DefaultParameterizedStringResolver getResolver() {
+        private ParameterizedStringResolver getResolver() {
             return DefaultParameterizedString.this.getResolver();
         }
 
@@ -298,10 +304,14 @@ class DefaultParameterizedString implements ParameterizedString {
          */
         private void resolveSuffix() {
             if (this.parameter == null) {
-                throw new StringFormatException(StringUtils.format(
-                        "Invalid suffix position. [string={0}, " + "position={1}]",
-                        this.getOriginalString(),
-                        this.position));
+                if (this.isStrict) {
+                    throw new StringFormatException(StringUtils.format(
+                            "Invalid suffix position. [string={0}, position={1}]",
+                            this.getOriginalString(),
+                            this.position));
+                }
+                this.resolveCharacter();
+                return;
             }
             String parameterName = this.parameter.toString();
             this.parameter = null;

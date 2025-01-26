@@ -31,4 +31,11 @@ public interface FitDataSource extends BeanSupplier<DataSource> {
      * @return 表示数据源访问模式的 {@link Scope}。
      */
     AccessMode mode();
+
+    /**
+     * 判断数据源是否已经加载。
+     *
+     * @return 如果数据源已经加载，则返回 {@code true}；否则返回 {@code false}。
+     */
+    boolean isLoaded();
 }

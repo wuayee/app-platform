@@ -11,6 +11,7 @@ import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.server.handler.PropertyValueMapperResolver;
 import modelengine.fit.http.server.handler.SourceFetcher;
 import modelengine.fit.http.server.handler.support.FormUrlEncodedEntityFetcher;
+import modelengine.fit.http.server.handler.support.ParamValue;
 import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
 
 import java.lang.annotation.Annotation;
@@ -39,6 +40,11 @@ public class RequestFormMapperResolver extends AbstractRequestParamMapperResolve
 
     @Override
     protected SourceFetcher createSourceFetcher(RequestParam requestParam) {
-        return new FormUrlEncodedEntityFetcher(requestParam.name());
+        return new FormUrlEncodedEntityFetcher(ParamValue.custom()
+                .name(requestParam.name())
+                .in(requestParam.in())
+                .defaultValue(requestParam.defaultValue())
+                .required(requestParam.required())
+                .build());
     }
 }

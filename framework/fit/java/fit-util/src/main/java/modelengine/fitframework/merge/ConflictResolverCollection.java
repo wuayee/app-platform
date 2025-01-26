@@ -8,6 +8,15 @@ package modelengine.fitframework.merge;
 
 import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.merge.support.DefaultConflictResolverCollection;
+import modelengine.fitframework.merge.support.OverrideConflictResolver;
+import modelengine.fitframework.util.ObjectUtils;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 表示冲突处理器的集合。
@@ -16,6 +25,27 @@ import modelengine.fitframework.merge.support.DefaultConflictResolverCollection;
  * @since 2022-08-02
  */
 public interface ConflictResolverCollection {
+    /** 表示基本类型的结合。 */
+    List<Class<?>> basicTypes = Arrays.asList(String.class,
+            Date.class,
+            LocalDate.class,
+            LocalTime.class,
+            LocalDateTime.class,
+            byte.class,
+            Byte.class,
+            int.class,
+            Integer.class,
+            short.class,
+            Short.class,
+            long.class,
+            Long.class,
+            float.class,
+            Float.class,
+            double.class,
+            Double.class,
+            boolean.class,
+            Boolean.class);
+
     /**
      * 向冲突处理器集合中添加默认的冲突处理器。
      *
@@ -62,5 +92,16 @@ public interface ConflictResolverCollection {
      */
     static ConflictResolverCollection create() {
         return new DefaultConflictResolverCollection();
+    }
+
+    /**
+     * 创建一个基本类型的冲突处理器的集合，该集合将使用 {@link OverrideConflictResolver} 来处理所有基本类型的冲突。
+     *
+     * @return 表示创建的冲突处理器的集合的 {@link ConflictResolverCollection}。
+     */
+    static ConflictResolverCollection createBasicOverwriteCollection() {
+        DefaultConflictResolverCollection resolverCollection = new DefaultConflictResolverCollection();
+        basicTypes.forEach(type -> resolverCollection.add(type, ObjectUtils.cast(new OverrideConflictResolver<>())));
+        return resolverCollection;
     }
 }

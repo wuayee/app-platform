@@ -12,6 +12,9 @@ import modelengine.fitframework.ioc.BeanDependency;
 import modelengine.fitframework.ioc.BeanMetadata;
 import modelengine.fitframework.ioc.DependencyResolvingResult;
 import modelengine.fitframework.ioc.annotation.AnnotationMetadata;
+import modelengine.fitframework.ioc.annotation.PostConstruct;
+import modelengine.fitframework.ioc.annotation.PreDestroy;
+import modelengine.fitframework.ioc.annotation.Resource;
 import modelengine.fitframework.ioc.lifecycle.bean.ValueSupplier;
 import modelengine.fitframework.util.StringUtils;
 
@@ -22,10 +25,6 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 
 /**
  * 为 {@link modelengine.fitframework.ioc.BeanResolver BeanResolver} 提供基于 <a

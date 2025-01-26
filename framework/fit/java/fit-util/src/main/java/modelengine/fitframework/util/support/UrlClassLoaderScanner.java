@@ -13,12 +13,10 @@ import modelengine.fitframework.util.ClassScanner;
 import modelengine.fitframework.util.FileUtils;
 import modelengine.fitframework.util.FunctionUtils;
 import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.ReflectionUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -195,10 +193,7 @@ public class UrlClassLoaderScanner implements ClassScanner {
                 return;
             }
             try (JarFile jar = UrlUtils.toJarFile(url)) {
-                Method method = ReflectionUtils.getDeclaredMethod(JarFile.class, "hasClassPathAttribute");
-                method.setAccessible(true);
-                boolean hasClassPathAttribute = (boolean) ReflectionUtils.invoke(jar, method);
-                if (hasClassPathAttribute) {
+                if (hasClassPathAttribute(jar)) {
                     URL[] urls = this.getClassPathUrls(url, jar);
                     this.scanner.push(urls);
                     return;
@@ -214,6 +209,14 @@ public class UrlClassLoaderScanner implements ClassScanner {
                 throw new IllegalStateException(StringUtils.format("Failed to load JAR file. [url={0}]",
                         url.toExternalForm()), e);
             }
+        }
+
+        private static boolean hasClassPathAttribute(JarFile jar) throws IOException {
+            Manifest man = jar.getManifest();
+            return Optional.ofNullable(man)
+                    .map(Manifest::getMainAttributes)
+                    .map(attr -> attr.containsKey(Attributes.Name.CLASS_PATH))
+                    .orElse(false);
         }
 
         private URL[] getClassPathUrls(URL base, JarFile jar) throws IOException {

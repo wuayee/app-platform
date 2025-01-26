@@ -5,7 +5,7 @@
 FIT 编程框架内的异常是能够跨语言跨进程传递的，核心异常有 3 个，分别是`FitException`、`DegradableException`
 和`RetryableException`，他们的关系如下：
 
-```plantuml
+``` plantuml
 @startuml
 skinparam roundcorner 15
 skinparam sequenceArrowThickness 2
@@ -114,9 +114,10 @@ FitException -u-|> RuntimeException
 
 - `0x7F040000` ~ `0x7F04FFFF`
 
-| 异常码          |      异常类型       | 说明                        |
-|--------------|:---------------:|---------------------------|
-| `0x7F040000` | ClientException | 点对点：远程通信客户端发生的异常，导致信息发送失败 |
+| 异常码          |       异常类型       | 说明                     |
+|--------------|:----------------:|------------------------|
+| `0x7F040000` | ClientException  | 远程通信客户端发生的异常，导致信息发送失败  |
+| `0x7F040001` | TimeoutException | 远程通信客户端发生超时异常，导致信息发送失败 |
 
 #### 序列化异常
 

@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.transaction.entity.UserEntity;
-import modelengine.fitframework.transaction.support.DefaultTransactionManager;
 
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.AfterAll;
@@ -64,9 +63,6 @@ class IntegrationTest {
         UserEntity.truncate(dataSource);
     }
 
-    private static TransactionManager createTransactionManager() {
-        return new DefaultTransactionManager(container);
-    }
 
     @Nested
     @DisplayName("测试 Required 传播策略")
@@ -79,7 +75,7 @@ class IntegrationTest {
         @Test
         @DisplayName("提交事务之前无法读取到数据，提交事务之后可以读取到数据")
         void can_read_after_commit() throws SQLException {
-            TransactionManager manager = createTransactionManager();
+            TransactionManager manager = TransactionManager.create(container);
 
             Transaction transaction = manager.begin(metadata);
             UserEntity.insert(transaction.connection(), new UserEntity().name("u1"));
@@ -99,7 +95,7 @@ class IntegrationTest {
         @Test
         @DisplayName("回滚之后无法读取到数据")
         void cannot_read_after_rollback() throws SQLException {
-            TransactionManager manager = createTransactionManager();
+            TransactionManager manager = TransactionManager.create(container);
 
             Transaction transaction = manager.begin(metadata);
             UserEntity.insert(transaction.connection(), new UserEntity().name("u1"));

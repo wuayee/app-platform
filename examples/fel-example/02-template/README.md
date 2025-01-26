@@ -2,7 +2,7 @@
 
 提示词(Prompt)在大语言模型应用中至关重要，他是提供给大模型的一段文字、指令或者图片和文件。使用提示词可以引导模型生成更加明确的内容，也用来限制和减少模型生成无用内容的次数，提高对话的效率。
 
-```java
+``` java
 public interface Prompt {
     List<ChatMessage> messages();
     default String text() {...}
@@ -15,7 +15,7 @@ public class ChatMessages implements Prompt {
 
 下图展示了消息框架下的接口和实现：
 
-```plantuml
+``` plantuml
 @startuml
    interface ChatMessage {
    }
@@ -54,15 +54,15 @@ public class ChatMessages implements Prompt {
    @enduml
 ```
 
-`AbstractChatMessage`和它的实现包括了4种消息类型。
+`AbstractChatMessage`和它的实现包括了 4 种消息类型。
 
 消息类型主要用于定义发出消息的一方的身份：
-`system`：表示系统消息，用于指导大模型的行为和输出规范，可以定义表达风格或者制定规则来影响模型的回应方式和输出。
-`human`：表示人类消息，用于给大模型提问题，发指令或是陈述需求，人类消息通常占据对话的一方。
-`ai`：表示ai消息，用于返回大模型的输出，构成了对话的另一方。
-`tool`：表示工具消息，用于返回大模型调用工具后的结果输出。一些大模型支持工具的调用，工具消息可以满足大模型与工具之间的交互。
+- `system`：表示系统消息，用于指导大模型的行为和输出规范，可以定义表达风格或者制定规则来影响模型的回应方式和输出。
+- `human`：表示人类消息，用于给大模型提问题，发指令或是陈述需求，人类消息通常占据对话的一方。
+- `ai`：表示 ai 消息，用于返回大模型的输出，构成了对话的另一方。
+- `tool`：表示工具消息，用于返回大模型调用工具后的结果输出。一些大模型支持工具的调用，工具消息可以满足大模型与工具之间的交互。
 
-```java
+``` java
 public enum MessageType {
     SYSTEM("system"),
     HUMAN("human"),
@@ -83,7 +83,6 @@ public enum MessageType {
         return RELATIONSHIP.getOrDefault(role, MessageType.HUMAN);
     }
 }
-
 ```
 
 ## 模板
@@ -92,7 +91,7 @@ public enum MessageType {
 
 通用泛型提示模板接口定义如下：
 
-```java
+``` java
 public interface GenericTemplate<I, O> {
     O render(I values);
     Set<String> placeholder();
@@ -100,13 +99,13 @@ public interface GenericTemplate<I, O> {
 ```
 
 - `O render(I values)`：根据输入参数渲染模板，生成结果。
-- `Set<String> placeholder()`：用于换区模板占位符集合
+- `Set<String> placeholder()`：用于获取模板占位符集合。
 
 ### 字符串模板
 
-字符串模板基于 [mustache](https://mustache.github.io/) 语法的文本模板引擎，输入从字符串到字符串的映射用于填充模板占位符，输出为字符串。字符串模板支持完全填充和部分填充，，。
+字符串模板基于 [mustache](https://mustache.github.io/) 语法的文本模板引擎，输入从字符串到字符串的映射用于填充模板占位符，输出为字符串。字符串模板支持完全填充和部分填充。
 
-```java
+``` java
 public interface StringTemplate extends GenericTemplate<Map<String, String>, String> {}
 ```
 
@@ -114,7 +113,7 @@ public interface StringTemplate extends GenericTemplate<Map<String, String>, Str
 
 完全填充 `render()` 需要一次性填充全部的占位符，示例：
 
-```java
+``` java
 String template = "给我讲个关于{{adjective}}的{{content}}。";
 Map<String, String> values = 
         MapBuilder.<String, String>get().put("adjective", "兔子").put("content", "故事").build();
@@ -129,7 +128,7 @@ String output = new DefaultStringTemplate(template).render(values);
 
 部分填充可以先用 `partial()` 填充部分占位符，然后再用 `render()` 填充剩余的占位符，示例：
 
-```java
+``` java
 String template = "给我讲个关于{{adjective}}的{{content}}。";
 StringTemplate partial = new DefaultStringTemplate(template).partial("adjective", "兔子");
 ```
@@ -146,7 +145,7 @@ StringTemplate partial = new DefaultStringTemplate(template).partial("adjective"
 
 示例：
 
-```java
+``` java
 MessageTemplate template = new HumanMessageTemplate("我喜欢{{staff1}}, {{staff2}}还有{{staff3}}");
 Tip tip = new Tip().add("staff1", MessageContent.from("唱歌", new Media("image/png", "singing.png")))
         .add("staff2", MessageContent.from("跳舞", new Media("image/png", "dance.png")))
@@ -162,7 +161,7 @@ System.out.println(message.text())
 
 1. 在项目 pom.xml 加入以下依赖：
 
-```xml
+``` xml
     <dependencies>
         <dependency>
             <groupId>modelengine.fit.starter</groupId>
@@ -205,9 +204,7 @@ example:
 
 3. 添加如下代码：
 
-```java
-controller:
-
+``` java
 @Component
 @RequestMapping("/ai/example")
 public class ChatTemplateExampleController {

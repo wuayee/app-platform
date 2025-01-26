@@ -45,15 +45,4 @@ public interface ParameterizedString {
      * @throws StringFormatException 当需要但是未提供指定名称的参数时。
      */
     String format(Map<?, ?> args);
-
-    /**
-     * 使用指定的参数映射格式化字符串。
-     *
-     * @param args 表示参数映射的 {@link Map}{@code <?, ?>}。
-     * @param isStrict 表示格式化严格模式的 {@code boolean} ，若为 {@code true} 时，{@code args}
-     * 的参数映射数量必须与格式化需要的参数量相等，否则允许参数映射数量大于格式化需要的参数量。
-     * @return 表示格式化后的字符串的 {@link String}。
-     * @throws StringFormatException 当需要但是未提供指定名称的参数时。
-     */
-    String format(Map<?, ?> args, boolean isStrict);
 }

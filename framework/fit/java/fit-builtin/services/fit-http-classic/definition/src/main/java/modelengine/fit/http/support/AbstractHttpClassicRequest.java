@@ -16,7 +16,6 @@ import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.protocol.MessageHeaderNames;
 import modelengine.fit.http.protocol.MessageHeaders;
 import modelengine.fit.http.protocol.RequestLine;
-import modelengine.fitframework.resource.UrlUtils;
 
 /**
  * 表示 {@link HttpClassicRequest} 的抽象实现类。
@@ -51,8 +50,7 @@ public abstract class AbstractHttpClassicRequest extends AbstractHttpMessage imp
         if (index < 0) {
             return QueryCollection.create();
         } else {
-            String decoded = UrlUtils.decodeValue(requestUri.substring(index + 1));
-            return QueryCollection.create(decoded);
+            return QueryCollection.create(requestUri.substring(index + 1));
         }
     }
 

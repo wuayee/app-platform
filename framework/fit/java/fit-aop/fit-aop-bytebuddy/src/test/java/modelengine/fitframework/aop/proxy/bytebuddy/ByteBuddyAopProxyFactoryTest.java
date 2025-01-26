@@ -24,6 +24,7 @@ import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -48,6 +49,23 @@ public class ByteBuddyAopProxyFactoryTest {
         Object proxy1 = aopProxyFactory.createProxy(support);
         Object proxy2 = aopProxyFactory.createProxy(support);
         assertThat(proxy1.getClass()).isEqualTo(proxy2.getClass());
+    }
+
+    @Nested
+    @DisplayName("当父类没有无参构造方法时")
+    class GivenParentClassHasNotNoArgConstructor {
+        @Test
+        @DisplayName("使用 bytebuddy 创建代理成功")
+        void shouldReturnProxy() {
+            InterceptSupport support = new DefaultInterceptSupport(Original.class,
+                    () -> new Original("original"),
+                    Collections.emptyList());
+            AopProxyFactory aopProxyFactory = new ByteBuddyAopProxyFactory();
+            Object proxy = aopProxyFactory.createProxy(support);
+            assertThat(proxy).isNotNull().isInstanceOf(Original.class);
+            Original actual = ObjectUtils.cast(proxy);
+            assertThat(actual.getName()).isEqualTo("original");
+        }
     }
 
     @Test
@@ -217,6 +235,31 @@ public class ByteBuddyAopProxyFactoryTest {
         @Override
         public Object getResult() {
             return null;
+        }
+    }
+
+    /**
+     * 测试携带 final 属性的父类型。
+     */
+    public static class Original {
+        private final String name;
+
+        /**
+         * 表示测试构造方法。
+         *
+         * @param name 表示测试参数的 {@link String}。
+         */
+        public Original(String name) {
+            this.name = name;
+        }
+
+        /**
+         * 测试方法。
+         *
+         * @return 表示测试结果的 {@link String}。
+         */
+        public String getName() {
+            return this.name;
         }
     }
 }

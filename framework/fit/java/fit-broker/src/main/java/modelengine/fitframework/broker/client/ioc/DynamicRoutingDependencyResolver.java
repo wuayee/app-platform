@@ -12,6 +12,7 @@ import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Genericable;
 import modelengine.fitframework.aop.interceptor.MethodInterceptor;
 import modelengine.fitframework.aop.interceptor.MethodMatcher;
+import modelengine.fitframework.aop.proxy.AopProxyFactories;
 import modelengine.fitframework.aop.proxy.AopProxyFactory;
 import modelengine.fitframework.aop.proxy.InterceptSupport;
 import modelengine.fitframework.aop.proxy.support.DefaultInterceptSupport;
@@ -20,6 +21,8 @@ import modelengine.fitframework.broker.client.aop.DynamicRoutingInterceptor;
 import modelengine.fitframework.conf.runtime.CommunicationProtocol;
 import modelengine.fitframework.conf.runtime.SerializationFormat;
 import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.ioc.BeanMetadata;
 import modelengine.fitframework.ioc.DependencyResolver;
 import modelengine.fitframework.ioc.DependencyResolvingResult;
@@ -45,7 +48,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class DynamicRoutingDependencyResolver implements DependencyResolver {
     private final DependencyResolver resolver;
+    private volatile AopProxyFactories aopFactories;
 
+    /**
+     * 直接实例化 {@link DynamicRoutingDependencyResolver}。
+     */
     public DynamicRoutingDependencyResolver() {
         this(new DefaultDependencyResolver());
     }
@@ -62,28 +69,36 @@ public class DynamicRoutingDependencyResolver implements DependencyResolver {
     @Override
     public DependencyResolvingResult resolve(@Nonnull BeanMetadata source, String name, @Nonnull Type type,
             @Nonnull AnnotationMetadata annotations) {
-        DependencyResolvingResult result = this.resolver.resolve(source, name, type, annotations);
         if (this.ignoreDynamicRouting(source, type)) {
-            return result;
+            return this.resolver.resolve(source, name, type, annotations);
         }
-        return new DynamicRoutingProxyDecorator(source, name, type, annotations, result);
+        List<AopProxyFactory> factories = this.getFactories(source.container());
+        return new DynamicRoutingProxyDecorator(source, name, type, annotations, this.resolver, factories);
     }
 
-    private boolean hasMultipleInstances(Type type) {
-        Class<?> clazz = TypeUtils.toClass(type);
-        return clazz == List.class || clazz == Map.class;
+    private List<AopProxyFactory> getFactories(BeanContainer container) {
+        if (this.aopFactories == null) {
+            this.aopFactories = container.lookup(AopProxyFactories.class)
+                    .map(BeanFactory::<AopProxyFactories>get)
+                    .orElseThrow(() -> new IllegalStateException("No aop proxy factories."));
+        }
+        return this.aopFactories.getAll();
     }
 
     private boolean ignoreDynamicRouting(BeanMetadata source, Type type) {
-        if (this.hasMultipleInstances(type)) {
+        Class<?> clazz = TypeUtils.toClass(type);
+        if (this.hasMultipleInstances(clazz)) {
             // 如果依赖的类型是多实例的聚合类型，则不需要注入路由代理，直接返回解析结果。
             return true;
         }
-        Class<?> clazz = TypeUtils.toClass(type);
         if (!clazz.isInterface()) {
             return true;
         }
         return !this.hasGenericableMethod(source, clazz);
+    }
+
+    private boolean hasMultipleInstances(Class<?> clazz) {
+        return clazz == List.class || clazz == Map.class;
     }
 
     private boolean hasGenericableMethod(BeanMetadata source, Class<?> clazz) {
@@ -100,53 +115,63 @@ public class DynamicRoutingDependencyResolver implements DependencyResolver {
     private static class DynamicRoutingProxyDecorator implements DependencyResolvingResult {
         private final String name;
         private final Class<?> clazz;
+        private final boolean resolved;
+        private final AopProxyFactory selectedFactory;
         private final AnnotationMetadata annotations;
-        private final DependencyResolvingResult result;
         private final LazyLoader<BrokerClient> brokerClientLazyLoader;
-        private final List<AopProxyFactory> factories = AopProxyFactory.all();
+        private final DependencyResolvingResult defaultResult;
 
         private DynamicRoutingProxyDecorator(BeanMetadata source, String name, Type type,
-                AnnotationMetadata annotations, DependencyResolvingResult result) {
+                AnnotationMetadata annotations, DependencyResolver resolver, List<AopProxyFactory> factories) {
             this.name = name;
             this.clazz = TypeUtils.toClass(type);
+            int resolvedIndex = isResolved(factories, this.clazz);
+            if (resolvedIndex >= 0) {
+                this.defaultResult = DependencyResolvingResult.failure();
+                this.resolved = true;
+                this.selectedFactory = factories.get(resolvedIndex);
+            } else {
+                this.defaultResult = resolver.resolve(source, name, type, annotations);
+                this.resolved = this.defaultResult.resolved();
+                this.selectedFactory = null;
+            }
             this.annotations = annotations;
-            this.result = result;
             this.brokerClientLazyLoader = new LazyLoader<>(() -> source.container()
                     .lookup(BrokerClient.class)
                     .orElseThrow(() -> new IllegalStateException("No broker client."))
                     .get());
         }
 
-        @Override
-        public boolean resolved() {
-            for (AopProxyFactory factory : this.factories) {
-                if (factory.support(this.clazz)) {
-                    return true;
+        private static int isResolved(List<AopProxyFactory> factories, Class<?> clazz) {
+            for (int i = 0; i < factories.size(); i++) {
+                AopProxyFactory factory = factories.get(i);
+                if (factory.support(clazz)) {
+                    return i;
                 }
             }
-            return this.result.resolved();
+            return -1;
+        }
+
+        @Override
+        public boolean resolved() {
+            return this.resolved;
         }
 
         @Override
         public Object get() {
-            return this.getProxy().orElseGet(this.result::get);
+            return this.getProxy().orElseGet(this.defaultResult::get);
         }
 
         private Optional<Object> getProxy() {
-            InterceptSupport support = this.constructInterceptSupport();
-            for (AopProxyFactory factory : this.factories) {
-                if (factory.support(this.clazz)) {
-                    return Optional.of(factory.createProxy(support));
-                }
-            }
-            return Optional.empty();
+            return Optional.ofNullable(this.selectedFactory).map(factory -> {
+                InterceptSupport support = this.constructInterceptSupport();
+                return factory.createProxy(support);
+            });
         }
 
         private InterceptSupport constructInterceptSupport() {
             MethodInterceptor methodInterceptor = this.constructMethodInterceptor();
-            return new DefaultInterceptSupport(this.clazz,
-                    this.result.resolved() ? this.result::get : () -> null,
-                    Collections.singletonList(methodInterceptor));
+            return new DefaultInterceptSupport(this.clazz, () -> null, Collections.singletonList(methodInterceptor));
         }
 
         private MethodInterceptor constructMethodInterceptor() {

@@ -6,8 +6,8 @@
 
 package modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes;
 
-import modelengine.fit.ohscript.script.parser.nodes.function.DoubleFunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionCallNode;
+import modelengine.fit.ohscript.script.parser.nodes.DoubleFunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.FunctionCallNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
 
 /**

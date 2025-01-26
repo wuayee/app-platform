@@ -25,6 +25,7 @@ import modelengine.fit.http.server.handler.PropertyValueMapper;
 import modelengine.fit.http.server.handler.PropertyValueMapperResolver;
 import modelengine.fit.http.server.handler.PropertyValueMetadata;
 import modelengine.fit.http.server.handler.PropertyValueMetadataResolver;
+import modelengine.fit.http.server.handler.exception.RequestParamFetchException;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
@@ -32,6 +33,7 @@ import modelengine.fitframework.pattern.builder.BuilderFactory;
 import modelengine.fitframework.util.AnnotationUtils;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapUtils;
+import modelengine.fitframework.util.ReflectionUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.TypeUtils;
 import modelengine.fitframework.value.PropertyValue;
@@ -68,7 +70,8 @@ public class DefaultHttpHandlerResolver implements HttpHandlerResolver {
     @Override
     public Optional<HttpHandlerGroup> resolve(BeanFactory candidate, List<HttpServerFilter> preFilters,
             GlobalPathPatternPrefixResolver pathPatternPrefixResolver, PropertyValueMapperResolver mapperResolver,
-            PropertyValueMetadataResolver metadataResolver, HttpResponseStatusResolver responseStatusResolver) {
+            PropertyValueMetadataResolver metadataResolver, HttpResponseStatusResolver responseStatusResolver)
+            throws RequestParamFetchException {
         String globalPrefix = pathPatternPrefixResolver.resolve().orElse(StringUtils.EMPTY);
         List<String> pathPatternPrefixes = this.resolvePathPatternPrefixes(candidate)
                 .stream()
@@ -153,10 +156,10 @@ public class DefaultHttpHandlerResolver implements HttpHandlerResolver {
         }
 
         private List<HttpHandler> resolveMethod() {
-            List<PropertyValueMapper> httpMappers = this.resolveMappers();
+            List<String> pathPatternSuffixes = DefaultHttpHandlerResolver.this.resolvePathPatternSuffixes(this.method);
+            List<PropertyValueMapper> httpMappers = this.resolveMappers(pathPatternSuffixes);
             List<PropertyValueMetadata> propertyValueMetadata = this.resolveMetadata();
             List<HttpHandler> handlers = new ArrayList<>();
-            List<String> pathPatternSuffixes = DefaultHttpHandlerResolver.this.resolvePathPatternSuffixes(this.method);
             int statusCode = this.resolveStatusCode();
             boolean isDocumentIgnored = DefaultHttpHandlerResolver.this.isDocumentIgnored(this.candidate, this.method);
             for (String pathPatternPrefix : this.pathPatternPrefixes) {
@@ -193,12 +196,20 @@ public class DefaultHttpHandlerResolver implements HttpHandlerResolver {
             return this.responseStatusResolver.resolve(this.method).orElse(HttpResponseStatus.OK).statusCode();
         }
 
-        private List<PropertyValueMapper> resolveMappers() {
-            return Stream.of(this.method.getParameters())
-                    .map(PropertyValue::createParameterValue)
-                    .map(this.mapperResolver::resolve)
-                    .map(optional -> optional.orElse(PropertyValueMapper.empty()))
-                    .collect(Collectors.toList());
+        private List<PropertyValueMapper> resolveMappers(List<String> pathPatternSuffixes) {
+            try {
+                return Stream.of(this.method.getParameters())
+                        .map(PropertyValue::createParameterValue)
+                        .map(this.mapperResolver::resolve)
+                        .map(optional -> optional.orElse(PropertyValueMapper.empty()))
+                        .collect(Collectors.toList());
+            } catch (RequestParamFetchException e) {
+                throw new RequestParamFetchException(StringUtils.format(
+                        "Invalid request parameter. [method={0}, prefixPath={1}, suffixPath={2}]",
+                        ReflectionUtils.toString(method),
+                        this.pathPatternPrefixes,
+                        pathPatternSuffixes), e);
+            }
         }
 
         private List<PropertyValueMetadata> resolveMetadata() {

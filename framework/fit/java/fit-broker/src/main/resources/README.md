@@ -2,7 +2,7 @@
 
 ## 动态路由依赖注入
 
-```plantuml
+``` plantuml
 @startuml
 
 hide empty members
@@ -110,7 +110,7 @@ ProxyFactory ..> ConcreteRemoteProxy
 
 ## Macro 服务代理
 
-```plantuml
+``` plantuml
 @startuml
 
 hide empty members

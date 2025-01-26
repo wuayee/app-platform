@@ -7,6 +7,7 @@
 package modelengine.fit.ohscript.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import modelengine.fit.ohscript.script.errors.OhPanic;
@@ -156,22 +157,32 @@ public class OhUtil implements Serializable {
         }
         ActivationContext finalCurrent = current;
         ScriptNode finalStart = start;
-        json.forEach((key, value) -> {
-            if (value instanceof JSONObject) {
-                entity.put("." + key, new ReturnValue(finalCurrent, TypeExprFactory.createExternal(finalStart),
-                        jsonToEntity((JSONObject) value)));
-            }
-            if (value instanceof String) {
-                entity.put("." + key, new ReturnValue(finalCurrent, TypeExprFactory.createString(finalStart), value));
-            }
-            if (value instanceof Number) {
-                entity.put("." + key, new ReturnValue(finalCurrent, TypeExprFactory.createNumber(finalStart), value));
-            }
-            if (value instanceof Boolean) {
-                entity.put("." + key, new ReturnValue(finalCurrent, TypeExprFactory.createBool(finalStart), value));
-            }
-        });
+        json.forEach((key, value) -> Optional.ofNullable(this.buildReturnValue(value, finalCurrent, finalStart))
+                .ifPresent(var -> entity.put("." + key, var)));
         return entity;
+    }
+
+    private ReturnValue buildReturnValue(Object value, ActivationContext finalCurrent, ScriptNode finalStart) {
+        ReturnValue returnValue = null;
+        if (value instanceof JSONObject) {
+            returnValue = new ReturnValue(finalCurrent, TypeExprFactory.createExternal(finalStart),
+                    jsonToEntity((JSONObject) value));
+        }
+        if (value instanceof JSONArray) {
+            List<Object> values = new ArrayList<>();
+            ((JSONArray) value).forEach(obj -> values.add(this.buildReturnValue(obj, finalCurrent, finalStart)));
+            returnValue = new ReturnValue(finalCurrent, TypeExprFactory.createArray(finalStart), values);
+        }
+        if (value instanceof String) {
+            returnValue = new ReturnValue(finalCurrent, TypeExprFactory.createString(finalStart), value);
+        }
+        if (value instanceof Number) {
+            returnValue = new ReturnValue(finalCurrent, TypeExprFactory.createNumber(finalStart), value);
+        }
+        if (value instanceof Boolean) {
+            returnValue = new ReturnValue(finalCurrent, TypeExprFactory.createBool(finalStart), value);
+        }
+        return returnValue;
     }
 
     /**

@@ -90,7 +90,7 @@ public final class NestableJarFile extends JarFile {
     }
 
     @Override
-    public InputStream getInputStream(ZipEntry ze) throws IOException {
+    public synchronized InputStream getInputStream(ZipEntry ze) throws IOException {
         Entry entry;
         if (ze instanceof Entry) {
             entry = (Entry) ze;

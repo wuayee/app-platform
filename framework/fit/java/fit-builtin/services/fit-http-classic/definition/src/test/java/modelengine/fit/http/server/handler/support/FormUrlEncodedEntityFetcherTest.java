@@ -29,7 +29,8 @@ import java.util.List;
  */
 @DisplayName("测试 FormUrlEncodedEntityFetcher 类")
 class FormUrlEncodedEntityFetcherTest {
-    private final FormUrlEncodedEntityFetcher encodedEntityFetcher = new FormUrlEncodedEntityFetcher("key");
+    private final FormUrlEncodedEntityFetcher encodedEntityFetcher =
+            new FormUrlEncodedEntityFetcher(ParamValue.custom().name("key").build());
 
     @Test
     @DisplayName("判断来源数据的常用格式是否是数组")

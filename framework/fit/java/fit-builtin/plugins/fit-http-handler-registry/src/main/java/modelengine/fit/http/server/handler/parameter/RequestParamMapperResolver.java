@@ -14,6 +14,7 @@ import modelengine.fit.http.server.handler.support.CookieFetcher;
 import modelengine.fit.http.server.handler.support.FormUrlEncodedEntityFetcher;
 import modelengine.fit.http.server.handler.support.HeaderFetcher;
 import modelengine.fit.http.server.handler.support.ObjectEntityFetcher;
+import modelengine.fit.http.server.handler.support.ParamValue;
 import modelengine.fit.http.server.handler.support.PathVariableFetcher;
 import modelengine.fit.http.server.handler.support.QueryFetcher;
 import modelengine.fitframework.ioc.annotation.AnnotationMetadataResolver;
@@ -29,8 +30,8 @@ import java.util.function.Function;
  * @since 2022-08-29
  */
 public class RequestParamMapperResolver extends AbstractRequestParamMapperResolver {
-    private static final Map<Source, Function<String, SourceFetcher>> SOURCE_FETCHER_MAPPING =
-            MapBuilder.<Source, Function<String, SourceFetcher>>get()
+    private static final Map<Source, Function<ParamValue, SourceFetcher>> SOURCE_FETCHER_MAPPING =
+            MapBuilder.<Source, Function<ParamValue, SourceFetcher>>get()
                     .put(Source.QUERY, QueryFetcher::new)
                     .put(Source.HEADER, HeaderFetcher::new)
                     .put(Source.COOKIE, CookieFetcher::new)
@@ -51,7 +52,12 @@ public class RequestParamMapperResolver extends AbstractRequestParamMapperResolv
 
     @Override
     protected SourceFetcher createSourceFetcher(RequestParam requestParam) {
-        Function<String, SourceFetcher> function = SOURCE_FETCHER_MAPPING.get(requestParam.in());
-        return function.apply(requestParam.name());
+        Function<ParamValue, SourceFetcher> function = SOURCE_FETCHER_MAPPING.get(requestParam.in());
+        return function.apply(ParamValue.custom()
+                .name(requestParam.name())
+                .in(requestParam.in())
+                .defaultValue(requestParam.defaultValue())
+                .required(requestParam.required())
+                .build());
     }
 }

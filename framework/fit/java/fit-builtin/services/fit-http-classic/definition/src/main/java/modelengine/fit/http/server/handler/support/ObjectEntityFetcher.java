@@ -21,8 +21,22 @@ import modelengine.fitframework.util.ObjectUtils;
 public class ObjectEntityFetcher extends EntityFetcher {
     private final String propertyPath;
 
+    /**
+     * 用参数路径来实例化 {@link ObjectEntityFetcher}。
+     *
+     * @param propertyPath 表示参数路径的 {@link ParamValue}。
+     */
     public ObjectEntityFetcher(String propertyPath) {
         this.propertyPath = propertyPath;
+    }
+
+    /**
+     * 用参数的元数据来实例化 {@link ObjectEntityFetcher}。
+     *
+     * @param paramValue 表示参数元数据的 {@link ParamValue}。
+     */
+    public ObjectEntityFetcher(ParamValue paramValue) {
+        this.propertyPath = paramValue.name();
     }
 
     @Override

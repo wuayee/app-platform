@@ -20,8 +20,6 @@ import static org.mockito.Mockito.when;
 
 import modelengine.fitframework.resource.UrlUtils;
 import modelengine.fitframework.util.FileUtils;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -70,7 +68,8 @@ public class UrlClassLoaderScannerTest {
             @Test
             @DisplayName("当存在观察者时，扫描过程没有异常")
             void givenObserverThenNoException() {
-                URLClassLoader classLoader = ObjectUtils.cast(Thread.currentThread().getContextClassLoader());
+                URLClassLoader classLoader =
+                        new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
                 UrlClassLoaderScanner actual = new UrlClassLoaderScanner(classLoader, null);
                 actual.addClassDetectedObserver(str -> {});
                 assertThatNoException().isThrownBy(actual::scan);
@@ -79,7 +78,8 @@ public class UrlClassLoaderScannerTest {
             @Test
             @DisplayName("当不存在观察者时，扫描过程没有异常")
             void givenNoObserverThenNoException() {
-                URLClassLoader classLoader = ObjectUtils.cast(Thread.currentThread().getContextClassLoader());
+                URLClassLoader classLoader =
+                        new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
                 UrlClassLoaderScanner actual = new UrlClassLoaderScanner(classLoader, null);
                 assertThatNoException().isThrownBy(actual::scan);
             }
@@ -184,15 +184,12 @@ public class UrlClassLoaderScannerTest {
                 URL[] urls = new URL[] {file.toURI().toURL()};
                 URLClassLoader classLoader = new URLClassLoader(urls);
                 UrlClassLoaderScanner actual = new UrlClassLoaderScanner(classLoader, null);
-                try (MockedStatic<UrlUtils> mock1 = mockStatic(UrlUtils.class);
-                     MockedStatic<ReflectionUtils> mock2 = mockStatic(ReflectionUtils.class)) {
+                try (MockedStatic<UrlUtils> mock = mockStatic(UrlUtils.class)) {
                     JarFile jar = mock(JarFile.class);
                     when(jar.getManifest()).thenThrow(new IOException());
-                    mock1.when(() -> UrlUtils.toJarFile(any())).thenReturn(jar);
-                    mock1.when(() -> UrlUtils.isJar(any())).thenCallRealMethod();
-                    mock1.when(() -> UrlUtils.exists(any())).thenCallRealMethod();
-                    mock2.when(() -> ReflectionUtils.invoke(eq(jar), any())).thenReturn(true);
-                    mock2.when(() -> ReflectionUtils.getDeclaredMethod(any(), any())).thenCallRealMethod();
+                    mock.when(() -> UrlUtils.toJarFile(any())).thenReturn(jar);
+                    mock.when(() -> UrlUtils.isJar(any())).thenCallRealMethod();
+                    mock.when(() -> UrlUtils.exists(any())).thenCallRealMethod();
                     IllegalStateException exception = catchThrowableOfType(actual::scan, IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to load JAR file. [url=" + urls[0].toExternalForm() + "]")
@@ -208,19 +205,17 @@ public class UrlClassLoaderScannerTest {
                 URL[] urls = new URL[] {url};
                 URLClassLoader classLoader = new URLClassLoader(urls);
                 UrlClassLoaderScanner actual = new UrlClassLoaderScanner(classLoader, null);
-                try (MockedStatic<UrlUtils> mock1 = mockStatic(UrlUtils.class);
-                     MockedStatic<ReflectionUtils> mock2 = mockStatic(ReflectionUtils.class)) {
+                try (MockedStatic<UrlUtils> mock = mockStatic(UrlUtils.class)) {
                     JarFile jar = mock(JarFile.class);
                     Manifest manifest = mock(Manifest.class);
                     Attributes attributes = mock(Attributes.class);
                     when(jar.getManifest()).thenReturn(manifest);
                     when(manifest.getMainAttributes()).thenReturn(attributes);
+                    when(attributes.containsKey(eq(Attributes.Name.CLASS_PATH))).thenReturn(true);
                     when(attributes.getValue(eq(Attributes.Name.CLASS_PATH))).thenReturn("://fit.lab?q=%");
-                    mock1.when(() -> UrlUtils.toJarFile(any())).thenReturn(jar);
-                    mock1.when(() -> UrlUtils.isJar(any())).thenReturn(true);
-                    mock1.when(() -> UrlUtils.exists(any())).thenReturn(true);
-                    mock2.when(() -> ReflectionUtils.invoke(eq(jar), any())).thenReturn(true);
-                    mock2.when(() -> ReflectionUtils.getDeclaredMethod(any(), any())).thenCallRealMethod();
+                    mock.when(() -> UrlUtils.toJarFile(any())).thenReturn(jar);
+                    mock.when(() -> UrlUtils.isJar(any())).thenReturn(true);
+                    mock.when(() -> UrlUtils.exists(any())).thenReturn(true);
                     IllegalStateException exception = catchThrowableOfType(actual::scan, IllegalStateException.class);
                     assertThat(exception).isNotNull()
                             .hasMessage("Failed to parse class path. [classPath=://fit.lab?q=%]")
@@ -237,19 +232,17 @@ public class UrlClassLoaderScannerTest {
                 URL[] urls = new URL[] {file.toURI().toURL()};
                 URLClassLoader classLoader = new URLClassLoader(urls);
                 UrlClassLoaderScanner actual = new UrlClassLoaderScanner(classLoader, null);
-                try (MockedStatic<UrlUtils> mock1 = mockStatic(UrlUtils.class);
-                     MockedStatic<ReflectionUtils> mock2 = mockStatic(ReflectionUtils.class)) {
+                try (MockedStatic<UrlUtils> mock = mockStatic(UrlUtils.class)) {
                     JarFile jar = mock(JarFile.class);
                     Manifest manifest = mock(Manifest.class);
                     Attributes attributes = mock(Attributes.class);
                     when(jar.getManifest()).thenReturn(manifest);
                     when(manifest.getMainAttributes()).thenReturn(attributes);
+                    when(attributes.containsKey(eq(Attributes.Name.CLASS_PATH))).thenReturn(true);
                     when(attributes.getValue(eq(Attributes.Name.CLASS_PATH))).thenReturn("file://fit.lab?q=%");
-                    mock1.when(() -> UrlUtils.toJarFile(any())).thenReturn(jar);
-                    mock1.when(() -> UrlUtils.isJar(any())).thenCallRealMethod();
-                    mock1.when(() -> UrlUtils.exists(any())).thenCallRealMethod();
-                    mock2.when(() -> ReflectionUtils.invoke(eq(jar), any())).thenReturn(true);
-                    mock2.when(() -> ReflectionUtils.getDeclaredMethod(any(), any())).thenCallRealMethod();
+                    mock.when(() -> UrlUtils.toJarFile(any())).thenReturn(jar);
+                    mock.when(() -> UrlUtils.isJar(any())).thenCallRealMethod();
+                    mock.when(() -> UrlUtils.exists(any())).thenCallRealMethod();
                     assertThatNoException().isThrownBy(actual::scan);
                 }
             }

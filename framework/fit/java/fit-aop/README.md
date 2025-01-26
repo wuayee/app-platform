@@ -12,7 +12,7 @@
 
 当不论是否在同一个切面类中的同类型增强方法，想要在同一个连接点执行时，默认的执行顺序是未定义的。例如:
 
-```java
+``` java
 public class TestAspect1 {
     /**
      * 表示一个方法前置拦截器
@@ -22,7 +22,7 @@ public class TestAspect1 {
 }
 ``` 
 
-```java
+``` java
 public class TestAspect2 {
     /**
      * 表示一个方法前置拦截器
@@ -39,7 +39,7 @@ public class TestAspect2 {
 
 但在一些特殊场景下，要求两者之间有严格的执行顺序，此时可以通过设置优先级来控制执行顺序，通过`modelengine.fitframework.annotation.Order`注解实现。例如：
 
-```java
+``` java
 
 @Order(1)
 public class TestAspect1 {
@@ -51,7 +51,7 @@ public class TestAspect1 {
 }
 ``` 
 
-```java
+``` java
 
 @Order(-1)
 public class TestAspect2 {
@@ -68,7 +68,7 @@ public class TestAspect2 {
 此外，`@Order` 注解同样可以添加在方法上，考虑下面一种特殊的场景：
 
 两个切面类 `A`, `B`， 要求 `A` 中除了前置拦截器的其他拦截器的优先级要高于 `B`。
-```java
+``` java
 
 @Order(-1)
 public class TestAspectA {
@@ -87,7 +87,7 @@ public class TestAspectA {
 }
 ``` 
 
-```java
+``` java
 
 @Order(1)
 public class TestAspectB {

@@ -15,10 +15,12 @@ import modelengine.fit.ohscript.script.errors.OhPanic;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.lexer.Token;
 import modelengine.fit.ohscript.script.parser.AST;
+import modelengine.fit.ohscript.script.parser.NonTerminal;
+import modelengine.fit.ohscript.script.parser.nodes.EntityDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.FunctionDeclareNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.FunctionDeclareNode;
+import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.base.NodeType;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.concretes.ArrayTypeExpr;
 import modelengine.fit.ohscript.util.Constants;
 import modelengine.fit.ohscript.util.ExternalWrapper;
@@ -211,8 +213,20 @@ public class ASTEnv {
             if (parent != null) {
                 parent.removeChild(node);
             }
+            this.removeScope(node);
         }
         return value;
+    }
+
+    private void removeScope(SyntaxNode node) {
+        node.children().forEach(this::removeScope);
+        NodeType nodeType = node.nodeType();
+        if (!(nodeType instanceof NonTerminal)) {
+            return;
+        }
+        if (((NonTerminal) nodeType).ownScope()) {
+            node.ast().symbolTable().removeScope(node.scope());
+        }
     }
 
     /**

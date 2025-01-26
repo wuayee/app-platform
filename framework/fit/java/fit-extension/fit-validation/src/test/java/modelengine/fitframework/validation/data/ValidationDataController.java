@@ -11,7 +11,7 @@ import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.validation.Validated;
-import modelengine.fitframework.validation.group.PersonGroup;
+import modelengine.fitframework.validation.group.NormalCarGroup;
 
 /**
  * 表示评估注解验证数据接口集。
@@ -23,26 +23,26 @@ import modelengine.fitframework.validation.group.PersonGroup;
 @RequestMapping(path = "/validation", group = "评估注解验证数据接口")
 public class ValidationDataController {
     /**
-     * Person 类默认分组注解验证。
+     * Car 类默认分组注解验证。
      *
-     * @param person 表示注解验证类 {@link Person}。
+     * @param car 表示注解验证类 {@link Car}。
      */
-    @PostMapping(path = "/person/default", description = "验证Person类默认分组注解")
-    public void validatePersonDefaultGroup(@RequestBody @Validated Person person) {}
+    @PostMapping(path = "/car/default", description = "验证 Car 类默认分组注解")
+    public void validateCarDefaultGroup(@RequestBody @Validated Car car) {}
 
     /**
-     * Person 类特定分组注解验证。
+     * Car 类特定分组注解验证。
      *
-     * @param person 表示注解验证类 {@link Person}。
+     * @param car 表示注解验证类 {@link Car}。
      */
-    @PostMapping(path = "/person/personGroup", description = "验证Person类特定分组注解")
-    public void validatePersonPersonGroup(@RequestBody @Validated(PersonGroup.class) Person person) {}
+    @PostMapping(path = "/car/carGroup", description = "验证 Car 类特定分组注解")
+    public void validateCarCarGroup(@RequestBody @Validated(NormalCarGroup.class) Car car) {}
 
     /**
      * Product 类默认分组注解验证。
      *
      * @param product 表示注解验证类 {@link Product}。
      */
-    @PostMapping(path = "/product/default", description = "验证Product类默认分组注解")
+    @PostMapping(path = "/product/default", description = "验证 Product 类默认分组注解")
     public void validateProductDefaultGroup(@RequestBody @Validated Product product) {}
 }

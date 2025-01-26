@@ -54,7 +54,8 @@ public abstract class AbstractFitDataSource implements FitDataSource {
         return container.all(FitDataSource.class)
                 .stream()
                 .map(BeanFactory::<FitDataSource>get)
-                .filter(ds -> ds != this && ds.mode() == AccessMode.SHARED && Objects.equals(ds.name(), name))
+                .filter(ds -> ds != this && ds.isLoaded() && ds.mode() == AccessMode.SHARED && Objects.equals(ds.name(),
+                        name))
                 .findFirst()
                 .map(FitDataSource::get)
                 .orElseGet(() -> this.buildDataSource(config, name));
@@ -68,6 +69,11 @@ public abstract class AbstractFitDataSource implements FitDataSource {
     @Override
     public AccessMode mode() {
         return this.mode;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return this.dataSource.isLoaded();
     }
 
     /**

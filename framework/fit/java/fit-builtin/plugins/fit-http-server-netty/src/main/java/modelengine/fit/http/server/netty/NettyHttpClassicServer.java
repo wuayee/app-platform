@@ -33,6 +33,7 @@ import modelengine.fit.http.server.HttpClassicServer;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.HttpDispatcher;
 import modelengine.fit.http.server.HttpServerStartupException;
+import modelengine.fit.http.server.netty.websocket.ProtocolUpgrader;
 import modelengine.fit.http.websocket.server.WebSocketDispatcher;
 import modelengine.fit.security.Decryptor;
 import modelengine.fit.server.http.HttpConfig;
@@ -90,8 +91,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
 
     private final ThreadPoolExecutor startServerExecutor =
             ThreadUtils.singleThreadPool(new DefaultThreadFactory("netty-http-server", false, (thread, exception) -> {
-                log.error("Failed to start netty http server.");
-                log.debug("Exception: ", exception);
+                log.error("Failed to start netty http server.", exception);
             }));
     private final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     private volatile int httpPort;
@@ -201,10 +201,14 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         EventLoopGroup bossGroup = createBossGroup();
         EventLoopGroup workerGroup = this.createWorkerGroup();
         try {
+            SSLContext sslContext = null;
+            if (this.httpsPort > 0 && this.httpsConfig.isSslEnabled()) {
+                sslContext = this.createSslContext();
+            }
             ChannelHandler channelHandler = new ChannelInitializerHandler(this,
                     this.getAssemblerConfig(),
                     this.httpsPort,
-                    this.httpsPort > 0 ? this.createSslContext() : null,
+                    sslContext,
                     this.httpsConfig);
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(bossGroup, workerGroup)
@@ -256,8 +260,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
 
     private static EventLoopGroup createBossGroup() {
         return new NioEventLoopGroup(1, new DefaultThreadFactory("netty-boss-group", false, (thread, exception) -> {
-            log.error("Netty boss group occurs exception.");
-            log.debug("Exception: ", exception);
+            log.error("Netty boss group occurs exception.", exception);
         }));
     }
 
@@ -265,8 +268,7 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         boolean isDaemon = !this.isGracefulExit;
         return new NioEventLoopGroup(this.coreThreadNum,
                 new DefaultThreadFactory("netty-worker-group", isDaemon, (thread, exception) -> {
-                    log.error("Netty worker group occurs exception.");
-                    log.debug("Exception: ", exception);
+                    log.error("Netty worker group occurs exception.", exception);
                 }));
     }
 
@@ -354,6 +356,8 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         private final int httpsPort;
         private final SSLContext sslContext;
         private final ServerConfig.Secure httpsConfig;
+        private final ProtocolUpgrader upgrader;
+        private final ProtocolUpgrader secureUpgrader;
         private final HttpClassicRequestAssembler assembler;
         private final HttpClassicRequestAssembler secureAssembler;
 
@@ -362,6 +366,14 @@ public class NettyHttpClassicServer implements HttpClassicServer {
             this.httpsPort = httpsPort;
             this.sslContext = sslContext;
             this.httpsConfig = httpsConfig;
+            this.upgrader = new ProtocolUpgrader(server,
+                    false,
+                    assemblerConfig.largeBodySize(),
+                    assemblerConfig.isGracefulExit());
+            this.secureUpgrader = new ProtocolUpgrader(server,
+                    true,
+                    assemblerConfig.largeBodySize(),
+                    assemblerConfig.isGracefulExit());
             this.assembler = new HttpClassicRequestAssembler(server, false, assemblerConfig);
             this.secureAssembler = new HttpClassicRequestAssembler(server, true, assemblerConfig);
         }
@@ -369,12 +381,15 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         @Override
         protected void initChannel(SocketChannel ch) {
             ChannelPipeline pipeline = ch.pipeline();
-            if (ch.localAddress().getPort() == this.httpsPort && this.sslContext != null) {
+            if (ch.localAddress().getPort() == this.httpsPort && this.sslContext != null
+                    && this.httpsConfig.isSslEnabled()) {
                 pipeline.addLast(new SslHandler(this.buildSslEngine(this.sslContext, this.httpsConfig)));
                 pipeline.addLast(new HttpServerCodec());
+                pipeline.addLast(this.secureUpgrader);
                 pipeline.addLast(this.secureAssembler);
             } else {
                 pipeline.addLast(new HttpServerCodec());
+                pipeline.addLast(this.upgrader);
                 pipeline.addLast(this.assembler);
             }
         }

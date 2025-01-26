@@ -51,6 +51,8 @@ class ConfigBeanInjectorTest {
     void whenConfigMatchBeanThenInjectSuccessfully() {
         final Config config = mock(Config.class);
         when(config.get(argThat("employee"::equals), any(Type.class))).thenReturn(this.employee);
+        when(config.get(argThat("employee.id"::equals), any(Type.class))).thenReturn(100);
+        when(config.get(argThat("employee.name"::equals), any(Type.class))).thenReturn("zhang");
         final ConfigBeanInjector beanInjector = new ConfigBeanInjector(config, "employee");
         final Bean bean = new Bean();
         beanInjector.inject(bean);

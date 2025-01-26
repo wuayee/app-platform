@@ -7,7 +7,6 @@
 package modelengine.fit.ohscript.script.parser.nodes;
 
 import modelengine.fit.ohscript.script.parser.NonTerminal;
-import modelengine.fit.ohscript.script.parser.nodes.entity.MemberNode;
 import modelengine.fitframework.util.ObjectUtils;
 
 /**

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import modelengine.fitframework.annotation.Genericable;
+import modelengine.fitframework.aop.proxy.AopProxyFactories;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.ioc.BeanMetadata;
@@ -53,6 +54,10 @@ public class DynamicRoutingDependencyResolverTest {
         FitRuntime runtime = mock(FitRuntime.class);
         when(this.metadata.runtime()).thenReturn(runtime);
         when(runtime.resolverOfAnnotations()).thenReturn(new DefaultAnnotationMetadataResolver());
+        AopProxyFactories aopProxyFactories = new AopProxyFactories();
+        BeanFactory aopProxyFactoriesBeanFactory = mock(BeanFactory.class);
+        when(container.lookup(AopProxyFactories.class)).thenReturn(Optional.of(aopProxyFactoriesBeanFactory));
+        when(aopProxyFactoriesBeanFactory.get()).thenReturn(aopProxyFactories);
         this.resolver = new DynamicRoutingDependencyResolver();
     }
 

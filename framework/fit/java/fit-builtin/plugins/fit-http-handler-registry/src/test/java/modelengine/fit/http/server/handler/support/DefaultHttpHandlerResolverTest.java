@@ -7,6 +7,9 @@
 package modelengine.fit.http.server.handler.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +20,7 @@ import modelengine.fit.http.server.HttpServerFilter;
 import modelengine.fit.http.server.handler.HttpResponseStatusResolver;
 import modelengine.fit.http.server.handler.PropertyValueMapperResolver;
 import modelengine.fit.http.server.handler.PropertyValueMetadataResolver;
+import modelengine.fit.http.server.handler.exception.RequestParamFetchException;
 import modelengine.fitframework.ioc.BeanContainer;
 import modelengine.fitframework.ioc.BeanFactory;
 import modelengine.fitframework.ioc.BeanMetadata;
@@ -62,26 +66,47 @@ public class DefaultHttpHandlerResolverTest {
     @Nested
     @DisplayName("测试 resolve() 方法")
     class TestResolve {
+        private BeanFactory beanFactory;
+        private List<HttpServerFilter> preFilters;
+        private PropertyValueMapperResolver mapperResolver;
+        private PropertyValueMetadataResolver metadataResolver;
+        private HttpResponseStatusResolver responseStatusResolver;
+
+        @BeforeEach
+        void setUp() {
+            this.beanFactory = this.initializeBeanFactory();
+            this.preFilters = new ArrayList<>();
+            HttpServerFilter httpServerFilter = mock(HttpServerFilter.class);
+            this.preFilters.add(httpServerFilter);
+            this.mapperResolver = mock(PropertyValueMapperResolver.class);
+            this.metadataResolver = mock(PropertyValueMetadataResolver.class);
+            this.responseStatusResolver = mock(HttpResponseStatusResolver.class);
+        }
+
+        private Optional<HttpHandlerGroup> getResolve() {
+            return DefaultHttpHandlerResolverTest.this.defaultHttpHandlerResolver.resolve(this.beanFactory,
+                    this.preFilters,
+                    Optional::empty,
+                    this.mapperResolver,
+                    this.metadataResolver,
+                    this.responseStatusResolver);
+        }
+
         @Test
         @DisplayName("给定合理的参数，返回值不为空")
         void givenValidParametersThenReturnIsNotEmpty() {
-            BeanFactory beanFactory = this.initializeBeanFactory();
-
-            List<HttpServerFilter> preFilters = new ArrayList<>();
-            HttpServerFilter httpServerFilter = mock(HttpServerFilter.class);
-            preFilters.add(httpServerFilter);
-
-            PropertyValueMapperResolver mapperResolver = mock(PropertyValueMapperResolver.class);
-            PropertyValueMetadataResolver metadataResolver = mock(PropertyValueMetadataResolver.class);
-            HttpResponseStatusResolver responseStatusResolver = mock(HttpResponseStatusResolver.class);
-            Optional<HttpHandlerGroup> resolve = DefaultHttpHandlerResolverTest.this.defaultHttpHandlerResolver.resolve(
-                    beanFactory,
-                    preFilters,
-                    Optional::empty,
-                    mapperResolver,
-                    metadataResolver,
-                    responseStatusResolver);
+            Optional<HttpHandlerGroup> resolve = this.getResolve();
             assertThat(resolve).isNotEmpty();
+        }
+
+        @Test
+        @DisplayName("触发异常逻辑")
+        void givenInvalidParameterThenThrowRequestParamFetchException() {
+            when(this.mapperResolver.resolve(any())).thenThrow(new RequestParamFetchException("test"));
+            RequestParamFetchException exception = assertThrows(RequestParamFetchException.class, this::getResolve);
+            String expectedPattern = "Invalid request parameter.*";
+            assertTrue(exception.getMessage().matches(expectedPattern),
+                    "Exception message does not match the expected pattern");
         }
 
         private BeanFactory initializeBeanFactory() {
@@ -90,12 +115,12 @@ public class DefaultHttpHandlerResolverTest {
             BeanMetadata beanMetadata = mock(BeanMetadata.class);
             when(beanMetadata.name()).thenReturn("mock");
             when(candidate.metadata()).thenReturn(beanMetadata);
-            Type type = Integer.class.getGenericSuperclass();
             AnnotationMetadata mock = EmptyAnnotationMetadata.INSTANCE;
             AnnotationMetadata annotationMetadata = mock(mock.getClass());
             when(annotationMetadata.isAnnotationPresent(RequestMapping.class)).thenReturn(true);
             RequestMapping requestMapping = mock(RequestMapping.class);
             when(annotationMetadata.getAnnotation(RequestMapping.class)).thenReturn(requestMapping);
+            Type type = Boolean.class;
             String[] testPath = {"testResolve/main,testResolve/modify/main,testResolve/helloWord"};
             when(requestMapping.path()).thenReturn(testPath);
             when(DefaultHttpHandlerResolverTest.this.annotationMetadataResolver.resolve(TypeUtils.toClass(type)))
@@ -103,8 +128,8 @@ public class DefaultHttpHandlerResolverTest {
             when(beanMetadata.type()).thenReturn(type);
             Method[] methods = TypeUtils.toClass(candidate.metadata().type()).getDeclaredMethods();
             for (int i = methods.length - 1; i >= 0; i--) {
-                when(DefaultHttpHandlerResolverTest.this.annotationMetadataResolver
-                        .resolve(TypeUtils.toClass(candidate.metadata().type()).getDeclaredMethods()[i]))
+                when(DefaultHttpHandlerResolverTest.this.annotationMetadataResolver.resolve(
+                        TypeUtils.toClass(candidate.metadata().type()).getDeclaredMethods()[i]))
                         .thenReturn(annotationMetadata);
             }
             return candidate;

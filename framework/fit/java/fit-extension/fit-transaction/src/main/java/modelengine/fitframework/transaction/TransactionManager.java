@@ -6,6 +6,9 @@
 
 package modelengine.fitframework.transaction;
 
+import modelengine.fitframework.ioc.BeanContainer;
+import modelengine.fitframework.transaction.support.DefaultTransactionManager;
+
 import javax.sql.DataSource;
 
 /**
@@ -55,4 +58,14 @@ public interface TransactionManager {
      * @throws IllegalStateException {@code transaction} 不是当前的活动事务。
      */
     void deactivate(Transaction transaction);
+
+    /**
+     * 创建事务管理器。
+     *
+     * @param beanContainer 表示当前插件的容器的 {@link BeanContainer}。
+     * @return 表示事务管理器的 {@link TransactionManager}。
+     */
+    static TransactionManager create(BeanContainer beanContainer) {
+        return new DefaultTransactionManager(beanContainer);
+    }
 }

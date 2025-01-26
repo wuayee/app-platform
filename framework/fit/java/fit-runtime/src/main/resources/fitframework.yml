@@ -56,6 +56,22 @@ matata:
       fitable-version: '1.0.0'
       formats:
       - 1
+    # 向注册中心发送心跳
+    - genericable-name: 'modelengine.fit.heartbeat.sendHeartbeat'
+      genericable-id: 'e12fd1c57fd84f50a673d93d13074082'
+      genericable-version: '1.0.0'
+      fitable-id: 'DBC9E2F7C0E443F1AC986BBC3D58C27B'
+      fitable-version: '1.0.0'
+      formats:
+      - 1
+    # 向注册中心注册服务信息
+    - genericable-name: 'modelengine.fit.registry.RegistryService.registerFitables'
+      genericable-id: '85bdce64cf724589b87cb6b6a950999d'
+      genericable-version: '1.0.0'
+      fitable-id: 'dedaa28cfb2742819a9b0271bc34f72a'
+      fitable-version: '1.0.0'
+      formats:
+      - 1
     auth-required-services: # 将注册中心和心跳相关的服务进行配置，表示其需要认证鉴权
     # 订阅服务并获取所订阅服务地址的接口
     - genericable-name: 'modelengine.fit.registry.RegistryService.subscribeFitables'

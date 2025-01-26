@@ -72,7 +72,7 @@ public class ConstructorBeanCreator extends AbstractBeanCreator {
         String parameterTypes = Stream.of(constructor.getParameters())
                 .map(parameter -> parameter.getParameterizedType().getTypeName())
                 .collect(Collectors.joining(", "));
-        String argumentValues = Stream.of(arguments).map(Objects::toString).collect(Collectors.joining(", "));
+        String argumentValues = Stream.of(arguments).map(Objects::toString).collect(Collectors.joining(", ", "[", "]"));
         return new BeanCreationException(StringUtils.format(
                 "Arguments mismatched: {0}. [constructor={1}({2}), arguments={3}]",
                 message,

@@ -48,11 +48,8 @@ public abstract class AbstractRequestParamMapperResolver extends AbstractPropert
         RequestParam requestParam = annotations.getAnnotation(RequestParam.class);
         SourceFetcher sourceFetcher = this.createSourceFetcher(requestParam);
         PropertyValueMapper mapper = new UniqueSourcePropertyValueMapper(sourceFetcher, isArray);
-        TypeTransformationPropertyValueMapper typeTransformationHttpMapper = new TypeTransformationPropertyValueMapper(
-                mapper,
-                propertyValue.getParameterizedType(),
-                requestParam.required(),
-                requestParam.defaultValue());
+        TypeTransformationPropertyValueMapper typeTransformationHttpMapper =
+                new TypeTransformationPropertyValueMapper(mapper, propertyValue.getParameterizedType());
         return Optional.of(typeTransformationHttpMapper);
     }
 

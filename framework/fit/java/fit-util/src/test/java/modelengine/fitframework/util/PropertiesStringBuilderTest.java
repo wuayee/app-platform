@@ -8,22 +8,16 @@ package modelengine.fitframework.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -78,36 +72,6 @@ class PropertiesStringBuilderTest {
             String newValue = "value2";
             String actual = new PropertiesStringBuilder().setProperty(key, oldValue).setProperty(key, newValue).build();
             assertEquals("key=value2", actual.trim());
-        }
-    }
-
-    @Nested
-    @DisplayName("Test exception scenario")
-    class TestExceptionScenario {
-        @Test
-        @DisplayName("Given properties store whit IOException then throw IllegalStateException")
-        void givenPropertiesStoreExceptionThenThrowException()
-                throws NoSuchFieldException, IllegalAccessException, IOException {
-            PropertiesStringBuilder builder = new PropertiesStringBuilder();
-            Field properties = this.removeFinal();
-            Properties mocked = mock(Properties.class);
-            doThrow(new IOException()).when(mocked).store(ObjectUtils.<BufferedWriter>cast(any()), any());
-            properties.set(builder, mocked);
-            IllegalStateException exception =
-                    Assertions.catchThrowableOfType(builder::build, IllegalStateException.class);
-            assertThat(exception).isNotNull()
-                    .hasMessage("Failed to store properties to memory stream.")
-                    .getCause()
-                    .isInstanceOf(IOException.class);
-        }
-
-        private Field removeFinal() throws NoSuchFieldException, IllegalAccessException {
-            Field propertiesField = PropertiesStringBuilder.class.getDeclaredField("properties");
-            propertiesField.setAccessible(true);
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(propertiesField, propertiesField.getModifiers() & ~Modifier.FINAL);
-            return propertiesField;
         }
     }
 

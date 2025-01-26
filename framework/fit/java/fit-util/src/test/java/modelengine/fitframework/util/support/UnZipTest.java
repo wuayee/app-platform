@@ -21,8 +21,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * {@link Unzip} 的单元测试。
@@ -174,7 +178,7 @@ public class UnZipTest {
         @DisplayName("Given max 1 entry security then throw SecurityException")
         void givenMax1EntrySecurityThenThrowException() {
             Unzip unzip = new Unzip(UnZipTest.this.zipFile, null).target(UnZipTest.this.unzipToFile)
-                    .secure(new Unzip.Security(100, 1));
+                    .secure(new Unzip.Security(100, 1, false));
             SecurityException exception = catchThrowableOfType(unzip::start, SecurityException.class);
             assertThat(exception).isNotNull()
                     .hasMessage("The file to unzip contains too many entries. [file=unzip-tmp.zip, max=1]");
@@ -184,9 +188,28 @@ public class UnZipTest {
         @DisplayName("Given max 1 byte security then throw SecurityException")
         void givenMax1ByteSecurityThenThrowException() {
             Unzip unzip = new Unzip(UnZipTest.this.zipFile, null).target(UnZipTest.this.unzipToFile)
-                    .secure(new Unzip.Security(1, 1024));
+                    .secure(new Unzip.Security(1, 1024, false));
             SecurityException exception = catchThrowableOfType(unzip::start, SecurityException.class);
             assertThat(exception).isNotNull().hasMessage("The file to unzip is too large. [file=unzip-tmp.zip, max=1]");
+        }
+
+        @Test
+        @DisplayName("给定压缩包中存在遍历路径文件，解压失败。")
+        public void givenPathTraversalThenCatchException() throws IOException {
+            File testZipFile = new File("test-archive.zip");
+            File targetDir = new File("target-dir");
+            try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(testZipFile.toPath()))) {
+                ZipEntry entry = new ZipEntry("../unauthorized-file.txt");
+                zos.putNextEntry(entry);
+                zos.write("Malicious content".getBytes(StandardCharsets.UTF_8));
+                zos.closeEntry();
+            }
+
+            Unzip unzip = FileUtils.unzip(testZipFile).secure(new Unzip.Security(100, 1024, false)).target(targetDir);
+            SecurityException securityException = catchThrowableOfType(unzip::start, SecurityException.class);
+            assertThat(securityException.getMessage()).startsWith("Detected a potential path traversal attack. ");
+            FileUtils.delete(testZipFile);
+            FileUtils.delete(targetDir);
         }
 
         @Test

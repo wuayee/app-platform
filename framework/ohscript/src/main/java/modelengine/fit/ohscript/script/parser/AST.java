@@ -17,6 +17,10 @@ import modelengine.fit.ohscript.script.interpreter.ActivationContext;
 import modelengine.fit.ohscript.script.interpreter.ReturnValue;
 import modelengine.fit.ohscript.script.lexer.Terminal;
 import modelengine.fit.ohscript.script.lexer.Token;
+import modelengine.fit.ohscript.script.parser.nodes.DoubleFunctionDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.EntityBodyNode;
+import modelengine.fit.ohscript.script.parser.nodes.EntityDeclareNode;
+import modelengine.fit.ohscript.script.parser.nodes.ExternalDataNode;
 import modelengine.fit.ohscript.script.parser.nodes.ImportNode;
 import modelengine.fit.ohscript.script.parser.nodes.InitialAssignmentNode;
 import modelengine.fit.ohscript.script.parser.nodes.LetStatementNode;
@@ -24,10 +28,6 @@ import modelengine.fit.ohscript.script.parser.nodes.NonTerminalNode;
 import modelengine.fit.ohscript.script.parser.nodes.ScriptNode;
 import modelengine.fit.ohscript.script.parser.nodes.SyntaxNode;
 import modelengine.fit.ohscript.script.parser.nodes.TerminalNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityBodyNode;
-import modelengine.fit.ohscript.script.parser.nodes.entity.EntityDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.function.DoubleFunctionDeclareNode;
-import modelengine.fit.ohscript.script.parser.nodes.java.ExternalDataNode;
 import modelengine.fit.ohscript.script.semanticanalyzer.SemanticAnalyzer;
 import modelengine.fit.ohscript.script.semanticanalyzer.SymbolTable;
 import modelengine.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
@@ -130,6 +130,7 @@ public class AST implements Serializable {
                 }
             }
             Object obj = host.first();
+            method.setAccessible(true);
             Object value = method.invoke(obj, matchedArgs);
             return mockReturnValue(env, value, current);
         } catch (InvocationTargetException e) {
@@ -753,7 +754,8 @@ public class AST implements Serializable {
             whiteList.add("size");
             whiteList.add("isEmpty");
         }
-        if (externalOh instanceof List) {
+        boolean isList = externalOh instanceof List;
+        if (isList) {
             whiteList.add("get");
             whiteList.add("add");
             whiteList.add("size");
@@ -770,6 +772,10 @@ public class AST implements Serializable {
                 continue;
             }
             if (!whiteList.isEmpty() && !whiteList.contains(method.getName())) {
+                continue;
+            }
+            // 兼容处理list的add方法重载问题
+            if (isList && method.getParameterCount() == 2 && "add".equals(method.getName())) {
                 continue;
             }
             if (blackList.contains(method.getName())) {

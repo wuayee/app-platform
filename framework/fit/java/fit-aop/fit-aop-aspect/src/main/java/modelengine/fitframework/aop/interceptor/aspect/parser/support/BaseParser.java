@@ -9,6 +9,7 @@ package modelengine.fitframework.aop.interceptor.aspect.parser.support;
 import modelengine.fitframework.aop.interceptor.aspect.parser.ExpressionParser;
 import modelengine.fitframework.aop.interceptor.aspect.parser.model.PointcutSupportedType;
 import modelengine.fitframework.aop.interceptor.aspect.util.ExpressionUtils;
+import modelengine.fitframework.util.LazyLoader;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -70,10 +71,13 @@ public abstract class BaseParser implements ExpressionParser {
          */
         protected final String content;
         private final ClassLoader classLoader;
+        private final LazyLoader<Boolean> isBindingLoader;
 
         public BaseResult(String content, ClassLoader classLoader) {
             this.content = content;
             this.classLoader = classLoader;
+            this.isBindingLoader =
+                    new LazyLoader<>(() -> ExpressionUtils.getContentClass(this.content, this.classLoader) == null);
         }
 
         @Override
@@ -88,7 +92,7 @@ public abstract class BaseParser implements ExpressionParser {
 
         @Override
         public boolean isBinding() {
-            return ExpressionUtils.getContentClass(this.content, this.classLoader) == null;
+            return this.isBindingLoader.get();
         }
 
         @Override

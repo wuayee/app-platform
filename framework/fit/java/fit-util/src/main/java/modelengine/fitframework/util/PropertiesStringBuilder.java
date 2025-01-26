@@ -109,11 +109,11 @@ public class PropertiesStringBuilder {
         String content = new String(bytes, StandardCharsets.UTF_8);
         String[] lines = content.split(System.lineSeparator());
         return Arrays.stream(lines)
-                .filter(PropertiesStringBuilder::isRedundant)
+                .filter(PropertiesStringBuilder::isNotRedundant)
                 .collect(Collectors.joining(this.lineSeparator.value()));
     }
 
-    private static boolean isRedundant(String line) {
+    private static boolean isNotRedundant(String line) {
         String trimmed = StringUtils.trimStart(line);
         return !trimmed.startsWith("#");
     }

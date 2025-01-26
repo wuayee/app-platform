@@ -36,9 +36,11 @@ import modelengine.fitframework.runtime.FitRuntime;
 import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
 import modelengine.fitframework.runtime.FitRuntimeStartupException;
 import modelengine.fitframework.runtime.shared.ClassLoaderSharedJarRegistry;
+import modelengine.fitframework.runtime.shared.SharedUrlClassLoader;
 import modelengine.fitframework.util.ClassUtils;
 import modelengine.fitframework.util.FileUtils;
 import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.support.AbstractDisposable;
@@ -46,10 +48,10 @@ import modelengine.fitframework.util.support.AbstractDisposable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,6 +60,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 为 {@link FitRuntime} 提供基类。
@@ -78,6 +81,7 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
     private static final String SYSTEM_PROPERTIES_CONFIG_NAME = "System Properties";
     private static final String EXTERNAL_FILE_CONFIG_NAME = "External Config File";
     private static final String ENVIRONMENT_VARIABLES_CONFIG_NAME = "Environment Variables";
+    private static final String SPECIFIC_ENVIRONMENT_VARIABLES_CONFIG_NAME = "Specific Environment Variables";
 
     private static final String EXTERNAL_CONFIG_FILE_KEY = "config-file";
     private static final String PROFILE_CONFIG_KEY = "fit.profiles.active";
@@ -85,6 +89,8 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
     private static final String KEY_PREFIX = "--";
 
     private static final String UNKNOWN_VERSION = "<UNKNOWN>";
+    private static final String FIT_SEPARATOR = "FIT_SEPARATOR";
+    private static final String DOT_SEPARATOR = ".";
 
     private final Class<?> entry;
     private final String[] args;
@@ -99,7 +105,7 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
     private final EventPublisher publisherOfEvents;
 
     private volatile URL location;
-    private volatile ClassLoader sharedClassLoader;
+    private volatile SharedUrlClassLoader sharedClassLoader;
     private volatile SharedJarRegistry registryOfSharedJars;
     private volatile String profile;
     private volatile Config config;
@@ -300,9 +306,9 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
     /**
      * 获取用以加载公共类的加载程序。
      *
-     * @return 表示公共类的加载程序的 {@link URLClassLoader}。
+     * @return 表示公共类的加载程序的 {@link SharedUrlClassLoader}。
      */
-    protected abstract URLClassLoader obtainSharedClassLoader();
+    protected abstract SharedUrlClassLoader obtainSharedClassLoader();
 
     private Config loadConfig() {
         ConfigChain globalChain = new DefaultConfigChain(GLOBAL_CONFIG_NAME);
@@ -318,6 +324,10 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
         chain.addConfig(loadStartupConfig(this.args));
         chain.addConfig(Config.fromHierarchical(SYSTEM_PROPERTIES_CONFIG_NAME, System.getProperties()));
         chain.addConfig(Config.fromHierarchical(ENVIRONMENT_VARIABLES_CONFIG_NAME, System.getenv()));
+        Map<String, String> specificEnv = this.loadSpecificEnv(System.getenv());
+        if (MapUtils.isNotEmpty(specificEnv)) {
+            chain.addConfig(Config.fromHierarchical(SPECIFIC_ENVIRONMENT_VARIABLES_CONFIG_NAME, specificEnv));
+        }
         chain.addConfig(this.loadExternalConfig(this.getExternalConfigFileName(globalChain)));
     }
 
@@ -462,6 +472,25 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
         }
         Resource resource = Resource.fromFile(file);
         return ConfigLoader.loadConfig(this.loaderOfConfigs, resource, EXTERNAL_FILE_CONFIG_NAME);
+    }
+
+    /**
+     * 加载特定的环境变量。
+     *
+     * @param envs 表示当前系统已存在的环境变量的 {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
+     * @return 表示特定的环境变量的 {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
+     */
+    protected Map<String, String> loadSpecificEnv(Map<String, String> envs) {
+        if (!envs.containsKey(FIT_SEPARATOR)) {
+            return Collections.emptyMap();
+        }
+        String separator = envs.get(FIT_SEPARATOR);
+        return envs.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().contains(separator))
+                .collect(Collectors.toMap(entry -> entry.getKey().replace(separator, DOT_SEPARATOR),
+                        Map.Entry::getValue,
+                        (existingValue, newValue) -> existingValue));
     }
 
     @Override

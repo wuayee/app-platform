@@ -42,12 +42,7 @@ public class BlockAllSubscriber<T> extends AbstractSubscriber<T> {
                 try {
                     this.lock.wait();
                 } catch (InterruptedException e) {
-                    FlowableException flowableException =
-                            new FlowableException("Failed to block: thread is interrupted.", e);
-                    if (this.cause != null) {
-                        flowableException.addSuppressed(this.cause);
-                    }
-                    throw flowableException;
+                    this.cancelInterruptedException(e);
                 }
             }
             if (this.cause != null) {
@@ -56,6 +51,14 @@ public class BlockAllSubscriber<T> extends AbstractSubscriber<T> {
                 return this.buffer;
             }
         }
+    }
+
+    private void cancelInterruptedException(InterruptedException e) {
+        FlowableException flowableException = new FlowableException("Failed to block: thread is interrupted.", e);
+        if (this.cause != null) {
+            flowableException.addSuppressed(this.cause);
+        }
+        throw flowableException;
     }
 
     @Override

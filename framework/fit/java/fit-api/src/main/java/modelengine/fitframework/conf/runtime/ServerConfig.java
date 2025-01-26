@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface ServerConfig {
     /**
      * 获取端口是否打开的标志。
-     * <p>如果显式地配置了 {@code 'server.*.is-enabled'}，则以配置内容为准，如果没有配置，则配置了 {@code 'server.*.port'}
+     * <p>如果显式地配置了 {@code 'server.*.enabled'}，则以配置内容为准，如果没有配置，则配置了 {@code 'server.*.port'}
      * 表示打开，没有配置则表示关闭。</p>
      * <p>如果这里的配置和安全配置都关闭了，则这里的配置会被强制打开。</p>
      *
@@ -53,7 +53,7 @@ public interface ServerConfig {
     interface Secure {
         /**
          * 获取端口是否打开的标志。
-         * <p>如果显式地配置了 {@code 'server.*.secure.is-enabled'}，则以配置内容为准，如果没有配置，则配置了
+         * <p>如果显式地配置了 {@code 'server.*.secure.enabled'}，则以配置内容为准，如果没有配置，则配置了
          * {@code 'server.*.secure.port'} 表示打开，没有配置则表示关闭。</p>
          *
          * @return 如果端口打开，则返回 {@code true}，否则，返回 {@code false}。
@@ -61,8 +61,16 @@ public interface ServerConfig {
         boolean isProtocolEnabled();
 
         /**
+         * https 是否启动 ssl 的标志。
+         * <p>如果显式地配置了 {@code 'server.*.secure.is-ssl-enabled'}，则以配置内容为准。</p>
+         *
+         * @return 表示是否开启 ssl 的标志, 如果开启，则返回 {@code true}，否则，返回 {@code false}。
+         */
+        boolean isSslEnabled();
+
+        /**
          * 服务端是否校验客户端证书。
-         * <p>如果显式地配置了 {@code 'server.*.need-client-auth'}，则以配置内容为准，如果没有配置，默认校验客户端证书。</p>
+         * <p>如果显式地配置了 {@code 'server.*.secure.need-client-auth'}，则以配置内容为准，如果没有配置，默认校验客户端证书。</p>
          *
          * @return 如果校验客户端证书，则返回 {@code true}，否则，返回 {@code false}。
          */

@@ -9,11 +9,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
 
         <!-- Framework version -->
         <fit.version>3.5.0-SNAPSHOT</fit.version>
@@ -110,23 +108,6 @@
                 <groupId>modelengine.fit.ohscript</groupId>
                 <artifactId>ohscript</artifactId>
                 <version>${ohscript.version}</version>
-            </dependency>
-
-            <!-- Jane -->
-            <dependency>
-                <groupId>com.huawei.fit.jane</groupId>
-                <artifactId>task</artifactId>
-                <version>${task.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.huawei.fit.jober</groupId>
-                <artifactId>jober-genericable</artifactId>
-                <version>${jober.genericable.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.huawei.fit.jober</groupId>
-                <artifactId>jober-multiversion-genericable</artifactId>
-                <version>${jober.multiversion.genericable.version}</version>
             </dependency>
 
             <!-- Third-party -->

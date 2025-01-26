@@ -46,6 +46,13 @@ public interface ConstraintViolation {
     Method validationMethod();
 
     /**
+     * 获取校验注解的参数。
+     *
+     * @return 表示校验注解的参数的 {@link Object}{@code []}。
+     */
+    Object[] args();
+
+    /**
      * {@link ConstraintViolation} 的构建器。
      */
     interface Builder {
@@ -80,6 +87,14 @@ public interface ConstraintViolation {
          * @return 表示构建器的 {@link Builder}。
          */
         Builder validationMethod(Method validationMethod);
+
+        /**
+         * 向构建器设置校验注解的参数。
+         *
+         * @param args 表示校验注解的参数的 {@link Object}{@code []}。
+         * @return 表示构建器的 {@link Builder}。
+         */
+        Builder args(Object args);
 
         /**
          * 构建对象。

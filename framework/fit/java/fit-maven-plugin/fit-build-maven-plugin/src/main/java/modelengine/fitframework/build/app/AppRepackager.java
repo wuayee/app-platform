@@ -34,6 +34,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,12 +42,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
@@ -75,9 +77,9 @@ public final class AppRepackager extends AbstractRepackager {
     private static final String MANIFEST_BUILT_BY_VALUE = "FIT Application Packager (Huawei)";
 
     private static final String METADATA_FILE = FIT_ROOT_DIRECTORY + PATH_SEPARATOR + "metadata.xml";
-    private static final List<String> specificThirdParties = Arrays.asList("byte-buddy", "snakeyaml");
 
     private final ArtifactDownloader downloader;
+    private final DependencyNode rootDependency;
 
     /**
      * 重新打包应用。
@@ -85,12 +87,14 @@ public final class AppRepackager extends AbstractRepackager {
      * @param project 表示 Maven 项目的 {@link MavenProject}。
      * @param log 表示 Maven 日志的 {@link Log}。
      * @param downloader 表示下载器的 {@link ArtifactDownloader}。
+     * @param rootDependency 表示根依赖的 {@link DependencyNode}。
      * @param sharedDependencies 表示共享依赖的 {@link List}{@code <}{@link SharedDependency}{@code >}。
      */
-    public AppRepackager(MavenProject project, Log log, ArtifactDownloader downloader,
+    public AppRepackager(MavenProject project, Log log, ArtifactDownloader downloader, DependencyNode rootDependency,
             List<SharedDependency> sharedDependencies) {
         super(project, log, sharedDependencies);
         this.downloader = downloader;
+        this.rootDependency = rootDependency;
     }
 
     /**
@@ -101,7 +105,7 @@ public final class AppRepackager extends AbstractRepackager {
     public void repackage() throws MojoExecutionException {
         File target = this.project().getArtifact().getFile();
         File backup = this.backupFile(target);
-        Set<Artifact> dependencies = this.project().getArtifacts();
+        Set<Artifact> dependencies = this.collectDependencies();
         List<Artifact> baseArtifacts = prepareBaseArtifacts(dependencies, this.downloader);
         try (ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(target.toPath()), UTF_8)) {
             JarPackager packager = JarPackager.of(out);
@@ -115,6 +119,40 @@ public final class AppRepackager extends AbstractRepackager {
             throw new MojoExecutionException(StringUtils.format("Failed to repackage application JAR. [file={0}]",
                     FileUtils.path(target)), ex);
         }
+    }
+
+    private Set<Artifact> collectDependencies() throws MojoExecutionException {
+        Queue<DependencyNode> queue = new LinkedList<>(this.rootDependency.getChildren());
+        Set<Artifact> dependencies = new HashSet<>();
+        while (!queue.isEmpty()) {
+            DependencyNode node = queue.poll();
+            Artifact dependency = node.getArtifact();
+            if (!StringUtils.equalsIgnoreCase(dependency.getType(), "jar")) {
+                queue.addAll(node.getChildren());
+                continue;
+            }
+            if (dependency.getFile() == null) {
+                final Artifact current = dependency;
+                Artifact found = this.project()
+                        .getArtifacts()
+                        .stream()
+                        .filter(artifact -> Objects.equals(artifact.getGroupId(), current.getGroupId()))
+                        .filter(artifact -> Objects.equals(artifact.getArtifactId(), current.getArtifactId()))
+                        .findAny()
+                        .orElse(null);
+                if (found != null) {
+                    dependency = found;
+                }
+            }
+            if (dependency.getFile() == null) {
+                dependency = this.download(dependency);
+            }
+            dependencies.add(dependency);
+            if (!isPlugin(dependency)) {
+                queue.addAll(node.getChildren());
+            }
+        }
+        return dependencies;
     }
 
     private void packageOriginalJar(JarPackager packager, File file) throws MojoExecutionException {
@@ -166,8 +204,13 @@ public final class AppRepackager extends AbstractRepackager {
     }
 
     private void packageLauncher(JarPackager packager) throws MojoExecutionException {
-        String name = AggregatedFitLauncher.class.getName();
-        name = StringUtils.replace(name, ClassUtils.PACKAGE_SEPARATOR, JarEntryLocation.ENTRY_PATH_SEPARATOR);
+        this.packageClass(packager, AggregatedFitLauncher.class.getName());
+        this.packageClass(packager, AggregatedFitLauncher.UrlClassLoader.class.getName());
+    }
+
+    private void packageClass(JarPackager packager, String className) throws MojoExecutionException {
+        String name =
+                StringUtils.replace(className, ClassUtils.PACKAGE_SEPARATOR, JarEntryLocation.ENTRY_PATH_SEPARATOR);
         name += ClassFile.FILE_EXTENSION;
         try (InputStream in = IoUtils.resource(AppRepackager.class.getClassLoader(), name)) {
             ZipEntry entry = new ZipEntry(name);
@@ -204,15 +247,9 @@ public final class AppRepackager extends AbstractRepackager {
 
     private void packageDependency(JarPackager packager, Artifact dependency) throws MojoExecutionException {
         String directory = this.directoryOf(dependency);
-        if (directory != null && isSpecificThirdParty(directory, dependency)) {
+        if (directory != null) {
             packager.store(dependency.getFile(), directory);
         }
-    }
-
-    private boolean isSpecificThirdParty(String directory, Artifact dependency) {
-        return StringUtils.equals(AggregatedFitLauncher.THIRD_PARTY_ENTRY_NAME, directory)
-                ? specificThirdParties.contains(dependency.getArtifactId())
-                : true;
     }
 
     private String directoryOf(Artifact artifact) throws MojoExecutionException {
@@ -310,10 +347,6 @@ public final class AppRepackager extends AbstractRepackager {
 
     private static String obtainClassName(String constantValue) {
         return StringUtils.replace(constantValue, JarEntryLocation.ENTRY_PATH_SEPARATOR, ClassUtils.PACKAGE_SEPARATOR);
-    }
-
-    private static boolean isPlugin(Artifact artifact) throws MojoExecutionException {
-        return hasSpecifiedFile(artifact, FIT_ROOT_DIRECTORY + PATH_SEPARATOR + "plugin.xml");
     }
 
     private Artifact download(Artifact artifact) throws MojoExecutionException {
