@@ -14,7 +14,6 @@ import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.flow.Flow;
-import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.NodeDisplay;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
@@ -37,7 +36,10 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
-    private final Publisher<R> publisher;
+    /**
+     * 持有的publisher
+     */
+    protected final Publisher<R> publisher;
 
     private final NodeDisplay display = new NodeDisplay("operation", null, null);
 
@@ -114,7 +116,7 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
      * @param locks 流程锁
      * @return From<R>
      */
-    private From<R> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+    protected From<R> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
         return new From<>(this.getStreamId(), repo, messenger, locks); // node里的from跟随subscriber的streamId
     }
 
@@ -231,12 +233,6 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
                 getLocks(), FlowNodeType.END);
         this.subscribe(end);
         return end;
-    }
-
-    @Override
-    public void setFlowConfig(FlowConfig flowConfig) {
-        super.setFlowConfig(flowConfig);
-        this.publisher.setFlowConfig(flowConfig);
     }
 
     @Override

@@ -6,138 +6,104 @@
 
 package modelengine.fit.waterflow.domain.context;
 
-import lombok.Getter;
-import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
-import modelengine.fit.waterflow.domain.stream.operators.Operators;
-import modelengine.fit.waterflow.domain.stream.reactive.Processor;
-import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
-import modelengine.fit.waterflow.domain.utils.Tuple;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 /**
- * window的处理器
+ * 用于计数session window中处理的数据
+ * 至于session window中素有的数据都consumed，该session window才算结束
+ * session window的解释，业务表达为某session数据在某节点处理完毕
  *
- * @param <I> 处理的数据类型
+ * @author songyongtan
  * @since 1.0
  */
-public class WindowToken<I> {
-    private final String id;
+public class WindowToken {
+    /**
+     * 状态枚举
+     */
+    enum Status {
+        INITIALIZED,
+        CONSUMING,
+        CONSUMED
+    }
 
-    @Getter
-    private final Operators.Window window;
+    private final Window window;
 
-    private Publisher processor;
+    public Status getStatus() {
+        return this.status;
+    }
 
-    private Map<Object, Tuple<FlowSession, Object>> accs = new HashMap<>();
+    private Status status = Status.INITIALIZED;
 
-    private List todo = new ArrayList();
+    private boolean reduced;
 
-    private List<I> origins = new ArrayList<>();
-
-    public WindowToken(Operators.Window<I> window) {
+    public WindowToken(Window window) {
         this.window = window;
-        this.id = UUID.randomUUID().toString();
     }
 
     /**
-     * 判定window是否条件满足，满足则执行window的聚合
-     *
-     * @return 是否触发成功
+     * 结束消费
      */
-    public synchronized boolean fire() {
-        // 如果还有未处理的数据，不能触发累积节点数据流转
-        if (this.todo.size() > 0 || !this.fulfilled()) {
-            return false;
+    public void finishConsume() {
+        if (this.status == Status.CONSUMED) {
+            return;
         }
-
-        accs.values().forEach(acc -> processor.offer(acc.second(), acc.first()));
-        accs.clear();
-        return true;
+        this.status = Status.CONSUMED;
     }
 
     /**
-     * 判定window是否条件满足，满足则执行window的聚合，判定window是否条件满足，满足则执行window的聚合直接通过系统完成消息触发
-     *
-     * @param processor 触发的节点
-     * @return 是否触发成功
+     * 开始消费
      */
-    public synchronized boolean fireComplete(Processor processor) {
-        if (this.processor != processor) {
-            return false;
+    public void beginConsume() {
+        this.status = Status.CONSUMING;
+    }
+
+    /**
+     * 是否为初始化状态
+     *
+     * @return 是
+     */
+    public boolean initialized() {
+        return this.status == Status.INITIALIZED;
+    }
+
+    /**
+     * 是否正在消费
+     *
+     * @return 是
+     */
+    public boolean isConsuming() {
+        return this.status == Status.CONSUMING;
+    }
+
+    /**
+     * 是否被消费过了
+     *
+     * @return 是
+     */
+    public boolean isConsumed() {
+        return this.status == Status.CONSUMED;
+    }
+
+    /**
+     * 是否reduce过了
+     *
+     * @return true，是
+     */
+    public boolean isReduced() {
+        return this.reduced;
+    }
+
+    /**
+     * 聚合
+     */
+    public void reduce() {
+        if (this.status != Status.INITIALIZED && !this.reduced) {
+            this.reduced = true;
         }
-        accs.values().forEach(acc -> {
-            FlowSession session = new FlowSession(acc.first());
-            session.clearInnerState(FlowBoundedEmitter.BOUNDED_SESSION_ID);
-            processor.offer(acc.second(), session);
-        });
-        accs.clear();
-        return true;
     }
 
     /**
-     * 获取id
-     *
-     * @return 得到id
+     * token结束
      */
-    public String id() {
-        return this.id;
-    }
-
-    public <T> void setProcessor(Publisher<T> processor) {
-        this.processor = processor;
-    }
-
-    /**
-     * 获取本window对应的收集器
-     *
-     * @return accs
-     */
-    public Map<Object, Tuple<FlowSession, Object>> accs() {
-        return accs;
-    }
-
-    /**
-     * 是否window内所有满足要求的数据已经到达
-     *
-     * @return 是否到达
-     */
-    public boolean fulfilled() {
-        if (this.window == null) {
-            return false;
-        }
-        return this.window.fulfilled(this.origins);
-    }
-
-    /**
-     * 添加原始来源对象
-     *
-     * @param data 原始来源对象
-     */
-    public synchronized void addOrigin(I data) {
-        this.origins.add(data);
-    }
-
-    /**
-     * 添加一个待执行任务
-     *
-     * @param data 任务对象
-     */
-    public synchronized void addToDo(Object data) {
-        this.todo.add(data);
-    }
-
-    /**
-     * 删除一个待执行任务
-     *
-     * @param data 任务对象
-     */
-    public synchronized void removeToDo(Object data) {
-        this.todo.remove(data);
+    public void accepted() {
+        this.window.tryFinish();
     }
 }
-

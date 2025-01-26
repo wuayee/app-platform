@@ -14,6 +14,7 @@ import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Set;
  * @author 高诗意
  * @since 1.0
  */
-public interface FlowContextRepo<T> {
+public interface FlowContextRepo {
     /**
      * 人工任务节点拉取边上的上下文，在节点的preprocess中处理
      *
@@ -32,7 +33,7 @@ public interface FlowContextRepo<T> {
      * @param status status
      * @return List<FlowContext < T>>
      */
-    List<FlowContext<T>> getContextsByPosition(String streamId, List<String> posIds, String status);
+    <T> List<FlowContext<T>> getContextsByPosition(String streamId, List<String> posIds, String status);
 
     /**
      * 获取节点处理完后产生的新的context，发送给下个节点处理，后续可以判断是否删除该方法
@@ -43,7 +44,7 @@ public interface FlowContextRepo<T> {
      * @param status status
      * @return List<FlowContext < T>>
      */
-    List<FlowContext<T>> getContextsByPosition(String streamId, String posId, String batchId, String status);
+    <T> List<FlowContext<T>> getContextsByPosition(String streamId, String posId, String batchId, String status);
 
     /**
      * getContextsByTrace
@@ -51,21 +52,21 @@ public interface FlowContextRepo<T> {
      * @param traceId transId
      * @return List<FlowContext < T1>>
      */
-    <T1> List<FlowContext<T1>> getContextsByTrace(String traceId);
+    <T> List<FlowContext<T>> getContextsByTrace(String traceId);
 
     /**
      * 批量保存context
      *
      * @param contexts contexts
      */
-    void save(List<FlowContext<T>> contexts);
+    <I> void save(List<FlowContext<I>> contexts);
 
     /**
      * 批量更新context的内容，不更新status和position
      *
      * @param contexts contexts
      */
-    default void update(List<FlowContext<T>> contexts) {
+    default <I> void update(List<FlowContext<I>> contexts) {
         save(contexts);
     }
 
@@ -74,7 +75,7 @@ public interface FlowContextRepo<T> {
      *
      * @param contexts contexts
      */
-    void updateToSent(List<FlowContext<T>> contexts);
+    <I> void updateToSent(List<FlowContext<I>> contexts);
 
     /**
      * getContextsByParallel
@@ -82,7 +83,7 @@ public interface FlowContextRepo<T> {
      * @param parallelId parallelId
      * @return List<FlowContext < T1>>
      */
-    <T1> List<FlowContext<T1>> getContextsByParallel(String parallelId);
+    <T> List<FlowContext<T>> getContextsByParallel(String parallelId);
 
     /**
      * getById
@@ -90,7 +91,7 @@ public interface FlowContextRepo<T> {
      * @param id id
      * @return FlowContext<T>
      */
-    FlowContext<T> getById(String id);
+    <T> FlowContext<T> getById(String id);
 
     /**
      * 根据ids查找FlowContext<T>
@@ -98,7 +99,7 @@ public interface FlowContextRepo<T> {
      * @param ids ids
      * @return List<FlowContext < T>>
      */
-    List<FlowContext<T>> getByIds(List<String> ids);
+    <T> List<FlowContext<T>> getByIds(List<String> ids);
 
     /**
      * 查找和指定一批ID对应的状态为PENDING且SENT了的流程上下文
@@ -106,19 +107,18 @@ public interface FlowContextRepo<T> {
      * @param ids ids
      * @return List<FlowContext < T>>
      */
-    List<FlowContext<T>> getPendingAndSentByIds(List<String> ids);
+    <T> List<FlowContext<T>> getPendingAndSentByIds(List<String> ids);
 
     /**
      * 查找map节点所有from事件上待处理的上下文
      *
      * @param streamId 流程版本ID
      * @param subscriptions from事件的事件ID
-     * @param filter 默认过滤器，map的场景永远使用默认过滤器过滤批次数据
-     * @param validator block校验器
+     * @param sessions 涉及保序的sessions
      * @return 待处理的上下文
      */
-    List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions, Operators.Filter<T> filter,
-            Operators.Validator<T> validator);
+    <T> List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions,
+            Map<String, Integer> sessions);
 
     /**
      * 查找produce节点所有from事件上待处理的上下文
@@ -128,7 +128,7 @@ public interface FlowContextRepo<T> {
      * @param filter filter校验器
      * @return 待处理的上下文
      */
-    List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
+    <T> List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
             Operators.Filter<T> filter);
 
     /**
@@ -138,7 +138,7 @@ public interface FlowContextRepo<T> {
      * @param version 流程对应版本
      * @return 对应所有上下文
      */
-    default List<FlowContext<T>> findByStreamId(String metaId, String version) {
+    default <T> List<FlowContext<T>> findByStreamId(String metaId, String version) {
         throw new WaterflowException(ErrorCodes.FLOW_ENGINE_DATABASE_NOT_SUPPORT, "findByStreamId");
     }
 
@@ -149,7 +149,7 @@ public interface FlowContextRepo<T> {
      * @param version 流程对应版本
      * @return 对应所有上下文
      */
-    default List<FlowContext<T>> findRunningContextByMetaId(String metaId, String version) {
+    default <T> List<FlowContext<T>> findRunningContextByMetaId(String metaId, String version) {
         throw new WaterflowException(ErrorCodes.FLOW_ENGINE_DATABASE_NOT_SUPPORT, "findRunningContextByMetaId");
     }
 
@@ -169,7 +169,7 @@ public interface FlowContextRepo<T> {
      * @param after context
      * @param traces 需要更新的tranceId列表
      */
-    default void updateContextPool(List<FlowContext<T>> after, Set<String> traces) {
+    default <T> void updateContextPool(List<FlowContext<T>> after, Set<String> traces) {
         save(after);
     }
 
@@ -179,14 +179,14 @@ public interface FlowContextRepo<T> {
      * @param trace 對應的trace
      * @param flowContext 待保存的contexts
      */
-    void save(FlowTrace trace, FlowContext<T> flowContext);
+    <T> void save(FlowTrace trace, FlowContext<T> flowContext);
 
     /**
      * 批量更新context的上下文数据flowData字段
      *
      * @param contexts contexts
      */
-    void updateFlowData(List<FlowContext<T>> contexts);
+    <T> void updateFlowData(List<FlowContext<T>> contexts);
 
     /**
      * 批量更新context的status和position
@@ -195,7 +195,7 @@ public interface FlowContextRepo<T> {
      * @param status 状态 {@link FlowNodeStatus}
      * @param position 位置
      */
-    default void updateStatus(List<FlowContext<T>> contexts, String status, String position) {
+    default <T> void updateStatus(List<FlowContext<T>> contexts, String status, String position) {
         save(contexts);
     }
 
@@ -216,5 +216,13 @@ public interface FlowContextRepo<T> {
     default boolean isTracesTerminate(List<String> traceIds) {
         return false;
     }
+
+    /**
+     * 更新序号
+     *
+     * @param contexts 上下文信息
+     * @param <T> 数据类型
+     */
+    <T> void updateIndex(List<FlowContext<T>> contexts);
 }
 

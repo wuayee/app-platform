@@ -32,7 +32,7 @@ public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>>
 
     @Override
     public void handle(D data, FlowSession session) {
-        this.origin().offer(data, new FlowSession(session));
+        this.origin().offer(data, session);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>>
 
     @Override
     public void emit(R data, FlowSession session) {
-        this.origin().emit(data, new FlowSession(session));
+        this.origin().emit(data, (session));
     }
 
     /**

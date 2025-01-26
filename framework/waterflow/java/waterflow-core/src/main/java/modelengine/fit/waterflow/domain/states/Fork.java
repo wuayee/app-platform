@@ -6,20 +6,21 @@
 
 package modelengine.fit.waterflow.domain.states;
 
+import javafx.util.Pair;
 import modelengine.fit.waterflow.domain.context.FlowContext;
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.context.WindowToken;
-import modelengine.fit.waterflow.domain.enums.ParallelMode;
+import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.flow.Flow;
-import modelengine.fit.waterflow.domain.stream.nodes.To;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
-import modelengine.fit.waterflow.domain.utils.Tuple;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -70,34 +71,42 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      */
     public <R> State<R, D, O, F> join(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Fork<O, D, I, F> me = this;
+        AtomicInteger forkNumber = new AtomicInteger(this.forks.size());
+        Map<String, Map<Object, Pair<R, Integer>>> allAccs = new HashMap<>();//session,keyby,data
         AtomicReference<Publisher<O>> processWrapper = new AtomicReference<>();
         Supplier<R> actualInit = ObjectUtils.nullIf(init, () -> null);
         Operators.Map<FlowContext<O>, R> wrapper = new Operators.Map<FlowContext<O>, R>() {
             @Override
             public synchronized R process(FlowContext<O> input) {
-                input.setAsAccumulator();
-                WindowToken windowToken = input.getWindowToken();
-                windowToken.removeToDo(input.getData());
-                if (windowToken.fulfilled()) {
+                input.getSession().setAsAccumulator();
+                Object key = input.getParallel();
+                Map<Object, Pair<R, Integer>> accs = allAccs.computeIfAbsent(input.getSession().getId(),
+                        k -> new HashMap<>());
+
+                Pair<R, Integer> acc = Optional.ofNullable(accs.get(key))
+                        .orElseGet(() -> new Pair<>(actualInit.get(), 0));
+                if (acc.getKey() == null) {
+                    if (input.getData() instanceof Number) {
+                        acc = new Pair<>((R) new Integer(0), 0);
+                    }
+                    if (input.getData() instanceof String) {
+                        acc = new Pair<>((R) "", 0);
+                    }
+                }
+                acc = new Pair<>(processor.process(acc.getKey(), input.getData()), acc.getValue() + 1);
+                accs.put(key, acc);
+
+                if (acc.getValue() == forkNumber.get()) {
+                    accs.remove(key);
+                    return acc.getKey();
+                } else {
                     return null;
                 }
-                Tuple<FlowSession, R> acc = ObjectUtils.cast(windowToken.accs().get(input.keyBy()));
-                if (acc == null) {
-                    acc = Tuple.from(input.getSession(), actualInit.get());
-                }
-                acc = Tuple.from(input.getSession(), processor.process(acc.second(), input.getData()));
-                windowToken.accs().put(input.keyBy(), acc);
-                windowToken.addOrigin(input.getParallelMode() == ParallelMode.ALL.name() ? me.forks.size() : 1);
-                windowToken.setProcessor(processWrapper.get());
-                return null;
             }
         };
-        Processor<O, R> pro = this.forks.get(0).processor.join(wrapper, null);
-        if (pro instanceof To) {
-            ((To<?, ?>) pro).setJoin(true);
-        }
+        final Processor<O, R> pro = this.forks.remove(0).processor.join(wrapper, null);
         processWrapper.set(ObjectUtils.cast(pro));
-        this.forks.stream().skip(1).forEach(fork -> fork.processor.subscribe(pro));
+        this.forks.forEach(fork -> fork.processor.subscribe(pro));
         return new State<>(pro, this.node.getFlow());
     }
 }

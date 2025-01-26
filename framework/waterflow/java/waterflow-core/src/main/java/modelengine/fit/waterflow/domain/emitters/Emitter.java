@@ -13,7 +13,7 @@ package modelengine.fit.waterflow.domain.emitters;
  *
  * @since 1.0
  */
-public interface Emitter<D, T> {
+public interface Emitter<D, T> extends Completable {
     /**
      * 注册监听
      *
@@ -44,5 +44,10 @@ public interface Emitter<D, T> {
      * @param token 发布数据时归属的session
      */
     default void start(T token) {
+    }
+
+    @Override
+    default void complete() {
+        throw new RuntimeException("Complete is not supported");
     }
 }

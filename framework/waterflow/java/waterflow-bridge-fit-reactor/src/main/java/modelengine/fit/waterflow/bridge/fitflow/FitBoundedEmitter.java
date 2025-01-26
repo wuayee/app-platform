@@ -6,23 +6,12 @@
 
 package modelengine.fit.waterflow.bridge.fitflow;
 
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE;
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM;
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID;
-
 import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.emitters.EmitterListener;
-import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
-import modelengine.fit.waterflow.domain.utils.UUIDUtil;
+import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
 import modelengine.fitframework.flowable.Publisher;
 import modelengine.fitframework.flowable.Subscriber;
 import modelengine.fitframework.flowable.Subscription;
-import modelengine.fitframework.model.Tuple;
-import modelengine.fitframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -31,14 +20,8 @@ import java.util.function.Function;
  * @author xiafei
  * @since 2024/8/16
  */
-public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
-    private final List<Tuple> dataDuet = new ArrayList<>();
-
-    private final FlowSession flowSession;
-
+public abstract class FitBoundedEmitter<O, D> extends FlowEmitter<D> {
     private final Function<O, D> dataConverter;
-
-    private boolean isComplete = false;
 
     private boolean isError = false;
 
@@ -49,71 +32,31 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
      * @param dataConverter 表示用于数据类型转换的 {@link Function}{@code <}{@link O}{@code >}。
      */
     public FitBoundedEmitter(Publisher<O> publisher, Function<O, D> dataConverter) {
-        this(new FlowSession(), publisher, dataConverter);
-    }
-
-    /**
-     * 指定 {@link FlowSession} 构造 {@link FitBoundedEmitter}{@code <}{@link O}{@code , }{@link D}{@code >}。
-     *
-     * @param flowSession 表示流程实例运行标识的 {@link FlowSession}。
-     * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
-     * @param dataConverter 表示用于数据类型转换的 {@link Function}{@code <}{@link O}{@code >}。
-     */
-    public FitBoundedEmitter(FlowSession flowSession, Publisher<O> publisher, Function<O, D> dataConverter) {
-        this.flowSession = new FlowSession(flowSession);
-        this.flowSession.setInnerState(BOUNDED_SESSION_ID, UUIDUtil.uuid());
         this.dataConverter = dataConverter;
         publisher.subscribe(new FitBoundedEmitter.EmitterSubscriber<>(this));
     }
 
-    @Override
-    public synchronized void emit(D data, FlowSession session) {
-        if (super.listeners.isEmpty()) {
-            this.dataDuet.add(Tuple.duet(data, session));
-            return;
-        }
-        super.emit(data, session);
-    }
-
-    @Override
-    public synchronized void register(EmitterListener<D, FlowSession> listener) {
-        super.listeners.add(listener);
-        if (this.dataDuet.isEmpty()) {
-            return;
-        }
-        this.dataDuet.forEach(duet -> {
-            Optional<FlowSession> sessionOptional = duet.get(1);
-            this.emit(ObjectUtils.cast(duet.get(0).orElse(null)), sessionOptional.orElse(null));
-        });
-    }
-
     private void doEmit(D data) {
-        FlowSession newSession = new FlowSession(this.flowSession);
-        this.emit(data, newSession);
+        this.emit(data, this.flowSession);
     }
 
     private void doComplete() {
-        FlowSession newSession = new FlowSession(this.flowSession);
-        newSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
-        newSession.setInnerState(IS_SYSTEM, true);
-        newSession.setInnerState(IS_SESSION_COMPLETE, true);
-        newSession.setInnerState(IS_BOUNDED, true);
-        newSession.setInnerState(IS_BOUNDED_COMPLETE, true);
-        this.emit(null, newSession);
+        this.complete();
     }
 
     private void doError(Exception cause) {
-        FlowSession newSession = new FlowSession(this.flowSession);
-        newSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
-        newSession.setInnerState(IS_SYSTEM, true);
-        newSession.setInnerState(IS_BOUNDED, true);
-        newSession.setInnerState(IS_BOUNDED_ERROR, true);
-        newSession.setInnerState(BOUNDED_ERROR, cause);
-        this.emit(null, newSession);
     }
 
     @Override
-    public void start(FlowSession session) {
+    public synchronized void start(FlowSession session) {
+        if (session != null) {
+            session.begin();
+        }
+        this.setFlowSession(session);
+        this.setStarted();
+        // 启动时先发射缓存的数据，此时可能先缓存了数据，所以开始时发射完数据就可能结束了。
+        this.fire();
+        this.tryCompleteWindow();
     }
 
     /**
@@ -147,13 +90,12 @@ public abstract class FitBoundedEmitter<O, D> extends FlowBoundedEmitter<D> {
 
         @Override
         public void complete() {
-            this.emitter.isComplete = true;
             this.emitter.doComplete();
         }
 
         @Override
         public boolean isCompleted() {
-            return this.emitter.isComplete;
+            return this.emitter.isComplete();
         }
 
         @Override

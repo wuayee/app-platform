@@ -8,8 +8,10 @@ package modelengine.fel.engine.operators.patterns;
 
 import modelengine.fel.core.pattern.Pattern;
 import modelengine.fel.engine.flows.AiProcessFlow;
+import modelengine.fel.engine.flows.ConverseLatch;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
@@ -64,8 +66,11 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
         return new SimplePattern<>(data -> {
             FlowSession require = AiFlowSession.require();
             FlowSession session = new FlowSession();
+            Window window = session.begin();
             session.copySessionState(require);
-            return this.getFlow().converse(session).offer(data).await();
+            ConverseLatch<O> conversation = this.getFlow().converse(session).offer(data);
+            window.complete();
+            return conversation.await();
         });
     }
 
