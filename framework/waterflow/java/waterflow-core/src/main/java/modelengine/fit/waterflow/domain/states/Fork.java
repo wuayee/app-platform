@@ -6,13 +6,12 @@
 
 package modelengine.fit.waterflow.domain.states;
 
-import javafx.util.Pair;
 import modelengine.fit.waterflow.domain.context.FlowContext;
-import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
+import modelengine.fit.waterflow.domain.utils.Tuple;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     public <R> State<R, D, O, F> join(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Fork<O, D, I, F> me = this;
         AtomicInteger forkNumber = new AtomicInteger(this.forks.size());
-        Map<String, Map<Object, Pair<R, Integer>>> allAccs = new HashMap<>();//session,keyby,data
+        Map<String, Map<Object, Tuple<R, Integer>>> allAccs = new HashMap<>();//session,keyby,data
         AtomicReference<Publisher<O>> processWrapper = new AtomicReference<>();
         Supplier<R> actualInit = ObjectUtils.nullIf(init, () -> null);
         Operators.Map<FlowContext<O>, R> wrapper = new Operators.Map<FlowContext<O>, R>() {
@@ -80,25 +79,25 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             public synchronized R process(FlowContext<O> input) {
                 input.getSession().setAsAccumulator();
                 Object key = input.getParallel();
-                Map<Object, Pair<R, Integer>> accs = allAccs.computeIfAbsent(input.getSession().getId(),
+                Map<Object, Tuple<R, Integer>> accs = allAccs.computeIfAbsent(input.getSession().getId(),
                         k -> new HashMap<>());
 
-                Pair<R, Integer> acc = Optional.ofNullable(accs.get(key))
-                        .orElseGet(() -> new Pair<>(actualInit.get(), 0));
-                if (acc.getKey() == null) {
+                Tuple<R, Integer> acc = Optional.ofNullable(accs.get(key))
+                        .orElseGet(() -> Tuple.from(actualInit.get(), 0));
+                if (acc.first() == null) {
                     if (input.getData() instanceof Number) {
-                        acc = new Pair<>((R) new Integer(0), 0);
+                        acc = Tuple.from((R) new Integer(0), 0);
                     }
                     if (input.getData() instanceof String) {
-                        acc = new Pair<>((R) "", 0);
+                        acc = Tuple.from((R) "", 0);
                     }
                 }
-                acc = new Pair<>(processor.process(acc.getKey(), input.getData()), acc.getValue() + 1);
+                acc = Tuple.from(processor.process(acc.first(), input.getData()), acc.second() + 1);
                 accs.put(key, acc);
 
-                if (acc.getValue() == forkNumber.get()) {
+                if (acc.second() == forkNumber.get()) {
                     accs.remove(key);
-                    return acc.getKey();
+                    return acc.first();
                 } else {
                     return null;
                 }
