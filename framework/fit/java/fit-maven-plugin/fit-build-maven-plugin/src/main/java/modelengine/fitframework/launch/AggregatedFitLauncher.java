@@ -63,8 +63,8 @@ public final class AggregatedFitLauncher {
 
     public static void main(String[] args) throws Throwable {
         Handlers.register();
-        URLClassLoader sharedClassLoader = obtainSharedClassLoader();
-        URLClassLoader frameworkClassLoader = new URLClassLoader(new URL[0], sharedClassLoader);
+        UrlClassLoader sharedClassLoader = obtainSharedClassLoader();
+        UrlClassLoader frameworkClassLoader = new UrlClassLoader(new URL[0], sharedClassLoader);
         String entryClassName = getEntryClassName(sharedClassLoader, frameworkClassLoader, Jar.from(startup()));
         if (entryClassName == null || entryClassName.isEmpty()) {
             throw new IllegalStateException("No FIT-Class-Name configured in manifest of JAR.");
@@ -118,10 +118,9 @@ public final class AggregatedFitLauncher {
         return file;
     }
 
-    private static String getEntryClassName(URLClassLoader sharedClassLoader, URLClassLoader frameworkClassLoader,
+    private static String getEntryClassName(UrlClassLoader sharedClassLoader, UrlClassLoader frameworkClassLoader,
             Jar jar) throws MalformedURLException {
         String entryClassName = null;
-        Method addUrl = getAddUrlMethod();
         for (Jar.Entry entry : jar.entries()) {
             if (MANIFEST_ENTRY_NAME.equalsIgnoreCase(entry.name())) {
                 Manifest manifest = manifestOf(entry);
@@ -129,44 +128,30 @@ public final class AggregatedFitLauncher {
                 continue;
             }
             if (CLASS_DIRECTORY_ENTRY_NAME.equalsIgnoreCase(entry.name())) {
-                registerJar(addUrl, frameworkClassLoader, entry.location().asJar().toUrl());
+                frameworkClassLoader.addURL(entry.location().asJar().toUrl());
                 continue;
             }
             if (!isJarEntry(entry.name())) {
                 continue;
             }
             if (inDirectory(entry.name(), LIB_ENTRY_NAME)) {
-                registerJar(addUrl, frameworkClassLoader, entry.location().asJar().toUrl());
+                frameworkClassLoader.addURL(entry.location().asJar().toUrl());
                 continue;
             }
             if (inDirectory(entry.name(), SHARED_ENTRY_NAME)) {
-                registerJar(addUrl, sharedClassLoader, entry.location().asJar().toUrl());
+                sharedClassLoader.addURL(entry.location().asJar().toUrl());
                 continue;
             }
             if (inDirectory(entry.name(), THIRD_PARTY_ENTRY_NAME)) {
-                registerJar(addUrl, frameworkClassLoader, entry.location().asJar().toUrl());
+                frameworkClassLoader.addURL(entry.location().asJar().toUrl());
             }
         }
         return entryClassName;
     }
 
-    private static Method getAddUrlMethod() {
-        try {
-            Method addUrl = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            addUrl.setAccessible(true);
-            return addUrl;
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("The URLClassLoader#addURL(URL) method required, but not found.", e);
-        }
-    }
-
-    private static URLClassLoader obtainSharedClassLoader() {
+    private static UrlClassLoader obtainSharedClassLoader() {
         ClassLoader loader = AggregatedFitLauncher.class.getClassLoader();
-        if (loader instanceof URLClassLoader) {
-            return (URLClassLoader) loader;
-        } else {
-            return new URLClassLoader(new URL[0], loader);
-        }
+        return new UrlClassLoader(new URL[0], loader);
     }
 
     private static Manifest manifestOf(Jar.Entry entry) {
@@ -225,22 +210,6 @@ public final class AggregatedFitLauncher {
         }
     }
 
-    private static void registerJar(Method add, URLClassLoader loader, URL url) {
-        try {
-            add.invoke(loader, url);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(String.format(Locale.ROOT,
-                    "Failed to access method to register JAR. [class=%s, method=%s]",
-                    add.getDeclaringClass().getName(),
-                    signatureOf(add)), e);
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException(String.format(Locale.ROOT,
-                    "Failed to invoke method to register JAR. [class=%s, method=%s]",
-                    add.getDeclaringClass().getName(),
-                    signatureOf(add)), e.getCause());
-        }
-    }
-
     private static boolean inDirectory(String string, String directory) {
         return string.length() >= directory.length() && string.regionMatches(true, 0, directory, 0, directory.length());
     }
@@ -266,5 +235,19 @@ public final class AggregatedFitLauncher {
         }
         builder.append(')');
         return builder.toString();
+    }
+
+    /**
+     * 表示 {@link URLClassLoader} 的共享类加载器的实现。
+     */
+    public static class UrlClassLoader extends URLClassLoader {
+        public UrlClassLoader(URL[] urls, ClassLoader parent) {
+            super(urls, parent);
+        }
+
+        @Override
+        public void addURL(URL url) {
+            super.addURL(url);
+        }
     }
 }

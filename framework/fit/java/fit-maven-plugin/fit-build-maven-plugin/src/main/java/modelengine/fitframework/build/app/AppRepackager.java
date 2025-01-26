@@ -204,8 +204,13 @@ public final class AppRepackager extends AbstractRepackager {
     }
 
     private void packageLauncher(JarPackager packager) throws MojoExecutionException {
-        String name = AggregatedFitLauncher.class.getName();
-        name = StringUtils.replace(name, ClassUtils.PACKAGE_SEPARATOR, JarEntryLocation.ENTRY_PATH_SEPARATOR);
+        this.packageClass(packager, AggregatedFitLauncher.class.getName());
+        this.packageClass(packager, AggregatedFitLauncher.UrlClassLoader.class.getName());
+    }
+
+    private void packageClass(JarPackager packager, String className) throws MojoExecutionException {
+        String name =
+                StringUtils.replace(className, ClassUtils.PACKAGE_SEPARATOR, JarEntryLocation.ENTRY_PATH_SEPARATOR);
         name += ClassFile.FILE_EXTENSION;
         try (InputStream in = IoUtils.resource(AppRepackager.class.getClassLoader(), name)) {
             ZipEntry entry = new ZipEntry(name);
