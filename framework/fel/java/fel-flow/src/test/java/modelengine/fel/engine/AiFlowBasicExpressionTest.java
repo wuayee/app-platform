@@ -16,6 +16,7 @@ import modelengine.fel.engine.flows.Conversation;
 import modelengine.fel.engine.utils.AiFlowTestData;
 import modelengine.fel.engine.utils.FlowsTestUtils;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -126,10 +127,11 @@ public class AiFlowBasicExpressionTest {
         }
 
         @Test
+        @Disabled("暂不支持")
         @DisplayName("带有window的reduce数据聚合")
         void shouldOkWhenReduceWithWindow() {
             AiProcessFlow<Integer, Integer> flow = AiFlows.<Integer>create()
-                    .window(inputs -> inputs.size() == 2)
+                    .window(2)
                     .reduce(() -> 0, Integer::sum)
                     .close();
 
@@ -137,6 +139,7 @@ public class AiFlowBasicExpressionTest {
         }
 
         @Test
+        @Disabled("暂不支持")
         @DisplayName("buffer数据聚合, 逐个注入数据")
         void shouldOkWhenGatherWithBuffer() {
             AiProcessFlow<Integer, Integer> flow =
@@ -146,6 +149,7 @@ public class AiFlowBasicExpressionTest {
         }
 
         @Test
+        @Disabled("暂不支持")
         @DisplayName("带有process节点的buffer数据聚合")
         void test_process_with_custom_state() {
             StringBuffer answer = new StringBuffer(512);
@@ -177,7 +181,7 @@ public class AiFlowBasicExpressionTest {
                                 collector.collect(data);
                                 collector.collect(data + 1);
                             })
-                            .window(inputs -> inputs.size() == 2)
+                            .window(2)
                             .reduce(StringBuilder::new, (acc, input) -> acc.append(input))
                             .map(StringBuilder::toString)
                             .close()

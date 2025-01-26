@@ -6,7 +6,7 @@
 
 package modelengine.fit.waterflow.domain.context.repo.flowlock;
 
-import modelengine.fit.waterflow.domain.common.Constant;
+import modelengine.fit.waterflow.domain.common.Constants;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
@@ -71,6 +71,6 @@ public interface FlowLocks {
      * @return 分布式锁key值
      */
     default String lockKey(String streamId, String nodeId, String processType) {
-        return StringUtils.join(Constant.STREAM_ID_SEPARATOR, NODE_LOCK_KEY_PREFIX, streamId, nodeId, processType);
+        return StringUtils.join(Constants.STREAM_ID_SEPARATOR, NODE_LOCK_KEY_PREFIX, streamId, nodeId, processType);
     }
 }

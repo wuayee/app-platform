@@ -8,7 +8,7 @@ package modelengine.fit.waterflow.domain.states;
 
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.Emitter;
-import modelengine.fit.waterflow.domain.emitters.FlowBoundedEmitter;
+import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.utils.Tuple;
@@ -38,11 +38,11 @@ public class DataStart<O, D, I> {
     private final Emitter<D, FlowSession> emitter;
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, D data) {
-        this(state, FlowBoundedEmitter.mono(data));
+        this(state, FlowEmitter.mono(data));
     }
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, D[] data) {
-        this(state, FlowBoundedEmitter.flux(data));
+        this(state, FlowEmitter.flux(data));
     }
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, Emitter<D, FlowSession> emitter) {
@@ -56,16 +56,6 @@ public class DataStart<O, D, I> {
     }
 
     /**
-     * 触发数据的发射。
-     */
-    protected void offer() {
-        if (this.emitter != null) {
-            this.start.state.getFlow().offer(this.emitter);
-            this.emitter.start(new FlowSession());
-        }
-    }
-
-    /**
      * just，只处理，不转换
      * <p>
      * {@link Start#just(Operators.Just)}的包装
@@ -76,17 +66,6 @@ public class DataStart<O, D, I> {
      */
     public DataState<O, D, O> just(Operators.Just<O> processor) {
         return new DataState(this.state.just(processor), this.start);
-    }
-
-    /**
-     * system节点，可处理系统事件，并给出context
-     *
-     * @param processor 事件消费
-     * @return 新的处理节点
-     */
-    public DataState<O, D, O> system(Operators.SystemProcessor<O> processor) {
-        State<O, D, O, ProcessFlow<D>> context = this.state.system(processor);
-        return new DataState(context, this.start);
     }
 
     /**
@@ -155,14 +134,14 @@ public class DataStart<O, D, I> {
     /**
      * 形成一个window，window中的数据满足条件后，将触发后续的数据聚合处理
      * <p>
-     * {@link Start#window(Operators.Window)}的包装
+     * {@link Start#window(Operators.WindowCondition)}的包装
      * </p>
      *
-     * @param window window的条件
+     * @param windowCondition window的条件
      * @return window的后续节点
      */
-    public DataState<O, D, O> window(Operators.Window<O> window) {
-        return new DataState(this.state.window(window), this.start);
+    public DataState<O, D, O> window(Operators.WindowCondition windowCondition) {
+        return new DataState(this.state.window(windowCondition), this.start);
     }
 
     /**
@@ -219,5 +198,23 @@ public class DataStart<O, D, I> {
      */
     public <R> DataState<R, D, O> process(Operators.Process<O, R> processor) {
         return new DataState(this.state.process(processor), this.start);
+    }
+
+    /**
+     * 触发数据的发射。
+     */
+    protected void offer(FlowSession session) {
+        if (this.emitter == null) {
+            return;
+        }
+        this.start.state.getFlow().offer(this.emitter);
+        this.emitter.start(session);
+    }
+
+    /**
+     * offer一个空数据
+     */
+    protected void offer() {
+        this.offer(null);
     }
 }

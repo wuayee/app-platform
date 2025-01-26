@@ -7,13 +7,11 @@
 package modelengine.fit.waterflow.domain.stream.nodes;
 
 import modelengine.fit.waterflow.domain.context.FlowContext;
-import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
-import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -42,15 +40,8 @@ public class ParallelNode<I> extends Node<I, I> {
      */
     public ParallelNode(String streamId, ParallelMode mode, FlowContextRepo repo, FlowContextMessenger messenger,
             FlowLocks locks) {
-        super(streamId, in -> {
-            in.setWindowToken(new WindowToken(inputs -> {
-                if (inputs.size() <= 0) {
-                    return false;
-                }
-                return inputs.size() == ObjectUtils.<Integer>cast(inputs.get(0));
-            }));
-            return in.getData();
-        }, repo, messenger, locks, () -> initFrom(streamId, mode, repo, messenger, locks));
+        super(streamId, FlowContext::getData, repo, messenger, locks,
+                () -> initFrom(streamId, mode, repo, messenger, locks));
         this.mode = mode;
     }
 

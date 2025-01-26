@@ -35,7 +35,7 @@ public class ProcessFlow<D> extends Flow<D> implements EmitterListener<D, FlowSe
 
     @Override
     public void handle(D data, FlowSession token) {
-        this.offer(data, token);
+        this.offer(data, token == null ? new FlowSession() : token);
     }
 
     @Override
@@ -46,5 +46,12 @@ public class ProcessFlow<D> extends Flow<D> implements EmitterListener<D, FlowSe
     @Override
     public void emit(Object data, FlowSession token) {
         this.end.emit(data, token);
+    }
+
+    @Override
+    public void complete() {
+        this.defaultSession.getWindow().complete();
+        this.defaultSession = new FlowSession();
+        this.defaultSession.begin();
     }
 }

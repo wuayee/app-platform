@@ -6,7 +6,7 @@
 
 package modelengine.fit.waterflow.domain.utils;
 
-import modelengine.fit.waterflow.domain.common.Constant;
+import modelengine.fit.waterflow.domain.common.Constants;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
@@ -101,9 +101,9 @@ public final class FlowUtil {
     private static String replaceFormattedVariable(String conditionRule, Matcher matcher) {
         String formatVariable = matcher.group(0);
         String originalVariable = matcher.group(1);
-        if (!originalVariable.startsWith(Constant.BUSINESS_DATA_KEY)
-                || !originalVariable.startsWith(Constant.PASS_DATA)) {
-            originalVariable = Constant.BUSINESS_DATA_KEY + "." + originalVariable;
+        if (!originalVariable.startsWith(Constants.BUSINESS_DATA_KEY)
+                || !originalVariable.startsWith(Constants.PASS_DATA)) {
+            originalVariable = Constants.BUSINESS_DATA_KEY + "." + originalVariable;
         }
         return conditionRule.replace(formatVariable, originalVariable);
     }

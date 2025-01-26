@@ -11,15 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import lombok.Data;
 import modelengine.fit.waterflow.domain.context.FlowSession;
+import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
-import modelengine.fit.waterflow.domain.stream.objects.ThreadMode;
 import modelengine.fit.waterflow.domain.utils.FlowDebug;
 import modelengine.fit.waterflow.domain.utils.SleepUtil;
-import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.flowable.Publisher;
-import modelengine.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,13 +48,12 @@ class FitBoundedEmitterTest {
         /**
          * 通过数据发布者和有限流数据构造器初始化 {@link TestEmitter}{@code <}{@link O}{@code , }{@link D}{@code >}。
          *
-         * @param flowSession 表示数据归属的 {@link FlowSession}{@code <}{@link O}{@code >}。
          * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
          * @param builder 表示有限流数据构造器的 {@link Function}{@code <}{@link O}{@code ,
          * }{@link D}{@code >}。
          */
-        public TestEmitter(FlowSession flowSession, Publisher<O> publisher, Function<O, D> builder) {
-            super(flowSession, publisher, builder);
+        public TestEmitter(Publisher<O> publisher, Function<O, D> builder) {
+            super(publisher, builder);
         }
     }
 
@@ -70,10 +67,12 @@ class FitBoundedEmitterTest {
             subscriber.complete();
         }).start();
         Function<String, TestEmitterData<String>> builder = new TestBoundedEmitterDataBuilder<>();
-        TestEmitter<String, TestEmitterData<String>> emitter = new TestEmitter<>(new FlowSession(), publisher, builder);
+        FlowSession flowSession = new FlowSession();
+        TestEmitter<String, TestEmitterData<String>> emitter = new TestEmitter<>(publisher, builder);
         emitter.register((data, token) -> {
             result.add(data.getData());
         });
+        emitter.start(flowSession);
         waitUntil(end::get, 1000);
         assertEquals(2, result.size());
     }
@@ -83,14 +82,14 @@ class FitBoundedEmitterTest {
         AtomicBoolean end = new AtomicBoolean(false);
         List<Integer> result = new ArrayList<>();
         FlowSession session = new FlowSession();
-        ProcessFlow<Integer> flow = Flows.<Integer>create(ThreadMode.SESSION).flatMap(input -> {
+        Window window = session.begin();
+        ProcessFlow<Integer> flow = Flows.<Integer>create().flatMap(input -> {
             Choir<Integer> publisher = Choir.create(emitter -> {
                 IntStream.range(0, input).forEach(emitter::emit);
                 emitter.complete();
             });
             TestBoundedEmitterDataBuilder<Integer> builder = new TestBoundedEmitterDataBuilder<>();
-            FitBoundedEmitter<Integer, TestEmitterData<Integer>> emitter = new TestEmitter<>(new FlowSession(session),
-                    publisher, builder);
+            FitBoundedEmitter<Integer, TestEmitterData<Integer>> emitter = new TestEmitter<>(publisher, builder);
             return Flows.source(emitter);
         }).close((sessionId, data) -> {
             result.add(data.getData());
@@ -100,13 +99,8 @@ class FitBoundedEmitterTest {
         }, (sessionId, error) -> {});
         FlowDebug.log("session:" + session.getId());
         flow.offer(3, session);
-        FlowSession flowSession = new FlowSession(session);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID,
-                UUIDUtil.uuid());
-        flow.offer(ObjectUtils.<Integer>cast(null), flowSession);
-        waitUntil(end::get, 1000);
+        window.complete();
+        waitUntil(end::get, 10000);
         assertEquals(3, result.size());
         assertTrue(end.get());
     }
@@ -116,17 +110,16 @@ class FitBoundedEmitterTest {
         AtomicBoolean end = new AtomicBoolean(false);
         List<Integer> result = new ArrayList<>();
         FlowSession session = new FlowSession();
-        ProcessFlow<Integer> flow = Flows.<Integer>create(ThreadMode.SESSION).flatMap(input -> {
+        session.begin();
+        ProcessFlow<Integer> flow = Flows.<Integer>create().flatMap(input -> {
             Choir<Integer> publisher = Choir.create(emitter -> {
                 IntStream.range(0, input).forEach(emitter::emit);
                 emitter.complete();
             });
             TestBoundedEmitterDataBuilder<Integer> builder = new TestBoundedEmitterDataBuilder<>();
-            FitBoundedEmitter<Integer, TestEmitterData<Integer>> emitter = new TestEmitter<>(new FlowSession(session),
-                    publisher, builder);
+            FitBoundedEmitter<Integer, TestEmitterData<Integer>> emitter = new TestEmitter<>(publisher, builder);
             return Flows.source(emitter);
         }).reduce(() -> 0, (acc, i) -> {
-            FlowDebug.log("reduce: " + acc);
             return acc + i.getData();
         }).close((sessionId, data) -> {
             result.add(data);
@@ -136,12 +129,7 @@ class FitBoundedEmitterTest {
         }, (sessionId, error) -> {});
         FlowDebug.log("session:" + session.getId());
         flow.offer(3, session);
-        FlowSession flowSession = new FlowSession(session);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID,
-                UUIDUtil.uuid());
-        flow.offer(ObjectUtils.<Integer>cast(null), flowSession);
+        session.getWindow().complete();
         waitUntil(end::get, 10000);
         assertTrue(end.get());
         assertEquals(1, result.size());
@@ -152,7 +140,8 @@ class FitBoundedEmitterTest {
         AtomicBoolean end = new AtomicBoolean(false);
         List<Integer> result = new ArrayList<>();
         FlowSession session = new FlowSession();
-        ProcessFlow<Integer> flow = Flows.<Integer>create(ThreadMode.SESSION)
+        session.begin();
+        ProcessFlow<Integer> flow = Flows.<Integer>create()
                 .map(i -> i + 1)
                 .id("redo")
                 .flatMap(input -> {
@@ -161,8 +150,8 @@ class FitBoundedEmitterTest {
                         emitter.complete();
                     });
                     TestBoundedEmitterDataBuilder<Integer> builder = new TestBoundedEmitterDataBuilder<>();
-                    FitBoundedEmitter<Integer, TestEmitterData<Integer>> emitter = new TestEmitter<>(
-                            new FlowSession(session), publisher, builder);
+                    FitBoundedEmitter<Integer, TestEmitterData<Integer>> emitter = new TestEmitter<>(publisher,
+                            builder);
                     return Flows.source(emitter);
                 })
                 .conditions()
@@ -174,13 +163,8 @@ class FitBoundedEmitterTest {
                     result.add(data);
                 }, sessionId -> end.set(true), (sessionId, error) -> {});
         flow.offer(0, session);
-        FlowSession flowSession = new FlowSession(session);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM, true);
-        flowSession.setInnerState(modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID,
-                UUIDUtil.uuid());
-        flow.offer(ObjectUtils.<Integer>cast(null), flowSession);
-        waitUntil(end::get, 10000);
+        session.getWindow().complete();
+        waitUntil(end::get, 1000);
         assertTrue(end.get());
         assertEquals(1, result.size());
     }

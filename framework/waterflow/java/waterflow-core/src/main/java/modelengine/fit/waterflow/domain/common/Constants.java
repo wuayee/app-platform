@@ -21,10 +21,10 @@ import java.util.Map;
 /**
  * 常数类
  *
- * @author 晏钰坤
+ * @author 宋永坦
  * @since 1.0
  */
-public final class Constant {
+public final class Constants {
     /**
      * 定时任务获取
      */
@@ -196,7 +196,8 @@ public final class Constant {
      * flowContext 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
      */
     public static final List<String> CONTEXT_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
+            Arrays.asList(
+                    FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
                     FlowNodeStatus.ERROR.toString()));
 
     /**
@@ -223,9 +224,9 @@ public final class Constant {
     /**
      * flowTrace 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
      */
-    public static final List<String> TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowTraceStatus.TERMINATE.toString(), FlowTraceStatus.ARCHIVED.toString(),
-                    FlowTraceStatus.ERROR.toString()));
+    public static final List<String> TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
+            FlowTraceStatus.TERMINATE.toString(), FlowTraceStatus.ARCHIVED.toString(),
+            FlowTraceStatus.ERROR.toString()));
 
     /**
      * flowTrace 其他状态的互斥状态列表
@@ -256,4 +257,19 @@ public final class Constant {
      * 流程运行非落盘数据
      */
     public static final String PASS_DATA = "passData";
+
+    /**
+     * 未确认的索引编号
+     */
+    public static final Integer UNCONFIRMED_INDEX = 1000000;
+
+    /**
+     * 不需要保序的索引编号
+     */
+    public static final Integer NOT_PRESERVED_INDEX = -1;
+
+    /**
+     * 来自于flat map的标识
+     */
+    public static final String FROM_FLATMAP = "FROM_FLATMAP";
 }

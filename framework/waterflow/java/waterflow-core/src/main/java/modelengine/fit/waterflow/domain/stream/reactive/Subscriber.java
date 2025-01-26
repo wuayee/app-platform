@@ -12,7 +12,6 @@ import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo
 import modelengine.fit.waterflow.domain.emitters.Emitter;
 import modelengine.fit.waterflow.domain.enums.ProcessType;
 import modelengine.fit.waterflow.domain.stream.nodes.Blocks;
-import modelengine.fit.waterflow.domain.stream.objects.FlowConfig;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.List;
@@ -85,9 +84,11 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
     /**
      * 节点真正处理context方法onProcess
      *
-     * @param contexts contexts
+     * @param type 任务类型，是pre还是
+     * @param preList contexts
+     * @param isInThread 是否是在线程中运行
      */
-    void onProcess(List<FlowContext<I>> contexts);
+    void onProcess(ProcessType type, List<FlowContext<I>> preList, boolean isInThread);
 
     /**
      * onNext
@@ -160,18 +161,4 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
      * @return repo
      */
     FlowContextRepo getFlowContextRepo();
-
-    /**
-     * 获取流配置
-     *
-     * @return 流配置
-     */
-    FlowConfig getFlowConfig();
-
-    /**
-     * 设置流配置
-     *
-     * @param flowConfig 流配置
-     */
-    void setFlowConfig(FlowConfig flowConfig);
 }

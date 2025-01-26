@@ -6,16 +6,11 @@
 
 package modelengine.fel.engine.operators.patterns;
 
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SESSION_COMPLETE;
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.IS_SYSTEM;
-import static modelengine.fit.waterflow.domain.stream.reactive.Publisher.SESSION_TRACE_ID;
-
 import modelengine.fel.core.pattern.Pattern;
 import modelengine.fel.engine.util.AiFlowSession;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.emitters.EmitterListener;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
-import modelengine.fit.waterflow.domain.utils.UUIDUtil;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 
@@ -56,11 +51,7 @@ public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
     public O invoke(I data) {
         FlowSession session = AiFlowSession.require();
         this.emit(this.processor.process(data, session), session);
-        FlowSession flowSession = new FlowSession(session);
-        flowSession.setInnerState(IS_SESSION_COMPLETE, true);
-        flowSession.setInnerState(IS_SYSTEM, true);
-        flowSession.setInnerState(SESSION_TRACE_ID, UUIDUtil.uuid());
-        this.emit(null, flowSession);
+        session.getWindow().complete();
         return null;
     }
 

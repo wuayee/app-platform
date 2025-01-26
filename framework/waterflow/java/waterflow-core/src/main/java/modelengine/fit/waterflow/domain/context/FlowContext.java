@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  *
  * @since 1.0
  */
-public final class FlowContext<T> extends IdGenerator implements StateContext {
+public class FlowContext<T> extends IdGenerator implements StateContext {
     /**
      * 通过 from.offer(data) 而不是 .offer(context) 发起的数据会新增一个路径，这个路径会延续到流的终点。
      */
@@ -99,7 +99,7 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
      * context 的生产批次唯一标识。
      */
     @Getter
-    private String batchId;
+    protected String batchId;
 
     /**
      * 转向哪个 context 批次。
@@ -135,13 +135,12 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     @Setter
     private LocalDateTime archivedAt;
 
+    /**
+     * 保序id,-1代表不需要保序
+     */
     @Getter
     @Setter
-    private WindowToken windowToken = null;
-
-    private Object keyBy = null;
-
-    private boolean isAccumulator;
+    private Integer index;
 
     /**
      * 创建一个 {@link FlowContext} 实例。
@@ -152,8 +151,9 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
      * @param traceId 表示路径唯一标识的 {@link Set}{@code <}的{@link String}{@code >}。
      * @param position 表示上下文当前所处的位置的 {@link String}。
      */
-    public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position) {
-        this(streamId, rootId, data, traceId, position, "", "");
+    public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position,
+                       FlowSession session) {
+        this(streamId, rootId, data, traceId, position, "", "", session);
     }
 
     /**
@@ -168,7 +168,7 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
      * @param parallelMode 表示并行模式的 {@link String}。
      */
     public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position, String parallel,
-            String parallelMode) {
+            String parallelMode, FlowSession session) {
         this.streamId = streamId;
         this.rootId = rootId;
         this.data = data;
@@ -178,7 +178,12 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
         this.parallel = parallel;
         this.parallelMode = parallelMode;
         this.createAt = LocalDateTime.now();
-        this.session = new FlowSession();
+        this.session = session;
+        this.index = this.createIndex(); // 0起始，说明保序
+    }
+
+    private Integer createIndex(){
+        return session.preserved() ? session.getWindow().tokenCount() : -1;
     }
 
     /**
@@ -254,17 +259,6 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 设置当前 context 所在的会话。
-     *
-     * @param flowSession 表示流会话的 {@link FlowSession}。
-     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
-     */
-    public FlowContext<T> inFlowTrans(FlowSession flowSession) {
-        this.session = flowSession;
-        return this;
-    }
-
-    /**
      * 在 map，reduce，produce 的过程中把大多数上一个 context 的内容复制给下一个。
      *
      * @param data 表示处理后数据的 {@link R}。
@@ -272,18 +266,12 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
      * @return 表示新的上下文的 {@link FlowContext}{@code <}{@link R}{@code >}。
      */
     public <R> FlowContext<R> generate(R data, String position) {
-        FlowContext<R> context = new FlowContext<>(this.streamId,
-                this.rootId,
-                data,
-                this.traceId,
-                this.position,
-                this.parallel,
-                this.parallelMode);
+        FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
+                this.parallel, this.parallelMode, this.session);
         context.position = position;
         context.previous = this.id;
-        context.session = this.session;
-        context.windowToken = this.windowToken;
-        context.keyBy = this.keyBy == null ? this.session.keyBy() : this.keyBy;
+        context.batchId = this.batchId;
+        context.index = this.index;
         return context;
     }
 
@@ -306,13 +294,8 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
      * @return 表示转换后的 context 的 {@link FlowContext}{@code <}{@link R}{@code >}。
      */
     public <R> FlowContext<R> convertData(R data, String id) {
-        FlowContext<R> context = new FlowContext<>(this.streamId,
-                this.rootId,
-                data,
-                this.traceId,
-                this.position,
-                this.parallel,
-                this.parallelMode);
+        FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
+                this.parallel, this.parallelMode, this.session);
         context.previous = this.previous;
         context.status = this.status;
         context.id = id;
@@ -321,9 +304,7 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
         context.createAt = this.createAt;
         context.updateAt = this.updateAt;
         context.archivedAt = this.archivedAt;
-        context.session = this.session;
-        context.windowToken = this.windowToken;
-        context.keyBy = this.keyBy == null ? this.session.keyBy() : this.keyBy;
+        context.index = this.index;
         return context;
     }
 
@@ -347,37 +328,15 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 将 context 设置为 accumulator。
-     */
-    public void setAsAccumulator() {
-        this.isAccumulator = true;
-    }
-
-    /**
-     * 判定是否是 accumulator。
-     *
-     * @return 表示返回值的 {@code boolean}。
-     */
-    public boolean isAccumulator() {
-        return this.isAccumulator;
-    }
-
-    /**
-     * 获取 keyBy。
+     * 获取keyBy
      *
      * @return 表示返回值的 {@link Object}。
      */
     public Object keyBy() {
-        return this.keyBy;
+        return this.session.keyBy();
     }
 
-    /**
-     * 设置 keyBy 的键，将会影响会话的键。
-     *
-     * @param key 表示目标键的 {@link Object}。
-     */
-    public void setKeyBy(Object key) {
-        this.keyBy = key;
-        this.session.setKeyBy(key);
+    public Window getWindow() {
+        return this.getSession().getWindow();
     }
 }
