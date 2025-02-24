@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {v4 as uuidv4} from 'uuid';
-const PLUGINS = 'plugins';
 
 /**
  * addInputParam 事件处理器.
@@ -445,81 +444,6 @@ export const ChangeSkillConfigReducer = () => {
 };
 
 /**
- * changePluginConfig 事件处理器.
- *
- * @return {{}} 处理器对象.
- * @constructor
- */
-export const ChangePluginConfigReducer = () => {
-  const self = {};
-  self.type = 'changePluginConfig';
-
-  /**
-   * 处理方法.
-   *
-   * @param config 配置数据.
-   * @param action 事件对象.
-   * @return {*} 处理之后的数据.
-   */
-  self.reduce = (config, action) => {
-    const getPlugins = () => [...config.inputParams.find(params => params.name === PLUGINS).value];
-    const pluginsValue = getPlugins();
-    const pluginMap = pluginsValue.reduce((map, plugin) => {
-      const uniqueName = plugin.value[0].value.find(v => v.name === 'uniqueName').value;
-      map[uniqueName] = plugin;
-      return map;
-    }, {});
-    const actionValue = action.value;
-    // 处理 actionValue 中的每个项
-    actionValue.forEach(actionPlugin => {
-      const key = actionPlugin.uniqueName;
-      if (pluginMap[key]) {
-        // 更新现有条目
-        pluginMap[key].value[0].value.forEach(v => {
-          if (actionPlugin[v.name] !== undefined) {
-            v.value = actionPlugin[v.name];
-          }
-        });
-      } else {
-        // 添加新条目
-        pluginsValue.push({
-          id: uuidv4(),
-          type: 'Object',
-          from: 'Expand',
-          value: [
-            {
-              id: uuidv4(),
-              from: 'Expand',
-              type: 'Object',
-              value: Object.keys(actionPlugin).map(actionPluginKey => ({
-                id: uuidv4(),
-                from: 'input',
-                name: actionPluginKey,
-                type: 'String',
-                value: actionPlugin[actionPluginKey],
-              })),
-            },
-          ],
-        });
-      }
-    });
-
-    // 删除多余的条目
-    Object.keys(pluginMap).forEach(key => {
-      if (!actionValue.find(item => item.uniqueName === key)) {
-        pluginsValue.splice(pluginsValue.indexOf(pluginMap[key]), 1);
-      }
-    });
-
-    const newConfig = {...config};
-    newConfig.inputParams.find(param => param.name === PLUGINS).value = pluginsValue;
-    return newConfig;
-  };
-
-  return self;
-};
-
-/**
  * changeKnowledge 事件处理器.
  *
  * @return {{}} 处理器对象.
@@ -673,46 +597,6 @@ export const DeleteInputParamReducer = () => {
                   return promptItem;
                 }
               }),
-            };
-          } else {
-            return item;
-          }
-        });
-      } else {
-        newConfig[key] = value;
-      }
-    });
-    return newConfig;
-  };
-
-  return self;
-};
-
-/**
- * deletePlugin 事件处理器.
- *
- * @return {{}} 处理器对象.
- * @constructor
- */
-export const DeletePluginReducer = () => {
-  const self = {};
-  self.type = 'deletePlugin';
-
-  /**
-   * 处理方法.
-   *
-   * @param config 配置数据.
-   * @param action 事件对象.
-   * @return {*} 处理之后的数据.
-   */
-  self.reduce = (config, action) => {
-    const newConfig = {};
-    Object.entries(config).forEach(([key, value]) => {
-      if (key === 'inputParams') {
-        newConfig[key] = value.map(item => {
-          if (item.name === PLUGINS) {
-            return {
-              ...item, value: item.value.filter(plugin => (plugin.id !== action.id)),
             };
           } else {
             return item;

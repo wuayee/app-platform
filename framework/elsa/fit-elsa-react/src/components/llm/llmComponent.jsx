@@ -17,12 +17,10 @@ import {
     ChangeInputParamsReducer,
     ChangeKnowledgeReducer,
     ChangeOutputParamReducer,
-    ChangePluginConfigReducer,
     ChangePromptReducer,
     ChangeSkillConfigReducer,
     DeleteInputParamReducer,
     DeleteOutputParamReducer,
-    DeletePluginReducer,
     DeleteToolReducer,
     MoveKnowledgeItemReducer,
     UpdateLogStatusReducer,
@@ -49,17 +47,14 @@ export const llmComponent = (jadeConfig, shape) => {
     addReducer(builtInReducers, ChangeInputParamsReducer(shape, self));
     addReducer(builtInReducers, ChangeKnowledgeReducer(shape, self));
     addReducer(builtInReducers, ChangeOutputParamReducer(shape, self));
-    addReducer(builtInReducers, ChangePluginConfigReducer(shape, self));
     addReducer(builtInReducers, ChangePromptReducer(shape, self));
     addReducer(builtInReducers, ChangeSkillConfigReducer(shape, self));
     addReducer(builtInReducers, UpdateToolsReducer(shape, self));
     addReducer(builtInReducers, DeleteInputParamReducer(shape, self));
     addReducer(builtInReducers, DeleteOutputParamReducer(shape, self));
-    addReducer(builtInReducers, DeletePluginReducer(shape, self));
     addReducer(builtInReducers, DeleteToolReducer(shape, self));
     addReducer(builtInReducers, MoveKnowledgeItemReducer(shape, self));
     addReducer(builtInReducers, UpdateLogStatusReducer(shape, self));
-    const PLUGINS = 'plugins';
 
     /**
      * 必须.
@@ -116,7 +111,6 @@ export const llmComponent = (jadeConfig, shape) => {
                 },
                 DEFAULT_MAX_MEMORY_ROUNDS,
                 {id: uuidv4(), name: 'tools', type: 'Array', from: 'Expand', value: []},
-                {id: uuidv4(), name: PLUGINS, type: 'Array', from: 'Expand', value: [{}]},
                 {id: uuidv4(), name: 'systemPrompt', type: 'String', from: 'Input', value: ''},
                 {
                     id: uuidv4(),
