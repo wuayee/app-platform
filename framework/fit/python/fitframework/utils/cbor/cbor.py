@@ -4,7 +4,7 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # ======================================================================================================================
 """
-功 能：cbor 编解码逻辑
+功 能：cbor 编解码逻辑，相关实现参考 FIT for Java。
 """
 import base64
 import collections
