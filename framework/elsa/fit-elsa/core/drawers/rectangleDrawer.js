@@ -4,9 +4,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { PAGE_MODE, SHAPE_HIT_TYPE } from '../../common/const.js';
-import { canvasDrawer } from './canvasDrawer.js';
-import { drawer } from './htmlDrawer.js';
+import {canvasDrawer} from './canvasDrawer.js';
+import {drawer} from './htmlDrawer.js';
 
 /**
  * 绘制发光的边缘
@@ -145,7 +144,7 @@ const drawDynamic = (context, x, y, shape, control) => {
 const rectangleDrawer = (shape, div, x, y) => {
     let self = drawer(shape, div, x, y);
     self.type = "rectangle html drawer";
-    self.drawStatic = (x, y) => {
+    self.drawStatic = (context, varX, varY) => {
         self.parent.style.opacity = shape.globalAlpha;
     };
 

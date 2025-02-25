@@ -122,33 +122,6 @@ export const pixelRateAdapter = function (context, pageScaleX, pageScaleY, ignor
     return {ratioX, ratioY}
 };
 
-export const getElementPosition = (el) => {
-    let xPos = 0;
-    let yPos = 0;
-
-  let elVal = el;
-  while (elVal) {
-    if (elVal.tagName === 'BODY') {
-            // deal with browser quirks with body/window/document and self.page scroll
-      let xScroll = elVal.scrollLeft || document.documentElement.scrollLeft;
-      let yScroll = elVal.scrollTop || document.documentElement.scrollTop;
-
-      xPos += (elVal.offsetLeft - xScroll + elVal.clientLeft);
-      yPos += (elVal.offsetTop - yScroll + elVal.clientTop);
-        } else {
-            // for all other non-BODY elements
-      xPos += (elVal.offsetLeft - elVal.scrollLeft + elVal.clientLeft);
-      yPos += (elVal.offsetTop - elVal.scrollTop + elVal.clientTop);
-        }
-
-    elVal = elVal.offsetParent;
-    }
-    return {
-        x: 0, // xPos,
-        y: 0// yPos
-    };
-};
-
 export const isPointInRect = function (point, rect) {
     try {
         return (point.x >= rect.x && point.x <= (rect.x + rect.width) && point.y >= rect.y && point.y <= (rect.y + rect.height));
@@ -276,14 +249,6 @@ export const position = function (canvas) {
     }
 };
 
-export const exceptionIgnore = function (f, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10) {
-    try {
-        f(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-    } catch (e) {
-        let error = e;
-    }
-};
-
 export const isRectInteractRect = function (rect1, rect2) {
     let r1 = {left: rect1.x, right: rect1.x + rect1.width, top: rect1.y, bottom: rect1.y + rect1.height};
     let r2 = {left: rect2.x, right: rect2.x + rect2.width, top: rect2.y, bottom: rect2.y + rect2.height};
@@ -310,43 +275,8 @@ export const requestAnimationFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame;
 
-export const colorRgb = function (colorName) {
-    let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
-    let sColor = colorName.toLowerCase();
-    if (sColor && reg.test(sColor)) {
-        if (sColor.length === 4) {
-            let sColorNew = "#";
-            for (let i = 1; i < 4; i += 1) {
-                sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-            }
-            sColor = sColorNew;
-        }
-        // 处理六位的颜色值
-        let sColorChange = [];
-        for (let i = 1; i < 7; i += 2) {
-            sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
-        }
-        return {R: sColorChange[0], G: sColorChange[1], B: sColorChange[2]};
-    } else {
-        return sColor;
-    }
-};
-
 export const isNumeric = (str) => {
     return !isNaN(str) && !isNaN(parseFloat(str))
-}
-
-export const parseNums = (number) => {
-    if (number === null) {
-        return "";
-    }
-    if (number === "") {
-        return "";
-    }
-    if (number === undefined) {
-        return "";
-    }
-    return parseFloat((number).toPrecision(12));
 }
 
 export const getUrlParam = key => {
