@@ -135,7 +135,7 @@ export const Header = ({shape, data, shapeStatus}) => {
   const showMenus = () => {
     if (shape.drawer.getToolMenus().length > 0) {
       return (<>
-        <div className={'jade-menus'}>
+        <div onMouseDown={e => e.stopPropagation()} className={'jade-menus'}>
           <Dropdown
             getPopupContainer={trigger => trigger.parentNode}
             disabled={shapeStatus.disabled}
