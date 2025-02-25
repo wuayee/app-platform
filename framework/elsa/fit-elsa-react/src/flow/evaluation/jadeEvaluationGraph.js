@@ -85,9 +85,10 @@ export const jadeEvaluationGraph = (div, title) => {
         shapeData.published = true;
       });
     } else {
+      // 一个应用第一次被打开对应的评估页面
       const start = pageData.shapes.find(s => s.type === 'evaluationStartNodeStart');
       if (!start) {
-        self.compatibilityManager.compatibleWith(pageData, self);
+        self.compatibilityManager.initializeData(pageData, self);
       }
     }
   };

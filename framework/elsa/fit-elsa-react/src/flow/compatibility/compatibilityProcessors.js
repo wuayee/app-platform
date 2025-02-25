@@ -17,6 +17,7 @@ import {
   FROM_TYPE,
 } from '@/common/Consts.js';
 import {getEndNodeType} from '@/components/end/endNodeUtils.js';
+import {pageProcessor} from '@/flow/pageProcessors.js';
 
 /**
  * page 兼容处理器.
@@ -26,27 +27,13 @@ import {getEndNodeType} from '@/components/end/endNodeUtils.js';
  * @return {{}} 处理器.
  */
 export const pageCompatibilityProcessor = (pageData, graph) => {
-  const self = {};
+  const self = pageProcessor(pageData, graph);
   const shapes = pageData.shapes;
   const shapeMap = new Map();
   shapes.forEach(s => shapeMap.set(s.id, s));
 
   /**
-   * 处理page兼容性问题.
-   */
-  self.process = () => {
-    if (shapes.length === 0) {
-      return;
-    }
-    shapes.map(sd => self.createShapeProcessor(sd, graph)).forEach(p => p.process());
-  };
-
-  /**
-   * 创建节点的兼容处理器.
-   *
-   * @param shapeData 节点数据.
-   * @param g 画布对象.
-   * @return {{}} 处理器.
+   * @override
    */
   self.createShapeProcessor = (shapeData, g) => {
     switch (shapeData.type) {
@@ -127,14 +114,14 @@ export const pageCompatibilityProcessor = (pageData, graph) => {
  *
  * @param shapeData 图形数据.
  * @param graph 画布对象.
- * @param pageProcessor 页面处理器.
+ * @param pageHandler 页面处理器.
  * @return {{}} 处理器对象.
  */
-export const shapeCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
+export const shapeCompatibilityProcessor = (shapeData, graph, pageHandler) => {
   const self = {};
   self.shapeData = shapeData;
   self.graph = graph;
-  self.pageProcessor = pageProcessor;
+  self.pageProcessor = pageHandler;
 
   /**
    * 兼容性处理.
@@ -153,8 +140,8 @@ export const shapeCompatibilityProcessor = (shapeData, graph, pageProcessor) => 
  *
  * @override
  */
-export const conditionCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
-  const self = shapeCompatibilityProcessor(shapeData, graph, pageProcessor);
+export const conditionCompatibilityProcessor = (shapeData, graph, pageHandler) => {
+  const self = shapeCompatibilityProcessor(shapeData, graph, pageHandler);
 
   /**
    * @override
@@ -177,8 +164,8 @@ export const conditionCompatibilityProcessor = (shapeData, graph, pageProcessor)
  *
  * @override
  */
-export const startNodeCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
-  const self = shapeCompatibilityProcessor(shapeData, graph, pageProcessor);
+export const startNodeCompatibilityProcessor = (shapeData, graph, pageHandler) => {
+  const self = shapeCompatibilityProcessor(shapeData, graph, pageHandler);
   const i18n = graph.i18n;
 
   /**
@@ -209,8 +196,8 @@ export const startNodeCompatibilityProcessor = (shapeData, graph, pageProcessor)
  *
  * @override
  */
-export const endNodeCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
-  const self = shapeCompatibilityProcessor(shapeData, graph, pageProcessor);
+export const endNodeCompatibilityProcessor = (shapeData, graph, pageHandler) => {
+  const self = shapeCompatibilityProcessor(shapeData, graph, pageHandler);
 
   /**
    * @override
@@ -320,8 +307,8 @@ export const endNodeCompatibilityProcessor = (shapeData, graph, pageProcessor) =
  *
  * @override
  */
-export const llmCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
-  const self = shapeCompatibilityProcessor(shapeData, graph, pageProcessor);
+export const llmCompatibilityProcessor = (shapeData, graph, pageHandler) => {
+  const self = shapeCompatibilityProcessor(shapeData, graph, pageHandler);
 
   const moveWorkFlows2Tools = (inputParams) => {
     const workflows = inputParams.find(item => item.name === 'workflows');
@@ -364,8 +351,8 @@ export const llmCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
  *
  * @override
  */
-export const knowledgeRetrievalCompatibilityProcessor = (shapeData, graph, pageProcessor) => {
-  const self = shapeCompatibilityProcessor(shapeData, graph, pageProcessor);
+export const knowledgeRetrievalCompatibilityProcessor = (shapeData, graph, pageHandler) => {
+  const self = shapeCompatibilityProcessor(shapeData, graph, pageHandler);
 
   /**
    * @override
