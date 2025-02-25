@@ -4,7 +4,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import i18n from './i18n.js';
