@@ -371,3 +371,29 @@ export const eventDebounce = () => {
 
     return self;
 };
+
+/**
+ * 获取div元素的可编辑状态
+ *
+ * @param element div元素
+ * @return {string} true/false的字符串
+ */
+export const getEditStatus = element => {
+    // 辅助函数：递归查找 contentEditable 状态
+    const _findContentEditableState = el => {
+        if (!el || el.nodeType !== Node.ELEMENT_NODE) {
+            // 如果到达文档根节点或非元素节点，返回 false
+            return 'false';
+        }
+        const editableStatus = el.contentEditable;
+        if (editableStatus === 'true' || editableStatus === 'false') {
+            return editableStatus;
+        } else { // editable为inherit的场景
+            // 继续向上查找父元素
+            return _findContentEditableState(el.parentElement);
+        }
+    };
+
+    // 调用辅助函数，从当前元素开始查找
+    return _findContentEditableState(element);
+};
