@@ -387,6 +387,8 @@ export const ChangeAccessInfoConfigReducer = () => {
                 return subItem;
               }),
             };
+          } else if (item.name === 'model') {
+            return {...item, value : action.value.split('&&')[0]};
           } else {
             return item;
           }

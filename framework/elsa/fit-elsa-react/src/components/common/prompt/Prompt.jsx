@@ -99,7 +99,7 @@ export const Prompt = (
           >
             <TextArea
               disabled={disabled}
-              maxLength={10000}
+              maxLength={2000}
               className='jade-textarea-input jade-font-size'
               onBlur={(e) => changeOnBlur(e)}
               placeholder={placeHolder}
