@@ -188,14 +188,14 @@ const _MemoryConfig = ({memoryConfig, disabled, templateType, isShowUseMemoryTyp
         });
     return () => {
       cancel();
-    }
+    };
   }, []);
 
   // 对话轮数变化时，如果最大轮次数小于当前的值，将值修改为最大轮次数.
   useEffect(() => {
     if (selectedOption === BUFFER_WINDOW) {
       if (maxConversationTurn < propertyValue) {
-        dispatch({actionType: 'changeWindowValue', value: maxConversationTurn})
+        dispatch({actionType: 'changeWindowValue', value: maxConversationTurn});
       }
     }
   }, [maxConversationTurn]);
