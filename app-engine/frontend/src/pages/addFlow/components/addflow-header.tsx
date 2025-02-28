@@ -15,7 +15,7 @@ import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';
 import TestModal from '../../components/test-modal';
 import TestStatus from '../../components/test-status';
-import TimeLineDrawer from '@/components/TimeLine';
+import TimeLineDrawer from '@/components/timeLine';
 import { useTranslation } from 'react-i18next';
 import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { useAppSelector, useAppDispatch } from "@/store/hook";
