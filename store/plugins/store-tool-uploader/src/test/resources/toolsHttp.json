@@ -1,0 +1,92 @@
+{
+  "name": "方法名",
+  "version": "1.0.0",
+  "definitionGroups": [
+    {
+      "name": "方法名",
+      "definitions": [
+        {
+          "schema": {
+            "name": "方法名",
+            "description": "描述",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "type": "string",
+                  "description": "查询地点"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "查询日期"
+                }
+              },
+              "required": [
+                "location",
+                "date"
+              ],
+              "order": [
+                "location",
+                "date"
+              ]
+            },
+            "return": {
+              "type": "string",
+              "name": "Name",
+              "description": "description of return param",
+              "converter": ""
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "toolGroups": [
+    {
+      "definitionGroupName": "方法名",
+      "name": "方法名",
+      "tools": [
+        {
+          "definitionName": "方法名",
+          "runnables": {
+            "FIT": {
+              "genericableId": "g1",
+              "fitableId": "f1",
+              "aliases": "a1"
+            },
+            "http": {
+              "method": "GET",
+              "protocol": "http",
+              "domain": "www.info.com",
+              "pathPattern": "/remuneration/{category}",
+              "mappings": {
+                "employeeInfo": {
+                  "name": {
+                    "key": "employeeName",
+                    "httpSource": "HEADER"
+                  },
+                  "employeeId": {
+                    "key": "employeeId",
+                    "httpSource": "BODY"
+                  }
+                },
+                "category": {
+                  "$": {
+                    "key": "category",
+                    "httpSource": "PATH"
+                  }
+                }
+              }
+            },
+            "extensions": {
+              "tags": [
+                "FIT",
+                "TEST"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

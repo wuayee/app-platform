@@ -1,0 +1,13 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.fit.jade.aipp.s3.file'
+
+s3:
+  app-name: lab
+  bucket: fit.elsa.bucket
+  config:
+    signer: S3SignerType
+    socket-timeout: 180000
+    max-connections: 50
+    connection-timeout: 10000

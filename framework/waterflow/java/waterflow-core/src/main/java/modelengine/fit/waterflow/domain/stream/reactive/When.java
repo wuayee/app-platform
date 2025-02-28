@@ -1,19 +1,17 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.stream.reactive;
 
-import static modelengine.fit.waterflow.domain.enums.ProcessType.PRE_PROCESS;
-import static modelengine.fit.waterflow.domain.enums.ProcessType.PROCESS;
-
 import lombok.Getter;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
+import modelengine.fit.waterflow.domain.enums.ProcessType;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fit.waterflow.domain.utils.IdGenerator;
 import modelengine.fitframework.util.CollectionUtils;
@@ -57,8 +55,8 @@ public class When<I> extends IdGenerator implements Subscription<I> {
      * @param repo contextRepo
      * @param messenger messenger
      */
-    public <R> When(String streamId, Subscriber<I, R> to, Operators.Whether<I> whether, FlowContextRepo repo,
-            FlowContextMessenger messenger) {
+    public <R> When(String streamId, Subscriber<I, R> to, Operators.Whether<I> whether,
+            FlowContextRepo repo, FlowContextMessenger messenger) {
         this.streamId = streamId;
         this.whether = whether == null ? any -> true : whether;
         this.to = to;
@@ -77,8 +75,8 @@ public class When<I> extends IdGenerator implements Subscription<I> {
      * @param repo contextRepo
      * @param messenger messenger
      */
-    public <R> When(String streamId, String eventId, Subscriber<I, R> to, Operators.Whether<I> whether,
-            FlowContextRepo repo, FlowContextMessenger messenger) {
+    public <R> When(String streamId, String eventId, Subscriber<I, R> to,
+            Operators.Whether<I> whether, FlowContextRepo repo, FlowContextMessenger messenger) {
         this(streamId, to, whether, repo, messenger);
         this.id = eventId;
     }
@@ -96,7 +94,7 @@ public class When<I> extends IdGenerator implements Subscription<I> {
                         .setStatus(FlowNodeStatus.PENDING))
                 .collect(Collectors.toList());
         repo.updateStatus(converted, converted.get(0).getStatus().toString(), converted.get(0).getPosition());
-        messenger.send(this.to.isAuto() ? PROCESS : PRE_PROCESS, this.to, converted);
+        messenger.send(this.to.isAuto() ? ProcessType.PROCESS : ProcessType.PRE_PROCESS, this.to, converted);
     }
 
     @Override

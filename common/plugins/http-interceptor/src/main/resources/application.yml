@@ -1,0 +1,15 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.jade.common.filter'
+  messages:
+    basename: i18n/aipp,i18n/store,i18n/default,i18n/aipp_extension
+
+  application:
+    http:
+      wrapper:
+        support:
+          - "/**/eval/**"
+          - "/**/s3/file/**"
+          - "/**/code/**"
+          - "/**/knowledge-manager/**"

@@ -1,0 +1,7 @@
+appengine:
+  metrics:
+    influxdb:
+      url: 'http://10.10.10.10:5432'
+      username: 'testUser'
+      password: 'testPassword'
+      database: 'testDatabase'

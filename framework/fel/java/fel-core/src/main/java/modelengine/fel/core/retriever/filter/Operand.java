@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -25,7 +25,7 @@ public interface Operand {
      * @param key 表示键的 {@link String}。
      * @return 返回 {@link Key} 的实例。
      */
-    static Operand.Key key(String key) {
+    static Key key(String key) {
         return new Key(key);
     }
 
@@ -35,7 +35,7 @@ public interface Operand {
      * @param value 表示值的 {@link Object}。
      * @return 返回 {@link Value} 的实例。
      */
-    static Operand.Value value(Object value) {
+    static Value value(Object value) {
         return new Value(value);
     }
 
@@ -47,7 +47,7 @@ public interface Operand {
      * @param right 表示右操作数的 {@link Operand}。
      * @return 返回 {@link Expression} 的实例。
      */
-    static Operand.Expression expression(Operator op, Operand left, Operand right) {
+    static Expression expression(Operator op, Operand left, Operand right) {
         return new Expression(op, left, right);
     }
 
@@ -59,7 +59,7 @@ public interface Operand {
      * @param value 表示值的 {@link Object}。
      * @return 返回 {@link Expression} 的实例。
      */
-    static Operand.Expression expression(Operator op, String key, Object value) {
+    static Expression expression(Operator op, String key, Object value) {
         Operand k = Operand.key(key);
         Operand v = Operand.value(value);
         return Operand.expression(op, k, v);

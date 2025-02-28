@@ -1,17 +1,17 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.enums;
 
-import static modelengine.fit.waterflow.common.ErrorCodes.ENUM_CONVERT_FAILED;
-
 import lombok.Getter;
-import modelengine.fit.waterflow.common.exceptions.WaterflowParamException;
+import modelengine.fit.jade.waterflow.exceptions.WaterflowParamException;
 
 import java.util.Arrays;
+
+import static modelengine.fit.jade.waterflow.ErrorCodes.ENUM_CONVERT_FAILED;
 
 /**
  * 并行节点的操作类型

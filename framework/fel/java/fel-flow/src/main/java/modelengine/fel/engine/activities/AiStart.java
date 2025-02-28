@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -7,16 +7,16 @@
 package modelengine.fel.engine.activities;
 
 import modelengine.fel.core.chat.ChatMessage;
-import modelengine.fel.core.chat.Prompt;
 import modelengine.fel.core.chat.support.ChatMessages;
+import modelengine.fel.core.chat.Prompt;
 import modelengine.fel.core.document.Content;
 import modelengine.fel.core.document.Document;
 import modelengine.fel.core.document.Measurable;
+import modelengine.fel.core.model.BlockModel;
 import modelengine.fel.core.pattern.Parser;
 import modelengine.fel.core.pattern.Pattern;
 import modelengine.fel.core.pattern.PostProcessor;
 import modelengine.fel.core.pattern.Retriever;
-import modelengine.fel.core.pattern.Source;
 import modelengine.fel.core.pattern.Splitter;
 import modelengine.fel.core.pattern.Store;
 import modelengine.fel.core.pattern.Synthesizer;
@@ -26,18 +26,21 @@ import modelengine.fel.engine.activities.processors.AiFlatMap;
 import modelengine.fel.engine.flows.AiFlow;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.flows.Conversation;
-import modelengine.fel.engine.operators.models.FlowModel;
+import modelengine.fel.engine.operators.models.ChatChunk;
+import modelengine.fel.engine.operators.models.StreamModel;
 import modelengine.fel.engine.operators.patterns.AbstractFlowPattern;
 import modelengine.fel.engine.operators.patterns.FlowPattern;
 import modelengine.fel.engine.operators.patterns.SimpleFlowPattern;
 import modelengine.fel.engine.operators.prompts.PromptTemplate;
 import modelengine.fel.engine.util.AiFlowSession;
-import modelengine.fit.waterflow.domain.emitters.FlowEmitter;
+import modelengine.fel.engine.util.StateKey;
+import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.flow.Flows;
 import modelengine.fit.waterflow.domain.states.Start;
 import modelengine.fit.waterflow.domain.states.State;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.operators.SessionWindow;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.utils.Tuple;
@@ -49,6 +52,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -60,7 +64,6 @@ import java.util.function.Supplier;
  * @param <RF> 表示内部数据流程类型，是 {@link Flow}{@code <}{@link D}{@code >} 的扩展。
  * @param <F> 表示 AI 流程的类型，是 {@link AiFlow}{@code <}{@link D}{@code , }{@link RF}{@code >} 的扩展。
  * @author 刘信宏
- * @author 易文渊
  * @since 2024-04-28
  */
 public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> extends AiActivity<D, RF, F> {
@@ -112,7 +115,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, O, RF, F> just(Operators.Just<O> processor) {
         Validation.notNull(processor, "Just processor cannot be null.");
-        return new AiState<>(this.start.just(processor), this.flow());
+        return new AiState<>(this.start.just(processor), this.getFlow());
     }
 
     /**
@@ -126,7 +129,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, O, RF, F> just(Operators.ProcessJust<O> processor) {
         Validation.notNull(processor, "Just processor cannot be null.");
-        return new AiState<>(this.start.just(processor), this.flow());
+        return new AiState<>(this.start.just(processor), this.getFlow());
     }
 
     /**
@@ -140,7 +143,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> map(Operators.Map<O, R> processor) {
         Validation.notNull(processor, "Map processor cannot be null.");
-        return new AiState<>(this.start.map(processor), this.flow());
+        return new AiState<>(this.start.map(processor), this.getFlow());
     }
 
     /**
@@ -155,7 +158,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> map(Operators.ProcessMap<O, R> processor) {
         Validation.notNull(processor, "Map processor cannot be null.");
-        return new AiState<>(this.start.map(processor), this.flow());
+        return new AiState<>(this.start.map(processor), this.getFlow());
     }
 
     /**
@@ -168,13 +171,13 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public <R> AiState<R, D, O, RF, F> flatMap(AiFlatMap<O, R> processor) {
-        return new AiState<>(this.start.flatMap(input -> processor.process(input).toDataStart()), this.flow());
+        return new AiState<>(this.start.flatMap(input -> processor.process(input).toDataStart()), this.getFlow());
     }
 
     /**
      * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
      * <p>如果流程是批量注入数据，那么聚合节点会将同一批次的数据聚合。</p>
-     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.WindowCondition)} 表达式使用，才会聚合数据。</p>
+     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.Window)} 表达式使用，才会聚合数据。</p>
      *
      * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}，当 {@code init} 为 {@code null}
      * 时，表示聚合之后的数据类型还是原数据类型。
@@ -186,13 +189,13 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> reduce(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor cannot be null.");
-        return new AiState<>(this.start.reduce(init, processor), this.flow());
+        return new AiState<>(this.start.reduce(init, processor), this.getFlow());
     }
 
     /**
      * 生成一个数据聚合节点， 将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。处理器内可消费自定义上下文。
      * <p>如果流程是批量注入数据，那么聚合节点会将同一批次的数据聚合。</p>
-     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.WindowCondition)} 表达式使用，才会聚合数据。</p>
+     * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.Window)} 表达式使用，才会聚合数据。</p>
      *
      * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}，当 {@code init} 为 {@code null}
      * 时，表示聚合之后的数据类型还是原数据类型。
@@ -205,38 +208,25 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor cannot be null.");
-        return new AiState<>(this.start.reduce(init, processor), this.flow());
+        return new AiState<>(this.start.reduce(init, processor), this.getFlow());
     }
 
     /**
      * 形成一个窗口节点。需要与数据聚合节点配合使用，窗口节点单独使用不生效。
      * <p>当窗口节点中的数据满足条件后，窗口关闭，后续的数据聚合节点才会将聚合的数据往下发送，在此之前， 数据聚合节点将持续聚合数据。</p>
      *
-     * @param windowCondition 表示窗口处理器的 {@link Operators.WindowCondition}{@code <}{@link O}{@code >}。
+     * @param window 表示窗口处理器的 {@link Operators.Window}{@code <}{@link O}{@code >}。
      * @return 表示窗口节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code window} 为 {@code null} 时。
      */
-    public AiState<O, D, O, RF, F> window(Operators.WindowCondition windowCondition) {
-        Validation.notNull(windowCondition, "Window operator cannot be null.");
-        return new AiState<>(this.start.window(windowCondition), this.flow());
+    public AiState<O, D, O, RF, F> window(Operators.Window<O> window) {
+        Validation.notNull(window, "Window operator cannot be null.");
+        return new AiState<>(this.start.window(window), this.getFlow());
     }
 
     /**
-     * 形成一个按照数量处理的窗口节点。需要与数据聚合节点配合使用，窗口节点单独使用不生效。
-     * <p>当窗口节点中的数据满足条件后，窗口关闭，后续的数据聚合节点才会将聚合的数据往下发送，在此之前， 数据聚合节点将持续聚合数据。</p>
-     *
-     * @param count 表示窗口大小。
-     * @return 表示窗口节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
-     * }{@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException 当 {@code window} 为 {@code null} 时。
-     */
-    public AiState<O, D, O, RF, F> window(int count) {
-        return this.window(arg -> arg.countToNow() == count);
-    }
-
-    /**
-     * 设置分组聚合的键，需要配合 {@link AiStart#window(Operators.WindowCondition)}、
+     * 设置分组聚合的键，需要配合 {@link AiStart#window(Operators.Window)}、
      * {@link AiStart#reduce(Supplier, Operators.Reduce)} 和 {@link AiStart#reduce(Supplier, Operators.ProcessReduce)}
      * 使用，后续的聚合操作按指定的键分组处理。
      *
@@ -248,7 +238,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<Tuple<R, O>, D, O, RF, F> keyBy(Operators.Map<O, R> keyBy) {
         Validation.notNull(keyBy, "KeyBy operator cannot be null.");
-        return new AiState<>(this.start.keyBy(keyBy), this.flow());
+        return new AiState<>(this.start.keyBy(keyBy), this.getFlow());
     }
 
     /**
@@ -261,7 +251,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<List<O>, D, O, RF, F> buffer(int size) {
         Validation.isTrue(size > 0, "Buffer size must be greater than 0.");
-        return this.window(size).reduce(null, (acc, input) -> {
+        return this.window(inputs -> inputs.size() == size).reduce(null, (acc, input) -> {
             acc = ObjectUtils.getIfNull(acc, ArrayList::new);
             acc.add(input);
             return acc;
@@ -281,7 +271,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> process(Operators.Process<O, R> processor) {
         Validation.notNull(processor, "Process operator cannot be null.");
-        return new AiState<>(this.start.process(processor), this.flow());
+        return new AiState<>(this.start.process(processor), this.getFlow());
     }
 
     /**
@@ -291,53 +281,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * }{@link F}{@code >}。
      */
     public AiConditions<D, O, RF, F> conditions() {
-        return new AiConditions<>(this.start.conditions(), this.flow());
-    }
-
-    /**
-     * 生成数据加载节点。
-     *
-     * @param source 表示数据源的 {@link Splitter}{@code <}{@link O}{@code >}。
-     * @return 表示数据加载节点的 {@link AiState}{@code <}{@link List}{@code <}{@link Document}{@code >}{@code ,}
-     * {@link D}{@code ,}{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException 当 {@code splitter} 为 {@code null} 时。
-     */
-    public AiState<List<Document>, D, O, RF, F> load(Source<O> source) {
-        Validation.notNull(source, "Splitter operator cannot be null.");
-        return new AiState<>(new State<>(this.publisher()
-                .map(input -> AiFlowSession.applyPattern(source, input.getData(), input.getSession()), null)
-                .displayAs("load"), this.flow().origin()), this.flow());
-    }
-
-    /**
-     * 生成文本切分节点。
-     *
-     * @param splitter 表示文本切分算子的 {@link Splitter}{@code <}{@link O}{@code >}。
-     * @return 表示文本切分节点的 {@link AiState}{@code <}{@link Document}{@code , }{@link D}{@code , }{@link O}{@code ,}
-     * {@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException 当 {@code splitter} 为 {@code null} 时。
-     */
-    public AiState<Document, D, O, RF, F> split(Splitter<O> splitter) {
-        Validation.notNull(splitter, "Splitter operator cannot be null.");
-        return new AiState<>(new State<>(this.publisher()
-                .flatMap(input -> Flows.flux(AiFlowSession.applyPattern(splitter, input.getData(), input.getSession())
-                        .toArray(new Document[0])), null)
-                .displayAs("split"), this.flow().origin()), this.flow());
-    }
-
-    /**
-     * 生成索引节点。
-     *
-     * @param store 表示索引存储的 {@link Store}{@code <}{@link O}{@code >}。
-     * @return 表示索引节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,}
-     * {@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException 当 {@code splitter} 为 {@code null} 时。
-     */
-    public AiState<O, D, O, RF, F> index(Store<O> store) {
-        Validation.notNull(store, "Persistent operator cannot be null.");
-        return new AiState<>(new State<>(this.publisher()
-                .just(input -> AiFlowSession.applyPattern(store, input.getData(), input.getSession()), null)
-                .displayAs("index"), this.flow().origin()), this.flow());
+        return new AiConditions<>(this.start.conditions(), this.getFlow());
     }
 
     /**
@@ -354,13 +298,13 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(retriever, "Retriever operator cannot be null.");
         return new AiState<>(new State<>(this.publisher()
                 .map(input -> AiFlowSession.applyPattern(retriever, input.getData(), input.getSession()), null)
-                .displayAs("retrieve"), this.flow().origin()), this.flow());
+                .displayAs("retrieve"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
      * 生成数据增强节点，用于检索后置处理。
      *
-     * @param processors 表示检索后置处理器的 {@code  PostProcessor[]}。
+     * @param processors 表示检索后置处理器的 {@link PostProcessor}{@code []}。
      * @return 表示数据检索节点的
      * {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code ,}{@link O}{@code , }{@link RF}
      * {@code , }{@link F}{@code >}。
@@ -375,13 +319,13 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                 result = AiFlowSession.applyPattern(processor, input.getData(), input.getSession());
             }
             return result;
-        }, null).displayAs("processors"), this.flow().origin()), this.flow());
+        }, null).displayAs("processors"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
      * 生成检索合成节点。
      *
-     * @param synthesizer 表示结果合成算子的 {@link Store}{@code <}{@link O}{@code >}。
+     * @param synthesizer 表示结果合成算子的 {@link Synthesizer}{@code <}{@link O}{@code >}。
      * @return 表示检索合成节点的 {@link AiState}{@code <}{@link Content}{@code , }{@link D}{@code , }{@link O}{@code ,}
      * {@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code splitter} 为 {@code null} 时。
@@ -390,7 +334,38 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(synthesizer, "The synthesizer cannot be null.");
         return new AiState<>(new State<>(this.publisher()
                 .map(input -> AiFlowSession.applyPattern(synthesizer, input.getData(), input.getSession()), null)
-                .displayAs("synthesizer"), this.flow().origin()), this.flow());
+                .displayAs("synthesizer"), this.getFlow().origin()), this.getFlow());
+    }
+
+    /**
+     * 生成文本切分节点。
+     *
+     * @param splitter 表示文本切分算子的 {@link Splitter}{@code <}{@link O}{@code >}。
+     * @return 表示文本切分节点的 {@link AiState}{@code <}{@link Document}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code splitter} 为 {@code null} 时。
+     */
+    public AiState<Document, D, O, RF, F> split(Splitter<O> splitter) {
+        Validation.notNull(splitter, "Splitter operator cannot be null.");
+        return new AiState<>(new State<>(this.publisher()
+                .flatMap(input -> Flows.flux(AiFlowSession.applyPattern(splitter, input.getData(), input.getSession())
+                        .toArray(new Document[0])), null)
+                .displayAs("split"), this.getFlow().origin()), this.getFlow());
+    }
+
+    /**
+     * 生成索引节点。
+     *
+     * @param store 表示索引存储的 {@link Store}{@code <}{@link O}{@code >}。
+     * @return 表示索引节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,}
+     * {@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code splitter} 为 {@code null} 时。
+     */
+    public AiState<O, D, O, RF, F> index(Store<O> store) {
+        Validation.notNull(store, "Persistent operator cannot be null.");
+        return new AiState<>(new State<>(this.publisher()
+                .just(input -> AiFlowSession.applyPattern(store, input.getData(), input.getSession()), null)
+                .displayAs("index"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -401,7 +376,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code parser} 为 {@code null} 时。
      */
-    public <R> AiState<R, D, O, RF, F> parse(Parser<O, R> parser) {
+    public <R> AiState<R, D, O, RF, F> format(Parser<O, R> parser) {
         Validation.notNull(parser, "Parser operator cannot be null.");
         AiState<R, D, O, RF, F> state = this.map(parser::parse);
         ((Processor<?, ?>) state.publisher()).displayAs("format");
@@ -421,13 +396,14 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> delegate(Pattern<O, R> pattern) {
         Validation.notNull(pattern, "Pattern operator cannot be null.");
         FlowPattern<O, R> flowPattern = this.castFlowPattern(pattern);
-        Processor<O, R> orProcessor = this.publisher().flatMap(input -> {
-            FlowEmitter<R> cachedEmitter = FlowEmitter.from(flowPattern);
+        Processor<O, R> processor = this.publisher().map(input -> {
             AiFlowSession.applyPattern(flowPattern, input.getData(), input.getSession());
-            return Flows.source(cachedEmitter);
+            return null;
         }, null);
-        this.displayPatternProcessor(pattern, orProcessor);
-        return new AiState<>(new State<>(orProcessor, this.flow().origin()), this.flow());
+        this.displayPatternProcessor(pattern, processor);
+        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
+        state.offer(flowPattern);
+        return state;
     }
 
     private <R> void displayPatternProcessor(Pattern<O, R> pattern, Processor<O, R> processor) {
@@ -482,7 +458,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             aiFlow.converse(input.getSession()).offer(input.getData());
             return (R) null;
         }, null).displayAs("delegate to flow", aiFlow.origin(), aiFlow.origin().start().getId());
-        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.flow().origin()), this.flow());
+        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
     }
@@ -496,9 +472,10 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * @param <R> 表示委托节点的输出数据类型。
      * @return 表示委托节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException <ul>
-     * <li>当 {@code aiFlow} 为 {@code null}时。</il>
-     * <li>当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时。</il>
+     * @throws IllegalArgumentException
+     * <ul>
+     *     <li>当 {@code aiFlow} 为 {@code null}时。</il>
+     *     <li>当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时。</il>
      * </ul>
      */
     public <R> AiState<R, D, O, RF, F> delegate(AiProcessFlow<O, R> aiFlow, String nodeId) {
@@ -509,7 +486,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             return (R) null;
         }, null).displayAs("delegate to node", aiFlow.origin(), nodeId);
 
-        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.flow().origin()), this.flow());
+        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
     }
@@ -529,24 +506,48 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                     AiFlowSession.applyBatchPattern(Arrays.asList(templates), input.getData(), input.getSession());
             prompts.forEach(prompt -> messages.addAll(prompt.messages()));
             return ObjectUtils.<Prompt>cast(messages);
-        }, null).displayAs("prompt"), this.flow().origin()), this.flow());
+        }, null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
+    }
+
+    /**
+     * 生成大模型阻塞调用节点。
+     *
+     * @param model 表示模型算子实现的 {@link BlockModel}{@code <}{@link M}{@code >}。
+     * @param <M> 表示模型节点的输入数据类型。
+     * @return 表示大模型阻塞调用节点的 {@link AiState}{@code <}{@link ChatMessage}{@code , }{@link D}{@code ,
+     * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
+     */
+    public <M extends ChatMessage> AiState<M, D, O, RF, F> generate(BlockModel<O, M> model) {
+        Validation.notNull(model, "Model operator cannot be null.");
+        return new AiState<>(new State<>(this.publisher()
+                .map(input -> AiFlowSession.applyPattern(model, input.getData(), input.getSession()), null)
+                .displayAs("generate"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
      * 生成大模型流式调用节点。
      *
-     * @param model 表示流式模型算子实现的 {@link FlowModel}{@code <}{@link O}{@code >}。
+     * @param model 表示流式模型算子实现的 {@link StreamModel}{@code <}{@link O}{@code >}。
      * @param <M> 表示模型节点的输入数据类型。
-     * @return 表示大模型流式调用节点的 {@link AiState}{@code <}{@link ChatMessage}{@code , }{@link D}{@code ,
-     * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
+     * @return 表示大模型流式调用节点的 {@link AiState}{@code <}{@link ChatChunk}{@code , }{@link D}{@code ,
+     * }{@link ChatChunk}{@code , }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
      */
-    public <M extends ChatMessage> AiState<ChatMessage, D, O, RF, F> generate(FlowModel<O, M> model) {
+    public <M extends ChatMessage> AiState<ChatChunk, D, ChatChunk, RF, F> generate(StreamModel<O, M> model) {
         Validation.notNull(model, "Streaming Model operator cannot be null.");
-        Processor<O, ChatMessage> processor = this.publisher().flatMap(input -> {
+
+        AtomicReference<Processor<O, ChatChunk>> processorRef = new AtomicReference<>();
+        Processor<O, ChatChunk> processor = this.publisher().flatMap(input -> {
+            FlowSession session = input.getSession();
+            input.setKeyBy(session.getId());
+            session.setInnerState(StateKey.STREAMING_PROCESSOR, processorRef.get());
+            session.setInnerState(StateKey.STREAMING_FLOW_CONTEXT, input);
             return Flows.source(AiFlowSession.applyPattern(model, input.getData(), input.getSession()));
-        }, null).displayAs("generate");
-        return new AiState<>(new State<>(processor, this.flow().origin()), this.flow());
+        }, null).displayAs("generate streaming");
+        processorRef.set(processor);
+        return new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow())
+                .window(SessionWindow.from(inputs -> inputs.stream().anyMatch(ChatChunk::isEnd)));
     }
 
     /**
@@ -561,8 +562,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public final AiState<Tip, D, Tip, RF, F> runnableParallel(Pattern<O, Tip>... patterns) {
         Validation.isTrue(patterns.length > 0, "Patterns can not be empty.");
 
-        F mineFlow = this.flow();
-        RF mineOrigin = this.flow().origin();
+        F mineFlow = this.getFlow();
+        RF mineOrigin = this.getFlow().origin();
         AiFork<Tip, D, O, RF, F> aiFork = null;
         for (Pattern<O, Tip> pattern : patterns) {
             AiBranchProcessor<Tip, D, O, RF, F> branchProcessor = node -> {

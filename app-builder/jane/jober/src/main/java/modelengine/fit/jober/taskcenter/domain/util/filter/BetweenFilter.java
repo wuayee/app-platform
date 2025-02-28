@@ -1,0 +1,93 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.taskcenter.domain.util.filter;
+
+import static modelengine.fitframework.inspection.Validation.notNull;
+
+import modelengine.fit.jane.task.domain.PropertyDataType;
+import modelengine.fit.jober.taskcenter.domain.util.Filter;
+import modelengine.fit.jober.taskcenter.domain.util.FilterParser;
+import modelengine.fit.jober.taskcenter.util.sql.ColumnRef;
+import modelengine.fit.jober.taskcenter.util.sql.Condition;
+import modelengine.fitframework.util.ParsingResult;
+import modelengine.fitframework.util.StringUtils;
+
+import java.util.Arrays;
+
+/**
+ * 表示判断在由最小值和最大值限定的有效值域内的过滤器。
+ *
+ * @author 梁济时
+ * @since 2024-01-12
+ */
+public class BetweenFilter implements Filter {
+    private static final String KEY = "between";
+
+    private final Object minimum;
+
+    private final Object maximum;
+
+    public BetweenFilter(Object minimum, Object maximum) {
+        this.minimum = notNull(minimum, "The minimum value of between filter cannot be null.");
+        this.maximum = notNull(maximum, "The maximum value of between filter cannot be null.");
+    }
+
+    @Override
+    public boolean indexable() {
+        return true;
+    }
+
+    @Override
+    public Condition toCondition(ColumnRef column) {
+        return Condition.between(column, this.minimum, this.maximum);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj != null && obj.getClass() == this.getClass()) {
+            BetweenFilter that = (BetweenFilter) obj;
+            return this.minimum.equals(that.minimum) && this.maximum.equals(that.maximum);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[] {this.getClass(), this.minimum, this.maximum});
+    }
+
+    @Override
+    public String toString() {
+        return KEY + '(' + this.minimum + ", " + this.maximum + ')';
+    }
+
+    /**
+     * BetweenFilter解析器
+     */
+    @FilterParser.Declare(KEY)
+    public static class Parser implements FilterParser {
+        @Override
+        public Filter parse(PropertyDataType dataType, String text) {
+            String[] parts = StringUtils.split(text, ',');
+            if (parts.length != 2) {
+                return null;
+            }
+            ParsingResult<Object> parsedMinimum = dataType.parse(parts[0]);
+            if (!parsedMinimum.isParsed()) {
+                return Filter.alwaysFalse();
+            }
+            ParsingResult<Object> parsedMaximum = dataType.parse(parts[1]);
+            if (!parsedMaximum.isParsed()) {
+                return Filter.alwaysFalse();
+            }
+            return new BetweenFilter(parsedMinimum.getResult(), parsedMaximum.getResult());
+        }
+    }
+}

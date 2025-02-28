@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -10,7 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.MessageType;
-import modelengine.fel.core.document.Content;
 import modelengine.fel.core.template.support.DefaultStringTemplate;
 import modelengine.fel.core.template.support.HumanMessageTemplate;
 import modelengine.fel.core.template.support.SystemMessageTemplate;
@@ -45,7 +44,7 @@ public class MessageTemplateTest {
         @DisplayName("渲染系统消息并携带媒体数据，返回正确结果")
         void shouldReturnOkWithMedia() {
             MessageTemplate template = new SystemMessageTemplate("You are a helpful {{character}}.");
-            Content contents = Content.from("assistant", new Media("image/png", "robot.png"));
+            MessageContent contents = MessageContent.from("assistant", new Media("image/png", "robot.png"));
             ChatMessage message = template.render(Tip.from("character", contents).freeze());
             assertThat(message.type()).isEqualTo(MessageType.SYSTEM);
             assertThat(message.medias()).isEmpty();
@@ -84,8 +83,8 @@ public class MessageTemplateTest {
         @DisplayName("渲染人类消息并携带媒体数据，返回正确结果")
         void shouldReturnOkWithMedia() {
             MessageTemplate template = new HumanMessageTemplate("I'm a good {{sex}}, I like play {{something}}.");
-            Tip tip = new Tip().add("sex", Content.from("man", new Media("image/png", "man.png")))
-                    .add("something", Content.from("basketball", new Media("image/png", "basketball.png")));
+            Tip tip = new Tip().add("sex", MessageContent.from("man", new Media("image/png", "man.png")))
+                    .add("something", MessageContent.from("basketball", new Media("image/png", "basketball.png")));
             ChatMessage message = template.render(tip.freeze());
             assertThat(message.type()).isEqualTo(MessageType.HUMAN);
             assertThat(message.medias()).hasSize(2);

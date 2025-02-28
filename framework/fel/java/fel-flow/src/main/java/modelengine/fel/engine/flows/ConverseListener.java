@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -19,12 +19,12 @@ import java.util.List;
  */
 public interface ConverseListener<T> {
     /**
-     * 对话数据消费回调。
+     * 对话成功回调。
      *
      * @param flowId 表示流程id的 {@link String}。
      * @param data 表示流程输出的数据的 {@link T}。
      */
-    void onConsume(String flowId, T data);
+    void onSuccess(String flowId, T data);
 
     /**
      * 流程异常回调。
@@ -41,13 +41,6 @@ public interface ConverseListener<T> {
      * @param exception 表示本次对话异常的 {@link Exception}。
      */
     void onConverseError(Exception exception);
-
-    /**
-     * 对话结束回调。
-     *
-     * @param flowId 表示流程唯一标志的 {@link String}。
-     */
-    void onConverseCompleted(String flowId);
 
     /**
      * 判断对话是否结束。

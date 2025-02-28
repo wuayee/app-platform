@@ -1,0 +1,5 @@
+fit:
+  beans:
+    packages: 'modelengine.fel.pipeline.huggingface'
+
+openai-url: ''

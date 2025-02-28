@@ -9,8 +9,16 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>examples/fel-example</module>
+        <module>app-builder</module>
+        <module>app-engine</module>
+        <module>app-eval</module>
+        <module>app-image</module>
+        <module>app-knowledge</module>
+        <module>carver</module>
+        <module>common</module>
+        <module>eco</module>
         <module>framework</module>
+        <module>store</module>
     </modules>
 
     <properties>
@@ -20,6 +28,10 @@
 
         <!-- FIT version -->
         <fit.version>3.5.0-SNAPSHOT</fit.version>
+
+        <!-- Common service version -->
+        <jade.version>1.0.0-SNAPSHOT</jade.version>
+        <locale.service.version>1.0.0-SNAPSHOT</locale.service.version>
 
         <!-- Jacoco version -->
         <jacoco.version>0.8.10</jacoco.version>
@@ -32,6 +44,18 @@
         <maven.surefire.version>3.1.2</maven.surefire.version>
         <maven.source.version>3.3.0</maven.source.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>modelengine.fit.jade</groupId>
+                <artifactId>jade-dependency</artifactId>
+                <version>${jade.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

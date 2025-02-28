@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -84,9 +84,7 @@ public class Blocks {
          */
         @Override
         public void process(List<FlowContext<I>> contexts) {
-            if (this.validator != null) {
-                this.getTarget().setValidator(this.validator);
-            }
+            this.getTarget().setValidator((context, all) -> validator == null || validator.check(context, all));
             super.process(contexts);
         }
     }

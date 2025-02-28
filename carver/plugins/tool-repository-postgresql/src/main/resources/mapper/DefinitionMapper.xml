@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.carver.tool.repository.pgsql.mapper.DefinitionMapper">
+    <resultMap id="Definition" type="modelengine.jade.carver.tool.repository.pgsql.model.entity.DefinitionDo">
+        <result column="id" property="definitionId"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="name" property="name"/>
+        <result column="schema" property="schema"/>
+        <result column="definition_group_name" property="definitionGroupName"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="definitionId" parameterType="modelengine.jade.carver.tool.repository.pgsql.model.entity.DefinitionDo">
+        insert into store_definition
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "name",
+            "schema",
+            "definition_group_name"
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{name},
+            cast(#{schema} as json),
+            #{definitionGroupName},
+        </trim>
+    </insert>
+    <insert id="addDefinitions" parameterType="java.util.List">
+        <foreach item='definitionDo' collection="list" separator=";">
+            insert into store_definition
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                "name",
+                "schema",
+                "definition_group_name",
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{definitionDo.name},
+                cast(#{definitionDo.schema} as json),
+                #{definitionDo.definitionGroupName},
+            </trim>
+        </foreach>
+    </insert>
+    <delete id="deleteByName">
+        delete
+        from "store_definition"
+        where definition_group_name = #{groupName}
+          and name = #{name};
+    </delete>
+    <delete id="deleteByGroup" parameterType="java.lang.String">
+        delete
+        from "store_definition"
+        where definition_group_name = #{definitionDo.definitionGroupName};
+    </delete>
+    <sql id="selectDefinitionColumns">
+        select i."id", i."name", i."schema", i."definition_group_name"
+        from "store_definition" i
+    </sql>
+    <select id="getByName" resultMap="Definition">
+        <include refid="selectDefinitionColumns"/>
+        where definition_group_name = #{groupName} and name = #{name};
+    </select>
+    <select id="getByGroup" resultMap="Definition">
+        <include refid="selectDefinitionColumns"/>
+        where definition_group_name = #{groupName};
+    </select>
+</mapper>

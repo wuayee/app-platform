@@ -1,0 +1,13 @@
+jane:
+  endpoint:
+  targetUrl:
+    noSource: 需求
+  default:
+    template:
+      id:
+  useDataEngine: false
+
+corsfilter:
+  priority:
+  patterns:
+  origin:

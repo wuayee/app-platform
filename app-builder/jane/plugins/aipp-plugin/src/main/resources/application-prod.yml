@@ -1,0 +1,80 @@
+fit:
+  beans:
+    packages:
+      - 'modelengine.fit.jober.aipp'
+      - 'modelengine.fel'
+      - 'modelengine.jade.voice.to.text'
+  messages:
+    basename: i18n/messages, i18n/ui
+  datasource:
+    primary: 'app-engine'
+    instances:
+      app-engine:
+        mode: 'shared'
+        url: ''
+        username: ''
+        password: ''
+        druid:
+          driver-class-name: 'org.postgresql.Driver'
+          initialSize: 5
+          minIdle: 5
+          maxActive: 32
+          maxWait: 60000
+          timeBetweenEvictionRunsMillis: 60000
+          minEvictableIdleTimeMillis: 300000
+          validationQuery: 'SELECT 1'
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+
+jackson:
+  datetime-format: 'yyyy-MM-dd HH:mm:ss'
+jane:
+  endpoint:
+app-engine:
+  endpoint: http://80.11.128.66:31111
+  pathPrefix:
+  exclude-names:
+  resource:
+    path-prefix: /static/
+  form:
+    create:
+      maximumNum: 400
+    path-prefix: /var/share/
+    path: smart_form
+    temporary-path: smart_form/temporary
+    group-name: 60000
+  file:
+    upload:
+      maxStorageRatio: 0.9
+elsa:
+  endpoint:
+  elsaKey:
+model:
+  xiaohai:
+    knowledge:
+    file:
+    read-timeout: 60000
+  imageGen:
+    model: multi-modal_chinese_stable_diffusion_v1.0
+    share_url:
+mybatis:
+  mapper-locations: mapper/*Mapper.xml
+tool:
+  tags:
+    CODENODESTATE: codeNodeState
+    QUERYOPTIMIZATIONNODESTATE: queryOptimizationNodeState
+    KNOWLEDGERETRIEVALNODESTATE: knowledgeRetrievalNodeState
+    TEXTEXTRACTIONNODESTATE: textExtractionNodeState
+    QUESTIONCLASSIFICATIONNODECONDITION: questionClassificationNodeCondition
+    VARIABLEAGGREGATIONNODESTATE: variableAggregationNodeState
+    HTTPNODESTATE: httpNodeState
+    DOCUMENTEXTRACTORNODE: documentExtractorNode
+    TEXTTOIMAGENODESTATE: textToImageNodeState
+    FILEEXTRACTNODESTATE: fileExtractionNodeState
+export-meta:
+  version: 1.0.1
+sensitive:
+  replace:
+    - pattern: "\"timestamp\":\"[^\"]+\""
+      to: "\"timestamp\":\"***\""

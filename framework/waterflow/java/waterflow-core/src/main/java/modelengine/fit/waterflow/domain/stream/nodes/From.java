@@ -1,20 +1,16 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.stream.nodes;
 
-import static modelengine.fit.waterflow.common.ErrorCodes.FLOW_ENGINE_INVALID_MANUAL_TASK;
-
-import modelengine.fit.waterflow.common.exceptions.WaterflowException;
-import modelengine.fit.waterflow.domain.context.FlatMapSourceWindow;
-import modelengine.fit.waterflow.domain.context.FlatMapWindow;
+import modelengine.fit.jade.waterflow.exceptions.WaterflowException;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.context.FlowTrace;
-import modelengine.fit.waterflow.domain.context.Window;
+import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
@@ -43,6 +39,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static modelengine.fit.jade.waterflow.ErrorCodes.FLOW_ENGINE_INVALID_MANUAL_TASK;
 
 /**
  * 数据发送者
@@ -151,11 +149,12 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     @Override
     public Processor<I, I> just(Operators.Just<FlowContext<I>> processor, Operators.Whether<I> whether) {
         // just的实现就是一个返回自己的map
-        Operators.Map<FlowContext<I>, I> wrapper = input -> {
-            processor.process(input);
-            return input.getData();
-        };
-        return this.map(wrapper, whether).displayAs("just");
+        Node<I, I> node = new Node<>(this.getStreamId(), i -> {
+            processor.process(i);
+            return i.getData();
+        }, repo, messenger, locks);
+        this.subscribe(node, whether);
+        return node.displayAs("just");
     }
 
     /**
@@ -177,23 +176,11 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         Validation.notNull(processor, "Flat map processor can not be null.");
         AtomicReference<Node<I, O>> processRef = new AtomicReference<>();
         Operators.Map<FlowContext<I>, O> wrapper = input -> {
-            FlatMapSourceWindow fWindow = FlatMapSourceWindow.from(input.getWindow(), this.repo);
-
-            final FlowSession session = new FlowSession(input.getSession());
-            FlatMapWindow flatMapWindow = new FlatMapWindow(fWindow);
-            session.setWindow(flatMapWindow);
-            session.begin();
-
             DataStart<O, O, ?> start = processor.process(input);
-
-            FlowSession startSession = new FlowSession();
-            flatMapWindow.setSource(startSession.begin());
-            start.just(data -> {
-                processRef.get().offer(data, session);
-            }).offer(startSession);
+            start.just(data -> processRef.get().offer(data, input.getSession())).offer();
             return null;
         };
-        Node<I, O> node = new FlatMapNode<>(this.getStreamId(), wrapper, repo, messenger, locks);
+        Node<I, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);
         processRef.set(node);
         this.subscribe(node, whether);
         return node.displayAs("flat map");
@@ -219,6 +206,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @param session 指定的session
      * @return traceId
      */
+    @Override
     public String offer(I data, FlowSession session) {
         I[] array = ObjectUtils.cast(new Object[1]);
         array[0] = data;
@@ -229,35 +217,26 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * 指定trans来offer数据
      *
      * @param data 待offer的数据
-     * @param session 指定的session
+     * @param trans 指定的session
      * @return traceId
      */
-    public String offer(I[] data, FlowSession session) {
+    @Override
+    public String offer(I[] data, FlowSession trans) {
         FlowTrace trace = new FlowTrace();
         Set<String> traceId = new HashSet<>();
         traceId.add(trace.getId());
-        Window window = session.begin();
         List<FlowContext<I>> contexts = Arrays.stream(data)
-                .map(d -> {
-                    FlowContext<I> context = new FlowContext<>(this.getStreamId(), this.getId(), d, traceId,
-                            this.getId(), session);
-                    window.createToken();
-                    return context;
-                })
+                .map(context -> new FlowContext<>(this.getStreamId(), this.getId(), context, traceId,
+                        this.getId()).inFlowTrans(trans))
                 .collect(Collectors.toList());
-        List<FlowContext<I>> after = this.startNodeMarkAsHandled(contexts, trace);
-        after.forEach(this::generateIndex);
-        this.offer(after);
+        WindowToken<I> windowToken = new WindowToken<>(inputs -> inputs.size() == contexts.size());
+        contexts.forEach(context -> {
+            context.setWindowToken(windowToken);
+            windowToken.addOrigin(context.getData());
+            windowToken.addToDo(context.getData());
+        });
+        this.offer(startNodeMarkAsHandled(contexts, trace));
         return trace.getId();
-    }
-
-    /**
-     * 生成一个index
-     *
-     * @param context 给定的context
-     */
-    protected void generateIndex(FlowContext context) {
-
     }
 
     /**
@@ -270,11 +249,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public String offer(I data) {
-        FlowSession session = new FlowSession();
-        Window token = session.begin();
-        String traceId = this.offer(data, session);
-        token.complete();
-        return traceId;
+        return this.offer(data, new FlowSession());
     }
 
     /**
@@ -287,11 +262,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public String offer(I... data) {
-        FlowSession session = new FlowSession();
-        Window token = session.begin();
-        String trace = this.offer(data, session);
-        token.complete();
-        return trace;
+        return this.offer(data, new FlowSession());
     }
 
     /**

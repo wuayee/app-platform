@@ -1,109 +1,116 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.context;
 
+import lombok.Getter;
+import modelengine.fit.waterflow.domain.stream.operators.Operators;
+import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
+import modelengine.fit.waterflow.domain.utils.Tuple;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 /**
- * 用于计数session window中处理的数据
- * 至于session window中素有的数据都consumed，该session window才算结束
- * session window的解释，业务表达为某session数据在某节点处理完毕
+ * window的处理器
  *
- * @author songyongtan
+ * @param <I> 处理的数据类型
  * @since 1.0
  */
-public class WindowToken {
-    /**
-     * 状态枚举
-     */
-    enum Status {
-        INITIALIZED,
-        CONSUMING,
-        CONSUMED
-    }
+public class WindowToken<I> {
+    private final String id;
 
-    private final Window window;
+    private Publisher processor;
 
-    public Status getStatus() {
-        return this.status;
-    }
+    private Map<Object, Tuple<FlowSession, Object>> accs = new HashMap<>();
 
-    private Status status = Status.INITIALIZED;
+    private List todo = new ArrayList();
 
-    private boolean reduced;
+    private List<I> origins = new ArrayList<>();
 
-    public WindowToken(Window window) {
+    @Getter
+    private final Operators.Window window;
+
+    public WindowToken(Operators.Window<I> window) {
         this.window = window;
+        this.id = UUID.randomUUID().toString();
     }
 
     /**
-     * 结束消费
+     * 判定window是否条件满足，满足则执行window的聚合
      */
-    public void finishConsume() {
-        if (this.status == Status.CONSUMED) {
+    public synchronized void fire() {
+        // 如果还有未处理的数据，不能触发累积节点数据流转
+        if (this.todo.size() > 0 || !this.fulfilled()) {
             return;
         }
-        this.status = Status.CONSUMED;
+
+        accs.values().forEach(acc -> processor.offer(acc.second(), acc.first()));
+        accs.clear();
     }
 
     /**
-     * 开始消费
-     */
-    public void beginConsume() {
-        this.status = Status.CONSUMING;
-    }
-
-    /**
-     * 是否为初始化状态
+     * 获取id
      *
-     * @return 是
+     * @return 得到id
      */
-    public boolean initialized() {
-        return this.status == Status.INITIALIZED;
+    public String id() {
+        return this.id;
+    }
+
+    public <T> void setProcessor(Publisher<T> processor) {
+        this.processor = processor;
     }
 
     /**
-     * 是否正在消费
+     * 获取本window对应的收集器
      *
-     * @return 是
+     * @return accs
      */
-    public boolean isConsuming() {
-        return this.status == Status.CONSUMING;
+    public Map<Object, Tuple<FlowSession, Object>> accs() {
+        return accs;
     }
 
     /**
-     * 是否被消费过了
+     * 是否window内所有满足要求的数据已经到达
      *
-     * @return 是
+     * @return 是否到达
      */
-    public boolean isConsumed() {
-        return this.status == Status.CONSUMED;
+    public boolean fulfilled() {
+        return this.window.fulfilled(this.origins);
     }
 
     /**
-     * 是否reduce过了
+     * 添加原始来源对象
      *
-     * @return true，是
+     * @param data 原始来源对象
      */
-    public boolean isReduced() {
-        return this.reduced;
+    public synchronized void addOrigin(I data) {
+        this.origins.add(data);
     }
 
     /**
-     * 聚合
+     * 添加一个待执行任务
+     *
+     * @param data 任务对象
      */
-    public void reduce() {
-        if (this.status != Status.INITIALIZED && !this.reduced) {
-            this.reduced = true;
-        }
+    public synchronized void addToDo(Object data) {
+        this.todo.add(data);
     }
 
     /**
-     * token结束
+     * 删除一个待执行任务
+     *
+     * @param data 任务对象
      */
-    public void accepted() {
-        this.window.tryFinish();
+    public synchronized void removeToDo(Object data) {
+        this.todo.remove(data);
     }
 }
+

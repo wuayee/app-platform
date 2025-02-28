@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -16,6 +16,7 @@ import modelengine.fel.core.chat.support.AiMessage;
 import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.support.HumanMessage;
 import modelengine.fel.core.chat.support.SystemMessage;
+import modelengine.fel.core.model.http.ModelExtraHttpBody;
 import modelengine.fel.core.tool.ToolCall;
 import modelengine.fel.core.tool.ToolInfo;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
@@ -122,6 +123,14 @@ public class OpenAiChatEntityTest {
         }
     }
 
+    private static class TestObj {
+        private String sessionId;
+
+        public TestObj(String sessionId) {
+            this.sessionId = sessionId;
+        }
+    }
+
     @Nested
     class ChatCompletionTest {
         @Test
@@ -163,6 +172,26 @@ public class OpenAiChatEntityTest {
                     + "\"enum\":[\"celsius\",\"fahrenheit\"]}},\"required\":[\"location\"]}}}}],"
                     + "\"frequency_penalty\":1.0,\"max_tokens\":512,\"presence_penalty\":1.0,\"top_p\":1.0,"
                     + "\"tool_choice\":\"auto\"}";
+            assertThat(SERIALIZER.serialize(request)).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("测试带额外 body 的请求序列化成功")
+        void giveRequestWithExtraThenSerializeOk() {
+            Prompt prompt = ChatMessages.from(new SystemMessage("请基于原文回答问题"),
+                    new HumanMessage("Dorado报错0xF00170015, 请问是什么意思?"));
+            ChatOption chatOption = ChatOption.custom()
+                    .model("llama3:8b")
+                    .stream(true)
+                    .user("user_1")
+                    .extras(Collections.singletonList(new ModelExtraHttpBody(new TestObj(
+                            "240d5f92-9629-40f7-a2a0-b719cb142913"))))
+                    .build();
+            OpenAiChatCompletionRequest request = new OpenAiChatCompletionRequest(prompt, chatOption);
+            String expected = "{\"messages\":[{\"role\":\"system\",\"content\":\"请基于原文回答问题\"},{\"role\":\"user\","
+                    + "\"content\":\"Dorado报错0xF00170015, 请问是什么意思?\"}],\"model\":\"llama3:8b\","
+                    + "\"stream\":true,\"user\":\"user_1\","
+                    + "\"sessionId\":\"240d5f92-9629-40f7-a2a0-b719cb142913\"}";
             assertThat(SERIALIZER.serialize(request)).isEqualTo(expected);
         }
 

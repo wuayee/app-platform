@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 /**
  * {@link FlowSession} 线程变量。
  *
- * @author 刘信宏
  * @author 易文渊
  * @since 2024-06-18
  */
@@ -35,6 +34,7 @@ public class AiFlowSession {
     }
 
     /**
+     *
      * 获取线程变量 {@link FlowSession}，如果变量为空，则返回一个新构造的对象。
      *
      * @return {@link FlowSession} 对象。

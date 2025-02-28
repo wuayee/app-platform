@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AppChatNumMapper">
+    <insert id="insertOrAddOne">
+        insert into app_chat_num(id, app_id, chat_mode, chat_num) values(#{id},#{appId},#{chatMode},1)
+        on conflict(app_id, chat_mode) do update set chat_num = app_chat_num.chat_num + 1
+    </insert>
+
+    <update id="minusOne">
+        update app_chat_num set chat_num=chat_num - 1 where app_id=#{appId} and chat_mode=#{chatMode}
+    </update>
+</mapper>

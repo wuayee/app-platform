@@ -1,0 +1,10 @@
+{
+  "checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b82",
+  "type": "java",
+  "name": "插件名",
+  "description": "这是一个插件描述",
+  "uniqueness": {
+    "artifactId": "jade-demo-parent",
+    "groupId": "store-demo-plugin"
+  }
+}

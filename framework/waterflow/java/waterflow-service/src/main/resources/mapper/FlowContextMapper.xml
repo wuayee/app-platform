@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper">
+    <resultMap id="objectMap"
+               type="modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO">
+        <id column="context_id" property="contextId"/>
+        <result column="trace_id" property="traceId"/>
+        <result column="trans_id" property="transId"/>
+        <result column="root_id" property="rootId"/>
+        <result column="stream_id" property="streamId"/>
+        <result column="flow_data" property="flowData"/>
+        <result column="position_id" property="positionId"/>
+        <result column="joined" property="joined"/>
+        <result column="status" property="status"/>
+        <result column="parallel" property="parallel"/>
+        <result column="parallel_mode" property="parallelMode"/>
+        <result column="previous" property="previous"/>
+        <result column="batch_id" property="batchId"/>
+        <result column="to_batch" property="toBatch"/>
+        <result column="sent" property="sent"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
+        <result column="archived_at" property="archivedAt"/>
+    </resultMap>
+
+    <resultMap id="objectMapWithoutFlowData"
+               type="modelengine.fit.waterflow.flowsengine.persist.po.FlowContextPO">
+        <id column="context_id" property="contextId"/>
+        <result column="trace_id" property="traceId"/>
+        <result column="trans_id" property="transId"/>
+        <result column="root_id" property="rootId"/>
+        <result column="stream_id" property="streamId"/>
+        <result column="position_id" property="positionId"/>
+        <result column="joined" property="joined"/>
+        <result column="status" property="status"/>
+        <result column="parallel" property="parallel"/>
+        <result column="parallel_mode" property="parallelMode"/>
+        <result column="previous" property="previous"/>
+        <result column="batch_id" property="batchId"/>
+        <result column="to_batch" property="toBatch"/>
+        <result column="sent" property="sent"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
+        <result column="archived_at" property="archivedAt"/>
+    </resultMap>
+
+    <sql id="table">flow_context</sql>
+
+    <sql id="columns">context_id
+    , trace_id, trans_id, root_id, stream_id, flow_data, position_id, joined, status, parallel, parallel_mode, previous, batch_id, to_batch, sent, create_at, archived_at, update_at</sql>
+
+    <sql id="columnsWithoutFlowData">context_id
+    , trace_id, trans_id, root_id, stream_id, position_id, joined, status, parallel, parallel_mode, previous, batch_id, to_batch, sent, create_at, archived_at, update_at</sql>
+
+    <insert id="create">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES(#{flowContext.contextId},
+        #{flowContext.traceId},
+        #{flowContext.transId},
+        #{flowContext.rootId},
+        #{flowContext.streamId},
+        #{flowContext.flowData}::jsonb,
+        #{flowContext.positionId},
+        #{flowContext.joined},
+        #{flowContext.status},
+        #{flowContext.parallel},
+        #{flowContext.parallelMode},
+        #{flowContext.previous},
+        #{flowContext.batchId},
+        #{flowContext.toBatch},
+        #{flowContext.sent},
+        #{flowContext.createAt},
+        #{flowContext.archivedAt},
+        #{flowContext.updateAt})
+    </insert>
+
+    <insert id="batchCreate" parameterType="java.util.List">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES
+        <foreach collection="flowContextPOS" item="flowContext" separator=",">
+            (#{flowContext.contextId},
+            #{flowContext.traceId},
+            #{flowContext.transId},
+            #{flowContext.rootId},
+            #{flowContext.streamId},
+            #{flowContext.flowData}::jsonb,
+            #{flowContext.positionId},
+            #{flowContext.joined},
+            #{flowContext.status},
+            #{flowContext.parallel},
+            #{flowContext.parallelMode},
+            #{flowContext.previous},
+            #{flowContext.batchId},
+            #{flowContext.toBatch},
+            #{flowContext.sent},
+            #{flowContext.createAt},
+            #{flowContext.archivedAt},
+            #{flowContext.updateAt})
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="flowContextPOS" item="flowContext" separator=";">
+            UPDATE
+            <include refid="table"/>
+            SET
+            flow_data = #{flowContext.flowData}::jsonb,
+            joined = #{flowContext.joined},
+            parallel = #{flowContext.parallel},
+            parallel_mode = #{flowContext.parallelMode},
+            previous = #{flowContext.previous},
+            batch_id = #{flowContext.batchId},
+            to_batch = #{flowContext.toBatch}
+            WHERE
+            context_id = #{flowContext.contextId}
+        </foreach>
+    </update>
+
+    <update id="updateToSent">
+        UPDATE
+        <include refid="table"/>
+        SET
+        sent = TRUE
+        WHERE
+        context_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateStatusAndPosition">
+        UPDATE
+        <include refid="table"/>
+        SET
+        status = #{updateInfo.status},
+        <if test="updateInfo.position != null">
+            position_id = #{updateInfo.position},
+        </if>
+        update_at = #{updateInfo.updateAt},
+        archived_at = #{updateInfo.archivedAt}
+        WHERE
+        context_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND
+        status NOT IN
+        <foreach item="exclusiveStatus" collection="exclusiveStatus" open="(" separator="," close=")">
+            #{exclusiveStatus}
+        </foreach>
+    </update>
+
+    <update id="updateFlowDataAndToBatch">
+        <foreach collection="flowContextPOS" item="flowContext" separator=";">
+            UPDATE
+            <include refid="table"/>
+            SET
+            flow_data = #{flowContext.flowData}::jsonb,
+            to_batch = #{flowContext.toBatch}
+            WHERE
+            context_id = #{flowContext.contextId}
+        </foreach>
+    </update>
+
+    <update id="updateFlowData">
+        <foreach collection="flowDataList.entrySet()" item="value" index="key" separator=";">
+            UPDATE
+            <include refid="table"/>
+            SET
+            flow_data = #{value}::jsonb
+            WHERE
+            context_id = #{key}
+        </foreach>
+    </update>
+
+    <select id="find" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE context_id = #{flowContextId}
+    </select>
+
+    <select id="findByPositions" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId} AND position_id IN
+        <foreach item="posId" collection="posIds" open="(" separator="," close=")">
+            #{posId}
+        </foreach>
+        AND status = #{status} AND sent = FALSE
+        <if test="traceIds.size() > 0">
+            AND trace_id in
+            <foreach item="item" collection="traceIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findByPositionWithBatchId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId} AND position_id = #{posId} AND batch_id = #{batchId} AND status = #{status}
+    </select>
+
+    <select id="findBySubscriptions" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId}
+        AND position_id IN
+        <foreach item="subscription" collection="subscriptions" open="(" separator="," close=")">
+            #{subscription}
+        </foreach>
+        AND trace_id in
+        <foreach item="item" index="index" collection="traceIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND status = #{status}
+    </select>
+
+    <select id="findSomeBySubscriptions" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId}
+        AND position_id IN
+        <foreach item="subscription" collection="subscriptions" open="(" separator="," close=")">
+            #{subscription}
+        </foreach>
+        AND trace_id in
+        <foreach item="item" index="index" collection="traceIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND status = #{status}
+        LIMIT #{limit}
+    </select>
+
+    <select id="findByStreamId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId}
+    </select>
+
+    <select id="findByStreamIdList" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id in
+        <foreach item="item" index="index" collection="streamIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findRunningContextCountByMetaId" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId}
+        AND
+        status NOT IN ('ARCHIVED', 'ERROR')
+    </select>
+
+    <update id="delete">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE stream_id = #{streamId}
+    </update>
+
+    <select id="pageQueryByStreamId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getTotalByStreamId" resultType="int">
+        SELECT COUNT(*) FROM
+        <include refid="table"/>
+        WHERE stream_id = #{streamId}
+    </select>
+
+    <select id="findByContextIdList" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        context_id in
+        <foreach item="item" index="index" collection="contextIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findWithoutFlowDataByContextIdList" resultMap="objectMapWithoutFlowData">
+        SELECT
+        <include refid="columnsWithoutFlowData"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        context_id in
+        <foreach item="item" index="index" collection="contextIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByTransIdList" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id in
+        <foreach item="item" index="index" collection="flowTransIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findWithoutFlowDataByTransIdList" resultMap="objectMapWithoutFlowData">
+        SELECT
+        <include refid="columnsWithoutFlowData"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id in
+        <foreach item="item" index="index" collection="flowTransIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateStatus">
+        UPDATE
+        <include refid="table"/>
+        SET
+        status = #{status}
+        WHERE
+        context_id
+        IN
+        <foreach item="item" index="index" collection="contextIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="findUnarchivedContextCountByMetaId" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id = #{streamId}
+        AND
+        status NOT IN ('ARCHIVED')
+    </select>
+
+    <select id="findByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE trace_id = #{traceId}
+    </select>
+
+    <select id="findWithoutFlowDataByTraceId" resultMap="objectMapWithoutFlowData">
+        SELECT
+        <include refid="columnsWithoutFlowData"/>
+        FROM
+        <include refid="table"/>
+        WHERE trace_id = #{traceId}
+    </select>
+
+    <select id="findErrorContextByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE trace_id = #{traceId}
+        AND status = 'ERROR'
+    </select>
+
+    <select id="findErrorContextByTransId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE trans_id = #{transId}
+        AND status = 'ERROR'
+    </select>
+
+    <select id="findRunningContextByStreamIds" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        stream_id
+        IN
+        <foreach item="item" index="index" collection="streamIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND status IN
+        ('PENDING', 'NEW', 'READY')
+    </select>
+
+    <select id="getRunningContextsIdByTransaction" resultType="string">
+        SELECT
+        context_id
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND status IN
+        ('PENDING', 'NEW', 'READY')
+    </select>
+
+    <select id="getRunningContextsIdByTraceId" resultType="string">
+        SELECT
+        context_id
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND status IN
+        ('PENDING', 'NEW', 'READY')
+    </select>
+
+    <select id="findFinishedContextsPagedByTransId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND (status = 'ERROR' OR (position_id = #{endNode} AND status = 'ARCHIVED'))
+        ORDER BY
+            CASE
+                WHEN status = 'ERROR' THEN 0
+                ELSE 1
+            END
+        LIMIT #{limit} OFFSET (#{pageNum}-1)*#{limit}
+    </select>
+
+    <select id="findFinishedContextsByTransId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND (status = 'ERROR' OR (position_id = #{endNode} AND status = 'ARCHIVED'))
+        ORDER BY archived_at
+    </select>
+
+    <select id="findFinishedContextsByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND (status = 'ERROR' OR (position_id = #{endNode} AND status = 'ARCHIVED'))
+        ORDER BY archived_at
+    </select>
+
+    <select id="getStreamIdByTransId" resultType="string">
+        SELECT
+        stream_id
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        LIMIT 1
+    </select>
+
+    <select id="findFinishedPageNumByTransId"  resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND (status = 'ERROR' OR position_id = #{endNode})
+    </select>
+
+    <select id="findEndContextsPagedByTransId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND position_id = #{endNode}
+        AND status = 'ARCHIVED'
+        ORDER BY archived_at
+        LIMIT #{limit} OFFSET (#{pageNum}-1)*#{limit}
+    </select>
+
+    <select id="findEndContextsNumByTransId"  resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND position_id = #{endNode}
+    </select>
+
+    <select id="findErrorContextsPagedByTransId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND status = 'ERROR'
+        ORDER BY archived_at
+        LIMIT #{limit} OFFSET (#{pageNum}-1)*#{limit}
+    </select>
+
+    <select id="findErrorContextsNumByTransId"  resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{transId}
+        AND status = 'ERROR'
+    </select>
+
+    <select id="getTraceByTransId" resultType="string">
+        SELECT DISTINCT
+        trace_id
+        FROM
+        <include refid="table"/>
+        WHERE
+        trans_id = #{flowTransId}
+    </select>
+
+    <delete id="deleteByTransId">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE trans_id = #{flowTransId}
+    </delete>
+
+    <select id="findByToBatch" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE to_batch
+        IN
+        <foreach item="item" index="index" collection="toBatchIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findWithoutFlowDataByToBatch" resultMap="objectMapWithoutFlowData">
+        SELECT
+        <include refid="columnsWithoutFlowData"/>
+        FROM
+        <include refid="table"/>
+        WHERE to_batch
+        IN
+        <foreach item="item" index="index" collection="toBatchIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findFinishedContextsPagedByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND (status = 'ERROR' OR (position_id = #{endNode} AND status = 'ARCHIVED'))
+        ORDER BY archived_at
+        LIMIT #{limit} OFFSET (#{pageNum}-1)*#{limit}
+    </select>
+
+    <select id="findFinishedPageNumByTraceId"  resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND (status = 'ERROR' OR position_id = #{endNode})
+    </select>
+
+    <select id="findEndContextsPagedByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND position_id = #{endNode}
+        AND status = 'ARCHIVED'
+        ORDER BY archived_at
+        LIMIT #{limit} OFFSET (#{pageNum}-1)*#{limit}
+    </select>
+
+    <select id="findEndContextsNumByTraceId"  resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND position_id = #{endNode}
+    </select>
+
+    <select id="findErrorContextsPagedByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND status = 'ERROR'
+        ORDER BY archived_at
+        LIMIT #{limit} OFFSET (#{pageNum}-1)*#{limit}
+    </select>
+
+    <select id="findErrorContextsNumByTraceId"  resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND status = 'ERROR'
+    </select>
+
+    <select id="getRunningContextsByTraceId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND status IN
+        ('PENDING', 'NEW', 'READY')
+    </select>
+    <delete id="deleteByContextIds">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE
+        context_id IN
+        <foreach item="id" collection="contextIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findTraceIdsByContextIds" resultType="string">
+        SELECT DISTINCT
+        trace_id
+        FROM
+        <include refid="table"/>
+        WHERE
+        context_id IN
+        <foreach item="id" collection="contextIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="updateProcessStatus">
+        UPDATE
+        <include refid="table"/>
+        SET
+        status = #{updateInfo.status},
+        to_batch = #{updateInfo.toBatch},
+        position_id = #{updateInfo.position},
+        update_at = #{updateInfo.updateAt},
+        archived_at = #{updateInfo.archivedAt}
+        WHERE
+        context_id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND
+        status NOT IN
+        <foreach item="exclusiveStatus" collection="exclusiveStatus" open="(" separator="," close=")">
+            #{exclusiveStatus}
+        </foreach>
+    </update>
+
+    <select id="findCountByStatus" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND
+        status
+        IN
+        <foreach item="status" collection="statusList" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+
+    <select id="findCountByStatusAtPosition" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND
+        position_id = #{position}
+        AND
+        status
+        IN
+        <foreach item="status" collection="statusList" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+
+    <select id="findCountNotInStatus" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        AND
+        status
+        NOT IN
+        <foreach item="status" collection="statusList" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+
+    <select id="getTransIdByTrace" resultType="string">
+        SELECT
+        trans_id
+        FROM
+        <include refid="table"/>
+        WHERE
+        trace_id = #{traceId}
+        LIMIT 1
+    </select>
+</mapper>

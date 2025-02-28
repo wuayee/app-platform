@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.task.mapper.EvalReportMapper">
+    <resultMap id="EvalReportEntityResultMap" type="modelengine.jade.app.engine.task.entity.EvalReportEntity">
+        <result property="passScore" column="pass_score"/>
+        <result property="averageScore" column="average_score"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="nodeName" column="node_name"/>
+        <result property="algorithmSchema" column="algorithm_schema"/>
+    </resultMap>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_report (node_id, average_score, histogram, instance_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.nodeId}, #{item.averageScore}, #{item.histogram},
+            #{item.instanceId})
+        </foreach>
+    </insert>
+
+    <!-- 分页查询评估任务报告元数据 -->
+    <select id="listEvalReport" resultType="modelengine.jade.app.engine.task.entity.EvalReportEntity"
+            resultMap="EvalReportEntityResultMap">
+        SELECT t_app_engine_eval_report.id,
+               t_app_engine_eval_report.node_id,
+               t_app_engine_eval_algorithm.pass_score,
+               t_app_engine_eval_algorithm.algorithm_schema,
+               t_app_engine_eval_algorithm.node_name,
+               t_app_engine_eval_report.average_score,
+               t_app_engine_eval_report.histogram
+        FROM t_app_engine_eval_report
+                 LEFT JOIN t_app_engine_eval_algorithm
+                            ON t_app_engine_eval_report.node_id = t_app_engine_eval_algorithm.node_id
+        WHERE t_app_engine_eval_report.instance_id = #{instanceId}
+    </select>
+
+    <!-- 查询评估任务报告个数 -->
+    <select id="countEvalReport" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_report
+        WHERE instance_id = #{instanceId}
+    </select>
+
+</mapper>

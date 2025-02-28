@@ -1,0 +1,10 @@
+[
+  {
+    "schema": "INVALID SCHEMA STR",
+    "content": [
+      "{\n  \"name\": \"Jerry\",\n  \"age\": 100\n}",
+      "{\n  \"name\": \"Alex\",\n  \"age\": 100\n}"
+    ],
+    "annotation": "INVALID SCHEMA"
+  }
+]

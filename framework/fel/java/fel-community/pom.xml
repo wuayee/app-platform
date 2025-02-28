@@ -15,5 +15,6 @@
 
     <modules>
         <module>model-openai</module>
+        <module>tokenizer-hanlp</module>
     </modules>
 </project>

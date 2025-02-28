@@ -1,0 +1,70 @@
+{
+  "name": "问题重写算子",
+  "description": "This method is to override query",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "originQuery": {
+        "type": "string",
+        "description": "原始问题。"
+      },
+      "dimension": {
+        "type": "string",
+        "description": "产品线名称。"
+      },
+      "historySwitch": {
+        "type": "boolean",
+        "description": "多轮对话开关。"
+      },
+      "conversationInfo": {
+        "type": "object",
+        "properties": {
+          "conversationId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          }
+        },
+        "description": "会话信息。"
+      }
+    },
+    "required": [
+      "originQuery",
+      "dimension",
+      "historySwitch",
+      "conversationInfo"
+    ]
+  },
+  "order": [
+    "originQuery",
+    "dimension",
+    "historySwitch",
+    "conversationInfo"
+  ],
+  "return": {
+    "description": "用户问题澄清",
+    "type": "object",
+    "properties": {
+      "supplement": {
+        "type": "string"
+      },
+      "needTime": {
+        "type": "boolean"
+      },
+      "needProduct": {
+        "type": "boolean"
+      },
+      "needIndicator": {
+        "type": "boolean"
+      },
+      "needAmbiguity": {
+        "type": "boolean"
+      },
+      "groupBy": {
+        "type": "string"
+      }
+    },
+    "converter": ""
+  }
+}

@@ -12,7 +12,7 @@ waterflow是一个水流式的流程编排引擎。其核心特点是支持有�
 
 创建一个流用于处理一系列数字，先每个数字加2，然后再将数字转换为字符串，最后将结果输出。
 
-``` java
+```java
 ProcessFlow<Integer> flow = Flows.<Integer>create()
         .map(i -> i + 2)
         .map(i -> i.toString())
@@ -30,7 +30,7 @@ flow.offer(new Integer[] {1, 2, 3, 4, 5});
 
 示例（打印接收到的数据）：
 
-``` java
+```java
 Flows.<Integer>create()
         .just(System.out::println)
         .close()
@@ -45,7 +45,7 @@ Flows.<Integer>create()
 
 示例(接收一个数字转换为字符串)：
 
-``` java
+```java
 Flows.<Integer>create()
         .map(i -> i.toString())
         .close()
@@ -60,7 +60,7 @@ Flows.<Integer>create()
 
 示例（将收到的数字按照大小创建对应数量的字符串数据）：
 
-``` java
+```java
 Flows.<Integer>create()
         .flatMap(num -> {
             String[] maps = new String[num];
@@ -87,7 +87,7 @@ Flows.<Integer>create()
 
 示例（将数据进行求和）：
 
-``` java
+```java
 Flows.<Integer>create()
         .reduce(() -> 0, Integer::sum)
         .close()
@@ -115,7 +115,7 @@ Flows.<Integer>create()
 
 示例（对于数字数据创建2个处理分支：小于10、小于20、其它处理）：
 
-``` java
+```java
 Flows.<Integer>create()
         .conditions()
         .match(i -> i < 10, node -> node.map(value -> value + 20))
@@ -133,7 +133,7 @@ Flows.<Integer>create()
 
 示例（将给定的一批数据排序并只保留2个同时转换为字符串）：
 
-``` java
+```java
 Flows.<Integer>create()
         .produce(list -> list.stream()
                 .sorted()
@@ -155,7 +155,7 @@ Flows.<Integer>create()
 
 示例（增加block节点，通过block节点控制数据流转）：
 
-``` java
+```java
 BlockToken<Integer> block = new BlockToken<Integer>() {
     @Override
     public boolean verify(Integer data) {
@@ -182,7 +182,7 @@ block.resume();
 
 示例（一次聚合两条数据进行字符串拼接）：
 
-``` java
+```java
 Operators.Window<Integer> window = inputs -> inputs.size() == 2;
 Flows.<Integer>create()
         .window(window)
@@ -200,7 +200,7 @@ Flows.<Integer>create()
 
 示例（一次打印两条数）：
 
-``` java
+```java
 Operators.Window<Integer> window = inputs -> inputs.size() == 2;
 Flows.<Integer>create()
         .map(i -> i.toString())
@@ -222,7 +222,7 @@ Flows.<Integer>create()
 
 示例（按照指定key分组后拼接输出）：
 
-``` java
+```java
 Flows.<Data>create()
         .keyBy(Data::getKey)
         .buffer()
@@ -255,7 +255,7 @@ Flows.<Data>create()
 
 示例（将一个数进行两次处理后再汇总结果）：
 
-``` java
+```java
 Flows.<Integer>create()
         .parallel()
         .fork(node -> node.map(i -> i + 1))

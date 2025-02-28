@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jane.flow.graph.FlowGraphMapper">
+    <resultMap id="objectMap"
+               type="modelengine.fit.jane.flow.graph.entity.FlowGraphDefinition">
+        <result column="id" property="flowId"/>
+        <result column="version" property="version"/>
+        <result column="tenant" property="tenant"/>
+        <result column="status" property="status"/>
+        <result column="name" property="name"/>
+        <result column="data" property="graphData"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="previous" property="previous"/>
+        <result column="is_deleted" property="isDeleted"/>
+    </resultMap>
+
+    <sql id="table">flow_graph</sql>
+
+    <sql id="columns">id
+    , version, tenant, status, name, data, created_by, created_at,updated_by, updated_at, previous, is_deleted</sql>
+
+    <insert id="create">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES(#{flowData.flowId},
+        #{flowData.version},
+        #{flowData.tenant},
+        #{flowData.status},
+        #{flowData.name},
+        #{flowData.graphData},
+        #{flowData.createdBy},
+        #{flowData.createdAt},
+        #{flowData.updatedBy},
+        #{flowData.updatedAt},
+        #{flowData.previous},
+        #{flowData.isDeleted})
+    </insert>
+
+    <update id="update">
+        UPDATE
+        <include refid="table"/>
+        SET
+        data = #{updateData.graphData},
+        name = #{updateData.name},
+        updated_by = #{updateData.updatedBy},
+        updated_at = #{updateData.updatedAt}
+        <if test="updateData.status != null">
+            ,status = #{updateData.status}
+        </if>
+        WHERE tenant = #{tenant} AND version = #{version} AND id = #{id}
+    </update>
+
+    <select id="find" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE id = #{id} AND version = #{version} AND tenant = #{tenant} AND is_deleted IS FALSE
+    </select>
+
+    <select id="findFlowByFlowIdAndVersion" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE id = #{flowId} and version = #{version}
+    </select>
+
+    <select id="findFlowsByFlowId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE id = #{flowId}
+    </select>
+
+    <update id="delete">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE id = #{flowId} AND version = #{version}
+    </update>
+
+    <select id="findByUserOrTag" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        <where>
+            <if test="createdBy != null">
+                created_by = #{createdBy}
+            </if>
+            <if test="tags != null">
+                <if test="createdBy != null">
+                    AND
+                </if>
+                tags = #{tags}
+            </if>
+        </where>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*)
+        FROM
+        <include refid="table"/>
+        <where>
+            <if test="flowIds != null and flowIds.size() > 0">
+                id IN
+                <foreach collection="flowIds" item="flowId" open="(" separator="," close=")">
+                    #{flowId}
+                </foreach>
+            </if>
+            <if test="createdBy != null">
+                <if test="flowIds != null and flowIds.size() > 0">
+                    AND
+                </if>
+                created_by = #{createdBy}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByFlowIdsOrUser" parameterType="map" resultMap="objectMap">
+        SELECT
+        <include refid="columns"></include>
+        FROM
+        <include refid="table"/>
+        <where>
+            <if test="flowIds != null and flowIds.size() > 0">
+                id IN
+                <foreach collection="flowIds" item="flowId" open="(" separator="," close=")">
+                    #{flowId}
+                </foreach>
+            </if>
+            <if test="createdBy != null">
+                <if test="flowIds != null and flowIds.size() > 0">
+                    AND
+                </if>
+                created_by = #{createdBy}
+            </if>
+        </where>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+</mapper>

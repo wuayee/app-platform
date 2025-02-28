@@ -1,0 +1,107 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.aipp.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
+import modelengine.jade.carver.ListResult;
+import modelengine.jade.store.entity.query.PluginToolQuery;
+import modelengine.jade.store.entity.transfer.PluginToolData;
+import modelengine.jade.store.service.PluginToolService;
+
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
+import modelengine.fit.jade.aipp.model.dto.ModelListDto;
+import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jober.aipp.service.impl.AgentInfoGenerateServiceImpl;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.test.annotation.Mock;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 智能体信息生成服务测试类。
+ *
+ * @author 兰宇晨。
+ * @since 2024-12-09。
+ */
+@FitTestWithJunit(includeClasses = AgentInfoGenerateServiceImpl.class)
+public class AgentInfoGenerateServiceImplTest {
+    @Fit
+    private AgentInfoGenerateService agentInfoGenerateService;
+
+    @Mock
+    private AippModelService aippModelService;
+
+    @Mock
+    private AippModelCenter aippModelCenter;
+
+    @Mock
+    private PluginToolService toolService;
+
+    @Test
+    @DisplayName("测试自动生成智能体名称")
+    void shouldOkWhenGenerateName() {
+        when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("NAME");
+        assertThat(this.agentInfoGenerateService.generateName("DESC")).isEqualTo("NAME");
+    }
+
+    @Test
+    @DisplayName("测试自动生成智能体开场白")
+    void shouldOkWhenGenerateGreeting() {
+        when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("GREETING");
+        assertThat(this.agentInfoGenerateService.generateGreeeting("DESC")).isEqualTo("GREETING");
+    }
+
+    @Test
+    @DisplayName("测试自动生成智能体提示词")
+    void shouldOkWhenGeneratePrompt() {
+        when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("PROMPT");
+        assertThat(this.agentInfoGenerateService.generatePrompt("DESC")).isEqualTo("PROMPT");
+    }
+
+    @Test
+    @DisplayName("测试自动选择工具")
+    void shouldOkWhenSelectTools() {
+        List<ModelAccessInfo> modelAccessInfos = new ArrayList<>();
+        modelAccessInfos.add(new ModelAccessInfo("MODEL", "TAG"));
+        ModelListDto dto = new ModelListDto();
+        dto.setModels(modelAccessInfos);
+
+        List<PluginToolData> pluginToolDataList = new ArrayList<>(Arrays.asList(new PluginToolData() {{
+            setUniqueName("UNIQUENAME1");
+            setName("NAME1");
+            setDescription("DESC1");
+        }}, new PluginToolData() {{
+            setUniqueName("UNIQUENAME2");
+            setName("NAME2");
+            setDescription("DESC2");
+        }}, new PluginToolData() {{
+            setUniqueName("UNIQUENAME3");
+            setName("NAME3");
+            setDescription("DESC3");
+        }}));
+        ListResult<PluginToolData> pluginToolDataListResult = ListResult.create(pluginToolDataList, 3);
+
+        when(this.aippModelCenter.fetchModelList()).thenReturn(dto);
+        when(this.aippModelService.chat(eq("MODEL"), eq("TAG"), anyDouble(), anyString())).thenReturn("[1,2]");
+        when(this.toolService.getPluginTools(any(PluginToolQuery.class))).thenReturn(pluginToolDataListResult);
+
+        assertThat(this.agentInfoGenerateService.selectTools("DESC", "CREATOR")).containsExactly("UNIQUENAME2",
+                "UNIQUENAME3");
+    }
+}

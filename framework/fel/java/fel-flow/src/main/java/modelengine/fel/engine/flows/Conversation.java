@@ -1,19 +1,25 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.engine.flows;
 
+import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.memory.Memory;
 import modelengine.fel.engine.activities.AiStart;
 import modelengine.fel.engine.activities.FlowCallBack;
+import modelengine.fel.engine.operators.models.ChatChunk;
+import modelengine.fel.engine.operators.models.StreamingConsumer;
+import modelengine.fel.engine.operators.sources.Source;
 import modelengine.fel.engine.util.StateKey;
+import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -44,9 +50,9 @@ public class Conversation<D, R> {
      */
     public Conversation(AiProcessFlow<D, R> flow, FlowSession session) {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
-        this.session =
-                (session == null) ? this.setConverseListener(new FlowSession()) : this.setSubConverseListener(session);
-        this.session.begin();
+        this.session = (session == null)
+                ? this.setConverseListener(new FlowSession())
+                : this.setSubConverseListener(session);
         this.callBackBuilder = FlowCallBack.builder();
     }
 
@@ -62,7 +68,6 @@ public class Conversation<D, R> {
         ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.start().offer(data, newSession);
-        newSession.getWindow().complete();
         return latch;
     }
 
@@ -80,20 +85,43 @@ public class Conversation<D, R> {
         ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
-        newSession.getWindow().complete();
         return latch;
+    }
+
+    /**
+     * 当前会话订阅一个发射源，由发射源驱动会话执行，会话结束后会注销本次订阅。
+     * <p>注意发射源的 {@link Source#emit(Object, FlowSession)} 传入的 {@link FlowSession} 的状态数据，会被当前会话的各类
+     * {@code bind} 方法覆盖， 如 {@link Conversation#bind(String, Object)}、 {@link Conversation#bind(Memory)} 等。</p>
+     *
+     * @param source 表示发射源的 {@link Source}{@code <}{@link D}{@code >}。
+     * @return 表示线程同步器的 {@link ConverseLatch}{@code <}{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code source} 为 {@code null} 时。
+     */
+    public ConverseLatch<R> offer(Source<D> source) {
+        Validation.notNull(source, "Source can not be null.");
+
+        FlowSession sessionClone = new FlowSession(this.session);
+        AiProcessFlow<D, R> processFlow = AiFlows.<D>create().just((data, ctx) -> {
+            FlowContext<D> flowContext = ObjectUtils.cast(ctx);
+            flowContext.getSession().copySessionState(sessionClone);
+        }).delegate(this.flow).close();
+        processFlow.offer(source);
+
+        Action finallyCb = this.callBackBuilder.getFinallyCb();
+        this.callBackBuilder.doOnFinally(finallyCb.andThen(() -> source.unregister(processFlow)));
+        return setListener(processFlow);
     }
 
     /**
      * 绑定大模型超参数到对话上下文，用于流程后续的大模型节点。
      *
-     * @param option 表示大模型超参数的 {@link ChatOption}。
+     * @param options 表示大模型超参数的 {@link ChatOption}。
      * @return 表示绑定了大模型超参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code options} 为 {@code null} 时。
      */
-    public Conversation<D, R> bind(ChatOption option) {
-        Validation.notNull(option, "Chat options cannot be null.");
-        this.session.setInnerState(StateKey.CHAT_OPTION, option);
+    public Conversation<D, R> bind(ChatOption options) {
+        Validation.notNull(options, "Chat options cannot be null.");
+        this.session.setInnerState(StateKey.CHAT_OPTIONS, options);
         return this;
     }
 
@@ -106,7 +134,21 @@ public class Conversation<D, R> {
      */
     public Conversation<D, R> bind(Memory memory) {
         Validation.notNull(memory, "Memory cannot be null.");
-        this.session.setInnerState(StateKey.HISTORY, memory);
+        this.session.setInnerState(StateKey.HISTORY_OBJ, memory);
+        return this;
+    }
+
+    /**
+     * 绑定流式响应信息消费者到对话上下文，用于消费流程流转过程中的流式信息。
+     *
+     * @param consumer 表示流式响应信息消费者的 {@link StreamingConsumer}{@code <}{@link ChatMessage}{@code ,
+     * }{@link ChatChunk}{@code >}。
+     * @return 表示绑定了流式响应信息消费者的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code consumer} 为 {@code null} 时。
+     */
+    public Conversation<D, R> bind(StreamingConsumer<ChatMessage, ChatChunk> consumer) {
+        Validation.notNull(consumer, "Streaming consumer cannot be null.");
+        this.session.setInnerState(StateKey.STREAMING_CONSUMER, consumer);
         return this;
     }
 
@@ -151,8 +193,8 @@ public class Conversation<D, R> {
      * @return 表示设置完成功回调的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public Conversation<D, R> doOnConsume(Consumer<R> processor) {
-        this.callBackBuilder.doOnConsume(processor);
+    public Conversation<D, R> doOnSuccess(Consumer<R> processor) {
+        this.callBackBuilder.doOnSuccess(processor);
         return this;
     }
 

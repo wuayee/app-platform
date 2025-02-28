@@ -1,0 +1,6 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.jade.knowledge'
+  messages:
+    basename: i18n/knowledge_data

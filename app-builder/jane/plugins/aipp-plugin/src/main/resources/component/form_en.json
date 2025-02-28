@@ -1,0 +1,206 @@
+{
+  "groups": [
+    {
+      "name": "Basic Controllers",
+      "type": "basic"
+    },
+    {
+      "name": "Advanced Controllers",
+      "type": "advanced"
+    }
+  ],
+  "items": [
+    {
+      "name": "Multi-line Input",
+      "icon": "xx.icon",
+      "type": "htmlInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Image Uploading",
+      "icon": "yy.icon",
+      "type": "htmlImageInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "File Uploading",
+      "icon": "yy.icon",
+      "type": "htmlFileInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "PDF File Uploading",
+      "icon": "yy.icon",
+      "type": "htmlPdfInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Word File Uploading",
+      "icon": "yy.icon",
+      "type": "htmlDocInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Image Display",
+      "icon": "yy.icon",
+      "type": "htmlImageDisplay",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Button",
+      "icon": "yy.icon",
+      "type": "htmlButton",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Mind",
+      "icon": "yy.icon",
+      "type": "htmlMind",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Radio Box",
+      "icon": "yy.icon",
+      "type": "htmlRadioBox",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "iframe",
+      "icon": "yy.icon",
+      "type": "htmlIframe",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Text Display",
+      "icon": "yy.icon",
+      "type": "htmlTextDisplay",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "File Download",
+      "icon": "yy.icon",
+      "type": "htmlFileDownload",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Video Input",
+      "icon": "yy.icon",
+      "type": "htmlVideoInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Audio Input",
+      "icon": "yy.icon",
+      "type": "htmlAudioInput",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Task List Display",
+      "icon": "yy.icon",
+      "type": "htmlTaskDisplay",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "PPT Display",
+      "icon": "yy.icon",
+      "type": "htmlPptDisplay",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Video Summary Display",
+      "icon": "yy.icon",
+      "type": "htmlVideoSummary",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Report Display",
+      "icon": "yy.icon",
+      "type": "htmlReport",
+      "group": [
+        "basic"
+      ]
+    },
+    {
+      "name": "Start Button",
+      "icon": "yy.icon",
+      "type": "startButton",
+      "group": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Confirm Button",
+      "icon": "yy.icon",
+      "type": "confirmButton",
+      "group": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "LLM Selector",
+      "icon": "yy.icon",
+      "type": "llmSelector",
+      "group": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Session Start Button",
+      "icon": "yy.icon",
+      "type": "sessionStartButton",
+      "group": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Session Continue Button",
+      "icon": "yy.icon",
+      "type": "sessionContinueButton",
+      "group": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Save Button",
+      "icon": "yy.icon",
+      "type": "reportSaveButton",
+      "group": [
+        "advanced"
+      ]
+    }
+  ]
+}

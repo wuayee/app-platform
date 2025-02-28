@@ -1,0 +1,1 @@
+INSERT INTO "task_instance_wide"("id", "task_id", "task_type_id", "source_id", "text_1", "text_2") VALUES(?, ?, ?, ?, ?, ?)

@@ -1,11 +1,14 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.engine.flows;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import modelengine.fitframework.log.Logger;
 
 import java.util.concurrent.CountDownLatch;
@@ -17,6 +20,9 @@ import java.util.concurrent.TimeUnit;
  * @author 刘信宏
  * @since 2024-04-10
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ConverseLatch<T> {
     private static final Logger log = Logger.get(ConverseLatch.class);
 
@@ -71,25 +77,5 @@ public class ConverseLatch<T> {
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
         }
         return this.data;
-    }
-
-    public T data() {
-        return this.data;
-    }
-
-    public void data(T data) {
-        this.data = data;
-    }
-
-    public Throwable throwable() {
-        return this.throwable;
-    }
-
-    public void throwable(Throwable throwable) {
-        this.throwable = throwable;
-    }
-
-    public CountDownLatch countDownLatch() {
-        return this.countDownLatch;
     }
 }

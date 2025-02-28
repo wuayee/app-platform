@@ -1,0 +1,40 @@
+{
+  "title": "llm node output schema",
+  "type": "object",
+  "properties": {
+    "llmOutput": {
+      "type": "string"
+    },
+    "reference": {
+      "title": "rag reference schema",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "[a-zA-Z0-9]{6}": {
+          "title": "rag document schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "score": {
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "score",
+            "text"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "llmOutput",
+    "reference"
+  ]
+}

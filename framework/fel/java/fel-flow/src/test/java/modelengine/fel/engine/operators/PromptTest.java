@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -9,13 +9,14 @@ package modelengine.fel.engine.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import modelengine.fel.core.chat.ChatMessage;
+import modelengine.fel.core.chat.MessageType;
+import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.Prompt;
 import modelengine.fel.core.chat.support.AiMessage;
-import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.support.HumanMessage;
-import modelengine.fel.core.document.Content;
+import modelengine.fel.core.memory.CacheMemory;
 import modelengine.fel.core.memory.Memory;
-import modelengine.fel.core.memory.support.CacheMemory;
+import modelengine.fel.core.template.MessageContent;
 import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +42,6 @@ import java.util.List;
 @DisplayName("测试提示词")
 public class PromptTest {
     @Test
-    @DisplayName("测试具名占位符")
     void shouldOkWhenPromptWithNamedPlaceholder() {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -54,7 +55,18 @@ public class PromptTest {
     }
 
     @Test
-    @DisplayName("测试数字占位符")
+    void shouldOkWhenSysPromptWithBlankMsg() {
+        List<ChatMessage> messages = new ArrayList<>();
+        AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
+                .prompt(Prompts.sys("{{someone}}"), Prompts.human("{{question}}"))
+                .close(r -> messages.addAll(r.messages()));
+
+        Conversation<Tip, Prompt> conversation = flow.converse();
+        conversation.offer(new Tip().add("someone", "").add("question", "my question")).await();
+        assertThat(messages).hasSize(1).extracting(ChatMessage::type).containsExactly(MessageType.HUMAN);
+    }
+
+    @Test
     void shouldOkWhenPromptWithNumberPlaceholder() {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -68,7 +80,6 @@ public class PromptTest {
     }
 
     @Test
-    @DisplayName("测试历史记录占位符")
     void shouldOkWhenPromptWithHistoryPlaceholder() {
         StringBuilder sb = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -88,7 +99,6 @@ public class PromptTest {
     }
 
     @Test
-    @DisplayName("测试多媒体内容")
     void shouldOkWhenPromptWithMedia() throws MalformedURLException {
         ChatMessages chatMessages = new ChatMessages();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
@@ -97,9 +107,9 @@ public class PromptTest {
                 .close();
 
         Conversation<Tip, Prompt> conversation = flow.converse();
-        Content content =
-                Content.from("will", new Media(new URL("http://localhost/1.png")), new Media("image/png", "url1"));
-        conversation.offer(Tip.from("someone", content)).await();
+        MessageContent contents =
+            MessageContent.from("will", new Media(new URL("http://localhost/1.png")), new Media("image/png", "url1"));
+        conversation.offer(Tip.from("someone", contents)).await();
 
         assertThat(chatMessages.messages()).hasSize(1);
         assertThat(chatMessages.messages().get(0).text()).isEqualTo("answer: will");

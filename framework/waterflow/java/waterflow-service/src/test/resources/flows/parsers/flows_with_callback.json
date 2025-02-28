@@ -1,0 +1,39 @@
+{
+  "name": "65f51904c43f499a96265037a6a0559c",
+  "nodes": [
+    {
+      "type": "state",
+      "metaId": "xc9ax5",
+      "name": "genericable-Jober",
+      "triggerMode": "auto",
+      "jober": {
+        "type": "genericable_jober",
+        "name": "任务",
+        "fitables": [
+          "helloWorld"
+        ],
+        "entity":{
+          "genericable": {
+            "id": "modelengine.fit.demo.flow.helloWorld",
+            "params": [
+              {
+                "name": "name"
+              }
+            ],
+            "return": {
+              "type": "String"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "status": "active",
+  "callback": {
+    "name": "通知回调",
+    "type": "general_callback",
+    "fitables": [
+      "modelengine.fit.jober.fitable.FlowInfoCallback"
+    ]
+  }
+}

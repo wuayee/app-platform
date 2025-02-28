@@ -1,0 +1,37 @@
+[
+  {
+    "type": "retrievalNodeState",
+    "name": "Ordinary Search",
+    "uniqueName": ""
+  },
+  {
+    "type": "llmNodeState",
+    "name": "Large Language Model",
+    "uniqueName": ""
+  },
+  {
+    "type": "manualCheckNodeState",
+    "name": "Manual Check",
+    "uniqueName": ""
+  },
+  {
+    "type": "codeNodeState",
+    "name": "Code",
+    "uniqueName": ""
+  },
+  {
+    "type": "conditionNodeCondition",
+    "name": "Condition",
+    "uniqueName": ""
+  },
+  {
+    "type": "endNodeEnd",
+    "name": "End",
+    "uniqueName": ""
+  },
+  {
+  "type": "queryOptimizationNodeState",
+  "name": "Query Optimization",
+  "uniqueName": ""
+  }
+]

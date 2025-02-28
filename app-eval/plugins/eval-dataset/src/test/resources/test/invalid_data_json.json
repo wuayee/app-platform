@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Eve Doe",
+    "age": "65",
+    "email": "eve.doe@example.com",
+    "preferences": {
+      "language": "it"
+    }
+  }
+]

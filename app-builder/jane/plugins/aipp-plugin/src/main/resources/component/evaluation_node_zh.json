@@ -1,0 +1,17 @@
+[
+  {
+    "type": "evaluationAlgorithmsNodeState",
+    "name": "评估算法",
+    "uniqueName": ""
+  },
+  {
+    "type": "evaluationTestSetNodeState",
+    "name": "数据集",
+    "uniqueName": ""
+  },
+  {
+    "type": "evaluationEndNodeEnd",
+    "name": "评估结束",
+    "uniqueName": ""
+  }
+]

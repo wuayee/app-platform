@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fel.plugin.huggingface.mapper.HuggingfaceModelMapper">
+    <resultMap id="HuggingfaceModelEntityResultMap" type="modelengine.fel.plugin.huggingface.entity.HuggingfaceModelEntity">
+        <result property="modelName" column="model_name"/>
+        <result property="modelSchema" column="model_schema"/>
+        <result property="taskId" column="task_id"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_eco_huggingface_model (model_name, model_schema, task_id)
+        VALUES (#{modelName}, #{modelSchema}, #{taskId})
+    </insert>
+
+    <select id="listModelPartialInfo" resultType="modelengine.fel.plugin.huggingface.entity.HuggingfaceModelEntity"
+            resultMap="HuggingfaceModelEntityResultMap">
+        SELECT model_name, model_schema, task_id
+        FROM t_eco_huggingface_model
+        WHERE task_id = #{taskId}
+        ORDER BY id
+            LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+
+    <select id="countModel" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_eco_huggingface_model
+        WHERE task_id = #{taskId}
+    </select>
+</mapper>
