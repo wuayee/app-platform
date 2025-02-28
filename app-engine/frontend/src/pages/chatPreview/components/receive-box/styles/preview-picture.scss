@@ -1,0 +1,31 @@
+.preview-picture {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+
+  .preview-header {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    display: flex;
+    align-items: center;
+
+    .download-preview {
+      display: flex;
+      align-items: center;
+      margin-right: 30px;
+      cursor: pointer;
+    }
+
+    img {
+      cursor: pointer;
+    }
+  }
+}

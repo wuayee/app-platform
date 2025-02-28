@@ -1,0 +1,130 @@
+.apps_root {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  .apps_header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    .apps_title {
+      font-size: 20px;
+      color: #1a1a1a;
+      line-height: 1.5;
+      font-weight: normal;
+    }
+    >span {
+      font-size: 18px;
+      margin-left: 12px;
+      cursor: pointer;
+    }
+  }
+  .apps_main {
+    height: calc(100% - 50px);
+    min-width: 1400px;
+    padding: 24px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    .apps-haeader-content {
+      display: flex;
+      justify-content: space-between;
+      .app-card-tab {
+        margin-right: 24px;
+        cursor: pointer;
+        padding-bottom: 2px;
+        border-bottom: 1px solid transparent;
+      }
+      .tab-active {
+        color: rgb(38, 115, 229);
+        font-weight: 700;
+        border-color: rgb(38, 115, 229);
+      }
+    }
+    .operatorArea {
+      display: flex;
+      align-items: center;
+      .status-dropdown {
+        display: flex;
+        align-items: center;
+        span {
+          margin-right: 8px;
+        }
+      }
+    }
+    .card_list {
+      max-height: calc(100vh - 360px);
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 20px 0;
+      gap: 16px;
+      .card_box {
+        width: calc(25% - 16px);
+        height: 190px;
+      }
+      .card_box_add {
+        background-color: rgb(247, 247, 247);
+        border-radius: 8px;
+        padding: 24px;
+        padding-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        .add_title {
+          color: rgb(128, 128, 128);
+        }
+        img {
+          width: 16px;
+          height: 16px;
+          margin-right: 8px;
+        }
+        .split-line {
+          height: 1px;
+          background-color: rgb(230, 230, 230);
+        }
+        >div {
+          display: flex;
+          align-items: center;
+          span {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .page_box {
+      padding-top: 10px;
+      height: 40px;
+      line-height: 40px;
+      width: 100%;
+    }
+  }
+  .empty-box {
+    width: 100%;
+    margin: 100px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.delete-title {
+  display: flex;
+  align-items: center;
+  img {
+    margin-right: 6px;
+  }
+}
+
+.upload-app {
+  .import-upload {
+    padding: 20px 0;
+    .upload-word {
+      font-weight: 700;
+    }
+    .tips {
+      color: #808080;
+    }
+  }
+}

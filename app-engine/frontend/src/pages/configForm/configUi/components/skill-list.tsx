@@ -1,0 +1,66 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
+const SkillList = (props) => {
+  const { t } = useTranslation();
+  const { skillList, deleteItem } = props;
+  const [showOperateIndex, setShowOperateIndex] = useState('');
+  const { tenantId } = useParams();
+  // hover显示操作按钮
+  const handleHoverItem = (index, operate) => {
+    if (operate === 'enter') {
+      setShowOperateIndex(index);
+    } else {
+      setShowOperateIndex('');
+    }
+  };
+
+  // 工具流详情
+  const workflowDetail = (item) => {
+    if (item.type === 'workflow') {
+      if (item.appId.length) {
+        window.open(`${location.origin}/#/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`);
+      }
+    } else {
+      window.open(`${location.origin}/#/plugin/detail/${item.pluginId}`);
+    }
+  }
+
+  // 获取详情删除按钮
+  const showOperate = (item) => {
+    return (<span>
+      <img src="./src/assets/images/eye_btn.svg" alt="" style={{ cursor: 'pointer' }} onClick={() => workflowDetail(item)} />
+      <img src="./src/assets/images/close_btn.svg" style={{ marginLeft: 16, cursor: 'pointer' }} alt="" onClick={() => deleteItem(item)} />
+    </span>);
+  };
+
+  return <>
+    <div>
+      {
+        skillList.length ? skillList.map((item, index) => {
+          return (
+            <div className='item' key={index} onMouseEnter={() => handleHoverItem(index, 'enter')} onMouseLeave={() => handleHoverItem(index, 'leave')}>
+              <span className='item-left'>
+                {item.type === 'tool' ?
+                  <img src='./src/assets/images/ai/tool.png' alt='' /> :
+                  <img src='./src/assets/images/ai/workflow.png' alt='' />
+                }
+                <span className='text'>{item.name || item}</span>
+              </span>
+              {index === showOperateIndex && showOperate(item)}
+            </div>
+          )
+        }) : <div className='no-data'>{t('noData')}</div>
+      }
+    </div>
+  </>
+};
+
+export default SkillList;

@@ -1,0 +1,1 @@
+export const SET_CUR_APPID = 'SET_CUR_APPID';

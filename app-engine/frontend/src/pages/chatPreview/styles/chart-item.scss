@@ -1,0 +1,63 @@
+.tool-box {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 0 0;
+  color: rgb(113, 117, 127);
+  font-size: 14px;
+  margin-bottom: 10px;
+  .table-tool {
+    svg {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      margin-left: 12px;
+    }
+  }
+}
+.receive-mark {
+  font-weight: 700;
+  white-space: pre-line;
+}
+.table-dom {
+  margin-bottom: 16px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+.table-full-dom {
+  padding: 20px;
+}
+.chart-dom-parent {
+  position: relative;
+  .chart-dom {
+    height: 360px;
+    background-color: #ffffff;
+    margin-top: 16px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .chart-drop {
+    position: absolute;
+    right: 70px;
+    top: 15px;
+    color: #333333;
+    font-size: 12px;
+    cursor: pointer;
+    .chart-icon {
+      margin-left: 6px;
+    }
+  }
+}
+#extension {
+  position: absolute;
+  font-size: 12px;
+  background: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border: 1px solid rgb(227, 227, 227);
+  border-radius: 5px;
+  z-index: 99;
+}

@@ -1,0 +1,22 @@
+.feed-inner {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  .feed-left {
+    font-size: 12px;
+    color: #71757f;
+  }
+  .feed-right {
+    svg {
+      width: 15px;
+      height: 15px;
+      margin-left: 26px;
+      cursor: pointer;
+      &:hover {
+        path {
+          stroke: #2673e5;
+        }
+      }
+    }
+  }
+}

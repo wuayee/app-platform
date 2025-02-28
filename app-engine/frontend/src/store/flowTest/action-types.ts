@@ -1,0 +1,2 @@
+export const SET_TEST_STATUS = 'SET_TEST_STATUS';
+export const SET_TEST_TIME = 'SET_TEST_TIME';

@@ -1,0 +1,72 @@
+.inspiration-wrap {
+  .plus-icon {
+    position: relative;
+    color: #047bfc;
+    vertical-align: 0rem;
+    margin: 0 0 0 10px;
+    font-size: 20px;
+  }
+  .ant-btn-primary {
+    background-color: #047bfc;
+  }
+  .prompt-pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0px;
+  }
+  .ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled),
+  .ant-switch.ant-switch-checked {
+    background-color: #2673e5;
+  }
+}
+.drawer-tree {
+  height: calc(100vh - 170px);
+  overflow: auto;
+  .drawer-tree-add {
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+  .drawer-tree-text {
+    margin-left: 8px;
+    cursor: pointer;
+    color: #2673e5;
+  }
+  .drawer-tree-node {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 10px;
+    background-color: #f6f6f8;
+    border-radius: 4px;
+    .drawer-tree-btn {
+      display: none;
+      >span {
+        margin-left: 8px;
+      }
+    }
+    &:hover {
+      .drawer-tree-btn {
+        display: block;
+      }
+    }
+  }
+  .ant-tree {
+    .ant-tree-treenode {
+      width: 100%;
+    }
+    .ant-tree-node-content-wrapper {
+      width: 100%;
+      margin-bottom: 6px;
+      padding: 0;
+      .ant-tree-node-selected {
+
+      }
+    }
+  }
+  .ant-tree-node-selected {
+    .drawer-tree-node {
+      color: #252B3A;
+      background-color: rgb(233, 237, 250);
+    }
+  }
+}

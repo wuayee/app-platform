@@ -1,0 +1,147 @@
+/****************************************** 通用样式 ******************************************/
+
+.aui-fullpage {
+  background: #f0f2f5;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.aui-header-1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.aui-block {
+  height: calc(100% - 50px);
+  min-width: 1000px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.aui-title-1,
+h1 {
+  font-size: 20px;
+  color: #1a1a1a;
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+/****************************************** ants ******************************************/
+.chat-inner .ant-table-thead > tr > th {
+  background-color: #f2f5fc;
+  color: #252b3a;
+  font-weight: 550;
+  font-size: 12px;
+  border-radius: 0;
+}
+
+.chat-inner .ant-table-cell {
+  padding: 8.5px 14px;
+  color: #1a1a1a;
+  font-size: 12px;
+}
+
+.chat-inner .ant-table-cell::before {
+  background-color: #dadada;
+  height: 16px;
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-header {
+  border-bottom: 0px;
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-footer {
+  border-top: 0px;
+  padding: 16px;
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-body {
+  padding: 0px 24px;
+}
+
+.margin-bottom-standard {
+  margin-bottom: 16px;
+}
+
+.margin-right-standard {
+  margin-right: 16px;
+}
+
+.ant-form-vertical .ant-form-item {
+  margin-bottom: 8px;
+
+  .ant-form-item-label {
+    padding: 0;
+  }
+
+  label {
+    font-size: 12px;
+  }
+}
+
+.ant-form-item .ant-upload-wrapper div.ant-upload-select {
+  width: 100%;
+}
+
+#root .ant-pagination-item-link {
+  margin: 0;
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-picker-outlined {
+  height: 32px;
+}
+
+#root .ant-tabs-nav-wrap {
+  height: 42px;
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-table-wrapper .ant-table-thead > tr > th {
+  padding: 3.5px 14px;
+}
+:where(.css-dev-only-do-not-override-1okl62o).ant-table-wrapper .ant-table-tbody > tr > td {
+  padding: 8.5px 14px;
+}
+:where(.css-dev-only-do-not-override-1okl62o).ant-descriptions .ant-descriptions-row > th {
+  padding-bottom: 0;
+
+  .ant-descriptions-item-label {
+    font-size: 12px;
+  }
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-pagination.ant-pagination-mini
+  .ant-pagination-total-text {
+  position: absolute;
+  left: 0;
+}
+:where(.css-dev-only-do-not-override-1okl62o).ant-table-wrapper
+  .ant-table-tbody-virtual
+  .ant-table-cell {
+  height: 40px;
+  padding: 8px 12px 8px 14px;
+}
+.operatorArea {
+  display: flex;
+  gap: 16px;
+  .ant-btn {
+    background-color: #2673e5;
+    width: 96px;
+    height: 32px;
+    font-size: 14px;
+    border-radius: 4px;
+    letter-spacing: 0;
+  }
+  .knowledge-search {
+    width: 200px;
+    border-radius: 4px;
+    border: 1px solid rgb(230, 230, 230);
+  }
+}

@@ -1,0 +1,76 @@
+.intelligent-form {
+  .ant-form.ant-form-vertical {
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+  }
+  .import-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 110px;
+    position: relative;
+    .upload-word {
+      color: #1a1a1a;
+      margin: 4px 0px;
+    }
+    .tips {
+      font-size: 12px;
+      color: #808080;
+    }
+  }
+
+  .preview-component {
+    width: 243px;
+    height: 172px;
+    border: 1px solid #E6E6E6;
+    border-radius: 4px;
+
+    .no-preview {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .empty-tip {
+        margin-top: 8px;
+        color: #808080;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .ant-drawer-title {
+    font-weight: 700;
+  }
+
+  .use-help {
+    position: absolute;
+    right: 0;
+    top: -23px;
+  }
+
+  .help-item {
+    padding-bottom: 16px;
+
+    &:not(:first-child) {
+      padding-top: 16px;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px dashed #D7D8DA;
+    }
+
+
+    .help-title {
+      font-weight: 700;
+    }
+
+    .help-content {
+      white-space: pre-line;
+    }
+  }
+}

@@ -1,0 +1,2 @@
+export const SET_CONFIG_DATA = 'SET_CONFIG_DATA';
+export const SET_CONFIG_ITEM = 'SET_CONFIG_ITEM';

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fillRule="evenodd">
+        <g id="首页Chat" transform="translate(-520.000000, -900.000000)">
+            <g id="语音提问-响应中" transform="translate(340.000000, 820.000000)">
+                <g id="Conversation/ico_Img备份-2" transform="translate(180.000000, 80.000000)">
+                    <rect id="矩形" fill="#D8D8D8" fillRule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                    <g id="编组-2" transform="translate(4.500000, 3.750000)" stroke="#333333" stroke-width="1.05">
+                        <g id="编组" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.6977576,4.95 C10.6977576,4.53547955 10.6977576,6.6 10.6977576,8.25 C10.6977576,9.9 10.6977576,12.375 13.1779493,12.375 C16.4848716,12.375 15.658141,8.25 15.658141,6.6 C15.658141,3.3 12.4055315,0 8.26730568,0 C3.70139883,0 0,3.69365081 0,8.25 C0,12.8063492 3.70139883,16.5 8.26730568,16.5 C9.45420736,16.5 10.5826914,16.2504077 11.6029259,15.8009504" id="路径"></path>
+                        </g>
+                        <ellipse id="椭圆形" cx="6.97747009" cy="8.6625" rx="3.60865284" ry="4.0125"></ellipse>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
