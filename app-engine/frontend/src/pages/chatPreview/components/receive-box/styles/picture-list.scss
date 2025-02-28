@@ -1,0 +1,40 @@
+.picture-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 9px;
+
+  .content-list {
+    margin-top: 12px;
+    display: flex;
+
+    .picture-item {
+      border-radius: 8px;
+
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+
+      &.cur-picture {
+        outline: 4px solid #cbdef9;
+      }
+
+      .ant-image-mask.preview-mask {
+        background-color: transparent;
+      }
+
+      .operate-item {
+        position: absolute;
+        bottom: 2px;
+        left: 2px;
+        right: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        height: 24px;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+}

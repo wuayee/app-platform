@@ -1,0 +1,56 @@
+.chat-running-container {
+  position: relative;
+  .chat-running-chat {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    z-index: 999;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    .running-app-name {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
+  }
+}
+.chat-running-full {
+  .chat-page-inner {
+    .chat-inner-left {
+      height: 100vh;
+    }
+  }
+  .chat-page-inner {
+    .chat-left-close {
+      width: calc(100% - 385px);
+    }
+  }
+  .chat-page-inner {
+    .chat-right-close {
+      top: 50px;
+    }
+  }
+  .chat-inner {
+    .chat-inner-right {
+      height: calc(100vh - 80px);
+    }
+    .chat-message-container  {
+      margin-top: 54px;
+    }
+  }
+}
+.appengine-login {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 16px 32px;
+  width: 100%;
+}

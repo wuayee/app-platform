@@ -1,0 +1,60 @@
+.apps_root {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  .apps_header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    .apps_title {
+      font-size: 20px;
+      color: #1a1a1a;
+      line-height: 1.5;
+      font-weight: normal;
+    }
+    >span {
+      font-size: 18px;
+      margin-left: 12px;
+      cursor: pointer;
+    }
+  }
+  .apps_main {
+    height: calc(100% - 50px);
+    min-width: 1400px;
+    padding: 24px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    .operatorArea {
+      display: flex;
+      align-items: center;
+    }
+    .card_list {
+      max-height: calc(100vh - 360px);
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 20px 0;
+      .card_box {
+        width: calc(25% - 16px);
+        height: 190px;
+      }
+    }
+    .page_box {
+      padding-top: 10px;
+      height: 40px;
+      line-height: 40px;
+      width: 100%;
+    }
+  }
+  .empty-box {
+    width: 100%;
+    margin: 100px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

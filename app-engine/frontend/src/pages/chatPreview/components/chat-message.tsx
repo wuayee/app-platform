@@ -1,0 +1,138 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import React, { useEffect, useState, useImperativeHandle, useRef } from 'react';
+import SendBox from './send-box/send-box';
+import ReceiveBox from './receive-box/receive-box';
+import ChatDetail from './chat-details';
+import { ChatContext } from '../../aippIndex/context';
+import { queryFeedback } from '@/shared/http/chat';
+import { deepClone, scrollBottom } from '../utils/chat-process';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setChatList } from '@/store/chatStore/chatStore';
+import '../styles/chat-message-style.scss';
+
+const ChatMessage = (props) => {
+  const dispatch = useAppDispatch();
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
+  const [list, setList] = useState([]);
+  const LIST_ITEM_SIZE = -10;
+  const [listIndex, setListIndex] = useState(LIST_ITEM_SIZE);
+  const chatContainer = useRef<any>();
+  const chatContainerLastScrollHeight = useRef<any>();
+  const chatBoxRef = useRef<any>(null);
+  const {
+    showCheck,
+    setCheckedList,
+    setEditorShow,
+    feedRef,
+    chatRunningStop,
+    conditionConfirm,
+    chatStreaming,
+    questionClarConfirm,
+    refreshInspiration
+  } = props;
+  const initFeedbackStatus = async (id) => {
+    let arr = JSON.parse(JSON.stringify(chatList));
+    for (let i = 0; i < arr?.length; i++) {
+      let item = arr[i]
+      if (item.type === 'receive' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
+        await queryFeedback(item.instanceId).then((res) => {
+          if (!res) {
+            item.feedbackStatus = -1;
+          } else {
+            item.feedbackStatus = res.usrFeedback;
+          }
+        });
+      }
+    }
+    dispatch(setChatList(arr));
+  }
+  useImperativeHandle(feedRef, () => {
+    return {
+      'initFeedbackStatus': initFeedbackStatus,
+      'setCheckStatus': setCheckStatus
+    }
+  })
+  useEffect(() => {
+    setList(deepClone(chatList));
+    scrollBottom();
+  }, [chatList]);
+
+  // 重置选中状态
+  const setCheckStatus = () => {
+    list.forEach(item => item.checked = false);
+  }
+  // 分享删除问答
+  function setShareClass(type) {
+    setCheckStatus();
+    setEditorShow(true, type);
+  }
+  // 选中回调
+  function checkCallBack() {
+    let checkList = list?.filter(item => item.checked);
+    setCheckedList(checkList);
+  }
+  // 澄清表单拒绝澄清回调
+  async function handleRejectClar(params) {
+    chatRunningStop(params);
+  }
+  // 聊天框添加灵感大全回调
+  const addInspirationCb = () => {
+    refreshInspiration();
+  }
+  const loadMoreChat = () => {
+    chatContainerLastScrollHeight.current = chatContainer.current.scrollHeight;
+    setListIndex(listIndex + LIST_ITEM_SIZE);
+  }
+  useEffect(() => {
+    if (chatContainerLastScrollHeight.current) {
+      chatContainer.current.scrollTop = chatContainer.current.scrollHeight - chatContainerLastScrollHeight.current;
+    }
+  }, [listIndex])
+
+
+  return (
+    <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id='chat-list-dom'>
+      { !list?.length && <ChatDetail />}
+      <ChatContext.Provider
+        value={{
+          checkCallBack,
+          setShareClass,
+          showCheck,
+          handleRejectClar,
+          dataDimension,
+          conditionConfirm,
+          chatStreaming,
+          questionClarConfirm,
+          addInspirationCb,
+          tenantId
+        }}>
+        <div ref={chatBoxRef} className='message-box'>
+        {(list.length > -listIndex) && <div className='load-more-btn' onClick={loadMoreChat}>展示更多</div>}
+          {
+            list?.map((item, index) => {
+              return (
+                item.type === 'send' ?
+                  <SendBox chatItem={item} key={index} /> :
+                  <ReceiveBox
+                    chatItem={item}
+                    key={index}
+                    refreshFeedbackStatus={initFeedbackStatus}
+                    mode={item.mode}
+                  />
+              )
+            })
+          }
+        </div>
+      </ChatContext.Provider>
+    </div>
+  )
+};
+
+export default ChatMessage;

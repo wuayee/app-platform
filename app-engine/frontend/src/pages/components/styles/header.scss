@@ -1,0 +1,130 @@
+.app-header {
+  position: relative;
+  z-index: 700;
+  display: flex;
+  align-items: center;
+  background: rgb(240, 242, 244);
+  height: 40px;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin: 12px 0;
+  pointer-events: none;
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .status-tag {
+      display: flex;
+      align-items: center;
+      margin: 0 24px;
+      img {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+      }
+      .version {
+        background-color: #ffffff;
+        margin: 0 12px;
+        padding: 0 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+    .header-text {
+      margin: 0 16px;
+      color: #000000;
+      font-size: 18px;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .edit-icon {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    .back-icon {
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+  .header-grid {
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+    .header-grid-btn {
+      display: flex;
+      align-items: center;
+      .more {
+        display: flex;
+        background-color: white;
+        padding: 6px;
+        cursor: pointer;
+      }
+      .history {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: #ffffff;
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid #ebebeb;
+      }
+      .robot {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-left: 12px;
+        img {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+  .header-btn{
+    border-radius: 4px;
+    font-size: 14px;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    min-width: 80px;
+      .anticon-upload {
+        margin-right: 5px;
+      }
+  }
+  .publish-btn {
+    color: #fff;
+    background-color: #047bfc;
+  }
+  .publish-btn:disabled {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.25);
+    border-color: #d9d9d9;
+  }
+}
+
+.publish-tip {
+  font-size: 14px;
+  .tip-top {
+    width: 450px;
+    display: flex;
+    justify-content: space-between;
+    .resolve-tip {
+      font-weight: 700;
+    }
+  }
+  .question-num {
+    color: #4D4D4D;
+  }
+}

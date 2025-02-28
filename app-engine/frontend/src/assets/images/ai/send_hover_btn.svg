@@ -1,0 +1,58 @@
+<svg width="40.000000" height="40.000000" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<filter id="filter_2_59077_dd" x="-2.476440" y="-4.808350" width="29.951904" height="27.616943" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+			<feGaussianBlur stdDeviation="3.33333" result="effect_layerBlur_1"/>
+		</filter>
+		<filter id="filter_2_59078_dd" x="-2.165649" y="20.376709" width="31.619751" height="27.406494" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+			<feGaussianBlur stdDeviation="3.33333" result="effect_layerBlur_1"/>
+		</filter>
+		<filter id="filter_2_59079_dd" x="-4.061035" y="10.918457" width="25.791382" height="25.961914" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+			<feGaussianBlur stdDeviation="3.33333" result="effect_layerBlur_1"/>
+		</filter>
+		<filter id="filter_2_59080_dd" x="19.277710" y="12.655762" width="25.562622" height="25.920166" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+			<feGaussianBlur stdDeviation="3.33333" result="effect_layerBlur_1"/>
+		</filter>
+		<clipPath id="clip2_59075">
+			<rect id="hover" width="40.000000" height="40.000000" fill="white" fill-opacity="0"/>
+		</clipPath>
+		<linearGradient x1="7.083333" y1="3.749999" x2="30.833309" y2="37.083313" id="paint_linear_2_59076_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#4692FF"/>
+			<stop stop-color="#74AEFF"/>
+			<stop offset="0.998777" stop-color="#6F58FE"/>
+		</linearGradient>
+	</defs>
+	<g clip-path="url(#clip2_59075)">
+		<rect id="矩形" rx="20.000000" width="40.000000" height="40.000000" fill="url(#paint_linear_2_59076_0)" fill-opacity="1.000000"/>
+		<g filter="url(#filter_2_59077_dd)">
+			<ellipse id="椭圆 22" rx="5.500000" ry="3.000000" transform="matrix(0.860808 -0.50893 0.50893 0.860808 12.4995 9.00024)" fill="#77D5FF" fill-opacity="0.528736"/>
+		</g>
+		<g filter="url(#filter_2_59078_dd)">
+			<ellipse id="椭圆 23" rx="6.201172" ry="3.000000" transform="matrix(0.916485 0.400069 -0.400069 0.916485 13.6442 34.0801)" fill="#DDD6FF" fill-opacity="0.373563"/>
+		</g>
+		<g filter="url(#filter_2_59079_dd)">
+			<ellipse id="椭圆 25" rx="2.874512" ry="3.000000" transform="matrix(0.916485 0.400069 -0.400069 0.916485 8.83459 23.8994)" fill="#6EE8A9" fill-opacity="0.597701"/>
+		</g>
+		<g filter="url(#filter_2_59080_dd)">
+			<ellipse id="椭圆 24" rx="2.736816" ry="3.000000" transform="matrix(0.916485 0.400069 -0.400069 0.916485 32.0591 25.616)" fill="#CEFFE2" fill-opacity="0.471264"/>
+		</g>
+		<g opacity="0.000000">
+			<rect id="矩形" x="8.000000" y="8.000000" width="24.000000" height="24.000000" fill="#D8D8D8" fill-opacity="1.000000"/>
+		</g>
+		<mask id="mask_2_59083" fill="white">
+			<path id="形状结合" d="M29.743 11.7932C29.545 11.6243 29.2731 11.5732 29.0221 11.6541L10.8931 17.6982C10.3821 17.8682 10.035 18.3262 10.0121 18.8643C9.98706 19.4021 10.29 19.8901 10.7831 20.1062L13.8201 21.4351L14.6791 21.8101L24.347 16.1411L16.7611 22.7212L17.0741 22.8572L17.0741 22.8752L22.427 25.1973L22.426 25.1992L25.5081 26.5471C25.744 26.6511 25.994 26.7031 26.244 26.7031C26.547 26.7031 26.848 26.6262 27.125 26.4751C27.6271 26.1982 27.9651 25.7151 28.052 25.1482L30.0011 12.4802C30.041 12.2222 29.9431 11.9622 29.743 11.7932ZM20.9436 25.7246L16.6697 23.8696L16.6697 27.0916C16.6697 27.6296 16.9937 28.1006 17.4946 28.2957C17.6487 28.3545 17.8066 28.3835 17.9636 28.3835C18.3186 28.3835 18.6647 28.2346 18.9166 27.9585L20.9436 25.7246Z" clip-rule="evenodd" fill="" fill-opacity="1.000000" fill-rule="evenodd"/>
+		</mask>
+		<path id="形状结合" d="M29.743 11.7932C29.545 11.6243 29.2731 11.5732 29.0221 11.6541L10.8931 17.6982C10.3821 17.8682 10.035 18.3262 10.0121 18.8643C9.98706 19.4021 10.29 19.8901 10.7831 20.1062L13.8201 21.4351L14.6791 21.8101L24.347 16.1411L16.7611 22.7212L17.0741 22.8572L17.0741 22.8752L22.427 25.1973L22.426 25.1992L25.5081 26.5471C25.744 26.6511 25.994 26.7031 26.244 26.7031C26.547 26.7031 26.848 26.6262 27.125 26.4751C27.6271 26.1982 27.9651 25.7151 28.052 25.1482L30.0011 12.4802C30.041 12.2222 29.9431 11.9622 29.743 11.7932ZM20.9436 25.7246L16.6697 23.8696L16.6697 27.0916C16.6697 27.6296 16.9937 28.1006 17.4946 28.2957C17.6487 28.3545 17.8066 28.3835 17.9636 28.3835C18.3186 28.3835 18.6647 28.2346 18.9166 27.9585L20.9436 25.7246Z" clip-rule="evenodd" fill="#FFFFFF" fill-opacity="1.000000" fill-rule="evenodd" mask="url(#mask_2_59083)"/>
+		<path id="形状结合" d="" clip-rule="evenodd" fill="#979797" fill-opacity="0.000000" fill-rule="evenodd"/>
+	</g>
+</svg>

@@ -1,0 +1,90 @@
+.chat-file-list {
+  background-color: #fff;
+  width: 100%;
+  overflow: auto;
+  display: flex;
+  padding: 8px 0;
+  font-size: 12px;
+
+  .file-container {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid #F2F2F2;
+
+    &.editable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f7f7f7;
+      }
+
+      &.upload-failed {
+        border: 1px solid rgba(198, 57, 57, 0.2);
+        background-color: rgba(198, 57, 57, 0.1);
+
+        .file-detail {
+          color: #C63939;
+        }
+      }
+    }
+
+    &:not(:last-child) {
+      margin-right: 18px;
+    }
+
+    &.debug-item {
+      margin-right: 0px;
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
+    }
+
+    .file-icon {
+      width: 36px;
+      height: 36px;
+      margin-right: 4px;
+      border-radius: 8px;
+      overflow: hidden;
+
+      img {
+        object-fit: cover;
+      }
+    }
+
+    .img-mask {
+      background-color: rgba(237, 237, 237, 0.6);
+    }
+
+    .file-content {
+      height: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      .file-name-container {
+        display: flex;
+        font-weight: 500;
+
+        .file-name {
+          max-width: 130px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .file-detail {
+        color: #808080;
+      }
+    }
+
+    .delete-file {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+}
