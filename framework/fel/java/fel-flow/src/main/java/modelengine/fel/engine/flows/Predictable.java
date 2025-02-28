@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -40,9 +40,8 @@ public class Predictable<T> implements ConverseListener<T> {
         Validation.notNull(flow, "Flow can not be null.");
         Validation.notNull(converseCallBack, "Callback can not be null.");
         this.converseCallBack = FlowCallBack.<T>builder()
-                .doOnConsume(converseCallBack.consumeCb().andThen(latch::data))
-                .doOnError(converseCallBack.errorCb().andThen(latch::throwable))
-                .doOnCompleted(converseCallBack.completedCb())
+                .doOnSuccess(converseCallBack.getSuccessCb().andThen(latch::setData))
+                .doOnError(converseCallBack.getErrorCb().andThen(latch::setThrowable))
                 .doOnFinally(latch::countDown)
                 .build();
         this.flowErrorCb = (exception, retryable, contexts) -> {
@@ -54,31 +53,23 @@ public class Predictable<T> implements ConverseListener<T> {
     }
 
     @Override
-    public void onConsume(String flowId, T data) {
-        // 对话数据消费回调由直接起会话的流程触发
-        if (!Objects.equals(flowId, this.flowId)) {
-            return;
-        }
-        this.converseCallBack.consumeCb().accept(data);
-    }
-
-    @Override
-    public void onConverseCompleted(String flowId) {
+    public void onSuccess(String flowId, T data) {
         // 对话结束回调由直接起会话的流程触发
         if (!Objects.equals(flowId, this.flowId)) {
             return;
         }
-        this.converseCallBack.completedCb().exec();
+        this.converseCallBack.getSuccessCb().accept(data);
     }
 
     @Override
-    public void onFlowError(Exception exception, Retryable<Object> retryable, List<FlowContext<Object>> contexts) {
+    public void onFlowError(Exception exception, Retryable<Object> retryable,
+            List<FlowContext<Object>> contexts) {
         this.flowErrorCb.handle(exception, retryable, contexts);
     }
 
     @Override
     public void onConverseError(Exception exception) {
-        this.converseCallBack.errorCb().accept(exception);
+        this.converseCallBack.getErrorCb().accept(exception);
     }
 
     @Override
@@ -86,6 +77,6 @@ public class Predictable<T> implements ConverseListener<T> {
         if (this.latch == null) {
             return true;
         }
-        return this.latch.countDownLatch().getCount() == 0;
+        return this.latch.getCountDownLatch().getCount() == 0;
     }
 }

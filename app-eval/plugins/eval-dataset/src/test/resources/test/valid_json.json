@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Alice Smith",
+    "age": 30,
+    "email": "alice.smith@example.com",
+    "preferences": {
+      "language": "en"
+    }
+  },
+  {
+    "name": "Bob Johnson",
+    "age": 45,
+    "email": "bob.johnson@example.com",
+    "preferences": {
+      "language": "es"
+    }
+  }
+]

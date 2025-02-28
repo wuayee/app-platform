@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ public class ProcessFlow<D> extends Flow<D> implements EmitterListener<D, FlowSe
 
     @Override
     public void handle(D data, FlowSession token) {
-        this.offer(data, token == null ? new FlowSession() : token);
+        this.offer(data, token);
     }
 
     @Override
@@ -46,12 +46,5 @@ public class ProcessFlow<D> extends Flow<D> implements EmitterListener<D, FlowSe
     @Override
     public void emit(Object data, FlowSession token) {
         this.end.emit(data, token);
-    }
-
-    @Override
-    public void complete() {
-        this.defaultSession.getWindow().complete();
-        this.defaultSession = new FlowSession();
-        this.defaultSession.begin();
     }
 }

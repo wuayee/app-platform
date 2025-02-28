@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -11,14 +11,13 @@ import modelengine.fit.waterflow.domain.context.FlowTrace;
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,8 +27,8 @@ import java.util.stream.Stream;
  * @author 高诗意
  * @since 1.0
  */
-public class FlowContextMemoRepo implements FlowContextRepo {
-    private final ConcurrentLinkedHashMap<String, FlowContext> contextsMap = new ConcurrentLinkedHashMap<>();
+public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
+    private final ConcurrentLinkedHashMap<String, FlowContext<T>> contextsMap = new ConcurrentLinkedHashMap<>();
 
     private final boolean isReserveTerminal;
 
@@ -49,39 +48,35 @@ public class FlowContextMemoRepo implements FlowContextRepo {
         this.isReserveTerminal = isReserveTerminal;
     }
 
-    private <T> List<FlowContext<T>> query(Function<Stream<FlowContext<T>>, Stream<FlowContext<T>>> filter) {
-        return filter.apply(this.contextsMap.stream()
-                        .map(p -> (FlowContext<T>) p))
-                .collect(Collectors.toList());
-    }
-
-
     @Override
-    public <T> List<FlowContext<T>> getContextsByPosition(String streamId, List<String> posIds, String status) {
-        return query(stream -> stream
+    public List<FlowContext<T>> getContextsByPosition(String streamId, List<String> posIds, String status) {
+        return this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> posIds.contains(context.getPosition()))
                 .filter(context -> context.getStatus().toString().equals(status))
-                .filter(context -> !context.isSent()));
+                .filter(context -> !context.isSent())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public <T> List<FlowContext<T>> getContextsByPosition(String streamId, String posId, String batchId, String status) {
-        return query(stream -> stream
+    public List<FlowContext<T>> getContextsByPosition(String streamId, String posId, String batchId, String status) {
+        return this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> context.getPosition().equals(posId))
                 .filter(context -> context.getBatchId().equals(batchId))
-                .filter(context -> context.getStatus().toString().equals(status)));
+                .filter(context -> context.getStatus().toString().equals(status))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public <T> List<FlowContext<T>> getContextsByTrace(String traceId) {
-        return query(stream -> stream
-                .filter(context -> context.getTraceId().contains(traceId)));
+    public List<FlowContext<T>> getContextsByTrace(String traceId) {
+        return this.contextsMap.stream()
+                .filter(context -> context.getTraceId().contains(traceId))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public synchronized <T> void save(List<FlowContext<T>> contexts) {
+    public synchronized void save(List<FlowContext<T>> contexts) {
         contexts.forEach(context -> {
             if (this.isReserveTerminal) {
                 this.contextsMap.put(context.getId(), context);
@@ -96,88 +91,69 @@ public class FlowContextMemoRepo implements FlowContextRepo {
     }
 
     @Override
-    public <T> void updateToSent(List<FlowContext<T>> contexts) {
+    public void updateToSent(List<FlowContext<T>> contexts) {
         save(contexts);
     }
 
     @Override
-    public <T> List<FlowContext<T>> getContextsByParallel(String parallelId) {
-        return query(stream -> stream
-                .filter(context -> context.getParallel().equals(parallelId)));
-    }
-
-    @Override
-    public <T> FlowContext<T> getById(String id) {
+    public List<FlowContext<T>> getContextsByParallel(String parallelId) {
         return this.contextsMap.stream()
-                .filter(context -> context.getId().equals(id)).findFirst().orElse(null);
+                .filter(context -> context.getParallel().equals(parallelId))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public <T> List<FlowContext<T>> getPendingAndSentByIds(List<String> ids) {
-        return query(stream -> stream
+    public FlowContext<T> getById(String id) {
+        return this.contextsMap.stream().filter(context -> context.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @Override
+    public List<FlowContext<T>> getPendingAndSentByIds(List<String> ids) {
+        return this.contextsMap.stream()
                 .filter(context -> context.getStatus().equals(FlowNodeStatus.PENDING))
                 .filter(FlowContext::isSent)
-                .filter(context -> ids.contains(context.getId())));
+                .filter(context -> ids.contains(context.getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public <T> List<FlowContext<T>> getByIds(List<String> ids) {
-        return ids.stream().map(i -> (FlowContext<T>) contextsMap.get(i)).collect(Collectors.toList());
+    public List<FlowContext<T>> getByIds(List<String> ids) {
+        return ids.stream().map(contextsMap::get).collect(Collectors.toList());
     }
 
     @Override
-    public <T> List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions,
-        Map<String, Integer> sessions) {
-        return query(stream -> stream
-                .filter(context -> context.getStreamId().equals(streamId))
-                .filter(context -> subscriptions.contains(context.getPosition()))
-                .filter(context -> context.getStatus() == FlowNodeStatus.PENDING)
-                .filter(context -> {
-                    boolean found = false;
-                    for (String s : sessions.keySet()) {
-                        found = context.getSession().getId().equals(s)
-                                && (Objects.equals(context.getIndex(), sessions.get(s)));
-                        if (found) {
-                            break;
-                        }
-                    }
-                    return context.getIndex() == -1 || context.getIndex() == 0 || found;//找到需要保序的当前序列或者不需要保序的
-                })
-                .limit(1));
+    public List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions,
+            Set<String> excludeSessionIds, Operators.Filter<T> filter, Operators.Validator<T> validator) {
+        List<FlowContext<T>> all = getFlowContexts(streamId, subscriptions, excludeSessionIds);
+        List<FlowContext<T>> flowContexts = filter.process(all);
+        return flowContexts.stream()
+                .filter(context -> validator.check(context, flowContexts))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public <T> List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
-                                                            Operators.Filter<T> filter) {
-        List<FlowContext<T>> all = query(stream -> stream
-                .filter(context -> context.getStreamId().equals(streamId))
-                .filter(context -> subscriptions.contains(context.getPosition()))
-                .filter(context -> context.getStatus() == FlowNodeStatus.PENDING));
+    public List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
+            Set<String> excludeSessionIds, Operators.Filter<T> filter) {
+        List<FlowContext<T>> all = getFlowContexts(streamId, subscriptions, excludeSessionIds);
         return filter.process(all);
     }
 
     @Override
-    public <T> void save(FlowTrace trace, FlowContext<T> flowContext) {
+    public void save(FlowTrace trace, FlowContext<T> flowContext) {
     }
 
     @Override
-    public <T> void updateFlowData(List<FlowContext<T>> contexts) {
+    public void updateFlowData(List<FlowContext<T>> contexts) {
         save(contexts);
     }
 
-    @Override
-    public <T> void updateIndex(List<FlowContext<T>> contexts) {
-        List<FlowContext<T>> updated = new ArrayList<>();
-        for (FlowContext<T> context : contexts) {
-            FlowContext<T> saved = this.contextsMap.get(context.getId());
-            if (saved == null) {
-                saved = context;
-            } else {
-                saved.setIndex(context.getIndex());
-            }
-            updated.add(saved);
-        }
-        this.save(updated);
+    private List<FlowContext<T>> getFlowContexts(String streamId, List<String> subscriptions,
+            Set<String> excludeSessionIds) {
+        return this.contextsMap.stream().filter(context -> context.getStreamId().equals(streamId))
+                .filter(context -> subscriptions.contains(context.getPosition()))
+                .filter(context -> context.getStatus() == FlowNodeStatus.PENDING)
+                .filter(context -> !excludeSessionIds.contains(context.getSession().getId()))
+                .collect(Collectors.toList());
     }
 
     /**

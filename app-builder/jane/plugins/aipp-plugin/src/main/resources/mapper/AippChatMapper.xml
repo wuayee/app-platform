@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AippChatMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jober.aipp.dto.chat.QueryChatRsp">
+        <result column="chat_id" property="chatId"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_version" property="version"/>
+        <result column="name" property="chatName"/>
+        <result column="attributes" property="attributes"/>
+        <result column="update_at" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        chat_id, app_id, app_version, name, attributes, create_at, create_by, update_at, update_by, status
+    </sql>
+
+    <insert id="insertChat" parameterType="modelengine.fit.jober.aipp.entity.ChatInfo">
+        insert into t_chat_session (chat_id, app_id, app_version, name, attributes, create_at, create_by, update_at, update_by, status)
+        values (#{chatId}, #{appId}, #{version}, #{chatName}, #{attributes}::jsonb, #{createTime}, #{creator}, #{updateTime}, #{updater}, #{status})
+        ON CONFLICT(chat_id) DO UPDATE SET
+                         update_at = #{updateTime},
+                         update_by = #{updater},
+                         name = #{chatName},
+                        attributes = #{attributes}::jsonb
+    </insert>
+
+    <insert id="insertWideRelationship" parameterType="modelengine.fit.jober.aipp.entity.ChatAndInstanceMap">
+        insert into t_chat_session_task_instance_wide_relationship (msg_id, chat_id, task_instance_wide_id, create_at, create_by, update_at, update_by)
+        values (#{msgId}, #{chatId}, #{instanceId}, #{createTime}, #{creator}, #{updateTime}, #{updater})
+    </insert>
+
+    <select id="selectChatList"
+            resultType="modelengine.fit.jober.aipp.dto.chat.QueryChatRsp">
+        select
+        chat_id as chatId,
+        name as chatName,
+        attributes as attributes,
+        app_id as appId,
+        app_version as version,
+        update_at as updateTime
+        from t_chat_session
+        where 1=1
+        <if test="requestParam != null and requestParam.appId!=null">
+            and app_id = #{requestParam.appId}
+        </if>
+        <if test="requestParam != null and requestParam.appVersion!=null">
+            and app_version = #{requestParam.appVersion}
+        </if>
+        <if test="requestParam != null and requestParam.aippId!=null">
+            and attributes ->> 'aipp_id' = #{requestParam.aippId}
+        </if>
+        <if test="chatId!=null">
+            and chat_id = #{chatId}
+        </if>
+        and status != 1
+        and attributes ->> 'state' = #{requestParam.appState}
+        <if test="createBy != null">
+            and create_by = #{createBy}
+        </if>
+        order by update_at desc
+        offset #{requestParam.offset} limit #{requestParam.limit}
+    </select>
+
+    <select id="getChatListCount" resultType="long">
+        select
+        count(*)
+        from t_chat_session
+        where 1=1
+        <if test="requestParam != null and requestParam.appId!=null">
+            and app_id = #{requestParam.appId}
+        </if>
+        <if test="requestParam != null and requestParam.appVersion!=null">
+            and app_version = #{requestParam.appVersion}
+        </if>
+        <if test="requestParam != null and requestParam.aippId!=null">
+            and attributes ->> 'aipp_id' = #{requestParam.aippId}
+        </if>
+        <if test="chatId!=null">
+            and chat_id = #{chatId}
+        </if>
+        and status != 1
+        and attributes ->> 'state' = #{requestParam.appState}
+    </select>
+
+    <select id="selectChat" resultType="modelengine.fit.jober.aipp.dto.chat.ChatDto">
+        select a.msg_id as msgId,
+               b.log_type as logType,
+               b.create_at as createTime,
+               b.log_data as logData,
+               b.aipp_id as aippId
+        from t_chat_session_task_instance_wide_relationship a
+                 join aipp_instance_log b
+                      on a.task_instance_wide_id = b.instance_id
+        where a.chat_id = #{chatId}
+        order by b.create_at desc
+        offset #{offset} limit #{limit}
+    </select>
+
+    <update id="deleteApp">
+        update t_chat_session
+        set status = 1
+        where app_id = #{appId}
+    </update>
+
+    <update id="deleteAppByAippId">
+        update t_chat_session
+        set status = 1
+        where attributes ->> 'aipp_id' = #{aippId}
+    </update>
+
+    <update id="deleteChat">
+        update t_chat_session
+        set status = 1
+        where chat_id = ANY(string_to_array(#{chatId}, ','))
+    </update>
+
+    <select id="selectInstanceByChat" resultType="string">
+        select task_instance_wide_id
+        from t_chat_session_task_instance_wide_relationship
+        where chat_id = #{chatId}
+        order by create_at desc
+        offset 0 limit #{limit}
+    </select>
+
+    <select id="selectFormerInstanceByChat" resultType="string">
+        select task_instance_wide_id
+        from t_chat_session_task_instance_wide_relationship
+        where chat_id = #{chatId}
+        order by create_at desc
+        offset 1 limit #{limit}
+    </select>
+
+    <select id="selectMsgByInstance" resultType="string">
+        select log_data
+        from aipp_instance_log
+        where instance_id = #{instanceId}
+          and log_type = 'MSG' and is_deleted = 0
+        order by create_at desc
+        limit 1
+    </select>
+
+    <select id="countChat" resultType="int">
+        select count(*)
+        from t_chat_session_task_instance_wide_relationship
+        where chat_id = #{chatId}
+    </select>
+
+    <select id="selectChatByAppId" resultType="string">
+        select chat_id
+        from t_chat_session
+        where app_id = #{appId}
+        and attributes -> 'originApp' IS NULL
+        <if test="appType != null">
+            and attributes ->> 'state' = #{appType}
+        </if>
+        order by create_at desc
+        offset 0 limit #{count}
+    </select>
+
+    <select id="selectChatIdByInstanceId" resultType="string">
+        select chat_id
+        from t_chat_session_task_instance_wide_relationship
+        where task_instance_wide_id = #{instanceId}
+    </select>
+
+    <delete id="deleteWideRelationshipByInstanceId">
+        delete
+        from t_chat_session_task_instance_wide_relationship
+        where task_instance_wide_id = #{instanceId}
+    </delete>
+
+    <select id="selectChatListByChatIds"
+            resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.dto.chat.QueryChatRsp">
+        select
+        <include refid="Base_Column_List"/>
+        from t_chat_session
+        where chat_id in
+        <foreach collection="chatIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and status != 1
+        order by update_at asc
+    </select>
+
+    <select id="selectChatListByInstId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.dto.chat.QueryChatRsp">
+        select
+        <include refid="Base_Column_List"/>
+        from t_chat_session
+        where attributes ->> 'instId' = #{instId}
+        and status != 1
+        order by update_at asc
+    </select>
+
+    <select id="selectChatByCondition" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.dto.chat.QueryChatRsp">
+        select
+        <include refid="Base_Column_List"/>
+        from t_chat_session
+        where
+        <if test="condition != null and condition.size() > 0">
+            <foreach collection="condition" item="value" index="key" separator=" AND " close=" AND ">
+                attributes ->> '${key}' = #{value}
+            </foreach>
+        </if>
+        <if test="requestParam != null and requestParam.createBy!=null">
+           create_by = #{requestParam.createBy} and
+        </if>
+        status != 1
+        order by update_at desc
+        offset #{requestParam.offset} limit #{requestParam.limit}
+    </select>
+</mapper>

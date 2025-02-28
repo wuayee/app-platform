@@ -1,0 +1,1 @@
+INSERT INTO "authorization"("id", "system", "user", "token", "expiration", "created_by", "created_at", "updated_by", "updated_at") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)

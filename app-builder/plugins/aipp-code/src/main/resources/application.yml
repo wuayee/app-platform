@@ -1,0 +1,11 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.fit.jade.aipp.code'
+code:
+  breaker-manager:
+    failure-rate-threshold: 80
+    minimum-number-of-calls: 4
+    window-size: 4
+    expire-after-access: 80
+    maximum-cache-size: 200

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.taskcenter.dao.TaskMapper">
+
+    <resultMap type="modelengine.fit.jober.taskcenter.dao.po.TaskObject" id="TaskMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="category" property="category"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="attributes" property="attributes" />
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="template_id" property="templateId"/>
+    </resultMap>
+
+    <sql id="table">task</sql>
+    <sql id="columns">id
+    ,name,category,tenant_id,template_id,attributes,created_by,updated_by,created_at,updated_at</sql>
+
+
+    <insert id="insert">
+        INSERT INTO <include refid="table"/> (<include refid="columns"/>) VALUES(#{id},#{name},#{category},#{tenantId},#{templateId},#{attributes}::json,#{createdBy},#{updatedBy},#{createdAt},#{updatedAt})
+    </insert>
+
+    <select id="selectById" resultMap="TaskMap">
+        SELECT <include refid="columns"/> FROM <include refid="table"/> WHERE id = #{taskId}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM <include refid="table"/> WHERE id = #{taskId}
+    </delete>
+
+    <select id="selectByIdsAndNames" resultMap="TaskMap">
+        <if test="taskIds!=null and taskNames!=null">
+            <if test="taskIds.size()>0 and taskNames.size()>0">
+                SELECT <include refid="columns"/> FROM <include refid="table"/> WHERE id IN
+                <foreach collection="taskIds" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach> AND name IN
+               <foreach collection="taskNames" item="item" separator="," close=")" open="(">
+                   #{item}
+                </foreach>
+                LIMIT #{limit} OFFSET #{offset}
+            </if>
+        </if>
+        <if test="taskIds!=null and taskNames==null">
+            <if test="taskIds.size()>0">
+                SELECT <include refid="columns"/> FROM <include refid="table"/> WHERE id IN
+                <foreach collection="taskIds" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+                LIMIT #{limit} OFFSET #{offset}
+            </if>
+        </if>
+        <if test="taskIds==null and taskNames!=null">
+            <if test="taskNames.size()>0">
+                SELECT <include refid="columns"/> FROM <include refid="table"/> WHERE name IN
+                <foreach collection="taskNames" item="item" separator="," close=")" open="(">
+                    #{item}
+                </foreach>
+                LIMIT #{limit} OFFSET #{offset}
+            </if>
+        </if>
+        <if test="taskIds==null and taskNames==null">
+            SELECT <include refid="columns"/> FROM <include refid="table"/>
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <select id="selectByIds" resultMap="TaskMap">
+        select
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        where id IN
+        <foreach item="item" index="index" collection="taskIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

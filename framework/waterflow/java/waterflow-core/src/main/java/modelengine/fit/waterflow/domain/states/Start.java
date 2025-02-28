@@ -1,16 +1,14 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.states;
 
-import modelengine.fit.waterflow.domain.context.CompleteContext;
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.context.Window;
-import modelengine.fit.waterflow.domain.emitters.EmitterListener;
+import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.stream.nodes.From;
@@ -21,7 +19,6 @@ import modelengine.fit.waterflow.domain.utils.Tuple;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.ObjectUtils;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +35,7 @@ import java.util.stream.Collectors;
  * @param <D> 表示这个节点对应流的初始数据类型。
  * @since 1.0
  */
-public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements EmitterListener<O, FlowSession> {
+public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     /**
      * 表示节点起点的 {@link From}{@code <}{@link O}{@code >}。
      */
@@ -60,7 +57,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param id 表示唯一标识的 {@link String}。
      * @return 表示节点自身的 {@link Start}{@code <}{@link O}{@code ,}
-     * {@link D}{@code ,}{@link I}{@code ,}{@link F}{@code >}。
+     *         {@link D}{@code ,}{@link I}{@code ,}{@link F}{@code >}。
      */
     public Start<O, D, I, F> id(String id) {
         ObjectUtils.<From>cast(this.from).setId(id);
@@ -118,7 +115,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param processor 表示 just 转换器的 {@link Operators.Just}{@code <}{@link O}{@code >}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link O}{@code ,}{@link D}
-     * {@code ,}{@link O}{@code , }{@link F}{@code >}。
+     *         {@code ,}{@link O}{@code , }{@link F}{@code >}。
      */
     public State<O, D, O, F> just(Operators.Just<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData());
@@ -130,23 +127,10 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param processor 表示处理器的 {@link Operators.ProcessJust}{@code <}{@link O}{@code ,}{@link D}{@code >}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link O}{@code , }{@link D}
-     * {@code , }{@link O}{@code , }{@link F}{@code >}。
+     *         {@code , }{@link O}{@code , }{@link F}{@code >}。
      */
     public State<O, D, O, F> just(Operators.ProcessJust<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData(), input);
-        return new State<>(this.from.just(wrapper, null), this.getFlow());
-    }
-
-    /**
-     * 多session汇聚操作，将若干有界流并为无界流
-     *
-     * @return 新的无界流节点
-     */
-    public State<O, D, O, F> unify() {
-        FlowSession session = this.getFlow().getDefaultSession();
-        Operators.Just<FlowContext<O>> wrapper = input -> {
-            input.setSession(session);
-        };
         return new State<>(this.from.just(wrapper, null), this.getFlow());
     }
 
@@ -155,7 +139,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param processor 表示 map 处理器的 {@link Operators.Map}{@code <}{@link O}{@code ,}{@link R}{@code >}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }
-     * {@link O}{@code , }{@link F}{@code >}。
+     *         {@link O}{@code , }{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> map(Operators.Map<O, R> processor) {
         Operators.Map<FlowContext<O>, R> wrapper = input -> processor.process(input.getData());
@@ -166,9 +150,9 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      * 处理，并往下发射新的数据，支持操作 session KV 状态数据。
      *
      * @param processor 表示携带数据、KV 下文和发射器的处理器的{@link Operators.Process}{@code <}{@link O}
-     * {@code ,}{@link R}{@code >}}。
+     *                  {@code ,}{@link R}{@code >}}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code ,}{@link D}
-     * {@code ,}{@link O}{@code ,}{@link F}{@code >}。
+     *         {@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> process(Operators.Process<O, R> processor) {
         AtomicReference<State<R, D, O, F>> wrapper = new AtomicReference<>();
@@ -184,9 +168,9 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      * 处理，并转换类型。
      *
      * @param processor 表示携带 KV 下文的 map 处理器的 {@link Operators.ProcessMap}{@code <}{@link O}
-     * {@code ,}{@link R}{@code >}。
+     *                  {@code ,}{@link R}{@code >}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}
-     * {@code , }{@link F}{@code >}。
+     *         {@code , }{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> map(Operators.ProcessMap<O, R> processor) {
         Operators.Map<FlowContext<O>, R> wrapper = input -> processor.process(input.getData(), input);
@@ -198,7 +182,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param processor 表示 flat map 处理器的 {@link Operators.FlatMap}{@code <}{@link O}{@code ,}{@link R}{@code >}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link R}{@code , }{@link D}
-     * {@code , }{@link O}{@code ,}{@link F}{@code >}。
+     *         {@code , }{@link O}{@code ,}{@link F}{@code >}。
      */
     public <R> State<R, D, O, F> flatMap(Operators.FlatMap<O, R> processor) {
         Validation.notNull(processor, "Flat map processor can not be null.");
@@ -213,10 +197,13 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      * </p>
      *
      * @return 表示缓存后的节点的 {@link State}{@code <}{@link List}{@code <}{@link O}{@code >}{@code ,}
-     * {@link D}{@code ,}{@link O}{@code >}{@code,}{@link F}{@code >}。
+     *         {@link D}{@code ,}{@link O}{@code >}{@code,}{@link F}{@code >}。
      */
     public State<List<O>, D, O, F> buffer() {
-        State<List<O>, D, O, F> state = this.reduce(ArrayList::new, (acc, cur) -> {
+        State<List<O>, D, O, F> state = this.reduce(null, (acc, cur) -> {
+            if (acc == null) {
+                acc = new ArrayList<>();
+            }
             acc.add(cur);
             return acc;
         });
@@ -232,7 +219,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link O}{@code >}。
      * @return 表示数据聚合节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }
-     * {@link O}{@code ,}{@link F}{@code >}。
+     *         {@link O}{@code ,}{@link F}{@code >}。
      */
     public State<O, D, O, F> reduce(Operators.Reduce<O, O> processor) {
         return this.reduce(null, processor);
@@ -247,7 +234,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
      * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }
-     * {@link O}{@code ,}{@link F}{@code >}。
+     *         {@link O}{@code ,}{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public <R> State<R, D, O, F> reduce(Supplier<R> init, Operators.Reduce<O, R> processor) {
@@ -262,33 +249,34 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示输出数据类型。
      * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }
-     * {@link O}{@code ,}{@link F}{@code >}。
+     *         {@link O}{@code ,}{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public <R> State<R, D, O, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor can not be null.");
         Supplier<R> actualInit = ObjectUtils.nullIf(init, () -> null);
+
+        // 有keyby的情况下，累加器按照key分开计算
+        Map<Object, Tuple<FlowSession, R>> globalAccs = new HashMap<>();
         AtomicReference<State<R, D, O, F>> stateWrapper = new AtomicReference<>();
         Operators.Map<FlowContext<O>, R> wrapper = new Operators.Map<FlowContext<O>, R>() {
             @Override
             public synchronized R process(FlowContext<O> input) {
-                input.getSession().setAsAccumulator();
-                Window window = input.getWindow();
-                R acc = ObjectUtils.cast(Optional.ofNullable(window.acc()).orElseGet(actualInit));
-                if (acc == null) {
-                    if (input.getData() instanceof Number) {
-                        acc = (R) new Integer(0);
-                    }
-                    if (input.getData() instanceof String) {
-                        acc = (R) "";
-                    }
+                input.setAsAccumulator();
+                Object key = input.keyBy();
+                WindowToken windowToken = input.getWindowToken();
+                Map<Object, Tuple<FlowSession, R>> accs = globalAccs;
+                if (windowToken != null) {
+                    accs = windowToken.accs();
                 }
-                acc = (input instanceof CompleteContext) ? acc : processor.process(acc, input.getData(), input);
-                window.setAcc(acc);
-                if (window.accept()) {
-                    window.resetAcc();
+                R acc = Optional.ofNullable(accs.get(key)).map(Tuple::second).orElseGet(actualInit);
+                acc = processor.process(acc, input.getData(), input);
+                accs.put(key, Tuple.from(input.getSession(), acc));
+                if (windowToken == null) {
                     return acc;
                 } else {
+                    windowToken.setProcessor(stateWrapper.get().from);
+                    // 有window支持情况下不返回，直到window关闭时返回最终累加值
                     return null;
                 }
             }
@@ -298,37 +286,29 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
     }
 
     /**
-     * 构建一个计数window
-     *
-     * @param count 计数的个数
-     * @return state节点，用以继续构建后续链路
-     */
-    public State<O, D, O, F> window(int count) {
-        return this.window(arg -> arg.countToNow() == count);
-    }
-
-    /**
-     * 构建一个时长的window
-     *
-     * @param duration 时间间隔
-     * @return state节点，用以继续构建后续链路
-     */
-    public State<O, D, O, F> window(Duration duration) {
-        return this.window(arg -> arg.timeToNow().compareTo(duration) >= 0);
-    }
-
-    /**
      * 形成一个 window，window 中的数据满足条件后，将触发后续的数据聚合处理。
      *
-     * @param windowCondition window的条件
-     * @return window的后续节点
+     * @param window 表示 window 条件的 {@link Operators.Window}{@code <}{@link O}{@code >}。
+     * @return 表示 window 的后续节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }
+     *         {@link O}{@code ,}{@link F}{@code >}。
      */
-    public State<O, D, O, F> window(Operators.WindowCondition windowCondition) {
+    public State<O, D, O, F> window(Operators.Window<O> window) {
+        final Map<Object, WindowToken<O>> windowTokens = new HashMap<>();
         Operators.Just<FlowContext<O>> wrapper = new Operators.Just<FlowContext<O>>() {
             @Override
             public synchronized void process(FlowContext<O> input) {
-                if (input.getSession().getWindow().getCondition() != windowCondition) {
-                    input.getSession().getWindow().setCondition(windowCondition);
+                Object tokenKey = window.getSessionKey(input);
+                WindowToken<O> windowToken = windowTokens.get(tokenKey);
+                if (windowToken == null) {
+                    windowToken = new WindowToken<>(window);
+                    windowTokens.put(tokenKey, windowToken);
+                }
+
+                windowToken.addToDo(input.getData());
+                windowToken.addOrigin(input.getData());
+                input.setWindowToken(windowToken);
+                if (windowToken.fulfilled()) {
+                    windowTokens.remove(tokenKey);
                 }
             }
         };
@@ -342,24 +322,9 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      * @return 表示聚合后的节点的 {@link Tuple}{@code <}{@link R}{@code , }{@link O}{@code >}。
      */
     public <R> State<Tuple<R, O>, D, O, F> keyBy(Operators.Map<O, R> keyGetter) {
-        Map<FlowSession, Map<Object, FlowSession>> cache = new HashMap<>();
         Operators.Map<FlowContext<O>, Tuple<R, O>> wrapper = input -> {
-            FlowSession originSession = input.getSession();
-            Map<Object, FlowSession> sessions = cache.computeIfAbsent(originSession, k -> new HashMap<>());
             R key = keyGetter.process(input.getData());
-            FlowSession session = sessions.get(key);
-            if (session == null) {
-                //create a session for each key & previous session
-                session = new FlowSession(originSession);
-                sessions.put(key, session);
-                session.setKeyBy(key);
-            }
-            if (originSession.getWindow().isDone()) {
-                for (FlowSession s : sessions.values()) {
-                    s.getWindow().complete();
-                }
-            }
-            input.setSession(session);
+            input.setKeyBy(key);
             return Tuple.from(key, input.getData());
         };
         return new State<>(this.from.map(wrapper, null).displayAs("key by"), this.getFlow());
@@ -370,14 +335,9 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> implements
      *
      * @param processor 表示处理器的 {@link Operators.Produce}{@code <}{@link O}{@code ,}{@link R}{@code >}。
      * @return 表示新的处理节点的 {@link State}{@code <}{@link List}{@code <}{@link R}{@code >}
-     * {@code ,}{@link D}{@code ,?,}{@link F}{@code >}
+     *         {@code ,}{@link D}{@code ,?,}{@link F}{@code >}
      */
     public <R> State<List<R>, D, ?, F> produce(Operators.Produce<O, R> processor) {
         return this.buffer().map(contexts -> processor.process(contexts));
-    }
-
-    @Override
-    public void handle(O data, FlowSession trans) {
-        this.from.handle(data, trans);
     }
 }

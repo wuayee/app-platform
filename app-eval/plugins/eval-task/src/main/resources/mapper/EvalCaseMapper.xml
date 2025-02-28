@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.task.mapper.EvalCaseMapper">
+    <resultMap id="EvalCaseEntityResultMap" type="modelengine.jade.app.engine.task.entity.EvalCaseEntity">
+        <id property="id" column="id"/>
+        <result property="pass" column="pass"/>
+    </resultMap>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_task_case (pass, instance_id)
+        VALUES (#{pass}, #{instanceId})
+    </insert>
+
+    <select id="getCaseByInstanceId" resultType="modelengine.jade.app.engine.task.entity.EvalCaseEntity"
+            resultMap="EvalCaseEntityResultMap">
+        SELECT id, pass
+        FROM t_app_engine_eval_task_case
+        WHERE instance_id = #{instanceId}
+    </select>
+
+    <select id="listEvalCase" resultType="modelengine.jade.app.engine.task.entity.EvalCaseEntity"
+            resultMap="EvalCaseEntityResultMap">
+        SELECT id, pass
+        FROM t_app_engine_eval_task_case
+        WHERE instance_id = #{instanceId}
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countEvalCase" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_task_case
+        WHERE instance_id = #{instanceId}
+    </select>
+</mapper>

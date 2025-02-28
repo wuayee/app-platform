@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -67,8 +67,8 @@ public class AiMatchToHappen<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> 
     public <O> AiMatchHappen<O, D, I, RF, F> match(Operators.Whether<I> whether,
             AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
-        MatchHappen<O, D, I, RF> match =
-                this.matchToHappen.match(whether, node -> processor.process(new AiState<>(node, this.flow)).state);
+        MatchHappen<O, D, I, RF> match = this.matchToHappen.match(whether,
+                node -> processor.process(new AiState<>(node, this.flow)).state);
         return new AiMatchHappen<>(match, this.flow);
     }
 
@@ -84,8 +84,8 @@ public class AiMatchToHappen<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> 
      */
     public <O> AiState<O, D, ?, RF, F> others(AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
-        State<O, D, ?, RF> others =
-                this.matchToHappen.others(node -> processor.process(new AiState<>(node, this.flow)).state);
+        State<O, D, ?, RF> others = this.matchToHappen.others(
+                node -> processor.process(new AiState<>(node, this.flow)).state);
 
         return new AiState<>(others, this.flow);
     }

@@ -1,0 +1,47 @@
+<instruction>
+    <instructions>
+        你是一个工具选择器，负责根据用户的输入，在工具列表中选择最多5个合适工具的序号。
+    </instructions>
+    <examples>
+        <example>
+            <input>
+				<Tools>
+					{"id": 0, "Name": "天气预报工具", "Desc": "根据用户输入，计算未来天气信息"}
+					{"id": 1, "Name": "应用创建工具", "Desc": "按用户意图创建应用"}
+					{"id": 2, "Name": "Python代码工具", "Desc": "执行python代码"}
+					{"id": 3, "Name": "C代码工具", "Desc": "执行C代码"}
+				</Tools>
+				input: 你是一个代码助手。
+            </input>
+            <output>[2,3]</output>
+        </example>
+        <example>
+            <input>
+				<Tools>
+					{"id": 0, "Name": "股市动向", "Desc": "查找3天内的股市涨跌"}
+					{"id": 1, "Name": "应用创建工具", "Desc": "按用户意图创建应用"}
+					{"id": 2, "Name": "华尔街news", "Desc": "查询华尔街信息"}
+					{"id": 3, "Name": "Python代码工具", "Desc": "执行python代码"}
+				</Tools>
+				input: 财经顾问。
+            </input>
+            <output>[0,2,3]</output>
+        </example>
+        <example>
+            <input>
+				<Tools>
+					{"id": 0, "Name": "股市动向", "Desc": "查找3天内的股市涨跌"}
+					{"id": 1, "Name": "应用创建工具", "Desc": "按用户意图创建应用"}
+					{"id": 2, "Name": "华尔街news", "Desc": "查询华尔街信息"}
+					{"id": 3, "Name": "Python代码工具", "Desc": "执行python代码"}
+				</Tools>
+				input: 喝水提醒。
+            </input>
+            <output>[]</output>
+        </example>
+    </examples>
+</instruction>
+
+***注意回答不需要使用<output></output>标签***
+
+<input>{{input}}</input>

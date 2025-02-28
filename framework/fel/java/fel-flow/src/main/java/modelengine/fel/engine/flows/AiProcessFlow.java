@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -24,15 +24,15 @@ import modelengine.fitframework.util.ObjectUtils;
  * @author 刘信宏
  * @since 2024-04-28
  */
-public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>>
-        implements EmitterListener<D, FlowSession>, Emitter<R, FlowSession> {
+public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>> implements EmitterListener<D, FlowSession>,
+        Emitter<R, FlowSession> {
     public AiProcessFlow(ProcessFlow<D> flow) {
         super(flow);
     }
 
     @Override
     public void handle(D data, FlowSession session) {
-        this.origin().offer(data, session);
+        this.origin().offer(data, new FlowSession(session));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>>
 
     @Override
     public void emit(R data, FlowSession session) {
-        this.origin().emit(data, (session));
+        this.origin().emit(data, new FlowSession(session));
     }
 
     /**

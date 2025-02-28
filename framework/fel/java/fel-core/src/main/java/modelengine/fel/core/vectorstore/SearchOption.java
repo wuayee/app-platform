@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -64,6 +64,6 @@ public interface SearchOption {
      * @return 表示创建成功构建器的 {@link Builder}。
      */
     static Builder custom() {
-        return BuilderFactory.get(SearchOption.class, SearchOption.Builder.class).create(null);
+        return BuilderFactory.get(SearchOption.class, Builder.class).create(null);
     }
 }

@@ -113,6 +113,12 @@
         </dependency>
         <dependency>
             <groupId>modelengine.fit.plugin</groupId>
+            <artifactId>fit-http-client-okhttp</artifactId>
+            <version>3.5.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.plugin</groupId>
             <artifactId>fit-http-server-netty</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>

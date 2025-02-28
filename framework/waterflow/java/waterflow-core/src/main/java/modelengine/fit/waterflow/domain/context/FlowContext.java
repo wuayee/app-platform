@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  *
  * @since 1.0
  */
-public class FlowContext<T> extends IdGenerator implements StateContext {
+public final class FlowContext<T> extends IdGenerator implements StateContext {
     /**
      * 通过 from.offer(data) 而不是 .offer(context) 发起的数据会新增一个路径，这个路径会延续到流的终点。
      */
@@ -99,7 +99,7 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
      * context 的生产批次唯一标识。
      */
     @Getter
-    protected String batchId;
+    private String batchId;
 
     /**
      * 转向哪个 context 批次。
@@ -135,12 +135,13 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
     @Setter
     private LocalDateTime archivedAt;
 
-    /**
-     * 保序id,-1代表不需要保序
-     */
     @Getter
     @Setter
-    private Integer index;
+    private WindowToken windowToken = null;
+
+    private Object keyBy = null;
+
+    private boolean isAccumulator;
 
     /**
      * 创建一个 {@link FlowContext} 实例。
@@ -151,24 +152,12 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
      * @param traceId 表示路径唯一标识的 {@link Set}{@code <}的{@link String}{@code >}。
      * @param position 表示上下文当前所处的位置的 {@link String}。
      */
-    public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position,
-                       FlowSession session) {
-        this(streamId, rootId, data, traceId, position, "", "", session);
+    public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position) {
+        this(streamId, rootId, data, traceId, position, "", "");
     }
 
-    /**
-     * 创建一个 {@link FlowContext} 实例。
-     *
-     * @param streamId 表示所处流唯一标识的 {@link String}。
-     * @param rootId 表示数据发起的起始节点唯一标识的 {@link String}。
-     * @param data 表示上下文里所带数据的 {@link T}。
-     * @param traceId 表示路径唯一标识的 {@link Set}{@code <}的{@link String}{@code >}。
-     * @param position 表示上下文当前所处的位置的 {@link String}。
-     * @param parallel 表示并行节点唯一标识的 {@link String}。
-     * @param parallelMode 表示并行模式的 {@link String}。
-     */
     public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position, String parallel,
-            String parallelMode, FlowSession session) {
+            String parallelMode) {
         this.streamId = streamId;
         this.rootId = rootId;
         this.data = data;
@@ -178,12 +167,7 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
         this.parallel = parallel;
         this.parallelMode = parallelMode;
         this.createAt = LocalDateTime.now();
-        this.session = session;
-        this.index = this.createIndex(); // 0起始，说明保序
-    }
-
-    private Integer createIndex(){
-        return session.preserved() ? session.getWindow().tokenCount() : -1;
+        this.session = new FlowSession();
     }
 
     /**
@@ -259,6 +243,17 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
+     * 设置当前 context 所在的会话。
+     *
+     * @param flowSession 表示流会话的 {@link FlowSession}。
+     * @return 表示 context 自身的 {@link FlowContext}{@code <}{@link T}{@code >}。
+     */
+    public FlowContext<T> inFlowTrans(FlowSession flowSession) {
+        this.session = flowSession;
+        return this;
+    }
+
+    /**
      * 在 map，reduce，produce 的过程中把大多数上一个 context 的内容复制给下一个。
      *
      * @param data 表示处理后数据的 {@link R}。
@@ -266,12 +261,18 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
      * @return 表示新的上下文的 {@link FlowContext}{@code <}{@link R}{@code >}。
      */
     public <R> FlowContext<R> generate(R data, String position) {
-        FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
-                this.parallel, this.parallelMode, this.session);
+        FlowContext<R> context = new FlowContext<>(this.streamId,
+                this.rootId,
+                data,
+                this.traceId,
+                this.position,
+                this.parallel,
+                this.parallelMode);
         context.position = position;
         context.previous = this.id;
-        context.batchId = this.batchId;
-        context.index = this.index;
+        context.session = this.session;
+        context.windowToken = this.windowToken;
+        context.keyBy = this.keyBy == null ? this.session.keyBy() : this.keyBy;
         return context;
     }
 
@@ -294,8 +295,13 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
      * @return 表示转换后的 context 的 {@link FlowContext}{@code <}{@link R}{@code >}。
      */
     public <R> FlowContext<R> convertData(R data, String id) {
-        FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
-                this.parallel, this.parallelMode, this.session);
+        FlowContext<R> context = new FlowContext<>(this.streamId,
+                this.rootId,
+                data,
+                this.traceId,
+                this.position,
+                this.parallel,
+                this.parallelMode);
         context.previous = this.previous;
         context.status = this.status;
         context.id = id;
@@ -304,7 +310,9 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
         context.createAt = this.createAt;
         context.updateAt = this.updateAt;
         context.archivedAt = this.archivedAt;
-        context.index = this.index;
+        context.session = this.session;
+        context.windowToken = this.windowToken;
+        context.keyBy = this.keyBy == null ? this.session.keyBy() : this.keyBy;
         return context;
     }
 
@@ -328,15 +336,37 @@ public class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     /**
-     * 获取keyBy
+     * 将 context 设置为 accumulator。
+     */
+    public void setAsAccumulator() {
+        this.isAccumulator = true;
+    }
+
+    /**
+     * 判定是否是 accumulator。
+     *
+     * @return 表示返回值的 {@code boolean}。
+     */
+    public boolean isAccumulator() {
+        return this.isAccumulator;
+    }
+
+    /**
+     * 获取 keyBy。
      *
      * @return 表示返回值的 {@link Object}。
      */
     public Object keyBy() {
-        return this.session.keyBy();
+        return this.keyBy;
     }
 
-    public Window getWindow() {
-        return this.getSession().getWindow();
+    /**
+     * 设置 keyBy 的键，将会影响会话的键。
+     *
+     * @param key 表示目标键的 {@link Object}。
+     */
+    public void setKeyBy(Object key) {
+        this.keyBy = key;
+        this.session.setKeyBy(key);
     }
 }

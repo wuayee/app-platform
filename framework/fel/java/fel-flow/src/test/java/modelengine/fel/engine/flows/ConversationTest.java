@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import modelengine.fit.waterflow.domain.utils.SleepUtil;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,21 +31,23 @@ public class ConversationTest {
     @DisplayName("对话异常处理")
     class ConversationException {
         String errorMsg = "test exception.";
-        AiProcessFlow<String, String> exceptionFlow = AiFlows.<String>create().map(input -> input).just(input -> {
-            throw new IllegalStateException(errorMsg);
-        }).close();
+        AiProcessFlow<String, String> exceptionFlow = AiFlows.<String>create()
+                .map(input -> input)
+                .just(input -> {
+                    throw new IllegalStateException(errorMsg);
+                })
+                .close();
 
         @Test
         @DisplayName("流程节点异常处理")
-        @Disabled
         void shouldFailWhenAsyncFlowThrowException() {
             final StringBuilder answer = new StringBuilder();
             ConverseLatch<String> latch = exceptionFlow.converse()
                     .doOnError(throwable -> answer.append(throwable.getMessage()))
                     .doOnFinally(() -> answer.append(" finally"))
                     .offer("test data");
-            IllegalStateException exception =
-                    assertThrows(IllegalStateException.class, () -> latch.await(500, TimeUnit.MILLISECONDS));
+            IllegalStateException exception = assertThrows(IllegalStateException.class,
+                    () -> latch.await(500, TimeUnit.MILLISECONDS));
             assertEquals(errorMsg, exception.getMessage());
             assertEquals(errorMsg + " finally", answer.toString());
         }
@@ -54,14 +55,16 @@ public class ConversationTest {
         @Test
         @DisplayName("对话未完成异常处理")
         void shouldFailWhenOfferRepeated() {
-            AiProcessFlow<String, String> flow = AiFlows.<String>create().just(input -> SleepUtil.sleep(50)).close();
+            AiProcessFlow<String, String> flow = AiFlows.<String>create()
+                    .just(input -> SleepUtil.sleep(50))
+                    .close();
 
             Conversation<String, String> converse = flow.converse();
             // 第一次对话
             converse.offer("test data");
             // 第二次对话
-            IllegalStateException exception =
-                    assertThrows(IllegalStateException.class, () -> converse.offer("test data1"));
+            IllegalStateException exception = assertThrows(IllegalStateException.class,
+                    () -> converse.offer("test data1"));
 
             assertEquals("conversation is running.", exception.getMessage());
         }
@@ -77,7 +80,8 @@ public class ConversationTest {
         void shouldOkWhenASyncFlowWithCustomCallback() {
             StringBuilder callbackAnswer = new StringBuilder();
             Conversation<Integer, String> converse = flow.converse();
-            String flowAnswer = converse.doOnConsume(data -> callbackAnswer.append("answer ").append(data))
+            String flowAnswer = converse
+                    .doOnSuccess(data -> callbackAnswer.append("answer ").append(data))
                     .doOnFinally(() -> callbackAnswer.append(" finally"))
                     .offer(5)
                     .await(500, TimeUnit.MILLISECONDS);

@@ -1,0 +1,174 @@
+{
+  "groups": [
+    {
+      "type": "flowController",
+      "name": "Flow Controller"
+    },
+    {
+      "type": "imageProcessor",
+      "name": "Image Processor"
+    },
+    {
+      "type": "textProcessor",
+      "name": "Text Processor"
+    },
+    {
+      "type": "search",
+      "name": "Search"
+    },
+    {
+      "type": "agent",
+      "name": "Agent"
+    },
+    {
+      "type": "AudioAndViedoProcessor",
+      "name": "Audio And Video Processor"
+    },
+    {
+      "type": "other",
+      "name": "Other"
+    }
+  ],
+  "items": [
+    {
+      "type": "aippState",
+      "name": "Blank",
+      "icon": "xx.icon",
+      "description": "This is a blank node.",
+      "tags": ["code"],
+      "triggerMode": "auto",
+      "group": [
+        "imageProcessor"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "Text Generate Text",
+      "icon": "xx.icon",
+      "description": "This is a text generation text node.\nInput key: prompt, llmModelName\nOutput key: llmText2TextResult",
+      "tags": ["prompt"],
+      "triggerMode": "auto",
+      "jober": {
+        "type": "GENERAL_JOBER",
+        "name": "Text Generate Text",
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.LLMText2Text"
+        ]
+      },
+      "group": [
+        "textProcessor"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "Analyze and Identify Procurement Information",
+      "icon": "xx.icon",
+      "description": "This is a text generation text (extract procurement information) node.\nInput key: prompt, llmModelName\nOutput key: llmText2TextResult",
+      "triggerMode": "auto",
+      "tags": ["prompt"],
+      "jober": {
+        "type": "ohscript_jober",
+        "name": "Analyze and Identify Procurement Information",
+        "entity": {
+          "code": "let input = ext::context; \nlet prompt = input.get(0).get(\"businessData\").get(\"prompt\"); \ninput.get(0).get(\"businessData\").put(\"prompt\", \"You are a storage product procurement analyst. Please analyze the procurement content of the customer based on the following information. The output content must be concise. The information is:\"+prompt);\nlet context1 = entity{.async = true;.id = \"modelengine.fit.jober.aipp.fitable.LLMText2Text\";};\nlet f1 = fit::handleTask(context1);\nlet ans = input >> f1;\nans",
+          "retryNum": 2
+        },
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.LLMText2Text"
+        ]
+      },
+      "group": [
+        "textProcessor"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "Extracting File Information",
+      "icon": "xx.icon",
+      "description": "This is an extract file information node that supports pdf, word, xml, yaml and html.\nInput key: filePath\nOutput key: llmFile2TextResult",
+      "tags": ["prompt"],
+      "triggerMode": "auto",
+      "jober": {
+        "type": "GENERAL_JOBER",
+        "name": "Extracting File Information",
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.CompositeFileReader"
+        ]
+      },
+      "group": [
+        "textProcessor"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "Video Generate Audio",
+      "icon": "xx.icon",
+      "description": "This is a video-to-audio node.\nInput key: videoPath\nOutput key: llmVideo2AudioResult",
+      "tags": ["prompt"],
+      "triggerMode": "auto",
+      "jober": {
+        "type": "GENERAL_JOBER",
+        "name": "Video Generate Audio",
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.FfmpegVideo2Audio"
+        ]
+      },
+      "group": [
+        "AudioAndViedoProcessor"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "ELSA ppt Release",
+      "icon": "xx.icon",
+      "description": "This is an ELSA ppt release node.\nInput key: text2pptResult\nOutput key: elsaPptResult",
+      "tags": ["prompt"],
+      "triggerMode": "auto",
+      "jober": {
+        "type": "GENERAL_JOBER",
+        "name": "ELSA ppt Release",
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.ReleaseElsaPpt"
+        ]
+      },
+      "group": [
+        "other"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "Invoke Intelligent Agent",
+      "icon": "xx.icon",
+      "description": "This is a node that calls the agent.\nInput key: aipp_agent_param_key\nOutput key: agentResult",
+      "tags": ["agent"],
+      "triggerMode": "auto",
+      "jober": {
+        "type": "GENERAL_JOBER",
+        "name": "Invoke Intelligent Agent",
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.AppFlowAgent"
+        ]
+      },
+      "group": [
+        "agent"
+      ]
+    },
+    {
+      "type": "aippState",
+      "name": "Generate Report",
+      "icon": "xx.icon",
+      "description": "This is a node that generates reports from chat logs.\nInput key: aipp$QAlist\nInput key: reportResult",
+      "triggerMode": "auto",
+      "jober": {
+        "type": "GENERAL_JOBER",
+        "name": "Generate Report",
+        "fitables": [
+          "modelengine.fit.jober.aipp.fitable.LLMGenerateOperationReport"
+        ]
+      },
+      "group": [
+        "other"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -20,11 +20,11 @@ import java.util.List;
  * @since 1.0
  */
 public class Retryable<I> {
-    private final FlowContextRepo repo;
+    private final FlowContextRepo<I> repo;
 
     private final Subscriber<I, ?> to;
 
-    public Retryable(FlowContextRepo repo, Subscriber<I, ?> to) {
+    public Retryable(FlowContextRepo<I> repo, Subscriber<I, ?> to) {
         this.repo = repo;
         this.to = to;
     }
@@ -46,6 +46,6 @@ public class Retryable<I> {
      */
     public void retry(List<FlowContext<I>> contexts) {
         this.process(contexts);
-        to.onProcess(null, contexts, false);
+        to.onProcess(contexts);
     }
 }

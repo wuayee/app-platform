@@ -1,0 +1,56 @@
+[
+  {
+    "data": "{\"key0\":{\"llmOutput\":\"llmOutput text in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"}}}}",
+    "expected": ""
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": "invalid reference"
+      }
+    },
+    "expected": ""
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": {
+            "id": "",
+            "score": 0.5,
+            "text": "invalid reference"
+          }
+      }
+    },
+    "expected": ""
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": {
+          "key000":   {
+            "id": "",
+            "score": "0.5",
+            "text": "invalid reference"
+          }
+        }
+      }
+    },
+    "expected": ""
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": {
+          "key000":   {
+            "text": "invalid reference"
+          }
+        }
+      }
+    },
+    "expected": ""
+  }
+]

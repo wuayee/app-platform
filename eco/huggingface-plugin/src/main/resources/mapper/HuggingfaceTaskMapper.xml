@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fel.plugin.huggingface.mapper.HuggingfaceTaskMapper">
+    <resultMap id="HuggingfaceTaskEntityResultMap" type="modelengine.fel.plugin.huggingface.entity.HuggingfaceTaskEntity">
+        <result property="taskId" column="id"/>
+        <result property="taskNameCode" column="task_name_code"/>
+        <result property="taskDescriptionCode" column="task_description_code"/>
+        <result property="totalModelNum" column="total_model_num"/>
+    </resultMap>
+
+    <select id="listAvailableTasks" resultMap="HuggingfaceTaskEntityResultMap">
+        SELECT id, task_name_code, task_description_code, total_model_num
+        FROM t_eco_huggingface_task
+        WHERE total_model_num > 0
+    </select>
+
+    <update id="increaseModelCount">
+        UPDATE t_eco_huggingface_task
+        SET total_model_num = total_model_num + 1
+        WHERE id = #{taskId}
+    </update>
+</mapper>

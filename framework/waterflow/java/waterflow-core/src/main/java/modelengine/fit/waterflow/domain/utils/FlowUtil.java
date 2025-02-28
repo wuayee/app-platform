@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.utils;
 
-import modelengine.fit.waterflow.domain.common.Constants;
+import modelengine.fit.waterflow.domain.common.Constant;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
@@ -82,28 +82,15 @@ public final class FlowUtil {
      */
     public static String formatConditionRule(String conditionRule) {
         LOG.debug("[FlowUtil] format condition rule: [{}]", conditionRule);
-        if (StringUtils.isEmpty(conditionRule)) {
-            return conditionRule;
-        }
-        String replacedConditionRule = conditionRule;
-        Matcher matcherWithQuotes = LEGACY_RULE_KEY_PATTERN_WITH_QUOTES.matcher(replacedConditionRule);
-        while (matcherWithQuotes.find()) {
-            replacedConditionRule = replaceFormattedVariable(replacedConditionRule, matcherWithQuotes);
-        }
-        Matcher matcher = LEGACY_RULE_KEY_PATTERN.matcher(replacedConditionRule);
-        while (matcher.find()) {
-            replacedConditionRule = replaceFormattedVariable(replacedConditionRule, matcher);
-        }
-        replacedConditionRule = replacedConditionRule.replace("'", "\"");
-        return replacedConditionRule;
+        return conditionRule;
     }
 
     private static String replaceFormattedVariable(String conditionRule, Matcher matcher) {
         String formatVariable = matcher.group(0);
         String originalVariable = matcher.group(1);
-        if (!originalVariable.startsWith(Constants.BUSINESS_DATA_KEY)
-                || !originalVariable.startsWith(Constants.PASS_DATA)) {
-            originalVariable = Constants.BUSINESS_DATA_KEY + "." + originalVariable;
+        if (!originalVariable.startsWith(Constant.BUSINESS_DATA_KEY)
+                || !originalVariable.startsWith(Constant.PASS_DATA)) {
+            originalVariable = Constant.BUSINESS_DATA_KEY + "." + originalVariable;
         }
         return conditionRule.replace(formatVariable, originalVariable);
     }

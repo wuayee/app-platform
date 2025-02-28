@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -84,11 +84,9 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
     /**
      * 节点真正处理context方法onProcess
      *
-     * @param type 任务类型，是pre还是
-     * @param preList contexts
-     * @param isInThread 是否是在线程中运行
+     * @param contexts contexts
      */
-    void onProcess(ProcessType type, List<FlowContext<I>> preList, boolean isInThread);
+    void onProcess(List<FlowContext<I>> contexts);
 
     /**
      * onNext
@@ -111,13 +109,6 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
      * @param callback callback
      */
     void onComplete(Operators.Just<Callback<FlowContext<O>>> callback);
-
-    /**
-     * onSessionComplete
-     *
-     * @param sessionCompleteCallback session完成时的callback
-     */
-    void onSessionComplete(Operators.Just<FlowSession> sessionCompleteCallback);
 
     /**
      * isAuto

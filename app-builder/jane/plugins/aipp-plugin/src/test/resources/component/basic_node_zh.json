@@ -1,0 +1,37 @@
+[
+  {
+    "type": "retrievalNodeState",
+    "name": "普通检索",
+    "uniqueName": ""
+  },
+  {
+    "type": "llmNodeState",
+    "name": "大模型",
+    "uniqueName": ""
+  },
+  {
+    "type": "manualCheckNodeState",
+    "name": "人工检查",
+    "uniqueName": ""
+  },
+  {
+    "type": "codeNodeState",
+    "name": "代码",
+    "uniqueName": ""
+  },
+  {
+    "type": "conditionNodeCondition",
+    "name": "条件",
+    "uniqueName": ""
+  },
+  {
+    "type": "endNodeEnd",
+    "name": "结束",
+    "uniqueName": ""
+  },
+  {
+    "type": "queryOptimizationNodeState",
+    "name": "问题优化",
+    "uniqueName": ""
+  }
+]

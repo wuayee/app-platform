@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -7,11 +7,13 @@
 package modelengine.fit.waterflow.domain.stream.nodes;
 
 import modelengine.fit.waterflow.domain.context.FlowContext;
+import modelengine.fit.waterflow.domain.context.WindowToken;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
 import modelengine.fit.waterflow.domain.enums.ParallelMode;
+import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -40,8 +42,15 @@ public class ParallelNode<I> extends Node<I, I> {
      */
     public ParallelNode(String streamId, ParallelMode mode, FlowContextRepo repo, FlowContextMessenger messenger,
             FlowLocks locks) {
-        super(streamId, FlowContext::getData, repo, messenger, locks,
-                () -> initFrom(streamId, mode, repo, messenger, locks));
+        super(streamId, in -> {
+            in.setWindowToken(new WindowToken(inputs -> {
+                if (inputs.size() <= 0) {
+                    return false;
+                }
+                return inputs.size() == ObjectUtils.<Integer>cast(inputs.get(0));
+            }));
+            return in.getData();
+        }, repo, messenger, locks, () -> initFrom(streamId, mode, repo, messenger, locks));
         this.mode = mode;
     }
 
@@ -74,8 +83,8 @@ public class ParallelNode<I> extends Node<I, I> {
      * @param locks 流程锁
      * @return From
      */
-    private static <I> From<I> initFrom(String streamId, ParallelMode mode, FlowContextRepo repo,
-            FlowContextMessenger messenger, FlowLocks locks) {
+    private static <I> From<I> initFrom(String streamId, ParallelMode mode,
+            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
         return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {

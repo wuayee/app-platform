@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -20,12 +20,10 @@ import modelengine.fit.waterflow.domain.stream.reactive.Callback;
 import modelengine.fit.waterflow.domain.stream.reactive.Processor;
 import modelengine.fit.waterflow.domain.stream.reactive.Publisher;
 import modelengine.fit.waterflow.domain.stream.reactive.Subscriber;
-import modelengine.fit.waterflow.domain.utils.FlowDebug;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +38,7 @@ import java.util.stream.Collectors;
  * @param <F> 表示对应的是处理流，还是生产流，用于泛型推演的 {@link F}。
  * @since 1.0
  */
+
 public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
         implements EmitterListener<O, FlowSession>, Emitter<O, FlowSession> {
     /**
@@ -114,7 +113,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * 类似于 goto，通常在 conditions 的分支中使用，用于形成循环。
      *
      * @param state 表示指定节点的 {@link State}{@code <}{@link O}{@code ,}
-     * {@link D}{@code ,}{@link I}{@code ,}{@link F}{@code >}。
+     *              {@link D}{@code ,}{@link I}{@code ,}{@link F}{@code >}。
      */
     public void to(State<?, D, O, F> state) {
         this.processor.subscribe(state.processor, null);
@@ -125,18 +124,18 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      *
      * @param block 表示控制阻塞和恢复逻辑的 {@link BlockToken}{@code <}{@link O}{@code >}。
      * @return 表示 block 节点的 {@link State}{@code <}{@link O}{@code ,}{@link D}
-     * {@code ,}{@link O}{@code ,}{@link F}{@code >}。
+     *         {@code ,}{@link O}{@code ,}{@link F}{@code >}。
      */
     public State<O, D, O, F> block(BlockToken<O> block) {
-        State<O, D, O, F> state = new State<>(this.from.map(new Operators.Map<FlowContext<O>, O>() {
+        AtomicReference<State<O, D, O, F>> state = new AtomicReference<>();
+        state.set(new State<>(this.from.map(new Operators.Map<FlowContext<O>, O>() {
             @Override
             public O process(FlowContext<O> input) {
-                block.setHost(input);
+                block.setHost(state.get().from, input);
                 return null;
             }
-        }, null), this.getFlow());
-        block.setPublisher(state.from);
-        return state;
+        }, null), this.getFlow()));
+        return state.get();
     }
 
     /**
@@ -144,7 +143,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      *
      * @param handler 表示错误处理器的 {@link Operators.ErrorHandler}{@code <}{@link I}{@code >}。
      * @return 表示对应的流对象的 {@link State}{@code <}{@link O}{@code ,}{@link D}{@code ,}
-     * {@link I}{@code ,}{@link F}{@code >}。
+     *         {@link I}{@code ,}{@link F}{@code >}。
      */
     public State<O, D, I, F> error(Operators.ErrorHandler<I> handler) {
         this.processor.onError(handler);
@@ -164,47 +163,23 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * close 流程，也就是加终止节点。
      *
      * @param callback 表示流程结束的回调处理器的 {@link Callback}{@code <}{@link FlowContext}
-     * {@code <}{@link O}{@code >}{@code >}。
+     *                 {@code <}{@link O}{@code >}{@code >}。
      * @return 表示对应的流对象的 {@link F}。
      */
     public F close(Operators.Just<Callback<FlowContext<O>>> callback) {
-        return this.close(input -> {
-            callback.process(input);
-            input.get().getWindow().peekAndConsume().finishConsume();
-            if (input.get().getWindow().isDone()) {
-                this.getFlow().completeSession(input.get().getSession().getId());
-            }
-        }, null, null);
+        return this.close(callback, null);
     }
 
     /**
      * close 流程，也就是加终止节点。
+     * 所有未结束节点都会同时连接上结束节点，这块遇到不同节点数据类型不同时有风险，需要重构。
      *
-     * @param callback 表示流程结束的回调处理器的 {@link Callback}{@code <}{@link FlowContext}
-     * {@code <}{@link O}{@code >}{@code >}。
+     * @param callback 表示回调的 {@link Operators.Just}{@code <}{@link Callback}{@code <}{@link FlowContext}{@code <}
+     *                 {@link O}{@code >}{@code >}{@code >}。
      * @param errHandler 表示流程错误处理器的 {@link Operators.ErrorHandler}{@code <}{@link Object}{@code >}。
-     * @return 表示对应的流对象的 {@link F}。
+     * @return 表示流程实例的 {@link F}。
      */
     public F close(Operators.Just<Callback<FlowContext<O>>> callback, Operators.ErrorHandler<Object> errHandler) {
-        return this.close(input -> {
-            callback.process(input);
-            input.get().getWindow().peekAndConsume().finishConsume();
-            if (input.get().getWindow().isDone()) {
-                this.getFlow().completeSession(input.get().getSession().getId());
-            }
-        }, null, errHandler);
-    }
-
-    /**
-     * close 流程，也就是加终止节点，提供session维度的数据消费
-     *
-     * @param callback 走到end节点的session的id和数据
-     * @param sessionComplete 走到end节点的session的系统通知
-     * @param errHandler 走到end节点的session的错误通知
-     * @return F 流程实例
-     */
-    public F close(Operators.Just<Callback<FlowContext<O>>> callback, Operators.Just<FlowSession> sessionComplete,
-            Operators.ErrorHandler<Object> errHandler) {
         getFlow().setEnd(this.processor.close());
         List<Publisher> nodes = this.getFlow()
                 .nodes()
@@ -213,39 +188,12 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
                 .collect(Collectors.toList());
         nodes.add(this.getFlow().start());
         nodes.stream().filter(node -> !node.subscribed()).forEach(node -> node.subscribe(getFlow().end()));
-        getFlow().end().onComplete((Operators.Just<Callback<FlowContext<O>>>) input -> {
-            FlowDebug.log(input.get().getSession(),
-                    "[close] " + this.getFlow().end().getId() + ":" + "end. data:" + input.get().getData());
-            callback.process(input);
-        });
-        if (sessionComplete != null) {
-            getFlow().end().onSessionComplete(session -> {
-                FlowSession session1 = ObjectUtils.cast(session);
-                FlowDebug.log(session1, "========================end session end===========================");
-                sessionComplete.process(session1);
-            });
-        }
+        getFlow().end().onComplete(callback);
         this.getFlow()
                 .nodes()
                 .forEach(node -> node.onGlobalError(this.buildGlobalHandler(errHandler, node.getFlowContextRepo())));
         getFlow().end().onGlobalError(this.buildGlobalHandler(errHandler, getFlow().end().getFlowContextRepo()));
         return this.getFlow();
-    }
-
-    /**
-     * close 流程，也就是加终止节点，提供session维度的数据消费
-     *
-     * @param sessionConsumer 走到end节点的session的id和数据
-     * @param sessionComplete 走到end节点的session的系统通知
-     * @param sessionError 走到end节点的session的错误通知
-     * @return F 流程实例
-     */
-    public F close(BiConsumer<FlowSession, O> sessionConsumer, Consumer<FlowSession> sessionComplete,
-            BiConsumer<FlowSession, Throwable> sessionError) {
-        return this.close(processor -> sessionConsumer.accept(processor.get().getSession(), processor.get().getData()),
-                sessionComplete::accept,
-                (exception, retryable, flowContexts) -> sessionError.accept(flowContexts.get(0).getSession(),
-                        exception));
     }
 
     private Operators.ErrorHandler<Object> buildGlobalHandler(Operators.ErrorHandler<Object> errHandler,

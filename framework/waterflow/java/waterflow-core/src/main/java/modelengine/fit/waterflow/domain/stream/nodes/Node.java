@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -36,10 +36,7 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
-    /**
-     * 持有的publisher
-     */
-    protected final Publisher<R> publisher;
+    private final Publisher<R> publisher;
 
     private final NodeDisplay display = new NodeDisplay("operation", null, null);
 
@@ -116,7 +113,7 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
      * @param locks 流程锁
      * @return From<R>
      */
-    protected From<R> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+    private From<R> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
         return new From<>(this.getStreamId(), repo, messenger, locks); // node里的from跟随subscriber的streamId
     }
 
@@ -136,7 +133,8 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
-    public Processor<R, R> just(Operators.Just<FlowContext<R>> processor, Operators.Whether<R> whether) {
+    public Processor<R, R> just(Operators.Just<FlowContext<R>> processor,
+            Operators.Whether<R> whether) {
         return this.publisher.just(processor, whether);
     }
 

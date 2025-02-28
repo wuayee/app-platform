@@ -1,0 +1,26 @@
+[
+  [
+    {
+      "id": "id0",
+      "score": 0.5,
+      "text": "text0"
+    },
+    {
+      "id": "id1",
+      "score": 0.5,
+      "text": "text1"
+    }
+  ],
+  [
+    {
+      "id": "id0",
+      "score": 0.5,
+      "text": "text0"
+    },
+    {
+      "id": "id2",
+      "score": 0.5,
+      "text": "text2"
+    }
+  ]
+]

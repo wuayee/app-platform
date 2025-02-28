@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -26,14 +26,14 @@ import java.util.function.Supplier;
  */
 public class DataStart<O, D, I> {
     /**
-     * 流程开始节点。
-     */
-    protected final Start<O, D, I, ProcessFlow<D>> state;
-
-    /**
      * 数据前置开始节点。
      */
     protected DataStart<?, D, ?> start;
+
+    /**
+     * 流程开始节点。
+     */
+    protected final Start<O, D, I, ProcessFlow<D>> state;
 
     private final Emitter<D, FlowSession> emitter;
 
@@ -53,6 +53,16 @@ public class DataStart<O, D, I> {
 
     protected DataStart(Start<O, D, I, ProcessFlow<D>> state) {
         this(state, (Emitter<D, FlowSession>) null);
+    }
+
+    /**
+     * 触发数据的发射。
+     */
+    protected void offer() {
+        if (this.emitter != null) {
+            this.start.state.getFlow().offer(this.emitter);
+            this.emitter.start(null);
+        }
     }
 
     /**
@@ -134,14 +144,14 @@ public class DataStart<O, D, I> {
     /**
      * 形成一个window，window中的数据满足条件后，将触发后续的数据聚合处理
      * <p>
-     * {@link Start#window(Operators.WindowCondition)}的包装
+     * {@link Start#window(Operators.Window)}的包装
      * </p>
      *
-     * @param windowCondition window的条件
+     * @param window window的条件
      * @return window的后续节点
      */
-    public DataState<O, D, O> window(Operators.WindowCondition windowCondition) {
-        return new DataState(this.state.window(windowCondition), this.start);
+    public DataState<O, D, O> window(Operators.Window<O> window) {
+        return new DataState(this.state.window(window), this.start);
     }
 
     /**
@@ -198,23 +208,5 @@ public class DataStart<O, D, I> {
      */
     public <R> DataState<R, D, O> process(Operators.Process<O, R> processor) {
         return new DataState(this.state.process(processor), this.start);
-    }
-
-    /**
-     * 触发数据的发射。
-     */
-    protected void offer(FlowSession session) {
-        if (this.emitter == null) {
-            return;
-        }
-        this.start.state.getFlow().offer(this.emitter);
-        this.emitter.start(session);
-    }
-
-    /**
-     * offer一个空数据
-     */
-    protected void offer() {
-        this.offer(null);
     }
 }

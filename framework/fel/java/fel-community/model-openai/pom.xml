@@ -30,19 +30,15 @@
             <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.service</groupId>
+            <artifactId>fit-security</artifactId>
+        </dependency>
 
         <!-- FEL -->
         <dependency>
             <groupId>modelengine.fit.jade.fel</groupId>
             <artifactId>fel-core</artifactId>
-        </dependency>
-
-        <!-- Test Plugins -->
-        <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
-            <artifactId>fit-message-serializer-json-jackson</artifactId>
-            <version>${fit.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Test -->
@@ -53,6 +49,15 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-test-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

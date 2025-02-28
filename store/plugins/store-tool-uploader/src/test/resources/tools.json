@@ -1,0 +1,330 @@
+{
+  "version": "1.0.0",
+  "definitionGroups": [
+    {
+      "name": "defGroup-weather-Rain",
+      "definitions": [
+        {
+          "schema": {
+            "name": "rain_today",
+            "description": "该方法获取今天的下雨信息",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "defaultValue": "",
+                  "description": "查询地点",
+                  "name": "location",
+                  "type": "string",
+                  "examples": "",
+                  "required": true
+                },
+                "date": {
+                  "defaultValue": "",
+                  "description": "查询日期",
+                  "name": "date",
+                  "type": "string",
+                  "examples": "",
+                  "required": true
+                }
+              },
+              "required": [
+                "location",
+                "date"
+              ]
+            },
+            "order": [
+              "location",
+              "date"
+            ],
+            "return": {
+              "convertor": "",
+              "type": "string"
+            }
+          }
+        },
+        {
+          "schema": {
+            "name": "rain_tomorrow",
+            "description": "该方法获取明天的下雨信息",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                },
+                "date": {
+                  "name": "date",
+                  "type": "string",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location",
+              "date"
+            ],
+            "return": {
+              "convertor": "",
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "defGroup-weather-Wind",
+      "definitions": [
+        {
+          "schema": {
+            "name": "wind_today",
+            "description": "获取今日的风量数据",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                },
+                "person": {
+                  "name": "person",
+                  "type": "object",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location",
+              "person"
+            ],
+            "return": {
+              "convertor": "",
+              "type": "string"
+            }
+          }
+        },
+        {
+          "schema": {
+            "name": "wind_tomorrow",
+            "description": "获取明日的风量数据",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location"
+            ],
+            "return": {
+              "convertor": "",
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "toolGroups": [
+    {
+      "definitionGroupName": "defGroup-weather-Rain",
+      "name": "implGroup-weather-Rain-Mobile",
+      "tools": [
+        {
+          "schema": {
+            "name": "mobile_rain_today",
+            "description": "使用移动提供的今日下雨信息",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                },
+                "date": {
+                  "name": "date",
+                  "type": "string",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location",
+              "date"
+            ],
+            "return": {
+              "convertor": "",
+              "examples": "",
+              "name": "",
+              "description": "获取的今日下雨信息的结果",
+              "type": "string"
+            }
+          },
+          "runnables": {
+            "FIT": {
+              "genericableId": "genericableId_weather_rain_today",
+              "fitableId": "weather_rain_mobile"
+            }
+          },
+          "extensions": {
+            "tags": [
+              "FIT",
+              "TEST"
+            ]
+          },
+          "definitionName": "rain_today"
+        },
+        {
+          "schema": {
+            "name": "mobile_rain_tomorrow",
+            "description": "使用移动提供的明日下雨信息",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                },
+                "date": {
+                  "name": "date",
+                  "type": "string",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location",
+              "date"
+            ],
+            "return": {
+              "convertor": "",
+              "examples": "",
+              "name": "",
+              "description": "获取的明日下雨信息的结果",
+              "type": "string"
+            }
+          },
+          "runnables": {
+            "FIT": {
+              "genericableId": "genericableId_weather_rain_tomorrow",
+              "fitableId": "weather_rain_mobile"
+            }
+          },
+          "extensions": {
+            "tags": [
+              "FIT",
+              "TEST"
+            ]
+          },
+          "definitionName": "rain_tomorrow"
+        }
+      ]
+    },
+    {
+      "definitionGroupName": "defGroup-weather-Rain",
+      "name": "implGroup-weather-Rain-Unicom",
+      "tools": [
+        {
+          "schema": {
+            "name": "unicom_rain_today",
+            "description": "使用联通提供的今日下雨信息",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                },
+                "date": {
+                  "name": "date",
+                  "type": "string",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location",
+              "date"
+            ],
+            "return": {
+              "convertor": "",
+              "type": "string"
+            }
+          },
+          "runnables": {
+            "FIT": {
+              "genericableId": "genericableId_weather_rain_today",
+              "fitableId": "weather_rain_unicom"
+            }
+          },
+          "extensions": {
+            "tags": [
+              "FIT",
+              "TEST"
+            ]
+          },
+          "definitionName": "rain_today"
+        },
+        {
+          "schema": {
+            "name": "unicom_rain_tomorrow",
+            "description": "使用联通提供的明日下雨信息",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "location": {
+                  "name": "location",
+                  "type": "string",
+                  "required": false
+                },
+                "date": {
+                  "name": "date",
+                  "type": "string",
+                  "required": false
+                }
+              },
+              "required": []
+            },
+            "order": [
+              "location",
+              "date"
+            ],
+            "return": {
+              "convertor": "",
+              "type": "string"
+            }
+          },
+          "runnables": {
+            "FIT": {
+              "genericableId": "genericableId_weather_rain_tomorrow",
+              "fitableId": "weather_rain_unicom"
+            }
+          },
+          "extensions": {
+            "tags": [
+              "FIT",
+              "TEST"
+            ]
+          },
+          "definitionName": "rain_tomorrow"
+        }
+      ]
+    }
+  ]
+}

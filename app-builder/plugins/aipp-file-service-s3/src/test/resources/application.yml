@@ -1,0 +1,12 @@
+s3:
+  access-key: mockak
+  secret-key: mocksk
+  host: mockhost
+  app-name: mockapp
+  huawei-app-id: mockappid
+  bucket: mockbucket
+  config:
+    signer: S3SignerType
+    socket-timeout: 180000
+    max-connections: 50
+    connection-timeout: 10000

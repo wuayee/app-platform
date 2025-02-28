@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.carver.tool.repository.pgsql.mapper.ToolMapper">
+    <resultMap id="Tool" type="modelengine.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
+        <result column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="name" property="name"/>
+        <result column="group_name" property="groupName"/>
+        <result column="definition_name" property="definitionName"/>
+        <result column="definition_group_name" property="definitionGroupName"/>
+        <result column="unique_name" property="uniqueName"/>
+        <result column="schema" property="schema"/>
+        <result column="runnables" property="runnables"/>
+        <result column="extensions" property="extensions"/>
+        <result column="version" property="version"/>
+        <result column="is_latest" property="isLatest"/>
+    </resultMap>
+    <insert id="addTool" parameterType="modelengine.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
+        insert into store_tool
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "name",
+            "unique_name",
+            "schema",
+            "runnables",
+            "extensions",
+            <if test="version != null">"version",</if>
+            <if test="isLatest != null">"is_latest",</if>
+            "group_name",
+            "definition_name",
+            "definition_group_name",
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{name},
+            #{uniqueName},
+            cast(#{schema} as json),
+            cast(#{runnables} as json),
+            cast(#{extensions} as json),
+            <if test="version != null">#{version},</if>
+            <if test="isLatest != null">#{isLatest},</if>
+            #{groupName},
+            #{definitionName},
+            #{definitionGroupName},
+        </trim>
+    </insert>
+    <insert id="addTools" parameterType="java.util.List">
+        <foreach item='toolDo' collection="list" separator=";">
+            insert into store_tool
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                "name",
+                "unique_name",
+                "schema",
+                "runnables",
+                "extensions",
+                <if test="toolDo.version != null">"version",</if>
+                <if test="toolDo.isLatest != null">"is_latest",</if>
+                "group_name",
+                "definition_name",
+                "definition_group_name",
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{toolDo.name},
+                #{toolDo.uniqueName},
+                cast(#{toolDo.schema} as json),
+                cast(#{toolDo.runnables} as json),
+                cast(#{toolDo.extensions} as json),
+                <if test="toolDo.version != null">#{toolDo.version},</if>
+                <if test="toolDo.isLatest != null">#{toolDo.isLatest},</if>
+                #{toolDo.groupName},
+                #{toolDo.definitionName},
+                #{toolDo.definitionGroupName},
+            </trim>
+        </foreach>
+    </insert>
+    <delete id="deleteTool" parameterType="String">
+        delete
+        from "store_tool"
+        where unique_name = #{uniqueName};
+    </delete>
+    <delete id="deleteTools" parameterType="List">
+        delete
+        from "store_tool"
+        where unique_name in
+        <foreach collection="uniqueNames" item="uniqueName" open="(" separator="," close=")">
+            #{uniqueName}
+        </foreach>
+    </delete>
+    <delete id="deleteToolsByDefinitionGroupName" parameterType="String">
+        delete
+        from "store_tool"
+        where definition_group_name = #{definitionGroupName};
+    </delete>
+    <delete id="deleteToolsByGroupName" parameterType="String">
+        delete
+        from "store_tool"
+        where definition_group_name = #{definitionGroupName}
+          and group_name = #{groupName};
+    </delete>
+    <delete id="deleteToolByVersion">
+        delete
+        from "store_tool"
+        where unique_name = #{uniqueName}
+          and version = #{version};
+    </delete>
+    <sql id="selectToolColumns">
+        select i."name", i."group_name", i."definition_name", i."definition_group_name", i."unique_name", i."schema", i."runnables", i."extensions", i."version", i."is_latest"
+        from "store_tool" i
+    </sql>
+    <select id="getToolByUniqueName" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where unique_name = #{uniqueName}
+        and is_latest = true
+    </select>
+    <select id="getToolsByDefinitionGroupName" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where definition_group_name = #{definitionGroupName}
+    </select>
+    <select id="getToolsByGroupName" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where definition_group_name = #{definitionGroupName}
+        and group_name = #{groupName}
+    </select>
+    <select id="getToolByVersion" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where unique_name = #{toolUniqueName}
+        and version = #{version}
+    </select>
+    <update id="setNotLatest">
+        update "store_tool"
+        set "is_latest" = false
+        where "unique_name" = #{toolUniqueName}
+          and "is_latest" = true
+    </update>
+    <update id="setLatest">
+        update "store_tool"
+        set "is_latest" = true
+        where "unique_name" = #{toolUniqueName}
+          and "version" = #{version}
+    </update>
+    <sql id="sortAndLimit">
+        order by i.updated_time desc
+        <if test="offset != null and offset >= 0">
+            offset #{offset}
+        </if>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </sql>
+    <select id="getAllToolVersions" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where i."unique_name" = #{toolUniqueName}
+    </select>
+    <select id="getAllToolVersionsCount">
+        select count(i."name")
+        from "store_tool" i
+        where i."unique_name" = #{toolUniqueName}
+    </select>
+    <select id="getToolsByIdentifier" parameterType="List" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where
+        <foreach collection="toolIdentifiers" item="toolIdentifier" separator=" OR ">
+            (i."unique_name" = #{toolIdentifier.uniqueName} AND i."version" = #{toolIdentifier.version})
+        </foreach>
+    </select>
+</mapper>

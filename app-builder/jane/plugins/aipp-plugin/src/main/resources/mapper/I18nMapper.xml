@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.I18nMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jober.aipp.po.I18nPo">
+        <result column="id" property="id"/>
+        <result column="key" property="key"/>
+        <result column="language" property="language"/>
+        <result column="value" property="value"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, key, language, value
+    </sql>
+
+    <select id="selectResource" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.I18nPo">
+        select
+        <include refid="Base_Column_List"/>
+        from i18n
+    </select>
+</mapper>

@@ -1,0 +1,7 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.jade.app.engine.image'
+model:
+  imageGen:
+    model: FLUX.1-dev

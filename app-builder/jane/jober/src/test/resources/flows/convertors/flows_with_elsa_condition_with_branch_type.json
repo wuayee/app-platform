@@ -1,0 +1,442 @@
+{
+  "id": "ee1d1c6d8f314fa090b5a3afe8adaf40",
+  "title": "jadeFlow",
+  "source": "elsa",
+  "type": "jadeFlowGraph",
+  "tenant": "default",
+  "pages": [
+    {
+      "shapes": [
+        {
+          "type": "startNodeStart",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShape6qm5eg",
+          "text": "开始",
+          "flowMeta": {
+            "triggerMode": "auto",
+            "inputParams": [
+              {
+                "id": "91138f09-b635-43df-95c6-1fe3d1745829",
+                "name": "input",
+                "type": "Object",
+                "from": "Expand",
+                "config": [
+                  {
+                    "allowAdd": true
+                  }
+                ],
+                "value": [
+                  {
+                    "id": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
+                    "name": "Question",
+                    "type": "String",
+                    "from": "Input",
+                    "description": "这是用户输入的问题",
+                    "value": "",
+                    "disableModifiable": true
+                  },
+                  {
+                    "id": "input_493c631d-bf0e-445a-b7ea-ba9f163f4200",
+                    "name": "bool1",
+                    "type": "Boolean",
+                    "from": "Input",
+                    "description": "",
+                    "value": "",
+                    "disableModifiable": false
+                  },
+                  {
+                    "id": "input_abc1791d-6b8f-432f-9b2e-a503a60a5979",
+                    "name": "bool2",
+                    "type": "Boolean",
+                    "from": "Input",
+                    "description": "",
+                    "value": "",
+                    "disableModifiable": false
+                  }
+                ]
+              },
+              {
+                "id": "4a770dc6-e3c9-475d-84c7-48dacc74a5b6",
+                "name": "memory",
+                "type": "Object",
+                "from": "Expand",
+                "value": [
+                  {
+                    "id": "cee9a31b-781c-4835-a616-ceed73be22f2",
+                    "name": "type",
+                    "type": "String",
+                    "from": "Input",
+                    "value": "ByConversationTurn"
+                  },
+                  {
+                    "id": "69592622-4291-409d-9d65-9faea83db657",
+                    "name": "value",
+                    "type": "Integer",
+                    "from": "Input",
+                    "value": "3"
+                  }
+                ]
+              }
+            ]
+          },
+          "componentName": "startComponent",
+          "index": 103,
+          "dirty": true
+        },
+        {
+          "type": "endNodeEnd",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapesoux5i",
+          "text": "结束",
+          "flowMeta": {
+            "triggerMode": "auto",
+            "callback": {
+              "type": "general_callback",
+              "name": "通知回调",
+              "fitables": [
+                "modelengine.fit.jober.aipp.fitable.AippFlowEndCallback"
+              ],
+              "converter": {
+                "type": "mapping_converter",
+                "entity": {
+                  "inputParams": [
+                    {
+                      "id": "ffad80c2-3f60-4d57-93b2-c2362a5dab9c",
+                      "name": "finalOutput",
+                      "type": "String",
+                      "from": "Reference",
+                      "referenceNode": "elsaShape6qm5eg",
+                      "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
+                      "referenceKey": "Question",
+                      "value": [
+                        "Question"
+                      ]
+                    }
+                  ],
+                  "outputParams": [
+                    {}
+                  ]
+                }
+              }
+            }
+          },
+          "componentName": "endComponent",
+          "index": 106,
+          "dirty": true
+        },
+        {
+          "type": "endNodeEnd",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapesoux52",
+          "text": "结束",
+          "flowMeta": {
+            "triggerMode": "auto",
+            "callback": {
+              "type": "general_callback",
+              "name": "通知回调",
+              "fitables": [
+                "modelengine.fit.jober.aipp.fitable.AippFlowEndCallback"
+              ],
+              "converter": {
+                "type": "mapping_converter",
+                "entity": {
+                  "inputParams": [
+                    {
+                      "id": "ffad80c2-3f60-4d57-93b2-c2362a5dab9c",
+                      "name": "finalOutput",
+                      "type": "String",
+                      "from": "Reference",
+                      "referenceNode": "elsaShape6qm5eg",
+                      "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
+                      "referenceKey": "Question",
+                      "value": [
+                        "Question"
+                      ]
+                    }
+                  ],
+                  "outputParams": [
+                    {}
+                  ]
+                }
+              }
+            }
+          },
+          "componentName": "endComponent",
+          "index": 106,
+          "dirty": true
+        },
+        {
+          "type": "conditionNodeCondition",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapehc0gkr",
+          "text": "条件",
+          "flowMeta": {
+            "conditionParams":  {
+              "branches": [
+                {
+                  "id": "46e12e0d-a677-40b4-8e2c-d07ed45789eb",
+                  "conditionRelation": "and",
+                  "branchType": "if",
+                  "conditions": [
+                    {
+                      "id": "7efa08b7-dbb6-4484-a0f1-de1595b3898d",
+                      "condition": "equal",
+                      "value": [
+                        {
+                          "id": "c726905b-b90d-40d9-864f-96acc4570884",
+                          "name": "left",
+                          "type": "Boolean",
+                          "from": "Reference",
+                          "value": [
+                            "bool1"
+                          ],
+                          "referenceNode": "elsaShape6qm5eg",
+                          "referenceId": "input_493c631d-bf0e-445a-b7ea-ba9f163f4200",
+                          "referenceKey": "bool1"
+                        },
+                        {
+                          "id": "93a884af-9b34-4da9-a2bf-d08b6be6b14f",
+                          "name": "right",
+                          "type": "Boolean",
+                          "from": "Reference",
+                          "value": [
+                            "bool2"
+                          ],
+                          "referenceNode": "elsaShape6qm5eg",
+                          "referenceId": "input_abc1791d-6b8f-432f-9b2e-a503a60a5979",
+                          "referenceKey": "bool2"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "64e14a9b-6d13-4cdd-b56d-20c9cb018de0",
+                      "condition": "is true",
+                      "value": [
+                        {
+                          "id": "4da34052-881d-4e6b-9bfd-7837342d5d83",
+                          "name": "left",
+                          "type": "Boolean",
+                          "from": "Reference",
+                          "value": [
+                            "bool1"
+                          ],
+                          "referenceNode": "elsaShape6qm5eg",
+                          "referenceKey": "bool1",
+                          "referenceId": "input_493c631d-bf0e-445a-b7ea-ba9f163f4200"
+                        },
+                        {
+                          "id": "a69f6f1d-d915-419e-a5ae-8762a890842f",
+                          "name": "right",
+                          "type": "String",
+                          "from": "Reference",
+                          "value": [],
+                          "referenceNode": ""
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "8ee53001-0c9f-441e-9d49-5fcb7d4bea37",
+                  "conditionRelation": "and",
+                  "branchType": "else",
+                  "conditions": [
+                    {
+                      "id": "e6ce209f-be65-4c0e-a945-7aa08bb9b0ca",
+                      "condition": "true",
+                      "value": []
+                    }
+                  ]
+                }
+              ]
+            },
+            "triggerMode": "auto"
+          },
+          "componentName": "conditionComponent",
+          "index": 107,
+          "dirty": true
+        },
+        {
+          "type": "jadeEvent",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapema5dve",
+          "text": "",
+          "namespace": "flowable",
+          "x": 200.3571428571429,
+          "y": 465.25,
+          "width": 93.43253968253964,
+          "height": -160.26190476190482,
+          "bold": false,
+          "italic": false,
+          "pad": 0,
+          "margin": 20,
+          "backColor": "white",
+          "hideText": true,
+          "beginArrow": false,
+          "beginArrowEmpty": false,
+          "beginArrowSize": 4,
+          "endArrow": true,
+          "endArrowEmpty": false,
+          "endArrowSize": 4,
+          "textX": 0,
+          "textY": 0,
+          "hAlign": "center",
+          "lineWidth": 2,
+          "fromShape": "elsaShape6qm5eg",
+          "toShape": "elsaShapehc0gkr",
+          "definedFromConnector": "E",
+          "definedToConnector": "W",
+          "arrowBeginPoint": {
+            "x": 0,
+            "y": 0
+          },
+          "arrowEndPoint": {
+            "x": 0,
+            "y": 0
+          },
+          "curvePoint1": {
+            "x": 0,
+            "y": 0
+          },
+          "curvePoint2": {
+            "x": 0,
+            "y": 0
+          },
+          "brokenPoints": [],
+          "lineMode": {
+            "type": "auto_curve"
+          },
+          "allowSwitchLineMode": false,
+          "allowLink": false,
+          "borderWidth": 1,
+          "borderColor": "#B1B1B7",
+          "mouseInBorderColor": "#B1B1B7",
+          "index": -92,
+          "dirty": true
+        },
+        {
+          "type": "jadeEvent",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapeey90r2",
+          "text": "",
+          "namespace": "flowable",
+          "x": 880.7896901690771,
+          "y": 231.98810668218698,
+          "width": 134.9245955452078,
+          "height": 91.4404647463843,
+          "bold": false,
+          "italic": false,
+          "pad": 0,
+          "margin": 20,
+          "backColor": "white",
+          "hideText": true,
+          "beginArrow": false,
+          "beginArrowEmpty": false,
+          "beginArrowSize": 4,
+          "endArrow": true,
+          "endArrowEmpty": false,
+          "endArrowSize": 4,
+          "textX": 0,
+          "textY": 0,
+          "hAlign": "center",
+          "lineWidth": 2,
+          "fromShape": "elsaShapehc0gkr",
+          "toShape": "elsaShapesoux5i",
+          "definedFromConnector": "dynamic-0",
+          "definedToConnector": "W",
+          "arrowBeginPoint": {
+            "x": 0,
+            "y": 0
+          },
+          "arrowEndPoint": {
+            "x": 0,
+            "y": 0
+          },
+          "curvePoint1": {
+            "x": 0,
+            "y": 0
+          },
+          "curvePoint2": {
+            "x": 0,
+            "y": 0
+          },
+          "brokenPoints": [],
+          "lineMode": {
+            "type": "auto_curve"
+          },
+          "allowSwitchLineMode": false,
+          "allowLink": false,
+          "borderWidth": 1,
+          "borderColor": "#B1B1B7",
+          "mouseInBorderColor": "#B1B1B7",
+          "index": -96,
+          "dirty": true
+        },
+        {
+          "type": "jadeEvent",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShape10nesb",
+          "text": "",
+          "namespace": "flowable",
+          "x": 880.7896901690771,
+          "y": 410.98812194097604,
+          "width": 134.9245955452078,
+          "height": -87.55955051240477,
+          "bold": false,
+          "italic": false,
+          "pad": 0,
+          "margin": 20,
+          "backColor": "white",
+          "hideText": true,
+          "beginArrow": false,
+          "beginArrowEmpty": false,
+          "beginArrowSize": 4,
+          "endArrow": true,
+          "endArrowEmpty": false,
+          "endArrowSize": 4,
+          "textX": 0,
+          "textY": 0,
+          "hAlign": "center",
+          "lineWidth": 2,
+          "fromShape": "elsaShapehc0gkr",
+          "toShape": "elsaShapesoux52",
+          "definedFromConnector": "dynamic-1",
+          "definedToConnector": "W",
+          "arrowBeginPoint": {
+            "x": 0,
+            "y": 0
+          },
+          "arrowEndPoint": {
+            "x": 0,
+            "y": 0
+          },
+          "curvePoint1": {
+            "x": 0,
+            "y": 0
+          },
+          "curvePoint2": {
+            "x": 0,
+            "y": 0
+          },
+          "brokenPoints": [],
+          "lineMode": {
+            "type": "auto_curve"
+          },
+          "allowSwitchLineMode": false,
+          "allowLink": false,
+          "borderWidth": 1,
+          "borderColor": "#B1B1B7",
+          "mouseInBorderColor": "#B1B1B7",
+          "index": -94,
+          "dirty": true
+        }
+      ]
+    }
+  ],
+  "enableText": false,
+  "flowMeta": {
+    "exceptionFitables": [
+      "modelengine.fit.jober.aipp.fitable.AippFlowExceptionHandler"
+    ]
+  }
+}

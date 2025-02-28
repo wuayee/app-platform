@@ -1,19 +1,17 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.states;
 
-import modelengine.fit.waterflow.domain.common.Constants;
-import modelengine.fit.waterflow.domain.context.FlowSession;
-import modelengine.fit.waterflow.domain.context.Window;
 import modelengine.fit.waterflow.domain.flow.ProcessFlow;
 import modelengine.fit.waterflow.domain.utils.SleepUtil;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * 数据前置的state节点
@@ -24,15 +22,20 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.0
  */
 public class DataState<O, D, I> extends DataStart<O, D, I> {
-    /**
-     * 数据前置的state节点
-     *
-     * @param state 基于用户的processor的节点数据处理逻辑
-     * @param start 指定的DataStart
-     */
     public DataState(State<O, D, I, ProcessFlow<D>> state, DataStart<D, D, D> start) {
         super(state);
         this.start = start;
+    }
+
+    /**
+     * 完成流程定义，并发射一个数据，提供一个callback用于接受数据
+     *
+     * @param callback 数据消费方
+     */
+    public void offer(Consumer<O> callback) {
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state)
+                .close(dataCallback -> callback.accept(dataCallback.get().getData()));
+        this.start.offer();
     }
 
     /**
@@ -40,29 +43,8 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
      */
     @Override
     public void offer() {
-        this.offer(new FlowSession());
-    }
-
-    /**
-     * 指定session的offer
-     *
-     * @param session 指定的session
-     */
-    public void offer(FlowSession session) {
         ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).close();
-        this.start.offer(session);
-    }
-
-    /**
-     * 指定window的offer
-     *
-     * @param window 指定的window
-     */
-    public void offer(Window window) {
-        FlowSession session = new FlowSession();
-        session.setWindow(window);
-        session.setId(Constants.FROM_FLATMAP);
-        this.offer(session);
+        this.start.offer();
     }
 
     /**

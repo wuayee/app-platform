@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.core.util;
 
-import modelengine.fel.core.document.Content;
+import modelengine.fel.core.template.MessageContent;
 import modelengine.fel.core.template.MessageTemplate;
 import modelengine.fitframework.inspection.Validation;
 
@@ -22,7 +22,7 @@ import java.util.Map;
  * @since 2024-04-25
  */
 public class Tip {
-    private final Map<String, Content> values = new HashMap<>();
+    private final Map<String, MessageContent> values = new HashMap<>();
     private int index = 0;
 
     /**
@@ -40,10 +40,10 @@ public class Tip {
      * 从键值对创建 {@link Tip} 的实例。
      *
      * @param key 表示占位符的 {@link String}。
-     * @param value 表示替换值的 {@link Content}。
+     * @param value 表示替换值的 {@link MessageContent}。
      * @return 返回创建完成的 {@link Tip}。
      */
-    public static Tip from(String key, Content value) {
+    public static Tip from(String key, MessageContent value) {
         return new Tip().add(key, value);
     }
 
@@ -75,34 +75,21 @@ public class Tip {
      * @return 表示当前的 {@link Tip}。
      */
     public Tip add(String key, String value) {
-        return this.add(key, Content.from(value));
+        return this.add(key, MessageContent.from(value));
     }
 
     /**
      * 添加消息内容。
      *
      * @param key 表示占位符的 {@link String}。
-     * @param value 表示替换值的 {@link Content}。
+     * @param value 表示替换值的 {@link MessageContent}。
      * @return 表示当前的 {@link Tip}。
      */
-    public Tip add(String key, Content value) {
+    public Tip add(String key, MessageContent value) {
         Validation.notBlank(key, "The key cannot be blank");
         Validation.notNull(this.values, () -> new IllegalStateException("The tip has been freeze."));
         this.values.put(key, value);
         this.index++;
-        return this;
-    }
-
-    /**
-     * 批量添加 {@link Map}{@code <}{@link String}{@code ,} {@link Content}{@code >} 中的数据。
-     *
-     * @param args 表示参数集合的 {@link Map}{@code <}{@link String}{@code ,} {@link Content}{@code >}。
-     * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当 {@code args} 为 {@code null}时。
-     */
-    public Tip addAll(Map<String, Content> args) {
-        Validation.notNull(args, () -> new IllegalStateException("The input map cannot be null."));
-        args.forEach(this::add);
         return this;
     }
 
@@ -113,15 +100,28 @@ public class Tip {
      * @return 表示当前的 {@link Tip}。
      */
     public Tip merge(Tip other) {
-        return this.addAll(other.values);
+        return this.merge(other.values);
     }
 
     /**
-     * 获取参数数据。
+     * 合并另一个 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
      *
-     * @return 返回表示参数数据的 {@link Map}{@code <}{@link String}{@code ,} {@link Content}{@code >}。
+     * @param args 表示另一个参数集合的 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
+     * @return 表示当前的 {@link Tip}。
+     * @throws IllegalStateException 当 {@code args} 为 {@code null}时。
      */
-    public Map<String, Content> freeze() {
+    public Tip merge(Map<String, MessageContent> args) {
+        Validation.notNull(args, () -> new IllegalStateException("The input map cannot be null."));
+        args.forEach(this::add);
+        return this;
+    }
+
+    /**
+     * 冻结并获取参数数据，之后禁止任何对于{@link Tip}操作。
+     *
+     * @return 返回表示参数数据的 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
+     */
+    public Map<String, MessageContent> freeze() {
         return Collections.unmodifiableMap(this.values);
     }
 }

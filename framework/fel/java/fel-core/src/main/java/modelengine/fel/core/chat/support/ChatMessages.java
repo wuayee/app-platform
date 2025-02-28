@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -33,6 +33,18 @@ public class ChatMessages implements Prompt {
      */
     public static ChatMessages from(ChatMessage... message) {
         return from(Arrays.asList(message));
+    }
+
+    /**
+     * 使用聊天消息数组创建 {@link ChatMessages} 的实例。
+     *
+     * @param messages 表示聊天消息的 {@link List}{@code <? extends }{@link ChatMessage}{@code >}。
+     * @return 表示创建成功的 {@link ChatMessages}。
+     */
+    public static ChatMessages fromList(List<? extends ChatMessage> messages) {
+        ChatMessages chatMessages = new ChatMessages();
+        chatMessages.messages().addAll(messages);
+        return chatMessages;
     }
 
     /**

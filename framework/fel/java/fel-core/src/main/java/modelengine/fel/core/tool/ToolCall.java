@@ -1,12 +1,11 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.core.tool;
 
-import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 /**
@@ -19,17 +18,22 @@ public interface ToolCall {
     /**
      * 获取工具调用的唯一标识。
      *
-     * @return 表示工具调用唯一编号的 {@link Integer}。
+     * @return 表示工具调用唯一编号的 {@link String}。
      */
-    @Nonnull
     String id();
+
+    /**
+     * 获取工具调用的索引标号。
+     *
+     * @return 表示索引标号的 {@link Integer}。
+     */
+    Integer index();
 
     /**
      * 获取调用的工具名称。
      *
      * @return 表示工具名称的 {@link String}。
      */
-    @Nonnull
     String name();
 
     /**
@@ -37,7 +41,6 @@ public interface ToolCall {
      *
      * @return 表示工具调用参数的 {@link String}。
      */
-    @Nonnull
     String arguments();
 
     /**
@@ -51,6 +54,14 @@ public interface ToolCall {
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder id(String id);
+
+        /**
+         * 设置工具调用的索引标号。
+         *
+         * @param index 表示索引标号的 {@code int}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder index(Integer index);
 
         /**
          * 设置调用的工具名称。

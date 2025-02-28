@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@ public class AiParallel<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <O> AiFork<O, D, I, RF, F> fork(AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
         Fork<O, D, I, RF> fork =
-                parallel.fork(input -> processor.process(new AiState<>(input, AiParallel.this.flow())).state);
-        return new AiFork<>(fork, this.flow());
+                parallel.fork(input -> processor.process(new AiState<>(input, AiParallel.this.getFlow())).state);
+        return new AiFork<>(fork, this.getFlow());
     }
 }

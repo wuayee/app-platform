@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AppBuilderFormPropertyMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jober.aipp.po.AppBuilderFormPropertyPo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="form_id" property="formId"/>
+        <result column="data_type" property="dataType"/>
+        <result column="default_value" property="defaultValue"/>
+        <result column="data_from" property="from"/>
+        <result column="in_group" property="group"/>
+        <result column="description" property="description"/>
+        <result column="default_index" property="index"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, form_id, data_type, default_value, data_from, in_group, description, default_index, app_id
+    </sql>
+
+    <select id="selectWithFormId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppBuilderFormPropertyPo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_form_property
+        where form_id = #{formId} and is_deleted = 0
+        order by default_index asc
+    </select>
+
+    <select id="selectWithAppId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppBuilderFormPropertyPo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_form_property
+        where app_id = #{appId} and is_deleted = 0
+        order by default_index asc
+    </select>
+
+    <select id="selectWithId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppBuilderFormPropertyPo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_form_property
+        where id = #{id} and is_deleted = 0
+    </select>
+
+    <insert id="insertOne" parameterType="modelengine.fit.jober.aipp.po.AppBuilderFormPropertyPo">
+        insert into app_builder_form_property(
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id}, #{name}, #{formId}, #{dataType}, #{defaultValue}, #{from}, #{group}, #{description}, #{index},
+        #{appId})
+    </insert>
+
+    <insert id="insertMore" parameterType="java.util.List">
+        insert into app_builder_form_property(
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="jadeFormProperties" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.formId}, #{item.dataType}, #{item.defaultValue}, #{item.from},
+            #{item.group}, #{item.description}, #{item.index}, #{item.appId})
+        </foreach>
+    </insert>
+
+    <update id="updateOne" parameterType="modelengine.fit.jober.aipp.po.AppBuilderFormPropertyPo">
+        update app_builder_form_property
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="formId != null">
+                form_id = #{formId},
+            </if>
+            <if test="dataType != null">
+                data_type = #{dataType},
+            </if>
+            <if test="defaultValue != null">
+                default_value = #{defaultValue},
+            </if>
+            <if test="from != null">
+                data_from = #{from},
+            </if>
+            <if test="group != null">
+                in_group = #{group},
+            </if>
+            <if test="description != null">
+                description = #{description}
+            </if>
+            <if test="appId != null">
+                app_id = #{appId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateMany" parameterType="java.util.List">
+        update app_builder_form_property
+        set default_value = case id
+        <foreach collection="formProperties" item="item" separator="">
+            when #{item.id} then #{item.defaultValue}
+        </foreach>
+        end
+        where id in (
+        <foreach collection="formProperties" item="item" separator=",">
+            #{item.id}
+        </foreach>
+        )
+    </update>
+
+    <update id="deleteMore" parameterType="java.util.List">
+        UPDATE app_builder_form_property
+        set is_deleted = 1
+        where id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteByFormIds" parameterType="java.util.List">
+        UPDATE app_builder_form_property
+        set is_deleted = 1
+        where form_id in
+        <foreach collection="formIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteByAppIds" parameterType="java.util.List">
+        UPDATE app_builder_form_property
+        set is_deleted = 1
+        where app_id in
+        <foreach collection="appIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

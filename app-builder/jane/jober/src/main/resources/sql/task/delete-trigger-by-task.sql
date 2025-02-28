@@ -1,0 +1,1 @@
+DELETE FROM "task_category_trigger" WHERE "task_id" = ?

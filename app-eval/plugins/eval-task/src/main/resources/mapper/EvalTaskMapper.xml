@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.task.mapper.EvalTaskMapper">
+    <resultMap id="EvalTaskEntityResultMap" type="modelengine.jade.app.engine.task.entity.EvalTaskEntity">
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="appId" column="app_id"/>
+        <result property="workflowId" column="workflow_id"/>
+    </resultMap>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_task (name, description, status, app_id, workflow_id)
+        VALUES (#{name}, #{description}, #{status}, #{appId}, #{workflowId})
+    </insert>
+
+    <update id="updateDeletedTask">
+        UPDATE t_app_engine_eval_task
+        SET status = 'DELETED'
+        WHERE id IN
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item})
+        </foreach>
+    </update>
+
+    <!-- 分页查询评估任务元数据 -->
+    <select id="listEvalTask" resultType="modelengine.jade.app.engine.task.entity.EvalTaskEntity"
+            resultMap="EvalTaskEntityResultMap">
+        SELECT id,
+               name,
+               description,
+               status,
+               created_at,
+               updated_at,
+               created_by,
+               updated_by,
+               app_id,
+               workflow_id
+        FROM t_app_engine_eval_task
+        WHERE app_id = #{appId} AND status != 'DELETED'
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 查询评估任务个数 -->
+    <select id="countEvalTask" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_task
+        WHERE app_id = #{appId}
+    </select>
+</mapper>
