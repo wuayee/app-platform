@@ -1,0 +1,124 @@
+.prompt-word {
+  z-index: 1001 !important;
+
+  .ant-modal-header {
+    display: none;
+  }
+
+  .ant-modal-content {
+    padding: 0px;
+  }
+
+  .prompt-content {
+    display: flex;
+    height: 590px;
+    width: 100%;
+
+    .content-part {
+      position: relative;
+      flex: 1;
+      padding: 24px;
+
+      &:first-child {
+        border-right: 1px solid #E6E6E6;
+      }
+
+      .model-name {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        font-weight: 700;
+      }
+
+      .enter-command {
+        margin-bottom: 2px;
+        font-size: 12px;
+        color: #4D4D4D;
+      }
+
+      .generate-title {
+        font-weight: 700;
+        font-size: 16px;
+        margin-bottom: 16px;
+
+        &.ai-generate {
+          width: 55px;
+          background: linear-gradient(to right, #488fff 0%, #5380ff 25%, #5878ff 50%, #6f58fe 75%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      }
+
+      .command-text {
+        textarea {
+          height: 394px;
+          max-height: 394px;
+        }
+      }
+
+      .prompt-area {
+        height: calc(100% - 89.2px);
+        border: 1px solid #E6E6E6;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        textarea {
+          border: none;
+          border-radius: 4px;
+          resize: none;
+        }
+
+        .ant-spin {
+          display: flex;
+          align-items: center;
+
+          .ant-spin-text {
+            margin-left: 6px;
+            font-size: 12px;
+            background: linear-gradient(to right, #3388FF, #BB60F5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+        }
+
+        .empty-prompt {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .empty-tip {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #808080;
+          }
+        }
+      }
+
+      .prompt-footer {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+
+        .generate-btn {
+          background: linear-gradient(to right, #5E7CE0FF, #6F58FEFF);
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          color: white;
+          transition: none;
+
+          &[disabled] {
+            background: #a39af5;
+          }
+        }
+      }
+
+      textarea {
+        border-radius: 4px;
+        max-height: 100%;
+      }
+    }
+  }
+}

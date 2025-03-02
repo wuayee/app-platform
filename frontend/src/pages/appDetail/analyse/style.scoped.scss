@@ -1,0 +1,89 @@
+.cards {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.full-card.ant-card {
+  .ant-card-body {
+    height: 100%;
+  }
+}
+.app-analyzed {
+  padding-right: 15px;
+  overflow: auto;
+}
+.ant-card.card {
+  width: 33%;
+  height: 140px;
+  background-repeat: no-repeat !important;
+  background-position-y: 99% !important;
+  background-size: cover !important;
+  .ant-card-body {
+    padding-bottom: 16px; 
+  }
+  .card-title {
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .number {
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .number-unit {
+    font-size: 12px;
+  }
+  .number-tip {
+    color: #808080;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  .knowledge {
+    width: 55px;
+    height: 64px;
+  }
+}
+.chart-cards {
+  display: flex;
+  gap: 16px;
+  &:not(:last-child) {
+    margin-bottom: 16px;
+  }
+  .chart-card {
+    width: calc(50% - 8px);
+    height: 100%;
+    .chart-title {
+      font-size: 18px;
+      font-weight: 400;
+    }
+    .chart {
+      height: calc(100% - 30px);
+    }
+  }
+}
+
+.speed-number {
+  position: relative;
+  margin: 70px 0 0 -325px;
+  .number {
+    font-size: 40px;
+    font-weight: 600;
+    margin-left: -10px;
+    text-align: center;
+  } 
+}
+.select {
+  margin-bottom: 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  .analyse {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .select-time {
+    float: right;
+  }
+}
+

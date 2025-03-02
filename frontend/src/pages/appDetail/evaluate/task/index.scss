@@ -1,0 +1,79 @@
+.time {
+  width: 200px;
+  background-color: antiquewhite;
+}
+.question-card {
+  background-color: #f0f2f4;
+  height: 40px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.answer-card {
+  background-color: #f0f2f4;
+  height: 140px;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: scroll;
+}
+
+.drawer-title{
+  font-weight: 600;
+  margin-top: 10px;
+}
+.drawer-sub-title{
+  font-size: 12px;
+  color: #4d4d4d;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+.evaluateCards{
+  display: flex;
+  gap:14px;
+.evaluateCard{
+  display: flex;
+  width: 32%;
+  padding: 12px;
+  border: 2px solid #f0f2f4 ;
+  border-radius: 4px;
+  .info{
+    margin-left: 14px;
+    .num{
+      font-weight: 700;
+      font-size: 18px;
+    }
+  }
+}
+}
+
+.clickRowStyl{
+  background-color: #f0f2f4 
+}
+
+.progress-card{
+  height: 400px;
+  width: 100%;
+  background-color: #f0f2f4 ;
+}
+
+.call-track-button{
+  display: flex;
+  float: right;
+  margin: 20px 20px 0px 0px;
+}
+
+.block{
+  margin-top: 20px;
+  .block-title{
+    color: #4d4d4d;
+  }
+  .block-num{
+    font-weight: 500;
+  }
+}
+
+.create-evaluation {
+  .ant-input-affix-wrapper {
+    height: auto;
+  }
+}

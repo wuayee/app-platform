@@ -1,0 +1,39 @@
+.no-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  height: 100%;
+  color: #1a1a1a;
+  &.bg {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+  }
+  .page-icon {
+    width: 25%;
+    height: 25%;
+    margin-bottom: 20px;
+  }
+  .page-desc {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 0;
+  }
+  .page-sub-desc {
+    font-size: 14px;
+    .page-sub-link {
+      color: #3388ff;
+      cursor: pointer;
+    }
+  }
+  .page-divider {
+    font-size: 22px;
+    padding: 10px 0;
+  }
+}
+.appengine-no-auth {
+  width: 100%;
+  height: 100vh;
+}

@@ -1,0 +1,50 @@
+.header-time {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 4px;
+  margin-left: 10px;
+  .test-img {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+.running {
+  background-color: rgba(38, 115, 229, 0.08);
+  color: rgb(38, 115, 229);
+  border: 1px solid rgb(38, 115, 229);
+}
+.error{
+  background-color: rgba(198, 57, 57, 0.2);
+  color: rgb(198, 57, 57);
+  border: 1px solid rgb(198, 57, 57);
+}
+.finished {
+  color: rgb(83, 171, 107);
+  background-color: rgba(77, 185, 155, 0.2);
+  border: 1px solid #3ac295;
+}
+.terminate {
+  color: rgb(128, 128, 128);
+  background-color: rgba(77, 77, 77, 0.08);
+  border: 1px solid rgba(77, 77, 77, 0.5);
+  div {
+    display: flex;
+    align-items: center;
+    .terminate-img {
+      width: 16px !important;
+      height: 16px !important;
+      margin-right: 4px;
+    }
+  }
+  
+}
+.terminate {
+  color: #fa9841;
+  background-color: #ffe1c7;
+}
+.test-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+}

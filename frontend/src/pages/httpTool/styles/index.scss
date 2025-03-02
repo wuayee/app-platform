@@ -1,0 +1,112 @@
+.http-tool-container {
+  height: calc(100vh - 18px);
+  .http-tool-head {
+    display: flex;
+    align-items: center;
+    margin-top: 18px;
+    img {
+      height: 20px;
+      width: 20px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 400;
+    }
+  }
+  .http-tool-content {
+    height: calc(100% - 46px);
+    background-color: #ffffff;
+    padding: 30px 24px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+    .http-tool-inner {
+      height: calc(100% - 50px);
+      .http-tool-input {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .http-form-content {
+          width: 800px;
+        }
+        .tool-input {
+          width: 100%;
+          .input-error {
+            display: none;
+          }
+        }
+        .tool-input-error {
+          width: 100%;
+          input {
+            border-color: red;
+          }
+          .input-error {
+            color: red;
+            font-size: 12px;
+            margin-top: 6px;
+            display: block;
+          }
+        }
+        .http-table-head {
+          .required {
+            color: red;
+            font-size: 14px;
+            padding-left: 6px;
+          }
+        }
+        .http-tool-title {
+          font-size: 16px;
+          font-weight: 700;
+          color: rgb(26, 26, 26);
+          margin: 16px 0px;
+        }
+        .ant-input-group-addon {
+          border-radius: 0px;
+        }
+      }
+      .http-tool-operation {
+        img {
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+          margin-right: 6px;
+        }
+      }
+    }
+    .http-tool-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+      .ant-btn {
+        margin: 0 5px;
+      }
+    }
+  }
+  .ant-table-cell-with-append {
+    display: flex;
+    align-items: flex-start;
+    .anticon {
+      margin-right: 8px;
+      margin-top: 8px;
+    }
+  }
+  .ant-switch.ant-switch-checked {
+    background-color: #1890ff !important;
+  }
+  .ant-steps-item-icon {
+    .ant-steps-icon {
+      top: -2.5px;
+    }
+  }
+  .expand-empty {
+    margin-right: 8px;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+  }
+}

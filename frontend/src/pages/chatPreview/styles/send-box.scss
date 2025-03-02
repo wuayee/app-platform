@@ -1,0 +1,132 @@
+.send-box {
+  position: relative;
+  margin: 20px 0;
+  .send-info {
+    color: #ffffff;
+    position: relative;
+    margin: 16px 0;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    .send-info-inner {
+      display: inline-block;
+      max-width: 100%;
+      background-color: #2673e5;
+      padding: 10px 16px;
+      font-size: 14px;
+      line-height: 25px;
+      border-radius: 10px;
+      //font-family: '苹方-简';
+      word-break: break-all;
+      position: relative;
+      white-space: pre-wrap;
+      &.file-send {
+        padding: 0 16px;
+        color: #1A1A1A;
+        font-weight: 500;
+        background-color: #ffffff;
+      }
+      code {
+        background-color: #5e7ce0;
+        color: #ffffff;
+      }
+      &:hover {
+        .message-tip-box-send {
+          width: max-content;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    a {
+      color: #e9edfa;
+      text-decoration: underline;
+    }
+
+    .img-send-box {
+      .img-send-item {
+        width: 240px;
+        height: 160px;
+      }
+      .file-div-item {
+        display: flex;
+        align-items: center;
+        height: 60px;
+        background-color: #252b3a33;
+        border-radius: 4px;
+        padding: 8px;
+        box-sizing: border-box;
+        .file-item {
+          width: 36px;
+          height: 36px;
+          margin-right: 8px;
+          background-color: transparent;
+          display: unset;
+          padding: 0;
+        }
+        .file-text {
+          width: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .file-close {
+          cursor: pointer;
+          width: 16px;
+          height: 16px;
+          margin-left: 6px;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+  .user-image {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    span {
+      font-size: 16px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+    svg {
+      margin-right: 16px;
+    }
+  }
+  .message-tip-box-send {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    color: #888888;
+    font-size: 12px;
+    display: none;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 7px 0px rgba(56, 89, 149, 0.2);
+    border-radius: 8px;
+    z-index: 999;
+    margin-bottom: 8px;
+    .inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: unset;
+      height: 36px;
+      & > div {
+        cursor: pointer;
+        padding: 0 10px;
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+  .check-box {
+    position: absolute;
+    left: 15px;
+  }
+}

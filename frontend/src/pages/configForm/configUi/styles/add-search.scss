@@ -1,0 +1,74 @@
+.search-param {
+  .ant-modal-content {
+    .ant-modal-header {
+      margin-bottom: 4px;
+    }
+
+    .ant-modal-body {
+      padding-top: 0;
+    }
+  }
+
+  .search-icon {
+    margin-right: 6px;
+  }
+
+  .ant-switch.ant-switch-checked {
+    background-color: #1890ff;
+  }
+
+  .rerank-description {
+    margin-bottom: 16px;
+  }
+
+  .searth-title {
+    margin-bottom: 8px;
+  }
+
+  .rerank-box {
+    margin-top: 16px;
+  }
+
+  .search-set {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px 8px 8px 16px;
+    border-radius: 4px;
+
+    .search-set-size {
+      margin: 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .search-set-img {
+      width: 24px;
+    }
+
+    .search-set-opacity {
+      opacity: .5;
+    }
+
+    .search-set-overflow {
+      max-width: 380px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .search-disable {
+    background-color: rgb(255, 255, 255);
+    color: rgba(77, 77, 77, .5);
+  }
+
+  .search-set-check {
+    border: 1px solid rgb(38, 115, 229);
+  }
+
+  .search-set-selected {
+    border: 1px solid rgb(230, 230, 230);
+  }
+}

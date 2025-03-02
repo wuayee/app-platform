@@ -1,0 +1,75 @@
+.tool-table {
+  .tool-table-header {
+    display: flex;
+    align-items: center;
+
+    .tags-icon {
+      padding-right: 24px;
+      img {
+        width: 64px;
+        height: 64px;
+      }
+    }
+
+    .tool-table-content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .plugin-tool-name {
+        font-size: 20px;
+        color: rgb(26, 26, 26);
+      }
+
+      .tool-version {
+        margin-left: 16px;
+      }
+
+      .tool-version-border {
+        border: 1px none #ccc;
+        border-radius: 10px;
+      }
+
+      .tool-version-bg {
+        background-color: #fff;
+        padding: 4px;
+      }
+
+      .tag-position {
+        position: relative;
+        top: 5px;
+        margin: 0 8px;
+      }
+
+      .user {
+        margin: 16px 0;
+        display: flex;
+        align-items: center;
+        img {
+          border-radius: 50%;
+        }
+      }
+
+      .user-creator {
+        margin-left: 5px;
+      }
+
+      .user-description {
+        word-wrap: break-word;
+        word-break: break-all;
+      }
+
+      .add-fontsize {
+        margin-right: 8px;
+      }
+ 
+      .add-bgc {
+        background-color: rgb(38, 115, 229);
+        width: 24px;
+        border-radius: 6px;
+        color: white;
+      }
+    }
+  }
+}

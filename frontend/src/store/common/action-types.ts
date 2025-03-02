@@ -1,0 +1,6 @@
+export const SET_HISTORY_SWITCH = 'SET_HISTORY_SWITCH';
+export const SET_DIMENSION = 'SET_DIMENSION';
+export const SET_USE_MEMORY = 'SET_USE_MEMORY';
+export const SET_IS_DEBUG = 'SET_IS_DEBUG';
+export const SET_ALL_FIELDS = 'SET_ALL_FIELDS';
+export const SET_IS_AUTO_OPEN = 'SET_IS_AUTO_OPEN';

@@ -1,0 +1,48 @@
+.connect-knowledge {
+  .connect-tip {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .connect-list {
+    max-height: 300px;
+    overflow: auto;
+
+    .knowledge-item {
+      position: relative;
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid #E6E6E6;
+      cursor: pointer;
+
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
+
+      &.chose {
+        border-color: #2673E5;
+      }
+
+      .knowledge-title {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+      }
+
+      .knowledge-desc {
+        width: 440px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .connect-circle {
+        position: absolute;
+        right: 25px;
+        top: 25px;
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+.recommend-add {
+  .ant-btn {
+    padding-left: 0;
+  }
+}
+.recommend-container {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .card-title {
+    color: #1A1A1A;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    .left {
+      &::after {
+        content: '*';
+        color: #c63939;
+      }
+    }
+    .right {
+      img {
+        cursor: pointer;
+        &.not-allowed {
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
