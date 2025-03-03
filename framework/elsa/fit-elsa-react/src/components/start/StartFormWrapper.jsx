@@ -7,13 +7,13 @@
 import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
 import {DeleteOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
-import {StartInputForm} from "./StartInputForm.jsx";
-import "./style.css";
-import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
-import {v4 as uuidv4} from "uuid";
-import MultiConversation from "@/components/start/MultiConversation.jsx";
-import PropTypes from "prop-types";
-import {Trans, useTranslation} from "react-i18next";
+import {StartInputForm} from './StartInputForm.jsx';
+import './style.css';
+import {useDispatch, useShapeContext} from '@/components/DefaultRoot.jsx';
+import {v4 as uuidv4} from 'uuid';
+import MultiConversation from '@/components/start/MultiConversation.jsx';
+import PropTypes from 'prop-types';
+import {Trans, useTranslation} from 'react-i18next';
 
 const {Panel} = Collapse;
 
@@ -80,8 +80,7 @@ export default function StartFormWrapper({data, shapeStatus}) {
                 <Button
                   disabled={shapeStatus.disabled}
                   type='text'
-                  className='icon-button'
-                  style={{height: '22px', marginLeft: 'auto !important'}}
+                  className='icon-button start-node-delete-icon-button'
                   onClick={() => handleDelete(item.id)}>
                     <DeleteOutlined/>
                 </Button>
