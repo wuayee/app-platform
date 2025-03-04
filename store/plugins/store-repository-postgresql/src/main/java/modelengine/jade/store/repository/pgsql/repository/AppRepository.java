@@ -56,4 +56,11 @@ public interface AppRepository {
      * @param toolUniqueName 表示应用的唯一标识的 {@link String}。
      */
     void deleteApp(String toolUniqueName);
+
+    /**
+     * 更新应用。
+     *
+     * @param appData 表示应用信息的 {@link AppPublishData}。
+     */
+    void updateApp(AppPublishData appData);
 }

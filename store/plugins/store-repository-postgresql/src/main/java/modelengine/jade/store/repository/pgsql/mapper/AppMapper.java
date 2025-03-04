@@ -55,4 +55,11 @@ public interface AppMapper {
      * @param uniqueName 表示工具名的 {@link String}。
      */
     void deleteApp(String uniqueName);
+
+    /**
+     * 更新应用。
+     *
+     * @param appDo 表示应用信息的 {@link AppDo}。
+     */
+    void updateApp(AppDo appDo);
 }

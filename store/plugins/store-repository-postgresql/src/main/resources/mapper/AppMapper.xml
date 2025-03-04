@@ -39,6 +39,11 @@
             #{toolName}, #{toolUniqueName},
         </trim>
     </insert>
+    <update id="updateApp" parameterType="com.huawei.jade.store.repository.pgsql.entity.AppDo">
+        UPDATE store_app
+        SET updated_time = current_timestamp, icon = #{icon}, source = #{source}
+        WHERE tool_unique_name = #{toolUniqueName}
+    </update>
     <sql id="getCount">
         select count(i."tool_unique_name")
         from "store_app" i

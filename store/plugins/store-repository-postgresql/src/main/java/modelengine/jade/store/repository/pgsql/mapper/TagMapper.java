@@ -53,4 +53,12 @@ public interface TagMapper {
      * @param uniqueName 表示工具的唯一表示名 {@link String}。
      */
     void deleteTagByUniqueName(String uniqueName);
+
+    /**
+     * 更新应用标签。
+     *
+     * @param appTag 表示工具标签的 {@link String}。
+     * @param uniqueName 表示工具唯一标识的 {@link String}。
+     */
+    void updateAppTag(String appTag, String uniqueName);
 }

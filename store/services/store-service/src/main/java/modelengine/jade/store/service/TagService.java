@@ -52,4 +52,13 @@ public interface TagService {
      */
     @Genericable(id = "modelengine.jade.store.tag.addTagsList")
     void addTagsList(List<Set<String>> tagsList, List<String> uniqueNameList);
+
+    /**
+     * 更新应用标签。
+     *
+     * @param appTag 表示工具标签的 {@link String}。
+     * @param uniqueName 表示工具唯一标识的 {@link String}。
+     */
+    @Genericable(id = "modelengine.jade.store.tag.updateAppTag")
+    void updateAppTag(String appTag, String uniqueName);
 }

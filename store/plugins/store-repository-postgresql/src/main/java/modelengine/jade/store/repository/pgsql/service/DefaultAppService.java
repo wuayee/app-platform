@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -49,6 +50,8 @@ import java.util.Set;
 public class DefaultAppService implements AppService {
     private static final Logger logger = Logger.get(DefaultAppService.class);
     private static final String FITABLE_ID = "store-repository-pgsql";
+    private static final String APP = "APP";
+    private static final String APP_TYPE = "APP_TYPE";
 
     private final ToolService toolService;
     private final AppRepository appRepository;
@@ -192,8 +195,22 @@ public class DefaultAppService implements AppService {
         }
     }
 
-    private String upgradeApp(AppData appData) {
+    private String upgradeApp(AppPublishData appData) {
+        this.updateAppTag(appData);
+        this.updateAppData(appData);
         return this.toolService.upgradeTool(appData);
+    }
+
+    private void updateAppData(AppPublishData appData) {
+        this.appRepository.updateApp(appData);
+    }
+
+    private void updateAppTag(AppPublishData appData) {
+        Optional<String> filteredTag = appData.getTags().stream()
+                .filter(tag -> tag.startsWith(APP_TYPE))
+                .findFirst();
+        String targetTag = filteredTag.orElse(APP);
+        this.tagService.updateAppTag(targetTag, appData.getUniqueName());
     }
 
     private List<AppPublishData> getAppDataList(List<AppDo> list) {

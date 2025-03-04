@@ -20,6 +20,15 @@
             (#{tag.name}, #{tag.toolUniqueName})
         </foreach>
     </insert>
+    <update id="updateAppTag">
+        DELETE FROM store_tag
+        WHERE tool_unique_name = #{uniqueName}
+        AND name LIKE 'APP_TYPE_%';
+        DELETE FROM store_tag
+        WHERE tool_unique_name = #{uniqueName}
+        AND name = #{appTag};
+        INSERT INTO store_tag (name, tool_unique_name) VALUES (#{appTag}, #{uniqueName});
+    </update>
     <delete id="deleteTag">
         delete
         from "store_tag"
