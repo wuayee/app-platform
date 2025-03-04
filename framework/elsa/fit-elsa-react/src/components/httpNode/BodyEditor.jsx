@@ -96,7 +96,7 @@ const _BodyEditor = ({type, json, text, urlencoded, disabled}) => {
           <TextArea
             disabled={disabled}
             className={`raw-text-textarea-input`}
-            maxLength={500}
+            maxLength={2000}
             onBlur={(e) => changeOnBlur(e, 'changeData', json.id)}
           />
         </Form.Item>;
@@ -113,7 +113,7 @@ const _BodyEditor = ({type, json, text, urlencoded, disabled}) => {
           <TextArea
             disabled={disabled}
             className={`raw-text-textarea-input`}
-            maxLength={500}
+            maxLength={2000}
             onBlur={(e) => changeOnBlur(e, 'changeData', text.id)}
           />
         </Form.Item>;
