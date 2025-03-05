@@ -74,7 +74,7 @@ public class OperationRecordAspect {
 
     private final TaskRelation.Repo relationRepo;
 
-    @Pointcut("@annotation(modelengine.fit.jober.aop.common.OperationRecord)")
+    @Pointcut("@annotation(modelengine.fit.jober.common.aop.OperationRecord)")
     private void operationRecordPointCut() {
     }
 
