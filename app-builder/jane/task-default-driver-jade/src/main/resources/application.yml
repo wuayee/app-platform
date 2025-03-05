@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fit.jane'
+      - 'modelengine.fit.jane'
       - 'modelengine.fitframework'
       - 'modelengine.fit.integration'
   datasource:
