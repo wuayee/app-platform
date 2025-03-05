@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.tool.eco.langchain'
+      - 'modelengine.jade.carver.tool.eco.langchain'

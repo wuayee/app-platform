@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fel.plugin.huggingface'
+      - 'modelengine.fel.plugin.huggingface'
   messages:
     basename: i18n/task_data
   datasource:

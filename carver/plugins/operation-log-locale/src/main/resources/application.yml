@@ -1,6 +1,6 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.operation'
+      - 'modelengine.jade.carver.operation'
   messages:
     basename: i18n/messages

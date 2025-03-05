@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fit.jober.websocket'
+      - 'modelengine.fit.jober.websocket'

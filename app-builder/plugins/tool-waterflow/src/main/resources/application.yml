@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.tool.waterflow'
+      - 'modelengine.jade.carver.tool.waterflow'
 
 tool-waterflow:
   app:

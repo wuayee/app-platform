@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fit.jade.aipp.code'
+      - 'modelengine.fit.jade.aipp.code'
 code:
   breaker-manager:
     failure-rate-threshold: 80

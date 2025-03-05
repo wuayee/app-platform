@@ -4,7 +4,7 @@ server:
 fit:
   beans:
     packages:
-    - 'modelengine.jade.app.engine.metrics'
+      - 'modelengine.jade.app.engine.metrics'
   datasource:
     primary: 'app-engine'
     instances:

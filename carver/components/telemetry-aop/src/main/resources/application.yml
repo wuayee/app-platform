@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.telemetry.aop'
+      - 'modelengine.jade.carver.telemetry.aop'
