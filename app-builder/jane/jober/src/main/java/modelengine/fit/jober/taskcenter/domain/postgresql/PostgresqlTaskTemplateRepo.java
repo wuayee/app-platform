@@ -13,7 +13,6 @@ import modelengine.fit.jane.task.util.OperationContext;
 import modelengine.fit.jane.task.util.UndefinableValue;
 import modelengine.fit.jober.common.ErrorCodes;
 import modelengine.fit.jober.common.ServerInternalException;
-import modelengine.fit.jober.common.aop.TenantAuthentication;
 import modelengine.fit.jober.common.exceptions.BadRequestException;
 import modelengine.fit.jober.common.exceptions.ConflictException;
 import modelengine.fit.jober.common.exceptions.NotFoundException;
@@ -68,7 +67,7 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
 
     @Override
     @Transactional
-    @TenantAuthentication
+    // @TenantAuthentication
     public TaskTemplate create(TaskTemplate.Declaration declaration, OperationContext context) {
         log.info("Start create a task template. OperationContext={}", context);
         if (Objects.isNull(declaration)) {
@@ -151,7 +150,7 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
 
     @Override
     @Transactional
-    @TenantAuthentication
+    // @TenantAuthentication
     public void patch(String id, TaskTemplate.Declaration declaration, OperationContext context) {
         log.info("Start update a task template. Id={}, operationContext={}", id, context);
         if (Objects.isNull(declaration)) {
@@ -244,7 +243,7 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
 
     @Override
     @Transactional
-    @TenantAuthentication
+    // @TenantAuthentication
     public void delete(String id, OperationContext context) {
         String actualId = Entities.validateId(id, () -> new BadRequestException(ErrorCodes.TASK_TEMPLATE_ID_INVALID));
         List<String> args = Collections.singletonList(actualId);

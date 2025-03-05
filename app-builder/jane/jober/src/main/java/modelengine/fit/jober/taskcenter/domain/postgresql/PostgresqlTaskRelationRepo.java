@@ -16,9 +16,6 @@ import modelengine.fit.jane.task.util.OperationContext;
 import modelengine.fit.jane.task.util.UndefinableValue;
 import modelengine.fit.jober.common.ErrorCodes;
 import modelengine.fit.jober.common.ServerInternalException;
-import modelengine.fit.jober.common.aop.ObjectTypeEnum;
-import modelengine.fit.jober.common.aop.OperateEnum;
-import modelengine.fit.jober.common.aop.OperationRecord;
 import modelengine.fit.jober.common.exceptions.BadRequestException;
 import modelengine.fit.jober.common.exceptions.NotFoundException;
 import modelengine.fit.jober.taskcenter.util.DynamicSqlExecutor;
@@ -72,8 +69,8 @@ public class PostgresqlTaskRelationRepo implements TaskRelation.Repo {
 
     @Override
     @Transactional
-    @OperationRecord(objectId = -1, objectIdGetMethodName = "objectId1", objectType = ObjectTypeEnum.INSTANCE,
-            operate = OperateEnum.RELADD, declaration = 0)
+    // @OperationRecord(objectId = -1, objectIdGetMethodName = "objectId1", objectType = ObjectTypeEnum.INSTANCE,
+    //         operate = OperateEnum.RELADD, declaration = 0)
     public TaskRelation create(TaskRelation.Declaration declaration, OperationContext context) {
         Row row = new Row();
         row.id(this.validator.id(UndefinableValue.require(declaration.id(),
@@ -98,7 +95,7 @@ public class PostgresqlTaskRelationRepo implements TaskRelation.Repo {
 
     @Override
     @Transactional
-    @OperationRecord(objectId = -2, objectType = ObjectTypeEnum.INSTANCE, operate = OperateEnum.RELDEL)
+    // @OperationRecord(objectId = -2, objectType = ObjectTypeEnum.INSTANCE, operate = OperateEnum.RELDEL)
     public void delete(String relationId, OperationContext context) {
         String actualId = this.validator.id(relationId);
         DeleteSql sql = DeleteSql.custom()

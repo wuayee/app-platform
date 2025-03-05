@@ -6,19 +6,20 @@
 
 package modelengine.fit.jober.taskcenter.service.impl;
 
-import static modelengine.fit.jober.taskcenter.util.Sqls.longValue;
 import static modelengine.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
+import static modelengine.fit.jober.taskcenter.util.Sqls.longValue;
 
 import modelengine.fit.jane.task.util.Entities;
 import modelengine.fit.jane.task.util.OperationContext;
 import modelengine.fit.jane.task.util.UndefinableValue;
-import modelengine.fit.jober.common.aop.ObjectTypeEnum;
-import modelengine.fit.jober.common.aop.OperateEnum;
-import modelengine.fit.jober.common.aop.OperationRecord;
-import modelengine.fit.jober.common.aop.TenantAuthentication;
+import modelengine.fit.jober.common.ErrorCodes;
+import modelengine.fit.jober.common.ServerInternalException;
 import modelengine.fit.jober.common.event.CommonSourceEvent;
 import modelengine.fit.jober.common.event.ScheduleSourceEvent;
 import modelengine.fit.jober.common.event.entity.SourceMetaData;
+import modelengine.fit.jober.common.exceptions.BadRequestException;
+import modelengine.fit.jober.common.exceptions.JobberParamException;
+import modelengine.fit.jober.common.exceptions.NotFoundException;
 import modelengine.fit.jober.taskcenter.dao.SourceMapper;
 import modelengine.fit.jober.taskcenter.dao.po.SourceObject;
 import modelengine.fit.jober.taskcenter.declaration.InstanceEventDeclaration;
@@ -42,12 +43,6 @@ import modelengine.fit.jober.taskcenter.util.Sqls;
 import modelengine.fit.jober.taskcenter.util.sql.InsertSql;
 import modelengine.fit.jober.taskcenter.validation.RelationshipValidator;
 import modelengine.fit.jober.taskcenter.validation.SourceValidator;
-
-import modelengine.fit.jober.common.ErrorCodes;
-import modelengine.fit.jober.common.ServerInternalException;
-import modelengine.fit.jober.common.exceptions.BadRequestException;
-import modelengine.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fit.jober.common.exceptions.NotFoundException;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
@@ -131,9 +126,9 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     @Transactional
-    @TenantAuthentication
-    @OperationRecord(objectId = -1, objectIdGetMethodName = "getId", objectType = ObjectTypeEnum.SOURCE,
-            operate = OperateEnum.CREATED, declaration = 2)
+    // @TenantAuthentication
+    // @OperationRecord(objectId = -1, objectIdGetMethodName = "getId", objectType = ObjectTypeEnum.SOURCE,
+    //         operate = OperateEnum.CREATED, declaration = 2)
     public SourceEntity create(String taskId, String typeId, SourceDeclaration declaration, OperationContext context) {
         String actualTaskId = sourceValidator.validateTaskId(taskId);
         relationshipValidator.validateTaskExistInTenant(actualTaskId, context.tenantId());
@@ -222,8 +217,8 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     @Transactional
-    @TenantAuthentication
-    @OperationRecord(objectId = 2, objectType = ObjectTypeEnum.SOURCE, operate = OperateEnum.UPDATED, declaration = 3)
+    // @TenantAuthentication
+    // @OperationRecord(objectId = 2, objectType = ObjectTypeEnum.SOURCE, operate = OperateEnum.UPDATED, declaration = 3)
     public void patch(String taskId, String typeId, String sourceId, SourceDeclaration declaration,
             OperationContext context) {
         String actualTaskId = sourceValidator.validateTaskId(taskId);
@@ -307,8 +302,8 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     @Transactional
-    @TenantAuthentication
-    @OperationRecord(objectId = 2, objectType = ObjectTypeEnum.SOURCE, operate = OperateEnum.DELETED)
+    // @TenantAuthentication
+    // @OperationRecord(objectId = 2, objectType = ObjectTypeEnum.SOURCE, operate = OperateEnum.DELETED)
     public void delete(String taskId, String typeId, String sId, OperationContext context) {
         sourceValidator.validateTaskId(taskId);
         String actualSourceId = sourceValidator.validateSourceId(sId);

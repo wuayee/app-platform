@@ -13,10 +13,6 @@ import lombok.RequiredArgsConstructor;
 import modelengine.fit.jane.task.util.Entities;
 import modelengine.fit.jane.task.util.OperationContext;
 import modelengine.fit.jober.common.ErrorCodes;
-import modelengine.fit.jober.common.aop.ObjectTypeEnum;
-import modelengine.fit.jober.common.aop.OperateEnum;
-import modelengine.fit.jober.common.aop.OperationRecord;
-import modelengine.fit.jober.common.aop.TenantAuthentication;
 import modelengine.fit.jober.common.exceptions.BadRequestException;
 import modelengine.fit.jober.common.exceptions.ConflictException;
 import modelengine.fit.jober.common.exceptions.NotFoundException;
@@ -119,9 +115,9 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
 
     @Override
     @Transactional
-    @TenantAuthentication
-    @OperationRecord(objectId = -1, objectIdGetMethodName = "id", objectType = ObjectTypeEnum.TASK_TYPE,
-            operate = OperateEnum.CREATED, declaration = 1)
+    // @TenantAuthentication
+    // @OperationRecord(objectId = -1, objectIdGetMethodName = "id", objectType = ObjectTypeEnum.TASK_TYPE,
+    //         operate = OperateEnum.CREATED, declaration = 1)
     public TaskType create(String taskId, TaskType.Declaration declaration, OperationContext context) {
         notNull(taskId, "The owning task id of type to create cannot be null.");
         notNull(declaration, "The declaration of task type to create cannot be null.");
@@ -189,9 +185,9 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
 
     @Override
     @Transactional
-    @TenantAuthentication
-    @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.TASK_TYPE, operate = OperateEnum.UPDATED,
-            declaration = 2)
+    // @TenantAuthentication
+    // @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.TASK_TYPE, operate = OperateEnum.UPDATED,
+    //         declaration = 2)
     public void patch(String taskId, String id, TaskType.Declaration declaration, OperationContext context) {
         notNull(taskId, "The owning task id of type to patch cannot be null.");
         notNull(id, "The id of task type to patch cannot be null.");
@@ -245,8 +241,8 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
 
     @Override
     @Transactional
-    @TenantAuthentication
-    @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.TASK_TYPE, operate = OperateEnum.DELETED)
+    // @TenantAuthentication
+    // @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.TASK_TYPE, operate = OperateEnum.DELETED)
     public void delete(String taskId, String id, OperationContext context) {
         notNull(taskId, "The owning task id of type to delete cannot be null.");
         notNull(id, "The id of task type to delete cannot be null.");
@@ -289,7 +285,7 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
     }
 
     @Override
-    @Transactional
+    // @Transactional
     public void deleteByTasks(String taskId, OperationContext context) {
         notNull(taskId, "The owning task id of type to delete cannot be null.");
         notNull(context, "The operation context to delete task type cannot be null.");
