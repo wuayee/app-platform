@@ -11,7 +11,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.jane.task.gateway.DistributedLockProvider;
 import modelengine.fit.jober.common.Constant;
 import modelengine.fit.jober.dataengine.biz.converter.TaskInstanceMetaDataConverter;
 import modelengine.fit.jober.dataengine.biz.converter.TimeSchedulerConverter;
@@ -25,6 +24,7 @@ import modelengine.fit.jober.entity.Filter;
 
 import modelengine.fit.jober.common.ErrorCodes;
 import modelengine.fit.jober.common.exceptions.JobberException;
+import modelengine.fit.waterflow.spi.lock.DistributedLockProvider;
 import modelengine.fitframework.broker.client.BrokerClient;
 
 import org.junit.jupiter.api.Assertions;

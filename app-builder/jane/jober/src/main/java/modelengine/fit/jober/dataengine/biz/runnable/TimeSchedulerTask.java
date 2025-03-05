@@ -8,7 +8,6 @@ package modelengine.fit.jober.dataengine.biz.runnable;
 
 import com.alibaba.fastjson.JSON;
 
-import modelengine.fit.jane.task.gateway.DistributedLockProvider;
 import modelengine.fit.jane.task.util.OperationContext;
 import modelengine.fit.jober.common.Constant;
 import modelengine.fit.jober.common.utils.HostUtil;
@@ -21,6 +20,7 @@ import modelengine.fit.jober.dataengine.domain.aggregate.timescheduler.repo.Time
 import modelengine.fit.jober.dataengine.rest.response.TaskInstanceMetaData;
 import modelengine.fit.jober.entity.Filter;
 import modelengine.fit.jober.entity.TaskEntity;
+import modelengine.fit.waterflow.spi.lock.DistributedLockProvider;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;

@@ -9,7 +9,6 @@ package modelengine.fit.jober.dataengine.biz.runnable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.jane.task.gateway.DistributedLockProvider;
 import modelengine.fit.jober.common.Constant;
 import modelengine.fit.jober.dataengine.biz.converter.TaskInstanceMetaDataConverter;
 import modelengine.fit.jober.dataengine.biz.service.EventPublishService;
@@ -23,6 +22,7 @@ import modelengine.fit.jober.entity.TaskEntity;
 import com.alibaba.fastjson.JSON;
 
 import modelengine.fit.jober.DataService;
+import modelengine.fit.waterflow.spi.lock.DistributedLockProvider;
 import modelengine.fitframework.broker.client.BrokerClient;
 
 import org.junit.jupiter.api.Assertions;

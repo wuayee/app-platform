@@ -7,7 +7,9 @@
 package modelengine.fit.jane.task.gateway;
 
 import lombok.AllArgsConstructor;
+
 import modelengine.fit.jane.dlock.jdbc.DistributedLockClient;
+import modelengine.fit.waterflow.spi.lock.DistributedLockProvider;
 import modelengine.fitframework.annotation.Alias;
 import modelengine.fitframework.annotation.Component;
 
