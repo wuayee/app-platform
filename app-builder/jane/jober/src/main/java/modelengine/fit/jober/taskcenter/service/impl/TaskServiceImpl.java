@@ -10,19 +10,16 @@ import static modelengine.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 import static modelengine.fitframework.util.ObjectUtils.nullIf;
 
-import lombok.RequiredArgsConstructor;
-import modelengine.fit.jane.meta.multiversion.definition.MetaFilter;
 import modelengine.fit.jane.task.domain.TaskProperty;
 import modelengine.fit.jane.task.domain.Tenant;
 import modelengine.fit.jane.task.util.Entities;
 import modelengine.fit.jane.task.util.OperationContext;
 import modelengine.fit.jane.task.util.UndefinableValue;
-import modelengine.fit.jober.common.ErrorCodes;
+import modelengine.fit.jober.common.aop.ObjectTypeEnum;
+import modelengine.fit.jober.common.aop.OperateEnum;
+import modelengine.fit.jober.common.aop.OperationRecord;
+import modelengine.fit.jober.common.aop.TenantAuthentication;
 import modelengine.fit.jober.common.enums.JaneCategory;
-import modelengine.fit.jober.common.exceptions.BadRequestException;
-import modelengine.fit.jober.common.exceptions.ConflictException;
-import modelengine.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fit.jober.common.exceptions.NotFoundException;
 import modelengine.fit.jober.common.util.ParamUtils;
 import modelengine.fit.jober.taskcenter.dao.TaskMapper;
 import modelengine.fit.jober.taskcenter.dao.po.TaskObject;
@@ -47,6 +44,14 @@ import modelengine.fit.jober.taskcenter.util.sql.OrderBy;
 import modelengine.fit.jober.taskcenter.util.sql.SqlBuilder;
 import modelengine.fit.jober.taskcenter.validation.RelationshipValidator;
 import modelengine.fit.jober.taskcenter.validation.TaskValidator;
+
+import lombok.RequiredArgsConstructor;
+import modelengine.fit.jane.meta.multiversion.definition.MetaFilter;
+import modelengine.fit.jober.common.ErrorCodes;
+import modelengine.fit.jober.common.exceptions.BadRequestException;
+import modelengine.fit.jober.common.exceptions.ConflictException;
+import modelengine.fit.jober.common.exceptions.JobberParamException;
+import modelengine.fit.jober.common.exceptions.NotFoundException;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
@@ -123,9 +128,9 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional
-    // @TenantAuthentication
-    // @OperationRecord(objectId = -1, objectIdGetMethodName = "getId", objectType = ObjectTypeEnum.TASK,
-    //         operate = OperateEnum.CREATED, declaration = 0)
+    @TenantAuthentication
+    @OperationRecord(objectId = -1, objectIdGetMethodName = "getId", objectType = ObjectTypeEnum.TASK,
+            operate = OperateEnum.CREATED, declaration = 0)
     public TaskEntity create(TaskDeclaration declaration, OperationContext context) {
         OperationContext actualContext = this.validateOperationContext(context);
         String taskId = Entities.generateId();
@@ -206,8 +211,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional
-    // @TenantAuthentication
-    // @OperationRecord(objectType = ObjectTypeEnum.TASK, operate = OperateEnum.UPDATED, declaration = 1)
+    @TenantAuthentication
+    @OperationRecord(objectType = ObjectTypeEnum.TASK, operate = OperateEnum.UPDATED, declaration = 1)
     public void patch(String tId, TaskDeclaration declaration, OperationContext context) {
         OperationContext actualContext = this.validateOperationContext(context);
         String taskId = taskValidator.validateTaskId(tId, actualContext);
@@ -254,8 +259,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional
-    // @TenantAuthentication
-    // @OperationRecord(objectType = ObjectTypeEnum.TASK, operate = OperateEnum.DELETED)
+    @TenantAuthentication
+    @OperationRecord(objectType = ObjectTypeEnum.TASK, operate = OperateEnum.DELETED)
     public void delete(String tId, OperationContext context) {
         String taskId = taskValidator.validateTaskId(tId, context);
         relationshipValidator.validateTaskExistInTenant(taskId, context.tenantId());

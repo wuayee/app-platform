@@ -27,6 +27,9 @@ import modelengine.fit.jane.task.util.PaginationResult;
 import modelengine.fit.jane.task.util.UndefinableValue;
 import modelengine.fit.jober.common.ErrorCodes;
 import modelengine.fit.jober.common.ServerInternalException;
+import modelengine.fit.jober.common.aop.ObjectTypeEnum;
+import modelengine.fit.jober.common.aop.OperateEnum;
+import modelengine.fit.jober.common.aop.OperationRecord;
 import modelengine.fit.jober.common.exceptions.BadRequestException;
 import modelengine.fit.jober.common.exceptions.ConflictException;
 import modelengine.fit.jober.common.exceptions.GoneException;
@@ -125,8 +128,8 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
 
     @Override
     @Transactional
-    // @OperationRecord(objectId = -1, objectIdGetMethodName = "id", objectType = ObjectTypeEnum.INSTANCE,
-    //         operate = OperateEnum.CREATED, declaration = 1)
+    @OperationRecord(objectId = -1, objectIdGetMethodName = "id", objectType = ObjectTypeEnum.INSTANCE,
+            operate = OperateEnum.CREATED, declaration = 1)
     public TaskInstance create(TaskEntity task, TaskInstance.Declaration declaration, OperationContext context) {
         ownerListText(declaration, task);
         TaskInstanceCreatingEvent event = new TaskInstanceCreatingEvent(this, task, Entities.generateId(), context);
@@ -143,7 +146,7 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
 
     @Override
     @Transactional
-    // @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.INSTANCE, operate = OperateEnum.UPDATED, declaration = 2)
+    @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.INSTANCE, operate = OperateEnum.UPDATED, declaration = 2)
     public void patch(TaskEntity task, String id, TaskInstance.Declaration declaration, OperationContext context) {
         ownerListText(declaration, task);
         RefreshInTimeTaskInstanceRepo repo = new RefreshInTimeTaskInstanceRepo(this.brokerClient, task);
@@ -179,7 +182,7 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
 
     @Override
     @Transactional
-    // @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.INSTANCE, operate = OperateEnum.DELETED)
+    @OperationRecord(objectId = 1, objectType = ObjectTypeEnum.INSTANCE, operate = OperateEnum.DELETED)
     public void delete(TaskEntity task, String id, OperationContext context) {
         RefreshInTimeTaskInstanceRepo repo = new RefreshInTimeTaskInstanceRepo(this.brokerClient, task);
         if (repo.processable()) {
