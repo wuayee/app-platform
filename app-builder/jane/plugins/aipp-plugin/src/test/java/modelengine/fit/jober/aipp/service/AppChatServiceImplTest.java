@@ -9,6 +9,7 @@ package modelengine.fit.jober.aipp.service;
 import static modelengine.fit.jober.aipp.enums.AppTypeEnum.APP;
 
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jade.waterflow.entity.FlowNodeInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.meta.multiversion.MetaService;
@@ -31,7 +32,6 @@ import modelengine.fit.jober.aipp.util.CacheUtils;
 import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fit.jober.common.RangeResult;
 import modelengine.fit.jober.common.RangedResultSet;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.model.Tuple;
 import modelengine.fitframework.util.StringUtils;

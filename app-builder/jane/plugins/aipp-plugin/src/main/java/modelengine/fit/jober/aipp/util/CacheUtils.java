@@ -10,9 +10,9 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.fitframework.annotation.Component;
 
 import java.util.concurrent.TimeUnit;

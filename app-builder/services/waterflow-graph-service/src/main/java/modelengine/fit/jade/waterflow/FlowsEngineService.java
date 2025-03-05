@@ -1,24 +1,21 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
+package modelengine.fit.jade.waterflow;
 
-package modelengine.fit.waterflow.graph;
-
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import modelengine.fit.jane.flow.graph.entity.FlowSaveEntity;
 import modelengine.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.fitframework.model.RangedResultSet;
 
 import java.util.List;
 
 /**
  * 流程bff封装service接口
- * 添加flowsService所有接口, 来源：webService、flowsService
+ * 添加flowsService所有接口, 三个来源：webService、a3000Service、flowsService
  *
  * @author 杨祥宇
  * @since 2023/10/30
@@ -110,7 +107,7 @@ public interface FlowsEngineService {
      * @return 流程定义列表
      */
     RangedResultSet<FlowGraphDefinition> findFlowList(String createdBy, List<String> tag, int offset, int limit,
-            OperationContext context);
+                                                      OperationContext context);
 
     /**
      * 根据flow_id去获取流程定义版本列表

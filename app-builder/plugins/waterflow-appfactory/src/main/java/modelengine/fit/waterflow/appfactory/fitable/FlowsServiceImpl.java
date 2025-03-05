@@ -10,9 +10,9 @@ package modelengine.fit.waterflow.appfactory.fitable;
 import static modelengine.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.flow.graph.entity.FlowSaveEntity;
 import modelengine.fit.jober.common.exceptions.JobberParamException;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.waterflow.graph.FlowsEngineWebServiceForDbGraph;
 import modelengine.fit.waterflow.graph.util.FlowDefinitionParseUtils;

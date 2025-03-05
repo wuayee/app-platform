@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>modelengine.fit.jade</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-graph-service</artifactId>
         </dependency>
         <dependency>
@@ -46,6 +46,10 @@
         <dependency>
             <groupId>modelengine.jade.service</groupId>
             <artifactId>waterflow-appfactory-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade</groupId>
+            <artifactId>waterflow-graph</artifactId>
         </dependency>
     </dependencies>
 

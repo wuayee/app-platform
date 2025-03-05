@@ -10,6 +10,7 @@ package modelengine.fit.waterflow.graph;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import modelengine.fit.jane.flow.graph.entity.FlowSaveEntity;
@@ -17,7 +18,6 @@ import modelengine.fit.jane.flow.graph.repo.FlowsGraphRepo;
 import modelengine.fit.jade.waterflow.entity.FlowDefinitionResult;
 import modelengine.fit.jade.waterflow.entity.FlowNodeInfo;
 import modelengine.fit.jade.waterflow.service.FlowDefinitionService;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.fit.waterflow.biz.task.TagService;
 import modelengine.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.QueryFlowContextPersistRepo;
 import modelengine.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;

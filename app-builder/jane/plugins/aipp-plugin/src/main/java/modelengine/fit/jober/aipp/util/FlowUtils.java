@@ -7,9 +7,9 @@
 package modelengine.fit.jober.aipp.util;
 
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.AppInputParam;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.fitframework.util.ObjectUtils;
 
 import java.util.List;

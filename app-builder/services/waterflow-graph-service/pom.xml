@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>modelengine.fit.jade.waterflow</groupId>
-        <artifactId>jade-waterflow-parent</artifactId>
+        <groupId>modelengine.fit.jade</groupId>
+        <artifactId>app-builder-service-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>waterflow-definition-service</artifactId>
+    <groupId>modelengine.fit.jade.waterflow</groupId>
+    <artifactId>waterflow-graph-service</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -23,7 +20,19 @@
     <dependencies>
         <dependency>
             <groupId>modelengine.fit.jade.waterflow</groupId>
-            <artifactId>waterflow-common</artifactId>
+            <artifactId>waterflow-definition-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jober</groupId>
+            <artifactId>jober-genericable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jane</groupId>
+            <artifactId>flow-graph</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
         </dependency>
     </dependencies>
 
