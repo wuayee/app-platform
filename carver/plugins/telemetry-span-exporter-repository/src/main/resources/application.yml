@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.exporter.repository'
+      - 'modelengine.jade.carver.exporter.repository'
 
 span-processor:
   maxQueueSize: 100

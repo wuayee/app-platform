@@ -7,8 +7,7 @@
 
 package modelengine.fit.jade.waterflow;
 
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
-
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fitframework.annotation.Genericable;
 

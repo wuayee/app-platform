@@ -19,10 +19,10 @@
     </properties>
 
     <dependencies>
-    <dependency>
-        <groupId>modelengine.fit.jade</groupId>
-        <artifactId>waterflow-graph-service</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
+            <artifactId>waterflow-graph-service</artifactId>
+        </dependency>
     <dependency>
         <groupId>modelengine.fit.jade</groupId>
         <artifactId>jober-common</artifactId>

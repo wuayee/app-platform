@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.tool.repository.pgsql'
+      - 'modelengine.jade.carver.tool.repository.pgsql'
   datasource:
     primary: 'app-engine'
     instances:

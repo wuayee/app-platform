@@ -126,6 +126,10 @@
             <groupId>modelengine.jade.service</groupId>
             <artifactId>aipp-prompt-builder-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
+            <artifactId>waterflow-graph-service</artifactId>
+        </dependency>
 
         <!-- Redis -->
         <dependency>
@@ -208,10 +212,6 @@
         <dependency>
             <groupId>modelengine.jade.service</groupId>
             <artifactId>aipp-s3-file-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>modelengine.fit.jade</groupId>
-            <artifactId>waterflow-graph-service</artifactId>
         </dependency>
         <dependency>
             <groupId>modelengine.fit.jade.waterflow</groupId>

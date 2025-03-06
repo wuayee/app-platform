@@ -29,7 +29,7 @@
         <module>tool-waterflow</module>
         <module>waterflow-appfactory</module>
         <module>waterflow-biz-common</module>
-        <module>waterflow-graph-service</module>
+        <module>waterflow-graph</module>
         <module>waterflow-task-event-handler</module>
     </modules>
 </project>

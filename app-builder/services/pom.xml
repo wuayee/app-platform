@@ -25,6 +25,7 @@
         <module>aipp-variable-aggregation</module>
         <module>aipp-file-service-s3</module>
         <module>waterflow-appfactory-service</module>
+        <module>waterflow-graph-service</module>
     </modules>
 
     <build>

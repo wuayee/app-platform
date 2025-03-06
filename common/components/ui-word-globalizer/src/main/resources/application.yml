@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.common.globalization'
+      - 'modelengine.jade.common.globalization'

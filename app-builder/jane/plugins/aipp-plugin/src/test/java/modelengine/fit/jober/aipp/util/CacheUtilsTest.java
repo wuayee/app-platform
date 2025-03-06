@@ -17,10 +17,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
 
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import org.junit.jupiter.api.Test;
 
 /**

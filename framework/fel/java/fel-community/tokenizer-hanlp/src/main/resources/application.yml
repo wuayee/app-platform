@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fel.community.tokenizer.hanlp'
+      - 'modelengine.fel.community.tokenizer.hanlp'

@@ -27,4 +27,33 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.version}</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Created-By>FIT Lab</Created-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>modelengine.fitframework</groupId>
+                <artifactId>fit-build-maven-plugin</artifactId>
+                <version>${fit.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-service</id>
+                        <goals>
+                            <goal>build-service</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

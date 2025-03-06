@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.common.audit'
+      - 'modelengine.jade.common.audit'

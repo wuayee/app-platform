@@ -11,7 +11,6 @@ import static modelengine.fit.jober.common.Constant.TASK_SOURCE_ID;
 import static modelengine.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static modelengine.fit.jober.common.ErrorCodes.SCHEDULE_TASK_IS_EXISTED;
 
-import modelengine.fit.jane.task.gateway.DistributedLockProvider;
 import modelengine.fit.jober.common.exceptions.JobberException;
 import modelengine.fit.jober.common.exceptions.JobberParamException;
 import modelengine.fit.jober.common.utils.GlobalExecutorUtil;
@@ -23,6 +22,7 @@ import modelengine.fit.jober.dataengine.domain.aggregate.timescheduler.TimeSched
 import modelengine.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
 import modelengine.fit.jober.dataengine.genericable.StaticDataEngine;
 import modelengine.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
+import modelengine.fit.waterflow.spi.lock.DistributedLockProvider;
 import modelengine.fitframework.annotation.Alias;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Conditional;

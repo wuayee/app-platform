@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.app.engine.uid'
+      - 'modelengine.jade.app.engine.uid'
   datasource:
     primary: 'app-engine'
     instances:

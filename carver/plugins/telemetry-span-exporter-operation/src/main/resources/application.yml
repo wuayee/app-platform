@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.carver.exporter'
+      - 'modelengine.jade.carver.exporter'

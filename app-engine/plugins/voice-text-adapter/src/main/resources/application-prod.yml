@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.voice.to.text'
+      - 'modelengine.jade.voice.to.text'

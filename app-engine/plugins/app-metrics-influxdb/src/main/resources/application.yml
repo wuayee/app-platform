@@ -5,7 +5,7 @@ server:
 fit:
   beans:
     packages:
-    - 'modelengine.jade.app.engine.metrics.influxdb'
+      - 'modelengine.jade.app.engine.metrics.influxdb'
 
 mybatis:
   mapper-locations: 'mapper/*Mapper.xml'

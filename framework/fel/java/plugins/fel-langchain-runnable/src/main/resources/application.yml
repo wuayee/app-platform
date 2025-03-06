@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fel.plugin.langchain'
+      - 'modelengine.fel.plugin.langchain'

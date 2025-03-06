@@ -158,8 +158,13 @@
                 <version>${waterflow.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.jade</groupId>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
                 <artifactId>waterflow-graph-service</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>modelengine.fit.jade</groupId>
+                <artifactId>waterflow-graph</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
             <dependency>

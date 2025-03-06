@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import modelengine.fit.dynamicform.entity.FormMetaItem;
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jade.waterflow.entity.FlowNodeFormInfo;
 import modelengine.fit.jade.waterflow.entity.FlowNodeInfo;
 import modelengine.fit.jane.common.entity.OperationContext;
@@ -54,7 +55,7 @@ import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.fit.jober.common.exceptions.JobberException;
 import modelengine.fit.jober.common.exceptions.JobberParamException;
 import modelengine.fit.waterflow.domain.enums.FlowNodeType;
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
+
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;

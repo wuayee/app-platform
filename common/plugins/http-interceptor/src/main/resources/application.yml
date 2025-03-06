@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.common.filter'
+      - 'modelengine.jade.common.filter'
   messages:
     basename: i18n/aipp,i18n/store,i18n/default,i18n/aipp_extension
 

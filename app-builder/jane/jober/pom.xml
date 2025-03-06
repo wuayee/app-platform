@@ -139,7 +139,7 @@
         </dependency>
 
         <dependency>
-            <groupId>modelengine.fit.jade</groupId>
+            <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-graph-service</artifactId>
         </dependency>
         <dependency>
@@ -150,6 +150,11 @@
         <dependency>
             <groupId>modelengine.fit.jade</groupId>
             <artifactId>waterflow-task-event-handler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade</groupId>
+            <artifactId>waterflow-graph</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

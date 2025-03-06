@@ -37,7 +37,7 @@ public class TenantAuthenticationAspect {
 
     private final Tenant.Repo repo;
 
-    @Pointcut("@annotation(modelengine.fit.jober.aop.common.TenantAuthentication)")
+    @Pointcut("@annotation(modelengine.fit.jober.common.aop.TenantAuthentication)")
     private void tenantPointCut() {
     }
 

@@ -8,11 +8,11 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import modelengine.fit.jade.waterflow.AippFlowDefinitionService;
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.dto.FlowInfo;
 import modelengine.fit.jade.waterflow.entity.FlowDefinitionResult;
 import modelengine.fit.jade.waterflow.entity.FlowNodeFormInfo;
 import modelengine.fit.jane.task.util.Entities;
 
-import modelengine.fit.waterflow.graph.entity.FlowInfo;
 import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.store.entity.transfer.AppData;
 import modelengine.jade.store.entity.transfer.AppPublishData;

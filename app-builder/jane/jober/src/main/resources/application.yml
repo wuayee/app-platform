@@ -4,7 +4,7 @@ mybatis:
 fit:
   beans:
     packages:
-    - 'modelengine.fit.jober'
+      - 'modelengine.fit.jober'
       - 'modelengine.fitframework'
       - 'modelengine.fit.integration'
   messages:

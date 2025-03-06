@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.knowledge'
+      - 'modelengine.jade.knowledge'

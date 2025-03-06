@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.knowledge'
+      - 'modelengine.jade.knowledge'
 edm:
   url:
     repo-list: '/knowledge-bases/v1/inner/list/query'

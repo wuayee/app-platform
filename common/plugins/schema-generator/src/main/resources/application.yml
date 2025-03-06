@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.common.generator'
+      - 'modelengine.jade.common.generator'

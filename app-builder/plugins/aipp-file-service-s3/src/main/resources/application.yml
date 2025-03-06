@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'modelengine.fit.jade.aipp.s3.file'
+      - 'modelengine.fit.jade.aipp.s3.file'
 
 s3:
   app-name: lab

@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'modelengine.jade.common.schema'
+      - 'modelengine.jade.common.schema'
