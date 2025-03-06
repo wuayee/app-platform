@@ -6,7 +6,7 @@ package modelengine.jade.oms.operater.log.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

@@ -8,13 +8,13 @@ import static modelengine.jade.oms.operater.log.util.Constants.REGISTER_INTERNAT
 import static modelengine.jade.oms.operater.log.util.Constants.REGISTER_LOGS_URI;
 import static modelengine.jade.oms.util.Constants.OMS_FRAMEWORK_NAME;
 
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.oms.OmsClient;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fitframework.annotation.Component;
+import modelengine.jade.oms.OmsClient;
 import modelengine.jade.oms.operater.log.service.OperateLogClient;
 import modelengine.jade.oms.operater.log.vo.LogI18N;
 import modelengine.jade.oms.operater.log.vo.OperateLog;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 import java.util.List;
 

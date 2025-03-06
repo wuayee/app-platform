@@ -4,21 +4,21 @@
 
 package modelengine.jade.oms.license.manager.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static modelengine.jade.oms.util.Constants.OMS_FRAMEWORK_NAME;
 import static modelengine.jade.oms.util.ResourceUtils.resolve;
 
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.resource.ResourceResolver;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.oms.OmsClient;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.resource.ResourceResolver;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.oms.OmsClient;
 import modelengine.jade.oms.license.manager.LicenseClient;
 import modelengine.jade.oms.license.meta.LicenseInfo;
 import modelengine.jade.oms.license.meta.LicenseProductRegisterRequest;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 import modelengine.jade.oms.util.parser.JsonParser;
 
 /**

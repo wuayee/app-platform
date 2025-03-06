@@ -6,7 +6,7 @@ package modelengine.jade.oms.operater.log.service;
 
 import modelengine.jade.oms.operater.log.vo.LogI18N;
 import modelengine.jade.oms.operater.log.vo.OperateLog;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 import java.util.List;
 

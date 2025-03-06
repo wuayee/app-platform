@@ -4,13 +4,13 @@
 
 package modelengine.jade.oms.certificate.management.service.impl;
 
-import com.huawei.fit.http.entity.FileEntity;
-import com.huawei.fit.security.Decryptor;
-import com.huawei.fit.security.Encryptor;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.validation.Validated;
-import com.huawei.jade.common.exception.AppEngineException;
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.security.Decryptor;
+import modelengine.fit.security.Encryptor;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.validation.Validated;
+import modelengine.jade.common.exception.ModelEngineException;
 import modelengine.jade.oms.certificate.management.constants.Constant;
 import modelengine.jade.oms.certificate.management.dto.CertTypeRegisterReq;
 import modelengine.jade.oms.certificate.management.dto.CertUploadReq;
@@ -24,10 +24,10 @@ import modelengine.jade.oms.certificate.management.service.CertMgmtService;
 import modelengine.jade.oms.certificate.management.utils.CertFileUtils;
 import modelengine.jade.oms.certificate.management.utils.ClearSensitiveDataUtil;
 import modelengine.jade.oms.code.OmsRetCode;
-import com.huawei.jade.oms.entity.NamedEntity;
-import com.huawei.jade.oms.entity.PartitionedEntity;
-import com.huawei.jade.oms.entity.TextEntity;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.entity.NamedEntity;
+import modelengine.jade.oms.entity.PartitionedEntity;
+import modelengine.jade.oms.entity.TextEntity;
+import modelengine.jade.oms.response.ResultVo;
 
 import org.apache.commons.io.FileUtils;
 
@@ -202,7 +202,7 @@ public class CertMgmtServiceImpl implements CertMgmtService {
         try {
             addTrustConfigFile(getTmpStorePath(CertCategoryEnum.TRUST), getRealStorePath(CertCategoryEnum.TRUST));
         } catch (IOException e) {
-            throw new AppEngineException(OmsRetCode.FAIL_TO_SAVE_TRUST_CONFIG_FILE, e);
+            throw new ModelEngineException(OmsRetCode.FAIL_TO_SAVE_TRUST_CONFIG_FILE, e);
         }
 
         // 用临时目录替换原目录
@@ -211,7 +211,7 @@ public class CertMgmtServiceImpl implements CertMgmtService {
         LOG.info("internal cert update finished.");
     }
 
-    private void saveCert(com.huawei.fit.http.entity.FileEntity cert, String certPath, String filePrefix,
+    private void saveCert(modelengine.fit.http.entity.FileEntity cert, String certPath, String filePrefix,
             CertTypeEnum certType) {
         String fileName = filePrefix + certType.getAllowedExtension().get(0);
         File certFile = new File(certPath + fileName);
@@ -220,10 +220,10 @@ public class CertMgmtServiceImpl implements CertMgmtService {
             CertFileUtils.grantRwPermissionOnlyToOwner(certFile);
         } catch (FileNotFoundException e) {
             LOG.error("File not found. Failed to store cert");
-            throw new AppEngineException(OmsRetCode.FAIL_TO_SAVE_CERT, e);
+            throw new ModelEngineException(OmsRetCode.FAIL_TO_SAVE_CERT, e);
         } catch (IOException e) {
             LOG.error("IO error. Failed to store cert");
-            throw new AppEngineException(OmsRetCode.FAIL_TO_SAVE_CERT, e);
+            throw new ModelEngineException(OmsRetCode.FAIL_TO_SAVE_CERT, e);
         }
     }
 

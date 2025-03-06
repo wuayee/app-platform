@@ -4,17 +4,17 @@
 
 package modelengine.jade.oms.observer;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 import static modelengine.jade.oms.util.ResourceUtils.resolve;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.plugin.Plugin;
-import com.huawei.fitframework.resource.ResourceResolver;
-import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.plugin.Plugin;
+import modelengine.fitframework.resource.ResourceResolver;
+import modelengine.fitframework.runtime.FitRuntime;
+import modelengine.fitframework.runtime.FitRuntimeStartedObserver;
 import modelengine.jade.oms.certificate.management.service.CertMgmtService;
 import modelengine.jade.oms.license.manager.LicenseClient;
 import modelengine.jade.oms.service.access.meta.menu.MenuRegisterInfo;

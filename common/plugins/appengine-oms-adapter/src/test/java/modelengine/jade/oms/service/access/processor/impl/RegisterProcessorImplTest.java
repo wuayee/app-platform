@@ -6,10 +6,10 @@ package modelengine.jade.oms.service.access.processor.impl;
 
 import static org.mockito.Mockito.mock;
 
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.TypeUtils;
-import com.huawei.jade.oms.OmsClient;
+import modelengine.fitframework.resource.Resource;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.TypeUtils;
+import modelengine.jade.oms.OmsClient;
 import modelengine.jade.oms.service.access.meta.role.RoleI18nInfo;
 import modelengine.jade.oms.util.parser.JsonParser;
 import modelengine.jade.oms.util.parser.support.DefaultJsonParser;

@@ -11,9 +11,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.MapBuilder;
 import modelengine.jade.oms.alarm.enums.PvcEnum;
 import modelengine.jade.oms.alarm.service.AlarmClient;
 import modelengine.jade.oms.alarm.vo.EventInfo;

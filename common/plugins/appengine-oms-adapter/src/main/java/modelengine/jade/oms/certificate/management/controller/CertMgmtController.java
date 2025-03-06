@@ -6,15 +6,15 @@ package modelengine.jade.oms.certificate.management.controller;
 
 import static modelengine.jade.oms.certificate.management.dto.CertUploadReq.convert;
 
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.entity.PartitionedEntity;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.entity.PartitionedEntity;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 import modelengine.jade.oms.certificate.management.constants.Constant;
 import modelengine.jade.oms.certificate.management.dto.CertUploadReq;
 import modelengine.jade.oms.certificate.management.service.CertMgmtService;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 /**
  * 证书管理控制器。

@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.license.meta;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

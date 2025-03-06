@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.service.access.meta.response;
 
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

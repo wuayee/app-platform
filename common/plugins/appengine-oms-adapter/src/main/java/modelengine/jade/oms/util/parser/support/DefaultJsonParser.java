@@ -4,13 +4,13 @@
 
 package modelengine.jade.oms.util.parser.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.resource.Resource;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.TypeUtils;
 import modelengine.jade.oms.util.parser.JsonParser;
 
 import java.io.IOException;

@@ -4,13 +4,14 @@
 
 package modelengine.jade.oms.license.handler;
 
-import static com.huawei.fit.jober.aipp.common.exception.AippErrCode.INVALID_LICENSE;
-import static com.huawei.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.jober.aipp.common.exception.AippException;
-import com.huawei.fit.jober.aipp.event.AppCreatingEvent;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.event.EventHandler;
+import static modelengine.fit.jober.aipp.common.exception.AippErrCode.INVALID_LICENSE;
+import static modelengine.fitframework.inspection.Validation.notNull;
+
+import modelengine.fit.jober.aipp.common.exception.AippException;
+import modelengine.fit.jober.aipp.events.AppCreatingEvent;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.event.EventHandler;
 import modelengine.jade.oms.license.manager.LicenseClient;
 
 /**

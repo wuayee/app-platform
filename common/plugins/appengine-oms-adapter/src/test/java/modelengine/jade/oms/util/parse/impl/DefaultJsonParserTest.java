@@ -4,9 +4,9 @@
 
 package modelengine.jade.oms.util.parse.impl;
 
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.TypeUtils;
+import modelengine.fitframework.resource.Resource;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.TypeUtils;
 import modelengine.jade.oms.service.access.meta.role.RoleI18nInfo;
 import modelengine.jade.oms.util.parser.support.DefaultJsonParser;
 

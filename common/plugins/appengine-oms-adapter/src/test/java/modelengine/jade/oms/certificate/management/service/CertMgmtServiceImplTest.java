@@ -11,15 +11,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.security.Decryptor;
-import com.huawei.fit.security.Encryptor;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
-import com.huawei.fitframework.util.IoUtils;
+import modelengine.fit.security.Decryptor;
+import modelengine.fit.security.Encryptor;
+import modelengine.fitframework.test.annotation.FitTestWithJunit;
+import modelengine.fitframework.util.IoUtils;
 import modelengine.jade.oms.certificate.management.feignclient.CertMgmtClient;
 import modelengine.jade.oms.certificate.management.service.impl.CertMgmtServiceImpl;
 import modelengine.jade.oms.certificate.management.utils.CertFileUtils;
-import com.huawei.jade.oms.entity.FileEntity;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.entity.FileEntity;
+import modelengine.jade.oms.response.ResultVo;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

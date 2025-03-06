@@ -4,11 +4,12 @@
 
 package modelengine.jade.oms.certificate.management.dto;
 
-import com.huawei.fit.http.entity.FileEntity;
-import com.huawei.fit.http.entity.NamedEntity;
-import com.huawei.fit.http.entity.PartitionedEntity;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.jade.common.exception.AppEngineException;
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.PartitionedEntity;
+import modelengine.fitframework.log.Logger;
+
+import modelengine.jade.common.exception.ModelEngineException;
 import modelengine.jade.oms.certificate.management.constants.Constant;
 import modelengine.jade.oms.certificate.management.convertor.NamedEntityToRequestParamConvertor;
 import modelengine.jade.oms.code.OmsRetCode;
@@ -128,7 +129,7 @@ public class CertUploadReq {
         String extension = FilenameUtils.getExtension(filename);
         if (!validExtension.equals(extension)) {
             LOG.error("Unsupported file extension {}", extension);
-            throw new AppEngineException(OmsRetCode.UNSUPPORTED_FILE_TYPE);
+            throw new ModelEngineException(OmsRetCode.UNSUPPORTED_FILE_TYPE);
         }
     }
 }

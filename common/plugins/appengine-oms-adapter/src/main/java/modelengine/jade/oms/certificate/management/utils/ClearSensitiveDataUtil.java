@@ -4,8 +4,8 @@
 
 package modelengine.jade.oms.certificate.management.utils;
 
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.oms.certificate.management.service.impl.CertMgmtServiceImpl;
 
 import java.lang.reflect.Field;

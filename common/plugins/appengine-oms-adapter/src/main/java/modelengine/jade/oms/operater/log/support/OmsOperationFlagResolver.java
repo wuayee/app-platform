@@ -4,14 +4,14 @@
 
 package modelengine.jade.oms.operater.log.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Initialize;
-import com.huawei.fitframework.parameterization.ParameterizedString;
-import com.huawei.fitframework.parameterization.ParameterizedStringResolver;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Initialize;
+import modelengine.fitframework.parameterization.ParameterizedString;
+import modelengine.fitframework.parameterization.ParameterizedStringResolver;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -46,6 +46,6 @@ public class OmsOperationFlagResolver {
         if (template == null) {
             return StringUtils.EMPTY;
         }
-        return template.format(args, false);
+        return template.format(args);
     }
 }

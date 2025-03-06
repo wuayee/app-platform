@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.service.access.processor;
 
-import com.huawei.fitframework.resource.Resource;
+import modelengine.fitframework.resource.Resource;
 import modelengine.jade.oms.service.access.meta.menu.MenuRegisterInfo;
 import modelengine.jade.oms.service.access.meta.permission.AuthorityInfo;
 import modelengine.jade.oms.service.access.meta.role.RoleRegisterVo;

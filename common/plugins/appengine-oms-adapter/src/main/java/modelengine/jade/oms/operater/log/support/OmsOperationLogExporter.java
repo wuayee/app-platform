@@ -4,20 +4,20 @@
 
 package modelengine.jade.oms.operater.log.support;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Initialize;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.parameterization.StringFormatException;
-import com.huawei.fitframework.util.IoUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Initialize;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.parameterization.StringFormatException;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.oms.operater.log.service.OperateLogClient;
 import modelengine.jade.oms.operater.log.vo.LogI18N;
 import modelengine.jade.oms.operater.log.vo.OperateLog;
-import com.huawei.jade.oms.response.ResultVo;
-import com.huawei.jade.service.CarverSpanExporter;
+import modelengine.jade.oms.response.ResultVo;
+import modelengine.jade.service.CarverSpanExporter;
 
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.trace.StatusCode;

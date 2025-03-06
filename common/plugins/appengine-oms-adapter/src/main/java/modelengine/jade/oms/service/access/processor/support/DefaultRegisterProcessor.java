@@ -6,10 +6,10 @@ package modelengine.jade.oms.service.access.processor.support;
 
 import static modelengine.jade.oms.util.Constants.OMS_FRAMEWORK_NAME;
 
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.jade.oms.OmsClient;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.resource.Resource;
+import modelengine.jade.oms.OmsClient;
 import modelengine.jade.oms.service.access.meta.menu.MenuInfo;
 import modelengine.jade.oms.service.access.meta.menu.MenuRegisterInfo;
 import modelengine.jade.oms.service.access.meta.permission.AuthorityInfo;

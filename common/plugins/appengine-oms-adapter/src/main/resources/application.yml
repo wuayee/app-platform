@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.oms'
+    - 'modelengine.jade.oms'

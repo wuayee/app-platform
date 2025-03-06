@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.certificate.management.convertor;
 
-import com.huawei.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.NamedEntity;
 import modelengine.jade.oms.certificate.management.dto.CertUploadReq;
 
 /**

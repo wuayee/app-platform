@@ -4,8 +4,8 @@
 
 package modelengine.jade.oms.alarm.support;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 import modelengine.jade.oms.alarm.util.Constants;
 
 import java.io.BufferedReader;

@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.service.access.meta.permission;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 import java.util.ArrayList;
 import java.util.List;

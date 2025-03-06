@@ -4,13 +4,13 @@
 
 package modelengine.jade.oms.certificate.management.feignclient.impl;
 
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.oms.OmsClient;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fitframework.annotation.Component;
+import modelengine.jade.oms.OmsClient;
 import modelengine.jade.oms.certificate.management.dto.CertTypeRegisterReq;
 import modelengine.jade.oms.certificate.management.feignclient.CertMgmtClient;
-import com.huawei.jade.oms.entity.PartitionedEntity;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.entity.PartitionedEntity;
+import modelengine.jade.oms.response.ResultVo;
 import modelengine.jade.oms.util.Constants;
 
 /**

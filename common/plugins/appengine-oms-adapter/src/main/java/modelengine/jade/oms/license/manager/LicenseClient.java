@@ -6,7 +6,7 @@ package modelengine.jade.oms.license.manager;
 
 import modelengine.jade.oms.license.meta.LicenseInfo;
 import modelengine.jade.oms.license.meta.LicenseProductRegisterRequest;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 /**
  * 许可证处理客户端。

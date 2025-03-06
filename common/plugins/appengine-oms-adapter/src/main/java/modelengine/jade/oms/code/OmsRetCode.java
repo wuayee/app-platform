@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.code;
 
-import com.huawei.jade.common.code.RetCode;
+import modelengine.jade.common.code.RetCode;
 
 /**
  * OMS 相关错误码。

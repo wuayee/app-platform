@@ -9,13 +9,13 @@ import static modelengine.jade.oms.alarm.util.Constants.OK;
 import static modelengine.jade.oms.alarm.util.Constants.REGISTER_EVENT_DEFINE_URI;
 import static modelengine.jade.oms.util.Constants.OMS_MONITOR_NAME;
 
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.oms.OmsClient;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fitframework.annotation.Component;
+import modelengine.jade.oms.OmsClient;
 import modelengine.jade.oms.alarm.service.AlarmClient;
 import modelengine.jade.oms.alarm.vo.EventInfo;
 import modelengine.jade.oms.alarm.vo.RegisterEventDefinitionReq;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 import java.util.List;
 

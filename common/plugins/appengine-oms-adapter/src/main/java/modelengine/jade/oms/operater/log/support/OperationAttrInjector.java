@@ -4,12 +4,12 @@
 
 package modelengine.jade.oms.operater.log.support;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.authentication.context.UserContext;
-import com.huawei.jade.authentication.context.UserContextHolder;
-import com.huawei.jade.service.SpanEndObserver;
+import modelengine.fitframework.annotation.Component;
+import modelengine.jade.authentication.context.UserContext;
+import modelengine.jade.authentication.context.UserContextHolder;
 
 import io.opentelemetry.api.trace.Span;
+import modelengine.jade.carver.telemetry.aop.SpanEndObserver;
 import modelengine.jade.oms.operater.log.util.Constants;
 
 import java.lang.reflect.Method;

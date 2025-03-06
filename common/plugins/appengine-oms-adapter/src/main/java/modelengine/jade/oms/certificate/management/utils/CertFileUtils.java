@@ -4,9 +4,9 @@
 
 package modelengine.jade.oms.certificate.management.utils;
 
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.log.Logger;
 import modelengine.jade.oms.certificate.management.service.impl.CertMgmtServiceImpl;
-import com.huawei.jade.oms.entity.FileEntity;
+import modelengine.jade.oms.entity.FileEntity;
 
 import org.apache.commons.io.FileUtils;
 
@@ -35,7 +35,7 @@ public class CertFileUtils {
      * @param dirPath 表示文件路径的 {@link String}。
      */
     public static void deleteDir(String dirPath) {
-        FileUtils.deleteQuietly(com.huawei.fitframework.util.FileUtils.canonicalize(dirPath));
+        FileUtils.deleteQuietly(modelengine.fitframework.util.FileUtils.canonicalize(dirPath));
     }
 
     /**

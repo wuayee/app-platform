@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.service.access.meta.role;
 
-import com.huawei.fitframework.annotation.Property;
+import modelengine.fitframework.annotation.Property;
 
 /**
  * 角色配置信息类。

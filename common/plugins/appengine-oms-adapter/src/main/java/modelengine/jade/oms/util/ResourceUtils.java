@@ -4,9 +4,9 @@
 
 package modelengine.jade.oms.util;
 
-import com.huawei.fitframework.resource.Resource;
-import com.huawei.fitframework.resource.ResourceResolver;
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.resource.Resource;
+import modelengine.fitframework.resource.ResourceResolver;
+import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 

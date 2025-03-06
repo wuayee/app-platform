@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 import modelengine.jade.oms.operater.log.service.OperateLogClient;
 import modelengine.jade.oms.operater.log.stub.SpanStub;
 import modelengine.jade.oms.operater.log.vo.OperateLog;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.response.ResultVo;
 
 import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.sdk.common.CompletableResultCode;

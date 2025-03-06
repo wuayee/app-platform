@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.util.parser;
 
-import com.huawei.fitframework.resource.Resource;
+import modelengine.fitframework.resource.Resource;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@
 package modelengine.jade.oms.certificate.management.feignclient;
 
 import modelengine.jade.oms.certificate.management.dto.CertTypeRegisterReq;
-import com.huawei.jade.oms.entity.PartitionedEntity;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.jade.oms.entity.PartitionedEntity;
+import modelengine.jade.oms.response.ResultVo;
 
 /**
  * OMS 证书注册相关接口。

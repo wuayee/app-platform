@@ -4,7 +4,7 @@
 
 package modelengine.jade.oms.operater.log.stub;
 
-import com.huawei.fitframework.util.StringUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
