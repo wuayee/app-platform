@@ -58,7 +58,8 @@ public class HttpCallResult {
                 return objectEntity.object();
             }
             default:
-                throw new IllegalArgumentException("Unsupported mime type: " + mimeType);
+                throw new IllegalArgumentException(
+                        "Unsupported mime type: " + mimeType + " with status code: " + this.status);
         }
     }
 }

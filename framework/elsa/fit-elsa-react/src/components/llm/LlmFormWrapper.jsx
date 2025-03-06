@@ -112,8 +112,13 @@ export default function LlmFormWrapper({data, shapeStatus}) {
           value: item.uniqueName,
         };
       })));
-    dispatch({type: 'updateTools', value: toolOptions});
   };
+
+  useEffect(() => {
+    if (toolOptions.length > 0) {
+      dispatch({type: 'updateTools', value: toolOptions});
+    }
+  }, [toolOptions]);
 
   useEffect(() => {
     if (!config || !config.urls) {
