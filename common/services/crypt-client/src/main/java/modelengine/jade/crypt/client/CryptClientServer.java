@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.crypt.client;
+package modelengine.jade.crypt.client;
 
 import com.huawei.framework.crypt.grpc.client.CryptClient;
 import com.huawei.framework.crypt.grpc.client.config.GlobalConfig;

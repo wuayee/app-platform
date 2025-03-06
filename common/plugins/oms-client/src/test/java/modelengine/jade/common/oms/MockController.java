@@ -2,16 +2,16 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.common.oms;
+package modelengine.jade.common.oms;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.annotation.PostMapping;
-import com.huawei.fit.http.entity.NamedEntity;
-import com.huawei.fit.http.entity.PartitionedEntity;
-import com.huawei.fit.http.entity.support.DefaultNamedEntity;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.PartitionedEntity;
+import modelengine.fit.http.entity.support.DefaultNamedEntity;
+import modelengine.fitframework.annotation.Component;
+import modelengine.jade.oms.response.ResultVo;
 
 import java.util.List;
 

@@ -83,6 +83,11 @@
             </dependency>
             <dependency>
                 <groupId>modelengine.fit.service</groupId>
+                <artifactId>fit-server</artifactId>
+                <version>${fit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>modelengine.fit.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>

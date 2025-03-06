@@ -2,26 +2,26 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.common.oms;
+package modelengine.jade.common.oms;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.annotation.MvcTest;
-import com.huawei.fitframework.test.domain.mvc.MockMvc;
-import com.huawei.jade.common.oms.nacos.NacosClient;
-import com.huawei.jade.common.oms.nacos.support.DefaultNacosClient;
-import com.huawei.jade.oms.OmsClient;
-import com.huawei.jade.oms.entity.FileEntity;
-import com.huawei.jade.oms.entity.NamedEntity;
-import com.huawei.jade.oms.entity.PartitionedEntity;
-import com.huawei.jade.oms.entity.TextEntity;
-import com.huawei.jade.oms.response.ResultVo;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.test.annotation.MvcTest;
+import modelengine.fitframework.test.domain.mvc.MockMvc;
+import modelengine.jade.common.oms.nacos.NacosClient;
+import modelengine.jade.common.oms.nacos.support.DefaultNacosClient;
+import modelengine.jade.oms.OmsClient;
+import modelengine.jade.oms.entity.FileEntity;
+import modelengine.jade.oms.entity.NamedEntity;
+import modelengine.jade.oms.entity.PartitionedEntity;
+import modelengine.jade.oms.entity.TextEntity;
+import modelengine.jade.oms.response.ResultVo;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

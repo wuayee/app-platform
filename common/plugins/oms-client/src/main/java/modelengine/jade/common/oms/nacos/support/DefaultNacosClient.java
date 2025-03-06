@@ -2,19 +2,19 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.common.oms.nacos.support;
+package modelengine.jade.common.oms.nacos.support;
 
-import static com.huawei.fitframework.inspection.Validation.notEmpty;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.inspection.Validation.notEmpty;
+import static modelengine.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fit.server.FitServer;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.broker.Endpoint;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.ThreadUtils;
-import com.huawei.jade.common.oms.config.NacosConfig;
-import com.huawei.jade.common.oms.nacos.NacosClient;
+import modelengine.fit.server.FitServer;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.Endpoint;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.ThreadUtils;
+import modelengine.jade.common.oms.config.NacosConfig;
+import modelengine.jade.common.oms.nacos.NacosClient;
 
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.exception.NacosException;

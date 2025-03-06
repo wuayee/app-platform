@@ -2,43 +2,45 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.common.oms;
+package modelengine.jade.common.oms;
 
-import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.fitframework.inspection.Validation.notEmpty;
-import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
+import static modelengine.fitframework.inspection.Validation.notBlank;
+import static modelengine.fitframework.inspection.Validation.notEmpty;
+import static modelengine.fitframework.inspection.Validation.notNull;
+import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.client.HttpClassicClient;
-import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
-import com.huawei.fit.http.entity.TextEntity;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.LockUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.TypeUtils;
+
 import com.huawei.framework.crypt.grpc.client.CryptClient;
 import com.huawei.framework.crypt.grpc.client.exception.CryptoInvokeException;
-import com.huawei.jade.common.oms.entity.NetPoint;
-import com.huawei.jade.common.oms.entity.ServiceInfo;
-import com.huawei.jade.common.oms.nacos.NacosClient;
-import com.huawei.jade.crypt.client.CryptClientServer;
-import com.huawei.jade.oms.OmsClient;
-import com.huawei.jade.oms.entity.FileEntity;
-import com.huawei.jade.oms.entity.NamedEntity;
-import com.huawei.jade.oms.entity.PartitionedEntity;
-import com.huawei.jade.oms.response.ResultVo;
+
+import modelengine.fit.http.client.HttpClassicClient;
+import modelengine.fit.http.client.HttpClassicClientFactory;
+import modelengine.fit.http.client.HttpClassicClientRequest;
+import modelengine.fit.http.client.HttpClassicClientResponse;
+import modelengine.fit.http.entity.TextEntity;
+import modelengine.fit.http.protocol.HttpRequestMethod;
+import modelengine.fit.http.protocol.HttpResponseStatus;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.inspection.Nonnull;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.serialization.ObjectSerializer;
+import modelengine.fitframework.util.LockUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
+import modelengine.fitframework.util.TypeUtils;
+import modelengine.jade.common.oms.entity.NetPoint;
+import modelengine.jade.common.oms.entity.ServiceInfo;
+import modelengine.jade.common.oms.nacos.NacosClient;
 
 import com.alibaba.nacos.api.naming.pojo.Instance;
 
+import modelengine.jade.crypt.client.CryptClientServer;
+import modelengine.jade.oms.OmsClient;
+import modelengine.jade.oms.entity.FileEntity;
+import modelengine.jade.oms.entity.NamedEntity;
+import modelengine.jade.oms.entity.PartitionedEntity;
+import modelengine.jade.oms.response.ResultVo;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -109,7 +111,7 @@ public class DefaultOmsClient implements OmsClient {
      * @param httpClassicClientFactory 表示工厂的 {@link HttpClassicClientFactory}。
      */
     public DefaultOmsClient(@Fit(alias = "json") ObjectSerializer serializer, NacosClient nacosClient,
-            HttpClassicClientFactory httpClassicClientFactory) throws NoSuchAlgorithmException, KeyManagementException {
+                            HttpClassicClientFactory httpClassicClientFactory) throws NoSuchAlgorithmException, KeyManagementException {
         this.serializer = notNull(serializer, "The serializer cannot be null.");
         this.nacosClient = notNull(nacosClient, "The nacos client cannot be null.");
         this.httpClassicClient = this.buildHttpClassicClient(httpClassicClientFactory);
@@ -159,7 +161,7 @@ public class DefaultOmsClient implements OmsClient {
 
     @Override
     public <T> ResultVo<T> executeJson(String service, HttpRequestMethod method, String url, Object param,
-            Class<T> resultType) {
+                                       Class<T> resultType) {
         HttpClassicClientRequest request = this.httpClassicClient.createRequest(method, this.buildUrl(service, url));
         request.headers().add(HEADER_TOKEN, this.getOmsToken());
         if (param != null) {
