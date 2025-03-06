@@ -258,6 +258,12 @@ _JadeInputForm.propTypes = {
   shapeStatus: PropTypes.object,
   content: PropTypes.element,
   editable: PropTypes.bool,
+  options: PropTypes.array,
+  maxInputLength: PropTypes.number,
+  fieldNameClassName: PropTypes.string,
+  typeSelectClassName: PropTypes.string,
+  fieldValueClassName: PropTypes.string,
+  deleteBtnClassName: PropTypes.string,
 };
 
 const areEqual = (prevProps, nextProps) => {

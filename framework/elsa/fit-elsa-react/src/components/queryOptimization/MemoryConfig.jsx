@@ -6,8 +6,8 @@
 
 import {Form, Radio, Slider} from 'antd';
 import {JadeStopPropagationSelect} from '@/components/common/JadeStopPropagationSelect.jsx';
-import React from 'react';
-import {useDispatch} from '@/components/DefaultRoot.jsx';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useShapeContext} from '@/components/DefaultRoot.jsx';
 import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {getConfigValue} from '@/components/util/JadeConfigUtils.js';
@@ -87,43 +87,52 @@ export const RadioGroup = ({disabled, memoryConfig, templateType, selectedOption
   </>);
 };
 
+RadioGroup.propTypes = {
+  disabled: PropTypes.bool,
+  memoryConfig: PropTypes.object,
+  templateType: PropTypes.string,
+  selectedOption: PropTypes.object,
+  useMemoryType: PropTypes.string,
+};
+
 /**
  * 配置值组件
  *
  * @param disabled 是否禁用
- * @param selectedOption option类型
  * @param propertyValue 属性值
+ * @param sliderConfig 配置.
  * @returns {React.JSX.Element} 配置值组件
  * @constructor
  */
-export const ConfigSlider = ({disabled, selectedOption, propertyValue}) => {
+export const ConfigSlider = ({disabled, propertyValue, sliderConfig}) => {
   const dispatch = useDispatch();
 
-  /**
-   * 获取Slider默认标签
-   *
-   * @returns {{1: string, '5': string, 10: string}|{1: string, 300: string, '150': string}}
-   */
   const getDefaultRecalls = () => {
-    return selectedOption === BUFFER_WINDOW ? {
-      1: '1', [5]: '5', 10: '10',
-    } : {
-      1: '1', [1500]: '1500', 3000: '3000',
-    };
+    const recalls = {};
+    recalls[sliderConfig.min] = `${sliderConfig.min}`;
+    recalls[sliderConfig.default] = `${sliderConfig.default}`;
+    recalls[sliderConfig.max] = `${sliderConfig.max}`;
+    return recalls;
   };
 
   return (<>
     <Slider disabled={disabled}
             className='jade-slider'
             style={{width: '90%'}}
-            min={selectedOption === BUFFER_WINDOW ? 1 : 1}
-            max={selectedOption === BUFFER_WINDOW ? 10 : 3000}
+            min={sliderConfig.min}
+            max={sliderConfig.max}
             value={propertyValue}
             marks={getDefaultRecalls()}
-            defaultValue={selectedOption === BUFFER_WINDOW ? 5 : 180}
+            defaultValue={sliderConfig.default}
             onChange={(value) => dispatch({actionType: 'changeWindowValue', value: value})}
     />
   </>);
+};
+
+ConfigSlider.propTypes = {
+  disabled: PropTypes.bool,
+  propertyValue: PropTypes.number,
+  sliderConfig: PropTypes.object,
 };
 
 /**
@@ -145,6 +154,10 @@ const _MemoryConfig = ({memoryConfig, disabled, templateType, isShowUseMemoryTyp
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
+  const shape = useShapeContext();
+  const startNode = shape.page.sm.findShapeBy(s => s.type === 'startNodeStart');
+  const [maxConversationTurn, setMaxConversationTurn] = useState(startNode.getConversationTurn());
+
   /**
    * 选择历史记录方式下拉框click回调
    *
@@ -162,6 +175,49 @@ const _MemoryConfig = ({memoryConfig, disabled, templateType, isShowUseMemoryTyp
   const changeHistoryType = (e) => {
     // 更改使用历史记录方式的类型
     dispatch({actionType: 'changeHistoryType', value: e});
+  };
+
+  // 监听开始节点中，对话轮数的修改.
+  useEffect(() => {
+    const cancel = shape.observeTo('start_node_conversation_turn_count', startNode.id, 'start_node_conversation_turn_count',
+        (args) => {
+          if (args.value === null || args.value === undefined) {
+            return;
+          }
+          setMaxConversationTurn(args.value);
+        });
+    return () => {
+      cancel();
+    };
+  }, []);
+
+  // 对话轮数变化时，如果最大轮次数小于当前的值，将值修改为最大轮次数.
+  useEffect(() => {
+    if (selectedOption === BUFFER_WINDOW) {
+      if (maxConversationTurn < propertyValue) {
+        dispatch({actionType: 'changeWindowValue', value: maxConversationTurn});
+      }
+    }
+  }, [maxConversationTurn]);
+
+  /**
+   * 获取slider的配置数据.
+   *
+   * @return 配置数据.
+   */
+  const getSliderConfig = () => {
+    if (selectedOption !== BUFFER_WINDOW) {
+      return {
+        min: 1,
+        max: 3000,
+        default: 1500,
+      };
+    }
+    return {
+      min: 1,
+      max: maxConversationTurn,
+      default: maxConversationTurn < 3 ? maxConversationTurn : 3,
+    };
   };
 
   return (<>
@@ -187,7 +243,11 @@ const _MemoryConfig = ({memoryConfig, disabled, templateType, isShowUseMemoryTyp
       </Form.Item>}
       <RadioGroup memoryConfig={memoryConfig} disabled={disabled} selectedOption={selectedOption}
                   templateType={templateType} useMemoryType={useMemoryType}/>
-      <ConfigSlider selectedOption={selectedOption} disabled={disabled} propertyValue={propertyValue}/>
+      <ConfigSlider
+          selectedOption={selectedOption}
+          disabled={disabled}
+          sliderConfig={getSliderConfig()}
+          propertyValue={propertyValue}/>
     </div>
   </>);
 };

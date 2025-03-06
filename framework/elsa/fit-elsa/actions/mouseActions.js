@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {offsetPosition, sleep, uuid} from '../common/util.js';
+import {getEditStatus, offsetPosition, sleep, uuid} from '../common/util.js';
 import {addCommand, eraserComamnd, positionCommand, resizeCommand, updateFreeLineCommand} from '../core/commands.js';
 import {EVENT_TYPE} from "../common/const.js";
 
@@ -262,7 +262,7 @@ const bindMouseActions = page => {
         // 非exclude元素导致的mousedown事件，都需要阻止默认事件，防止拖拽时选中文本.
         if ((!document.activeElement || document.activeElement === document.body) &&
           (!page.mouseEvents.mouseDown.preventDefault.exclude.
-          contains(e => e === position.e.srcElement.tagName)) && position.e.srcElement.contentEditable === 'false') {
+          contains(e => e === position.e.srcElement.tagName)) && (getEditStatus(position.e.srcElement) === 'false')) {
             position.e.preventDefault();
         }
 
