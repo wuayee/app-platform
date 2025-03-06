@@ -2,12 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.security.kmc;
+package modelengine.fit.security.kmc;
 
-import static com.huawei.fit.security.kmc.KmcDecryptor.ME_KS_USER;
-
-import com.huawei.fit.security.Encryptor;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fit.security.Encryptor;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 添加 kmc 加密功能
@@ -19,7 +17,7 @@ import com.huawei.fitframework.annotation.Component;
 public class KmcEncryptor implements Encryptor {
     @Override
     public String encrypt(String decrypted) {
-        return KmcUtils.encrypt(decrypted, ME_KS_USER);
+        return KmcUtils.encrypt(decrypted, KmcDecryptor.ME_KS_USER);
     }
 }
 

@@ -2,10 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.security.kmc;
+package modelengine.fit.security.kmc;
 
-import com.huawei.fit.security.Decryptor;
-import com.huawei.fitframework.annotation.Component;
+import modelengine.fit.security.Decryptor;
+import modelengine.fitframework.annotation.Component;
 
 /**
  * 添加 kmc 解密功能

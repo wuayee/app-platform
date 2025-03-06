@@ -2,10 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
  */
 
-package com.huawei.fit.security.kmc;
+package modelengine.fit.security.kmc;
 
-import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
 import com.huawei.framework.crypt.grpc.client.utils.PassUtils;
 
 import com.google.common.cache.Cache;

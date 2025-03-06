@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.fit.security.kmc'
+    - 'modelengine.fit.security.kmc'
