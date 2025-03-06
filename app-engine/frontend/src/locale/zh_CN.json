@@ -230,6 +230,8 @@
   "playback": "播放",
   "copy": "复制",
   "savingFailed": "保存失败",
+  "fieldName": "字段名",
+  "fieldValue": "字段值",
   "receiveTips": "以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记",
   "pluginManagement": "插件管理",
   "deploying": "部署",
