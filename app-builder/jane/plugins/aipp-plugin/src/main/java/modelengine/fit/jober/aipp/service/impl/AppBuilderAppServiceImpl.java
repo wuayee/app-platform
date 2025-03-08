@@ -1276,6 +1276,9 @@ public class AppBuilderAppServiceImpl
         configProperty.setId(Entities.generateId());
         configProperty.setConfigId(configId);
         AppBuilderFormProperty formProperty = idToFormPropertyMap.get(configProperty.getFormPropertyId());
+        if (formProperty == null) {
+            return;
+        }
         formProperty.setId(Entities.generateId());
         formProperty.setFormId(formId);
         configProperty.setFormPropertyId(formProperty.getId());
