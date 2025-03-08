@@ -43,4 +43,7 @@ public class TemplateInfoDto {
 
     @Property(description = "应用模板的创建者")
     private String creator;
+
+    @Property(description = "应用模板的创建者")
+    private String appBuiltType;
 }

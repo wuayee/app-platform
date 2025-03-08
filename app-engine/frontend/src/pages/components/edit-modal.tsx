@@ -101,6 +101,8 @@ const EditModal = (props) => {
         description: formParams.description || '',
         icon: filePath || formParams.icon || '',
         app_type: formParams.app_type,
+        app_built_type: appInfo.appBuiltType,
+        app_category: appInfo.category,
         type: 'app'
       }
       const res = await templateCreateAipp(tenantId, params);
