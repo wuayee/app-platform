@@ -197,9 +197,14 @@ public class AippFlowEndCallback implements FlowCallbackService {
         logData.setFormAppearance(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_APPEARANCE_KEY)));
         logData.setFormData(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_DATA_KEY)));
         // 子应用/工作流的结束节点表单不需要在历史记录展示
-        return this.aippLogService.insertLog((businessData.containsKey(AippConst.PARENT_INSTANCE_ID)
+        return this.aippLogService.insertLog((this.isExistParent(businessData)
                 ? AippInstLogType.HIDDEN_FORM
                 : AippInstLogType.FORM).name(), logData, businessData);
+    }
+
+    private boolean isExistParent(Map<String, Object> businessData) {
+        return businessData.containsKey(AippConst.PARENT_INSTANCE_ID) && StringUtils.isNotBlank(ObjectUtils.cast(
+                businessData.get(AippConst.PARENT_INSTANCE_ID)));
     }
 
     private void logFinalOutput(Map<String, Object> businessData, String aippInstId) {
