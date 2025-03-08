@@ -6,6 +6,8 @@
 
 package modelengine.fit.jober.aipp.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,12 +30,15 @@ import java.util.Map;
 @SerializeStrategy(include = SerializeStrategy.Include.NON_NULL)
 public class AippLogData {
     @Property(description = "表单id，log_type为FORM时填充", name = "form_id")
+    @JsonProperty("form_id")
     private String formId;
 
     @Property(description = "表单id，log_type为FORM时填充", name = "form_version")
+    @JsonProperty("form_version")
     private String formVersion;
 
     @Property(description = "表单参数，log_type为FORM时填充", name = "form_args")
+    @JsonProperty("form_args")
     private String formArgs;
 
     @Property(description = "提示信息，log_type为MSG时填充")
