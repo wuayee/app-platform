@@ -53,6 +53,7 @@ import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.merge.ConflictResolutionPolicy;
 import modelengine.fitframework.model.Tuple;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapUtils;
@@ -182,9 +183,10 @@ public class AppChatServiceImpl implements AppChatService {
         String question = ObjectUtils.cast(logData.get("msg"));
         if (logData.containsKey(BUSINESS_INFOS_KEY)) {
             Map<String, Object> infos = ObjectUtils.cast(logData.get(BUSINESS_INFOS_KEY));
-            if (infos.containsKey(BUSINESS_INPUT_KEY)) {
+            if (infos != null && infos.containsKey(BUSINESS_INPUT_KEY)) {
                 Map<String, Object> input = ObjectUtils.cast(infos.get(BUSINESS_INPUT_KEY));
-                Map<String, Object> mergedContext = MapUtils.merge(additionalContext, input);
+                Map<String, Object> mergedContext =
+                        MapUtils.merge(additionalContext, input, ConflictResolutionPolicy.OVERRIDE);
                 additionalContext = mergedContext;
             }
         }
