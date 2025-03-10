@@ -534,6 +534,7 @@ public class AippRunTimeServiceImpl
                     .map(fileDesc -> fileDesc.get("file_url"))
                     .collect(Collectors.toList());
             businessData.put(AippConst.BS_AIPP_FILES_DOWNLOAD_KEY, fileUrls);
+            businessData.put(AippConst.BS_AIPP_FILE_DOWNLOAD_KEY, fileUrls.get(0));
         }
     }
 
