@@ -137,7 +137,7 @@ const MarketItems = ({ reload }) => {
     },
     {
       key: '3',
-      label: <div onClick={(e) => workFlow(e)}>{t('workFlow')}</div>,
+      label: <div onClick={(e) => workFlow(e)}>{t('workflow')}</div>,
     },
   ];
 

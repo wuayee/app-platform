@@ -388,7 +388,7 @@ const EditModal = (props) => {
                 </Radio.Button>
                 <Radio.Button value='workflow' className='app-edit-btn'>
                   <img src={workflow} alt='' className='app-edit-btn-img' />
-                  {t('workFlow')}
+                  {t('workflow')}
                 </Radio.Button>
               </Radio.Group>
             </div>
@@ -497,13 +497,5 @@ const EditModal = (props) => {
   );
 };
 
-const Img = (props) => {
-  const { icon } = props;
-  return <>{(
-    <span>
-      {icon ? <img src={icon} /> : <img src={knowledgeBase} />}
-    </span>
-  )}</>
-}
 
 export default EditModal;
