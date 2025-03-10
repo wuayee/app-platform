@@ -5,11 +5,6 @@
     "uniqueName": ""
   },
   {
-    "type": "manualCheckNodeState",
-    "name": "人工检查",
-    "uniqueName": ""
-  },
-  {
     "type": "codeNodeState",
     "name": "代码",
     "uniqueName": ""
