@@ -242,7 +242,6 @@ export const versionStringCompare = (preVersion = '', lastVersion = '') => {
  */
 export const updateChatId = function (chatId, appId, dimension, appInfo = undefined) {
   let appChatMap = storage.get('appChatMap') || {};
-  // 如果不是小魔方
   if (!enablePermission(appInfo)) {
     appChatMap[appId] = { chatId: chatId };
   } else {
@@ -270,7 +269,7 @@ export const updateChatId = function (chatId, appId, dimension, appInfo = undefi
 };
 
 /**
- * 检查是否为小魔方页面
+ * 检查是否为开启权限
  * @param {String} appId 应用Id
  * @return {boolean}
  */
@@ -407,9 +406,16 @@ export const queryAppCategories = async (tenantId : String, isCreation: boolean)
 
 // 表单地址判断修改
 export const formEnv = () => {
-  let isTZ = false;
-  if (origin.startsWith('https://tianzhou')) {
-    isTZ = true;
+  let isSpa = false;
+  if (process.env.PACKAGE_MODE === 'spa') {
+    isSpa = true;
   }
-  return isTZ;
+  return isSpa;
+}
+
+export const setSpaClassName = (name:string) => {
+  if (formEnv()) {
+    return `${name} ${name}-spa`
+  }
+  return name
 }

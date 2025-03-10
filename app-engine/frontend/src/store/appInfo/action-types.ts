@@ -6,6 +6,5 @@ export const SET_AT_APP_INFO = 'SET_AT_APP_INFO';
 export const SET_VALIDATE_INFO = 'SET_VALIDATE_INFO';
 export const SET_NODE_ID = 'SET_NODE_ID';
 export const SET_AGENT_INFO = 'SET_AGENT_INFO';
-export const SET_ELSA_CHANGE = 'SET_ELSA_CHANGE';
 export const SET_AIPP_ID = 'SET_AIPP_ID';
 export const SET_APP_VERSION = 'SET_APP_VERSION';

@@ -65,7 +65,7 @@
         border-radius: 8px;
         margin-bottom: 16px;
         margin-right: 12px;
-        background: url('/src/assets/images/knowledge/knowledge-background.png') center center;
+        background-position: center center;
         cursor: pointer;
         padding: 18px 18px 0px;
         box-sizing: border-box;
@@ -162,6 +162,7 @@
   gap: 16px;
   flex-wrap: wrap;
   align-content: flex-start;
+  padding-right: 8px;
   .mashup-add-item {
     position: relative;
     .check-item {
@@ -212,6 +213,8 @@
       .mine-icon {
         padding: 12px 8px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
         .icon-size {
           margin-left: 8px;
         }
@@ -223,6 +226,8 @@
       .tool-market-tabs {
         height: 40px;
         padding: 12px 8px;
+        display: flex;
+        align-items: center;
       }
       .tool-icon {
         margin-left: 8px;
@@ -231,6 +236,9 @@
     }
     .right-table {
       width: calc(80% - 24px);
+      .tool-empty {
+        height: 370px;
+      }
     }
   }
   .menu-tags {

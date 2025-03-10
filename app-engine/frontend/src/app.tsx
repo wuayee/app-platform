@@ -4,30 +4,27 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { HashRouter, BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import AppLayout from '@/components/layout/index';
 import zhCN from 'antd/lib/locale/zh_CN';
 import enUS from 'antd/lib/locale/en_US';
 import './locale/i18n';
 import 'antd/dist/antd.less';
-import '__styles/index.scss';
-import '__styles/common.scss';
-import '__styles/workSpace.scss';
-import '__styles/antStyle.scss';
+import '@/styles/index.scss';
+import '@/styles/common.scss';
+import '@/styles/workSpace.scss';
+import '@/styles/antStyle.scss';
 import './index.scss';
-import '@/shared/utils/rem';
 import { getCookie, setCookie } from './shared/utils/common';
 
-localStorage.getItem('currentUser') || localStorage.setItem('currentUser', '');
-localStorage.getItem('currentUserId') || localStorage.setItem('currentUserId', '');
-localStorage.getItem('currentUserIdComplete') || localStorage.setItem('currentUserIdComplete', '');
+let userName = localStorage.getItem('__account_name__') || '';
+localStorage.getItem('currentUser') || localStorage.setItem('currentUser', userName);
 localStorage.getItem('appChatMap') || localStorage.setItem('appChatMap', JSON.stringify({}));
-localStorage.getItem('showFlowChangeWarning') ||
-  localStorage.setItem('showFlowChangeWarning', 'true');
+localStorage.getItem('showFlowChangeWarning') || localStorage.setItem('showFlowChangeWarning', 'true');
 
-const locale = getCookie('locale');
+const locale = getCookie('language').toLocaleLowerCase();
 if (!locale) {
   setCookie('locale', 'zh-cn');
 } else {
@@ -39,14 +36,29 @@ if (!locale) {
   }
 }
 
+let isHashRouter = true;
+let basename = '/'
+if (process.env.PACKAGE_MODE === 'spa') {
+  isHashRouter = false;
+  if (process.env.NODE_ENV === 'production') {
+    basename = '/appengine'
+  }
+  import(`@/styles/appengine-bg-spa.scss`);
+} else {
+  import(`@/styles/appengine-bg.scss`);
+}
+const RouterComponent = isHashRouter ? HashRouter : BrowserRouter
+const AppRouter = ({ children }) => (
+  <RouterComponent basename={basename}>
+    {children}
+  </RouterComponent>
+);
 export default function App() {
   return (
     <ConfigProvider locale={getCookie('locale').toLocaleLowerCase() === 'en-us' ? enUS : zhCN} autoInsertSpace={true}>
-      {/* <StoreProvider> */}
-      <Router>
+      <AppRouter>
         <AppLayout />
-      </Router>
-      {/* </StoreProvider> */}
+      </AppRouter>
     </ConfigProvider>
   );
 }

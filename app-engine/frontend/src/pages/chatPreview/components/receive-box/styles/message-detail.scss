@@ -11,13 +11,6 @@
   border-radius: 50%;
 }
 
-.source-word {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-image: url('/src/assets/images/source/sourceEven.png');
-}
-
 .source-title {
   font-size: 16px;
   font-weight: 700;
@@ -62,20 +55,6 @@
 .source-text:hover .source-tooltip {
   visibility: visible;
   opacity: 1;
-}
-
-.source-word:hover {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-image: url('/src/assets/images/source/sourcehover.png');
-}
-
-.source-word-click {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-image: url('/src/assets/images/source/sourcehover.png');
 }
 
 .source-drawer {
