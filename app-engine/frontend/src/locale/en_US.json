@@ -423,7 +423,6 @@
   "visiblePopover": "<p>If this option is selected, </p>\n<p>this field will be displayed in chat configuration on the chat page and can be set by users.</p>",
   "forExample": "Example:",
   "searchArgsConfig": "Search Parameters",
-  "searchMode": "Search Mode",
   "maxReferences": "待翻译",
   "minRelativity": "待翻译",
   "resultRearrange": "待翻译",
@@ -553,7 +552,6 @@
   "toolGroupNameRepeat": "待翻译",
   "iframeTip": "待翻译",
   "iframeTitle": "待翻译",
-  "displayNameRule": "<p>Enter a string containing only letters, digits, hyphens (-), and underscores (_). </p>\n<p>The value cannot start or end with a hyphen (-) or underscore (_).</p>",
   "jsonRule": "待翻译",
   "textRule": "待翻译",
   "assignVariable": "待翻译",
@@ -663,5 +661,7 @@
   "testCode": "Test Code",
   "intelligentFormShowResult": "Display result using intelligent form",
   "parameterDescription": "Parameter Description: ",
-  "notePlaceHolder" : "待翻译"
+  "notePlaceHolder" : "待翻译",
+  "similarityThresholdTips": "待翻译",
+  "chatAgentTips": "待翻译"
 }

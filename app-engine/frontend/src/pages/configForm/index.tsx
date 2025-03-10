@@ -59,9 +59,6 @@ const ConfigForm = (props) => {
     if (!configData) return;
     const configStructure = configData;
     const appCategory = appInfo.appCategory;
-    if (appCategory === 'workflow') {
-      mashupClick();
-    }
     setConfigStructure(configStructure);
     setGetCategory(appCategory);
     const data = getConfigValue(configStructure);

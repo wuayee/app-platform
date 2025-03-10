@@ -8,3 +8,8 @@ export enum PluginTypeE {
   MARKET = 'market',
   OWER = 'owner',
 }
+
+export enum ToolType {
+  TOOL ='tool',
+  WATERFLOW ='waterFlow',
+}

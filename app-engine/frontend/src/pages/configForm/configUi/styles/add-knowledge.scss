@@ -201,6 +201,17 @@
     -webkit-box-orient: vertical;
   }
 }
+.card-ellipsis {
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card-data-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .pagination-footer{
   margin-top: 16px;
 }

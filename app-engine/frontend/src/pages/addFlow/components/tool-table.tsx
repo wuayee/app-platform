@@ -11,6 +11,7 @@ import { getPluginDetail, getChatbotPluginDetail } from '@/shared/http/plugin';
 import { useTranslation } from 'react-i18next';
 import { validate } from '../utils';
 import { deepClone } from '../../chatPreview/utils/chat-process';
+import { ToolType } from './model';
 import '../styles/tool-table.scss';
 
 /**
@@ -35,9 +36,11 @@ const ToolTable = (props: any) => {
     checkedList,
     modalType,
     setShowModal,
+    checkData,
   } = props;
   const [getPluginData, setGetPluginData] = useState<any>([]);
   const modalTypes = ['pluginButtonTool', 'llmTool'];
+  let checkedToolList: any = [];
 
   const confirm = (item: any) => {
     const pluginInfo = pluginData?.mapType ? [pluginData] : getPluginData;
@@ -74,7 +77,7 @@ const ToolTable = (props: any) => {
   };
 
   // 通用HTML
-  const fncHTML = (item: any, type: string) => {
+  const fncHTML = (item: any, toolType: string) => {
     return (
       <div className='tool-table'>
         <div className='tool-table-header'>
@@ -89,7 +92,7 @@ const ToolTable = (props: any) => {
             <div>
               <div>
                 <span className='plugin-tool-name'>{item?.name || item?.pluginName}</span>
-                {(type === 'tool' || type === 'waterFlow') && (
+                {(toolType === ToolType.TOOL || toolType === ToolType.WATERFLOW) && (
                   <>
                     <span className='tool-version'>
                       <span className='tool-version-border tool-version-bg'>{item.version}</span>
@@ -117,13 +120,22 @@ const ToolTable = (props: any) => {
                 {item.pluginToolDataList === null ? item.extension.description : item.description}
               </div>
             </div>
-            {(type === 'tool' || type === 'waterFlow') && (
+            {(toolType === ToolType.TOOL || toolType === ToolType.WATERFLOW) && (
               <div>
-                <Button onClick={() => confirm(item.uniqueName)}>
+                <Button
+                  disabled={type === 'addSkill' ? item.isChecked : false}
+                  onClick={() => confirm(item.uniqueName)}
+                >
                   {item.isChecked ? (
                     <>
-                      <span className='add-fontsize'>{t('additions')}</span>
-                      <span className='add-bgc'>+{item.toolCount}</span>
+                      {type !== 'addSkill' ? (
+                        <>
+                          <span className='add-fontsize'>{t('additions')}</span>
+                          <span className='add-bgc'>+{item.toolCount}</span>
+                        </>
+                      ) : (
+                        <span>{t('added')}</span>
+                      )}
                     </>
                   ) : (
                     t('additions')
@@ -139,6 +151,11 @@ const ToolTable = (props: any) => {
 
   const onChange = async (e: any) => {
     let param = e.toString();
+    if (type === 'addSkill') {
+      checkData.forEach((item: any) => {
+        checkedToolList.push(item.name);
+      });
+    }
     try {
       if (param !== '') {
         const res: any = pluginData.appCategory
@@ -147,7 +164,11 @@ const ToolTable = (props: any) => {
         if (res.code === 0) {
           let newRes = pluginData.appCategory !== null ? [res.data] : res.data.pluginToolDataList;
           newRes.forEach((ite: any) => {
-            ite.isChecked = false;
+            if (checkedToolList.includes(ite.name)) {
+              ite.isChecked = true;
+            } else {
+              ite.isChecked = false;
+            }
             ite.toolCount = 0;
           });
           setGetPluginData(newRes);

@@ -6,6 +6,7 @@
 
 import React, { useImperativeHandle, useState, useRef } from 'react';
 import { Modal, Tabs, Radio, Switch, Tooltip, Spin } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { getSearchParams } from '@/shared/http/appBuilder';
 import { useTranslation } from 'react-i18next';
 import { Message } from '@/shared/utils/message';
@@ -188,7 +189,16 @@ const AddSearch = (props: any) => {
           )}
           {item.type === 'similarityThreshold' && (
             <>
-              <div>{item.name}</div>
+              <div>
+                <span className='search-icon'>{item.name}</span>
+                <Tooltip
+                  overlayInnerStyle={{ color: '#000' }}
+                  color='#fff'
+                  title={t('similarityThresholdTips')}
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </div>
               <Slider
                 data={item}
                 step={0.1}

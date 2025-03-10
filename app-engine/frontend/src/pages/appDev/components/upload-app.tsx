@@ -51,7 +51,7 @@ const UploadApp = ({ uploadRef, tenantId, addAippCallBack }) => {
     const result = await importApp(tenantId, formData);
     try {
       if (result?.code === 0 && result?.data) {
-        addAippCallBack(result.data.id);
+        addAippCallBack(result.data.id, result.data.aippId, result.data.appCategory);
         setFileList([]);
       }
     } finally {

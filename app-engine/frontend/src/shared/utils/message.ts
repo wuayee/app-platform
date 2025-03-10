@@ -8,7 +8,7 @@ export const Message = ({ type, content }) => {
   message.destroy();
   switch (type) {
     case 'info':
-      message.warning({
+      message.info({
         content,
         className: 'message-notice-antd4',
         key: 'message',

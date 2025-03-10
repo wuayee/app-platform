@@ -5,11 +5,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState } from 'react';
-import { Button, Input, } from 'antd';
+import { Button, Input } from 'antd';
 import { AppIcons } from '@/components/icons/app';
 import { toClipboard } from '@/shared/utils/common';
 import { CopyUrlIcon } from '@/assets/icon';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 import Empty from '@/components/empty/empty-item';
 import IframeModal from './iframe-modal';
 import DocumentDrawer from './apiDocument';
@@ -24,7 +24,7 @@ import DocumentIcon from '@/assets/images/ai/document.png';
  * @return {JSX.Element}
  * @constructor
  */
-const PublicCard = ({ type, url, auth = false  }) => {
+const PublicCard = ({ type, url, detail, auth = false }) => {
   const { t } = useTranslation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -33,7 +33,7 @@ const PublicCard = ({ type, url, auth = false  }) => {
     let origin = window.location.origin;
     return type === 'URL' ? `${origin}/#${url}` : `${origin}${url}`;
   };
-  
+
   // 复制
   const copyClick = (url) => {
     toClipboard(url);
@@ -58,14 +58,26 @@ const PublicCard = ({ type, url, auth = false  }) => {
       {url ? (
         <div className='item-detail'>
           <div className='item-top'>
-            {type === 'URL' ? <div className='title'>{t('public')}URL</div> : <div className='title'>API{t('access')}</div>}
+            {type === 'URL' ? (
+              <div className='title'>{t('public')}URL</div>
+            ) : (
+              <div className='title'>API{t('access')}</div>
+            )}
           </div>
-          <Input
-            value={setPreviewUrl(url)}
-            readOnly
-            suffix={
-              <CopyUrlIcon onClick={() => copyClick(setPreviewUrl(url))} style={{ cursor: 'pointer' }} />
-            } />
+          {detail.attributes?.latest_version || detail.state === 'active' ? (
+            <Input
+              value={setPreviewUrl(url)}
+              readOnly
+              suffix={
+                <CopyUrlIcon
+                  onClick={() => copyClick(setPreviewUrl(url))}
+                  style={{ cursor: 'pointer' }}
+                />
+              }
+            />
+          ) : (
+            <></>
+          )}
           {type === 'URL' ? (
             <div className='item-bottom'>
               <Button size='small' onClick={() => openClick(setPreviewUrl(url))}>
@@ -77,23 +89,29 @@ const PublicCard = ({ type, url, auth = false  }) => {
                 <span>{t('iframeTip')}</span>
               </Button>
             </div>
-          ) : (
+          ) : detail.attributes?.latest_version || detail.state === 'active' ? (
             <div className='item-bottom'>
               <Button size='small' disabled={auth} onClick={openKey}>
-                <img src={SecretKeyIcon} alt="" />
+                <img src={SecretKeyIcon} alt='' />
                 <span>{t('ApiKey')}</span>
               </Button>
               <Button size='small' onClick={() => openDocumentation(url)}>
-                <img src={DocumentIcon} alt="" />
+                <img src={DocumentIcon} alt='' />
                 <span>{t('ApiDocumentation')}</span>
               </Button>
             </div>
+          ) : (
+            <Empty iconType='url' text={t('notReleasedYetTip')} />
           )}
         </div>
       ) : (
         <div className='item-detail'>
           <div className='item-top'>
-            {type === 'URL' ? <div className='title'>{t('public')}</div> : <div className='title'>API{t('access')}</div>}
+            {type === 'URL' ? (
+              <div className='title'>{t('public')}</div>
+            ) : (
+              <div className='title'>API{t('access')}</div>
+            )}
           </div>
           <Empty iconType='url' text={t('notReleasedYetTip')} />
         </div>
@@ -103,11 +121,7 @@ const PublicCard = ({ type, url, auth = false  }) => {
         url={setPreviewUrl(url)}
         setDrawerOpen={setDrawerOpen}
       />
-      <IframeModal 
-        deleteOpen={deleteOpen} 
-        setDeleteOpen={setDeleteOpen} 
-        url={setPreviewUrl(url)}
-      />
+      <IframeModal deleteOpen={deleteOpen} setDeleteOpen={setDeleteOpen} url={setPreviewUrl(url)} />
     </div>
   );
 };
