@@ -10,7 +10,7 @@ import { uploadMultipleFile } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import uploadImg from '@/assets/images/upload_icon.svg';
-const supportFileTypes = ['pdf', 'txt', 'docx', 'markdown', 'html', 'png', 'jpg', 'jpeg', 'mp3', 'mp4'];
+const supportFileTypes = ['pdf', 'txt', 'docx', 'md', 'markdown', 'html', 'png', 'jpg', 'jpeg', 'mp3', 'mp4'];
 const pictureTypes = ['png', 'jpg', 'jpeg'];
 
 const { Dragger } = Upload;
@@ -102,7 +102,7 @@ const UploadFile = (props) => {
           } else {
             const addItem = addFileList.find(item => item.name === file.name);
             if (addItem) {
-              return Object.assign(file, { uploadStatus: 'failed' });;
+              return Object.assign(file, { uploadStatus: 'failed' });
             } else {
               return file;
             }

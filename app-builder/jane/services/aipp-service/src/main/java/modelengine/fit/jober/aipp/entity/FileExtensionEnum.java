@@ -33,7 +33,8 @@ public enum FileExtensionEnum {
     TXT("txt", OperatorService.FileType.TXT),
     HTML("html", OperatorService.FileType.HTML),
     HTM("htm", OperatorService.FileType.HTML),
-    MARKDOWN("md", OperatorService.FileType.MARKDOWN);
+    MD("md", OperatorService.FileType.MARKDOWN),
+    MARKDOWN("markdown", OperatorService.FileType.MARKDOWN);
 
     private final String extension;
     private final OperatorService.FileType fileType;
