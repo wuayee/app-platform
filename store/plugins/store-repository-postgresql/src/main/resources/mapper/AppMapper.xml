@@ -39,7 +39,7 @@
             #{toolName}, #{toolUniqueName},
         </trim>
     </insert>
-    <update id="updateApp" parameterType="com.huawei.jade.store.repository.pgsql.entity.AppDo">
+    <update id="updateApp" parameterType="modelengine.jade.store.repository.pgsql.entity.AppDo">
         UPDATE store_app
         SET updated_time = current_timestamp, icon = #{icon}, source = #{source}
         WHERE tool_unique_name = #{toolUniqueName}
