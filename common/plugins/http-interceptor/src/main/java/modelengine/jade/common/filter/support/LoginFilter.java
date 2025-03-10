@@ -6,6 +6,7 @@
 
 package modelengine.jade.common.filter.support;
 
+import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.http.server.HttpServerFilter;
@@ -14,6 +15,7 @@ import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Order;
 import modelengine.fitframework.annotation.Scope;
 import modelengine.fitframework.inspection.Validation;
+import modelengine.fitframework.log.Logger;
 import modelengine.jade.authentication.AuthenticationService;
 import modelengine.jade.authentication.context.HttpRequestUtils;
 import modelengine.jade.authentication.context.UserContext;
@@ -33,6 +35,7 @@ public class LoginFilter implements HttpServerFilter {
     private final List<String> matchPatterns;
     private final List<String> mismatchPatterns;
     private final AuthenticationService authenticationService;
+    private static final Logger log = Logger.get(LoginFilter.class);
 
     /**
      * 根据配置创建过滤器的实例。
@@ -69,6 +72,9 @@ public class LoginFilter implements HttpServerFilter {
     @Override
     public void doFilter(HttpClassicServerRequest request, HttpClassicServerResponse response,
             HttpServerFilterChain chain) {
+        if (isExcludeUrl(request)) {
+            chain.doFilter(request, response);
+        }
         UserContext operationContext = new UserContext(this.authenticationService.getUserName(request),
                 HttpRequestUtils.getUserIp(request),
                 HttpRequestUtils.getAcceptLanguages(request));
@@ -78,5 +84,18 @@ public class LoginFilter implements HttpServerFilter {
     @Override
     public Scope scope() {
         return Scope.GLOBAL;
+    }
+
+    /**
+     * 仅仅打开文件下载接口的认证
+     * @param request 用户请求
+     * @return 是否例外
+     */
+    private boolean isExcludeUrl(HttpClassicServerRequest request) {
+        final String downloadUrl = "/v1/api/31f20efc7e0848deab6a6bc10fc3021e/file?";
+        HttpRequestMethod method = request.method();
+        String uri = request.requestUri();
+        log.info("uri : {}", uri);
+        return uri.contains(downloadUrl) && method.name().equals(HttpRequestMethod.GET.name());
     }
 }
