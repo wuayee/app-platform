@@ -313,10 +313,7 @@ public class AppBuilderAppServiceImpl
         } catch (AippTaskNotFoundException e) {
             throw new AippException(APP_PUBLISH_FAILED);
         }
-        AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
-        aippDto.setId(aippCreateDto.getAippId());
         String id = appDto.getId();
-        this.updateFlowGraph(id, appDto.getFlowGraph(), contextOf);
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
         if (AppState.getAppState(appBuilderApp.getState()) == AppState.PUBLISHED) {
             throw new AippException(AippErrCode.APP_HAS_PUBLISHED);
@@ -325,6 +322,9 @@ public class AppBuilderAppServiceImpl
         // 添加校验，禁止更低版本手动输入
         this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
         appBuilderApp.setVersion(appDto.getVersion());
+        AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
+        aippDto.setId(aippCreateDto.getAippId());
+        this.updateFlowGraph(id, appDto.getFlowGraph(), contextOf);
         Map<String, Object> appBuilderAppAttr = appBuilderApp.getAttributes();
         appBuilderAppAttr.put(PUBLISH_UPDATE_DESCRIPTION_KEY, aippDto.getPublishedDescription());
         appBuilderAppAttr.put(PUBLISH_UPDATE_LOG_KEY, aippDto.getPublishedUpdateLog());
