@@ -59,7 +59,7 @@ public class AgentController extends AbstractController {
             @RequestBody @Validated @SpanAttr("description:$.description") AgentCreateInfoDto dto) {
         AgentInfoEntity entity = new AgentInfoEntity();
         OperationContext context = this.contextOf(request, "");
-        entity.setName(this.agentInfoGenerateService.generateName(dto.getDescription()));
+        entity.setName(this.agentInfoGenerateService.generateName(dto.getDescription(), context));
         entity.setGreeting(this.agentInfoGenerateService.generateGreeting(dto.getDescription()));
         entity.setPrompt(this.agentInfoGenerateService.generatePrompt(dto.getDescription()));
         entity.setTools(this.agentInfoGenerateService.selectTools(dto.getDescription(), context.getEmployeeNumber()));
