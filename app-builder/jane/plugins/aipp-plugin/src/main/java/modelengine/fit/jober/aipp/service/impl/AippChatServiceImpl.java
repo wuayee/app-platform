@@ -35,6 +35,7 @@ import modelengine.fit.jober.aipp.enums.RestartModeEnum;
 import modelengine.fit.jober.aipp.mapper.AippChatMapper;
 import modelengine.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
+import modelengine.fit.jober.aipp.po.MsgInfoPO;
 import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
 import modelengine.fit.jober.aipp.service.AippChatService;
 import modelengine.fit.jober.aipp.service.AippLogService;
@@ -313,24 +314,33 @@ public class AippChatServiceImpl implements AippChatService {
             throw new AippException(OBTAIN_HISTORY_CONVERSATION_FAILED);
         }
         List<QueryChatRsp> result = this.aippChatMapper.selectChatList(request, null, context.getAccount());
+        List<String> instanceIds = result.stream().map(this::getInstanceId).collect(Collectors.toList());
+        List<MsgInfoPO> logs = new ArrayList<>();
+        if (!instanceIds.isEmpty()) {
+            logs = this.aippChatMapper.selectMsgByInstanceIds(instanceIds);
+        }
+        Map<String, String> finalLogs = logs.stream()
+            .collect(Collectors.toMap(MsgInfoPO::getInstanceId, MsgInfoPO::getLogData));
         result.forEach((chat) -> {
             chat.setUpdateTimeStamp(Timestamp.valueOf(chat.getUpdateTime()).getTime());
             chat.setCurrentTime(Timestamp.valueOf(LocalDateTime.now()).getTime());
             chat.setRecentInfo("暂无新消息");
-            Map<String, Object> mapTypes = JsonUtils.parseObject(chat.getAttributes());
-            String instId = String.valueOf(mapTypes.get("instId"));
+            String instId = getInstanceId(chat);
             chat.setMsgId(instId);
-            String log = this.aippChatMapper.selectMsgByInstance(instId);
+            String log = finalLogs.get(instId);
             if (log != null) {
                 AippLogData data = JsonUtils.parseObject(log, AippLogData.class);
                 chat.setRecentInfo(data.getMsg());
             }
         });
-        long total = this.aippChatMapper.getChatListCount(request, null);
-        List<QueryChatRspDto> queryChatRspDtos = result.stream()
-                .map(this::buildQueryChatRspDto)
-                .collect(Collectors.toList());
-        return RangedResultSet.create(queryChatRspDtos, body.getOffset(), body.getLimit(), total);
+        long total = this.aippChatMapper.getChatListCount(request, null, context.getAccount());
+        return RangedResultSet.create(result.stream().map(this::buildQueryChatRspDto).collect(Collectors.toList()),
+            body.getOffset(), body.getLimit(), total);
+    }
+
+    private String getInstanceId(QueryChatRsp chat) {
+        Map<String, Object> mapTypes = JsonUtils.parseObject(chat.getAttributes());
+        return String.valueOf(mapTypes.get("instId"));
     }
 
     private QueryChatRspDto buildQueryChatRspDto(QueryChatRsp rsp) {
