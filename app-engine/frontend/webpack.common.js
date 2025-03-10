@@ -6,13 +6,9 @@
 
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const {
-  CleanWebpackPlugin
-} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HappyPack = require('happypack');
-const PUBLIC_PATH = '/appbuilder/';
-const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -21,7 +17,7 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle[hash].js',
-    publicPath: PUBLIC_PATH,
+    publicPath: './',
     path: path.resolve(__dirname, 'build'),
   },
   module: {
@@ -119,18 +115,6 @@ module.exports = {
   },
   resolve: {
     alias: {
-      // __utils: path.join(__dirname, 'src/utils'),
-      __styles: path.join(__dirname, 'src/styles'),
-      __plugins: path.join(__dirname, 'src/plugins'),
-      // __enum: path.join(__dirname, 'src/enum'),
-      __pages: path.join(__dirname, 'src/pages'),
-      __service: path.join(__dirname, 'src/service'),
-      __constants: path.join(__dirname, 'src/constants'),
-      __support: path.join(__dirname, 'src/support'),
-      __components: path.join(__dirname, 'src/components'),
-      '@shared': path.join(__dirname, 'src/shared'),
-      '@assets': path.join(__dirname, 'src/assets'),
-      __store: path.join(__dirname, 'src/store'),
       '@': path.resolve(__dirname, 'src')
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -145,14 +129,11 @@ module.exports = {
       chunkFilename: '[name].[hash:8].css',
     }),
     new HtmlWebpackPlugin({
-      title: 'elsa',
+      title: 'ModeEngine',
       template: path.join(process.cwd(), './src/index.html'),
       filename: 'index.html',
     }),
     new CleanWebpackPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.SSO_URL': JSON.stringify(process.env.SSO_URL)
-    }),
     new CopyWebpackPlugin({
       patterns: [
         {

@@ -9,8 +9,16 @@ import i18n from "@/locale/i18n";
 import { Message } from '../utils/message';
 import store from '@/store/store';
 import { setLoginStatus, setNoAuth } from '@/store/chatStore/chatStore';
+import { getCookie } from "@/shared/utils/common";
 
-let baseAxios = axios.create();
+let baseAxios = axios.create({
+  headers: {
+    common: {
+      'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+      'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
+    }
+  }
+});
 baseAxios.defaults.timeout = 100000;
 baseAxios.defaults.withCredentials = true;
 baseAxios.interceptors.request.use(

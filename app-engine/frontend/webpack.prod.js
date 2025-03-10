@@ -18,6 +18,7 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.PACKAGE_MODE': JSON.stringify('common'),
     }),
     new SubresourceIntegrityPlugin({ hashFuncNames: ['sha256', 'sha384'] }),
   ],

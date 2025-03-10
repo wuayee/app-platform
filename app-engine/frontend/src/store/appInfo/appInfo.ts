@@ -7,7 +7,6 @@ import {
   SET_VALIDATE_INFO, 
   SET_NODE_ID, 
   SET_AGENT_INFO, 
-  SET_ELSA_CHANGE, 
   SET_AIPP_ID, 
   SET_APP_VERSION 
 } from './action-types';
@@ -35,9 +34,6 @@ export const setChoseNodeId = (item) => {
 }
 export const setAgentInfo = (item) => {
   return { type: SET_AGENT_INFO, payload: item }
-}
-export const setElsaChange = (item) => {
-  return { type: SET_ELSA_CHANGE, payload: item }
 }
 export const setAippId = (item) => {
   return { type: SET_AIPP_ID, payload: item }

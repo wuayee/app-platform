@@ -33,11 +33,11 @@ export const storage = {
     return storage.get('appChatMap')?.[appId]?.chatId || '';
   },
   /**
-   * 获取小魔方应用产品线对话chatId
+   * 获取对话chatId
    * @param {String} dimensionId 应用Id
    * @return {String} 对话的chatId
    */
-  getDimensionChatId(aippId, dimensionId) {
-    return storage.get('appChatMap')?.[aippId]?.dimensions?.[dimensionId] || '';
+  getDimensionChatId(appId, dimensionId) {
+    return storage.get('appChatMap')?.[appId]?.dimensions?.[dimensionId] || '';
   },
 };
