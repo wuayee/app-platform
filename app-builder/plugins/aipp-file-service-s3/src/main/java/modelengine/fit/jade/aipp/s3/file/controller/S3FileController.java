@@ -72,7 +72,7 @@ public class S3FileController {
         List<S3FileMetaEntity> metaEntities = new ArrayList<>();
         for (NamedEntity entity : entityList) {
             FileEntity file = entity.asFile();
-            String fileName = file.filename();
+            String fileName = file.filename().replace(" ", "");
             LOG.info("Received upload file:{}.", fileName);
             metaEntities.add(this.s3Service.upload(file.getInputStream(), file.length(), fileName));
         }
