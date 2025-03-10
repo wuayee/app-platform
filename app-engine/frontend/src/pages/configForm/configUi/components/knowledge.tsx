@@ -30,7 +30,7 @@ const Knowledge = (props) => {
 
   // 删除
   const deleteItem = (item) => {
-    list.current = list.current.filter(Litem => Litem.tableId !== item.tableId);
+    list.current = list.current.filter(Litem => Litem.id !== item.id);
     setKnows([...list.current]);
     updateData(list.current);
   };

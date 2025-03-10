@@ -30,7 +30,7 @@ const AddKnowledge = (props) => {
   const { modalRef, tenantId, groupId, handleDataChange } = props;
   const [open, setOpen] = useState(false);
   const [listPage, setListPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(12);
   const [total, setTotal] = useState(0);
   const [knowledgeList, setKnowledgeList] = useState([]);
   const [cachedKnowledgeList, setCachedKnowledgeList] = useState<any>([]);
@@ -48,14 +48,14 @@ const AddKnowledge = (props) => {
   };
   const showModal = (list = []) => {
     setTotal(0);
-    checkData.current = list;
+    checkData.current = deepClone(list);
     setOpen(true);
     setCheck();
   };
   // 设置选中列表
   const setCheck = () => {
     setListPage(1);
-    setPageSize(10);
+    setPageSize(12);
     setKnowledgeList(checkData.current);
     handleGetKnowledgeOptions();
   };
@@ -195,8 +195,12 @@ const AddKnowledge = (props) => {
               return (
                 <div key={item.id} className='select-card'>
                   <div className='title-box title-box-bottom'>
-                    <div className='konwledge-name'>{item.name}</div>
-                    <div className='knowledge-size'>{typeMap[item?.type]}</div>
+                    <Tooltip title={item.name} placement='topLeft'>
+                      <div className='konwledge-name card-ellipsis'>{item.name}</div>
+                    </Tooltip>
+                    <Tooltip title={typeMap[item?.type]} placement='topLeft'>
+                      <div className='knowledge-size card-data-ellipsis'>{typeMap[item?.type]}</div>
+                    </Tooltip>
                   </div>
                   <div className='knowledge-size knowledge-size-bottom'>
                     {t('createdAt')} {item.createdAt}
@@ -219,7 +223,13 @@ const AddKnowledge = (props) => {
           </div>
         )}
         <div className='pagination-footer'>
-          <Pagination total={total} current={listPage} onChange={selectPage} pageSize={pageSize} />
+          <Pagination
+            total={total}
+            current={listPage}
+            onChange={selectPage}
+            pageSize={pageSize}
+            pageSizeOptions={[12, 24, 36, 48]}
+          />
         </div>
       </Modal>
     </>

@@ -53,6 +53,9 @@ const AippIndex = () => {
     dispatch(setInspirationOpen(false));
     getUser();
     getAippDetails();
+    if (window.location.href.indexOf('type=chatWorkflow') !== -1) {
+      setShowElsa(true);
+    };
     dispatch(setChoseNodeId(''));
     dispatch(setValidateInfo([]));
   }, []);

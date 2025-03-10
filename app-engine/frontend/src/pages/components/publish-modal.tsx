@@ -127,7 +127,11 @@ const PublishModal = (props) => {
           appEngineId && navigate(`/app-develop/${tenantId}/app-detail/${appEngineId}`);
         } else {
           sessionStorage.setItem('pluginType', 'workflow');
-          navigate(`/plugin`);
+          if (window.location.href.indexOf('type=chatWorkflow') !== -1) {
+            navigate(`/app-develop`);
+          } else {
+            navigate(`/plugin`);
+          }
         }
       }
     } finally {

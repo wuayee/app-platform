@@ -136,7 +136,14 @@ const AppDev: React.FC = () => {
   };
 
   // 应用添加成功回调
-  function addAippCallBack(appId: string, aippId: string) {
+  function addAippCallBack(appId: string, aippId: string, appCategory?: string) {
+    if (appCategory && appCategory === 'workflow') {
+      navigate({
+        pathname: `/app-develop/${tenantId}/app-detail/${appId}/${aippId}`,
+        search: '?type=chatWorkflow',
+      });
+      return;
+    }
     if (aippId) {
       navigate(`/app-develop/${tenantId}/app-detail/${appId}/${aippId}`);
       return;

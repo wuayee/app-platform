@@ -37,7 +37,6 @@ const AppOverview: React.FC = () => {
   const [appIcon, setAppIcon] = useState('');
   const dispatch = useAppDispatch();
   const readOnly = useAppSelector((state) => state.chatCommonStore.readOnly);
-  const elsaChange = useAppSelector((state) => state.appStore.elsaChange);
 
   // 页面初始化
   useEffect(() => {
@@ -71,7 +70,10 @@ const AppOverview: React.FC = () => {
         if (aippId) {
           navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`);
           if (detail.appCategory === 'workflow') {
-            elsaChange();
+            navigate({
+              pathname: `/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`,
+              search: '?type=chatWorkflow',
+            });
           }
         } else {
           navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/`);
@@ -148,8 +150,8 @@ const AppOverview: React.FC = () => {
           </div>
         </div>
         <div className='detail-card'>
-          <PublicCard url={detail.chatUrl} type='URL' />
-          <PublicCard url={`/app/v1/api/${tenantId}`} type='API' auth={readOnly}/>
+        <PublicCard url={detail.chatUrl} type='URL' detail={detail}  />
+          <PublicCard url={`/app/v1/api/${tenantId}`} type='API' auth={readOnly} detail={detail} />
         </div>
       </div>
     </Spin>

@@ -253,6 +253,7 @@ const ToolDrawer = (props) => {
   // 关闭弹窗
   const closeModal = () => {
     setShowModal(false);
+    searchName.current = '';
     setPluginCategory('mine');
     setSelectedSourceTab(minePluginCategories[0].key);
   };
@@ -334,6 +335,7 @@ const ToolDrawer = (props) => {
                             checkedList={checkedList}
                             modalType={modalType}
                             setShowModal={setShowModal}
+                            checkData={checkData}
                           />
                         </div>
                       );

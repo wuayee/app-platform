@@ -18,7 +18,7 @@ import agent from '@/assets/images/appdevelop/agent.png';
 import workflow from '@/assets/images/appdevelop/workflow.png';
 import type { RadioChangeEvent } from 'antd';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
-import { APP_TYPE } from './common/common';
+import { APP_TYPE, APP_BUILT_TYPE, APP_BUILT_CLASSIFICATION } from './common/common';
 import { useTranslation } from 'react-i18next';
 import { findConfigItem } from '@/shared/utils/common';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
@@ -38,8 +38,8 @@ const EditModal = (props) => {
   const [filePath, setFilePath] = useState('');
   const [showImg, setShowImg] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
-  const [appBuiltType, setAppBuiltType] = useState('BASIC');
-  const [applicationType, setApplicationType] = useState('assistant');
+  const [appBuiltType, setAppBuiltType] = useState(APP_BUILT_TYPE.BASIC);
+  const [applicationType, setApplicationType] = useState(APP_BUILT_CLASSIFICATION.ASSISTANT);
   const [types, setTypes] = useState([]);
   const inputData = useRef<any>({});
   const graphOperator = useRef<any>({});
@@ -120,11 +120,11 @@ const EditModal = (props) => {
   // 获取category
   const getCategory = () => {
     let appCategoryType = '';
-    if (applicationType === 'assistant') {
+    if (applicationType === APP_BUILT_CLASSIFICATION.ASSISTANT) {
       appCategoryType = 'chatbot';
-    } else if (applicationType === 'agent') {
+    } else if (applicationType === APP_BUILT_CLASSIFICATION.AGENT) {
       appCategoryType = 'agent';
-    } else if (applicationType === 'workflow') {
+    } else if (applicationType === APP_BUILT_CLASSIFICATION.WORKFLOW) {
       appCategoryType = 'workflow';
     }
     return appCategoryType;
@@ -145,9 +145,9 @@ const EditModal = (props) => {
   const handleAddOk = async () => {
     let agentName = '';
     try {
-      setLoading(true);
       const formParams = await form.validateFields();
-      if (applicationType === 'agent') {
+      setLoading(true);
+      if (applicationType === APP_BUILT_CLASSIFICATION.AGENT) {
         const agentParam = {
           description: formParams.description,
         };
@@ -156,7 +156,7 @@ const EditModal = (props) => {
         agentInfo.current = res.data;
       }
       const params = {
-        name: applicationType === 'agent' ? agentName : formParams.name,
+        name: applicationType === APP_BUILT_CLASSIFICATION.AGENT ? agentName : formParams.name,
         description: formParams.description,
         icon: type === 'add' && filePath ? filePath : formParams.icon,
         app_type: formParams.app_type,
@@ -164,9 +164,9 @@ const EditModal = (props) => {
         type: 'app',
         app_category: getCategory(),
       }
-      const res: any = await createAipp(tenantId, applicationType === 'workflow' ? APP_TYPE.WORK_FLOW.configId : APP_TYPE[appBuiltType].configId, params);
+      const res: any = await createAipp(tenantId, applicationType === APP_BUILT_CLASSIFICATION.WORKFLOW ? APP_TYPE.WORK_FLOW.configId : APP_TYPE[appBuiltType].configId, params);
       if (res.code === 0) {
-        if (res.data.appCategory === 'agent') {
+        if (res.data.appCategory === APP_BUILT_CLASSIFICATION.AGENT) {
           updateAgent(res.data);
         } else {
           addSuccessfulCallback(res.data);
@@ -177,10 +177,16 @@ const EditModal = (props) => {
     }
   }
 
-  const addSuccessfulCallback = ({ id, aippId }) => {
+  useEffect(() => {
+    if (applicationType === APP_BUILT_CLASSIFICATION.AGENT && loading) {
+      Message({ type: 'info', content: t('chatAgentTips') });
+    }
+  }, [loading]);
+
+  const addSuccessfulCallback = ({ id, aippId, appCategory  }) => {
     handleCancel();
     Message({ type: 'success', content: t('addedSuccessfully') });
-    addAippCallBack(id, aippId);
+    addAippCallBack(id, aippId, appCategory);
   };
 
   // 更新智能体信息
@@ -254,7 +260,11 @@ const EditModal = (props) => {
     }
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    if (!loading) {
+      setAppBuiltType(APP_BUILT_TYPE.BASIC);
+      setApplicationType(APP_BUILT_CLASSIFICATION.ASSISTANT);
+      setIsModalOpen(false);
+    }
   };
   const beforeUpload = (file) => {
     return false
@@ -326,6 +336,7 @@ const EditModal = (props) => {
   // 应用类型切换方法
   const applicationOnChange = (e: RadioChangeEvent) => {
     setApplicationType(e.target.value);
+    setAppBuiltType(APP_BUILT_TYPE.BASIC);
     form.resetFields(['name', 'description']);
   };
   useImperativeHandle(modalRef, () => {
@@ -344,17 +355,17 @@ const EditModal = (props) => {
         open={isModalOpen}
         onCancel={handleCancel}
         footer={[
-          <Button key='back' onClick={handleCancel}>
+          <Button disabled={loading} key='back' onClick={handleCancel}>
             {t('cancel')}
           </Button>,
           <Button
-            className={applicationType === 'agent' ? 'agent-button ' : ''}
+            className={applicationType === APP_BUILT_CLASSIFICATION.AGENT ? 'agent-button ' : ''}
             key='submit'
             type='primary'
             loading={loading}
             onClick={confrimClick}
           >
-            {applicationType === 'agent' ? (
+            {applicationType === APP_BUILT_CLASSIFICATION.AGENT ? (
               <span>
                 <img
                   style={{ marginRight: '4px' }}
@@ -375,6 +386,7 @@ const EditModal = (props) => {
             <div className='app-edit-modal'>
               <Radio.Group
                 value={applicationType}
+                disabled={loading}
                 onChange={applicationOnChange}
                 className='app-edit-btn-box'
               >
@@ -394,15 +406,15 @@ const EditModal = (props) => {
             </div>
           </>
         )}
-        {type && applicationType === 'assistant' && !isTemplate && (
+        {type && applicationType === APP_BUILT_CLASSIFICATION.ASSISTANT && !isTemplate && (
           <>
             <div style={{ marginBottom: '4px', marginTop: '16px', fontSize: '12px' }}>
               {t('arrangementTechniques')}
             </div>
             <div className='arrange-model'>
               <div
-                className={`arrange-container ${appBuiltType === 'BASIC' ? 'chose' : ''}`}
-                onClick={() => setAppBuiltType('BASIC')}
+                className={`arrange-container ${appBuiltType === APP_BUILT_TYPE.BASIC ? 'chose' : ''}`}
+                onClick={() => setAppBuiltType(APP_BUILT_TYPE.BASIC)}
               >
                 <div className='model-name'>
                   <img src='./src/assets/images/basic.svg' alt='' />
@@ -411,8 +423,8 @@ const EditModal = (props) => {
                 <div className='model-desc'>{t('basicArrangeDescription')}</div>
               </div>
               <div
-                className={`arrange-container ${appBuiltType === 'WORK_FLOW' ? 'chose' : ''}`}
-                onClick={() => setAppBuiltType('WORK_FLOW')}
+                className={`arrange-container ${appBuiltType === APP_BUILT_TYPE.WORK_FLOW ? 'chose' : ''}`}
+                onClick={() => setAppBuiltType(APP_BUILT_TYPE.WORK_FLOW)}
               >
                 <div className='model-name'>
                   <img src='./src/assets/images/workflow.svg' alt='' />
@@ -425,7 +437,7 @@ const EditModal = (props) => {
         )}
         <div>
           <Form form={form} layout='vertical' autoComplete='off' className='edit-form-content'>
-            {applicationType !== 'agent' && (
+            {applicationType !== APP_BUILT_CLASSIFICATION.AGENT && (
               <div>
                 <Form.Item label={t('icon')} name='icon'>
                   <div className='avatar'>
@@ -485,7 +497,7 @@ const EditModal = (props) => {
             </Form.Item>
             <Form.Item
               label={t('description')}
-              rules={[{ required: applicationType === 'agent', message: `${t('plsEnter')}${t('description')}` }]}
+              rules={[{ required: applicationType === APP_BUILT_CLASSIFICATION.AGENT, message: `${t('plsEnter')}${t('description')}` }]}
               name='description'
             >
               <TextArea rows={3} showCount maxLength={300} />

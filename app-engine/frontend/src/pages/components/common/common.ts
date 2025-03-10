@@ -8,3 +8,14 @@ export const APP_TYPE = {
     configId: "df87073b9bc85a48a9b01eccc9afccc5",
   }
 };
+
+export const APP_BUILT_TYPE = {
+  BASIC: 'BASIC',
+  WORK_FLOW: 'WORK_FLOW',
+};
+
+export const APP_BUILT_CLASSIFICATION = {
+  ASSISTANT: 'assistant',
+  AGENT: 'agent',
+  WORKFLOW: 'workflow',
+};

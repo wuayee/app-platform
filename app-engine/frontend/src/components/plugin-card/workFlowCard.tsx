@@ -49,7 +49,7 @@ const WorkflowCard = ({ pluginData, type }: any) => {
       }}
     >
       <div className='plugin-card-header'>
-        <img src='./src/assets/images/knowledge/knowledge-base.png' />
+      <img src={pluginData.attributes.icon ||'./src/assets/images/knowledge/knowledge-base.png'} />
         <div>
           <div className='plugin-title'>
             <div className='plugin-head'>

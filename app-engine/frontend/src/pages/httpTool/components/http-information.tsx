@@ -252,7 +252,7 @@ const InformationConfiguration = (props: any) => {
             setLoading(false);
           }
         })
-        .catch(() => {
+        .finally(() => {
           setLoading(false);
         });
     }
