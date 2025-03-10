@@ -547,7 +547,7 @@ public class AppBuilderAppServiceImpl
     public AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context,
             boolean isUpgrade) {
         if (dto != null && !isUpgrade) {
-            this.validateCreateApp(dto.getName(), context);
+            this.validateCreateApp(dto, context);
         }
         String[] firstModelInfo = this.getFirstModelInfo();
         AppBuilderApp templateApp = this.appFactory.create(appId);
@@ -631,13 +631,32 @@ public class AppBuilderAppServiceImpl
         return newVersion.length() > VERSION_LENGTH ? app.getVersion() : newVersion;
     }
 
-    private void validateCreateApp(String name, OperationContext context) {
+    private void validateCreateApp(AppBuilderAppCreateDto dto, OperationContext context) {
+        String name = dto.getName();
         this.validateAppName(name, context);
         AppQueryCondition queryCondition =
                 AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
         if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
             log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
+        }
+        this.validateAppDescription(dto, context);
+        this.validateAppCategory(dto, context);
+    }
+
+    private void validateAppDescription(AppBuilderAppCreateDto dto, OperationContext context) {
+        if (dto.getDescription().length() > 300) {
+            log.error("Create aipp failed, [name={}, tenantId={}], app description is larger than 300.",
+                    dto.getName(), context.getTenantId());
+            throw new AippException(context, AippErrCode.APP_DESCRIPTION_LENGTH_OUT_OF_BOUNDS);
+        }
+    }
+
+    private void validateAppCategory(AppBuilderAppCreateDto dto, OperationContext context) {
+        if (dto.getAppCategory() == null) {
+            log.error("Create aipp failed, [name={}, tenantId={}], app category is null.",
+                    dto.getName(), context.getTenantId());
+            throw new AippException(context, AippErrCode.APP_CATEGORY_IS_NULL);
         }
     }
 

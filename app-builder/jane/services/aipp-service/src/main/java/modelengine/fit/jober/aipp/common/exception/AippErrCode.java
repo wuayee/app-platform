@@ -558,6 +558,16 @@ public enum AippErrCode implements ErrorCode, RetCode {
     INVALID_PATH_ERROR(90002980, "路径格式无效"),
 
     /**
+     * APP 描述超过最大值
+     */
+    APP_DESCRIPTION_LENGTH_OUT_OF_BOUNDS(90002981, "创建失败，应用描述长度应该小于300。"),
+
+    /**
+     * APP 分类为空
+     */
+    APP_CATEGORY_IS_NULL(90002982, "创建失败，应用分类不能为空。"),
+
+    /**
      * 许可证过期
      */
     INVALID_LICENSE(90002998, "许可证已过期。"),
