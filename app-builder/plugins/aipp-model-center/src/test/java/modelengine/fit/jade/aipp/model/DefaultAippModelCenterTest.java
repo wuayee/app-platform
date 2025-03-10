@@ -72,7 +72,7 @@ public class DefaultAippModelCenterTest {
                 this.config,
                 this.container,
                 "http://localhost:" + this.server.getPort() + "/api/ui/serviceaccess/v1/service/LLM_SERVICE",
-                modelBaseUrls);
+                modelBaseUrls, "Qwen2-72B-Instruct-GPTQ-Int4");
         doAnswer((Answer<String>) invocation -> invocation.getArgument(0)).when(this.decryptor)
                 .decrypt(any(String.class));
     }

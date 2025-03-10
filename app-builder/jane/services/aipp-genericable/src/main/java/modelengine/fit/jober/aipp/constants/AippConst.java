@@ -755,6 +755,11 @@ public class AippConst {
     public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * 表示筛选对话模型的类型名字
+     */
+    public static final String CHAT_MODEL_TYPE = "chat_completions";
+
+    /**
      * 节点的执行开始时间
      */
     public static final String NODE_START_TIME_KEY = "startTime";

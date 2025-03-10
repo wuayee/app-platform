@@ -10,6 +10,7 @@ import static modelengine.jade.carver.validation.ValidateTagMode.validateTagMode
 
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.condition.AppQueryCondition;
+import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
 import modelengine.fit.jober.aipp.util.UUIDUtil;
 import modelengine.jade.carver.ListResult;
@@ -168,23 +169,8 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
             log.error("read prompt template file fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
-        ModelAccessInfo model = getDefaultModel();
+        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
         String prompt = new DefaultStringTemplate(template).render(values);
         return aippModelService.chat(model.getServiceName(), model.getTag(), 0.0, prompt);
-    }
-
-    private ModelAccessInfo getDefaultModel() {
-        ModelAccessInfo firstModel = new ModelAccessInfo("", "");
-        ModelListDto modelList = this.aippModelCenter.fetchModelList();
-        if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
-            List<ModelAccessInfo> modelInfoList = modelList.getModels();
-            for (ModelAccessInfo info : modelInfoList) {
-                if (StringUtils.equals(info.getServiceName(), "Qwen2-72B-Instruct-GPTQ-Int4")) {
-                    return info;
-                }
-            }
-            firstModel = modelList.getModels().get(0);
-        }
-        return firstModel;
     }
 }

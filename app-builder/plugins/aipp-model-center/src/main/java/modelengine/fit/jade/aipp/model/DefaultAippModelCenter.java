@@ -61,13 +61,16 @@ public class DefaultAippModelCenter implements AippModelCenter {
     private final BeanContainer container;
     private final String url;
     private final Map<String, String> modelBaseUrls;
+    private final String defaultModel;
     private LazyLoader<HttpClassicClient> httpClient;
 
     public DefaultAippModelCenter(HttpClassicClientFactory httpClientFactory, Config config, BeanContainer container,
-            @Value("${model-fetch-url}") String url, @Value("${openai-urls}") Map<String, String> modelBaseUrls) {
+            @Value("${model-fetch-url}") String url, @Value("${openai-urls}") Map<String, String> modelBaseUrls,
+            @Value("${defaultModel.chatModel}") String defaultModel) {
         this.httpClientFactory = httpClientFactory;
         this.config = config;
         this.container = container;
+        this.defaultModel = defaultModel;
         this.decryptor = this.container.lookup(Decryptor.class)
                 .map(BeanFactory::<Decryptor>get)
                 .orElseGet(() -> encrypted -> encrypted);
@@ -125,6 +128,22 @@ public class DefaultAippModelCenter implements AippModelCenter {
             throw new AippNotFoundException(AippErrCode.NOT_FOUND, tag);
         }
         return baseUrl;
+    }
+
+    @Override
+    public ModelAccessInfo getDefaultModel(String type) {
+        ModelAccessInfo firstModel = new ModelAccessInfo("", "");
+        ModelListDto modelList = fetchModelList(type);
+        if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
+            List<ModelAccessInfo> modelInfoList = modelList.getModels();
+            for (ModelAccessInfo info : modelInfoList) {
+                if (StringUtils.equals(info.getServiceName(), this.defaultModel)) {
+                    return info;
+                }
+            }
+            firstModel = modelList.getModels().get(0);
+        }
+        return firstModel;
     }
 
     private HttpClassicClient getHttpClient() {
