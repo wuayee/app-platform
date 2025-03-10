@@ -6,8 +6,7 @@ import {
   SET_AT_APP_INFO, 
   SET_VALIDATE_INFO, 
   SET_NODE_ID, 
-  SET_AGENT_INFO, 
-  SET_ELSA_CHANGE, 
+  SET_AGENT_INFO,
   SET_AIPP_ID, 
   SET_APP_VERSION } from './action-types';
 import { TENANT_ID } from '../../pages/chatPreview/components/send-editor/common/config';
@@ -21,7 +20,6 @@ const initialState = {
   validateInfo: [],
   choseNodeId: '',
   agentInfo: {},
-  elsaChange: null,
   aippId: '',
   appVersion: ''
 }
@@ -44,8 +42,6 @@ const appInfoReducers = (state = initialState, action) => {
       return { ...state, choseNodeId: action.payload };
     case SET_AGENT_INFO:
       return { ...state, agentInfo: action.payload };
-    case SET_ELSA_CHANGE:
-      return { ...state, elsaChange: action.payload };
     case SET_AIPP_ID:
       return { ...state, aippId: action.payload };
     case SET_APP_VERSION:

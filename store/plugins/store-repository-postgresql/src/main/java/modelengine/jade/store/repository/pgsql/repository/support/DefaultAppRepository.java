@@ -62,4 +62,11 @@ public class DefaultAppRepository implements AppRepository {
     public void deleteApp(String toolUniqueName) {
         this.appMapper.deleteApp(toolUniqueName);
     }
+
+    @Override
+    @Transactional
+    public void updateApp(AppPublishData appData) {
+        AppDo appDo = AppDo.from(appData);
+        this.appMapper.updateApp(appDo);
+    }
 }

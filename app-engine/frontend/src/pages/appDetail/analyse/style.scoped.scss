@@ -16,10 +16,9 @@
 .ant-card.card {
   width: 33%;
   height: 140px;
-  background-repeat: no-repeat;
-  background-position-y: 99%;
-  background-size: cover;
-  background-image: url('/src/assets/images/knowledge/knowledge-background.png');
+  background-repeat: no-repeat !important;
+  background-position-y: 99% !important;
+  background-size: cover !important;
   .ant-card-body {
     padding-bottom: 16px; 
   }

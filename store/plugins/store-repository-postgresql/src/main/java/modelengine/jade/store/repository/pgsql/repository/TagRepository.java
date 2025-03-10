@@ -48,4 +48,12 @@ public interface TagRepository {
      * @param uniqueNameList 表示工具的唯一标识的列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     void addTagsList(List<Set<String>> tagsList, List<String> uniqueNameList);
+
+    /**
+     * 更新应用标签。
+     *
+     * @param appTag 表示工具标签的 {@link String}。
+     * @param uniqueName 表示工具唯一标识的 {@link String}。
+     */
+    void updateAppTag(String appTag, String uniqueName);
 }

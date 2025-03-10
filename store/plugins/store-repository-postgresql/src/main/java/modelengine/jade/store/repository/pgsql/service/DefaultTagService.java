@@ -66,4 +66,11 @@ public class DefaultTagService implements TagService {
     public void addTagsList(List<Set<String>> tagsList, List<String> uniqueNameList) {
         this.tagRepo.addTagsList(tagsList, uniqueNameList);
     }
+
+    @Override
+    @Fitable(id = FITABLE_ID)
+    @Transactional
+    public void updateAppTag(String appTag, String uniqueName) {
+        this.tagRepo.updateAppTag(appTag, uniqueName);
+    }
 }

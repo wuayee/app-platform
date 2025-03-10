@@ -9,6 +9,22 @@ export function bytesToSize(bytes) {
   return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
 }
 
+export function convertImgPath(path: string) {
+  return new Promise((resolve, reject) => {
+    fetch(path, {
+      headers: {
+        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
+      },
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      resolve(url);
+    });
+  });
+}
+
 export function uuid(isLong) {
   if (isLong) {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

@@ -78,4 +78,10 @@ public class DefaultTagRepository implements TagRepository {
         }).flatMap(List::stream).collect(Collectors.toList());
         this.tagMapper.addTags(tagDos);
     }
+
+    @Override
+    @Transactional
+    public void updateAppTag(String appTag, String uniqueName) {
+        this.tagMapper.updateAppTag(appTag, uniqueName);
+    }
 }

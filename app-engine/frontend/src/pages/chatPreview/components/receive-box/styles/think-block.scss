@@ -1,0 +1,32 @@
+.think-info-btn {
+  display: inline-flex;
+  flex-grow: 0;
+  width: auto !important;
+  align-items: center;
+  padding: 4px 10px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  gap: 12px;
+  font-weight: bold;
+  color: #191919;
+  background-color: #F3F3F3;
+  cursor: pointer;
+
+  img {
+    margin-right: -8px;
+  }
+}
+.think-info-html {
+  overflow: hidden;
+  transition: height 0.3s ease-in-out;
+  color: #71757f;
+}
+.think-info-html-finished {
+  margin-bottom: 4px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dbdbdb;
+}
+.think-info-html-collapse {
+  padding-bottom: 0;
+  border-bottom: none;
+}

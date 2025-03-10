@@ -1,8 +1,9 @@
-import { httpUrlMap } from './httpConfig';
+import serviceConfig from './httpConfig';
 import { get } from './http';
-import { Message } from '@/shared/utils/message';
 import i18n from '@/locale/i18n';
-const { AIPP_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+import { getCookie } from '@/shared/utils/common';
+import { Message } from '@/shared/utils/message';
+const { AIPP_URL } = serviceConfig;
 
 // 工具流调试应用
 /**
@@ -17,6 +18,8 @@ export function workflowDebug(tenantId: string, params: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },
       body: JSON.stringify(params)
     }).then((res) => {
@@ -39,6 +42,8 @@ export function sseChat(tenantId: string, params: any, isDebug: boolean) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },
       body: JSON.stringify(params)
     }).then((res) => {
@@ -63,6 +68,8 @@ export function saveContent(tenantId: string, instanceId: string, params: any, l
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },
       body: JSON.stringify(params)
     }).then((res) => {
@@ -95,6 +102,8 @@ export function saveChart(tenantId: string, instanceId: string, params: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },
       body: JSON.stringify(params)
     }).then((res) => {
@@ -119,6 +128,8 @@ export function getReportInstance(tenantId: string, instanceId: string, params: 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
+        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },
       body: JSON.stringify(params)
     }).then((res) => {

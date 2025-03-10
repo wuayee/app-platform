@@ -1,40 +1,31 @@
 .configuration-tooltip {
   z-index: 999 !important;
-
   .ant-popover-inner {
     border-radius: 8px;
-
     .ant-popover-inner-content {
       padding: 13px 5px;
-
       .configuration-header {
         display: flex;
         justify-content: space-between;
         margin-bottom: 13px;
         padding: 0 19px;
-
         .configuration-title {
           display: flex;
           align-items: center;
-
           &::before {
             content: '';
             display: block;
             height: 16px;
             width: 16px;
             display: block;
-            background-image: url('../../../../../assets/images/conversation.svg');
             margin-right: 8px;
           }
-
           font-weight: 500;
         }
-
         img {
           cursor: pointer;
         }
       }
-
       .configuration-content {
         padding: 0 19px;
         max-height: 300px;
@@ -42,16 +33,13 @@
       }
     }
   }
-
   .ant-popover-arrow {
     left: 10px !important;
   }
-
   .ant-form-item {
     &:not(:last-child) {
       margin-bottom: 12px;
     }
-
     &.is-required {
       .ant-form-item-label {
         &::after {
@@ -59,7 +47,6 @@
           width: 15px;
           height: 12px;
           display: block;
-          background-image: url('../../../../../assets/images/required.svg');
         }
       }
     }
@@ -92,11 +79,6 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
-  background-image: url('/src/assets/images/ai/configuration_icon.svg');
-  &:hover {
-    background-image: url('/src/assets/images/ai/configuration_icon_active.svg');
-  }
-
   .configuration_btn {
     width: 20px !important;
     height: 20px !important;

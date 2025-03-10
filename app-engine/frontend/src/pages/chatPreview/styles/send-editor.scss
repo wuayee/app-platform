@@ -148,7 +148,7 @@
         word-wrap: break-word;
         border-radius: 16px;
         padding-right: 120px;
-        padding-left: 80px;
+        padding-left: 20px;
         line-height: 25px;
         min-height: 85px;
         &:focus {
@@ -199,13 +199,8 @@
           height: 48px;
           background-repeat: no-repeat;
           background-position: center;
-          background-image: url('../../../assets/images/ai/empty_send.svg');
           &.active-btn {
             cursor: pointer;
-            background-image: url('../../../assets/images/ai/send_btn.svg');
-            &:hover {
-              background-image: url('../../../assets/images/ai/send_hover_btn.svg');
-            }
           }
         }
       }
@@ -561,30 +556,18 @@
       width: 20px;
       height: 20px;
       cursor: pointer;
-      background-image: url('/src/assets/images/ai/upload_icon.svg');
-      &:hover {
-        background-image: url('/src/assets/images/ai/upload_icon_active.svg');
-      }
     }
     .item-share {
       width: 20px;
       height: 20px;
       cursor: pointer;
-      background-image: url('/src/assets/images/ai/share.svg');
-      &:hover {
-        background-image: url('/src/assets/images/ai/share_active.svg');
-      }
     }
     .item-clear {
       cursor: pointer;
       text-align: center;
       width: 24px;
       height: 18px;
-      background-image: url('/src/assets/images/ai/new-chat.png');
       background-size: 100% 100%;
-      &:hover {
-       background-image: url('/src/assets/images/ai/new-chat-active.png');
-      }
     }
     >span {
       margin: 0 8px;

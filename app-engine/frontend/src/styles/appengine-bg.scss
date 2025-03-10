@@ -1,0 +1,107 @@
+.app_card_root,
+.plugin-card,
+.page-plugin-card,
+.add-knowledge-card {
+  background-image: url('/src/assets/images/knowledge/knowledge-background.png');
+}
+.add-knowledge-card {
+  .select-card {
+    background-image: url('/src/assets/images/knowledge/knowledge-background.png');
+  }
+}
+.tool-modal-content {
+  .content-left {
+    .left-item {
+      background-image: url('/src/assets/images/knowledge/knowledge-background.png');
+    }
+  }
+}
+.search-list {
+  .selected-node {
+    &::after {
+      background-image: url('/src/assets/images/selected.png');
+    }
+  }
+}
+.share-content {
+  background-image: url('/src/assets/images/bg.png');
+}
+.send-editor-container {
+  .editor-inner {
+    .editor-input {
+      .send-btn { 
+        background-image: url('/src/assets/images/ai/empty_send.svg');
+        &.active-btn {
+          background-image: url('/src/assets/images/ai/send_btn.svg');
+          &:hover {
+            background-image: url('/src/assets/images/ai/send_hover_btn.svg');
+          }
+        }
+      }
+    }
+  }
+}
+.btn-inner {
+  .inner-item {
+    .item-upload {
+      background-image: url('/src/assets/images/ai/upload_icon.svg');
+      &:hover {
+        background-image: url('/src/assets/images/ai/upload_icon_active.svg');
+      }
+    }
+    .item-share {
+      background-image: url('/src/assets/images/ai/share.svg');
+      &:hover {
+        background-image: url('/src/assets/images/ai/share_active.svg');
+      }
+    }
+    .item-clear {
+      background-image: url('/src/assets/images/ai/new-chat.png');
+      &:hover {
+       background-image: url('/src/assets/images/ai/new-chat-active.png');
+      }
+    }
+  }
+}
+.configuration-tooltip {
+  .configuration-title {
+    &::before {
+      background-image: url('/src/assets/images/conversation.svg');
+    }
+  }
+  .ant-form-item {
+    &.is-required {
+      &::after {
+        background-image: url('/src/assets/images/required.svg');
+      }
+    }
+  }
+}
+.configuration-icon {
+  background-image: url('/src/assets/images/ai/configuration_icon.svg');
+  &:hover {
+    background-image: url('/src/assets/images/ai/configuration_icon_active.svg');
+  }
+}
+.source-word {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-image: url('/src/assets/images/source/sourceEven.png');
+  &:hover {
+    background-image: url('/src/assets/images/source/sourcehover.png');
+  }
+}
+.source-word-click {
+  background-image: url('/src/assets/images/source/sourcehover.png');
+}
+.app-analyzed {
+  .card {
+    background-image: url('/src/assets/images/knowledge/knowledge-background.png') !important;
+  }
+}
+.chat-inner,
+.home-chat,
+.home-app {
+  background-image: url('/src/assets/images/bg3.png');
+} 
