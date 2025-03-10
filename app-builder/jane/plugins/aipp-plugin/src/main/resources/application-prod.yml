@@ -35,6 +35,7 @@ app-engine:
   endpoint: http://80.11.128.66:31111
   pathPrefix:
   exclude-names:
+    - 'i18n_appBuilder_*xiaohai*'
   resource:
     path-prefix: /static/
   form:
