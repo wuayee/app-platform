@@ -27,12 +27,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.jade.waterflow.FlowsService;
-import modelengine.jade.store.service.AppService;
-
 import com.alibaba.fastjson.JSONObject;
 
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.waterflow.FlowsService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
@@ -185,7 +183,7 @@ public class AppBuilderAppServiceImplTest {
                 .put("version", "1.0.1")
                 .put("hash-template", "123")
                 .put("digest", "MD5")
-                .build(), appTypeService);
+                .build(), appTypeService, null, null);
     }
 
     private AppBuilderApp mockApp() {
@@ -554,7 +552,7 @@ public class AppBuilderAppServiceImplTest {
                 this.aippFlowService, this.appRepository, null, 64, this.metaService, this.usrAppCollectionService,
                 this.appUpdateValidator, this.metaInstanceService, this.uploadedFileManageService, this.aippLogMapper,
                 this.flowsService, this.appService, this.aippChatService, this.aippModelCenter, this.aippChatMapper,
-                null, null);
+                null, null, null, null);
 
         @Test
         @DisplayName("更新 config")
@@ -737,9 +735,26 @@ public class AppBuilderAppServiceImplTest {
             AppBuilderAppFactory appFactory = mock(AppBuilderAppFactory.class);
             UploadedFileManageService uploadedFileManageService = mock(UploadedFileManageService.class);
             AppUpdateValidator appUpdateValidator = mock(AppUpdateValidator.class);
-            AppBuilderAppServiceImpl service = spy(
-                    new AppBuilderAppServiceImpl(appFactory, null, null, null, 100, null, null, appUpdateValidator,
-                            null, uploadedFileManageService, null, null, null, null, null, null, null, null));
+            AppBuilderAppServiceImpl service = spy(new AppBuilderAppServiceImpl(appFactory,
+                    null,
+                    null,
+                    null,
+                    100,
+                    null,
+                    null,
+                    appUpdateValidator,
+                    null,
+                    uploadedFileManageService,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null));
             doNothing().when(service).validateUpdateApp(any(), any(), any());
             doNothing().when(appUpdateValidator).validate(anyString());
             when(appFactory.create(anyString())).thenReturn(mockApp());

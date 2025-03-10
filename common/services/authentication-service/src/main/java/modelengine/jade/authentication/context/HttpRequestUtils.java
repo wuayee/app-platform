@@ -54,7 +54,14 @@ public class HttpRequestUtils {
                 HttpRequestUtils::getHttpForwardedFor), request);
     }
 
-    private static Optional<String> header(HttpClassicServerRequest request, String name) {
+    /**
+     * 获取请求的头信息
+     *
+     * @param request 请求信息
+     * @param name 表示需要获取的头
+     * @return 获取到的头信息
+     */
+    public static Optional<String> header(HttpClassicServerRequest request, String name) {
         return request.headers()
                 .names()
                 .stream()

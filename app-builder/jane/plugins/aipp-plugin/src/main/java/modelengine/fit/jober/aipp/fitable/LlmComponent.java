@@ -508,6 +508,9 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
      */
     private ChatOption buildChatOptions(Map<String, Object> businessData) {
         List<String> skillNameList = new ArrayList<>(ObjectUtils.cast(businessData.get("tools")));
+        if (businessData.containsKey("workflows")) {
+            skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
+        }
         skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         String model = ObjectUtils.cast(businessData.get("model"));
         Map<String, String> accessInfo = ObjectUtils.nullIf(ObjectUtils.cast(businessData.get("accessInfo")),

@@ -20,10 +20,6 @@ import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_UNIQUE_NAME;
 import static modelengine.fit.jober.aipp.service.impl.UploadedFileMangeServiceImpl.IRREMOVABLE;
 import static modelengine.fit.jober.aipp.service.impl.UploadedFileMangeServiceImpl.REMOVABLE;
 
-import modelengine.fit.jade.waterflow.FlowsService;
-import modelengine.fit.jane.task.util.Entities;
-import modelengine.jade.store.service.AppService;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
@@ -41,6 +37,7 @@ import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.waterflow.FlowsService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.enums.DirectionEnum;
 import modelengine.fit.jane.common.response.Rsp;
@@ -86,6 +83,7 @@ import modelengine.fit.jober.aipp.dto.template.TemplateInfoDto;
 import modelengine.fit.jober.aipp.enums.AippMetaStatusEnum;
 import modelengine.fit.jober.aipp.enums.AippSortKeyEnum;
 import modelengine.fit.jober.aipp.enums.AippTypeEnum;
+import modelengine.fit.jober.aipp.enums.AppCategory;
 import modelengine.fit.jober.aipp.enums.AppState;
 import modelengine.fit.jober.aipp.enums.AppTypeEnum;
 import modelengine.fit.jober.aipp.factory.AppBuilderAppFactory;
@@ -128,7 +126,10 @@ import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.app.engine.base.service.UsrAppCollectionService;
+import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.AppService;
+import modelengine.jade.store.service.PluginService;
+import modelengine.jade.store.service.PluginToolService;
 
 import java.io.File;
 import java.io.IOException;
@@ -236,6 +237,10 @@ public class AppBuilderAppServiceImpl
 
     private final AippChatMapper aippChatMapper;
 
+    private final PluginToolService pluginToolService;
+
+    private final PluginService pluginService;
+
     private final Map<String, String> exportMeta;
 
     private final AppTypeService appTypeService;
@@ -247,7 +252,8 @@ public class AppBuilderAppServiceImpl
             MetaInstanceService metaInstanceService, UploadedFileManageService uploadedFileManageService,
             AippLogMapper aippLogMapper, FlowsService flowsService, AppService appService,
             AippChatService aippChatService, AippModelCenter aippModelCenter, AippChatMapper aippChatMapper,
-            @Value("${export-meta}") Map<String, String> exportMeta, AppTypeService appTypeService) {
+            @Value("${export-meta}") Map<String, String> exportMeta, AppTypeService appTypeService,
+            PluginToolService pluginToolService, PluginService pluginService) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.templateFactory = templateFactory;
@@ -265,6 +271,8 @@ public class AppBuilderAppServiceImpl
         this.aippChatMapper = aippChatMapper;
         this.exportMeta = exportMeta;
         this.appTypeService = appTypeService;
+        this.pluginToolService = pluginToolService;
+        this.pluginService = pluginService;
     }
 
     @Override
@@ -273,8 +281,8 @@ public class AppBuilderAppServiceImpl
         AppBuilderApp appBuilderApp = this.appFactory.create(appId);
         AppBuilderAppDto appBuilderAppDto = this.buildFullAppDto(appBuilderApp);
         try {
-            appBuilderAppDto.setBaselineCreateAt(
-                    this.getMetaByCreatAtDirection(appId, context, DirectionEnum.ASCEND).getCreationTime());
+            appBuilderAppDto.setBaselineCreateAt(this.getMetaByCreatAtDirection(appId, context, DirectionEnum.ASCEND)
+                    .getCreationTime());
             appBuilderAppDto.setAippId(MetaUtils.getAippIdByAppId(this.metaService, appId, context));
         } catch (AippTaskNotFoundException e) {
             throw new AippException(OBTAIN_APP_CONFIGURATION_FAILED);
@@ -434,8 +442,8 @@ public class AppBuilderAppServiceImpl
      *
      * @param appId 待校验的应用 id
      */
-    private void validateApp(String appId) {
-        this.appFactory.create(appId);
+    private AppBuilderApp validateApp(String appId) {
+        return this.appFactory.create(appId);
     }
 
     @Override
@@ -496,8 +504,8 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     public Optional<AppBuilderConfigFormPropertyDto> getPropertyByName(String appId, String name) {
         AppBuilderApp appBuilderApp = this.appFactory.create(appId);
-        List<AppBuilderConfigFormPropertyDto> configFormPropertyDtos = this.buildAppBuilderConfigFormProperties(
-                appBuilderApp.getFormProperties());
+        List<AppBuilderConfigFormPropertyDto> configFormPropertyDtos =
+                this.buildAppBuilderConfigFormProperties(appBuilderApp.getFormProperties());
         return configFormPropertyDtos.stream().filter(prop -> prop.getName().equals(name)).findFirst();
     }
 
@@ -625,10 +633,8 @@ public class AppBuilderAppServiceImpl
 
     private void validateCreateApp(String name, OperationContext context) {
         this.validateAppName(name, context);
-        AppQueryCondition queryCondition = AppQueryCondition.builder()
-                .tenantId(context.getTenantId())
-                .name(name)
-                .build();
+        AppQueryCondition queryCondition =
+                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
         if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
             log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
@@ -660,10 +666,8 @@ public class AppBuilderAppServiceImpl
             return;
         }
         // 如果mataList是空的，即没有发布过，那么名称可以修改为不和其它名称重复的名称
-        AppQueryCondition queryCondition = AppQueryCondition.builder()
-                .tenantId(context.getTenantId())
-                .name(name)
-                .build();
+        AppQueryCondition queryCondition =
+                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
         List<AppBuilderApp> appBuilderApps = this.appRepository.selectWithCondition(queryCondition);
         if (appBuilderApps.isEmpty()) {
             return;
@@ -861,7 +865,7 @@ public class AppBuilderAppServiceImpl
     @Override
     @Fitable(id = "default")
     public void delete(String appId, OperationContext context) {
-        this.validateApp(appId);
+        AppBuilderApp app = this.validateApp(appId);
         MetaFilter filter = new MetaFilter();
         try {
             String metaId = MetaUtils.getAippIdByAppId(this.metaService, appId, context);
@@ -870,10 +874,8 @@ public class AppBuilderAppServiceImpl
             if (CollectionUtils.isEmpty(metas)) {
                 return;
             }
-            List<String> metaVersionIds = metas.stream()
-                    .map(Meta::getVersionId)
-                    .distinct()
-                    .collect(Collectors.toList());
+            List<String> metaVersionIds =
+                    metas.stream().map(Meta::getVersionId).distinct().collect(Collectors.toList());
             List<Tuple> versionIdInstances = this.getVersionIdInstanceIds(metaVersionIds, context);
             Set<String> instanceIds = this.getInstanceIds(versionIdInstances);
             List<String> appIds = this.getFullAppIds(metas);
@@ -883,7 +885,7 @@ public class AppBuilderAppServiceImpl
             this.uploadedFileManageService.cleanAippFiles(Collections.singletonList(appId));
             this.deleteLogs(instanceIds);
             this.deleteFlows(metas, context);
-            this.deleteStore(metas);
+            this.deleteStore(metas, AppCategory.findByType(app.getType()).orElse(null));
             this.deleteChats(metaId);
             this.deleteUsrAppCollection(appId);
         } catch (AippTaskNotFoundException exception) {
@@ -899,13 +901,21 @@ public class AppBuilderAppServiceImpl
         this.usrAppCollectionService.deleteByAppId(appId);
     }
 
-    private void deleteStore(List<Meta> metas) {
+    private void deleteStore(List<Meta> metas, AppCategory type) {
+        if (type == null) {
+            return;
+        }
         List<String> uniqueNames = metas.stream()
                 .filter(meta -> meta != null && meta.getAttributes().containsKey(ATTR_UNIQUE_NAME))
                 .map(meta -> ObjectUtils.<String>cast(meta.getAttributes().get(ATTR_UNIQUE_NAME)))
                 .distinct()
-                .collect(Collectors.toList());
-        uniqueNames.forEach(this.appService::deleteApp);
+                .toList();
+        if (type == AppCategory.WATER_FLOW) {
+            List<PluginToolData> pluginTools = this.pluginToolService.getPluginTools(uniqueNames);
+            pluginTools.forEach(pluginTool -> this.pluginService.deletePlugin(pluginTool.getPluginId()));
+        } else {
+            uniqueNames.forEach(this.appService::deleteApp);
+        }
     }
 
     private void deleteFlows(List<Meta> metas, OperationContext context) {
@@ -922,8 +932,8 @@ public class AppBuilderAppServiceImpl
     private Set<String> getInstanceIds(List<Tuple> versionIdInstances) {
         Set<String> instanceIds = new HashSet<>();
         for (Tuple versionIdInstance : versionIdInstances) {
-            List<Instance> instances = ObjectUtils.cast(
-                    versionIdInstance.get(1).orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
+            List<Instance> instances = ObjectUtils.cast(versionIdInstance.get(1)
+                    .orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
             if (CollectionUtils.isEmpty(instances)) {
                 continue;
             }
@@ -956,15 +966,16 @@ public class AppBuilderAppServiceImpl
     }
 
     private void deleteMetaInstance(OperationContext context, Tuple versionIdInstance) {
-        String versionId = ObjectUtils.cast(
-                versionIdInstance.get(0).orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
-        List<Instance> instances = ObjectUtils.cast(
-                versionIdInstance.get(1).orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
+        String versionId = ObjectUtils.cast(versionIdInstance.get(0)
+                .orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
+        List<Instance> instances = ObjectUtils.cast(versionIdInstance.get(1)
+                .orElseThrow(() -> new AippException(AippErrCode.DELETE_ERROR)));
         if (CollectionUtils.isEmpty(instances)) {
             return;
         }
-        instances.forEach(
-                instance -> this.metaInstanceService.deleteMetaInstance(versionId, instance.getId(), context));
+        instances.forEach(instance -> this.metaInstanceService.deleteMetaInstance(versionId,
+                instance.getId(),
+                context));
     }
 
     private void deleteMetas(List<String> metaVersionIds, OperationContext context) {
@@ -1049,7 +1060,8 @@ public class AppBuilderAppServiceImpl
         try {
             AppExportDto appExportDto = new ObjectMapper().readValue(appConfig, AppExportDto.class);
             if (!StringUtils.equals(appExportDto.getVersion(), this.exportMeta.get("version"))) {
-                throw new AippException(AippErrCode.IMPORT_CONFIG_UNMATCHED_VERSION, this.exportMeta.get("version"),
+                throw new AippException(AippErrCode.IMPORT_CONFIG_UNMATCHED_VERSION,
+                        this.exportMeta.get("version"),
                         appExportDto.getVersion());
             }
             AppImExportUtil.checkAppExportDto(appExportDto);
@@ -1065,10 +1077,11 @@ public class AppBuilderAppServiceImpl
             Object iconAttr = appExportDto.getApp().getAttributes().get("icon");
             AppBuilderApp templateApp = AppImExportUtil.convertToAppBuilderApp(appExportDto, context);
             this.appFactory.setRepositories(templateApp);
-            AppBuilderAppDto appDto = this.createAppWithTemplate(null, templateApp, context, false,
-                    templateApp.getType());
-            String iconContent = iconAttr instanceof Map ? ObjectUtils.cast(
-                    ObjectUtils.<Map<String, Object>>cast(iconAttr).get("content")) : StringUtils.EMPTY;
+            AppBuilderAppDto appDto =
+                    this.createAppWithTemplate(null, templateApp, context, false, templateApp.getType());
+            String iconContent =
+                    iconAttr instanceof Map ? ObjectUtils.cast(ObjectUtils.<Map<String, Object>>cast(iconAttr)
+                            .get("content")) : StringUtils.EMPTY;
             if (StringUtils.isBlank(iconContent)) {
                 return appDto;
             }
@@ -1080,12 +1093,15 @@ public class AppBuilderAppServiceImpl
             AppBuilderApp update = this.appFactory.create(appDto.getId());
             update.getAttributes().put("icon", iconPath);
             this.appFactory.update(update);
-            this.uploadedFileManageService.addFileRecord(update.getId(), context.getAccount(),
-                    AippFileUtils.getFileNameFromIcon(iconPath), Entities.generateId());
+            this.uploadedFileManageService.addFileRecord(update.getId(),
+                    context.getAccount(),
+                    AippFileUtils.getFileNameFromIcon(iconPath),
+                    Entities.generateId());
             return this.buildFullAppDto(update);
         } catch (JsonProcessingException e) {
             log.error("Imported config file is not json", e);
-            throw new AippException(AippErrCode.IMPORT_CONFIG_NOT_JSON, e.getLocation().getLineNr(),
+            throw new AippException(AippErrCode.IMPORT_CONFIG_NOT_JSON,
+                    e.getLocation().getLineNr(),
                     e.getLocation().getColumnNr());
         }
     }
@@ -1096,8 +1112,8 @@ public class AppBuilderAppServiceImpl
                 .filter(dto -> StringUtils.equals(dto.getName(), appTypeName))
                 .map(AppTypeDto::getId)
                 .findAny();
-        return createdId.orElseGet(
-                () -> this.appTypeService.add(AppTypeDto.builder().name(appTypeName).build(), tenantId).getId());
+        return createdId.orElseGet(() -> this.appTypeService.add(AppTypeDto.builder().name(appTypeName).build(),
+                tenantId).getId());
     }
 
     private String copyIconFiles(String icon, String aippId, String operator) throws IOException {
@@ -1106,7 +1122,9 @@ public class AppBuilderAppServiceImpl
         String copiedIconName = UUID.randomUUID() + FileUtils.extension(originIconName);
         File copiedIcon = FileUtils.canonicalize(originIcon.getCanonicalPath().replace(originIconName, copiedIconName));
         IoUtils.copy(originIcon, copiedIcon);
-        this.uploadedFileManageService.addFileRecord(aippId, operator, copiedIcon.getCanonicalPath(),
+        this.uploadedFileManageService.addFileRecord(aippId,
+                operator,
+                copiedIcon.getCanonicalPath(),
                 Entities.generateId());
         return icon.replace(originIconName, copiedIconName);
     }
@@ -1151,7 +1169,8 @@ public class AppBuilderAppServiceImpl
         this.templateFactory.save(template);
         String icon = ObjectUtils.cast(template.getAttributes().get(TemplateUtils.ICON_ATTR_KEY));
         if (StringUtils.isNotBlank(icon)) {
-            this.uploadedFileManageService.updateRecord(template.getId(), AippFileUtils.getFileNameFromIcon(icon),
+            this.uploadedFileManageService.updateRecord(template.getId(),
+                    AippFileUtils.getFileNameFromIcon(icon),
                     IRREMOVABLE);
         }
 
@@ -1212,8 +1231,8 @@ public class AppBuilderAppServiceImpl
             cond.setIds(appIds);
             cond.setTenantId(context.getTenantId());
             List<AppBuilderApp> allPublishedApp = this.appRepository.selectWithCondition(cond);
-            Map<String, AppBuilderApp> appIdKeyAppValueMap = allPublishedApp.stream()
-                    .collect(Collectors.toMap(AppBuilderApp::getId, Function.identity()));
+            Map<String, AppBuilderApp> appIdKeyAppValueMap =
+                    allPublishedApp.stream().collect(Collectors.toMap(AppBuilderApp::getId, Function.identity()));
             return this.buildPublishedAppResDtos(allPublishedMeta, appIdKeyAppValueMap);
         } catch (AippTaskNotFoundException exception) {
             throw new AippException(QUERY_PUBLICATION_HISTORY_FAILED);
@@ -1259,14 +1278,15 @@ public class AppBuilderAppServiceImpl
     private static AppBuilderConfig resetConfig(List<AppBuilderFormProperty> formProperties, AppBuilderConfig config) {
         AppBuilderForm form = config.getForm();
         // 这里先根据旧的formId查询得到formProperties
-        Map<String, AppBuilderFormProperty> idToFormPropertyMap = formProperties.stream()
-                .collect(Collectors.toMap(AppBuilderFormProperty::getId, Function.identity()));
+        Map<String, AppBuilderFormProperty> idToFormPropertyMap =
+                formProperties.stream().collect(Collectors.toMap(AppBuilderFormProperty::getId, Function.identity()));
         // 先根据旧的configId查询得到configProperties
         List<AppBuilderConfigProperty> configProperties = config.getConfigProperties();
         config.setId(Entities.generateId());
-        configProperties.forEach(
-                configProperty -> resetIdToConfigAndFormProperty(configProperty, idToFormPropertyMap, form.getId(),
-                        config.getId()));
+        configProperties.forEach(configProperty -> resetIdToConfigAndFormProperty(configProperty,
+                idToFormPropertyMap,
+                form.getId(),
+                config.getId()));
         config.setFormId(form.getId());
         return config;
     }
@@ -1276,6 +1296,9 @@ public class AppBuilderAppServiceImpl
         configProperty.setId(Entities.generateId());
         configProperty.setConfigId(configId);
         AppBuilderFormProperty formProperty = idToFormPropertyMap.get(configProperty.getFormPropertyId());
+        if (formProperty == null) {
+            return;
+        }
         formProperty.setId(Entities.generateId());
         formProperty.setFormId(formId);
         configProperty.setFormPropertyId(formProperty.getId());
@@ -1325,7 +1348,8 @@ public class AppBuilderAppServiceImpl
 
         String icon = ObjectUtils.cast(appBuilderApp.getAttributes().get("icon"));
         if (StringUtils.isNotBlank(icon)) {
-            this.uploadedFileManageService.updateRecord(appBuilderApp.getId(), AippFileUtils.getFileNameFromIcon(icon),
+            this.uploadedFileManageService.updateRecord(appBuilderApp.getId(),
+                    AippFileUtils.getFileNameFromIcon(icon),
                     IRREMOVABLE);
         }
 
@@ -1400,7 +1424,9 @@ public class AppBuilderAppServiceImpl
             List<AppBuilderFormProperty> formProperties) {
         LinkedHashMap<String, AppBuilderConfigFormPropertyDto> formPropertyMapping = formProperties.stream()
                 .map(AppBuilderFormProperty::toAppBuilderConfigFormPropertyDto)
-                .collect(Collectors.toMap(AppBuilderConfigFormPropertyDto::getName, Function.identity(), (k1, k2) -> k1,
+                .collect(Collectors.toMap(AppBuilderConfigFormPropertyDto::getName,
+                        Function.identity(),
+                        (k1, k2) -> k1,
                         LinkedHashMap::new));
         String root = "";
         for (Map.Entry<String, AppBuilderConfigFormPropertyDto> entry : formPropertyMapping.entrySet()) {
@@ -1426,9 +1452,8 @@ public class AppBuilderAppServiceImpl
         Map<String, AppBuilderConfigFormPropertyDto> newIdToPropertyDtoMap = newProperties.stream()
                 .collect(Collectors.toMap(AppBuilderConfigFormPropertyDto::getId, Function.identity()));
         List<AppBuilderConfigProperty> oldConfigProperties = oldConfig.getConfigProperties(); // 这个对象里全是id，所以是不会改动的
-        Set<String> oldFormPropertyIds = oldFormProperties.stream()
-                .map(AppBuilderFormProperty::getId)
-                .collect(Collectors.toSet());
+        Set<String> oldFormPropertyIds =
+                oldFormProperties.stream().map(AppBuilderFormProperty::getId).collect(Collectors.toSet());
 
         // 删除
         this.deleteProperties(oldConfig, oldConfigProperties, newIdToPropertyDtoMap, oldFormProperties);
@@ -1501,11 +1526,12 @@ public class AppBuilderAppServiceImpl
                 .collect(Collectors.groupingBy(AppBuilderConfigFormPropertyDto::getNodeId))
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()
-                        .stream()
-                        .collect(Collectors.toMap(AppBuilderConfigFormPropertyDto::getName,
-                                appBuilderConfigFormPropertyDto -> JsonUtils.toJsonString(
-                                        appBuilderConfigFormPropertyDto.getDefaultValue())))));
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        entry -> entry.getValue()
+                                .stream()
+                                .collect(Collectors.toMap(AppBuilderConfigFormPropertyDto::getName,
+                                        appBuilderConfigFormPropertyDto -> JsonUtils.toJsonString(
+                                                appBuilderConfigFormPropertyDto.getDefaultValue())))));
         JSONObject oldAppearanceObject = JSONObject.parseObject(oldAppearance);
         JSONObject page = ObjectUtils.<JSONObject>cast(oldAppearanceObject.getJSONArray("pages").get(0));
         JSONArray shapes = page.getJSONArray("shapes");
@@ -1596,8 +1622,8 @@ public class AppBuilderAppServiceImpl
     private void handleParamKnowledge(JsonNode node, Map.Entry<String, String> param) {
         JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
         ArrayNode valueArrayNode = nodeFactory.arrayNode();
-        List<Map<String, Object>> res = ObjectUtils.<List<Map<String, Object>>>cast(
-                JsonUtils.parseObject(param.getValue(), List.class));
+        List<Map<String, Object>> res =
+                ObjectUtils.<List<Map<String, Object>>>cast(JsonUtils.parseObject(param.getValue(), List.class));
         res.forEach(r -> {
             ArrayNode valueArrayNode1 = nodeFactory.arrayNode();
             for (Map.Entry<String, Object> rr : r.entrySet()) {
@@ -1642,8 +1668,8 @@ public class AppBuilderAppServiceImpl
                 this.checkEntryType(resEntry, Boolean.class);
                 valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(), ObjectUtils.cast(resEntry.getValue())));
             } else if (Objects.equals(resEntry.getKey(), "value")) {
-                valueArrayNode.add(
-                        this.convertValueForUserSelect(resEntry.getKey(), String.valueOf(resEntry.getValue())));
+                valueArrayNode.add(this.convertValueForUserSelect(resEntry.getKey(),
+                        String.valueOf(resEntry.getValue())));
             } else {
                 valueArrayNode.add(this.convertObject(resEntry.getKey(), String.valueOf(resEntry.getValue())));
             }
@@ -1757,8 +1783,8 @@ public class AppBuilderAppServiceImpl
         // 这个map {nodeId:{name:value}}
         Map<String, Map<String, Object>> nodeIdToJadeConfigMap = this.getJadeConfigsFromAppearance(appearance);
         List<AppBuilderConfigProperty> configProperties = config.getConfigProperties();
-        Map<String, AppBuilderFormProperty> idToFormPropertyMap = formProperties.stream()
-                .collect(Collectors.toMap(AppBuilderFormProperty::getId, Function.identity()));
+        Map<String, AppBuilderFormProperty> idToFormPropertyMap =
+                formProperties.stream().collect(Collectors.toMap(AppBuilderFormProperty::getId, Function.identity()));
         // 这样写避免循环的时候去查询数据库获取configProperty对应的formProperty
         for (AppBuilderConfigProperty cp : configProperties) {
             if (!idToFormPropertyMap.containsKey(cp.getFormPropertyId())) {
@@ -1785,8 +1811,8 @@ public class AppBuilderAppServiceImpl
                 if (nameValue.get("accessInfo") == null) {
                     formProperty.setDefaultValue(nameValue.get(formProperty.getName()));
                 } else {
-                    formProperty.setDefaultValue(
-                            ObjectUtils.<Map<String, String>>cast(nameValue.get("accessInfo")).get("serviceName"));
+                    formProperty.setDefaultValue(ObjectUtils.<Map<String, String>>cast(nameValue.get("accessInfo"))
+                            .get("serviceName"));
                 }
             } else {
                 formProperty.setDefaultValue(nameValue.get(formProperty.getName()));
@@ -1823,7 +1849,8 @@ public class AppBuilderAppServiceImpl
         } else if (StringUtils.equalsIgnoreCase("evaluationStartNodeStart", nodeType)) {
             return new JSONArray();
         } else if (StringUtils.equalsIgnoreCase("endNodeEnd", nodeType) || StringUtils.equalsIgnoreCase(
-                "evaluationEndNodeEnd", nodeType)) {
+                "evaluationEndNodeEnd",
+                nodeType)) {
             return null;
         } else if (StringUtils.equalsIgnoreCase("jadeEvent", nodeType)) {
             return null;

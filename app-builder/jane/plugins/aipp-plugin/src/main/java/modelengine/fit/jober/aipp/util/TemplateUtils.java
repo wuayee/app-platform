@@ -49,6 +49,7 @@ public class TemplateUtils {
                 .icon(ObjectUtils.cast(template.getAttributes().get(ICON_ATTR_KEY)))
                 .name(template.getName())
                 .creator(template.getCreateBy())
+                .appBuiltType(template.getBuiltType())
                 .build();
     }
 

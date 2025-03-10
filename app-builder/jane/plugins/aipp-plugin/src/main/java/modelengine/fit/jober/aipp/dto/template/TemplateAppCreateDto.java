@@ -6,6 +6,8 @@
 
 package modelengine.fit.jober.aipp.dto.template;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,4 +39,12 @@ public class TemplateAppCreateDto {
 
     @Property(description = "创建的应用或者模板的简介信息")
     private String description;
+
+    @Property(description = "创建的应用或者模板的创建分类", name = "app_built_type")
+    @JsonProperty("app_built_type")
+    private String appBuiltType;
+
+    @Property(description = "创建的应用或者模板的创建类别", name = "app_category")
+    @JsonProperty("app_category")
+    private String appCategory;
 }
