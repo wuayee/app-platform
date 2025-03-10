@@ -340,6 +340,14 @@ const Stage = (props) => {
   };
 
   useEffect(() => {
+    if (appValidateInfo.length && window.agent) {
+      window.agent.validate(appValidateInfo, (val) => {
+        dispatch(setValidateInfo(cloneDeep(val)));
+      });
+    }
+  }, [appValidateInfo]);
+
+  useEffect(() => {
     window.addEventListener("updateChoseNode", handleUpdateChose);
     return () => {
       window.removeEventListener("updateChoseNode", handleUpdateChose);

@@ -109,13 +109,13 @@ const AppOverview: React.FC = () => {
                       (
                         <div className="status-tag">
                           <img src={complateImg} />
-                          <span>{t('published')}</span>
+                          <span>{t('active')}</span>
                         </div>
                       ) :
                       (
                         <div className="status-tag">
                           <img src={publishImg} />
-                          <span>{t('unPublished')}</span>
+                          <span>{t('inactive')}</span>
                         </div>
                       )
                   }

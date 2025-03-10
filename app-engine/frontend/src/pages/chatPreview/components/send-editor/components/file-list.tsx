@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { bytesToSize } from '@/common/util';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'antd';
+import { FileType, PictureFileType } from '../common/config';
+import '../styles/file-list.scss';
 import docxIcon from '@/assets/images/ai/docx.svg';
 import htmlIcon from '@/assets/images/ai/html.svg';
 import markdownIcon from '@/assets/images/ai/markdown.svg';
@@ -17,8 +19,7 @@ import pdfIcon from '@/assets/images/ai/pdf.svg';
 import txtIcon from '@/assets/images/ai/txt.svg';
 import deleteFileIcon from '@/assets/images/ai/delete_file.svg';
 import previewIcon from '@/assets/images/ai/preview_icon.svg';
-import '../styles/file-list.scss';
-const pictureTypes = ['png', 'jpg', 'jpeg'];
+const pictureTypes = Object.values(PictureFileType);
 
 /**
  * 对话框上传多文件展示列表组件
@@ -39,7 +40,7 @@ const FileList = (props) => {
     if (pictureTypes.includes(type.toLocaleLowerCase())) {
       return <Image src={url} height={'100%'} width={'100%'} preview={{mask: getImgMask(), maskClassName: 'img-mask'}}/>
     }
-    return <img src={getOtherFileIcon(type)} alt="" />
+    return <img src={getOtherFileIcon(type.toLocaleLowerCase())} alt="" />
   };
 
   const getImgMask = () => {
@@ -52,7 +53,7 @@ const FileList = (props) => {
     const suffix = fileArr.pop();
     const fileName = fileArr.join('.');
     return <div className='file-name-container'>
-      <div className='file-name'>{fileName}</div>
+      <div className='file-name' title={name}>{fileName}</div>
       <div>.{suffix}</div>
     </div>
   };
@@ -60,19 +61,19 @@ const FileList = (props) => {
   // 获取除图片外的文件图标
   const getOtherFileIcon = (type) => {
     switch (type) {
-      case 'docx':
+      case FileType.DOCX:
         return docxIcon;
-      case 'html':
+      case FileType.HTML:
         return htmlIcon;
-      case 'markdown':
+      case FileType.MD:
         return markdownIcon;
-      case 'mp3':
+      case FileType.MP3:
         return mp3Icon;
-      case 'mp4':
+      case FileType.MP4:
         return mp4Icon;
-      case 'pdf':
+      case FileType.PDF:
         return pdfIcon;
-      case 'txt':
+      case FileType.TXT:
         return txtIcon;
       default:
         break;
@@ -101,7 +102,7 @@ const FileList = (props) => {
       case 'uploading':
         return t('uploading');
       case 'failed':
-        return t('uploadFailed');
+        return file.failedReason || t('uploadFailed');
       default:
         break;
     }
@@ -118,7 +119,7 @@ const FileList = (props) => {
           <div className='file-icon'>{getFileIcon(file.file_type, file.file_url)}</div>
           <div className='file-content'>
             {getFileName(file.file_name)}
-            {isChatUpload && <div className='file-detail' title={file.uploadStatus === 'failed' ? file.failedReason : ''}>{getDetail(file)}</div>}
+            {isChatUpload && <div className='file-detail'>{getDetail(file)}</div>}
           </div>
           {
             isChatUpload && showOperateIndex === index && <img className='delete-file' src={deleteFileIcon} alt="" onClick={() => deleteFile(index)} />

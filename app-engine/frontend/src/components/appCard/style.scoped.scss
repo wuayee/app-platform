@@ -73,7 +73,6 @@
     font-size: 12px;
     line-height: 22px;
     text-align: justify;
-    flex: 1;
     margin-top: 16px;
     color: rgb(77, 77, 77);
     display: -webkit-box;
@@ -102,11 +101,15 @@
         justify-content: center;
         align-items: center;
         font-size: 12px;
-        &.published {
+        &.active {
+          color: rgb(0, 179, 54);
+          background-color: rgb(174, 228, 190, 0.5);
+        }
+        &.activing {
           color: #2673E5;
           background-color: rgba(38, 115, 229, 0.06);
         }
-        &.unpublished {
+        &.inactive {
           color: #4D4D4D;
           background-color: #F0F2F4;
         }

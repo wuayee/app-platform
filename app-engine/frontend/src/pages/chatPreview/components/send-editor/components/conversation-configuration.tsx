@@ -7,13 +7,12 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, InputNumber, Input, Switch, Popover, Empty } from 'antd';
-import { isInputEmpty } from '@/shared/utils/common';
-import { createGraphOperator } from '@fit-elsa/elsa-react';
-import { Message } from '@/shared/utils/message';
+import { isInputEmpty, getConfiguration } from '@/shared/utils/common';
 import { AippContext } from '@/pages/aippIndex/context';
-import { get, find, filter } from 'lodash';
+import { useAppSelector } from '@/store/hook';
 import CloseImg from '@/assets/images/close_btn.svg';
 import '../styles/configuration.scss';
+
 
 /**
  * 多输入对话配置弹框组件
@@ -28,7 +27,9 @@ import '../styles/configuration.scss';
  */
 const ConversationConfiguration = ({ appInfo, updateUserContext, chatRunning, isChatRunning, display }) => {
   const { t } = useTranslation();
+  const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const [open, setOpen] = useState(false);
+  const [configAppInfo, setConfigAppInfo] = useState({});
   const [form] = Form.useForm();
   const [configurationList, setConfigurationList] = useState([]);
   const preConfigurationList = useRef([]);
@@ -119,21 +120,6 @@ const ConversationConfiguration = ({ appInfo, updateUserContext, chatRunning, is
     }
   };
 
-  // 获取多输入对话配置列表
-  const getConfiguration = () => {
-    let result = []
-    if (appInfo?.flowGraph?.appearance) {
-      const graphOperator = createGraphOperator(JSON.stringify(appInfo.flowGraph.appearance));
-      const list = graphOperator.getStartNodeInputParams() || [];
-      if (list?.length > 1) {
-        Message({ type: 'error', content: t('startingNodeTip') });
-      } else if (list?.length === 1) {
-        result = filter(get(find(list[0], ['name', 'input']), 'value', []), (input) => input.name !== 'Question' && input.isVisible) || [];
-      }
-    }
-    return result;
-  };
-
   // 给表单赋初始值
   useEffect(() => {
     if (configurationList?.length) {
@@ -151,10 +137,9 @@ const ConversationConfiguration = ({ appInfo, updateUserContext, chatRunning, is
     preConfigurationList.current = configurationList;
   }, [configurationList]);
 
-  // 发送消息后弹框关闭
   useEffect(() => {
     if (open) {
-      setConfigurationList(getConfiguration());
+      setConfigurationList(getConfiguration(configAppInfo));
       if (isChatRunning()) {
         setOpen(false);
       }
@@ -168,10 +153,15 @@ const ConversationConfiguration = ({ appInfo, updateUserContext, chatRunning, is
   }, [chatRunning]);
 
   useEffect(() => {
-    const configuration = getConfiguration();
+    setOpen(false);
+    setConfigAppInfo(atAppInfo || appInfo || {});
+  }, [atAppInfo, appInfo]);
+
+  useEffect(() => {
+    const configuration = getConfiguration(configAppInfo);
     setConfigurationList(configuration);
     setOpen(configuration?.length > 0);
-  }, [appInfo]);
+  }, [configAppInfo]);
 
   useEffect(() => {
     if (showElsa) {

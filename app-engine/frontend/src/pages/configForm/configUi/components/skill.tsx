@@ -5,17 +5,20 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
-import { useParams } from 'react-router-dom';
-import { getMyPlugin } from '@/shared/http/plugin';
+import { pick, merge } from 'lodash';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setValidateInfo } from '@/store/appInfo/appInfo';
+import { getPluginByUniqueName } from '@/shared/http/plugin';
 import AddSkill from '../../../addFlow/components/tool-modal';
 import SkillList from './skill-list';
 
 const Skill = (props) => {
-  const { pluginData, updateData, toolsRef } = props;
+  const { pluginData, updateData, toolsRef, validateList } = props;
   const [skillList, setSkillList] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const { tenantId } = useParams();
   const pluginMap = useRef([]);
+  const dispatch = useAppDispatch();
+  const appValidateInfo = useAppSelector((state) => state.appStore.validateInfo);
 
   useImperativeHandle(toolsRef, () => {
     return { addPlugin };
@@ -25,12 +28,10 @@ const Skill = (props) => {
     setShowModal(true);
   }
   // 选择数据后回调
-  const confirmCallBack = (workFlowId, fitId) => {
-    if (workFlowId.length === 0 && fitId.length === 0) {
-      setSkillList([]);
-    }
-    updateData(fitId, 'tools');
-    updateData(workFlowId, 'workflows');
+  const confirmCallBack = (workFlowList, fitList) => {
+    setSkillList(fitList.concat(workFlowList));
+    updateData(fitList.map((item) => item.uniqueName), 'tools');
+    updateData(workFlowList.map((item) => item.uniqueName), 'workflows');
   }
   // 删除
   const deleteItem = (item) => {
@@ -38,58 +39,71 @@ const Skill = (props) => {
     let fitList = [];
     pluginMap.current = pluginMap.current.filter(pItem => pItem.uniqueName !== item.uniqueName);
     pluginMap.current.forEach(item => {
-      if (item.tags.includes('WATERFLOW')) {
+      if (item.tags?.includes('WATERFLOW')) {
         workFlowList.push(item);
       } else {
         fitList.push(item);
       }
     });
     setSkillList([...pluginMap.current]);
-    let workFlowId = workFlowList.map(item => item.uniqueName);
-    let fitId = fitList.map(item => item.uniqueName);
-    confirmCallBack(workFlowId, fitId);
+    confirmCallBack(workFlowList, fitList);
+    dispatch(setValidateInfo(appValidateInfo.filter(it => it.uniqueName !== item.uniqueName)));
   }
   // 获取插件列表
   const getPluginList = () => {
-    getMyPlugin(tenantId, {
-      pageNum: 1,
-      pageSize: 100,
-      tag: 'FIT',
-      isDeployed: true,
-    }).then(({ data }) => {
-      setSkillArr(data?.pluginToolData || []);
+    const uniqueNameList = pluginData.map(item => `uniqueNames=${item}`);
+    const uniqueNameQuery = uniqueNameList.join('&');
+    getPluginByUniqueName(uniqueNameQuery).then(({ data }) => {
+      setSkillArr(data || []);
     });
   };
   // 回显设置
   const setSkillArr = (data) => {
     pluginMap.current = [];
-    data.forEach(item => {
-      if (pluginData.includes(item.uniqueName)) {
-        let obj = {
-          uniqueName: item.uniqueName,
-          pluginId: item.pluginId,
-          name: item.name,
-          tags: item.tags,
-          type: item.tags.includes('WATERFLOW') ? 'workflow' : 'tool',
-          appId: item.runnables?.APP?.appId || '',
-          runnables: item.runnables
-        };
-        pluginMap.current.push(obj);
+    pluginData.forEach(item => {
+      const pluginItem = data.find(it => it.uniqueName === item);
+      if (pluginItem) {
+        const curItem = merge(pick(pluginItem, ['uniqueName', 'pluginId', 'name', 'tags', 'runnables']), {
+          type: pluginItem.tags.includes('WATERFLOW') ? 'workflow' : 'tool',
+          appId: pluginItem.runnables?.APP?.appId || '',
+        })
+        pluginMap.current.push(curItem);
       }
-    });
+    })
     setSkillList([...pluginMap.current]);
   }
+
+  // 更新每一条是否存在
+  const updateExistStatus= () => {
+    if (!validateList?.length) {
+      return;
+    }
+    pluginMap.current = pluginMap.current.map(item => {
+      const checkItem = validateList.find(it => it.configName === 'plugin' && it.uniqueName == item.uniqueName);
+      const curItem = checkItem ? checkItem : item;
+      return {
+        ...curItem,
+        name: curItem.name || item.uniqueName,
+        notExist: !!checkItem,
+      }
+    });
+    setSkillList(pluginMap.current);
+  };
 
   useEffect(() => {
     if (pluginData && pluginData.length) {
       getPluginList();
     }
   }, [pluginData]);
+
+  useEffect(() => {
+    updateExistStatus();
+  }, [validateList]);
   return (
     <>
       <div className='control-container'>
         <div className='control'>
-          <div className='control-inner'>
+          <div className='control-inner inner-list'>
             <SkillList skillList={skillList} deleteItem={deleteItem}></SkillList>
           </div>
           <AddSkill

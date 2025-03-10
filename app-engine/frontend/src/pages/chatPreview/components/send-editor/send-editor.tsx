@@ -92,6 +92,7 @@ const SendEditor = (props) => {
   const audioBtnRef = useRef<any>(null);
   const audioDomRef = useRef<any>(null);
   const isAlreadySent = useRef<any>(false);
+  const isAutoSend = useRef<any>(false);
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const recommondListRef = useRef<any>([]);
@@ -149,25 +150,29 @@ const SendEditor = (props) => {
     }
   }
   // 发送消息
-  async function sendMessage() {
+  function sendMessage() {
     if (isChatRunning()) {
       Message({ type: 'warning', content: t('tryLater') });
       return;
     }
-    if (!await checkMutipleInput() || !checkFileSuccess()) {
+    if (!checkMutipleInput() || !checkFileSuccess()) {
       return;
     }
     let chatContent = document.getElementById('ctrl-promet')?.innerText;
     if (chatContent?.trim()) {
       if (fileList.length) {
-        isAlreadySent.current = true;
-        setFileList([]);
+        clearFileList();
       }
-      onSend(chatContent, 'fileList');
+      onSend(chatContent);
       editorRef.current.innerText = '';
       setShowClear(false);
     }
   }
+  // 清空上传文件列表
+  function clearFileList() {
+    isAlreadySent.current = true;
+    setFileList([]);
+  };
   // 设置灵感大全下拉
   function setFilterHtml(prompt, promptMap, strXss) {
     const editorDom = document.getElementById('ctrl-promet');
@@ -203,15 +208,17 @@ const SendEditor = (props) => {
     }
   }, []);
   // 更新文件
-  function updateFileList(paramFileList) {
+  function updateFileList(paramFileList, autoSend) {
     if (isAlreadySent.current) {
       isAlreadySent.current = false;
     }
+    isAutoSend.current = autoSend;
     setFileList(paramFileList);
   }
   useImperativeHandle(filterRef, () => {
     return {
       setFilterHtml: setFilterHtml,
+      clearFileList,
     };
   });
   // 语音实时转文字
@@ -335,11 +342,11 @@ const SendEditor = (props) => {
 
   useEffect(() => {
     if (!isAlreadySent.current) {
-      setChatFileList(cloneDeep(fileList));
+      setChatFileList(cloneDeep(fileList), isAutoSend.current);
     }
   }, [fileList]);
   return <>{(
-    <div className='send-editor-container' style={{display: display ? 'block' : 'none'}} onClick={handleEditorClick}>
+    <div className='send-editor-container' style={{ display: display ? 'block' : 'none' }} onClick={handleEditorClick}>
       {
         showMask && <div className='send-editor-mask'>
           <div className='mask-inner'>

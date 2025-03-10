@@ -20,7 +20,7 @@ import type { RadioChangeEvent } from 'antd';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import { APP_TYPE, APP_BUILT_TYPE, APP_BUILT_CLASSIFICATION } from './common/common';
 import { useTranslation } from 'react-i18next';
-import { findConfigItem } from '@/shared/utils/common';
+import { findConfigItem, getConfigValue } from '@/shared/utils/common';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
 import { pick, isEmpty } from 'lodash';
 import './styles/edit-modal.scss';
@@ -209,18 +209,6 @@ const EditModal = (props) => {
       addSuccessfulCallback(res.data);
     }
   }
-
-  // 获取各个配置信息的值
-  const getConfigValue = (sourceData, target = {}) => {
-    if (!sourceData) return;
-    sourceData.forEach(item => {
-      target[item.name] = pick(item, ['dataType', 'defaultValue', 'id', 'name', 'nodeId', 'from']);
-      if (item.children) {
-        target = { ...target, ...getConfigValue(item.children, target) };
-      }
-    })
-    return target;
-  };
 
   // 更新配置信息
   const updateConfig = (config, value) => {

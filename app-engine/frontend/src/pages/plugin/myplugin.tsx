@@ -44,7 +44,7 @@ const appItems = [
   },
   {
     key: 'published',
-    label: i18n.t('published'),
+    label: i18n.t('active'),
   },
   {
     key: 'avaliable',

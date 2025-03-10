@@ -39,13 +39,14 @@ const AppDev: React.FC = () => {
   const [listLoading, setListLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(11);
   const [search, setSearch] = useState('');
   const [appData, setAppData] = useState([]);
   const [tabs, setTabs] = useState([]);
-  const [appKey, setAppKey] = useState('all');
-  const [activkey, setActiveKey] = useState('all');
-  const [statusKey, setStatusKty] = useState('all');
+  const [typeKey, setTypeKey] = useState('all');
+  const [categoryKey, setCategoryKey] = useState('all');
+  const [statusKey, setStatusKey] = useState(items[0].key);
+  const [statusLabel, setStatusLabel] = useState(items[0].label);
   const uploadRef = useRef<any>();
   const currentApp = useRef<any>({});
   const tempalteListRef = useRef<any>(null);
@@ -70,9 +71,9 @@ const AppDev: React.FC = () => {
       offset: (page - 1) * pageSize,
       limit: pageSize,
       name: search || '',
-      app_type: appKey !== 'all' ? appKey : null,
+      app_type: typeKey !== 'all' ? typeKey : null,
       state: statusKey !== 'all' ? statusKey : null,
-      app_category: activkey !== 'all' ? activkey : null
+      app_category: categoryKey !== 'all' ? categoryKey : null
     };
     setListLoading(true);
     try {
@@ -98,14 +99,13 @@ const AppDev: React.FC = () => {
   // tab点击回调
   function tabChange(key: string) {
     setPage(1);
-    setActiveKey(key);
-    setSearch('');
+    setCategoryKey(key);
   };
 
   // 点击类目tab
-  const categoryTabChange = (id: String) => {
+  const handleTypeChange = (id: String) => {
     setPage(1);
-    setAppKey(id);
+    setTypeKey(id);
   }
 
   // 分页change回调方法
@@ -129,7 +129,7 @@ const AppDev: React.FC = () => {
         attributes: {
           description: '',
           icon: '',
-          app_type: appKey !== 'all' ? appKey : tabs?.[1]?.key,
+          app_type: typeKey !== 'all' ? typeKey : tabs?.[1]?.key,
         },
       };
     });
@@ -218,14 +218,16 @@ const AppDev: React.FC = () => {
   // 应用状态查询点击回调
   const clickItem = (e) => {
     const { key } = e;
+    const label = items.find(status => status.key === key)?.label;
     setPage(1);
-    setStatusKty(key);
+    setStatusLabel(label);
+    setStatusKey(key);
   };
 
   // 获取应用列表
   useEffect(() => {
     queryApps();
-  }, [page, pageSize, search, activkey, appKey, statusKey]);
+  }, [page, pageSize, search, categoryKey, typeKey, statusKey]);
 
   // 删除弹窗title组件
   const DeleteTitle = () => {
@@ -254,7 +256,7 @@ const AppDev: React.FC = () => {
             {tabItems.map((item) => {
               return (
                 <span
-                  className={activkey === item.key ? 'tab-active app-card-tab' : 'app-card-tab'}
+                  className={categoryKey === item.key ? 'tab-active app-card-tab' : 'app-card-tab'}
                   key={item.key}
                   onClick={() => tabChange(item.key)}>
                   {item.label}
@@ -265,7 +267,7 @@ const AppDev: React.FC = () => {
           <div className='operatorArea'>
             <Dropdown menu={{ items, activeKey: statusKey, onClick: (e) => clickItem(e) }}>
               <div className='status-dropdown'>
-                <span>{t('publishStatus')}</span>
+                <span>{statusLabel}</span>
                 <DownOutlined />
               </div>
             </Dropdown>
@@ -280,8 +282,8 @@ const AppDev: React.FC = () => {
         </div>
         <Tabs
           items={tabs}
-          activeKey={appKey}
-          onChange={(key: string) => categoryTabChange(key)}
+          activeKey={typeKey}
+          onChange={(key: string) => handleTypeChange(key)}
           style={{ width: '100%', textAlign: 'center' }}
           centered={true}
         />
@@ -310,7 +312,7 @@ const AppDev: React.FC = () => {
           <Pagination
             current={page}
             onChange={paginationChange}
-            pageSizeOptions={[8, 16, 32, 60]}
+            pageSizeOptions={[11, 23, 35, 47]}
             total={total}
             pageSize={pageSize}
           />

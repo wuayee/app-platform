@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useCallback, useMemo, useState } from 'react';
+import { pick, find, filter } from 'lodash';
 import { Message } from '@/shared/utils/message';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
 import { storage } from '../storage';
@@ -280,6 +281,23 @@ export const enablePermission = function (appInfo) {
 };
 
 /**
+ * 获取各个配置信息的值，作为更新应用配置的参数
+ * @param {Object} sourceData 应用详情的configFormProperties参数
+ * @param {Object} target 最后扁平化的配置对象
+ * @return {Object|Array|String}
+ */
+export const getConfigValue = (sourceData, target = {}) => {
+  return (sourceData || []).reduce((acc, item) => {
+    if (!item) return acc;
+    acc[item.name] = pick(item, ['dataType', 'defaultValue', 'id', 'name', 'nodeId', 'from']);
+    return item.children ? {
+      ...getConfigValue(item.children, acc),
+      ...acc
+    } : acc;
+  }, { ...target });
+};
+
+/**
  * 获取应用某一个配置项的值
  * @param {Object} appInfo 应用详情
  * @param {String} name 需要获取的配置的名称
@@ -312,10 +330,10 @@ export const findConfigItem = (configStructure, configName) => {
   }
   for (let index = 0; index < configStructure.length; index++) {
     const item = configStructure[index];
-    if (item.name === configName) {
+    if (item?.name === configName) {
       return item;
     }
-    if (item.children?.length) {
+    if (item?.children?.length) {
       const result = findConfigItem(item.children, configName);
       if (result) {
         return result;
@@ -419,3 +437,23 @@ export const setSpaClassName = (name:string) => {
   }
   return name
 }
+
+/**
+ * 获取对话多输入配置
+ * @param {Object} curAppInfo 应用详情
+ * @return {Array} 对话多输入配置
+ */
+export const getConfiguration = (curAppInfo: any) => {
+  if (!curAppInfo?.flowGraph?.appearance) {
+    return [];
+  }
+  const graphOperator = createGraphOperator(JSON.stringify(curAppInfo.flowGraph.appearance));
+  const paramsList = graphOperator.getStartNodeInputParams() || [];
+  if (paramsList?.length !== 1) {
+    Message({ type: 'error', content: i18n.t('startingNodeTip') });
+    return [];
+  }
+  const inputData = find(paramsList[0], ['name', 'input']);
+  const inputList = inputData?.value || [];
+  return filter(inputList, (input) => input.name !== 'Question' && input.isVisible) || [];
+};

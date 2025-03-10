@@ -56,8 +56,10 @@ const AippIndex = () => {
     if (window.location.href.indexOf('type=chatWorkflow') !== -1) {
       setShowElsa(true);
     };
-    dispatch(setChoseNodeId(''));
-    dispatch(setValidateInfo([]));
+    return () => {
+      dispatch(setChoseNodeId(''));
+      dispatch(setValidateInfo([]));
+    };
   }, []);
 
   useEffect(() => {

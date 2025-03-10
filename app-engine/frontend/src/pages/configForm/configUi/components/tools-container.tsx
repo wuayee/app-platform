@@ -12,7 +12,7 @@ import { Collapse } from 'antd';
 const { Panel } = Collapse;
 
 const ToolsContainer = (props) => {
-  const { graphOperator, config, updateData } = props;
+  const { graphOperator, config, updateData, validateList } = props;
   const [pluginData, setPluginData] = useState([]);
   const [activePanelKey, setActivePanelKey] = useState(['']);
   const toolsRef = useRef<any>(null);
@@ -73,7 +73,7 @@ const ToolsContainer = (props) => {
         <span>{config.description}</span>
         <img src="./src/assets/images/add_btn.svg" style={{ width: 16, height: 16 }} alt="" onClick={addPlugin} />
       </div>} forceRender key='tools' className="site-collapse-custom-panel">
-        <Skill toolsRef={toolsRef} pluginData={pluginData} updateData={updateTools} />
+        <Skill toolsRef={toolsRef} pluginData={pluginData} updateData={updateTools} validateList={validateList}/>
       </Panel>
     </Collapse>
   </>
