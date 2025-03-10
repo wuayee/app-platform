@@ -316,7 +316,8 @@ public class AippLogServiceImpl implements AippLogService {
     private static boolean isNeededLog(AippInstLog l) {
         return AippInstLogType.QUESTION.name().equals(l.getLogType()) || AippInstLogType.MSG.name()
                 .equals(l.getLogType()) || AippInstLogType.FILE.name().equals(l.getLogType())
-                || AippInstLogType.ERROR.name().equals(l.getLogType());
+                || AippInstLogType.ERROR.name().equals(l.getLogType()) || AippInstLogType.QUESTION_WITH_FILE.name()
+                .equals(l.getLogType());
     }
 
     private boolean checkLogValid(String lastLog, String cacheLog) {

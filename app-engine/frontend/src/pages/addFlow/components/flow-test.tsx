@@ -66,17 +66,22 @@ const Index = (props) => {
     setShowDebug(false);
   }
 
+  const handleStart = async () => {
+    try {
+      const values = multiFileConfig.autoChatOnUpload ? form.getFieldsValue() : await form.validateFields();
+      runningStart(values);
+    } catch (error) {
+      Message({ type: 'warning', content: t('plsEnterCorrectDebugParams') });
+    }
+  };
+
   const handleRunTest = () => {
     if (!checkFileSuccess()) return;
     setShowFlowChangeWarning(false);
     elsaRunningCtl.current?.reset();
     dispatch(setTestStatus(null));
     dispatch(setTestTime(0));
-    form.validateFields().then((values) => {
-      runningStart(values);
-    }).catch(() => {
-      Message({ type: 'warning', content: t('plsEnterCorrectDebugParams') });
-    });
+    handleStart();
   }
 
   // 校验文件是否都上传成功

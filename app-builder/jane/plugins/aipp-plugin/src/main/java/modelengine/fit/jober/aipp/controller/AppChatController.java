@@ -28,6 +28,7 @@ import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * app对话管理接口
@@ -66,8 +67,8 @@ public class AppChatController extends AbstractController {
     @PostMapping(value = "/app_chat", description = "会话接口，传递会话信息")
     public Choir<Object> chat(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestBody CreateAppChatRequest body) throws AippTaskNotFoundException {
-        this.validateChatBody(body);
-        this.validateChatQuestion(body);
+        // todo 等多版本整改上线，在app domain结构中获取多模态的配置信息 当前临时方案是放在请求的headers里
+        this.validateChat(httpRequest, body);
         return this.appChatService.chat(body, this.contextOf(httpRequest, tenantId), false);
     }
 
@@ -83,8 +84,8 @@ public class AppChatController extends AbstractController {
     @PostMapping(value = "/app_chat_debug", description = "会话接口，传递会话信息")
     public Choir<Object> chatDebug(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestBody CreateAppChatRequest body) {
-        this.validateChatBody(body);
-        this.validateChatQuestion(body);
+        // todo 等越哥多版本整改上线，在app domain结构中获取多模态的配置信息 当前临时方案是放在请求的headers里
+        this.validateChat(httpRequest, body);
         return this.appChatService.chat(body, this.contextOf(httpRequest, tenantId), true);
     }
 
@@ -149,6 +150,13 @@ public class AppChatController extends AbstractController {
         if (StringUtils.isEmpty(body.getQuestion())) {
             LOGGER.error("The input chat body is incorrect.");
             throw new AippParamException(AippErrCode.APP_CHAT_QUESTION_IS_NULL);
+        }
+    }
+
+    private void validateChat(HttpClassicServerRequest httpRequest, CreateAppChatRequest body) {
+        this.validateChatBody(body);
+        if (!Objects.equals(httpRequest.headers().require("Autochatonupload"), "true")) {
+            this.validateChatQuestion(body);
         }
     }
 }

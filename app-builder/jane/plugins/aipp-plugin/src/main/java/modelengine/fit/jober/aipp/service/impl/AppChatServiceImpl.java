@@ -136,7 +136,7 @@ public class AppChatServiceImpl implements AppChatService {
 
     private boolean isInvalidQuestion(String appType, CreateAppChatRequest request) {
         return StringUtils.equals(APP.code(), appType) && (request.getQuestion() == null || !StringUtils.lengthBetween(
-                request.getQuestion(), 1, 20000, true, true));
+                request.getQuestion(), 0, 20000, true, true));
     }
 
     @Override

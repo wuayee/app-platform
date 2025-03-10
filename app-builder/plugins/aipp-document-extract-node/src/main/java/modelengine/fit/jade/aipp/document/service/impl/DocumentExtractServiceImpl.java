@@ -80,6 +80,10 @@ public class DocumentExtractServiceImpl implements DocumentExtractService {
         StringBuilder fileContent = new StringBuilder();
         Map<String, Object> context = objectMapper.convertValue(fileExtractionParam, Map.class);
 
+        if (fileExtractionParam.getFiles() == null) {
+            return StringUtils.EMPTY;
+        }
+
         for (String fileUrl : fileExtractionParam.getFiles()) {
             FileType fileType = FileExtensionEnum.findType(fileUrl)
                     .orElseThrow(() -> new DocumentExtractException(DOCUMENT_EXTRACT_ERROR, fileUrl));
