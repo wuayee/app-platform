@@ -144,7 +144,15 @@
             and type = #{cond.type}
         </if>
         <if test="cond.state != null">
-            and state = #{cond.state}
+            <choose>
+                <when test="cond.state == 'active'">
+                    and state = #{cond.state}
+                </when>
+                <when test="cond.state == 'inactive'">
+                    and state = #{cond.state}
+                    and (attributes ->> 'latest_version') is null
+                </when>
+            </choose>
         </if>
         <if test="cond.name != null and cond.name != ''">
             and name ilike '%\' || #{cond.name} || '%' ESCAPE '\'
