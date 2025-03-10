@@ -10,11 +10,9 @@ import { generatePrompt } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 import { Message } from '@/shared/utils/message';
 import EmptyPromptIcon from '@/assets/images/ai/empty_prompt.png';
-import ModelIcon from '@/assets/images/ai/model_icon.png';
 import GenerateBtnIcon from '@/assets/images/ai/generate_btn_icon.png';
 import LoadingIcon from '@/assets/images/ai/loading_icon.png';
 import '../styles/prompt-word.scss';
-
 
 /**
  * AI生成提示词的弹框组件
@@ -34,7 +32,6 @@ const PromptWord = ({ promptWordRef, updatePromptValue, currentModelInfo }) => {
   };
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [modelName, setModelName] = useState('');
   const [command, setCommand] = useState('');
   const [prompt, setPrompt] = useState('');
   const [generateStatus, setGenerateStatus] = useState(generateStatusMap.NOT_GENEATED);
@@ -59,9 +56,6 @@ const PromptWord = ({ promptWordRef, updatePromptValue, currentModelInfo }) => {
       const res = await generatePrompt(
         {
           input: command,
-          model: currentModelInfo.model,
-          temperature: currentModelInfo.temperature,
-          modelTag: 'internal',
           templateType: currentModelInfo.templateType,
         }
       );
@@ -129,10 +123,6 @@ const PromptWord = ({ promptWordRef, updatePromptValue, currentModelInfo }) => {
     isGenerating.current = false;
   }, [open]);
 
-  useEffect(() => {
-    setModelName(currentModelInfo.model);
-  }, [currentModelInfo]);
-
   return <>
     <Modal title="Basic Modal"
       open={open}
@@ -144,10 +134,10 @@ const PromptWord = ({ promptWordRef, updatePromptValue, currentModelInfo }) => {
       <div className='prompt-content'>
         <div className='content-part'>
           <div className='generate-title ai-generate'>{'AI' + t('generate')}</div>
-          <div className='model-name'>
-            <img src={ModelIcon} alt="" style={{ marginRight: 8 }} />
-            <span>{modelName}</span>
-          </div>
+          {/*<div className='model-name'>*/}
+          {/*  <img src={ModelIcon} alt="" style={{ marginRight: 8 }} />*/}
+          {/*  <span>{modelName}</span>*/}
+          {/*</div>*/}
           <div className='enter-command'>{t('enterCommand')}</div>
           <Input.TextArea
             value={command}

@@ -187,8 +187,6 @@ const Stage = (props) => {
       agent.listen('GENERATE_AI_PROMPT', (event) => {
         promptEvent.current = event;
         setCurrentModelInfo({
-          model: event.model,
-          temperature: event.temperature,
           templateType: event.type || 'user',
         });
         openGeneratePrompt();
