@@ -155,7 +155,7 @@ public class AppChatController extends AbstractController {
 
     private void validateChat(HttpClassicServerRequest httpRequest, CreateAppChatRequest body) {
         this.validateChatBody(body);
-        if (!Objects.equals(httpRequest.headers().require("Autochatonupload"), "true")) {
+        if (!Objects.equals(httpRequest.headers().require("Auto-Chat-On-Upload"), "true")) {
             this.validateChatQuestion(body);
         }
     }
