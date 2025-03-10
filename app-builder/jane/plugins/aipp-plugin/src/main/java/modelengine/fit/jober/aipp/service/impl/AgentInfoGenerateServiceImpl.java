@@ -8,7 +8,9 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import static modelengine.jade.carver.validation.ValidateTagMode.validateTagMode;
 
+import modelengine.fit.jober.aipp.util.UUIDUtil;
 import modelengine.jade.carver.ListResult;
+import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.store.entity.query.PluginToolQuery;
 import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.PluginToolService;
@@ -45,6 +47,7 @@ import java.util.Map;
 @Component
 public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
     private static final Logger log = Logger.get(AppBuilderAppServiceImpl.class);
+    private static final String UI_WORD_KEY = "aipp.service.impl.agent.agent";
 
     private final AippModelService aippModelService;
 
@@ -52,16 +55,25 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
 
     private final PluginToolService toolService;
 
+    private final LocaleService localeService;
+
+    private final String agentNameFormat = "^[\\u4E00-\\u9FA5A-Za-z0-9][\\u4E00-\\u9FA5A-Za-z0-9-_]*$";
+
     public AgentInfoGenerateServiceImpl(AippModelService aippModelService, AippModelCenter aippModelCenter,
-            PluginToolService toolService) {
+            PluginToolService toolService, LocaleService localeService) {
         this.aippModelService = aippModelService;
         this.aippModelCenter = aippModelCenter;
         this.toolService = toolService;
+        this.localeService = localeService;
     }
 
     @Override
     public String generateName(String desc) {
-        return this.generateByTemplate(desc, "prompt/promptGenerateName.txt");
+        String name = this.generateByTemplate(desc, "prompt/promptGenerateName.txt");
+        if (!name.matches(this.agentNameFormat)) {
+            name = this.localeService.localize(UI_WORD_KEY) + UUIDUtil.uuid();
+        }
+        return name;
     }
 
     @Override
