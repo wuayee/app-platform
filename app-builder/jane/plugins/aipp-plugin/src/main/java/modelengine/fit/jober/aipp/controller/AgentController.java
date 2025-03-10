@@ -62,7 +62,7 @@ public class AgentController extends AbstractController {
         entity.setName(this.agentInfoGenerateService.generateName(dto.getDescription(), context));
         entity.setGreeting(this.agentInfoGenerateService.generateGreeting(dto.getDescription()));
         entity.setPrompt(this.agentInfoGenerateService.generatePrompt(dto.getDescription()));
-        entity.setTools(this.agentInfoGenerateService.selectTools(dto.getDescription(), context.getEmployeeNumber()));
+        entity.setTools(this.agentInfoGenerateService.selectTools(dto.getDescription(), context.getOperator()));
         return Rsp.ok(entity);
     }
 }
