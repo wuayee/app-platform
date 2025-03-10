@@ -87,6 +87,12 @@
             <if test="cond != null and cond.name != null and cond.name != ''">
                 and name ilike '%\' || #{cond.name} || '%' ESCAPE '\'
             </if>
+            <if test="cond.ids != null and cond.ids.size() > 0">
+                and id in
+                <foreach collection="cond.ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
             <if test="cond.excludeNames != null and !cond.excludeNames.isEmpty()">
                 AND name NOT IN
                 <foreach item="excludeName" collection="cond.excludeNames" open="(" separator="," close=")">
