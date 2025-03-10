@@ -1,11 +1,12 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.engine.activities;
 
+import lombok.Getter;
 import modelengine.fel.engine.flows.AiFlow;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fitframework.inspection.Validation;
@@ -19,6 +20,7 @@ import modelengine.fitframework.inspection.Validation;
  * @author 刘信宏
  * @since 2024-04-28
  */
+@Getter
 public class AiActivity<D, RF extends Flow<D>, F extends AiFlow<D, RF>> {
     private final F flow;
 
@@ -30,9 +32,5 @@ public class AiActivity<D, RF extends Flow<D>, F extends AiFlow<D, RF>> {
      */
     protected AiActivity(F flow) {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
-    }
-
-    public F flow() {
-        return this.flow;
     }
 }

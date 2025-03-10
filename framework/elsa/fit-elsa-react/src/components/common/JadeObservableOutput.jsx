@@ -192,7 +192,7 @@ export const TreeNode = ({
       if (value === 'Object') {
         changes.push({key: 'value', value: []});
       } else {
-        findChildIds([output], id).forEach(childId => {
+        findChildIds([output], id).filter(childId => childId !== id).forEach(childId => {
           shape.page.removeObservable(shape.id, childId);
         });
         changes.push({key: 'value', value: ''});
@@ -201,7 +201,6 @@ export const TreeNode = ({
     };
 
     const changes = _buildChanges();
-    shape.page.removeObservable(shape.id);
     handleItemChange(id, eventType, changes);
     form.setFieldsValue({[`value-select-${shape.id}-${id}`]: value});
   };
@@ -347,7 +346,7 @@ export const TreeNode = ({
             id={`property-input-${node.id}-${key}`}
             value={title}
             disabled={level === 1 || disabled}
-            onBlur={(e) => editOutputFieldProperty(key, 'editOutputFieldProperty', 'name', e)}
+            onChange={(e) => editOutputFieldProperty(key, 'editOutputFieldProperty', 'name', e)}
           />
         </Form.Item>
       </Col>

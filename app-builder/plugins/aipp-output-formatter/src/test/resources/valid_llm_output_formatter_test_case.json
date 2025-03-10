@@ -1,0 +1,60 @@
+[
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": {
+          "key000": {
+            "id": "",
+            "score": 0.5,
+            "text": "reference text"
+          }
+        }
+      }
+    },
+    "expected": "[{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"}}}]",
+    "finalOutput": "{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"}}}"
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": {
+          "key000": {
+            "id": "",
+            "score": 0.5,
+            "text": "reference text"
+          }
+        }
+      },
+      "key1": "llmOutput text1 in map"
+    },
+    "expected": "[{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"}}},{\"type\":\"TEXT\",\"data\":\"llmOutput text1 in map\"}]",
+    "finalOutput": "{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text in map\\nllmOutput text1 in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"}}}"
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map",
+        "reference": {
+          "key000": {
+            "id": "",
+            "score": 0.5,
+            "text": "reference text"
+          }
+        }
+      },
+      "key1": {
+        "llmOutput": "llmOutput text1 in map",
+        "reference": {
+          "key100": {
+            "id": "",
+            "score": 0.5,
+            "text": "reference text1"
+          }
+        }
+      }
+    },
+    "expected": "[{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"}}},{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text1 in map\",\"reference\":{\"key100\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text1\"}}}]",
+    "finalOutput": "{\"type\":\"TEXT_WITH_REFERENCE\",\"data\":\"llmOutput text in map\\nllmOutput text1 in map\",\"reference\":{\"key000\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text\"},\"key100\":{\"id\":\"\",\"score\":0.5,\"text\":\"reference text1\"}}}"  }
+]

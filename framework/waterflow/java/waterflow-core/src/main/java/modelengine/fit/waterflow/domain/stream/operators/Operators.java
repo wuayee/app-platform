@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -8,13 +8,11 @@ package modelengine.fit.waterflow.domain.stream.operators;
 
 import modelengine.fit.waterflow.domain.context.FlowContext;
 import modelengine.fit.waterflow.domain.context.StateContext;
-import modelengine.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.states.DataStart;
 import modelengine.fit.waterflow.domain.states.State;
 import modelengine.fit.waterflow.domain.stream.Collector;
 import modelengine.fit.waterflow.domain.stream.nodes.Retryable;
-import modelengine.fit.waterflow.domain.stream.nodes.To;
 
 import java.util.List;
 
@@ -169,17 +167,22 @@ public final class Operators {
     /**
      * window接口，提供window结束的判定
      *
+     * @param <T> window中的数据类型
      * @since 1.0
      */
     @FunctionalInterface
-    public interface WindowCondition {
+    public interface Window<T> {
         /**
-         * window是否完成
+         * 窗口是否完结
          *
-         * @param arg 判定window完成的参数
-         * @return 是，完成
+         * @param inputs 输入的数据
+         * @return 是否完结
          */
-        boolean fulfilled(WindowArg arg);
+        boolean fulfilled(List<T> inputs);
+
+        default Object getSessionKey(FlowContext<T> input) {
+            return null;
+        }
     }
 
     /**
@@ -284,13 +287,13 @@ public final class Operators {
     @FunctionalInterface
     public interface Validator<T> {
         /**
-         * 过滤符合标准的context
+         * check
          *
-         * @param repo context的repo
-         * @param to 目标
-         * @return 符合条件的context的列表
+         * @param input input
+         * @param inputs inputs
+         * @return boolean
          */
-        List<FlowContext<T>> validate(FlowContextRepo repo, To<T, ?> to);
+        boolean check(FlowContext<T> input, List<FlowContext<T>> inputs);
     }
 }
 

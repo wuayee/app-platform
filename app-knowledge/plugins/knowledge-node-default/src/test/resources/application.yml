@@ -1,0 +1,2 @@
+openai-urls:
+  internal: 'http://localhost:9090/'

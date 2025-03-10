@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AippUploadedFileMapper">
+    <select id="queryExpiredFiles">
+        select aipp_instance_file.filename
+        from aipp_instance_file
+        where aipp_instance_file.create_at &lt;= current_timestamp - interval '30 D'
+        and is_removable = 1
+        and is_deleted = 0
+    </select>
+
+    <select id="queryFilesByUserAipp">
+        select aipp_instance_file.filename
+        from aipp_instance_file
+        where aipp_id = #{aippId}
+        and is_deleted = 0
+    </select>
+
+    <update id="deleteFileRecords" parameterType="java.util.List">
+        UPDATE aipp_instance_file
+        set is_deleted = 1, is_removable = 1
+        where filename in
+        <foreach collection="fileNames" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="deleteByAippIds" parameterType="java.util.List">
+        UPDATE aipp_instance_file
+        set is_deleted = 1, is_removable = 1
+        where aipp_id in
+        <foreach collection="aippIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <insert id="insertFileRecord" parameterType="modelengine.fit.jober.aipp.dto.aipplog.AippUploadedFileInfoDto">
+        insert into aipp_instance_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aippId != null">aipp_id,</if>
+            <if test="createUserAccount != null">create_by,</if>
+            <if test="filename != null">filename,</if>
+            <if test="fileUuid != null">file_uuid</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aippId != null">#{aippId},</if>
+            <if test="createUserAccount != null">#{createUserAccount},</if>
+            <if test="filename != null">#{filename},</if>
+            <if test="fileUuid != null">#{fileUuid}</if>
+        </trim>
+    </insert>
+
+    <update id="updateRecord">
+        UPDATE aipp_instance_file
+        <set>
+            <if test="appId != null">aipp_id = #{appId},</if>
+            is_removable = #{status}
+        </set>
+        where filename = #{fileName}
+    </update>
+
+    <update id="updateRecordWithFileUuid">
+        UPDATE aipp_instance_file
+        <set>
+            is_removable = #{status}
+        </set>
+        where file_uuid = #{fileUuid}
+    </update>
+</mapper>

@@ -1,0 +1,1 @@
+UPDATE "task_instance_wide" SET "text_2" = ? WHERE "id" = ?

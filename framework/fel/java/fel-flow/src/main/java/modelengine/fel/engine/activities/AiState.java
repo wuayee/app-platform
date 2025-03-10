@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, O, RF, F> block(BlockToken<O> block) {
         Validation.notNull(block, "Block operator cannot be null.");
-        return new AiState<>(this.state.block(block), this.flow());
+        return new AiState<>(this.state.block(block), this.getFlow());
     }
 
     /**
@@ -141,7 +141,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, I, RF, F> doOnError(Operators.ErrorHandler<I> handler) {
         Validation.notNull(handler, "Error handler cannot be null.");
-        return new AiState<>(this.state.error(handler), this.flow());
+        return new AiState<>(this.state.error(handler), this.getFlow());
     }
 
     /**
@@ -183,7 +183,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
      */
     public AiProcessFlow<D, O> close(Consumer<O> callback) {
-        return this.close(FlowCallBack.<O>builder().doOnConsume(callback).build());
+        return this.close(FlowCallBack.<O>builder().doOnSuccess(callback).build());
     }
 
     /**
@@ -199,14 +199,9 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             Operators.ErrorHandler<Object> errHandler) {
         Consumer<Throwable> errorCbWrapper = exception -> errHandler.handle(new Exception(exception), null, null);
         return this.close(FlowCallBack.<O>builder()
-                .doOnConsume(data -> callback.process(new ToCallback<>(Collections.singletonList(new FlowContext<>(null,
-                        null,
-                        data,
-                        new HashSet<>(),
-                        null,
-                        null)))))
-                .doOnError(errorCbWrapper)
-                .build());
+                .doOnSuccess(data -> callback.process(new ToCallback<>(Collections.singletonList(
+                        new FlowContext<>(null, null, data, new HashSet<>(), null)))))
+                .doOnError(errorCbWrapper).build());
     }
 
     /**
@@ -217,35 +212,25 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiProcessFlow<D, O> close(FlowCallBack<O> callback) {
         Operators.Just<Callback<FlowContext<O>>> successCb = input -> {
-            // 流程的全局数据消费回调
-            callback.consumeCb().accept(input.get().getData());
-            // 对话数据消费回调由直接起会话的流程触发
-            String flowId = this.flow().getId();
-            getConverseListener(input.get().getSession(), flowId).ifPresent(listener -> listener.onConsume(flowId,
+            callback.getSuccessCb().accept(input.get().getData());
+            // 对话结束回调由直接起会话的流程触发
+            String flowId = this.getFlow().getId();
+            getConverseListener(input.get(), flowId).ifPresent(listener -> listener.onSuccess(flowId,
                     input.get().getData()));
         };
 
         Operators.ErrorHandler<Object> errCb = (exception, retryable, flowContexts) -> {
-            // 流程的全局异常回调
-            callback.errorCb().accept(exception);
+            callback.getErrorCb().accept(exception);
             // 触发对话异常处理，及父流程异常处理
             handleConverseAndParentError(exception, retryable, flowContexts);
         };
-
-        Operators.Just<FlowSession> boundCompletedAction = session -> {
-            // 流程的全局结束回调
-            callback.completedCb().exec();
-            // 对话结束回调由直接起会话的流程触发
-            String flowId = this.flow().getId();
-            getConverseListener(session, flowId).ifPresent(listener -> listener.onConverseCompleted(flowId));
-        };
-        this.state.close(successCb, boundCompletedAction, errCb);
-        return ObjectUtils.cast(this.flow());
+        this.state.close(successCb, errCb);
+        return ObjectUtils.cast(this.getFlow());
     }
 
     private void handleConverseAndParentError(Exception exception, Retryable<Object> retryable,
             List<FlowContext<Object>> flowContexts) {
-        String flowId = this.flow().getId();
+        String flowId = this.getFlow().getId();
         flowContexts.stream()
                 .map(this::getAndClearListenerMap)
                 .filter(Optional::isPresent)
@@ -278,12 +263,13 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     private Optional<Map<String, AtomicReference<ConverseListener<O>>>> getAndClearListenerMap(FlowContext<?> ctx) {
         AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
                 ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
-        return Optional.ofNullable(listenerRefMap).map(mapRef -> mapRef.getAndSet(null));
+        return Optional.ofNullable(listenerRefMap)
+                .map(mapRef -> mapRef.getAndSet(null));
     }
 
-    private Optional<ConverseListener<O>> getConverseListener(FlowSession session, String flowId) {
+    private Optional<ConverseListener<O>> getConverseListener(FlowContext<?> ctx, String flowId) {
         AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
-                session.getInnerState(StateKey.CONVERSE_LISTENER);
+                ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
         return Optional.ofNullable(listenerRefMap)
                 .map(AtomicReference::get)
                 .map(listenerMap -> listenerMap.get(flowId))

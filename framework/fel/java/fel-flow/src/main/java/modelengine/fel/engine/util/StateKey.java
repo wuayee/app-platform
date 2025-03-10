@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -16,15 +16,35 @@ public interface StateKey {
     /**
      * 表示历史记录对象句柄的键。
      */
-    String HISTORY = "history";
+    String HISTORY_OBJ = "history_obj";
+
+    /**
+     * 表示用户原始问题的键。
+     */
+    String HISTORY_INPUT = "history_input";
 
     /**
      * 表示模型超参数的键。
      */
-    String CHAT_OPTION = "chat_option";
+    String CHAT_OPTIONS = "chat_options";
 
     /**
      * 表示流程对话监听器的键。
      */
     String CONVERSE_LISTENER = "converse_listener";
+
+    /**
+     * 表示流式响应信息消费者的键。
+     */
+    String STREAMING_CONSUMER = "streaming_consumer";
+
+    /**
+     * 表示流式模型节点处理器。
+     */
+    String STREAMING_PROCESSOR = "streaming_processor";
+
+    /**
+     * 表示流式模型节点处理器。
+     */
+    String STREAMING_FLOW_CONTEXT = "streaming_flow_context";
 }

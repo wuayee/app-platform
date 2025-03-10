@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -17,12 +17,17 @@ public interface OpenAiApi {
     /**
      * 会话补全请求的端点。
      */
-    String CHAT_ENDPOINT = "/chat/completions";
+    String CHAT_ENDPOINT = "/v1/chat/completions";
 
     /**
      * 嵌入请求的端点。
      */
-    String EMBEDDING_ENDPOINT = "/embeddings";
+    String EMBEDDING_ENDPOINT = "/v1/embeddings";
+
+    /**
+     * 图像生成请求的端点。
+     */
+    String IMAGE_ENDPOINT = "/v1/images/generations";
 
     /**
      * 请求头模型密钥字段。

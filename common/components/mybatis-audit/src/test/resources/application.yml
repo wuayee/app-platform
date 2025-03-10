@@ -1,0 +1,6 @@
+fit:
+  beans:
+    packages:
+      - 'modelengine.jade.common.audit'
+mybatis:
+  mapper-locations: 'mapper/*Mapper.xml'

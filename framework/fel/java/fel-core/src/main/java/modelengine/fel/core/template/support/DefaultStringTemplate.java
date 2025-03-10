@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultStringTemplate implements StringTemplate {
     private static final ParameterizedStringResolver FORMATTER =
-            ParameterizedStringResolver.create("{{", "}}", '/', false);
+            ParameterizedStringResolver.create("{{", "}}", '\\', false);
 
     private final ParameterizedString parameterizedString;
 
@@ -57,9 +57,9 @@ public class DefaultStringTemplate implements StringTemplate {
      *
      * @param key 表示占位符的 {@link String}。
      * @param value 表示静态值的 {@link String}。
-     * @return 返回表示当前实例的 {@link DefaultStringTemplate}。
+     * @return 返回表示当前实例的 {@link StringTemplate}。
      */
-    public DefaultStringTemplate partial(String key, String value) {
+    public StringTemplate partial(String key, String value) {
         Validation.notBlank(value, "The input value cannot be blank");
         return this.partial(key, () -> value);
     }
@@ -69,9 +69,9 @@ public class DefaultStringTemplate implements StringTemplate {
      *
      * @param key 表示占位符的 {@link String}。
      * @param supplier 表示提供参数的 {@link Supplier}{@code <}{@link String}{@code >}。
-     * @return 返回表示当前实例的 {@link DefaultStringTemplate}。
+     * @return 返回表示当前实例的 {@link StringTemplate}。
      */
-    public DefaultStringTemplate partial(String key, Supplier<String> supplier) {
+    public StringTemplate partial(String key, Supplier<String> supplier) {
         Validation.isTrue(this.placeholder.contains(key), "The template not contained '{0}'", key);
         this.placeholder.remove(key);
         this.builtin.put(key, supplier);

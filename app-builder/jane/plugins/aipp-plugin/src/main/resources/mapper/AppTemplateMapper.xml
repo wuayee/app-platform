@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AppTemplateMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jober.aipp.po.AppTemplatePo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="built_type" property="builtType"/>
+        <result column="category" property="category"/>
+        <result column="attributes" property="attributes"/>
+        <result column="app_type" property="appType"/>
+        <result column="like" property="like"/>
+        <result column="collection" property="collection"/>
+        <result column="usage" property="usage"/>
+        <result column="version" property="version"/>
+        <result column="config_id" property="configId"/>
+        <result column="flow_graph_id" property="flowGraphId"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_at" property="updateAt"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, built_type, category, attributes, app_type, "like", collection, usage, version, config_id, flow_graph_id, create_by, create_at, update_by, update_at
+    </sql>
+
+    <select id="selectWithId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppTemplatePo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_template
+        where id = #{id}
+        and is_deleted = 0
+    </select>
+
+    <sql id="orderBySelect">
+        <choose>
+            <when test="cond == null || cond.orderBy == null || cond.orderBy == ''">
+                order by name asc
+            </when>
+            <when test="cond.orderBy == 'like'">
+                order by "like" desc
+            </when>
+            <when test="cond.orderBy == 'collection'">
+                order by collection desc
+            </when>
+            <when test="cond.orderBy == 'usage'">
+                order by usage desc
+            </when>
+        </choose>
+    </sql>
+    
+    <select id="selectWithCondition" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppTemplatePo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_template
+        <where>
+            true and is_deleted = 0
+            <if test="cond !=null and cond.name != null and cond.name != ''">
+                and name ilike '%\' || #{cond.name} || '%' ESCAPE '\'
+            </if>
+            <if test="cond !=null and cond.appType != null and cond.appType.size() > 0">
+                and app_type in
+                <foreach collection="cond.appType" item="type" index="index" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="cond != null and cond.categories != null and cond.categories.size() > 0">
+                and category in
+                <foreach collection="cond.categories" item="category" index="index" open="(" separator="," close=")">
+                    #{category}
+                </foreach>
+            </if>
+            <include refid="orderBySelect"/>
+            <if test="cond != null">
+                limit #{cond.limit} offset #{cond.offset}
+            </if>
+        </where>
+    </select>
+
+    <select id="countWithCondition" resultType="int">
+        select count(*) from (
+            select * from app_template
+            <where>
+                true and is_deleted = 0
+                <if test="cond !=null and cond.name != null and cond.name != ''">
+                    and name ilike '%\' || #{cond.name} || '%' ESCAPE '\'
+                </if>
+                <if test="cond !=null and cond.appType != null and cond.appType.size() > 0">
+                    and app_type in
+                    <foreach collection="cond.appType" item="type" index="index" open="(" separator="," close=")">
+                        #{type}
+                    </foreach>
+                </if>
+                <if test="cond != null and cond.categories != null and cond.categories.size() > 0">
+                    and category in
+                    <foreach collection="cond.categories" item="category" index="index" open="(" separator="," close=")">
+                        #{category}
+                    </foreach>
+                </if>
+            </where>
+        ) as latest_records;
+    </select>
+
+    <insert id="insertOne" parameterType="modelengine.fit.jober.aipp.po.AppTemplatePo">
+        insert into app_template (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id}, #{name}, #{builtType}, #{category}, #{attributes}::jsonb, #{appType}, #{like}, #{collection}, #{usage}, #{version}, #{configId}, #{flowGraphId}, #{createBy}, #{createAt}, #{updateBy}, #{updateAt})
+
+    </insert>
+
+    <update id="deleteOne" parameterType="string">
+        UPDATE app_template
+        set is_deleted = 1
+        where id = #{id}
+    </update>
+
+    <update id="increaseUsage" parameterType="string">
+        UPDATE app_template
+        set usage = usage + 1
+        where id = #{id}
+    </update>
+
+    <update id="updateLike">
+        UPDATE app_template
+        set "like" = "like" + #{delta}
+        where id = #{id}
+    </update>
+
+    <update id="updateCollection">
+        UPDATE app_template
+        set collection = collection + #{delta}
+        where id = #{id}
+    </update>
+</mapper>

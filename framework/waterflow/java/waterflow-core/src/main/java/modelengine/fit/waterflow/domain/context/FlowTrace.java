@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -78,13 +78,7 @@ public class FlowTrace extends IdGenerator {
         contextPool = new HashSet<>();
     }
 
-    /**
-     * 流程的trace
-     *
-     * @param id 指定trace的id
-     */
     public FlowTrace(String id) {
         super(id);
-        contextPool = new HashSet<>();
     }
 }

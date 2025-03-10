@@ -1,0 +1,145 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.taskcenter.validation.impl;
+
+import static modelengine.fitframework.util.ObjectUtils.nullIf;
+
+import modelengine.fit.jane.task.domain.PropertyDataType;
+import modelengine.fit.jane.task.domain.PropertyScope;
+import modelengine.fit.jane.task.util.Entities;
+import modelengine.fit.jane.task.util.OperationContext;
+import modelengine.fit.jober.common.util.ParamUtils;
+import modelengine.fit.jober.taskcenter.util.Enums;
+import modelengine.fit.jober.taskcenter.validation.AbstractValidator;
+import modelengine.fit.jober.taskcenter.validation.PropertyValidator;
+
+import modelengine.fit.jober.common.ErrorCodes;
+import modelengine.fit.jober.common.exceptions.BadRequestException;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
+import modelengine.fitframework.util.StringUtils;
+
+/**
+ * {@link PropertyValidator}的默认实现。
+ *
+ * @author 陈镕希
+ * @since 2023-08-18
+ */
+@Component
+public class PropertyValidatorImpl extends AbstractValidator implements PropertyValidator {
+    private final int nameLengthMinimum;
+
+    private final int nameLengthMaximum;
+
+    private final int descriptionLengthMaximum;
+
+    private final int dataTypeLengthMaximum;
+
+    private final int scopeLengthMaximum;
+
+    public PropertyValidatorImpl(@Value("${validation.property.name.length.minimum:1}") int nameLengthMinimum,
+            @Value("${validation.property.name.length.maximum:64}") int nameLengthMaximum,
+            @Value("${validation.property.description.length.maximum:512}") int descriptionLengthMaximum,
+            @Value("${validation.property.dataType.length.maximum:16}") int dataTypeLengthMaximum,
+            @Value("${validation.property.scope.length.maximum:16}") int scopeLengthMaximum) {
+        this.nameLengthMinimum = nameLengthMinimum;
+        this.nameLengthMaximum = nameLengthMaximum;
+        this.descriptionLengthMaximum = descriptionLengthMaximum;
+        this.dataTypeLengthMaximum = dataTypeLengthMaximum;
+        this.scopeLengthMaximum = scopeLengthMaximum;
+    }
+
+    @Override
+    public String validatePropertyId(String propertyId, OperationContext context) {
+        if (propertyId == null) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_REQUIRED, ParamUtils.convertOperationContext(context));
+        } else {
+            return Entities.validateId(propertyId, () -> new BadRequestException(ErrorCodes.PROPERTY_INVALID,
+                    ParamUtils.convertOperationContext(context)));
+        }
+    }
+
+    @Override
+    public String validateTaskId(String taskId, OperationContext context) {
+        return super.validateTaskId(taskId, context);
+    }
+
+    @Override
+    public String validateName(String name, OperationContext context) {
+        if (StringUtils.isEmpty(name)) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_NAME_REQUIRED,
+                    ParamUtils.convertOperationContext(context));
+        } else if (name.length() > this.nameLengthMaximum) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_NAME_LENGTH_OUT_OF_BOUNDS,
+                    ParamUtils.convertOperationContext(context));
+        } else if (name.length() < this.nameLengthMinimum) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_NAME_LENGTH_LESS_THAN_BOUNDS,
+                    ParamUtils.convertOperationContext(context));
+        } else {
+            return name;
+        }
+    }
+
+    @Override
+    public String validateDescription(String description, OperationContext context) {
+        if (StringUtils.isEmpty(description)) {
+            return "";
+        } else if (description.length() > this.descriptionLengthMaximum) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_DESCRIPTION_LENGTH_OUT_OF_BOUNDS,
+                    ParamUtils.convertOperationContext(context));
+        } else {
+            return description;
+        }
+    }
+
+    @Override
+    public PropertyDataType validateDataType(String dataType, OperationContext context) {
+        if (StringUtils.isEmpty(dataType)) {
+            return PropertyDataType.TEXT;
+        } else if (dataType.length() > this.dataTypeLengthMaximum) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_DATATYPE_LENGTH_OUT_OF_BOUNDS,
+                    ParamUtils.convertOperationContext(context));
+        } else {
+            return Enums.parse(PropertyDataType.class, dataType);
+        }
+    }
+
+    @Override
+    public Boolean validateIdentifiable(Boolean isIdentifiable) {
+        return nullIf(isIdentifiable, false);
+    }
+
+    @Override
+    public Boolean validateRequired(Boolean isRequired) {
+        if (isRequired == null) {
+            return false;
+        } else {
+            return isRequired;
+        }
+    }
+
+    @Override
+    public PropertyScope validateScope(String scope, OperationContext context) {
+        if (StringUtils.isEmpty(scope)) {
+            return PropertyScope.PUBLIC;
+        } else if (scope.length() > this.scopeLengthMaximum) {
+            throw new BadRequestException(ErrorCodes.PROPERTY_SCOPE_LENGTH_OUT_OF_BOUNDS,
+                    ParamUtils.convertOperationContext(context));
+        } else {
+            return Enums.parse(PropertyScope.class, scope);
+        }
+    }
+
+    @Override
+    public String validateAppearance(String appearance) {
+        if (StringUtils.isEmpty(appearance)) {
+            return "{}";
+        } else {
+            return appearance;
+        }
+    }
+}

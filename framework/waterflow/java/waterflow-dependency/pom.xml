@@ -18,9 +18,6 @@
         <fel.version>1.0.0-SNAPSHOT</fel.version>
         <waterflow.version>1.0.0-SNAPSHOT</waterflow.version>
         <ohscript.version>0.0.3.6-SNAPSHOT</ohscript.version>
-        <task.version>0.1.0</task.version>
-        <jober.genericable.version>0.6.0-SNAPSHOT</jober.genericable.version>
-        <jober.multiversion.genericable.version>0.1.0-SNAPSHOT</jober.multiversion.genericable.version>
 
         <!-- Third-party versions -->
         <druid.version>1.2.20</druid.version>
@@ -30,10 +27,11 @@
         <lombok.version>1.18.26</lombok.version>
         <jackson.version>2.16.2</jackson.version>
         <mybatis.version>3.5.13</mybatis.version>
+        <caffeine.version>2.9.3</caffeine.version>
 
         <!-- Test framework versions -->
         <assertj.version>3.22.0</assertj.version>
-        <junit.version>5.10.3</junit.version>
+        <junit5.version>5.9.2</junit5.version>
         <mockito.version>4.11.0</mockito.version>
     </properties>
 
@@ -102,6 +100,21 @@
                 <artifactId>waterflow-genericable</artifactId>
                 <version>${waterflow.version}</version>
             </dependency>
+            <dependency>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
+                <artifactId>waterflow-runtime-service</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
+                <artifactId>waterflow-common</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>modelengine.fit.jade.waterflow</groupId>
+                <artifactId>waterflow-definition-service</artifactId>
+                <version>${waterflow.version}</version>
+            </dependency>
 
             <!-- Ohscript -->
             <dependency>
@@ -148,12 +161,17 @@
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
 
             <!-- Test -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
-                <version>${junit.version}</version>
+                <version>${junit5.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

@@ -9,7 +9,7 @@
 1. 通过@符号正则匹配字符串，使用开源三方包email_validator校验邮箱合法性。若合法则匿名化为<email>
 
 ## 调用接口输入
-``` python
+```python
 inputs = [
     {
         "businessData": {
@@ -29,7 +29,7 @@ inputs = [
 ```
 
 ## 调用接口输出
-``` python
+```python
 outputs = [
     {
         "businessData": {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -12,7 +12,6 @@ import modelengine.fit.waterflow.domain.utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,11 +47,7 @@ public abstract class BlockToken<T> extends IdGenerator {
                         .batchId(context.getBatchId()))
                 .collect(Collectors.toList());
         this.publisher.getFlowContextRepo().save(cloned);
-        cloned.stream()
-                .collect(Collectors.groupingBy(item -> item.getSession().getId(), LinkedHashMap::new,
-                        Collectors.toList()))
-                .values()
-                .forEach(this.publisher::offer);
+        this.publisher.offer(cloned);
     }
 
     /**
@@ -66,9 +61,11 @@ public abstract class BlockToken<T> extends IdGenerator {
     /**
      * 设置
      *
+     * @param publisher 需要中断的目标节点
      * @param data block的data
      */
-    public void setHost(FlowContext<T> data) {
+    public void setHost(Publisher<T> publisher, FlowContext<T> data) {
+        this.publisher = publisher;
         this.data.add(data);
     }
 
@@ -79,14 +76,5 @@ public abstract class BlockToken<T> extends IdGenerator {
      */
     public List<FlowContext<T>> data() {
         return this.data;
-    }
-
-    /**
-     * 设置publisher
-     *
-     * @param publisher publisher
-     */
-    public void setPublisher(Publisher<T> publisher) {
-        this.publisher = publisher;
     }
 }

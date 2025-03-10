@@ -1,0 +1,11 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.jade.store.tool.upload'
+
+store:
+  plugin:
+    uploader:
+      maxPluginNumber: 3000
+      maxStorageRatio: 0.9
+      toolsPath: '/var/store/tools/'

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -69,9 +69,9 @@ public class BulkStringTemplateTest {
         values.add(MapBuilder.<String, String>get().put("adjective", "sad").put("content", "rabbits").build());
         values.add(MapBuilder.<String, String>get().put("adjective", "lovely").put("content", "cats").build());
         String output = new DefaultBulkStringTemplate(template, "\n\n").render(values);
-        assertThat(output).isEqualTo(
-                "Tell me a funny story about chickens.\n\n" + "Tell me a sad story about rabbits.\n\n"
-                        + "Tell me a lovely story about cats.");
+        assertThat(output).isEqualTo("Tell me a funny story about chickens.\n\n"
+                + "Tell me a sad story about rabbits.\n\n"
+                + "Tell me a lovely story about cats.");
     }
 
     @Test

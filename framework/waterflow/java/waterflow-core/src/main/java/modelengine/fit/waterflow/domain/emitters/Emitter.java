@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -13,7 +13,7 @@ package modelengine.fit.waterflow.domain.emitters;
  *
  * @since 1.0
  */
-public interface Emitter<D, T> extends Completable {
+public interface Emitter<D, T> {
     /**
      * 注册监听
      *
@@ -44,10 +44,5 @@ public interface Emitter<D, T> extends Completable {
      * @param token 发布数据时归属的session
      */
     default void start(T token) {
-    }
-
-    @Override
-    default void complete() {
-        throw new RuntimeException("Complete is not supported");
     }
 }

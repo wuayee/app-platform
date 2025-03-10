@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -18,7 +18,6 @@ import modelengine.fel.core.util.MathUtils;
 import modelengine.fel.core.vectorstore.SearchOption;
 import modelengine.fel.core.vectorstore.VectorStore;
 import modelengine.fitframework.inspection.Nonnull;
-import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.resource.web.Media;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.ObjectUtils;
@@ -79,7 +78,7 @@ public class MemoryVectorStore implements VectorStore {
 
     @Override
     public void delete(List<String> ids) {
-        Validation.notNull(ids, "The id list cannot be null.");
+        notNull(ids, "The id list cannot be null.");
         ids.forEach(this.cache::remove);
     }
 

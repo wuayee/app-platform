@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.task.mapper.EvalRecordMapper">
+    <resultMap id="EvalRecordEntityResultMap" type="modelengine.jade.app.engine.task.entity.EvalRecordEntity">
+        <id property="id" column="id"/>
+        <result property="input" column="input"/>
+        <result property="nodeName" column="node_name"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="score" column="score"/>
+        <result property="taskCaseId" column="task_case_id"/>
+    </resultMap>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_record (input, node_id, node_name, score, task_case_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.input}, #{item.nodeId}, #{item.nodeName}, #{item.score}, #{item.taskCaseId})
+        </foreach>
+    </insert>
+
+    <select id="listEvalRecord" resultType="modelengine.jade.app.engine.task.entity.EvalRecordEntity" resultMap="EvalRecordEntityResultMap">
+        SELECT id,
+               input,
+               node_name,
+               node_id,
+               score
+        FROM t_app_engine_eval_record
+        WHERE node_id in
+        <foreach collection="nodeIds" separator="," item="nodeId" close=")" open="(">
+            #{nodeId}
+        </foreach>
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countEvalRecord" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_record
+        WHERE node_id IN
+        <foreach collection="nodeIds" separator="," item="nodeId" close=")" open="(">
+            #{nodeId}
+        </foreach>
+    </select>
+
+    <select id="getEntityByCaseIds" resultType="modelengine.jade.app.engine.task.entity.EvalRecordEntity"
+            resultMap="EvalRecordEntityResultMap">
+        SELECT id, input, node_name, node_id, node_name, score, task_case_id
+        FROM t_app_engine_eval_record
+        WHERE task_case_id IN
+        <foreach collection="caseIds" separator="," item="caseId" close=")" open="(">
+            #{caseId}
+        </foreach>
+    </select>
+</mapper>

@@ -30,7 +30,6 @@ const _ModelForm = ({shapeId, modelData, modelOptions, disabled}) => {
   const shape = useShapeContext();
   const dispatch = useDispatch();
   const form = useFormContext();
-  const data = useDataContext();
   const {t} = useTranslation();
   const startNode = shape.page.sm.findShapeBy(s => s.type === 'startNodeStart');
   const maxMemoryRounds = modelData.maxMemoryRounds;

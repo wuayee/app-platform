@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fel.core.chat;
 
+import modelengine.fel.core.model.ModelExtractParam;
 import modelengine.fel.core.tool.ToolInfo;
-import modelengine.fitframework.inspection.Nonnull;
 import modelengine.fitframework.pattern.builder.BuilderFactory;
 
 import java.util.List;
@@ -25,7 +25,6 @@ public interface ChatOption {
      *
      * @return 表示模型名字的 {@link String}。
      */
-    @Nonnull
     String model();
 
     /**
@@ -36,8 +35,14 @@ public interface ChatOption {
      *
      * @return 表示是否使用流式接口的 {@code boolean}。
      */
-    @Nonnull
     Boolean stream();
+
+    /**
+     * 大模型服务端地址。
+     *
+     * @return 表示大模型服务端地址的 {@link String}。
+     */
+    String baseUrl();
 
     /**
      * 获取模型接口秘钥。
@@ -123,6 +128,20 @@ public interface ChatOption {
     List<ToolInfo> tools();
 
     /**
+     * 获取请求用户名。
+     *
+     * @return 表示请求用户名的 {@link String}。
+     */
+    String user();
+
+    /**
+     * 获取模型额外参数列表。
+     *
+     * @return 表示模型额外参数列表的 {@link List}{@code <}{@link ModelExtractParam}{@code >}。
+     */
+    List<ModelExtractParam<?>> extras();
+
+    /**
      * {@link ChatOption} 的构建器。
      */
     interface Builder {
@@ -140,7 +159,15 @@ public interface ChatOption {
          * @param stream 表示是否使用流式接口的 {@code boolean}。
          * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder stream(boolean stream);
+        Builder stream(Boolean stream);
+
+        /**
+         * 设置模型服务端地址。
+         *
+         * @param baseUrl 表示大模型服务端地址的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder baseUrl(String baseUrl);
 
         /**
          * 设置模型接口秘钥。
@@ -156,7 +183,7 @@ public interface ChatOption {
          * @param maxTokens 表示生成文本最大长度的 {@code int}。
          * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder maxTokens(int maxTokens);
+        Builder maxTokens(Integer maxTokens);
 
         /**
          * 设置频率惩罚系数。
@@ -164,7 +191,7 @@ public interface ChatOption {
          * @param frequencyPenalty 表示频率惩罚系数的 {@code double}。
          * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder frequencyPenalty(double frequencyPenalty);
+        Builder frequencyPenalty(Double frequencyPenalty);
 
         /**
          * 设置文本出现惩罚系数。
@@ -172,7 +199,7 @@ public interface ChatOption {
          * @param presencePenalty 表示文本出现惩罚系数的 {@code double}。
          * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder presencePenalty(double presencePenalty);
+        Builder presencePenalty(Double presencePenalty);
 
         /**
          * 设置停止字符串列表。
@@ -188,7 +215,7 @@ public interface ChatOption {
          * @param temperature 表示采样温度的 {@code double}。
          * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder temperature(double temperature);
+        Builder temperature(Double temperature);
 
         /**
          * 设置采样率。
@@ -196,7 +223,7 @@ public interface ChatOption {
          * @param topP 表示采样率的 {@code double}。
          * @return 表示当前构建器的 {@link Builder}。
          */
-        Builder topP(double topP);
+        Builder topP(Double topP);
 
         /**
          * 设置模型能使用的工具列表。
@@ -205,6 +232,22 @@ public interface ChatOption {
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder tools(List<ToolInfo> tools);
+
+        /**
+         * 设置请求用户名。
+         *
+         * @param user 表示请求用户名的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder user(String user);
+
+        /**
+         * 设置模型额外参数列表。
+         *
+         * @param extras 表示模型额外参数列表的 {@link List}{@code <}{@link ModelExtractParam}{@code >}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder extras(List<ModelExtractParam<?>> extras);
 
         /**
          * 构建对象。

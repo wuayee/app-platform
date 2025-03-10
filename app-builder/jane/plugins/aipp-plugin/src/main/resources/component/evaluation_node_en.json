@@ -1,0 +1,17 @@
+[
+  {
+    "type": "evaluationAlgorithmsNodeState",
+    "name": "Evaluation Algorithms",
+    "uniqueName": ""
+  },
+  {
+    "type": "evaluationTestSetNodeState",
+    "name": "Evaluation Test",
+    "uniqueName": ""
+  },
+  {
+    "type": "evaluationEndNodeEnd",
+    "name": "Evaluation End",
+    "uniqueName": ""
+  }
+]

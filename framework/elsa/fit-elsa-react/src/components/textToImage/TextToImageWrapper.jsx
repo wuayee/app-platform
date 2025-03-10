@@ -102,6 +102,7 @@ const _FileExtractionWrapper = ({data, shapeStatus}) => {
       name={`textToImagePromptDrawer-${shapeId}-${prompt.id}`}
       prompt={prompt}
       header={t('textToImageConfigPanelHeader')}
+      drawerTitle={t('textToImagePrompt')}
       disabled={shapeStatus.disabled}/>
     <TextToImageParamConfig imageCount={imageCount} disabled={shapeStatus.disabled}/>
     <InvokeOutput outputData={data.outputParams} getDescription={getOutputDescription}/>

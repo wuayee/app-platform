@@ -1,0 +1,28 @@
+{
+  "title": "knowledge reference schema",
+  "type": "array",
+  "items": {
+    "title": "knowledge node output schema",
+    "type": "array",
+    "items": {
+      "title": "rag document schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "score",
+        "text"
+      ]
+    }
+  }
+}

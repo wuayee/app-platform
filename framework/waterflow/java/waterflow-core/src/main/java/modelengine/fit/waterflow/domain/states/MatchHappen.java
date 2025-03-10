@@ -1,19 +1,17 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.waterflow.domain.states;
 
-import modelengine.fit.waterflow.domain.context.MatchWindow;
 import modelengine.fit.waterflow.domain.enums.SpecialDisplayNode;
 import modelengine.fit.waterflow.domain.flow.Flow;
 import modelengine.fit.waterflow.domain.stream.operators.Operators;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 代表了条件分支的when
@@ -48,11 +46,8 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      */
     public MatchHappen<O, D, I, F> match(Operators.Whether<I> whether,
             Operators.BranchProcessor<O, D, I, F> processor) {
-        UUID id = UUID.randomUUID();
-        State<I, D, I, F> branchStart = new State<>(this.node.publisher()
-                .just(input -> input.setSession(
-                        MatchWindow.from(input.getWindow(), id, input.getData()).getSession()), whether)
-                .displayAs(SpecialDisplayNode.BRANCH.name()), this.node.getFlow());
+        State<I, D, I, F> branchStart = new State<>(this.node.publisher().just(any -> {
+        }, whether).displayAs(SpecialDisplayNode.BRANCH.name()), this.node.getFlow());
         State<O, D, ?, F> branch = processor.process(branchStart);
         this.branches.add(branch);
         return this;
@@ -85,12 +80,7 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      */
     public State<O, D, O, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
         this.match(null, processor);
-        State<O, D, O, F> joinState = this.branches.get(0).just(any -> {});
-        joinState.processor.displayAs(SpecialDisplayNode.OTHERS.name());
-        this.branches.stream().skip(1).forEach(branch -> {
-            branch.publisher().subscribe(joinState.subscriber());
-        });
-        return joinState;
+        return this.others();
     }
 
     /**
@@ -99,6 +89,11 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      * @return conditions后续的节点
      */
     public State<O, D, O, F> others() {
-        return this.others(node -> node.map(n -> null));
+        State<O, D, O, F> joinState = this.branches.get(0).just(any -> {});
+        joinState.processor.displayAs(SpecialDisplayNode.OTHERS.name());
+        this.branches.stream().skip(1).forEach(branch -> {
+            branch.publisher().subscribe(joinState.subscriber());
+        });
+        return joinState;
     }
 }

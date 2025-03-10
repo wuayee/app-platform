@@ -127,6 +127,7 @@ const _QueryOptimizationWrapper = ({data, shapeStatus}) => {
       addItem={addItem}
       updateItem={updateItem}
       deleteItem={deleteItem}
+      editable={false}
       content={inputDescription}
       maxInputLength={1000}/>
     <OptimizationConfig modelOptions={modelOptions} disabled={shapeStatus.disabled} template={template}

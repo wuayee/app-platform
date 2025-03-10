@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jane.dlock.jdbc.persist.mapper.FlowLockMapper">
+    <resultMap id="objectMap"
+               type="modelengine.fit.jane.dlock.jdbc.persist.po.FlowLockPO">
+        <id column="lock_key" property="lockKey"/>
+        <result column="expired_at" property="expiredAt"/>
+        <result column="locked_client" property="lockedClient"/>
+    </resultMap>
+
+    <sql id="table">flow_lock</sql>
+
+    <sql id="columns">lock_key, expired_at, locked_client</sql>
+
+    <insert id="create">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES(#{flowLock.lockKey},
+        #{flowLock.expiredAt},
+        #{flowLock.lockedClient}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+        <include refid="table"/>
+        SET
+        expired_at = #{flowLock.expiredAt},
+        locked_client = #{flowLock.lockedClient}
+        WHERE
+        lock_key = #{flowLock.lockKey} AND (locked_client = #{flowLock.lockedClient} OR expired_at <![CDATA[ < ]]> #{expiredAt})
+    </update>
+
+    <update id="updateExpiredAt">
+        UPDATE
+        <include refid="table"/>
+        SET
+        expired_at = #{flowLock.expiredAt}
+        WHERE
+        lock_key = #{flowLock.lockKey} AND locked_client = #{flowLock.lockedClient}
+    </update>
+
+    <select id="find" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE lock_key = #{lockKey}
+    </select>
+
+    <select id="isExists">
+        SELECT EXISTS(
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE lock_key = #{flowLock.lockKey} AND expired_at <![CDATA[ >= ]]> #{flowLock.expiredAt} AND locked_client = #{flowLock.lockedClient}
+        )
+    </select>
+
+    <update id="delete">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE lock_key = #{lockKey} AND locked_client = #{lockedClient}
+    </update>
+
+    <update id="deleteExpired">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE lock_key = #{flowLock.lockKey} AND locked_client = #{flowLock.lockedClient} AND expired_at <![CDATA[ < ]]> #{flowLock.expiredAt}
+    </update>
+
+    <select id="now" resultType="java.lang.Long">
+        SELECT FLOOR(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) * 1000) AS current_timestamp_ms;
+    </select>
+</mapper>

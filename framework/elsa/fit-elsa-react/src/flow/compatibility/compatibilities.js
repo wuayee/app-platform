@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {pageCompatibilityProcessor} from '@/flow/compatibility/compatibilityProcessors.js';
-import {evaluationPageCompatibilityProcessor} from '@/flow/compatibility/evaluationCompatibilityProcessor.js';
+import {evaluationPageInitializationProcessor} from '@/flow/initialization/evaluationInitializationProcessor.js';
 
 /**
  * 兼容管理器.
@@ -26,11 +26,20 @@ export const compatibilityManager = () => {
         if (!pageData) {
             return;
         }
-        if (self.type === 'flow') {
-            pageCompatibilityProcessor(pageData, graph).process();
-        } else {
-            evaluationPageCompatibilityProcessor(pageData, graph).process();
+        pageCompatibilityProcessor(pageData, graph).process();
+    };
+
+    /**
+     * 数据初始化逻辑.
+     *
+     * @param pageData 页面对象.
+     * @param graph 画布对象.
+     */
+    self.initializeData = (pageData, graph) => {
+        if (!pageData) {
+            return;
         }
+        evaluationPageInitializationProcessor(pageData, graph).process();
     };
 
     return self;

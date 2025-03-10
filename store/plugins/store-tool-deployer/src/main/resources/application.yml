@@ -1,0 +1,18 @@
+fit:
+  beans:
+    packages:
+    - 'modelengine.jade.store.tool.deploy'
+
+store:
+  plugin:
+    deployer:
+      query:
+        timeout: 600
+        interval: 10
+        toolsPath: '/var/store/tools/'
+  registry:
+    query:
+      pool:
+        corePoolSize: 20
+        maximumPoolSize: 20
+        workQueueCapacity: 10

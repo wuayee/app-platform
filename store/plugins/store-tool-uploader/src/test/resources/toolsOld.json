@@ -1,0 +1,140 @@
+{
+  "tools": [
+    {
+      "schema": {
+        "name": "add_list",
+        "description": "This method adds two list",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "description": "First list",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "b": {
+              "description": "Second list",
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": [
+            "a",
+            "b"
+          ]
+        },
+        "return": {
+          "description": "The sum of two list",
+          "type": "integer"
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default_fitable_id1",
+          "genericableId": "modelengine.fit.test_demo"
+        }
+      },
+      "extensions": {
+        "tags": [
+          "FIT",
+          "BUILTIN"
+        ]
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN",
+        "HUGGINGFACE"
+      ]
+    },
+    {
+      "schema": {
+        "name": "add_itself",
+        "description": "This method adds two integers",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "description": "First integer",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "a"
+          ]
+        },
+        "order": [
+          "a"
+        ],
+        "return": {
+          "description": "The sum of two integers",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default_fitable_id2",
+          "genericableId": "modelengine.fit.test_demo"
+        }
+      },
+      "extensions": {
+        "tags": [
+          "FIT",
+          "BUILTIN"
+        ]
+      }
+    },
+    {
+      "schema": {
+        "name": "name_for_tool",
+        "description": "description for tool.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "condition": {
+              "description": "condition description.",
+              "type": "string"
+            },
+            "query": {
+              "description": "query description.",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": [
+            "condition",
+            "query"
+          ]
+        },
+        "order": [
+          "condition",
+          "query"
+        ],
+        "return": {
+          "description": "the ans for test demo.",
+          "type": "string"
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default_fitable_id3",
+          "genericableId": "modelengine.fit.test_demo"
+        }
+      },
+      "extensions": {
+        "tags": [
+          "FIT",
+          "BUILTIN"
+        ]
+      }
+    }
+  ]
+}

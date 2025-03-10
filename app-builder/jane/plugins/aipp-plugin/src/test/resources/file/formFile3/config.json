@@ -1,0 +1,73 @@
+{
+  "schema": {
+    "parameters": {
+      "type": "object",
+      "required": [
+        "P1"
+      ],
+      "properties": {
+        "P1": {
+          "type": "string",
+          "default": "default_value"
+        },
+        "a": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "b": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "p2": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "age": {
+              "type": "integer"
+            },
+            "b": {
+              "type": "object",
+              "properties": {
+                "c": {
+                  "type": "string"
+                }
+              }
+            },
+            "grade": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "return": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "age": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AppBuilderFlowGraphMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jober.aipp.po.AppBuilderFlowGraphPo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="appearance" property="appearance"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_at" property="updateAt"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, appearance, create_by, create_at, update_by, update_at
+    </sql>
+
+    <select id="selectWithId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppBuilderFlowGraphPo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_flow_graph
+        where id = #{id} and is_deleted = 0
+    </select>
+
+    <insert id="insertOne" parameterType="modelengine.fit.jober.aipp.po.AppBuilderFlowGraphPo">
+        insert into app_builder_flow_graph( <include refid="Base_Column_List"/> )
+        values (#{id}, #{name}, #{appearance}::jsonb, #{createBy}, #{createAt}, #{updateBy}, #{updateAt})
+    </insert>
+
+    <update id="updateOne" parameterType="modelengine.fit.jober.aipp.po.AppBuilderFlowGraphPo">
+        update app_builder_flow_graph
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="appearance != null">
+                appearance = #{appearance}::jsonb,
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="delete" parameterType="java.util.List">
+        UPDATE app_builder_flow_graph
+        set is_deleted = 1
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

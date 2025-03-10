@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelenegine.jade.app.engine.eval.mapper.EvalDataMapper">
+    <resultMap id="EvalDataEntityResultMap" type="modelengine.jade.app.engine.eval.entity.EvalDataEntity">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <resultMap id="EvalVersionEntityResultMap" type="modelenegine.jade.app.engine.eval.entity.EvalVersionEntity">
+        <id property="version" column="version"/>
+        <result property="createdTime" column="version_time"/>
+    </resultMap>
+
+    <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_data (content, created_version, dataset_id, created_at, updated_at, created_by,
+        updated_by) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.content}, #{item.createdVersion}, #{item.datasetId}, #{item.createdAt}, #{item.updatedAt},
+            #{item.createdBy}, #{item.updatedBy})
+        </foreach>
+    </insert>
+
+    <sql id="select_by_version">
+        dataset_id
+        =
+        #{datasetId}
+        AND
+        created_version
+        &lt;=
+        #{version}
+        AND
+        expired_version
+        >
+        #{version}
+    </sql>
+
+    <sql id="MAX_LONG">
+        9223372036854775807
+    </sql>
+
+    <select id="listEvalData" resultType="modelengine.jade.app.engine.eval.entity.EvalDataEntity"
+            resultMap="EvalDataEntityResultMap">
+        SELECT id, content, created_at, updated_at
+        FROM t_app_engine_eval_data
+        WHERE
+        <include refid="select_by_version"/>
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countEvalData" resultType="int">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_data
+        WHERE
+        <include refid="select_by_version"/>
+    </select>
+
+    <update id="updateExpiredVersion">
+        UPDATE t_app_engine_eval_data
+        SET expired_version = #{version}, updated_at = #{updatedAt}, updated_by = #{updatedBy}
+        WHERE (expired_version =<include refid="MAX_LONG"/>) AND id IN
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item})
+        </foreach>
+    </update>
+
+    <delete id="deleteAll">
+        DELETE
+        FROM t_app_engine_eval_data
+        WHERE dataset_id IN
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item})
+        </foreach>
+    </delete>
+
+    <select id="getLatestVersion" resultType="modelenegine.jade.app.engine.eval.entity.EvalVersionEntity"
+            resultMap="EvalVersionEntityResultMap">
+        SELECT version, version_time
+        FROM (
+        (SELECT created_version AS version, created_at AS version_time
+        FROM t_app_engine_eval_data
+        WHERE dataset_id = #{datasetId}
+        ORDER BY "version" DESC LIMIT 1)
+        UNION
+        (SELECT expired_version AS version, updated_at AS version_time
+        FROM t_app_engine_eval_data
+        WHERE dataset_id = #{datasetId}
+        AND (expired_version !=<include refid="MAX_LONG"/>)
+        ORDER BY "version" DESC LIMIT 1)
+        ) AS combined
+        ORDER BY version DESC LIMIT 1;
+    </select>
+</mapper>

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@ public class HumanMessageTemplate extends AbstractMessageTemplate {
      * @see <a href="https://mustache.github.io/">mustache</a>。
      */
     public HumanMessageTemplate(String template) {
-        this(StringTemplate.create(template));
+        this(new DefaultStringTemplate(template));
     }
 
     /**

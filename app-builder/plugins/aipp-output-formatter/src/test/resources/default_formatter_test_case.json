@@ -1,0 +1,20 @@
+[
+  {
+    "data": "llmOutput text string",
+    "expected": "llmOutput text string"
+  },
+  {
+    "data": {
+      "llmOutput": "llmOutput text in map"
+    },
+    "expected": "llmOutput text in map"
+  },
+  {
+    "data": {
+      "key0": {
+        "llmOutput": "llmOutput text in map"
+      }
+    },
+    "expected": "{\"llmOutput\":\"llmOutput text in map\"}"
+  }
+]

@@ -1,0 +1,143 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.aipp.service.impl;
+
+import static modelengine.jade.carver.validation.ValidateTagMode.validateTagMode;
+
+import modelengine.jade.carver.ListResult;
+import modelengine.jade.store.entity.query.PluginToolQuery;
+import modelengine.jade.store.entity.transfer.PluginToolData;
+import modelengine.jade.store.service.PluginToolService;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import modelengine.fel.core.template.support.DefaultStringTemplate;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
+import modelengine.fit.jade.aipp.model.dto.ModelListDto;
+import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jober.aipp.common.exception.AippErrCode;
+import modelengine.fit.jober.aipp.common.exception.AippException;
+import modelengine.fit.jober.aipp.service.AgentInfoGenerateService;
+import modelengine.fit.jober.aipp.service.AippModelService;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.util.IoUtils;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 表示 {@link AgentInfoGenerateService} 的默认实现。
+ *
+ * @author 兰宇晨
+ * @since 2024-12-2
+ */
+@Component
+public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
+    private static final Logger log = Logger.get(AppBuilderAppServiceImpl.class);
+
+    private final AippModelService aippModelService;
+
+    private final AippModelCenter aippModelCenter;
+
+    private final PluginToolService toolService;
+
+    public AgentInfoGenerateServiceImpl(AippModelService aippModelService, AippModelCenter aippModelCenter,
+            PluginToolService toolService) {
+        this.aippModelService = aippModelService;
+        this.aippModelCenter = aippModelCenter;
+        this.toolService = toolService;
+    }
+
+    @Override
+    public String generateName(String desc) {
+        return this.generateByTemplate(desc, "prompt/promptGenerateName.txt");
+    }
+
+    @Override
+    public String generateGreeeting(String desc) {
+        return this.generateByTemplate(desc, "prompt/promptGenerateGreeting.txt");
+    }
+
+    @Override
+    public String generatePrompt(String desc) {
+        return this.generateByTemplate(desc, "prompt/promptGeneratePrompt.txt");
+    }
+
+    @Override
+    public List<String> selectTools(String desc, String creator) {
+        StringBuilder toolsCandidate = new StringBuilder();
+        ListResult<PluginToolData> tools = this.getTools(creator);
+        int count = tools.getCount();
+        List<PluginToolData> toolData = tools.getData();
+        for (int i = 0; i < count; i++) {
+            toolsCandidate.append(StringUtils.format("[ID:{0},Name:{1},Desc:{2}]\n", i, toolData.get(i).getName(),
+                    toolData.get(i).getDescription()));
+        }
+        String result = this.generateByTemplate("<Tools>\n" + toolsCandidate + "</Tools>\n" + "input: " + desc,
+                "prompt/promptOfSelectTools.txt");
+
+        ArrayList<Integer> toolsIndex;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            toolsIndex = mapper.readValue(result,
+                    mapper.getTypeFactory().constructCollectionType(List.class, Integer.class));
+        } catch (JsonProcessingException e) {
+            log.error("Parse the return tools index from LLM failed.", e);
+            throw new AippException(AippErrCode.JSON_DECODE_FAILED, e.getMessage());
+        }
+        ArrayList<String> toolsResult = new ArrayList<>();
+        for (int i = 0; i < Math.min(5, toolsIndex.size()); i++) {
+            toolsResult.add(toolData.get(toolsIndex.get(i)).getUniqueName());
+        }
+        return toolsResult;
+    }
+
+    private ListResult<PluginToolData> getTools(String creator) {
+        PluginToolQuery pluginQuery = new PluginToolQuery.Builder().toolName(null).includeTags(new HashSet<String>() {{
+            add("FIT");
+        }}).excludeTags(new HashSet<String>() {{
+            add("APP");
+        }}).mode(validateTagMode("AND")).offset(null).limit(null).creator(creator).isDeployed(true).build();
+        return this.toolService.getPluginTools(pluginQuery);
+    }
+
+    private String generateByTemplate(String input, String templatePath) {
+        Map<String, String> values = MapBuilder.<String, String>get().put("input", input).build();
+        String template;
+        try {
+            template = IoUtils.content(AgentInfoGenerateService.class.getClassLoader(), templatePath);
+        } catch (IOException e) {
+            log.error("read prompt template file fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
+        }
+        ModelAccessInfo model = getDefaultModel();
+        String prompt = new DefaultStringTemplate(template).render(values);
+        return aippModelService.chat(model.getServiceName(), model.getTag(), 0.0, prompt);
+    }
+
+    private ModelAccessInfo getDefaultModel() {
+        ModelAccessInfo firstModel = new ModelAccessInfo("", "");
+        ModelListDto modelList = this.aippModelCenter.fetchModelList();
+        if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
+            List<ModelAccessInfo> modelInfoList = modelList.getModels();
+            for (ModelAccessInfo info : modelInfoList) {
+                if (StringUtils.equals(info.getServiceName(), "Qwen2-72B-Instruct-GPTQ-Int4")) {
+                    return info;
+                }
+            }
+            firstModel = modelList.getModels().get(0);
+        }
+        return firstModel;
+    }
+}

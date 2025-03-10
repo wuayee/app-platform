@@ -30,10 +30,11 @@ const maxPromptLength = 2000;
  * @param name formItem名称
  * @param popoverContent 折叠标题popover内容
  * @param header 折叠区域标题文字
+ * @param drawerTitle 弹窗标题
  * @return {JSX.Element}
  * @private
  */
-const _AiPromptPanel = ({disabled, prompt, name, popoverContent = null, header}) => {
+const _AiPromptPanel = ({disabled, prompt, name, popoverContent = null, header, drawerTitle}) => {
   const shape = useShapeContext();
   const shapeId = shape.id;
   const {t} = useTranslation();
@@ -104,7 +105,7 @@ const _AiPromptPanel = ({disabled, prompt, name, popoverContent = null, header})
             maxLength={maxPromptLength}
             value={prompt.value}
             name={name}
-            title={t('fileExtractionPrompt')}
+            title={drawerTitle}
             rules={[]}
             placeHolder={''}
             container={shape.page.graph.div.parentElement}
@@ -125,6 +126,7 @@ _AiPromptPanel.propTypes = {
   popoverContent: PropTypes.element.isRequired,
   name: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
+  drawerTitle: PropTypes.string.isRequired,
 };
 
 const areEqual = (prevProps, nextProps) => {
@@ -132,7 +134,8 @@ const areEqual = (prevProps, nextProps) => {
     prevProps.prompt === nextProps.prompt &&
     prevProps.popoverContent === nextProps.popoverContent &&
     prevProps.name === nextProps.name &&
-    prevProps.header === nextProps.header;
+    prevProps.header === nextProps.header &&
+    prevProps.drawerTitle === nextProps.drawerTitle;
 };
 
 export const AiPromptPanel = React.memo(_AiPromptPanel, areEqual);

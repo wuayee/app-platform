@@ -4,11 +4,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {Drawer} from "antd";
-import {CodePlayground} from "@/components/common/code/CodePlayground.jsx";
-import "../custom-antd.css";
-import React, {useEffect} from "react";
-import PropTypes from "prop-types";
+import {Drawer} from 'antd';
+import {CodePlayground} from '@/components/common/code/CodePlayground.jsx';
+import '../custom-antd.css';
+import {useEffect} from 'react';
+import PropTypes from 'prop-types';
 
 const drawerStyles = {
     body: {

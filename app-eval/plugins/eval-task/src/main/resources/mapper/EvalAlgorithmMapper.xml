@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.task.mapper.EvalAlgorithmMapper">
+    <resultMap id="EvalAlgorithmVoResultMap" type="modelengine.jade.app.engine.task.vo.EvalAlgorithmVo">
+        <result property="nodeId" column="node_id"/>
+        <result property="nodeName" column="node_name"/>
+        <result property="algorithmSchema" column="algorithm_schema"/>
+        <result property="passScore" column="pass_score"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_algorithm (node_id, node_name, algorithm_schema, pass_score, task_id) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.nodeId}, #{item.nodeName}, #{item.algorithmSchema}, #{item.passScore}, #{item.taskId})
+        </foreach>
+    </insert>
+
+    <select id="countByNodeId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_algorithm
+        WHERE node_id = #{nodeId}
+    </select>
+</mapper>

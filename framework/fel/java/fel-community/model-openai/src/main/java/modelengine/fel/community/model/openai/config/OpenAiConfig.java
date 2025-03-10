@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -8,6 +8,7 @@ package modelengine.fel.community.model.openai.config;
 
 import modelengine.fitframework.annotation.AcceptConfigValues;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
 
 /**
  * 表示 {@link OpenAiConfig} 的默认实现。
@@ -18,7 +19,8 @@ import modelengine.fitframework.annotation.Component;
 @Component
 @AcceptConfigValues("fel.openai")
 public class OpenAiConfig {
-    private String apiBase = "https://api.openai.com/v1/";
+    @Value("${openai-urls.internal:https://api.openai.com/}")
+    private String apiBase;
     private String apiKey = "EMPTY";
     private int connectTimeout = 30000;
     private int readTimeout = 30000;

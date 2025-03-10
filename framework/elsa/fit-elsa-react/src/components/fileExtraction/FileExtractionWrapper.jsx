@@ -95,6 +95,7 @@ const _FileExtractionWrapper = ({data, shapeStatus}) => {
       popoverContent={content}
       prompt={prompt}
       header={t('fileExtractionConfig')}
+      drawerTitle={t('fileExtractionPrompt')}
       disabled={shapeStatus.disabled}/>
     <InvokeOutput outputData={data.outputParams} getDescription={getOutputDescription}/>
   </>);

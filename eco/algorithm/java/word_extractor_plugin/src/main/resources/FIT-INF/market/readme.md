@@ -36,7 +36,7 @@ Identifier）如下，这些URI并不指向实际的网页或网络资源，而�
 
 ## 调用接口输入
 
-``` python
+```python
 inputs = [
     {
         "businessData": {
@@ -59,7 +59,7 @@ inputs = [
 
 ## 调用接口输出
 
-``` python
+```python
 outputs = [
     {
         "businessData": {

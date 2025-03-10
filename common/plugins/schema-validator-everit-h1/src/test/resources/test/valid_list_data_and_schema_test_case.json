@@ -1,0 +1,14 @@
+[
+  {
+    "schema": "{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"score\":{\"type\":\"number\"}},\"required\":[\"id\",\"score\"]}}",
+    "content": [
+      "[{\"id\":\"id0\",\"score\":0.5},{\"id\":\"id1\",\"score\":0.5}]"
+    ]
+  },
+  {
+    "schema": "{\"title\":\"neasted list\",\"type\":\"array\",\"items\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"score\":{\"type\":\"number\"}},\"required\":[\"id\",\"score\"]}}}",
+    "content": [
+      "[[{\"id\":\"id0\",\"score\":0.5},{\"id\":\"id1\",\"score\":0.5}],[{\"id\":\"id0\",\"score\":0.5}]]"
+    ]
+  }
+]

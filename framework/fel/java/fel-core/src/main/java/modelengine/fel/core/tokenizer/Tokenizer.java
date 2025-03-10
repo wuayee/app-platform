@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
@@ -30,4 +30,12 @@ public interface Tokenizer {
      * @return 表示解码后的字符串的 {@link String}。
      */
     String decode(List<Integer> tokens);
+
+    /**
+     * 计算分词数。
+     *
+     * @param text 表示需要进行分词字符串的 {@link String}。
+     * @return 表示分词数的 {@code int}。
+     */
+    int countToken(String text);
 }
