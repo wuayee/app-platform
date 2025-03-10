@@ -9,18 +9,21 @@ import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setConfigItem } from '@/store/appConfig/config';
 import Knowledge from './knowledge';
 import { Collapse } from 'antd';
+import { Message } from '@/shared/utils/message';
 const { Panel } = Collapse;
 
 const KnowledgeContainer = (props) => {
-  const { graphOperator, config, updateData } = props;
+  const { graphOperator, config, updateData, validateList } = props;
   const [knowledge, setKnowledge] = useState([]);
   const [activePanelKey, setActivePanelKey] = useState(['']);
   const knowledgeRef: any = useRef(null);
+  const curKnowledge = useRef(null);
   const dispatch = useAppDispatch();
   const appConfig = useAppSelector((state) => state.appConfigStore.inputConfigData);
 
   // 更新knowledge
   const updateKnowledge = (value) => {
+    value.forEach(item => delete item.notExist);
     if (config.from === 'graph') {
       graphOperator.update(config.defaultValue, value);
     } else {
@@ -36,6 +39,20 @@ const KnowledgeContainer = (props) => {
     setActivePanelKey(['knowledge']);
   };
 
+  // 更新每一条是否存在
+  const updateExistStatus = () => {
+    if (!validateList?.length) {
+      return;
+    }
+    curKnowledge.current = curKnowledge.current.map(item => {
+      return {
+        ...item,
+        notExist: !!validateList.find(it => it.configName === 'knowledgeRepos' && it.id == item.id),
+      }
+    });
+    setKnowledge(curKnowledge.current);
+  };
+
   useEffect(() => {
     if (knowledge?.length) {
       setActivePanelKey(['knowledge']);
@@ -47,11 +64,21 @@ const KnowledgeContainer = (props) => {
       return;
     }
     if (config.from === 'graph') {
-      setKnowledge(graphOperator.getConfig(config.defaultValue));
+      try {
+        curKnowledge.current = graphOperator.getConfig(config.defaultValue);
+      } catch {
+        Message({ type: 'warning', content: '能力配置数据与elsa数据节点不匹配' });
+      }
     } else {
-      setKnowledge(config.defaultValue);
+      curKnowledge.current = config.defaultValue;
     }
+    setKnowledge(curKnowledge.current);
+    updateExistStatus();
   }, [config, appConfig]);
+
+  useEffect(() => {
+    updateExistStatus();
+  }, [validateList]);
   
   return <>
     <Collapse

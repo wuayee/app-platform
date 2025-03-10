@@ -23,12 +23,12 @@ import './index.scss';
 const taskStatusMap: any = {
   [TaskStatusE.PUBLISHED]: (
     <div>
-      <AppIcons.CompleteIcon /> {i18n.t('published')}
+      <AppIcons.CompleteIcon /> {i18n.t('active')}
     </div>
   ),
   [TaskStatusE.UNPUBLISHED]: (
     <div>
-      <AppIcons.AbnormalIcon /> {i18n.t('unPublished')}
+      <AppIcons.AbnormalIcon /> {i18n.t('inactive')}
     </div>
   ),
   [TaskStatusE.DELETED]: (

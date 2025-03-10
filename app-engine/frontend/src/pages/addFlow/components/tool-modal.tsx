@@ -167,14 +167,18 @@ const ToolDrawer = (props) => {
     const fitList: any = [];
     checkedList.current.forEach((item) => {
       if (item.tags.includes('WATERFLOW')) {
-        workFlowList.push(item);
+        workFlowList.push({ ...item, type: 'waterflow' });
       } else {
-        fitList.push(item);
+        fitList.push({ ...item, type: 'tool' });
       }
     });
     const workFlowId = workFlowList.map((item) => item.uniqueName);
     const fitId = fitList.map((item) => item.uniqueName);
-    confirmCallBack(workFlowId, fitId);
+    if (type === 'addSkill') {
+      confirmCallBack(workFlowList, fitList);
+    } else {
+      confirmCallBack(workFlowId, fitId);
+    }
   };
 
   // 设置默认选中

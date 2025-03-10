@@ -15,6 +15,7 @@ import { workflowDebug, getTestVersion } from '@/shared/http/sse';
 import { useAppDispatch } from '@/store/hook';
 import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { EventSourceParserStream } from '@/shared/eventsource-parser/stream';
+import { findConfigValue } from "@/shared/utils/common";
 import RenderFormItem from './render-form-item';
 import RemoteForm from '../../chatPreview/components/receive-box/render';
 import UploadFile from '../../chatPreview/components/send-editor/components/upload-file';
@@ -45,11 +46,13 @@ const Index = (props) => {
     setShowFlowChangeWarning
   } = props;
   const { t } = useTranslation();
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [showFormIcon, setShowFormIcon] = useState(false);
   const [chatConfig, setChatConfig] = useState<any>({});
   const [fileList, setFileList] = useState<any>([]);
+  const [multiFileConfig, setMultiFileConfig] = useState<any>({});
   const { tenantId, appId } = useParams();
   const [form] = Form.useForm();
   const timerRef = useRef<any>(null);
@@ -66,17 +69,22 @@ const Index = (props) => {
     setShowDebug(false);
   }
 
+  const handleStart = async () => {
+    try {
+      const values = multiFileConfig.autoChatOnUpload ? form.getFieldsValue() : await form.validateFields();
+      runningStart(values);
+    } catch (error) {
+      Message({ type: 'warning', content: t('plsEnterCorrectDebugParams') });
+    }
+  };
+
   const handleRunTest = () => {
     if (!checkFileSuccess()) return;
     setShowFlowChangeWarning(false);
     elsaRunningCtl.current?.reset();
     dispatch(setTestStatus(null));
     dispatch(setTestTime(0));
-    form.validateFields().then((values) => {
-      runningStart(values);
-    }).catch(() => {
-      Message({ type: 'warning', content: t('plsEnterCorrectDebugParams') });
-    });
+    handleStart();
   }
 
   // 校验文件是否都上传成功
@@ -279,6 +287,10 @@ const Index = (props) => {
     }
   }, [])
 
+  useEffect(() => {
+    setMultiFileConfig(findConfigValue(appInfo, 'multimodal') || {});
+  }, [appInfo]);
+
   return <>{(
     <div>
       { showFormIcon && 
@@ -323,10 +335,13 @@ const Index = (props) => {
                   isRequired={debugType.isRequired} />
               )
             })}
-            <Form.Item name='fileUrls' label='fileUrls'>
-              <UploadFile fileList={fileList} updateFileList={setFileList} />
-              <FileList isDebug fileList={fileList} updateFileList={setFileList}></FileList>
-            </Form.Item>
+            {
+              multiFileConfig.useMultimodal &&
+              <Form.Item name='fileUrls' label='fileUrls'>
+                <UploadFile maxCount={multiFileConfig.maxUploadFilesNum} fileList={fileList} updateFileList={setFileList} />
+                <FileList isDebug fileList={fileList} updateFileList={setFileList}></FileList>
+              </Form.Item>
+            }
           </Form>
         </div>
       </Drawer>

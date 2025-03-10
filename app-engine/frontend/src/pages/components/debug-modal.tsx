@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setChoseNodeId } from "@/store/appInfo/appInfo";
 import { useTranslation } from 'react-i18next';
+import { NodeType } from './common/common';
 import NodeIcon from '@/components/icons/node-icon';
 import closeImg from '@/assets/images/close_btn.svg';
 import warningImg from '@/assets/images/debug_warning_icon.svg';
@@ -33,7 +34,7 @@ const DebugModal = ({ isWorkFlow, showElsa, mashupClick, closeDebug }) => {
 
 
   // 选中某一条
-  const choseItem = (item, checkId) => {
+  const choseItem = (item) => {
     if (isWorkFlow.current) {
       if (item.nodeId) {
         dispatch(setChoseNodeId(item.nodeId));
@@ -42,7 +43,7 @@ const DebugModal = ({ isWorkFlow, showElsa, mashupClick, closeDebug }) => {
         mashupClick();
       }
     } else {
-      setCheckId(checkId);
+      setCheckId(item.configCheckId);
     }
     const updateChoseNode = new CustomEvent('updateChoseNode', {
       detail: {
@@ -52,20 +53,38 @@ const DebugModal = ({ isWorkFlow, showElsa, mashupClick, closeDebug }) => {
     window.dispatchEvent(updateChoseNode);
   };
 
-  const getPrompt = (item) => {
-    switch (item.type) {
-      case 'llmNodeState':
-        return item.serviceName + t('doesNotExist');
-      case 'knowledgeRetrievalNodeState':
-      case 'retrievalNodeState':
-      case 'endNodeEnd':
-      case 'manualCheckNodeState':
-        return t('pleaseDeleteAndReconfigure');
-      case 'huggingFaceNodeState':
-      case 'toolInvokeNodeState':
-        return t('pluginReconfigurePrompt');
-      default:
-        break;
+  const getPrompt = (item, isWorkFlow) => {
+    if (isWorkFlow) {
+      switch (item.type) {
+        case NodeType.LLM:
+          return `${item.serviceName}${t('doesNotExist')}`;
+        case NodeType.KNOWLEDGE_RETRIEVAL:
+        case NodeType.RETRIEVAL:
+        case NodeType.END:
+        case NodeType.MANUAL_CHECK:
+          return t('pleaseDeleteAndReconfigure');
+        case NodeType.HUGGING_FACE:
+        case NodeType.TOOL_INVOKE:
+          return t('pluginReconfigurePrompt');
+        default:
+          break;
+      }
+    } else {
+      switch (item.type) {
+        case NodeType.LLM:
+          if (item.serviceName) {
+            return `${item.serviceName}${t('doesNotExist')}`;
+          } else {
+            return `${item.name}${t('tool')}${t('doesNotExist')}`;
+          }
+        case NodeType.KNOWLEDGE_RETRIEVAL:
+          return `${item.name}${t('knowledgeBase')}${t('doesNotExist')}`;
+        case NodeType.HUGGING_FACE:
+        case NodeType.TOOL_INVOKE:
+          return `${item.name}${t('tool')}${t('doesNotExist')}`;
+        default:
+          break;
+      }
     }
   };
 
@@ -86,13 +105,13 @@ const DebugModal = ({ isWorkFlow, showElsa, mashupClick, closeDebug }) => {
                 item.configChecks && item?.configChecks?.map(it =>
                   <div className='workflow-item' key={it.configCheckId}>
                     <img src={warningImg} alt="" style={{ marginRight: 8 }} />
-                    <div>{getPrompt({ ...it, type: item.type })}</div>
+                    <div>{getPrompt({ ...it, type: item.type }, true)}</div>
                   </div>
                 )
               }
-            </div> : <div key={item.configCheckId} className={`basic-item ${checkId === item.configCheckId ? 'chose' : ''}`} onClick={() => choseItem(item, index)}>
+            </div> : <div key={item.configCheckId} className={`basic-item ${checkId === item.configCheckId ? 'chose' : ''}`} onClick={() => choseItem(item)}>
               <img src={warningImg} alt="" style={{ marginRight: 8 }} />
-              <div>{getPrompt(item)}</div>
+              <div>{getPrompt(item, false)}</div>
             </div>
           )
         }

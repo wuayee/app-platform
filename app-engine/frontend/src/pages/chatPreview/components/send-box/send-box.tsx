@@ -46,14 +46,14 @@ const SendBox = (props) => {
           </div>
         </span>
       }
-      <div className='send-info'>
-        <span className='send-info-inner'>
-          {sendType === 'text' && (<div>{content}</div>)}
-          {
-            showIcon && <SendBtn content={content} sendType={sendType} />
-          }
-        </span>
-      </div>
+      {
+        content && <div className='send-info'>
+          <span className='send-info-inner'>
+            {sendType === 'text' && (<div>{content}</div>)}
+            {showIcon && <SendBtn content={content} sendType={sendType} />}
+          </span>
+        </div>
+      }
     </div>
   )}</>
 };

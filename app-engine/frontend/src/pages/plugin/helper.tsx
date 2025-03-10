@@ -106,5 +106,5 @@ export enum PluginCnType {
   DEPLOYING = i18n.t('deployment'),
   UNDEPLOYED = i18n.t('notDeployed'),
   DEPLOYMENT_FAILED = i18n.t('deploymentFailed'),
-  RELEASED = i18n.t('published'),
+  RELEASED = i18n.t('active'),
 }

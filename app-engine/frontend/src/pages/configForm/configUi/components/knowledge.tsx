@@ -6,18 +6,23 @@
 
 import React, { useEffect, useState, useRef, useImperativeHandle  } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setValidateInfo } from '@/store/appInfo/appInfo';
 import AddKnowledge from './add-knowledge';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import closeImg from '@/assets/images/close_btn.svg';
 
 const Knowledge = (props) => {
   const { t } = useTranslation();
   const { knowledge, updateData, knowledgeRef } = props;
   const [knows, setKnows] = useState([]);
-  const [showOperateIndex, setShowOperateIndex] = useState('');
+  const [showOperateIndex, setShowOperateIndex] = useState(-1);
   const { tenantId } = useParams();
   const list = useRef([]);
   const modalRef = useRef();
+  const dispatch = useAppDispatch();
+  const appValidateInfo = useAppSelector((state) => state.appStore.validateInfo);
   useImperativeHandle(knowledgeRef, () => {
     return { addKnowledge };
   });
@@ -32,6 +37,8 @@ const Knowledge = (props) => {
   const deleteItem = (item) => {
     list.current = list.current.filter(Litem => Litem.id !== item.id);
     setKnows([...list.current]);
+    setShowOperateIndex(-1);
+    dispatch(setValidateInfo(appValidateInfo.filter(it => it.configName !== 'knowledgeRepos' || (it.configName === 'knowledgeRepos' && it.id != item.id))));
     updateData(list.current);
   };
 
@@ -44,7 +51,7 @@ const Knowledge = (props) => {
     if (operate === 'enter') {
       setShowOperateIndex(index);
     } else {
-      setShowOperateIndex('');
+      setShowOperateIndex(-1);
     }
   };
 
@@ -63,12 +70,17 @@ const Knowledge = (props) => {
             {
               knows.length ? knows.map((item, index) => {
                 return (
-                  <div className='item' key={index} onMouseEnter={() => handleHoverItem(index, 'enter')} onMouseLeave={() => handleHoverItem(index, 'leave')}>
-                    <span className='text'>{item.name}</span>
+                  <div className='item-container' key={index}>
+                    <div className='item' onMouseEnter={() => handleHoverItem(index, 'enter')} onMouseLeave={() => handleHoverItem(index, 'leave')}>
+                      <span className='text'>{item.name}</span>
+                      {
+                        index === showOperateIndex && (<span>
+                          <img src={closeImg} style={{ cursor: 'pointer' }} alt="" onClick={() => deleteItem(item)} />
+                        </span>)
+                      }
+                    </div>
                     {
-                      index === showOperateIndex && (<span>
-                        <img src="./src/assets/images/close_btn.svg" style={{ cursor: 'pointer' }} alt="" onClick={() => deleteItem(item)} />
-                      </span>)
+                      item.notExist && <div className='not-exist'>{`${t('knowledgeBase')}${item.name}${t('selectedValueNotExist')}`}</div>
                     }
                   </div>
                 )
@@ -80,6 +92,7 @@ const Knowledge = (props) => {
       <AddKnowledge
         modalRef={modalRef}
         tenantId={tenantId}
+        groupId='default'
         handleDataChange={handleChange}
       />
     </>

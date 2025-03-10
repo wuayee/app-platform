@@ -66,7 +66,9 @@ const ToolTable = (props: any) => {
         if (ite.isChecked) {
           ite.toolCount++;
         }
-        checkedList.current = [];
+        if (type !== 'addSkill') {
+          checkedList.current = [];
+        }
       }
     });
     let newData = deepClone(getPluginData);

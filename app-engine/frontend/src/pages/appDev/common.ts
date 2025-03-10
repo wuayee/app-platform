@@ -24,11 +24,11 @@ export const items = [
     key: 'all',
   },
   {
-    label: i18n.t('published'),
+    label: i18n.t('active'),
     key: 'active',
   },
   {
-    label: i18n.t('unPublished'),
+    label: i18n.t('inactive'),
     key: 'inactive',
   },
 ]

@@ -32,16 +32,18 @@ export function workflowDebug(tenantId: string, params: any) {
  * @param {string} tenantId - 租户ID。
  * @param {any} params - 请求参数。
  * @param {boolean} isDebug - 是否是调试状态
+ * @param {boolean} isAuto - 是否自动上传
  * @return {Promise} 返回一个Promise对象，该对象在请求成功时解析为响应对象。
  * @throws {Error} 如果请求失败，Promise对象将被拒绝。
  */
-export function sseChat(tenantId: string, params: any, isDebug: boolean) {
+export function sseChat(tenantId: string, params: any, isDebug: boolean, isAuto: boolean = false) {
   let url = `${AIPP_URL}/${tenantId}/${isDebug ? 'app_chat_debug' : 'app_chat'}`
   return new Promise((resolve, reject) => {
     fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Auto-Chat-On-Upload': isAuto
         'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
         'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },

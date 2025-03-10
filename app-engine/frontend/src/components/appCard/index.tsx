@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown, Tooltip, Button } from 'antd';
 import { Icons } from '../icons';
 import { useTranslation } from 'react-i18next';
+import { STATE_MAP } from './common';
 import chatbotImg from '@/assets/images/ai/app_chatbot.svg';
 import workflowImg from '@/assets/images/ai/app_workflow.svg';
 import agentImg from '@/assets/images/ai/app_agent.svg';
@@ -46,6 +47,22 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, 
         break;
     }
   }
+
+  // 获取发布状态
+  const statusToText = () => {
+    if (cardInfo.state === STATE_MAP.ACTIVING) {
+      return t(STATE_MAP.ACTIVING);
+    } else if (cardInfo.attributes?.latest_version || cardInfo.state === STATE_MAP.ACTIVE) {
+      return t(STATE_MAP.ACTIVE);
+    } else {
+      return t(STATE_MAP.INACTIVE);
+    }
+  };
+
+  const getStatusClassName = () => {
+    return `status ${cardInfo.attributes?.latest_version || cardInfo.state === STATE_MAP.ACTIVE ? STATE_MAP.ACTIVE : cardInfo.state === STATE_MAP.ACTIVING ? STATE_MAP.ACTIVING : STATE_MAP.INACTIVE}`;
+  };
+
   useEffect(() => {
     let { likeCount } = cardInfo;
     setCount(likeCount || 0);
@@ -102,7 +119,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, 
       </div>
 
       {/* 描述 */}
-      <div className='app_card_body'>{cardInfo.description}</div>
+      <div className='app_card_body' style={(showOptions || isTemplate) ? { flex: 1 } : {}}>{cardInfo.description}</div>
 
       {/* 底部 */}
       {
@@ -110,7 +127,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, 
           {
             showOptions && (
               <div className='left'>
-                <div className={`status ${cardInfo.attributes?.latest_version || cardInfo.state === 'active' ? 'published' : 'unpublished'}`}>{cardInfo.attributes?.latest_version || cardInfo.state === 'active' ? t('published') : t('unPublished')}</div>
+                <div className={getStatusClassName()}>{statusToText()}</div>
               </div>)
           }
           <div style={{ flex: 1 }}></div>

@@ -16,9 +16,9 @@ import { getCookie } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import { Message } from "@/shared/utils/message";
 import { setAppInfo, setValidateInfo } from '@/store/appInfo/appInfo';
-import { getCheckList, exportApp, updateAppInfo } from '@/shared/http/aipp';
+import { getCheckList, exportApp, updateAppInfo, updateFlowInfo } from '@/shared/http/aipp';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
-import { get } from 'lodash';
+import { get, cloneDeep } from 'lodash';
 import TimeLineDrawer from '@/components/timeLine';
 import PublishModal from './publish-modal';
 import EditModal from './edit-modal';
@@ -121,6 +121,10 @@ const ChoreographyHead = (props) => {
         }, []);
       }
       dispatch(setValidateInfo(validateList));
+      if (isWorkFlow.current && isFormPrompt && validateList.find(item => ['knowledgeRetrievalNodeState', 'manualCheckNodeState', 'endNodeEnd'].includes(item.type))) {
+        Message({ type: 'warning', content: t('formPrompt') });
+        setIsFormPrompt(false);
+      }
     }
   };
 
@@ -153,8 +157,18 @@ const ChoreographyHead = (props) => {
     modalRef.current.showModal();
   };
 
+  // 实时保存数据
+  const updateGraph = async () => {
+    const currentApp = cloneDeep(appInfo);
+    currentApp.flowGraph.appearance = window.agent.serialize();
+    await updateFlowInfo(tenantId, appId, currentApp.flowGraph);
+  };
+
   // 返回编排页面
-  const backClick = () => {
+  const backClick = async () => {
+    if (showElsa && window.agent && !testStatus) {
+      await updateGraph();
+    }
     if (appInfo.appCategory === 'workflow') {
       return navigate(`/app-develop/${tenantId}/appDetail/${appId}`);
     }
@@ -233,13 +247,6 @@ const ChoreographyHead = (props) => {
     }
   }, [appValidateInfo]);
 
-  useEffect(() => {
-    if (debugVisible && isFormPrompt && appValidateInfo.find(item => ['knowledgeRetrievalNodeState', 'manualCheckNodeState', 'endNodeEnd'].includes(item.type))) {
-      Message({ type: 'warning', content: t('formPrompt') });
-      setIsFormPrompt(false);
-    }
-  }, [debugVisible, appValidateInfo]);
-
   // 只读用户无法访问该页面
   useEffect(() => {
     if (readOnly) {
@@ -261,13 +268,13 @@ const ChoreographyHead = (props) => {
             (
               <div className='status-tag'>
                 <img src={complateImg} />
-                <span>{t('published')}</span>
+                <span>{t('active')}</span>
               </div>
             ) :
             (
               <div className='status-tag'>
                 <img src={publishImg} />
-                <span>{t('unPublished')}</span>
+                <span>{t('inactive')}</span>
               </div>
             )
         }

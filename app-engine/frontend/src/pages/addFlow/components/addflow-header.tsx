@@ -96,13 +96,13 @@ const AddHeader = (props) => {
               (
                 <div className='status-tag'>
                   <img src='./src/assets/images/ai/complate.png' />
-                  <span>{t('published')}</span>
+                  <span>{t('active')}</span>
                 </div>
               ) :
               (
                 <div className='status-tag'>
                   <img src='./src/assets/images/ai/publish.png' />
-                  <span>{t('unPublished')}</span>
+                  <span>{t('inactive')}</span>
                 </div>
               )
           }

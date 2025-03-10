@@ -9,6 +9,16 @@ export const APP_TYPE = {
   }
 };
 
+export enum NodeType {
+  LLM = 'llmNodeState',
+  KNOWLEDGE_RETRIEVAL = 'knowledgeRetrievalNodeState',
+  RETRIEVAL = 'retrievalNodeState',
+  END = 'endNodeEnd',
+  MANUAL_CHECK = 'manualCheckNodeState',
+  HUGGING_FACE = 'huggingFaceNodeState',
+  TOOL_INVOKE = 'toolInvokeNodeState'
+};
+
 export const APP_BUILT_TYPE = {
   BASIC: 'BASIC',
   WORK_FLOW: 'WORK_FLOW',
