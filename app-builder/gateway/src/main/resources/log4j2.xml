@@ -60,6 +60,6 @@ monitorInterval : Log4j能够自动检测修改配置文件和重新配置本身
         </root>
         <!-- 第三方日志系统 -->
         <logger name="com.alibaba.nacos" level="info"/>
-        <logger name="com.huawei.fit" level="info"/>
+        <logger name="modelengine.fit" level="info"/>
     </Loggers>
 </Configuration>
