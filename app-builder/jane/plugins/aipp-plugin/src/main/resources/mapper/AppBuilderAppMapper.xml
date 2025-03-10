@@ -155,6 +155,9 @@
                 #{excludeName}
             </foreach>
         </if>
+        <if test="cond.appCategory != null">
+            and app_category = #{cond.appCategory}
+        </if>
         ) as latest_records WHERE <include refid="appTypeCondition"/>;
     </select>
 
