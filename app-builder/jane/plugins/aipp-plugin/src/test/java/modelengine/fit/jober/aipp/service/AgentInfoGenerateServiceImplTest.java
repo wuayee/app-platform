@@ -13,7 +13,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
 import modelengine.jade.carver.ListResult;
+import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.store.entity.query.PluginToolQuery;
 import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.PluginToolService;
@@ -53,18 +56,24 @@ public class AgentInfoGenerateServiceImplTest {
     @Mock
     private PluginToolService toolService;
 
+    @Mock
+    private LocaleService localeService;
+
+    @Mock
+    private AppBuilderAppRepository appRepository;
+
     @Test
     @DisplayName("测试自动生成智能体名称")
     void shouldOkWhenGenerateName() {
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("NAME");
-        assertThat(this.agentInfoGenerateService.generateName("DESC")).isEqualTo("NAME");
+        assertThat(this.agentInfoGenerateService.generateName("DESC", new OperationContext())).isEqualTo("NAME");
     }
 
     @Test
     @DisplayName("测试自动生成智能体开场白")
     void shouldOkWhenGenerateGreeting() {
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("GREETING");
-        assertThat(this.agentInfoGenerateService.generateGreeeting("DESC")).isEqualTo("GREETING");
+        assertThat(this.agentInfoGenerateService.generateGreeting("DESC")).isEqualTo("GREETING");
     }
 
     @Test
