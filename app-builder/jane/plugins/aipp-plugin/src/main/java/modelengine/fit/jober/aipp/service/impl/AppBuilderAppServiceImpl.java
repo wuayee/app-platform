@@ -640,7 +640,9 @@ public class AppBuilderAppServiceImpl
             log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
         }
-        this.validateAppDescription(dto, context);
+        if (dto.getDescription() != null) {
+            this.validateAppDescription(dto, context);
+        }
         this.validateAppCategory(dto, context);
     }
 
