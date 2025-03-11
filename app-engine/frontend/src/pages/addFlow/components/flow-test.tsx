@@ -12,7 +12,7 @@ import { Message } from '@/shared/utils/message';
 import { reTestInstance } from '@/shared/http/aipp';
 import { messageProcess } from '../../chatPreview/utils/chat-process';
 import { workflowDebug, getTestVersion } from '@/shared/http/sse';
-import { useAppDispatch } from '@/store/hook';
+import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { EventSourceParserStream } from '@/shared/eventsource-parser/stream';
 import { findConfigValue } from "@/shared/utils/common";
