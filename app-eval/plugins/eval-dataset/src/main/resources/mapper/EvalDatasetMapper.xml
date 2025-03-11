@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="modelenegine.jade.app.engine.eval.mapper.EvalDatasetMapper">
-    <resultMap id="EvalDatasetVoResultMap" type="modelenegine.jade.app.engine.eval.vo.EvalDatasetVo">
+<mapper namespace="modelengine.jade.app.engine.eval.mapper.EvalDatasetMapper">
+    <resultMap id="EvalDatasetVoResultMap" type="modelengine.jade.app.engine.eval.vo.EvalDatasetVo">
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="updatedBy" column="updated_by"/>
@@ -15,7 +15,7 @@
     </select>
 
     <!-- 分页查询数据集元数据 -->
-    <select id="listEvalDataset" resultType="modelenegine.jade.app.engine.eval.vo.EvalDatasetVo"
+    <select id="listEvalDataset" resultType="modelengine.jade.app.engine.eval.vo.EvalDatasetVo"
             resultMap="EvalDatasetVoResultMap">
         SELECT id,
                name,
@@ -31,7 +31,7 @@
     </select>
 
     <!-- 按照数据集唯一标识查询指定数据集元数据 -->
-    <select id="getEvalDatasetById" resultType="modelenegine.jade.app.engine.eval.vo.EvalDatasetVo"
+    <select id="getEvalDatasetById" resultType="modelengine.jade.app.engine.eval.vo.EvalDatasetVo"
             resultMap="EvalDatasetVoResultMap">
         SELECT id,
                name,

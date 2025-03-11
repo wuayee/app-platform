@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="modelenegine.jade.app.engine.eval.mapper.EvalDataMapper">
+<mapper namespace="modelengine.jade.app.engine.eval.mapper.EvalDataMapper">
     <resultMap id="EvalDataEntityResultMap" type="modelengine.jade.app.engine.eval.entity.EvalDataEntity">
         <id property="id" column="id"/>
         <result property="content" column="content"/>
@@ -8,7 +8,7 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <resultMap id="EvalVersionEntityResultMap" type="modelenegine.jade.app.engine.eval.entity.EvalVersionEntity">
+    <resultMap id="EvalVersionEntityResultMap" type="modelengine.jade.app.engine.eval.entity.EvalVersionEntity">
         <id property="version" column="version"/>
         <result property="createdTime" column="version_time"/>
     </resultMap>
@@ -75,7 +75,7 @@
         </foreach>
     </delete>
 
-    <select id="getLatestVersion" resultType="modelenegine.jade.app.engine.eval.entity.EvalVersionEntity"
+    <select id="getLatestVersion" resultType="modelengine.jade.app.engine.eval.entity.EvalVersionEntity"
             resultMap="EvalVersionEntityResultMap">
         SELECT version, version_time
         FROM (
