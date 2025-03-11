@@ -5,10 +5,13 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Collapse } from 'antd';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setConfigItem } from '@/store/appConfig/config';
 import Skill from './skill';
-import { Collapse } from 'antd';
+import CloseImg from '@/assets/images/close_arrow.png';
+import OpenImg from '@/assets/images/open_arrow.png';
+import AddImg from '@/assets/images/add_btn.svg';
 const { Panel } = Collapse;
 
 const ToolsContainer = (props) => {
@@ -65,13 +68,13 @@ const ToolsContainer = (props) => {
   return <>
     <Collapse
       bordered={false}
-      expandIcon={({ isActive }) => isActive ? <img src="./src/assets/images/close_arrow.png" alt="" /> : <img src="./src/assets/images/open_arrow.png" alt="" />}
+      expandIcon={({ isActive }) => isActive ? <img src={CloseImg} alt="" /> : <img src={OpenImg} alt="" />}
       activeKey={activePanelKey}
       onChange={(keys) => setActivePanelKey(keys)}
     >
       <Panel header={<div className='panel-label'>
         <span>{config.description}</span>
-        <img src="./src/assets/images/add_btn.svg" style={{ width: 16, height: 16 }} alt="" onClick={addPlugin} />
+        <img src={AddImg} style={{ width: 16, height: 16 }} alt="" onClick={addPlugin} />
       </div>} forceRender key='tools' className="site-collapse-custom-panel">
         <Skill toolsRef={toolsRef} pluginData={pluginData} updateData={updateTools} validateList={validateList}/>
       </Panel>

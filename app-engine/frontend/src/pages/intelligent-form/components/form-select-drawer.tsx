@@ -68,7 +68,7 @@ const FormSelectDrawer = ({ showDrawer, setShowDrawer, formConfirm }) => {
         list.forEach(item => {
           let imgUrl = item.appearance.imgUrl;
           item.description = item.appearance?.description || '';
-          item.appearance.imgUrl = `${origin}/${formEnv() ? 'appengine' : 'api/jober'}/static/${imgUrl}`;
+          item.appearance.imgUrl = `${origin}/${formEnv() ? 'appbuilder' : 'api/jober'}/static/${imgUrl}`;
         })
         setTableData(list);
         setTotal(res.data.range?.total || 0);

@@ -43,7 +43,7 @@ export function sseChat(tenantId: string, params: any, isDebug: boolean, isAuto:
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Auto-Chat-On-Upload': isAuto
+        'Auto-Chat-On-Upload': isAuto,
         'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
         'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
       },

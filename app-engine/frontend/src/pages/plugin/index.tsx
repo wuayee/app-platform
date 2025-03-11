@@ -44,7 +44,7 @@ const Plugin = () => {
         { !readOnly && <Button type='primary' onClick={setDeployOpen}>{t('deploying')}</Button> }
       </div>
       <div>
-        <MarketItems reload={reload} />
+        <MarketItems reload={reload} readOnly={readOnly}/>
       </div>
       <Drawer
         title={t('pluginDeploying')}

@@ -73,7 +73,7 @@ export const ComponentContainer = ({ config, createComponent }) => {
   return (<>
     <div className='config-name'>{config.description}</div>
     <div className='config-content'>
-      {config.children.map(item => createComponent(item))}
+      {config.children.map((item, index) => <div key={index}>{createComponent(item)}</div>)}
     </div>
   </>);
 };

@@ -10,6 +10,9 @@ import { setConfigItem } from '@/store/appConfig/config';
 import Knowledge from './knowledge';
 import { Collapse } from 'antd';
 import { Message } from '@/shared/utils/message';
+import CloseImg from '@/assets/images/close_arrow.png';
+import OpenImg from '@/assets/images/open_arrow.png';
+import AddImg from '@/assets/images/add_btn.svg';
 const { Panel } = Collapse;
 
 const KnowledgeContainer = (props) => {
@@ -83,13 +86,13 @@ const KnowledgeContainer = (props) => {
   return <>
     <Collapse
       bordered={false}
-      expandIcon={({ isActive }) => isActive ? <img src="./src/assets/images/close_arrow.png" alt="" /> : <img src="./src/assets/images/open_arrow.png" alt="" />}
+      expandIcon={({ isActive }) => isActive ? <img src={CloseImg} alt="" /> : <img src={OpenImg} alt="" />}
       activeKey={activePanelKey}
       onChange={(keys) => setActivePanelKey(keys)}
     >
       <Panel header={<div className='panel-label'>
         <span>{config.description}</span>
-        <img src="./src/assets/images/add_btn.svg" style={{ width: 16, height: 16 }} alt="" onClick={addKnowledgeBase} />
+        <img src={AddImg} style={{ width: 16, height: 16 }} alt="" onClick={addKnowledgeBase} />
       </div>} forceRender key='knowledge' className="site-collapse-custom-panel">
         <Knowledge knowledgeRef={knowledgeRef} knowledge={knowledge} updateData={updateKnowledge} />
       </Panel>

@@ -10,7 +10,7 @@ import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hook';
 import { getCookie, fileValidate } from '@/shared/utils/common';
-import { httpUrlMap } from '@/shared/http/httpConfig';
+import serviceConfig from '@/shared/http/httpConfig';
 import tinymce from 'tinymce';
 import 'tinymce/models/dom/index.js';
 import 'tinymce/icons/default/index.js';
@@ -20,7 +20,7 @@ import 'tinymce/plugins/lists/index.js';
 import 'tinymce/plugins/wordcount/index.js';
 import 'tinymce/skins/ui/oxide/skin.min.css';
 import 'tinymce/themes/silver/theme.min.js';
-const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = serviceConfig;
 
 /**
  * 发布应用富文本编辑器组件
