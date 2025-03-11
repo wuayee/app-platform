@@ -38,7 +38,7 @@ const Render = (props: {
   funcCallback?: any;
   uniqueId: any;
   path: string;
-  formTerminateCallback: any;
+  formTerminateCallback?: any;
 }): JSX.Element => {
   const { t } = useTranslation();
   const { path, uniqueId, funcCallback, formConfig } = props;

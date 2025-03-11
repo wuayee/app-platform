@@ -19,7 +19,6 @@ export const ChatContext = createContext({
   setShareClass: (type: string) => {},
   setInspiration: null,
   checkCallBack: () => {},
-  dataDimension: null,
   addInspirationCb: () => {},
   tenantId: '',
   showCheck: false,

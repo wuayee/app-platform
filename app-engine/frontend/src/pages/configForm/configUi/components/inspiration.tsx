@@ -370,13 +370,6 @@ const Inspiration = (props) => {
     return promptVarData.slice((current - 1) * pageSize, current * pageSize);
   }
 
-  // 灵感大全产品线切换
-  const dimensionSwitchChange = (checked) => {
-    const newInspirationValues = { ...inspirationValues, dimension: checked };
-    setInspirationValues(newInspirationValues);
-    updateData(newInspirationValues);
-  };
-
   return (
     <>
       <div className='control-container'>
@@ -386,13 +379,6 @@ const Inspiration = (props) => {
               <span>{t('inspirationFunctionDescription')}</span>
             </div>
           </div>
-          <span className='permission'>
-            <span className='open-permission'>{t('openPermissionManagement')}</span>
-            <Popover content={<div style={{ maxWidth: '250px' }}>{t('inspirationPermissionTips')}</div>}>
-              <QuestionCircleOutlined />
-            </Popover>
-          </span>
-          <Switch disabled={!inspirationValues?.showInspiration} onChange={(checked, event) => dimensionSwitchChange(checked, event)} checked={inspirationValues?.dimension} />
           <InspirationList inspirationValues={inspirationValues} clickInspiration={clickInspiration} handleDeleteIns={handleDeleteIns}></InspirationList>
         </div>
         <Drawer

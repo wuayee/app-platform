@@ -64,7 +64,6 @@ const EditorBtnHome = (props) => {
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAt, setShowAt] = useState(false);
@@ -158,7 +157,7 @@ const EditorBtnHome = (props) => {
     let { deleteChatId, refreshChat, deleteAppId } = data;
     if (appIdRef.current === deleteAppId && (deleteChatId === chatIdRef.current || refreshChat)) {
       dispatch(setChatId(null));
-      updateChatId(null, aippId, dimension);
+      updateChatId(null, aippId);
     }
   }
   // 清空历史记录
@@ -225,7 +224,7 @@ const EditorBtnHome = (props) => {
   const onClickNewChat = () => {
     if (isChatRunning()) { return; }
     dispatch(setChatRunning(false));
-    updateChatId(null, aippId, dimension, appInfo)
+    updateChatId(null, aippId, appInfo)
     dispatch(setChatId(null));
     dispatch(setChatList([]));
     dispatch(setAtAppInfo(null));

@@ -10,6 +10,7 @@ import { useLocation } from 'react-router-dom';
 import { ChatContext } from '@/pages/aippIndex/context';
 import { useAppSelector } from '@/store/hook';
 import { convertImgPath } from '@/common/util';
+import { scrollBottom } from '../../utils/chat-process';
 import MessageDetail from './message-detail';
 import SendBtn from '../send-box/send-btn';
 import RemoteForm from './render';
@@ -25,6 +26,7 @@ import '../../styles/receive-box.scss';
  */
 const ReceiveBox = (props) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { checkCallBack, showCheck } = useContext(ChatContext);
   const {
     content,
@@ -57,6 +59,15 @@ const ReceiveBox = (props) => {
       setShowIcon(false);
     }
   }, [location]);
+  useEffect(() => {
+    if (chatRunning) {
+      scrollBottom();
+    } else if (finished) {
+      setTimeout(() => {
+        scrollBottom();
+      }, 300);
+    }
+  }, [props.chatItem]);
   function onChange(e) {
     props.chatItem.checked = e.target.checked;
     checkCallBack();

@@ -19,14 +19,9 @@ const ChatMessage = (props) => {
   const dispatch = useAppDispatch();
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
   const loginStatus = useAppSelector((state) => state.chatCommonStore.loginStatus);
   const [list, setList] = useState([]);
-  const LIST_ITEM_SIZE = -10;
-  const [listIndex, setListIndex] = useState(LIST_ITEM_SIZE);
   const [showMask, setShowMask] = useState(false);
-  const chatContainer = useRef<any>();
-  const chatContainerLastScrollHeight = useRef<any>();
   const chatBoxRef = useRef<any>(null);
   const {
     showCheck,
@@ -63,14 +58,13 @@ const ChatMessage = (props) => {
   })
   useEffect(() => {
     setList(deepClone(chatList));
-    scrollBottom();
   }, [chatList]);
 
   // 重置选中状态
   const setCheckStatus = () => {
     list.forEach(item => item.checked = false);
   }
-  // 分享删除问答
+  // 删除问答
   function setShareClass(type) {
     setCheckStatus();
     setEditorShow(true, type);
@@ -80,7 +74,7 @@ const ChatMessage = (props) => {
     let checkList = list?.filter(item => item.checked);
     setCheckedList(checkList);
   }
-  // 澄清表单拒绝澄清回调
+  // 表单拒绝回调
   async function handleRejectClar(params) {
     chatRunningStop(params);
   }
@@ -88,34 +82,7 @@ const ChatMessage = (props) => {
   const addInspirationCb = () => {
     refreshInspiration();
   }
-  const loadMoreChat = () => {
-    chatContainerLastScrollHeight.current = chatContainer.current.scrollHeight;
-    setListIndex(listIndex + LIST_ITEM_SIZE);
-  }
-  useEffect(() => {
-    if (chatContainerLastScrollHeight.current) {
-      chatContainer.current.scrollTop = chatContainer.current.scrollHeight - chatContainerLastScrollHeight.current;
-    }
-  }, [listIndex]);
 
-  // 回答消息自动滚动底部
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      for (let entry of entries) {
-        if (entry.target === chatBoxRef.current) {
-          scrollBottom();
-        }
-      }
-    });
-    if (chatBoxRef.current) {
-      resizeObserver.observe(chatBoxRef.current);
-    }
-    return () => {
-      if (chatBoxRef.current) {
-        resizeObserver.unobserve(chatBoxRef.current);
-      }
-    }
-  }, []);
   useEffect(() => {
     if (!loginStatus) {
       setShowMask(true);
@@ -131,7 +98,6 @@ const ChatMessage = (props) => {
           setShareClass,
           showCheck,
           handleRejectClar,
-          dataDimension,
           conditionConfirm,
           chatStreaming,
           questionClarConfirm,

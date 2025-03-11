@@ -16,18 +16,10 @@ const ThinkBlock = memo(({ content = '', thinkTime = '' }) => {
     if (!collapse) {
       thinkElRef.current.style.height = 0;
     } else {
-      thinkElRef.current.style.height =
-        thinkElRef.current.style.getPropertyValue('--height') + 'px';
+      thinkElRef.current.style.height = 'auto'
     }
     setcollapse(!collapse);
   };
-
-  useEffect(() => {
-    if (thinkFinished && thinkElRef.current) {
-      thinkElRef.current.style.setProperty('--height', thinkElRef.current.clientHeight);
-      thinkElRef.current.style.height = thinkElRef.current.clientHeight + 'px';
-    }
-  }, [thinkFinished]);
 
   return (
     <>

@@ -241,44 +241,12 @@ export const versionStringCompare = (preVersion = '', lastVersion = '') => {
  * @param {String} appId 应用Id
  * @Return void
  */
-export const updateChatId = function (chatId, appId, dimension, appInfo = undefined) {
+export const updateChatId = function (chatId, appId) {
   let appChatMap = storage.get('appChatMap') || {};
-  if (!enablePermission(appInfo)) {
-    appChatMap[appId] = { chatId: chatId };
-  } else {
-    if (!appChatMap?.[appId]) {
-      appChatMap[appId] = {
-        dimensions: {
-          default: { ...dimension },
-          [dimension.id]: chatId,
-        }
-      };
-    } else {
-      if (appChatMap[appId].dimensions) {
-        appChatMap[appId].dimensions[dimension.id] = chatId;
-      } else {
-        appChatMap[appId] = {
-          dimensions: {
-            default: { ...dimension },
-            [dimension.id]: chatId,
-          }
-        }
-      }
-    };
-  };
+  appChatMap[appId] = { chatId: chatId };
   storage.set('appChatMap', appChatMap);
 };
 
-/**
- * 检查是否为开启权限
- * @param {String} appId 应用Id
- * @return {boolean}
- */
-export const enablePermission = function (appInfo) {
-  let inspiration = findConfigValue(appInfo, 'inspiration');
-  if (!inspiration) return false;
-  return inspiration.dimension || false;
-};
 
 /**
  * 获取各个配置信息的值，作为更新应用配置的参数
