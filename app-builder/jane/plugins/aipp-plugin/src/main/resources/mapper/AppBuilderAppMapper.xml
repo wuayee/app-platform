@@ -149,7 +149,7 @@
                     and state = #{cond.state}
                 </when>
                 <when test="cond.state == 'inactive'">
-                    and state = #{cond.state}
+                    and state != 'active'
                     and (attributes ->> 'latest_version') is null
                 </when>
             </choose>
