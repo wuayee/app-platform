@@ -8,12 +8,13 @@ import React, { useImperativeHandle, useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Input, Dropdown, Modal, Checkbox, Tooltip } from 'antd';
 import { SearchOutlined, DownOutlined } from '@ant-design/icons';
-import Pagination from '@/components/pagination';
+import { setSpaClassName } from '@/shared/utils/common';
 import { getKnowledgesCard } from '@/shared/http/appBuilder';
 import { Message } from '@/shared/utils/message';
 import { deepClone } from '@/pages/chatPreview/utils/chat-process';
 import { useTranslation } from 'react-i18next';
 import Empty from '@/components/empty/empty-item';
+import Pagination from '@/components/pagination';
 import '../styles/add-knowledge.scss';
 const { Search } = Input;
 
@@ -93,11 +94,7 @@ const AddKnowledge = (props) => {
   };
   // 创建知识库
   const createClick = () => {
-    if (window.self !== window.top) {
-      window.parent.location.href = `${window.parent.location.origin}/#/model-knowledge/create`;
-    } else {
-      navigate(`/knowledge-base/create`);
-    }
+    window.parent.location.href = `${window.parent.location.origin}/edatamate/model-knowledge/create`;
   };
 
   // 过滤相同的对象
@@ -182,15 +179,17 @@ const AddKnowledge = (props) => {
               placeholder={t('search')}
               onSearch={onSearch}
             />
-            <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
-              <Button type='primary' icon={<DownOutlined />}>
-                {t('create')}
-              </Button>
-            </Dropdown>
+            { process.env.PACKAGE_MODE !== 'common'&& 
+              <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
+                <Button type='primary' icon={<DownOutlined />}>
+                  {t('create')}
+                </Button>
+              </Dropdown> 
+            }
           </div>
         </div>
         {knowledgeList.length > 0 ? (
-          <div className='add-knowledge-card'>
+          <div className={setSpaClassName('add-knowledge-card')}>
             {knowledgeList.map((item: any) => {
               return (
                 <div key={item.id} className='select-card'>

@@ -5,17 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { del, get, post, patch } from './http';
-import { httpUrlMap } from './httpConfig';
-
-const { AI_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
-
-export const tenantId = '282b963640544f148dbdfa49718075bc';
-
-// 聊天界面---详情
-export function queryAppDetail(id) {
-  const url = `${AI_URL}/hisp/api/v1/platform/app/${id}`;
-  return get(url);
-}
+import serviceConfig from './httpConfig';
+const { PLUGIN_URL } = serviceConfig;
 
 // 点赞点灭
 export function feedbacksRq(params) {

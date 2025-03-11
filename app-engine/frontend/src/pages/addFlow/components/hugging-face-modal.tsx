@@ -8,8 +8,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Modal, Input, Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import { getHuggingFaceList } from '@/shared/http/appBuilder';
-import EmptyItem from '@/components/empty/empty-item';
 import { useTranslation } from 'react-i18next';
+import { setSpaClassName } from '@/shared/utils/common';
+import EmptyItem from '@/components/empty/empty-item';
+import huggingFacImg from '@/assets/images/ai/hugging-face.png';
+import downloadImg from '@/assets/images/ai/download.png';
+import likeImg from '@/assets/images/ai/like.png';
 const { Search } = Input;
 
 const HuggingFaceModal = (props) => {
@@ -76,7 +80,7 @@ const HuggingFaceModal = (props) => {
       <div className='tool-modal-search'>
         <Search size='large' onSearch={filterByName} placeholder={t('plsEnter')} allowClear />
       </div>
-      <div className='tool-modal-content'>
+      <div className={setSpaClassName('tool-modal-content')}>
         <div className='content-left'>
           <div className='left-list'>
             {list.length > 0 && list.map((card: any) =>
@@ -86,17 +90,17 @@ const HuggingFaceModal = (props) => {
                 <div className='card-detail' onClick={() => window.open(`https://${card.url}`)}>{t('checkMore')}</div>
                 <div className='item-top'>
                   <div className='top-left'>
-                    <img src='./src/assets/images/ai/hugging-face.png' alt='' />
+                    <img src={huggingFacImg} alt='' />
                   </div>
                   <div className='top-right'>
                     <div className='item-title' title={card.name}>{card.name} </div>
                     <div className='item-tag'>
                       <span>
-                        <img src='./src/assets/images/ai/download.png' alt='' />
+                        <img src={downloadImg} alt='' />
                         {card.context.downloads}
                       </span>
                       <span>
-                        <img src='./src/assets/images/ai/like.png' alt='' />
+                        <img src={likeImg} alt='' />
                         {card.context.likes}
                       </span>
                     </div>

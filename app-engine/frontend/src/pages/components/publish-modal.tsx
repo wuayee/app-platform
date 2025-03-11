@@ -16,6 +16,7 @@ import { setTestStatus } from "@/store/flowTest/flowTest";
 import { useTranslation } from 'react-i18next';
 import { createEvaluate } from '../../shared/http/appEvaluate';
 import TextEditor from './text-editor';
+import infoImg from '@/assets/images/ai/info.png';
 import './styles/publish-modal.scss';
 
 /**
@@ -207,7 +208,7 @@ const PublishModal = (props) => {
               <div className='search-list'>
                 {appInfo.attributes?.latest_version || appInfo.state === 'active' ? (
                   <div className='publish-tag'>
-                    <img src='./src/assets/images/ai/info.png' />
+                    <img src={infoImg} />
                     <span>{t('releaseTip')}</span>
                   </div>
                 ) : (
@@ -215,7 +216,7 @@ const PublishModal = (props) => {
                     className='publish-tag'
                     style={{ display: publishType === 'app' ? 'block' : 'none' }}
                   >
-                    <img src='./src/assets/images/ai/info.png' />
+                    <img src={infoImg} />
                     <span>{t('releaseTip2')}</span>
                   </div>
                 )}

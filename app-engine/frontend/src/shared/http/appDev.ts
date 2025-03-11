@@ -5,12 +5,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {del, get, patch} from "./http";
-import { httpUrlMap } from './httpConfig';
-
-
+import serviceConfig from './httpConfig';
 const collectUrl = '/api/jober/aipp';
 
-const { AIPP_URL, COLLECT_URL = collectUrl } = httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL, COLLECT_URL = collectUrl } = serviceConfig;
 
 // 获取应用开发列表
 export function queryAppDevApi(tenantId,params) {

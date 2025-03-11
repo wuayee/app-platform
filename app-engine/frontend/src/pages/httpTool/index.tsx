@@ -13,6 +13,7 @@ import { deepClone } from '../chatPreview/utils/chat-process';
 import HttpForm from './components/http-form';
 import MethodDefinition from './components/http-method-definition';
 import InformationConfiguration from './components/http-information';
+import LeftArrowImg from '@/assets/images/ai/left-arrow.png';
 import './styles/index.scss';
 
 const HttpToolIndex = () => {
@@ -32,7 +33,7 @@ const HttpToolIndex = () => {
     <>
       <div className='http-tool-container'>
         <div className='http-tool-head'>
-          <img src='./src/assets/images/ai/left-arrow.png' onClick={() => window.history.back()} />
+          <img src={LeftArrowImg} onClick={() => window.history.back()} />
           <span className='title'>{t('createHttp')}</span>
         </div>
         <div className='http-tool-content'>

@@ -8,7 +8,7 @@ import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 import { Tooltip } from 'antd';
 import { useParams, useHistory } from 'react-router-dom'
 import { getAppInfo } from '@/shared/http/aipp';
-import { ConfigFlowIcon } from '@assets/icon';
+import { ConfigFlowIcon } from '@/assets/icon';
 import { Message } from '@/shared/utils/message';
 import { FlowContext } from '../aippIndex/context';
 import { setTestTime, setTestStatus } from "@/store/flowTest/flowTest";

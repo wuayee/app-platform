@@ -9,6 +9,8 @@ import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setConfigItem } from '@/store/appConfig/config';
 import { useTranslation } from 'react-i18next';
 import { Collapse, Input, Form } from 'antd';
+import CloseImg from '@/assets/images/close_arrow.png';
+import OpenImg from '@/assets/images/open_arrow.png';
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -53,7 +55,7 @@ const OpeningContainer = (props) => {
   return <>
     <Collapse
       bordered={false}
-      expandIcon={({ isActive }) => isActive ? <img src="./src/assets/images/close_arrow.png" alt="" /> : <img src="./src/assets/images/open_arrow.png" alt="" />}
+      expandIcon={({ isActive }) => isActive ? <img src={CloseImg} alt="" /> : <img src={OpenImg} alt="" />}
       activeKey={activePanelKey}
       onChange={(keys) => setActivePanelKey(keys)}
     >

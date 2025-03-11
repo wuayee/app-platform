@@ -5,10 +5,14 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Collapse, Switch } from 'antd';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setConfigItem } from '@/store/appConfig/config';
 import Inspiration from './inspiration';
-import { Collapse, Switch } from 'antd';
+import CloseImg from '@/assets/images/close_arrow.png';
+import OpenImg from '@/assets/images/open_arrow.png';
+import AddImg from '@/assets/images/add_btn.svg';
+import LineImg from '@/assets/images/line.svg';
 const { Panel } = Collapse;
 
 const InspirationContainer = (props) => {
@@ -73,15 +77,15 @@ const InspirationContainer = (props) => {
   return <>
     <Collapse
       bordered={false}
-      expandIcon={({ isActive }) => isActive ? <img src="./src/assets/images/close_arrow.png" alt="" /> : <img src="./src/assets/images/open_arrow.png" alt="" />}
+      expandIcon={({ isActive }) => isActive ? <img src={CloseImg} alt="" /> : <img src={OpenImg} alt="" />}
       activeKey={activePanelKey}
       onChange={(keys) => setActivePanelKey(keys)}
     >
       <Panel header={<div className='panel-label'>
         <span>{config.description}</span>
         <div className='panel-add'>
-          <img src="./src/assets/images/add_btn.svg" style={{ width: 16, height: 16 }} alt="" onClick={addInspiration} className={showInspiration ? '' : 'not-allowed'} />
-          <img src="./src/assets/images/line.svg" alt="" />
+          <img src={AddImg} style={{ width: 16, height: 16 }} alt="" onClick={addInspiration} className={showInspiration ? '' : 'not-allowed'} />
+          <img src={LineImg} alt="" />
           <Switch onChange={(checked, event) => inspirationSwitchChange(checked, event)} checked={showInspiration} />
         </div>
       </div>} forceRender key='inspiration' className="site-collapse-custom-panel">

@@ -17,16 +17,10 @@ export const getDepth  =  (arr) => {
   return helper(dummyRoot);
 };
 // 删除children为空
-export const delNodeChild = (arr, dimension = false) => {
+export const delNodeChild = (arr) => {
   arr.forEach(item => {
     if (item.children && item.children.length) {
-      delNodeChild(item.children, dimension)
-    } else if (dimension) {
-      if (item.level > 2) {
-        item.childrenEmpty = true;
-      } else {
-        item.disabled = true;
-      };
+      delNodeChild(item.children)
     } else {
       let list = arr.filter(item => (item.children && item.children.length));
       list.length ? null : item.childrenEmpty = true;

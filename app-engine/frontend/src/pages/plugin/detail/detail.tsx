@@ -7,10 +7,11 @@
 import React, { useEffect, useState } from 'react';
 import { Divider, Table, Tag } from 'antd';
 import { PluginIcons } from '@/components/icons/plugin';
-import { Icons } from '@/components/icons';
 import { IconMap, outputColumns, paramsColumns } from '../helper';
 import { recursion } from '../../helper';
 import { useTranslation } from 'react-i18next';
+import knowledgeImg from '@/assets/images/knowledge/plugin.png';
+import userImg from '@/assets/images/ai/user.jpg';
 import '../style.scoped.scss';
 
 /**
@@ -49,13 +50,11 @@ const PlugeDetail: React.FC = ({ pluginData }) => {
   return (
     <div className='engine-plugin-detail'>
       <div className='detail-header'>
-        <img src='./src/assets/images/knowledge/plugin.png' />
+        <img src={knowledgeImg} />
         <div>
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', alignItems:'center' }}>
             <div className='detail-header-name'>{data?.name}</div>
-            <div className='icon-display'>
-              <PluginIcons.ToolIcon />
-            </div>
+            <PluginIcons.ToolIcon />
             <div className='icon-display' style={{ gap: '4px' }}>
               {IconMap[data?.tags?.[0]]?.icon}
               <span style={{ fontSize: 12, fontWeight: 700 }}>
@@ -71,7 +70,7 @@ const PlugeDetail: React.FC = ({ pluginData }) => {
             </div>
           </div>
           <div className='user-info'>
-            <Icons.user />
+            <img width="18" height="18" src={userImg} alt="" />
             <span className='header-user'>{data?.creator}</span>
             <span className='header-time' hidden>
               {t('createdAt')}

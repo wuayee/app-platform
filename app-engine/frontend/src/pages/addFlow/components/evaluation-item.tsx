@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StartIcon, DataRetrievalIcon, EndIcon, LlmIcon } from '@assets/icon';
+import { StartIcon, DataRetrievalIcon, EndIcon, LlmIcon } from '@/assets/icon';
 import { handleClickAddBasicNode, handleDragBasicNode } from '../utils';
 
 const BasicItems = (props: any) => {

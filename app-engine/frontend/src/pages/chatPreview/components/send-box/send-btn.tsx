@@ -23,7 +23,7 @@ const SendBtn = (props) => {
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const copyType = ['msg', 'text'];
-  const detailPage = location.pathname.indexOf('app-detail') !== -1;
+  const detailPage = location.href.indexOf('app-detail') !== -1;
   const inspirationRef = useRef(null);
   
   // 复制
@@ -66,7 +66,7 @@ const SendBtn = (props) => {
             <DeleteIcon className='hover-blue-icon' />
           </div>
         }
-        {!isRecieve && 
+        {(!isRecieve && !detailPage) && 
           <div title='添加灵感' onClick={addInspiration}>
             <PlusCircleOutlined  className='hover-blue-icon' style={{ fontSize: '18px', color: '#4D4D4D' }} />
           </div>

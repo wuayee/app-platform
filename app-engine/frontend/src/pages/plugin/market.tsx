@@ -23,7 +23,7 @@ import CreateWorkfowDrawer from './upload/createWorkflow';
 import type { MenuProps } from 'antd';
 import './styles/market.scss';
 
-const MarketItems = ({ reload }) => {
+const MarketItems = ({ reload, readOnly }) => {
   const { t } = useTranslation();
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
@@ -165,11 +165,13 @@ const MarketItems = ({ reload }) => {
           prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
           defaultValue={name}
         />
-        <Dropdown menu={{ items }}>
+        { !readOnly && ( process.env.PACKAGE_MODE !== 'common' ? <Button className='market-button'  onClick={(e) => uploadAdd(e)} >
+          {t('upload')}
+        </Button> : <Dropdown menu={{ items }}>
           <Button className='market-button'>
             {t('upload')}
           </Button>
-        </Dropdown>
+        </Dropdown> )}
         <UploadToolDrawer openSignal={isOpenPlugin} refreshPluginList={getPluginList} />
       </div>
       <Tabs
@@ -192,6 +194,7 @@ const MarketItems = ({ reload }) => {
                     pluginData={card}
                     cardType={PluginCardTypeE.MARKET}
                     pluginId={card.pluginId}
+                    readOnly={readOnly}
                   />
               ))}
             </div>

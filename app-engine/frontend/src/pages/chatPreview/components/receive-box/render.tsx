@@ -38,7 +38,7 @@ const Render = (props: {
   funcCallback?: any;
   uniqueId: any;
   path: string;
-  formTerminateCallback: any;
+  formTerminateCallback?: any;
 }): JSX.Element => {
   const { t } = useTranslation();
   const { path, uniqueId, funcCallback, formConfig } = props;
@@ -188,7 +188,7 @@ const Render = (props: {
             className='appengine-remote-frame'
             sandbox='allow-scripts'
             style={{ width: `100%`, height: `${iframeHeight + 60}px`, border: "none" }}
-            src={`${origin}/${formEnv() ? 'appengine' : 'api/jober'}/static/${path}?uniqueId=${props.uniqueId}`}>
+            src={`${origin}/${formEnv() ? 'appbuilder' : 'api/jober'}/static/${path}?uniqueId=${props.uniqueId}`}>
           </iframe>
         </Spin>
       </div>

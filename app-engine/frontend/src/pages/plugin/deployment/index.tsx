@@ -10,6 +10,7 @@ import DeployTable from './deploy-table';
 import { getDeployTool, setDeployTool } from '@/shared/http/plugin';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
+import infoUploadImg from '@/assets/images/ai/info-upload.png';
 import '../styles/deployment.scss';
 
 const DeployMent = ({ cancle, confirm }) => {
@@ -72,7 +73,7 @@ const DeployMent = ({ cancle, confirm }) => {
   return <>
     <div className='engine-deployment'>
       <div className='upload-info-head'>
-        <img src='./src/assets/images/ai/info-upload.png' />
+        <img src={infoUploadImg} />
         <span>{t('pluginTips2')}</span>
       </div>
       <DeployTable pluginRef={pluginRef} />

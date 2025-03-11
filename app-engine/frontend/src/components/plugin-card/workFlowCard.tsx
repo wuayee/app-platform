@@ -4,17 +4,22 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dropdown, MenuProps, Tag } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { useAppSelector } from '@/store/hook';
+import { setSpaClassName } from '@/shared/utils/common';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
+import { convertImgPath } from '@/common/util';
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
+import userImg from '@/assets/images/ai/user.jpg';
 import './style.scss';
 
 const WorkflowCard = ({ pluginData, type }: any) => {
   const { t } = useTranslation();
+  const [imgPath, setImgPath] = useState('');
   const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
@@ -34,8 +39,29 @@ const WorkflowCard = ({ pluginData, type }: any) => {
       search: '?type=workFlow',
     });
   }
+
+  const setClassName = () => {
+    if (type === 'plugin') {
+      return setSpaClassName('page-plugin-card');
+    }
+    return setSpaClassName('plugin-card');
+  }
+
+  // 获取图片
+  const getImgPath = async (info) => {
+    const res:any = await convertImgPath(info.icon);
+    setImgPath(res);
+  }
+
+  useEffect(() => {
+    pluginData.attributes.icon && getImgPath(pluginData.attributes);
+    return () => {
+      setImgPath('');
+    }
+  }, [pluginData.attributes]);
+
   return (
-    <div className={type === 'plugin' ? 'page-plugin-card' : 'plugin-card'}
+    <div className={setClassName()}
       onClick={async () => {
         let id = pluginData?.id;
         if (pluginData?.state === 'active') {
@@ -49,7 +75,7 @@ const WorkflowCard = ({ pluginData, type }: any) => {
       }}
     >
       <div className='plugin-card-header'>
-      <img src={pluginData.attributes.icon ||'./src/assets/images/knowledge/knowledge-base.png'} />
+        {imgPath ? <img src={imgPath} alt='' /> : <img src={knowledgeImg} alt='' />}
         <div>
           <div className='plugin-title'>
             <div className='plugin-head'>
@@ -58,7 +84,7 @@ const WorkflowCard = ({ pluginData, type }: any) => {
             </div>
           </div>
           <div className='plugin-card-user'>
-            <img width="18" height="18" src="./src/assets/images/ai/user.jpg" alt="" />
+            <img width="18" height="18" src={userImg} alt="" />
             <span style={{ marginRight: 8 }}>{pluginData?.createBy}</span>
             {pluginData?.tags?.map((tag: string, index: number) => {
               if (tag.trim().length > 0) {

@@ -6,12 +6,13 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Input, Spin } from 'antd';
-import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
-import { useAppSelector } from '@/store/hook';
 import { SearchOutlined } from '@ant-design/icons';
+import { useAppSelector } from '@/store/hook';
 import { queryAppsApi } from '@/shared/http/apps';
+import { convertImgPath } from '@/common/util';
 import { FINANCE_APP_ID } from '../common/config';
 import { useTranslation } from 'react-i18next';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import '../styles/referencing-app.scss';
 
 
@@ -74,15 +75,7 @@ const ReferencingApp = (props) => {
           {
             appArr.map((item, index) => {
               return (
-                <div className='at-list-item' key={index} onClick={() => itemClick(item)}>
-                  <div className='left'>
-                    <span>
-                      {item.icon ? <img src={item.icon} /> : <img src={knowledgeBase} />}
-                    </span>
-                    <span className='name'>{item.name}</span>
-                    <span className='description'>{item.description}</span>
-                  </div>
-                </div>
+                <ListItem key={index} item={item} itemClick={itemClick} icon={item.icon} />
               )
             })
           }
@@ -91,5 +84,28 @@ const ReferencingApp = (props) => {
     </div>
   )}</>
 };
+
+const ListItem = (props) => {
+  const { itemClick, item, icon } = props;
+  const [imgPath, setImgPath] = useState('');
+  useEffect(() => {
+    if (icon) {
+      convertImgPath(icon).then(res => {
+        setImgPath(res);
+      });
+    }
+  }, [icon])
+  return (
+  <div className='at-list-item'  onClick={() => itemClick(item)}>
+      <div className='left'>
+        <span>
+          {imgPath ? <img src={imgPath} /> : <img src={knowledgeBase} />}
+        </span>
+        <span className='name'>{item.name}</span>
+        <span className='description'>{item.description}</span>
+      </div>
+    </div>
+  )
+}
 
 export default ReferencingApp;

@@ -4,21 +4,27 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { LeftArrowIcon, UploadIcon } from '@/assets/icon';
 import { updateAppInfo } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
-import { FlowContext } from '../../aippIndex/context';
-import EditTitleModal from '../../components/edit-title-modal';
-import PublishModal from '../../components/publish-modal';
-import TestModal from '../../components/test-modal';
-import TestStatus from '../../components/test-status';
+import { convertImgPath } from '@/common/util';
+import { FlowContext } from '@/pages/aippIndex/context';
+import EditTitleModal from '@/pages/components/edit-title-modal';
+import PublishModal from '@/pages/components/publish-modal';
+import TestModal from '@/pages/components/test-modal';
+import TestStatus from '@/pages/components/test-status';
 import TimeLineDrawer from '@/components/timeLine';
 import { useTranslation } from 'react-i18next';
 import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { useAppSelector, useAppDispatch } from "@/store/hook";
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
+import editImg from '@/assets/images/ai/edit.png';
+import complateImg from '@/assets/images/ai/complate.png';
+import publishImg from '@/assets/images/ai/publish.png';
+import timeImg from '@/assets/images/ai/time.png';
 
 /**
  * 工具流编排头部信息展示组件
@@ -32,8 +38,9 @@ const AddHeader = (props) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { handleDebugClick, workFlow, types, saveTime } = props;
-  const { appInfo, showTime, setFlowInfo } = useContext(FlowContext);
+  const { appInfo, setFlowInfo } = useContext(FlowContext);
   const [open, setOpen] = useState(false);
+  const [imgPath, setImgPath] = useState('');
   const { tenantId, appId } = useParams();
   let editRef: any = useRef(null);
   let modalRef: any = useRef(null);
@@ -80,28 +87,32 @@ const AddHeader = (props) => {
   const versionDetail = () => {
     setOpen(true);
   }
+  useEffect(() => {
+    if (appInfo.attributes?.icon) {
+      convertImgPath(appInfo.attributes.icon).then(res => {
+        setImgPath(res);
+      });
+    }
+  }, [appInfo]);
   return <>{(
     <div>
       <div className='app-header'>
         <div className='logo'>
           { workFlow ==='workFlow' && <LeftArrowIcon className='back-icon' onClick={handleBackClick} /> }
-          {(appInfo.attributes?.icon && appInfo.attributes?.icon !== 'null') ?
-            <img src={appInfo.attributes?.icon} /> :
-            <img src='./src/assets/images/knowledge/knowledge-base.png' />
-          }
+          {imgPath ? <img src={imgPath} /> : <img src={knowledgeImg} />}
           <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
-          <img className='edit-icon' src='./src/assets/images/ai/edit.png' onClick={handleEditClick} />
+          <img className='edit-icon' src={editImg} onClick={handleEditClick} />
           {
             (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
               (
                 <div className='status-tag'>
-                  <img src='./src/assets/images/ai/complate.png' />
+                  <img src={complateImg} />
                   <span>{t('active')}</span>
                 </div>
               ) :
               (
                 <div className='status-tag'>
-                  <img src='./src/assets/images/ai/publish.png' />
+                  <img src={publishImg} />
                   <span>{t('inactive')}</span>
                 </div>
               )
@@ -113,7 +124,7 @@ const AddHeader = (props) => {
           {
             (appInfo.attributes?.latest_version || appInfo.state === 'active') &&
             <span className='history' onClick={versionDetail}>
-              <img src='./src/assets/images/ai/time.png' />
+              <img src={timeImg} />
             </span>
           }
           <Button

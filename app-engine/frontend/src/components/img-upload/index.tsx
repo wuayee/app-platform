@@ -8,20 +8,18 @@ import React, { useEffect, useState } from 'react';
 import { Button, Upload } from 'antd';
 import { ToTopOutlined } from '@ant-design/icons';
 import { fileValidate } from '@/shared/utils/common';
-import { httpUrlMap } from '@/shared/http/httpConfig';
+import serviceConfig from '@/shared/http/httpConfig';
 import { uploadImage } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useAppSelector } from '@/store/hook';
+import { convertImgPath } from '@/common/util';
 import { useTranslation } from 'react-i18next';
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
 
 const ImgUpload = () => {
   const { t } = useTranslation();
-  const [filePath, setFilePath] = useState('');
-  const [fileName, setFileName] = useState('');
-  const { AIPP_URL } =
-    process.env.NODE_ENV === 'development'
-      ? { AIPP_URL: `${window.location.origin}/api/jober/v1/api` }
-      : httpUrlMap[process.env.NODE_ENV];
+  const [imgPath, setImgPath] = useState('');
+  const { AIPP_URL } = serviceConfig;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   // 上传图片
   async function pictureUpload(file) {
@@ -33,8 +31,10 @@ const ImgUpload = () => {
       formData.append('file', file);
       const res = await uploadImage(tenantId, formData, headers);
       if (res.code === 0) {
-        setFileName(res.data.file_name);
-        setFilePath(res.data.file_path);
+        let path = `${AIPP_URL}/${tenantId}/file?filePath=${res.data.file_path}&fileName=${res.data.file_name}`;
+        convertImgPath(path).then(res => {
+          setImgPath(res);
+        });
       }
     } catch (err) {
       Message({ type: 'error', content: err.message || t('uploadImageFail') });
@@ -44,7 +44,7 @@ const ImgUpload = () => {
   const onChange = ({ file }) => {
     let validateResult = fileValidate(file);
     if (!validateResult) {
-      setFilePath('');
+      return
     }
     validateResult && pictureUpload(file);
   };
@@ -52,13 +52,13 @@ const ImgUpload = () => {
   return (
     <>
       <div className='avatar'>
-        {filePath ? (
+        {imgPath ? (
           <img
             className='img-send-item'
-            src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}
+            src={imgPath}
           />
         ) : (
-          <img src='./src/assets/images/knowledge/knowledge-base.png' />
+          <img src={knowledgeImg} />
         )}
         <Upload
           beforeUpload={beforeUpload}

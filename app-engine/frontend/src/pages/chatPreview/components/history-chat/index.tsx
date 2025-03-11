@@ -19,8 +19,8 @@ import { getChatRecentLog } from '@/shared/http/aipp';
 import { formatLocalDate } from '@/common/dataUtil';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { isChatRunning } from '@/shared/utils/chat';
-import { setChatList, setChatRunning, setChatId, setOpenStar, setInspirationDeminsion } from '@/store/chatStore/chatStore';
-import { getUiD, updateChatId, enablePermission } from "@/shared/utils/common";
+import { setChatList, setChatRunning, setChatId, setOpenStar } from '@/store/chatStore/chatStore';
+import { updateChatId } from "@/shared/utils/common";
 import { historyChatProcess } from '../../utils/chat-process';
 import { useTranslation } from 'react-i18next';
 import * as dayjs from 'dayjs'
@@ -49,7 +49,6 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal, setL
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -145,12 +144,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal, setL
       await dispatch(setChatList(chatArr));
       dispatch(setChatId(chat_id));
       setOpen(false);
-      if (dimensionId && enablePermission(appInfo)) {
-        let key = getUiD();
-        dispatch(setInspirationDeminsion({ chat_id, aippId, key, dimensionId }));
-      } else {
-        updateChatId(chat_id, aippId, dimensionId, appInfo);
-      }
+      updateChatId(chat_id, aippId, appInfo);
     } finally {
       setLoading(false);
     }
@@ -180,7 +174,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal, setL
       dispatch(setChatList([]));
       dispatch(setChatId(null));
       localStorage.setItem('storageMessage', JSON.stringify(storageParams));
-      updateChatId(null, aippId, dimension, appInfo)
+      updateChatId(null, aippId)
       setOpen(false);
     } catch {
       setLoading(false);

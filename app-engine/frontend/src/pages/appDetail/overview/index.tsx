@@ -9,14 +9,15 @@ import { Button, Divider, Spin } from 'antd';
 import { getAppInfo, getAppInfoByVersion } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useHistory, useParams } from 'react-router';
-import { AppIcons } from '@/components/icons/app';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppInfo } from "@/store/appInfo/appInfo";
 import { findConfigValue } from '@/shared/utils/common';
+import { convertImgPath } from '@/common/util';
 import { useTranslation } from "react-i18next";
 import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
 import complateImg from '@/assets/images/ai/complate.png';
 import publishImg from '@/assets/images/ai/publish.png';
+import userImg from '@/assets/images/ai/user.jpg';
 import PublicCard from './public-card';
 import './style.scoped.scss';
 
@@ -48,7 +49,7 @@ const AppOverview: React.FC = () => {
         sessionStorage.setItem('evaluateDetails', JSON.stringify(res?.data));
         setDetail({ ...res.data });
         if (res.data?.attributes?.icon) {
-          setAppIcon(res.data?.attributes?.icon);
+          getImgPath(res.data.attributes.icon);
         }
       } else {
         Message({ type: 'error', content: res.message || t('requestFailed') });
@@ -57,7 +58,11 @@ const AppOverview: React.FC = () => {
       setLoading(false);
     });
   }, []);
-
+  // 获取图片
+  const getImgPath = async (icon) => {
+    const res: any = await convertImgPath(icon);
+    setAppIcon(res);
+  };
   // 去编排点击回调
   const gotoArrange = () => {
     setBtnLoading(true);
@@ -68,15 +73,16 @@ const AppOverview: React.FC = () => {
         const newAppId = res.data.id;
         const aippId = res.data.aippId;
         if (aippId) {
-          navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`);
           if (detail.appCategory === 'workflow') {
             navigate({
               pathname: `/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`,
               search: '?type=chatWorkflow',
             });
+          } else {
+            navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`);
           }
         } else {
-          navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/`);
+          navigate(`/app-develop/${tenantId}/app-detail/${newAppId}`);
         }
       }
     }).catch(() => {
@@ -122,7 +128,7 @@ const AppOverview: React.FC = () => {
                 </div>
                 <div className='detail-footer'>
                   <div className='icon'>
-                    <AppIcons.UserIcon />
+                  <img width={18} height={18} src={userImg} style={{ borderRadius: '50%' }} alt='' />
                     <span>{detail?.createBy || 'Admin'}</span>
                   </div>
                   <div className='create'>
@@ -137,7 +143,7 @@ const AppOverview: React.FC = () => {
             {detail?.attributes?.description}
           </div>
           <div className='app-btn'>
-            <Button type='primary' loading={btnLoading} onClick={gotoArrange}>{t('toArrange')}</Button>
+            { !readOnly && <Button type='primary' loading={btnLoading} onClick={gotoArrange}>{t('toArrange')}</Button> }
           </div>
           <Divider style={{ margin: 0, backgroundColor: 'rgb(230, 230, 230)' }} />
           <div>

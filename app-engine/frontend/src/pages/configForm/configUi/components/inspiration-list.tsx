@@ -6,6 +6,8 @@
 
 import React, { useState } from 'react';
 import { Form } from 'antd';
+import EditImg from '@/assets/images/edit_btn.svg';
+import DeleteImg from '@/assets/images/delete_btn.svg';
 
 const InspirationList = (props) => {
   const { inspirationValues, clickInspiration, handleDeleteIns } = props;
@@ -23,8 +25,8 @@ const InspirationList = (props) => {
   // 获取编辑删除按钮
   const showOperate = (item) => {
     return (<span className='right'>
-      <img src="./src/assets/images/edit_btn.svg" alt="" onClick={() => clickInspiration(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
-      <img src="./src/assets/images/delete_btn.svg" alt="" onClick={() => handleDelete(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
+      <img src={EditImg} alt="" onClick={() => clickInspiration(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
+      <img src={DeleteImg} alt="" onClick={() => handleDelete(item.id)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
     </span>);
   };
 

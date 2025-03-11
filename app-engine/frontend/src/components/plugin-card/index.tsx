@@ -9,9 +9,12 @@ import { Tag, message, Modal, Drawer, Dropdown } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { IconMap, PluginCardTypeE, PluginStatusTypeE, PluginCnType } from '@/pages/plugin/helper';
-import { deletePluginAPI } from '../../shared/http/plugin';
-import Detail from '../../pages/plugin/detail/detail';
+import { deletePluginAPI } from '@/shared/http/plugin';
+import { setSpaClassName } from '@/shared/utils/common';
+import Detail from '@/pages/plugin/detail/detail';
 import { useTranslation } from 'react-i18next';
+import knowledgeImg from '@/assets/images/knowledge/plugin.png';
+import userImg from '@/assets/images/ai/user.jpg';
 import './style.scss';
 
 /**
@@ -66,12 +69,12 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus,
     name = pluginData?.pluginToolDataList === null ? pluginData.pluginName : pluginData?.name;
     return name;
   }
-
+  
   return (
     <>
-      <div className='page-plugin-card' onClick={pluginCardClick}>
+      <div className={setSpaClassName('page-plugin-card')} onClick={pluginCardClick}>
         <div className='plugin-card-header'>
-          <img src='./src/assets/images/knowledge/plugin.png' />
+          <img src={knowledgeImg} />
           <div className='header-content'>
             <div className='header-name'>
               <div className='text' title={setPluginName()}>
@@ -79,7 +82,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, cardStatus,
               </div>
             </div>
             <div className='plugin-card-user'>
-              <img width="18" height="18" src="./src/assets/images/ai/user.jpg" alt="" />
+              <img width="18" height="18" src={userImg} alt="" />
               <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
               {pluginData?.tags?.map((tag: string, index: number) => {
                  if (tag.trim().length > 0) {

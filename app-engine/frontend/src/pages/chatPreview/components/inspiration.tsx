@@ -22,19 +22,13 @@ import {
   filterArr,
   arrayToTree,
   getDeepNode,
-  findItemById,
-  setItemLevel,
   findMyCategoryId,
   findExpandId
 } from '../utils/inspiration-utils';
-import { setDimension } from '@/store/common/common';
-import { setChatId } from '@/store/chatStore/chatStore';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { Message } from '@/shared/utils/message';
-import { queryDepartMent, queryInspiration, getLatestChatId, deleteInspiration } from '@/shared/http/aipp';
-import { storage } from '@/shared/storage';
+import { queryDepartMent, queryInspiration, deleteInspiration } from '@/shared/http/aipp';
 import { TENANT_ID } from '../../chatPreview/components/send-editor/common/config';
-import { enablePermission, updateChatId } from '@/shared/utils/common';
 import { isChatRunning } from '@/shared/utils/chat';
 import { useTranslation } from 'react-i18next';
 import Add from './inspiration/add-inspiration';
@@ -57,7 +51,6 @@ const Inspiration = (props) => {
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
-  const inspirationDeminsion = useAppSelector((state) => state.chatCommonStore.inspirationDeminsion);
   const [showDrop, setShowDrop] = useState(false);
   const [open, setOpen] = useState(false);
   const [promptTypeList, setPromptTypeList] = useState([]);
@@ -92,24 +85,6 @@ const Inspiration = (props) => {
     appId && initInspiration();
   }, [appId, reloadInspiration]);
 
-  useEffect(() => {
-    if (inspirationDeminsion) {
-      if (dropList.length) {
-        let { chat_id, aippId, dimensionId } = inspirationDeminsion;
-        let dimension = findItemById(dimensionId, dropList);
-        if (dimension) {
-          let { id, title } = dimension;
-          setCurrentNodeId(id);
-          setCurrentPromptName(title);
-          dispatch(setDimension({ ...dimension, value: title, noChange: true }));
-          updateChatId(chat_id, aippId, { id, name: title, value: title }, appInfo);
-          typeRefresh.current = true;
-          nodeClick(id, title, id);
-        }
-      }
-    }
-  }, [inspirationDeminsion]);
-
   // 初始化灵感大全
   const initInspiration = () => {
     if (appId) {
@@ -121,11 +96,7 @@ const Inspiration = (props) => {
   }
   // 刷新灵感大全
   const refreshInspiration = () => {
-    if (enablePermission(appInfo)) {
-      typeRefresh.current = true;
-    } else {
-      typeRefresh.current = false;
-    }
+    typeRefresh.current = false;
     getList();
   }
   // 获取灵感大全列表
@@ -152,11 +123,7 @@ const Inspiration = (props) => {
         myCategoryID.current = findMyCategoryId(childNodes);
       } else {
         setShowDrop(true);
-        if (enablePermission(appInfo)) {
-          dimensionInspirationProcess(childNodes);
-        } else {
-          multiInspirationProcess(childNodes);
-        }
+        multiInspirationProcess(childNodes);
       }
     } else {
       setPromptTypeList([]);
@@ -186,39 +153,12 @@ const Inspiration = (props) => {
     setDropList(setArr);
     setDefaultSelect(setArr);
   }
-  const dimensionInspirationProcess = (childNodes) => {
-    childNodes = childNodes.filter(item => item.title !== t('mine'));
-    let arr = JSON.parse(JSON.stringify(childNodes));
-    setItemLevel(arr);
-    let list = delNodeChild(arr, true);
-    list.forEach((item) => {
-      delete item.childrenEmpty;
-    });
-    let setArr = filterArr(list);
-    setArr.forEach((item) => delete item.children);
-    setArr = setArr.filter((item) => item.childrenEmpty === undefined);
-    setArr = arrayToTree(setArr);
-    setDropList(setArr);
-    setDefaultSelect(setArr);
-  }
   // 设置默认选中
   const setDefaultSelect = async (setArr) => {
-    let defaultDimension = storage.get('dimension')?.[storageId];
     let obj;
-    if (defaultDimension && enablePermission(appInfo)) {
-      obj = getDeepNode(setArr, (node) => {
-        return defaultDimension.id === node.id;
-      });
-      if (!obj) {
-        obj = getDeepNode(setArr, (node) => {
-          return !node.children.length;
-        });
-      }
-    } else {
-      obj = getDeepNode(setArr, (node) => {
-        return !node.children.length;
-      });
-    }
+    obj = getDeepNode(setArr, (node) => {
+      return !node.children.length;
+    });
     let parentId = obj.parent.split(':')[1];
     nodeClick(obj.id, obj.title, parentId);
   };
@@ -227,9 +167,6 @@ const Inspiration = (props) => {
     const res:any = await queryInspiration(TENANT_ID, appIdVal.current, nodeId, detailPage);
     if (res.code === 0 && res.data) {
       let categories = res.data.categories || [];
-      if (enablePermission(appInfo) && categories.length) {
-        myCategoryID.current = findMyCategoryId(categories);
-      }
       setAllPromptData(res.data.inspirations);
       search(searchValue, res.data.inspirations);
     } else {
@@ -292,27 +229,6 @@ const Inspiration = (props) => {
   }
   // 分类点击回调
   async function nodeClick(id, name, parentId) {
-    setLoading(true);
-    try {
-      if (enablePermission(appInfo) && !typeRefresh.current) {
-        const res: any = await getLatestChatId(tenantId, {
-          condition: {
-            dimension_id: id,
-            aipp_id: aippId || appId
-          },
-          limit: 1,
-          offset: 0
-        });
-        if (res.code === 0 && res.data[0]) {
-          dispatch(setChatId(res.data[0].chat_id));
-        } else {
-          dispatch(setChatId(undefined));
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-    !typeRefresh.current && dispatch(setDimension({ id, name, value: name }));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: t('all'), id: parentId }];
@@ -321,13 +237,6 @@ const Inspiration = (props) => {
       : [];
     setCurrentPromptType(parentId);
     setCurrentNodeId(id);
-    if (enablePermission(appInfo)) {
-      let obj: any = storage.get('dimension') || {};
-      let storageId = aippId || appId;
-      obj[storageId] = { id, name, value: name };
-      storage.set('dimension', obj);
-      myCategoryID.current = findMyCategoryId(typeList);
-    }
     setPromptTypeList(parentId === 'others' ? [] : typeList);
     getPromptList(parentId);
   }
@@ -346,10 +255,6 @@ const Inspiration = (props) => {
     onSearch(e.target.value);
   }
   function handleOpenChange(newOpen) {
-    if (chatRunning && enablePermission(appInfo)) {
-      Message({ type: 'warning', content: t('tryLater') });
-      return;
-    }
     let hasRunning = chatList.filter(item => item.status === 'RUNNING')[0];
     if (hasRunning) {
       Message({ type: 'warning', content: t('tryLater') })

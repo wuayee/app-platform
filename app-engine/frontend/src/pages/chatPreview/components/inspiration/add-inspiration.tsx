@@ -12,7 +12,6 @@ import { useParams } from 'react-router-dom';
 import { uuid } from '@/common/util';
 import { useTranslation } from 'react-i18next';
 import { addInspiration, editInspiration } from '@/shared/http/aipp';
-import { enablePermission } from '@/shared/utils/common';
 import { sourceTypes } from '@/pages/configForm/common/common';
 import { Message } from '@/shared/utils/message';
 import { useAppSelector } from '@/store/hook';
@@ -25,8 +24,6 @@ const AddIns = (props) => {
   const [cachePromptVar, setCachePromptVar] = useState(null);
   const [promptVar, setPromptVar] = useState([]);
   const [promptVarData, setPromptVarData] = useState([]);
-  const appInfo = useAppSelector((state) => state.appStore.appInfo);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const [type, setType] = useState('');
   const editId = useRef('');
   const category = useRef('');
@@ -103,12 +100,7 @@ const AddIns = (props) => {
   // 添加回调
   const addCallback = async (params) => {
     params.id = uuid();
-    let parentId = '';
-    if (enablePermission(appInfo)) {
-      parentId = dimension?.id || 'root';
-    } else {
-      parentId = 'root'
-    }
+    let parentId = 'root';
     const res: any = await addInspiration(tenantId, appId, parentId, params);
     if (res.code === 0) {
       setShowModal(false);
@@ -222,7 +214,6 @@ const AddIns = (props) => {
     <Drawer
       title={type !== 'edit' ? t('createInspiration') : t('editInspiration')}
       open={showModal}
-      forceRender
       maskClosable={false}
       onClose={handleModalCancel}
       footer={[

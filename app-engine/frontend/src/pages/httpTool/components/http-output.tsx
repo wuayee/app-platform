@@ -13,6 +13,7 @@ import { deepClone } from '../../chatPreview/utils/chat-process';
 import { useTranslation } from 'react-i18next';
 import { updateTable, getDefaultExpandedRowKeys, findNodeAndAddChild, filterTable } from '../utils';
 import { initParams, paramsTypeOption, paramsArrayOption } from '../config';
+import ExpandImg from '@/assets/images/ai/expand.png';
 
 const HttpOutPut = (props) => {
   const { t } = useTranslation();
@@ -114,7 +115,7 @@ const HttpOutPut = (props) => {
       render: (text, record) => (
         <div className='http-tool-operation'>
           {addType.includes(record.type) && (
-            <img onClick={() => addClick(record)} src='./src/assets/images/ai/expand.png' alt='' />
+            <img onClick={() => addClick(record)} src={ExpandImg} alt='' />
           )}
         </div>
       ),

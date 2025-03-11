@@ -28,7 +28,7 @@ const ChatRunning = () => {
   
   // 获取当前登录用户名
   const getLoaclUser = () => {
-    return localStorage.getItem('currentUserIdComplete') ?? '';
+    return localStorage.getItem('currentUserId') ?? '';
   }
 
   // 第一次加载界面，获取user信息

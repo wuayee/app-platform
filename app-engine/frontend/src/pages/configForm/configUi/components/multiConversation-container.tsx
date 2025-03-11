@@ -10,6 +10,8 @@ import { setConfigItem } from '@/store/appConfig/config';
 import { setHistorySwitch } from '@/store/common/common';
 import MultiConversationContent from './mutiConversation';
 import { Collapse, Switch, Form } from 'antd';
+import CloseImg from '@/assets/images/close_arrow.png';
+import OpenImg from '@/assets/images/open_arrow.png';
 const { Panel } = Collapse;
 
 const MultiConversationContainer = (props) => {
@@ -81,7 +83,7 @@ const MultiConversationContainer = (props) => {
   return <>
     <Collapse
       bordered={false}
-      expandIcon={({ isActive }) => isActive ? <img src="./src/assets/images/close_arrow.png" alt="" /> : <img src="./src/assets/images/open_arrow.png" alt="" />}
+      expandIcon={({ isActive }) => isActive ? <img src={CloseImg} alt="" /> : <img src={OpenImg} alt="" />}
     >
       <Panel header={<div className='panel-label'>
           <span>{config.description}</span>

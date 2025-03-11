@@ -7,7 +7,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Button, Dropdown, Badge, Typography } from 'antd';
-import { LeftArrowIcon, UploadIcon } from '@assets/icon';
+import { LeftArrowIcon, UploadIcon } from '@/assets/icon';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setTestStatus, setTestTime } from "@/store/flowTest/flowTest";
 import { setChatId, setChatList } from '@/store/chatStore/chatStore';
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { Message } from "@/shared/utils/message";
 import { setAppInfo, setValidateInfo } from '@/store/appInfo/appInfo';
 import { getCheckList, exportApp, updateAppInfo, updateFlowInfo } from '@/shared/http/aipp';
+import { convertImgPath } from '@/common/util';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
 import { get, cloneDeep } from 'lodash';
 import TimeLineDrawer from '@/components/timeLine';
@@ -32,6 +33,7 @@ import robotImg from '@/assets/images/ai/robot.png';
 import moreBtnImg from '@/assets/images/more_btn.svg';
 import lineImg from '@/assets/images/line.svg';
 import debugBtnImg from '@/assets/images/debug_btn.svg';
+import EditImg from '@/assets/images/ai/edit.png';
 import './styles/header.scss'
 
 /**
@@ -64,6 +66,7 @@ const ChoreographyHead = (props) => {
   const [debugVisible, setDebugVisible] = useState(true);
   const [open, setOpen] = useState(false);
   const [isFormPrompt, setIsFormPrompt] = useState(true);
+  const [imgPath, setImgPath] = useState('');
   const isChecked = useRef(false);
   const isWorkFlow = useRef(false);
   let modalRef = useRef<any>();
@@ -238,6 +241,14 @@ const ChoreographyHead = (props) => {
     if (appInfo?.state === 'importing' && !isChecked.current) {
       checkValidity(appInfo?.flowGraph?.appearance);
     }
+    if (appInfo.attributes?.icon) {
+      convertImgPath(appInfo.attributes.icon).then(res => {
+        setImgPath(res);
+      });
+    }
+    return () => {
+      setImgPath('');
+    }
   }, [appInfo]);
 
   useEffect(() => {
@@ -257,12 +268,12 @@ const ChoreographyHead = (props) => {
     <div className='app-header'>
       <div className='logo'>
         <LeftArrowIcon className='back-icon' onClick={backClick} />
-        {appInfo?.attributes?.icon ?
-          <img src={appInfo.attributes?.icon} onClick={backClick} /> :
+        {imgPath ?
+          <img src={imgPath} onClick={backClick} /> :
           <img src={knowledgeImg} onClick={backClick} />
         }
         <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
-        <img className='edit-icon' src='./src/assets/images/ai/edit.png' onClick={handleEditClick} />
+        <img className='edit-icon' src={EditImg} onClick={handleEditClick} />
         {
           (appInfo.attributes?.latest_version || appInfo.state === 'active') ?
             (

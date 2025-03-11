@@ -22,7 +22,7 @@ import {
   VariableAggregation,
   TextToImageIcon,
   FileExtractionIcon
-} from '@assets/icon';
+} from '@/assets/icon';
 import { handleClickAddBasicNode, handleDragBasicNode } from '../utils'
 
 /**

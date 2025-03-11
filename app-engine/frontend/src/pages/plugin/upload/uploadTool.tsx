@@ -16,6 +16,11 @@ import { Message } from '@/shared/utils/message';
 import { recursion } from '../../helper';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/locale/i18n';
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
+import complateImg from '@/assets/images/ai/complate.png';
+import infoUploadImg from '@/assets/images/ai/info-upload.png';
+import downImg from '@/assets/images/ai/down.png';
+import PluginWarningImg from '@/assets/images/plugin/plugin-warning.png';
 import '../style.scoped.scss';
 
 const uploadSpaceOptions = [
@@ -252,7 +257,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
       }
     >
       <div className='upload-info-head'>
-        <img src='./src/assets/images/ai/info-upload.png' />
+        <img src={infoUploadImg} />
         <span>{t('uploadTip')}</span>
       </div>
       <Spin tip={t('uploadingPlugin')} size='small' spinning={loading}>
@@ -286,7 +291,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
             <div className='upload-repeat-tips'>
               <span>
                 <img
-                  src='./src/assets/images/plugin/plugin-warning.png'
+                  src={PluginWarningImg}
                   style={{ marginRight: '8px' }}
                 />
                 {t('defineGroupTips')}
@@ -305,11 +310,11 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                 <div className={['collapse-plugin', item.open ? 'collapse-plugin-open' : ''].join(' ')} key={item.key}>
                   <div className='collapse-plugin-head' onClick={() => itemClick(item)}>
                     <div className='head-left'>
-                      <img src='./src/assets/images/ai/down.png' />
+                      <img src={downImg} />
                       <span>{item.name}</span>
                     </div>
                     <div className='head-right'>
-                      {item?.list?.length > 0 && <img src='./src/assets/images/ai/complate.png' />}
+                      {item?.list?.length > 0 && <img src={complateImg} />}
                       <span className='text'>{item?.list?.length > 0 ? t('parsedSuccessfully') : t('parsingFailed')}</span>
                       <span>{item?.list?.length}/{item.checkedNum}</span>
                       <span className='check-text' onClick={(e) => pluginCheckAll(e, item)}>{item.checkedNum === item?.list?.length ? '取消全选' : '全选'}</span>
@@ -323,7 +328,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                           <Checkbox value={lItem} />
                         </div>
                         <div className='card-header-left'>
-                          <img src='./src/assets/images/knowledge/knowledge-base.png' />
+                          <img src={knowledgeImg} />
                           <div>
                             <div style={{ fontSize: 20, marginBottom: 8, wordBreak: 'break-all' }}>{lItem.schema?.name}</div>
                             <div className='card-user'>

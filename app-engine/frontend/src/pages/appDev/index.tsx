@@ -23,6 +23,10 @@ import EditModal from '../components/edit-modal';
 import Pagination from '@/components/pagination';
 import UploadApp from './components/upload-app';
 import TemplateList from '@/pages/components/template-list';
+import WarningIcon from '@/assets/images/warning_icon.svg';
+import CreateImg from '@/assets/images/ai/create.png';
+import TemplateImg from '@/assets/images/ai/create2.png';
+import ImportImg from '@/assets/images/ai/import.png';
 import './index.scoped.scss';
 
 /**
@@ -232,7 +236,7 @@ const AppDev: React.FC = () => {
   // 删除弹窗title组件
   const DeleteTitle = () => {
     return <div className='delete-title'>
-      <img src='./src/assets/images/warning_icon.svg'></img>
+      <img src={WarningIcon}></img>
       <span>{t('deleteAppModalTitle')}</span>
     </div>
   };
@@ -293,10 +297,10 @@ const AppDev: React.FC = () => {
             { !readOnly &&  
               <div className='card_box card_box_add'>
                 <div className='add_title'>{t('create')}</div>
-                <div><img src='./src/assets/images/ai/create.png' /><span onClick={() => create()}>{t('ceateBlankApplication')}</span></div>
-                <div><img src='./src/assets/images/ai/create2.png' /><span onClick={() => tempalteListRef.current.open()}>{t('templateCreate')}</span></div>
+                <div><img src={CreateImg} /><span onClick={() => create()}>{t('ceateBlankApplication')}</span></div>
+                <div><img src={TemplateImg} /><span onClick={() => tempalteListRef.current.open()}>{t('templateCreate')}</span></div>
                 <div className='split-line'></div>
-                <div><img src='./src/assets/images/ai/import.png' /><span onClick={handleCreateClick}>{t('importApplication')}</span></div>
+                <div><img src={ImportImg} /><span onClick={handleCreateClick}>{t('importApplication')}</span></div>
               </div>
             }
             {
