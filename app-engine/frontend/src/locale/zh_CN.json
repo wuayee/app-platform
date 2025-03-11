@@ -801,7 +801,7 @@
   "fileExtractionOutputTips": "文件提取节点的输出信息，输出内容是大模型按照提示词从文件提取出的内容",
   "fileExtractionPrompt": "文件提取提示词",
   "fileExtractionInputTips": "<p>1. 用户对话上传的文件，请选择引用系统上下文的files字段。</p>\n <p>2. 其他自定义来源的文件，请选择合适的引用。</p>\n<p> 3. 支持图片、文件、音频、视频(pdf/txt/docx/</p>\n<p>markdown/html/png/jpg/jpeg/mp3/mp4)</p>",
-  "chatSupportedFileTypes": "支持文件类型pdf/txt/docx/markdown/html/png/jpg/jpeg/mp3/mp4",
+  "chatSupportedFileTypes": "支持文件类型pdf/txt/docx/markdown/html/png/jpg/jpeg/wav",
   "chatFileSizeTip": "单个文件最大15MB。",
   "chatFileCountTip": "最多上传5个文件。",
   "uploading": "上传中",
