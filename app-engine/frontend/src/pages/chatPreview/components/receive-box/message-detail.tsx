@@ -60,12 +60,12 @@ const MessageBox = (props: any) => {
   };
 
   // 拼接content与reference
-  const replaceInfo = () => {
-    let metaContent = [answerContent];
+  const replaceInfo = (content, type = '') => {
+    let metaContent = [content];
     let mataStr = metaContent.map((item: any, index: any) => {
       return regExpReplace(item, index);
     });
-    setReplacedText(mataStr.join(''));
+    type ? setThinkContent(mataStr.join('')) : setReplacedText(mataStr.join(''));
   };
 
   // 点击弹出溯源的抽屉回调
@@ -110,7 +110,7 @@ const MessageBox = (props: any) => {
 
   useEffect(() => {
     if (msgType === 'META_MSG' || chatReference) {
-      replaceInfo();
+      replaceInfo(answerContent);
     } else {
       setReplacedText(answerContent);
     }
@@ -126,7 +126,12 @@ const MessageBox = (props: any) => {
       thinkEndIdx = thinkEndIdx + '</think>'.length;
     }
     if (thinkStartIdx > -1) {
-      setThinkContent(content.slice(thinkStartIdx, thinkEndIdx));
+      const thinkContent = content.slice(thinkStartIdx, thinkEndIdx);
+      if (msgType === 'META_MSG' || chatReference) {
+        replaceInfo(thinkContent, 'deepseek');
+      } else {
+        setThinkContent(thinkContent);
+      }
       setAnswerContent(content.slice(thinkEndIdx));
     } else {
       setAnswerContent(content);

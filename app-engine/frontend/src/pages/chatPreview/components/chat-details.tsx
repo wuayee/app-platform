@@ -87,16 +87,6 @@ const ChatDetail = ({ showMask = false }) => {
               <div className='nav-title'>{t('createApp')}</div>
               <div className='nav-desc'>{t('createAppDescription')}</div>
             </div>
-            <div
-              className={`nav-right ${openStar ? 'nav-item-active' : ''}`}
-              onClick={() => dispatch(setOpenStar(true))}
-            >
-              <div className='tag-home-page'>
-                <AppBoxIcon />
-              </div>
-              <div className='nav-title'>{t('appTreasure')}</div>
-              <div className='nav-desc'>{t('appTreasureDescription')}</div>
-            </div>
           </div>
         </div>
       ) : (

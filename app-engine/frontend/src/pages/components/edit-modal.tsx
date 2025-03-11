@@ -278,41 +278,8 @@ const EditModal = (props) => {
     }
     validateResult && pictureUpload(file);
   }
-  // ai生成图片
   const imgLoad = () => {
     setShowImg(true);
-  }
-  const generatedClick = async () => {
-    const name = form.getFieldValue('name');
-    const description = form.getFieldValue('description');
-    if (!name.trim().length || !description.trim().length) {
-      Message({ type: 'warning', content: t('generatedTip') });
-      return
-    }
-    setAiLoading(true);
-    const res: any = await generatedRequest({
-      name,
-      description,
-      width: 512,
-      height: 512
-    }, tenantId)
-    if (res.code == 0 && res.data) {
-      let data = `data:image/png;base64,${res.data}`
-      generatedProcess(data);
-    } else {
-      setAiLoading(false);
-    }
-  }
-  // base64转
-  const generatedProcess = (data) => {
-    let binaryData = atob(data.split(',')[1]);
-    let arrayBuffer = new ArrayBuffer(binaryData.length);
-    let uint8Array = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < binaryData.length; i++) {
-      uint8Array[i] = binaryData.charCodeAt(i);
-    }
-    let blob = new Blob([uint8Array], { type: 'image/png' });
-    pictureUpload(blob, 'ai.png')
   }
   // 上传图片
   async function pictureUpload(file, name = '') {
@@ -467,12 +434,6 @@ const EditModal = (props) => {
                         )}
                       </span>
                     </Upload>
-                    <Spin spinning={aiLoading}>
-                      <span className='upload-add-content' onClick={generatedClick}>
-                        <img width={'100%'} src={AddImg} alt='' />
-                        <span>{t('AIGenerated')}</span>
-                      </span>
-                    </Spin>
                   </div>
                 </Form.Item>
                 <Form.Item
