@@ -8,9 +8,6 @@ const path = require('path');
 const rootPath = path.resolve(__dirname, './');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { DefinePlugin } = require('webpack');
-
-const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
   context: rootPath,
