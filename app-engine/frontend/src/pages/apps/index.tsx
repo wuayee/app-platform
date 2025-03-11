@@ -30,13 +30,6 @@ const Apps: React.FC = () => {
   const [listLoading, setListLoading] = useState(false);
 
   async function queryApps() {
-    let regex = /&/g;
-    let result = search.match(regex);
-    if (result && result.length) {
-      setAppData([]);
-      setTotal(0);
-      return;
-    }
     const params = {
       pageNum: page,
       pageSize,

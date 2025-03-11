@@ -79,7 +79,7 @@ export const recursion = (el: any, deep = 1) => {
         item.items.key = uuidv4();
         item.children = [item.items];
       } else {
-        item.children = Object.keys(item.properties).map((ite) => ({
+        item.children = Object?.keys(item.properties).map((ite) => ({
           ...item.properties[ite],
           name: ite,
           key: uuidv4(),

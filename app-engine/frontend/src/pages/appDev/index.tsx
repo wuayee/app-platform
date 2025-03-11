@@ -64,13 +64,6 @@ const AppDev: React.FC = () => {
 
   // 查询应用列表
   async function queryApps() {
-    let regex = /&/g;
-    let result = search.match(regex);
-    if (result && result.length) {
-      setAppData([]);
-      setTotal(0);
-      return;
-    }
     const params = {
       offset: (page - 1) * pageSize,
       limit: pageSize,
