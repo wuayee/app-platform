@@ -140,13 +140,13 @@ export const inspirationProcess = (tenantId, data, prompItem, appInfo) => {
   return { prompt, promptArr }
 };
 //  发送消息前验证与数据拼装
-export const beforeSend = (chatRunning, value, chatFileList) => {
+export const sendProcess = (chatRunning, value, chatFileList) => {
   const chatInitObj = JSON.parse(JSON.stringify({
     content: '',
     type: 'send',
     checked: false
   }));
-  if (!value.trim().length) {
+  if (!value.trim().length && !chatFileList?.length) {
     return;
   }
   if (chatRunning) {

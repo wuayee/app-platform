@@ -131,10 +131,10 @@ const MarketItems = ({ reload }) => {
       key: '1',
       label: <div onClick={(e) => uploadAdd(e)}>{t('customPlugin')}</div>,
     },
-    {
-      key: '2',
-      label: <div onClick={() => history({ pathname: '/http' })}>{t('httpPlugin')}</div>,
-    },
+    // {
+    //   key: '2',
+    //   label: <div onClick={() => history({ pathname: '/http' })}>{t('httpPlugin')}</div>,
+    // },
     {
       key: '3',
       label: <div onClick={(e) => workFlow(e)}>{t('workflow')}</div>,
@@ -146,6 +146,12 @@ const MarketItems = ({ reload }) => {
       uploadAdd({ timeStamp: Date.now() });
     }
   }, [isAutoOpen]);
+
+  // tabs切换回调
+  const tabsOnChange = (key:string) =>{
+    setSelectedSource(key);
+    setPageNum(1);
+  }
   
   return (
     <div className='aui-block market-block'>
@@ -169,7 +175,7 @@ const MarketItems = ({ reload }) => {
       <Tabs
         items={sourceTabs}
         activeKey={selectedSource}
-        onChange={(key: string) => setSelectedSource(key)}
+        onChange={(key: string) => tabsOnChange(key)}
         style={{ width: '100%', textAlign: 'center' }}
         centered={true}
       />

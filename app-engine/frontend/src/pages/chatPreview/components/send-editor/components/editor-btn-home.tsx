@@ -32,7 +32,7 @@ import {
 import { setAtAppInfo, setAtAppId } from '@/store/appInfo/appInfo';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setUseMemory } from '@/store/common/common';
-import { updateChatId } from "@/shared/utils/common";
+import { updateChatId, findConfigValue } from "@/shared/utils/common";
 import { isChatRunning } from '@/shared/utils/chat';
 import { HOME_APP_ID } from '../common/config';
 import { useTranslation } from 'react-i18next';
@@ -74,6 +74,7 @@ const EditorBtnHome = (props) => {
   const [openHistorySignal, setOpenHistorySignal] = useState(0);
   const [searchKey, setSearchKey] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [multiFileConfig, setMultiFileConfig] = useState<any>({});
   let chatIdRef = useRef<any>(null);
   let appIdRef = useRef<any>(null);
   const deleteId = useRef<any>([]);
@@ -84,6 +85,7 @@ const EditorBtnHome = (props) => {
     })
     setAppIcon(appInfo.attributes?.icon);
     setAppName(appInfo.name || t('app'));
+    setMultiFileConfig(findConfigValue(appInfo, 'multimodal') || {});
   }, [appInfo]);
   useEffect(() => {
     chatIdRef.current = chatId;
@@ -202,8 +204,8 @@ const EditorBtnHome = (props) => {
   // 多模态上传文件
   const uploadClick = () => {
     if (isChatRunning()) { return; }
-    if (fileList.length > 4) {
-      return Message({ type: 'error', content: t('clickUploadCountTip') });
+    if (fileList.length > multiFileConfig.maxUploadFilesNum - 1) {
+      return Message({ type: 'error', content:  `${t('clickUploadCountTip')}${multiFileConfig.maxUploadFilesNum}${t('num')}` });
     }
     setModalOpen(true);
   }
@@ -261,7 +263,7 @@ const EditorBtnHome = (props) => {
             <span className='item-name' title={appName}>{appName}</span>
             {atAppId && <span style={{ marginLeft: '6px' }}>{t('chat')}</span>}
           </div>
-          <span className='item-upload' onClick={uploadClick}></span>
+          {multiFileConfig.useMultimodal && <span className='item-upload' onClick={uploadClick}></span>}
           <ConversationConfiguration
             appInfo={appInfo}
             display={display}
@@ -283,30 +285,30 @@ const EditorBtnHome = (props) => {
             (
               <div className='inner-item'>
                 <NotificationIcon onClick={announcementsClick} />
-                { !isDebug && <HistoryIcon onClick={historyChatClick} />}
-                { <div className='multi-conversation-title'>
-                    <span>{t('multiTurnConversation')}</span>
-                    <Switch 
-                      className='multi-conversation-switch' 
-                      disabled={showMask} 
-                      size='small' 
-                      checked={useMemory} 
-                      onChange={onMultiConverChange} 
-                    />
-                  </div>
+                {!isDebug && <HistoryIcon onClick={historyChatClick} />}
+                {<div className='multi-conversation-title'>
+                  <span>{t('multiTurnConversation')}</span>
+                  <Switch
+                    className='multi-conversation-switch'
+                    disabled={showMask}
+                    size='small'
+                    checked={useMemory}
+                    onChange={onMultiConverChange}
+                  />
+                </div>
                 }
-                { !showMask && 
-                    <Tooltip 
-                      title={<span style={{ color: '#4d4d4d' }}>{t('newChat')}</span>}
-                      color='#ffffff'
-                    >
-                      <span className='item-clear' onClick={onClickNewChat}></span>
-                    </Tooltip>}
+                {!showMask &&
+                  <Tooltip
+                    title={<span style={{ color: '#4d4d4d' }}>{t('newChat')}</span>}
+                    color='#ffffff'
+                  >
+                    <span className='item-clear' onClick={onClickNewChat}></span>
+                  </Tooltip>}
               </div>
             )
         }
       </div>
-      { showAt && <ReferencingApp atItemClick={atItemClick}
+      {showAt && <ReferencingApp atItemClick={atItemClick}
         atClick={showMoreClick}
         searchKey={searchKey}
         setSearchKey={setSearchKey} />}
@@ -344,7 +346,12 @@ const EditorBtnHome = (props) => {
         footer={null}
         width={608}
         centered>
-        <UploadFile fileList={fileList} updateFileList={fileCallBack} updateModal={setModalOpen}/>
+        <UploadFile
+          maxCount={multiFileConfig.maxUploadFilesNum}
+          fileList={fileList}
+          updateFileList={(fileList) => fileCallBack(fileList, multiFileConfig.autoChatOnUpload)}
+          updateModal={setModalOpen}
+        />
       </Modal>
       {!isDebug && <HistoryChatDrawer openHistorySignal={openHistorySignal} setListCurrentList={setListCurrentList} />}
     </div>

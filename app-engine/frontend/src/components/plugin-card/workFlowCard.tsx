@@ -49,7 +49,7 @@ const WorkflowCard = ({ pluginData, type }: any) => {
       }}
     >
       <div className='plugin-card-header'>
-        <img src='./src/assets/images/knowledge/knowledge-base.png' />
+      <img src={pluginData.attributes.icon ||'./src/assets/images/knowledge/knowledge-base.png'} />
         <div>
           <div className='plugin-title'>
             <div className='plugin-head'>
@@ -78,7 +78,7 @@ const WorkflowCard = ({ pluginData, type }: any) => {
             <span>
               {
                 (pluginData?.attributes?.latest_version || pluginData.state === 'active') ?
-                  <Tag bordered={false} color='processing' className='footer-type'>{t('published')}</Tag> :
+                  <Tag bordered={false} color='processing' className='footer-type'>{t('active')}</Tag> :
                   <Tag bordered={false} className='footer-type'>{t('draft')}</Tag>
               }
             </span>

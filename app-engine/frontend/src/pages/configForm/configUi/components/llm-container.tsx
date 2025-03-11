@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setConfigItem } from '@/store/appConfig/config';
 import LLM from './llm';
@@ -13,7 +13,8 @@ import { pick } from 'lodash';
 const { Panel } = Collapse;
 
 const LLMContainer = (props) => {
-  const { graphOperator, config, updateData, validateItem } = props;
+  const { graphOperator, config, updateData, validateList } = props;
+  const [validateItem, setValidateItem] = useState({});
   const dispatch = useAppDispatch();
   const appConfig = useAppSelector((state) => state.appConfigStore.inputConfigData);
   const [form] = Form.useForm();
@@ -30,7 +31,7 @@ const LLMContainer = (props) => {
       updateData();
     }).catch((errorInfo) => { })
   };
-  
+
   useEffect(() => {
     if (!config.from) {
       return;
@@ -41,11 +42,13 @@ const LLMContainer = (props) => {
   }, [config, appConfig]);
 
   useEffect(() => {
-    if (validateItem.nodeType === 'llmNodeState' && validateItem.configName === 'accessInfo') {
+    const validateData = validateList.find(item => item.type === 'llmNodeState' && item.configName === 'accessInfo');
+    if (validateData) {
+      setValidateItem(validateData);
       form.validateFields();
     }
-  }, [validateItem])
-  
+  }, [validateList]);
+
   return <>
     <Collapse
       bordered={false}

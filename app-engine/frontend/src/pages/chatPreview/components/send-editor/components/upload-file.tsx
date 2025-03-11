@@ -9,14 +9,16 @@ import { Upload } from 'antd';
 import { uploadMultipleFile } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
+import { FileType, PictureFileType } from '../common/config';
 import uploadImg from '@/assets/images/upload_icon.svg';
-const supportFileTypes = ['pdf', 'txt', 'docx', 'md', 'markdown', 'html', 'png', 'jpg', 'jpeg', 'wav'];
-const pictureTypes = ['png', 'jpg', 'jpeg'];
+const supportFileTypes = Object.values(FileType);
+const pictureTypes = Object.values(PictureFileType);
 
 const { Dragger } = Upload;
 /**
  * 对话框上传文件弹框组件
  *
+ * @param maxCount 最大上传文件数.
  * @param fileList 多文件列表.
  * @param updateFileList 更新文件列表的方法.
  * @param updateModal 修改外层modal的打开状态.
@@ -24,23 +26,25 @@ const { Dragger } = Upload;
  * @constructor
  */
 const UploadFile = (props) => {
-  const { fileList, updateFileList, updateModal } = props;
+  const { maxCount, fileList, updateFileList, updateModal } = props;
   const { t } = useTranslation();
   const [addFileList, setAddFileList] = useState([]);
   const isWarnLimit = useRef(false);
+  const isWarnType = useRef(false);
 
-  const beforeUpload = async (curFile, curfileList) => {
+  const fileDataProcess = async (curFile, curfileList) => {
+    const isLastFile = curFile.name === curfileList[curfileList.length - 1].name;
     if (isWarnLimit.current) {
-      if (curfileList.length + fileList.length <= 5) {
+      if ((curfileList.length + fileList.length <= maxCount) || isLastFile) {
         isWarnLimit.current = false;
       } else {
-        return;
+        return false;
       }
     }
-    if (curfileList.length + fileList.length > 5 && !isWarnLimit.current) {
+    if (curfileList.length + fileList.length > maxCount && !isWarnLimit.current) {
       isWarnLimit.current = true;
-      Message({ type: 'warning', content: t('currentAvailableUpload') + (5 - fileList.length) + t('num') + t('file') });
-      return;
+      Message({ type: 'warning', content: `${t('currentAvailableUpload')}${maxCount - fileList.length}${t('num')}${t('file')}` });
+      return false;
     }
     curfileList.forEach(file => {
       let suffix = '';
@@ -57,12 +61,21 @@ const UploadFile = (props) => {
         file.failedReason = t('uploadExceedLimit');
       }
       if (fileList.find(item => item.file_name === file.name)) {
-        Message({ type: 'warning', content: t('alreadyUploaded') + file.name });
+        Message({ type: 'warning', content: `${t('alreadyUploaded')}${file.name}` });
       }
       if (pictureTypes.includes(file.file_type.toLocaleLowerCase())) {
         file.file_url = URL.createObjectURL(file);
       }
     });
+    const illegalTypeList = (curfileList.filter(item => !supportFileTypes.includes(item.file_type.toLocaleLowerCase()))).map(it => it.file_type);
+    if (illegalTypeList.length && !isWarnType.current) {
+      isWarnType.current = true;
+      const illegalTypeStr = illegalTypeList.join('/');
+      Message({ type: 'warning', content: `${t('notSupportedUpload')}${illegalTypeStr}${t('fileFormat')}` });
+    }
+    if (isWarnType.current && isLastFile) {
+      isWarnType.current = false;
+    }
     curfileList = curfileList.filter(item => {
       return supportFileTypes.includes(item.file_type.toLocaleLowerCase()) && !fileList.find(it => it.file_name === item.name);
     });
@@ -77,7 +90,7 @@ const UploadFile = (props) => {
   };
 
   const getFileType = () => {
-    const typeList = supportFileTypes.map(item => '.' + item);
+    const typeList = supportFileTypes.map(item => `.${item}`);
     return typeList.join();
   };
 
@@ -96,9 +109,9 @@ const UploadFile = (props) => {
     } finally {
       updateFileList((preList) => {
         const curList = preList.map(file => {
-          const resultItem = resultData.find(item => item.file_name === file.name);
+          const resultItem = resultData.find(item => item.file_name === file.name.replace(/\s+/g, ''));
           if (resultItem) {
-            return Object.assign(file, resultItem, { uploadStatus: 'success' });
+            return Object.assign(file, { ...resultItem, file_name: file.name }, { uploadStatus: 'success' });
           } else {
             const addItem = addFileList.find(item => item.name === file.name);
             if (addItem) {
@@ -111,11 +124,12 @@ const UploadFile = (props) => {
         return curList;
       });
     }
-  }
+  };
 
-  const handleClick = (e) => {
-    if (fileList.length > 4) {
-      Message({ type: 'error', content: t('clickUploadCountTip') });
+  // 点击上传
+  const handleClick = () => {
+    if (fileList.length > (maxCount - 1)) {
+      Message({ type: 'error', content: `${t('chatFileLimitTip')}${maxCount}${t('num')}${t('file')}` });
     }
   };
 
@@ -130,10 +144,10 @@ const UploadFile = (props) => {
       <Dragger
         fileList={[]}
         multiple
-        maxCount={5}
+        maxCount={maxCount}
         accept={getFileType()}
-        beforeUpload={beforeUpload}
-        openFileDialogOnClick={fileList.length < 5}
+        beforeUpload={fileDataProcess}
+        openFileDialogOnClick={fileList.length < maxCount}
       >
         <div className='import-upload' onClick={handleClick}>
           <img src={uploadImg} />
@@ -141,10 +155,10 @@ const UploadFile = (props) => {
           <div className='tips'>{t('chatSupportedFileTypes')}</div>
           <div className='tips'>
             <span>{t('chatFileSizeTip')}</span>
-            <span>{t('chatFileCountTip')}</span>
+            <span>{`${t('chatFileLimitTip')}${maxCount}${t('num')}${t('file')}`}</span>
             <span>{t('currentAvailableUpload')}</span>
-            <span className='available-count'>{5 - fileList.length}</span>
-            <span>{t('num') + t('file')}</span>
+            <span className='available-count'>{maxCount - fileList.length}</span>
+            <span>{`${t('num')}${t('file')}`}</span>
           </div>
         </div>
       </Dragger>

@@ -98,7 +98,7 @@ const Recommends = (props) => {
     setShowRecommend(recommendItem?.showRecommend || false);
     setShowInspiration(inspirationItem?.showInspiration || false);
     if (!curRecommendList.current?.length) {
-      setRecommendList(recommendItem.list);
+      setRecommendList(recommendItem?.list || []);
     }
   }, [appInfo]);
 

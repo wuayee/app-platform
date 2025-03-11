@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import EnterWorkflow from './enter-workflow';
 import LLMContainer from './llm-container';
 import ToolsContainer from './tools-container';
@@ -10,11 +10,12 @@ import InspirationContainer from './inspiration-container';
 
 const ComponentFactory = (props) => {
   const { configStructure, graphOperator, updateData, eventConfigs, categoryType } = props;
-  const [validateItem, setValidateItem] = useState({});
+  const [validateList, setValidateList] = useState([]);
+  const curValidateList = useRef([]);
 
   // 获取各项配置组件
   const createComponent = (config) => {
-    const commonProps = { graphOperator, config, updateData, key: config.name, eventConfigs, validateItem, categoryType };
+    const commonProps = { graphOperator, config, updateData, key: config.name, eventConfigs, validateList, categoryType };
     switch (config.name) {
       case 'enterWorkflow':
         return <EnterWorkflow {...commonProps}></EnterWorkflow>;
@@ -42,9 +43,13 @@ const ComponentFactory = (props) => {
 
   const handleUpdateChose = (e) => {
     if (e.detail.choseItem) {
-      setValidateItem(e.detail.choseItem);
+      setValidateList([...curValidateList.current, e.detail.choseItem]);
     }
   };
+
+  useEffect(() => {
+    curValidateList.current = validateList;
+  }, [validateList]);
 
   useEffect(() => {
     window.addEventListener("updateChoseNode", handleUpdateChose);

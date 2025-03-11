@@ -11,14 +11,14 @@ import { useTranslation } from 'react-i18next';
 const SkillList = (props) => {
   const { t } = useTranslation();
   const { skillList, deleteItem } = props;
-  const [showOperateIndex, setShowOperateIndex] = useState('');
+  const [showOperateIndex, setShowOperateIndex] = useState(-1);
   const { tenantId } = useParams();
   // hover显示操作按钮
   const handleHoverItem = (index, operate) => {
     if (operate === 'enter') {
       setShowOperateIndex(index);
     } else {
-      setShowOperateIndex('');
+      setShowOperateIndex(-1);
     }
   };
 
@@ -37,16 +37,21 @@ const SkillList = (props) => {
   const showOperate = (item) => {
     return (<span>
       <img src="./src/assets/images/eye_btn.svg" alt="" style={{ cursor: 'pointer' }} onClick={() => workflowDetail(item)} />
-      <img src="./src/assets/images/close_btn.svg" style={{ marginLeft: 16, cursor: 'pointer' }} alt="" onClick={() => deleteItem(item)} />
+      <img src="./src/assets/images/close_btn.svg" style={{ marginLeft: 16, cursor: 'pointer' }} alt="" onClick={() => handleDelete(item)} />
     </span>);
   };
 
+  const handleDelete = (item) => {
+    deleteItem(item);
+    setShowOperateIndex(-1);
+  };
+
   return <>
-    <div>
-      {
-        skillList.length ? skillList.map((item, index) => {
-          return (
-            <div className='item' key={index} onMouseEnter={() => handleHoverItem(index, 'enter')} onMouseLeave={() => handleHoverItem(index, 'leave')}>
+    {
+      skillList.length ? skillList.map((item, index) => {
+        return (
+          <div className='item-container' key={index}>
+            <div className='item' onMouseEnter={() => handleHoverItem(index, 'enter')} onMouseLeave={() => handleHoverItem(index, 'leave')}>
               <span className='item-left'>
                 {item.type === 'tool' ?
                   <img src='./src/assets/images/ai/tool.png' alt='' /> :
@@ -56,10 +61,13 @@ const SkillList = (props) => {
               </span>
               {index === showOperateIndex && showOperate(item)}
             </div>
-          )
-        }) : <div className='no-data'>{t('noData')}</div>
-      }
-    </div>
+            {
+              item.notExist && <div className='not-exist'>{`${t('tool')}${item.name}${t('selectedValueNotExist')}`}</div>
+            }
+          </div>
+        )
+      }) : <div className='no-data'>{t('noData')}</div>
+    }
   </>
 };
 

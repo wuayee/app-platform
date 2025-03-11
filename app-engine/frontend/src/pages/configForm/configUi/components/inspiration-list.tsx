@@ -9,14 +9,14 @@ import { Form } from 'antd';
 
 const InspirationList = (props) => {
   const { inspirationValues, clickInspiration, handleDeleteIns } = props;
-  const [showOperateIndex, setShowOperateIndex] = useState('');
+  const [showOperateIndex, setShowOperateIndex] = useState(-1);
   const [showInspControl, setShowInspControl] = useState(true);
   // hover显示操作按钮
   const handleHoverItem = (index, operate) => {
     if (operate === 'enter') {
       setShowOperateIndex(index);
     } else {
-      setShowOperateIndex('');
+      setShowOperateIndex(-1);
     }
   };
 
@@ -24,8 +24,13 @@ const InspirationList = (props) => {
   const showOperate = (item) => {
     return (<span className='right'>
       <img src="./src/assets/images/edit_btn.svg" alt="" onClick={() => clickInspiration(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
-      <img src="./src/assets/images/delete_btn.svg" alt="" onClick={() => handleDeleteIns(item.id)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
+      <img src="./src/assets/images/delete_btn.svg" alt="" onClick={() => handleDelete(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
     </span>);
+  };
+
+  const handleDelete = (item) => {
+    handleDeleteIns(item.id);
+    setShowOperateIndex(-1);
   };
   
   return <>

@@ -7,7 +7,7 @@
 import { get, post, del } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { PLUGIN_URL, AIPP_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+const { PLUGIN_URL, AIPP_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 // 获取插件工具列表，应用于流程编排页面
 export function getPluginTools(data: {
   pageNum: number;
@@ -50,6 +50,11 @@ export function getToolsList(params) {
 export function getPluginTool(tenantId, data: { pageNum: number; pageSize: number; }) {
   const url = `${AIPP_URL}/${tenantId}/store/plugins?excludeTags=APP&excludeTags=WATERFLOW`;
   return get(url, data);
+}
+// 根据uniqueName获取插件
+export function getPluginByUniqueName(queryString) {
+  const url = `${PLUGIN_URL}/store/plugins/tools?${queryString}`;
+  return get(url);
 }
 // 我的-工具流
 export function getPluginWaterFlow(

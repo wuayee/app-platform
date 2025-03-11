@@ -109,12 +109,10 @@ const LLM = (props) => {
   const handleUpdateModel = (value) => {
     if (appValidateInfo.length) {
       form.validateFields(['model']).then(() => {
-        updateData({ model: value, accessInfo: { serviceName: value } });
-        dispatch(setValidateInfo(appValidateInfo.filter(item => item.configCheckId !== validateItem.configCheckId)));
+        dispatch(setValidateInfo(appValidateInfo.filter(item => (item.configCheckId !== validateItem.configCheckId) && item.configName !== 'accessInfo')));
       })
-    } else {
-      updateData({ model: value, accessInfo: { serviceName: value } });
     }
+    updateData({ model: value, accessInfo: { serviceName: value } });
   };
 
   const openGeneratePrompt = (isFormDrawer = false) => {
@@ -140,7 +138,7 @@ const LLM = (props) => {
           <div style={{ display: showControl ? 'block' : 'none' }}>
             <div style={{ display: 'flex' }}>
               <Form.Item
-                style={{ flex: 1, marginRight: 10 }}
+                style={{ flex: 1, marginRight: 10, maxWidth: 200 }}
                 name='model'
                 label={t('LLM')}
                 rules={[{ required: true },

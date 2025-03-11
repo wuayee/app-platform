@@ -10,8 +10,8 @@ import ComponentFactory from './configUi/components/component-factory';
 import './index.scoped.scss';
 import './configUi/index.scoped.scss';
 import { setConfigData } from '@/store/appConfig/config';
+import { getConfigValue } from '@/shared/utils/common';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
-import { pick } from 'lodash';
 
 const ConfigForm = (props) => {
   const {
@@ -43,25 +43,10 @@ const ConfigForm = (props) => {
     },
   }
 
-  // 获取各个配置信息的值
-  const getConfigValue = (sourceData, target = {}) => {
-    if (!sourceData) return;
-    sourceData.forEach(item => {
-      target[item.name] = pick(item, ['dataType', 'defaultValue', 'id', 'name', 'nodeId', 'from']);
-      if (item.children) {
-        target = { ...target, ...getConfigValue(item.children, target) };
-      }
-    })
-    return target;
-  };
-
   useEffect(() => {
     if (!configData) return;
     const configStructure = configData;
     const appCategory = appInfo.appCategory;
-    if (appCategory === 'workflow') {
-      mashupClick();
-    }
     setConfigStructure(configStructure);
     setGetCategory(appCategory);
     const data = getConfigValue(configStructure);

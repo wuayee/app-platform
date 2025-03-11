@@ -167,14 +167,18 @@ const ToolDrawer = (props) => {
     const fitList: any = [];
     checkedList.current.forEach((item) => {
       if (item.tags.includes('WATERFLOW')) {
-        workFlowList.push(item);
+        workFlowList.push({ ...item, type: 'waterflow' });
       } else {
-        fitList.push(item);
+        fitList.push({ ...item, type: 'tool' });
       }
     });
     const workFlowId = workFlowList.map((item) => item.uniqueName);
     const fitId = fitList.map((item) => item.uniqueName);
-    confirmCallBack(workFlowId, fitId);
+    if (type === 'addSkill') {
+      confirmCallBack(workFlowList, fitList);
+    } else {
+      confirmCallBack(workFlowId, fitId);
+    }
   };
 
   // 设置默认选中
@@ -253,6 +257,7 @@ const ToolDrawer = (props) => {
   // 关闭弹窗
   const closeModal = () => {
     setShowModal(false);
+    searchName.current = '';
     setPluginCategory('mine');
     setSelectedSourceTab(minePluginCategories[0].key);
   };
@@ -334,6 +339,7 @@ const ToolDrawer = (props) => {
                             checkedList={checkedList}
                             modalType={modalType}
                             setShowModal={setShowModal}
+                            checkData={checkData}
                           />
                         </div>
                       );

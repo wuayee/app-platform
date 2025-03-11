@@ -10,7 +10,14 @@ import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
 import { LeftArrowIcon } from '@assets/icon';
 import { Message } from '@/shared/utils/message';
-import { isJsonString, updateChatId, isInputEmpty } from '@/shared/utils/common';
+import {
+  isJsonString,
+  updateChatId,
+  isInputEmpty,
+  enablePermission,
+  findConfigValue,
+  getConfiguration
+} from '@/shared/utils/common';
 import { isChatRunning } from '@/shared/utils/chat';
 import { initChat } from './common/config';
 import { AippContext } from '../aippIndex/context';
@@ -22,7 +29,7 @@ import {
   reportProcess,
   messageProcess,
   messageProcessNormal,
-  beforeSend,
+  sendProcess,
   deepClone
 } from './utils/chat-process';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
@@ -38,12 +45,9 @@ import {
 } from '@/store/chatStore/chatStore';
 import { storage } from '@/shared/storage';
 import { EventSourceParserStream } from '@/shared/eventsource-parser/stream';
-import { enablePermission } from '@/shared/utils/common';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { useTranslation } from 'react-i18next';
-import { findConfigValue } from '@/shared/utils/common';
-import { createGraphOperator } from '@fit-elsa/elsa-react';
-import { get, find, filter, pick, cloneDeep } from 'lodash';
+import { pick, cloneDeep } from 'lodash';
 import ChatMessage from './components/chat-message';
 import SendEditor from './components/send-editor/send-editor';
 import CheckGroup from './components/check-group';
@@ -91,6 +95,7 @@ const ChatPreview = (props) => {
   const [chatFileList, setChatFileList] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewProps, setPreviewProps] = useState({ pictureList: [], curPicturePath: '' });
+  const [configAppInfo, setConfigAppInfo] = useState({});
   const location = useLocation();
   let editorRef = useRef<any>(null);
   let runningInstanceId = useRef<any>('');
@@ -104,6 +109,7 @@ const ChatPreview = (props) => {
   let chatRender = useRef<any>(null);
   const listRef = useRef<any>([]);
   const inspirationRef = useRef<any>(null);
+  const isAutoSend = useRef<boolean>(false);
   const detailPage = location.pathname.indexOf('app-detail') !== -1;
   const storageId = detailPage ? appId : aippId;
   const chatStatus = ['ARCHIVED', 'ERROR', 'TERMINATED'];
@@ -210,8 +216,8 @@ const ChatPreview = (props) => {
     }
   }, [showMulti]);
   // 发送消息
-  const onSend = async (value, type = undefined) => {
-    if (!await checkMutipleInput() || !validateSend() || !checkFileSuccess()) {
+  const onSend = (value) => {
+    if (!checkMutipleInput() || !validateSend() || !checkFileSuccess()) {
       return;
     }
     if (isChatRunning()) {
@@ -219,11 +225,31 @@ const ChatPreview = (props) => {
       return
     }
     // 文件列表不从参数传过来是因为灵感大全发送消息也需要判断文件
-    const sentItem = beforeSend(chatRunning, value, chatFileList);
+    const sentItem = sendProcess(chatRunning, value, chatFileList);
     if (sentItem) {
       let arr = [...chatList, sentItem];
       listRef.current = arr;
       sendMessageRequest(value, chatFileList);
+    }
+  };
+
+  // 更新上传文件
+  const handleUpdateFileList = (fileList, isAuto) => {
+    setChatFileList(fileList);
+    isAutoSend.current = isAuto;
+    if (isAutoSend.current) {
+      if (fileList.find(item => item.uploadStatus === 'failed')) {
+        Message({ type: 'warning', content: t('uploadFailedTip') });
+      } else if (fileList.every(item => item.uploadStatus === 'success')) {
+        // 发送消息
+        const sentItem = sendProcess(chatRunning, '', fileList);
+        if (sentItem) {
+          let arr = [...chatList, sentItem];
+          listRef.current = arr;
+          sendMessageRequest('', fileList, true);
+        }
+        editorRef.current?.clearFileList();
+      }
     }
   };
 
@@ -295,8 +321,8 @@ const ChatPreview = (props) => {
   };
 
   // 校验多输入是否必填
-  const checkMutipleInput = async () => {
-    const configurationList = getConfiguration();
+  const checkMutipleInput = () => {
+    const configurationList = getConfiguration(configAppInfo);
     const requiredList = [];
     configurationList.forEach(item => {
       if (item.isRequired && item.type !== 'Boolean' && isInputEmpty(userContext?.[item.name])) {
@@ -330,7 +356,7 @@ const ChatPreview = (props) => {
     if (type === 'clar') {
       response = await saveContent(tenantId, instanceId, params, isDebug);
     } else {
-      response = await sseChat(tenantId, params, isDebug);
+      response = await sseChat(tenantId, params, isDebug, isAutoSend.current);
     }
     if (response.status !== 200) {
       chatRender.current && onStop(response.msg || response.suppressed || t('conversationFailed'));
@@ -653,27 +679,23 @@ const ChatPreview = (props) => {
     inspirationRef.current.initInspiration();
   }
 
-  // 获取对话多输入配置
-  const getConfiguration = () => {
-    let result = []
-    if (appInfo?.flowGraph?.appearance) {
-      const graphOperator = createGraphOperator(JSON.stringify(appInfo.flowGraph.appearance));
-      const list = graphOperator.getStartNodeInputParams() || [];
-      if (list?.length > 1) {
-        Message({ type: 'error', content: t('startingNodeTip') });
-      } else if (list?.length === 1) {
-        result = filter(get(find(list[0], ['name', 'input']), 'value', []), (input) => input.name !== 'Question' && input.isVisible) || [];
-      }
-    }
-    return result;
-  };
-
   const handlePreview = (e) => {
     if (e.detail) {
       setPreviewProps(e.detail);
       setPreviewVisible(true);
     }
   };
+
+  useEffect(() => {
+    setConfigAppInfo(atAppInfo || appInfo || {});
+  }, [atAppInfo, appInfo]);
+
+  useEffect(() => {
+    if (!chatRunning) {
+      setChatFileList([]);
+      isAutoSend.current = false;
+    }
+  }, [chatRunning]);
 
   return (
     <div
@@ -718,7 +740,7 @@ const ChatPreview = (props) => {
               setListCurrentList={setListCurrentList}
               checkMutipleInput={checkMutipleInput}
               updateUserContext={(val) => setUserContext(val)}
-              setChatFileList={setChatFileList}
+              setChatFileList={handleUpdateFileList}
               checkFileSuccess={checkFileSuccess}
             />
             {previewVisible && <PreviewPicture {...previewProps} closePreview={() => setPreviewVisible(false)} />}
