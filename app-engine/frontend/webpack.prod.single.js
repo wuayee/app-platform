@@ -26,6 +26,7 @@ module.exports = merge(baseConfig, {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.PACKAGE_MODE': JSON.stringify('spa'),
+      APP_BUILDER: isDev ? '' : JSON.stringify('/appbuilder'),
     }),
   ],
   optimization: {
