@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+ */
+
+package modelengine.jade.app.engine.eval.dto;
+
+import lombok.Data;
+import modelengine.jade.app.engine.eval.controller.EvalDataController;
+import modelengine.fitframework.annotation.Property;
+
+import java.util.List;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+/**
+ * 表示评估数据集创建传输对象。
+ *
+ * @author 易文渊
+ * @see EvalDataController#createEvalData。
+ * @since 2024-07-19
+ */
+@Data
+public class EvalDataCreateDto {
+    @Property(description = "数据集编号", required = true, defaultValue = "1")
+    @NotNull(message = "The dataset id cannot be null.")
+    @Positive(message = "The dataset id is invalid.")
+    private Long datasetId;
+
+    @Property(description = "评估内容列表", required = true)
+    @NotEmpty(message = "The contents cannot be empty.")
+    private List<String> contents;
+}
