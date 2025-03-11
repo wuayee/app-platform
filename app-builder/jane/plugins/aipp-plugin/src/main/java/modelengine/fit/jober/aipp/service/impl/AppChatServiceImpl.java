@@ -108,7 +108,7 @@ public class AppChatServiceImpl implements AppChatService {
         if (isInvalidQuestion(app.getType(), body)) {
             throw new AippParamException(INPUT_PARAM_IS_INVALID, AippConst.BS_AIPP_QUESTION_KEY);
         }
-        Map<String, Object> businessData = this.convertContextToBusinessData(body);
+        Map<String, Object> businessData = this.convertContextToBusinessData(body, isDebug);
         // 这里几行代码的顺序不可以调整，必须先把对话的appId查询出来，再去创建chatId
         String chatAppId = this.getAppId(body);
         boolean hasAtOtherApp = this.hasAtOtherApp(body);
@@ -244,12 +244,13 @@ public class AppChatServiceImpl implements AppChatService {
         }
     }
 
-    private Map<String, Object> convertContextToBusinessData(CreateAppChatRequest body) {
+    private Map<String, Object> convertContextToBusinessData(CreateAppChatRequest body, boolean isDebug) {
         Map<String, Object> businessData = new HashMap<>();
         if (body.getContext().getUseMemory() != null) {
             businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, body.getContext().getUseMemory());
         }
         businessData.put("dimension", body.getContext().getDimension());
+        businessData.put("isDebug", isDebug);
         return businessData;
     }
 

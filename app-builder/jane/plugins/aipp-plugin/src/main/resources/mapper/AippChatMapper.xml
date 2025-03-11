@@ -10,6 +10,11 @@
         <result column="update_at" property="updateTime"/>
     </resultMap>
 
+    <resultMap id="logMap" type="modelengine.fit.jober.aipp.po.MsgInfoPO">
+        <result column="instance_id" property="instanceId"/>
+        <result column="log_data" property="logData"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         chat_id, app_id, app_version, name, attributes, create_at, create_by, update_at, update_by, status
     </sql>
@@ -78,6 +83,9 @@
         <if test="chatId!=null">
             and chat_id = #{chatId}
         </if>
+        <if test="createBy != null">
+            and create_by = #{createBy}
+        </if>
         and status != 1
         and attributes ->> 'state' = #{requestParam.appState}
     </select>
@@ -130,13 +138,14 @@
         offset 1 limit #{limit}
     </select>
 
-    <select id="selectMsgByInstance" resultType="string">
-        select log_data
+    <select id="selectMsgByInstanceIds" resultMap="logMap" resultType="modelengine.fit.jober.aipp.po.MsgInfoPO">
+        select distinct on (instance_id) instance_id, log_data
         from aipp_instance_log
-        where instance_id = #{instanceId}
-          and log_type = 'MSG' and is_deleted = 0
-        order by create_at desc
-        limit 1
+        where instance_id in
+        <foreach collection="instanceIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and log_type = 'MSG' and is_deleted = 0
     </select>
 
     <select id="countChat" resultType="int">
