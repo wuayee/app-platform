@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack serve --progress --profile --mode development --host localhost --port 3310 --config webpack.dev.js",
     "start:single": "webpack serve --config webpack.dev.single.js",
-    "build:prod": "webpack --mode production   --config webpack.prod.js",
+    "build:prod": "webpack --mode production --config webpack.prod.js",
     "build:single": "webpack --mode production  --config webpack.prod.single.js"
   },
   "license": "ISC",
