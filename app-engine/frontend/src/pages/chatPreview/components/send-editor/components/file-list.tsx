@@ -67,10 +67,6 @@ const FileList = (props) => {
         return htmlIcon;
       case FileType.MD:
         return markdownIcon;
-      case FileType.MP3:
-        return mp3Icon;
-      case FileType.MP4:
-        return mp4Icon;
       case FileType.PDF:
         return pdfIcon;
       case FileType.TXT:

@@ -27,8 +27,7 @@ export enum FileType {
   PNG = 'png',
   JPG = 'jpg',
   JPEG = 'jpeg',
-  MP3 = 'mp3',
-  MP4 = 'mp4'
+  WAV = 'wav'
 };
 
 export enum PictureFileType {
