@@ -324,7 +324,11 @@ public class AppBuilderAppServiceImpl
         appBuilderApp.setVersion(appDto.getVersion());
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
         aippDto.setId(aippCreateDto.getAippId());
-        this.updateFlowGraph(id, appDto.getFlowGraph(), contextOf);
+        AppBuilderSaveConfigDto saveConfigDto = AppBuilderSaveConfigDto.builder()
+                .graph(JsonUtils.toJsonString(appDto.getFlowGraph().getAppearance()))
+                .input(appDto.getConfigFormProperties())
+                .build();
+        this.saveConfig(id, saveConfigDto, contextOf);
         Map<String, Object> appBuilderAppAttr = appBuilderApp.getAttributes();
         appBuilderAppAttr.put(PUBLISH_UPDATE_DESCRIPTION_KEY, aippDto.getPublishedDescription());
         appBuilderAppAttr.put(PUBLISH_UPDATE_LOG_KEY, aippDto.getPublishedUpdateLog());
