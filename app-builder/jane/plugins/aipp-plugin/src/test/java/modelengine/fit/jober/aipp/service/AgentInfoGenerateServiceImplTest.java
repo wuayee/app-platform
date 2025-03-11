@@ -10,31 +10,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
+import modelengine.fit.jade.aipp.model.dto.ModelListDto;
+import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
+import modelengine.fit.jober.aipp.service.impl.AgentInfoGenerateServiceImpl;
 import modelengine.jade.carver.ListResult;
 import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.store.entity.query.PluginToolQuery;
 import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.PluginToolService;
 
-import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
-import modelengine.fit.jade.aipp.model.dto.ModelListDto;
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
-import modelengine.fit.jober.aipp.service.impl.AgentInfoGenerateServiceImpl;
-import modelengine.fitframework.annotation.Fit;
-import modelengine.fitframework.test.annotation.FitTestWithJunit;
-import modelengine.fitframework.test.annotation.Mock;
-
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,9 +43,8 @@ import java.util.List;
  * @author 兰宇晨。
  * @since 2024-12-09。
  */
-@FitTestWithJunit(includeClasses = AgentInfoGenerateServiceImpl.class)
+@ExtendWith(MockitoExtension.class)
 public class AgentInfoGenerateServiceImplTest {
-    @Fit
     private AgentInfoGenerateService agentInfoGenerateService;
 
     @Mock
@@ -66,20 +62,32 @@ public class AgentInfoGenerateServiceImplTest {
     @Mock
     private AppBuilderAppRepository appRepository;
 
+    @BeforeEach
+    void beforeAll() {
+        this.agentInfoGenerateService = new AgentInfoGenerateServiceImpl(this.aippModelService,
+                this.aippModelCenter,
+                this.toolService,
+                this.localeService,
+                this.appRepository);
+    }
+
     @Test
     @DisplayName("测试自动生成智能体名称")
-    @Disabled
     void shouldOkWhenGenerateName() {
+        ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
+        when(model.getServiceName()).thenReturn("llm_model");
+        when(model.getTag()).thenReturn("llm_tag");
+        when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("NAME");
         assertThat(this.agentInfoGenerateService.generateName("DESC", new OperationContext())).isEqualTo("NAME");
     }
 
     @Test
     @DisplayName("测试自动生成智能体开场白")
-    @Disabled
     void shouldOkWhenGenerateGreeting() {
         ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
         when(model.getServiceName()).thenReturn("llm_model");
+        when(model.getTag()).thenReturn("llm_tag");
         when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("GREETING");
         assertThat(this.agentInfoGenerateService.generateGreeting("DESC")).isEqualTo("GREETING");
@@ -87,10 +95,10 @@ public class AgentInfoGenerateServiceImplTest {
 
     @Test
     @DisplayName("测试自动生成智能体提示词")
-    @Disabled
     void shouldOkWhenGeneratePrompt() {
         ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
         when(model.getServiceName()).thenReturn("llm_model");
+        when(model.getTag()).thenReturn("llm_tag");
         when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("PROMPT");
         assertThat(this.agentInfoGenerateService.generatePrompt("DESC")).isEqualTo("PROMPT");
@@ -98,7 +106,6 @@ public class AgentInfoGenerateServiceImplTest {
 
     @Test
     @DisplayName("测试自动选择工具")
-    @Disabled
     void shouldOkWhenSelectTools() {
         ModelListDto dto = this.getModelListDto();
 
@@ -117,8 +124,11 @@ public class AgentInfoGenerateServiceImplTest {
         }}));
         ListResult<PluginToolData> pluginToolDataListResult = ListResult.create(pluginToolDataList, 3);
 
-        when(this.aippModelCenter.fetchModelList(any())).thenReturn(dto);
-        when(this.aippModelService.chat(eq("MODEL"), eq("TAG"), anyDouble(), anyString())).thenReturn("[1,2]");
+        ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
+        when(model.getServiceName()).thenReturn("llm_model");
+        when(model.getTag()).thenReturn("llm_tag");
+        when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
+        when(this.aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("[1,2]");
         when(this.toolService.getPluginTools(any(PluginToolQuery.class))).thenReturn(pluginToolDataListResult);
 
         assertThat(this.agentInfoGenerateService.selectTools("DESC", "CREATOR")).containsExactly("UNIQUENAME2",
