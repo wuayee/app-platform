@@ -10,7 +10,7 @@ import { uploadMultipleFile } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
 import uploadImg from '@/assets/images/upload_icon.svg';
-const supportFileTypes = ['pdf', 'txt', 'docx', 'md', 'markdown', 'html', 'png', 'jpg', 'jpeg', 'mp3', 'mp4'];
+const supportFileTypes = ['pdf', 'txt', 'docx', 'md', 'markdown', 'html', 'png', 'jpg', 'jpeg', 'wav'];
 const pictureTypes = ['png', 'jpg', 'jpeg'];
 
 const { Dragger } = Upload;
