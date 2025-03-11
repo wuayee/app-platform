@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState } from 'react';
-import { ClearFileIcon } from '@assets/icon';
+import { ClearFileIcon } from '@/assets/icon';
 import UploadFile from './upload-file';
 import { useTranslation } from 'react-i18next';
 import '../styles/file-preview.scss';

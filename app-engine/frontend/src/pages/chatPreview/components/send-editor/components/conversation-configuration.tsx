@@ -10,6 +10,7 @@ import { Form, InputNumber, Input, Switch, Popover, Empty } from 'antd';
 import { isInputEmpty, getConfiguration } from '@/shared/utils/common';
 import { AippContext } from '@/pages/aippIndex/context';
 import { useAppSelector } from '@/store/hook';
+import { setSpaClassName } from '@/shared/utils/common';
 import CloseImg from '@/assets/images/close_btn.svg';
 import '../styles/configuration.scss';
 
@@ -205,9 +206,9 @@ const ConversationConfiguration = ({ appInfo, updateUserContext, chatRunning, is
         trigger={'click'}
         content={content}
         color='#fff'
-        overlayClassName='configuration-tooltip'
+        overlayClassName={setSpaClassName('configuration-tooltip')}
       >
-        <div className='configuration-icon' onClick={() => setOpen(!open)}></div>
+        <div className={setSpaClassName('configuration-icon')} onClick={() => setOpen(!open)}></div>
       </Popover>
     }
   </>

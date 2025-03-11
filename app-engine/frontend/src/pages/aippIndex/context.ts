@@ -23,8 +23,10 @@ export const ChatContext = createContext({
   addInspirationCb: () => {},
   tenantId: '',
   showCheck: false,
+  chatStreaming: {},
   handleRejectClar: (params:any) => {},
   conditionConfirm: (params:any, logId?: string) => {},
+  questionClarConfirm: (params:any, logId?: string) => {},
   useMemory: true
 });
 

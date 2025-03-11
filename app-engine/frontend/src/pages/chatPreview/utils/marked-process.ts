@@ -10,7 +10,8 @@ export const markedProcess = (content) => {
       div: ['class'],
       span: ['class', 'data-reference'],
       br:['class'],
-      font: ['color', 'id']
+      font: ['color', 'id'],
+      think: []
     },
   };
   const clean = xss(content, config);

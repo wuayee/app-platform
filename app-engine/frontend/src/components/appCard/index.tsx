@@ -6,12 +6,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { Dropdown, Tooltip, Button } from 'antd';
-import { Icons } from '../icons';
 import { useTranslation } from 'react-i18next';
 import { STATE_MAP } from './common';
+import { Icons } from '../icons';
+import { convertImgPath } from '@/common/util';
+import { setSpaClassName } from '@/shared/utils/common';
 import chatbotImg from '@/assets/images/ai/app_chatbot.svg';
 import workflowImg from '@/assets/images/ai/app_workflow.svg';
 import agentImg from '@/assets/images/ai/app_agent.svg';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
+import user from '@/assets/images/ai/user.jpg';
 import './style.scoped.scss';
 
 /**
@@ -30,11 +34,16 @@ import './style.scoped.scss';
 
 const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, isCurrentHover = false, openTemplateModal, readOnly }: any) => {
   const { t } = useTranslation();
-  const [count, setCount] = useState(0);
+  const [imgPath, setImgPath] = useState('');
   const [menu, setMenu] = useState<any>([]);
   const clickItem = (info: any) => {
     clickMore(info.key, cardInfo);
   };
+  // 获取图片
+  const getImgPath = async (cardInfo) => {
+    const res:any = await convertImgPath(cardInfo.icon);
+    setImgPath(res);
+  }
   const getAppIcon = (category) => {
     switch (category) {
       case 'chatbot':
@@ -64,8 +73,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, 
   };
 
   useEffect(() => {
-    let { likeCount } = cardInfo;
-    setCount(likeCount || 0);
+    cardInfo.icon && getImgPath(cardInfo);
   }, [cardInfo]);
 
   // 基于用户角色动态设置操作按钮
@@ -91,14 +99,11 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, 
     }
   }, [readOnly]);
   return (
-    <div className='app_card_root'>
+    <div className={setSpaClassName('app_card_root')}>
       {/* 头部区域 */}
       <div className='app_card_header'>
         <div className='img_box'>
-          {cardInfo.icon && <img width={'100%'} src={cardInfo.icon} alt='' />}
-          {!cardInfo.icon && (
-            <img width={'100%'} src='./src/assets/images/knowledge/knowledge-base.png' alt='' />
-          )}
+          {imgPath ? <img width={'100%'} src={imgPath} alt='' /> : <img width={'100%'} src={knowledgeBase} alt='' />}
         </div>
         <div className='infoArea'>
           <Tooltip title={cardInfo?.name}>
@@ -112,7 +117,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true, isTemplate = false, 
             </div>
           </Tooltip>
           <div className='title_info'>
-            <img width={16} height={16} src='./src/assets/images/ai/people.png' alt='' />
+            <img width={16} height={16} src={user} alt='' />
             <div className='createBy'>{cardInfo.createBy || cardInfo.creator}</div>
           </div>
         </div>

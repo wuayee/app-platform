@@ -20,9 +20,11 @@ const ChatMessage = (props) => {
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const dataDimension = useAppSelector((state) => state.commonStore.dimension.name);
+  const loginStatus = useAppSelector((state) => state.chatCommonStore.loginStatus);
   const [list, setList] = useState([]);
   const LIST_ITEM_SIZE = -10;
   const [listIndex, setListIndex] = useState(LIST_ITEM_SIZE);
+  const [showMask, setShowMask] = useState(false);
   const chatContainer = useRef<any>();
   const chatContainerLastScrollHeight = useRef<any>();
   const chatBoxRef = useRef<any>(null);
@@ -94,12 +96,35 @@ const ChatMessage = (props) => {
     if (chatContainerLastScrollHeight.current) {
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight - chatContainerLastScrollHeight.current;
     }
-  }, [listIndex])
+  }, [listIndex]);
 
+  // 回答消息自动滚动底部
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        if (entry.target === chatBoxRef.current) {
+          scrollBottom();
+        }
+      }
+    });
+    if (chatBoxRef.current) {
+      resizeObserver.observe(chatBoxRef.current);
+    }
+    return () => {
+      if (chatBoxRef.current) {
+        resizeObserver.unobserve(chatBoxRef.current);
+      }
+    }
+  }, []);
+  useEffect(() => {
+    if (!loginStatus) {
+      setShowMask(true);
+    }
+  }, [loginStatus]);
 
   return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id='chat-list-dom'>
-      { !list?.length && <ChatDetail />}
+      { !list?.length && <ChatDetail showMask={showMask} />}
       <ChatContext.Provider
         value={{
           checkCallBack,
@@ -114,7 +139,6 @@ const ChatMessage = (props) => {
           tenantId
         }}>
         <div ref={chatBoxRef} className='message-box'>
-        {(list.length > -listIndex) && <div className='load-more-btn' onClick={loadMoreChat}>展示更多</div>}
           {
             list?.map((item, index) => {
               return (

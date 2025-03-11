@@ -8,7 +8,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
-import { LeftArrowIcon } from '@assets/icon';
+import { LeftArrowIcon } from '@/assets/icon';
 import { Message } from '@/shared/utils/message';
 import {
   isJsonString,
@@ -16,7 +16,8 @@ import {
   isInputEmpty,
   enablePermission,
   findConfigValue,
-  getConfiguration
+  getConfiguration,
+  setSpaClassName
 } from '@/shared/utils/common';
 import { isChatRunning } from '@/shared/utils/chat';
 import { initChat } from './common/config';
@@ -43,6 +44,7 @@ import {
   setReference,
   setReferenceList,
 } from '@/store/chatStore/chatStore';
+import { v4 as uuidv4 } from 'uuid';
 import { storage } from '@/shared/storage';
 import { EventSourceParserStream } from '@/shared/eventsource-parser/stream';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
@@ -111,7 +113,7 @@ const ChatPreview = (props) => {
   const inspirationRef = useRef<any>(null);
   const isAutoSend = useRef<boolean>(false);
   const detailPage = location.pathname.indexOf('app-detail') !== -1;
-  const storageId = detailPage ? appId : aippId;
+  const storageId = aippId ? aippId : appId;
   const chatStatus = ['ARCHIVED', 'ERROR', 'TERMINATED'];
   const messageType = ['MSG', 'ERROR', 'META_MSG'];
 
@@ -359,6 +361,8 @@ const ChatPreview = (props) => {
       response = await sseChat(tenantId, params, isDebug, isAutoSend.current);
     }
     if (response.status !== 200) {
+      listRef.current[listRef.current.length - 2].logId = `${uuidv4()}-empty`;
+      listRef.current[listRef.current.length - 1].logId = `${uuidv4()}-empty`;
       chatRender.current && onStop(response.msg || response.suppressed || t('conversationFailed'));
       return;
     };
@@ -439,7 +443,7 @@ const ChatPreview = (props) => {
           chatForm(obj);
           saveLocalChatId(messageData);
         }
-        if (log.type === 'QUESTION') {
+        if (log.type === 'QUESTION' || log.type === 'QUESTION_WITH_FILE' || log.type === 'FILE') {
           listRef.current[listRef.current.length - 2]['logId'] = Number(messageData.log_id);
           dispatch(setChatList(deepClone(listRef.current)));
         }
@@ -529,6 +533,9 @@ const ChatPreview = (props) => {
         initObj.chartConfig = msgObj;
       }
     }
+    if (msg === '<think>') {
+      initObj.thinkStartTime = Date.now();
+    }
     initObj.loading = false;
     if (status === 'ARCHIVED') {
       initObj.finished = true;
@@ -539,6 +546,10 @@ const ChatPreview = (props) => {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
+      const { thinkTime } = listRef.current[idx];
+      if (thinkTime) {
+        initObj.thinkTime = thinkTime;
+      }
       const receiveItem = multiModelProcess(initObj);
       listRef.current.splice(idx, 1, deepClone(receiveItem));
     }
@@ -558,6 +569,9 @@ const ChatPreview = (props) => {
       item.content = str;
       if (status === 'ARCHIVED') {
         item.finished = true;
+      }
+      if (msg === '</think>' && item.thinkStartTime) {
+        item.thinkTime = Date.now() - item.thinkStartTime;
       }
       dispatch(setChatList(deepClone(listRef.current)));
     } else {
@@ -709,7 +723,7 @@ const ChatPreview = (props) => {
         <span className='icon-back' onClick={previewBack}>
           {showElsa && <LeftArrowIcon />}
         </span>
-        <div className={`chat-inner ${!detailPage ? 'chat-page-inner' : ''}`}>
+        <div className={`${setSpaClassName('chat-inner')} ${!detailPage ? 'chat-page-inner' : ''}`}>
           <div className={`chat-inner-left ${inspirationOpen && showInspiration ? 'chat-left-close' : 'no-border'}`}>
             <ChatMessage
               feedRef={feedRef}

@@ -188,7 +188,7 @@ const Render = (props: {
             className='appengine-remote-frame'
             sandbox='allow-scripts'
             style={{ width: `100%`, height: `${iframeHeight + 60}px`, border: "none" }}
-            src={`${origin}/${formEnv() ? 'appengine' : 'api/jober'}/static/${path}?uniqueId=${props.uniqueId}`}>
+            src={`${origin}/${formEnv() ? 'appbuilder' : 'api/jober'}/static/${path}?uniqueId=${props.uniqueId}`}>
           </iframe>
         </Spin>
       </div>

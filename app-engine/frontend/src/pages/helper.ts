@@ -4,16 +4,29 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { getCurUser } from '../shared/http/aipp';
+import { getCurUser, getOmsCurUser, getUserRole } from '../shared/http/aipp';
 import { v4 as uuidv4 } from 'uuid';
 import { setUserRole, setReadOnly } from '@/store/chatStore/chatStore';
 import store from '@/store/store';
 
 export const getUser = async () => {
-  const res = await getCurUser();
-  localStorage.setItem('currentUserId', res.data.account?.substr(1));
-  localStorage.setItem('currentUserIdComplete', res.data.account);
-  localStorage.setItem('currentUser', res.data.chineseName);
+  let userName = localStorage.getItem('__account_name__');
+  if (!userName) {
+    const res = await getCurUser();
+    localStorage.setItem('currentUserId', res.data.account);
+    localStorage.setItem('currentUserIdComplete', res.data.account);
+    localStorage.setItem('currentUser', res.data.chineseName);
+  }
+};
+
+export const getOmsUser = async () => {
+  let userName = localStorage.getItem('__account_name__');
+  if (!userName) {
+    const res = await getOmsCurUser();
+    localStorage.setItem('currentUserId', res.data.account);
+    localStorage.setItem('currentUserIdComplete', res.data.userId);
+    localStorage.setItem('currentUser', res.data.chineseName);
+  }
 };
 
 /**
@@ -21,7 +34,15 @@ export const getUser = async () => {
  *
  * @return {Promise<void>} 无返回值
  */
-export const getRole = async () => {};
+export const getRole = async () => {
+  const res:any = await getUserRole();
+  if (res.code == 0 &&  res.data.roleName) {
+    let userRole = res.data.roleName[0] || 'READ_ONLY';
+    localStorage.setItem('__currentRole__', userRole);
+    store.dispatch(setUserRole(userRole));
+    store.dispatch(setReadOnly(userRole === 'READ_ONLY'));
+  }
+};
 
 // 超过一千，转为K
 export const FormatQaNumber = (val) => {

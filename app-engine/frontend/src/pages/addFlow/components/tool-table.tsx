@@ -6,12 +6,14 @@
 
 import React, { useState } from 'react';
 import { Collapse, Button, Divider, Tag } from 'antd';
-import { Icons } from '@/components/icons';
 import { getPluginDetail, getChatbotPluginDetail } from '@/shared/http/plugin';
 import { useTranslation } from 'react-i18next';
 import { validate } from '../utils';
 import { deepClone } from '../../chatPreview/utils/chat-process';
 import { ToolType } from './model';
+import knowledgeImg from '@/assets/images/knowledge/plugin.png';
+import userImg from '@/assets/images/ai/user.jpg';
+import aiImg from '@/assets/images/ai/2.png';
 import '../styles/tool-table.scss';
 
 /**
@@ -85,9 +87,9 @@ const ToolTable = (props: any) => {
         <div className='tool-table-header'>
           <div className='tags-icon'>
             {item?.tags?.includes('HUGGINGFACE') ? (
-              <img src={`./src/assets/images/ai/${2}.png`} />
+              <img src={aiImg} />
             ) : (
-              <img src='./src/assets/images/knowledge/knowledge-base.png' />
+              <img src={knowledgeImg} />
             )}
           </div>
           <div className='tool-table-content'>
@@ -115,7 +117,7 @@ const ToolTable = (props: any) => {
                 )}
               </div>
               <div className='user'>
-                <Icons.user />
+                <img width="18" height="18" src={userImg} alt="" />
                 <span className='user-creator'>{item.creator}</span>
               </div>
               <div className='user-description'>

@@ -222,7 +222,6 @@ const AddIns = (props) => {
     <Drawer
       title={type !== 'edit' ? t('createInspiration') : t('editInspiration')}
       open={showModal}
-      forceRender
       maskClosable={false}
       onClose={handleModalCancel}
       footer={[

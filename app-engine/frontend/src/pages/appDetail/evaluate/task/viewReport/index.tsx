@@ -7,12 +7,12 @@
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Descriptions } from 'antd';
 import { getEvaluateReport, getEvaluateTaskResult } from '@/shared/http/appEvaluate';
-import { useHistory } from 'react-router-dom';
 import DescriptionTable from './descriptionTable';
 import OverviewCharts from './overviewCharts';
 import EvaluateCharts from './evaluateCharts';
 import OverviewResult from './overviewResult';
 import { useTranslation } from 'react-i18next';
+import LeftArrowImg from '@/assets/images/ai/left-arrow.png';
 import './index.scss';
 
 const viewReport = () => {
@@ -83,7 +83,7 @@ const viewReport = () => {
         </Breadcrumb>
       </div>
       <div className='view-report-flex-box mb-8'>
-        <img src='./src/assets/images/ai/left-arrow.png' onClick={previousClick} className='w-16' />
+        <img src={LeftArrowImg} onClick={previousClick} className='w-16' />
         <div>{t('viewReport')}</div>
       </div>
       <div className='view-report-flex'>

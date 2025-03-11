@@ -74,7 +74,7 @@ const StarApps = ({ handleAt }) => {
 
   // 获取当前登录用户名
   const getLocalUser = () => {
-    return localStorage.getItem('currentUserIdComplete') ?? '';
+    return localStorage.getItem('currentUserId') ?? '';
   }
 
   // 数据转换

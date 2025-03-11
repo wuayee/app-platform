@@ -12,15 +12,15 @@ import { messagePaste } from './utils';
 import { deepClone } from '../../utils/chat-process';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setUseMemory } from '@/store/common/common';
+import { setSpaClassName } from '@/shared/utils/common';
 import { isChatRunning } from '@/shared/utils/chat';
-import { uploadChatFile, voiceToText } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
 import { cloneDeep } from 'lodash';
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
 import EditorSelect from './components/editor-selet';
 import FileList from './components/file-list';
-import '@/shared/utils/rendos';
+import stopImg from '@/assets/images/ai/stop.png';
 import '../../styles/send-editor.scss';
 
 /**
@@ -89,12 +89,9 @@ const SendEditor = (props) => {
   const promptMapRef = useRef<any>([]);
   const recommondRef = useRef<any>(null);
   const recording = useRef(false);
-  const audioBtnRef = useRef<any>(null);
   const audioDomRef = useRef<any>(null);
   const isAlreadySent = useRef<any>(false);
   const isAutoSend = useRef<any>(false);
-  const appId = useAppSelector((state) => state.appStore.appId);
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const recommondListRef = useRef<any>([]);
   // 编辑器change事件
   function messageChange() {
@@ -221,67 +218,7 @@ const SendEditor = (props) => {
       clearFileList,
     };
   });
-  // 语音实时转文字
-  let recorderHome: any = null;
-  let intervalData: any = null;
-  // 点击语音按钮
-  const onRecord = async () => {
-    if (isChatRunning()) { return; }
-    if (!recording.current) {
-      (window as any).HZRecorder.get((rec) => {
-        recorderHome = rec;
-        recorderHome.start();
-        recording.current = true;
-        audioBtnRef.current.setActive(true);
-        intervalData = setInterval(() => {
-          uploadFile();
-        }, 5000);
-      });
-    } else {
-      recording.current = false
-      recorderHome.stop();
-      audioBtnRef.current.setActive(false);
-      clearInterval(intervalData);
-      uploadFile();
-    }
-  }
-  async function uploadFile() {
-    let newBlob = recorderHome?.getBlob();
-    if (!newBlob) {
-      recording.current = false;
-      recorderHome.stop();
-      audioBtnRef.current.setActive(false);
-      clearInterval(intervalData);
-      return
-    }
-    const fileOfBlob = new File([newBlob], new Date().getTime() + '.wav', {
-      type: 'audio/wav',
-    })
-    const formData = new FormData();
-    formData.append('file', fileOfBlob);
-    let headers = {
-      'attachment-filename': encodeURI(fileOfBlob.name || ''),
-    };
-    if (fileOfBlob.size) {
-      const result: any = await uploadChatFile(tenantId, appId, formData, headers);
-      if (result.data) {
-        let res: any = await voiceToText(tenantId, `${result.data.file_path}`, fileOfBlob.name);
-        if (res.data && res.data.trim().length) {
-          const editorDom = document.getElementById('ctrl-promet');
-          const textNode = document.createTextNode(res.data.trim());
-          editorDom.appendChild(textNode);
-          setTextLenth(editorDom.innerText.length);
-          setShowClear(true);
-        }
-      }
-    }
-  }
 
-  function handleEditorClick(e) {
-    if (!audioDomRef.current?.contains(e.target)) {
-      recording.current
-    }
-  }
   useEffect(() => {
     if (showMulti) {
       dispatch(setUseMemory(true));
@@ -331,14 +268,6 @@ const SendEditor = (props) => {
     let url = `${window.location.origin}/SSOSvr/login`;
     window.open(url)
   }
-  useEffect(() => {
-    return () => {
-      recording.current = false;
-      recorderHome?.stop();
-      audioBtnRef.current?.setActive(false);
-      intervalData && clearInterval(intervalData);
-    }
-  }, []);
 
   useEffect(() => {
     if (!isAlreadySent.current) {
@@ -346,7 +275,7 @@ const SendEditor = (props) => {
     }
   }, [fileList]);
   return <>{(
-    <div className='send-editor-container' style={{ display: display ? 'block' : 'none' }} onClick={handleEditorClick}>
+    <div className={setSpaClassName('send-editor-container')} style={{display: display ? 'block' : 'none'}}>
       {
         showMask && <div className='send-editor-mask'>
           <div className='mask-inner'>
@@ -357,7 +286,7 @@ const SendEditor = (props) => {
       {(chatRunning && showStop) &&
         <div className='editor-stop' onClick={onStop}>
           <Spin spinning={stopLoading} size='small'>
-            <img src='./src/assets/images/ai/stop.png' alt='' />
+            <img src={stopImg} alt='' />
             <span>{t('stopResponding')}</span>
           </Spin>
         </div>
@@ -383,6 +312,7 @@ const SendEditor = (props) => {
           fileCallBack={updateFileList}
           editorRef={editorRef}
           chatType={chatType}
+          showMask={showMask}
           setEditorShow={setEditorShow}
           setListCurrentList={setListCurrentList}
           updateUserContext={props.updateUserContext}
@@ -410,14 +340,6 @@ const SendEditor = (props) => {
             }
           </div>
           {showClear && <div className='send-num'>{textLenth}/20000</div>}
-          <Tooltip title={<span style={{ color: '#4d4d4d' }}>{t('recordTip')}</span>} color='white'>
-            <div
-              className='audio-icon'
-              ref={audioDomRef}
-              onClick={onRecord}>
-              <AudioBtn ref={audioBtnRef} />
-            </div>
-          </Tooltip>
           {showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div>}
         </div>
       </div>
