@@ -151,7 +151,7 @@ const EditModal = (props) => {
         const agentParam = {
           description: formParams.description,
         };
-        const res: any = await createAgent(agentParam);
+        const res: any = await createAgent(tenantId, agentParam);
         agentName = res.data?.name;
         agentInfo.current = res.data;
       }

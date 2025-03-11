@@ -51,8 +51,8 @@ export function createAipp(tenantId, appId, params) {
   return post(`${AIPP_URL}/${tenantId}/app/${appId}`, params);
 }
 // 创建智能体
-export function createAgent(params) {
-  return post(`${AIPP_URL}/agent`, params);
+export function createAgent(tenantId, params) {
+  return post(`${AIPP_URL}/${tenantId}/agent`, params);
 }
 // 获取应用详情
 export function getAppInfo(tenantId, appId) {
