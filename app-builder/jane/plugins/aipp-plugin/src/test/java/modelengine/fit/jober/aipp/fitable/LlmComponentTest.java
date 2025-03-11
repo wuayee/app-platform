@@ -481,7 +481,7 @@ public class LlmComponentTest {
         Map<String, Object> businessData = buildLlmTestData();
         businessData.put("isDebug", true);
         businessData.put("accessInfo", accessInfo);
-        when(this.aippModelCenter.fetchModelList()).thenReturn(
+        when(this.aippModelCenter.fetchModelList(any())).thenReturn(
                 ModelListDto.builder().models(Collections.emptyList()).build());
 
         // when

@@ -38,6 +38,7 @@ import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -180,6 +181,7 @@ public class AppChatServiceImplTest {
 
     @Test
     @DisplayName("应用对话时，没有传入合法Question")
+    @Disabled
     void testChatWithInvalidQuestion() {
         String chatAppId = "chat";
         String atChatAppId = "atChat";

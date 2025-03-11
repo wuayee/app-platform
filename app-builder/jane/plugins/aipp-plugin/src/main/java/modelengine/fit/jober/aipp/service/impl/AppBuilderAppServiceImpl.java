@@ -1957,7 +1957,7 @@ public class AppBuilderAppServiceImpl
     }
 
     private String[] getFirstModelInfo() {
-        ModelListDto modelList = this.aippModelCenter.fetchModelList();
+        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             ModelAccessInfo firstModel = modelList.getModels().get(0);
             return new String[] {firstModel.getServiceName(), firstModel.getTag()};

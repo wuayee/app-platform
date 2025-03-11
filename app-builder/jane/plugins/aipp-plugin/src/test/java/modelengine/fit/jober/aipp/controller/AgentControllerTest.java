@@ -65,7 +65,7 @@ public class AgentControllerTest {
         when(this.agentInfoGenerateService.selectTools(anyString(), any())).thenReturn(tools);
         AgentCreateInfoDto agentCreateInfoDto = new AgentCreateInfoDto();
         agentCreateInfoDto.setDescription("DESC");
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/api/agent")
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/api/tid/agent")
                 .jsonEntity(agentCreateInfoDto)
                 .responseType(Rsp.class);
         this.response = this.mockMvc.perform(requestBuilder);

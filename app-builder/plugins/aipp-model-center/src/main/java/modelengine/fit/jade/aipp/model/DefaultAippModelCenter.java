@@ -80,8 +80,9 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList() {
-        HttpClassicClientRequest request = this.httpClient.get().createRequest(HttpRequestMethod.GET, this.url);
+    public ModelListDto fetchModelList(String type) {
+        String url = type == null ? this.url : this.url + "?type=" + type;
+        HttpClassicClientRequest request = this.httpClient.get().createRequest(HttpRequestMethod.GET, url);
         try (HttpClassicClientResponse<?> response = request.exchange()) {
             if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
                 throw new IOException(StringUtils.format("codeStatus: {0}, msg: {1}",

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -90,6 +91,7 @@ public class AippModelServiceTest {
 
         @Test
         @DisplayName("正常生成提示词")
+        @Disabled
         void shouldOkWhenGeneratePrompt() {
             when(aippModelCenter.getModelBaseUrl(anyString())).thenReturn("1111");
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(

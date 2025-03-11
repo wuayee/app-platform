@@ -19,6 +19,7 @@ import modelengine.fit.jober.aipp.service.AppChatService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,6 +74,9 @@ public class AppChatControllerTest {
                 .appId("appid")
                 .context(CreateAppChatRequest.Context.builder().build())
                 .build();
+        DefaultMessageHeaders headers = new DefaultMessageHeaders();
+        headers.add("Auto-Chat-On-Upload", "false");
+        Mockito.when(request.headers()).thenReturn(headers);
         AippParamException exception = Assertions.assertThrows(AippParamException.class,
                 () -> this.controller.chat(request, "123", body));
         Assertions.assertEquals(AippErrCode.APP_CHAT_QUESTION_IS_NULL.getErrorCode(), exception.getCode());
