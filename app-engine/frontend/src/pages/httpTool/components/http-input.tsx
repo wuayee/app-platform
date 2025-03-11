@@ -16,6 +16,8 @@ import HttpTableTitle from './http-table-head';
 import { setInputData } from '@/store/toolHttp/toolHttp';
 import { useAppDispatch } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
+import ExpandImg from '@/assets/images/ai/expand.png';
+import DeleteRowImg from '@/assets/images/ai/delete-row.png';
 
 const HttpInput = (props: any) => {
   const { t } = useTranslation();
@@ -114,12 +116,12 @@ const HttpInput = (props: any) => {
       render: (text, record) => (
         <div className='http-tool-operation'>
           {addType.includes(record.type) && (
-            <img onClick={() => addClick(record)} src='./src/assets/images/ai/expand.png' alt='' />
+            <img onClick={() => addClick(record)} src={ExpandImg} alt='' />
           )}
           {!normalType.includes(record.type) && (
             <img
               onClick={() => deleteClick(record)}
-              src='./src/assets/images/ai/delete-row.png'
+              src={DeleteRowImg}
               alt=''
             />
           )}

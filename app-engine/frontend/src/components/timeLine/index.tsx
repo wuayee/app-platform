@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { CloseOutlined } from '@ant-design/icons';
 import { getVersion } from '@/shared/http/aipp';
 import { useTranslation } from "react-i18next";
+import tagImg from '@/assets/images/ai/tag.png';
 
 const TimeLineFc = (props) => {
   const { open, setOpen } = props;
@@ -44,7 +45,7 @@ const TimeLineFc = (props) => {
       }>
       <div>
         <div style={{ marginBottom: '18px', display: 'flex', alignItems: 'center' }}>
-          <img src='./src/assets/images/ai/tag.png' />
+          <img src={tagImg} />
           <span style={{ marginLeft: '12px' }}>{t('cannotRevertVersion')}</span>
         </div>
         {timeList.length > 0 ? 

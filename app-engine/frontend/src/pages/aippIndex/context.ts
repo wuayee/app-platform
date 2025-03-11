@@ -19,12 +19,13 @@ export const ChatContext = createContext({
   setShareClass: (type: string) => {},
   setInspiration: null,
   checkCallBack: () => {},
-  dataDimension: null,
   addInspirationCb: () => {},
   tenantId: '',
   showCheck: false,
+  chatStreaming: {},
   handleRejectClar: (params:any) => {},
   conditionConfirm: (params:any, logId?: string) => {},
+  questionClarConfirm: (params:any, logId?: string) => {},
   useMemory: true
 });
 

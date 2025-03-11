@@ -10,23 +10,23 @@ import { Button, Drawer, Form, Input, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useHistory } from 'react-router';
 import { useAppSelector } from '@/store/hook';
-import { httpUrlMap } from '@/shared/http/httpConfig';
+import serviceConfig from '@/shared/http/httpConfig';
 import { createAipp, uploadImage } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
-import { fileValidate } from '@/shared/utils/common';
+import { fileValidate, formEnv } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
+import { convertImgPath } from '@/common/util';
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
 import '../style.scoped.scss';
 
 const CreateWorkfowDrawer = (props) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const { AIPP_URL } =
-    process.env.NODE_ENV === 'development'
-      ? { AIPP_URL: `${window.location.origin}/api/jober/v1/api` }
-      : httpUrlMap[process.env.NODE_ENV];
+  const { AIPP_URL } = serviceConfig;
   const [form] = Form.useForm();
   const [filePath, setFilePath] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
+  const [imgPath, setImgPath] = useState('');
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const navigate = useHistory().push;
 
@@ -42,6 +42,10 @@ const CreateWorkfowDrawer = (props) => {
       if (res.code === 0) {
         setFileName(res.data.file_name);
         setFilePath(res.data.file_path);
+        let path = `${AIPP_URL}/${tenantId}/file?filePath=${res.data.file_path}&fileName=${res.data.file_name}`;
+        convertImgPath(path).then(res => {
+          setImgPath(res);
+        });
       }
     } catch (err) {
       Message({ type: 'error', content: err.message || t('uploadImageFail') });
@@ -90,7 +94,7 @@ const CreateWorkfowDrawer = (props) => {
             style={{ width: 90, backgroundColor: '#2673e5', color: '#ffffff' }}
             onClick={async () => {
               await form.validateFields();
-              const icon = filePath && `${AIPP_URL}/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
+              const icon = filePath && `${AIPP_URL}${formEnv() ? '/appbuilder' : '/api/jober'}/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
               const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: form.getFieldValue('name'), icon: icon, description: form.getFieldValue('description'), app_built_type: 'workflow', app_category: 'workflow' });
               const aippId = res.data.id;
               sessionStorage.setItem('add-type', 'plugin');
@@ -107,13 +111,13 @@ const CreateWorkfowDrawer = (props) => {
         <Form form={form} layout='vertical' autoComplete='off' className='edit-form-content'>
           <Form.Item label={t('icon')} name='icon'>
             <div className='avatar'>
-              {filePath ? (
+              {imgPath ? (
                 <img
                   className='img-send-item'
-                  src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}
+                  src={imgPath}
                 />
               ) : (
-                  <img src='./src/assets/images/knowledge/knowledge-base.png' />
+                  <img src={knowledgeImg} />
                 )}
               <Upload
                 beforeUpload={beforeUpload}

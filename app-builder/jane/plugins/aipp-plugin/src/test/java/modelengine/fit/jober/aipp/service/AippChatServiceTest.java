@@ -34,6 +34,7 @@ import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 
 /**
@@ -73,8 +74,8 @@ public class AippChatServiceTest {
                 .updateTime(Timestamp.valueOf(LocalDateTime.now()).toString())
                 .build();
         when(aippChatMapper.selectChatList(any(), any(), any())).thenReturn(Collections.singletonList(rsp));
-        when(aippChatMapper.selectMsgByInstance(any())).thenReturn(null);
-        when(aippChatMapper.getChatListCount(any(), anyString())).thenReturn(1L);
+        when(aippChatMapper.selectMsgByInstanceIds(any())).thenReturn(new ArrayList<>());
+        when(aippChatMapper.getChatListCount(any(), anyString(), anyString())).thenReturn(1L);
         Mockito.when(
                         this.metaService.list(Mockito.any(MetaFilter.class), Mockito.eq(false), Mockito.eq(0L), Mockito.eq(10),
                                 Mockito.any(OperationContext.class), Mockito.any(MetaFilter.class)))

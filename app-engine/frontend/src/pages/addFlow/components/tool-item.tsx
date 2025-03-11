@@ -14,6 +14,7 @@ import { getMyPlugin, getPluginTools } from '@/shared/http/plugin';
 import { debounce } from '@/shared/utils/common';
 import { useAppSelector } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
+import pluginImg from '@/assets/images/ai/plugin.png';
 import '../styles/tool-item.scss';
 
 const { Option } = Select;
@@ -107,7 +108,7 @@ const ToolItem = () => {
                 <div className='drag-item-title'>
                   <div>
                     <span className='content-node-name node-tool'>
-                      <img src='./src/assets/images/ai/plugin.png' alt='' />
+                      <img src={pluginImg} alt='' />
                       {item.name}
                     </span>
                   </div>

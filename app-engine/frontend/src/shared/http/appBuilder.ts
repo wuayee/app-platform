@@ -5,9 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { get, put } from "./http";
-import { httpUrlMap } from './httpConfig';
-
-const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+import serviceConfig from './httpConfig';
+const { TOOL_URL, AIPP_URL, PLUGIN_URL } = serviceConfig;
 
 // mock获取生成经营报告数据
 const getMockChart = () => {
@@ -44,7 +43,7 @@ const getModels = () => {
 
 // 获取工具 工具流列表
 const getTools = (params) => {
-  let url = `${JANE_URL}/store/platform/jade/categories/TOOL?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
+  let url = `${TOOL_URL}/store/platform/jade/categories/TOOL?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
   if (params.includeTags) {
     url += `&includeTags=${params.includeTags}`;
   }
@@ -124,7 +123,7 @@ const getKnowledgesList = (params) => {
 // 获取灵感大全fitable列表
 const getFitables = () => {
   return new Promise((resolve, reject) => {
-    get(`${JANE_URL}/jober/v1/api/public/genericables/d01041a73e00ac46bedde08d02c6818e`).then((res) => {
+    get(`${TOOL_URL}/jober/v1/api/public/genericables/d01041a73e00ac46bedde08d02c6818e`).then((res) => {
       resolve(res);
     }, (error) => {
       reject(error);

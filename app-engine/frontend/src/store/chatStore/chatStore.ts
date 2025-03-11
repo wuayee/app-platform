@@ -7,7 +7,6 @@ import {
   SET_CHAT_TYPE,
   SET_AT_CHAT_ID,
   SET_FORM_RECEIVED,
-  SET_INSPIRATION_DEMINSION,
   SET_LOGIN_STATUS,
   SET_REFERENCE,
   SET_REFERENCE_LIST,
@@ -39,9 +38,6 @@ export const setAtChatId = (item) => {
 }
 export const setFormReceived = (item) => {
   return { type: SET_FORM_RECEIVED, payload: item }
-}
-export const setInspirationDeminsion = (item) => {
-  return { type: SET_INSPIRATION_DEMINSION, payload: item }
 }
 export const setLoginStatus = (item) => {
   return { type: SET_LOGIN_STATUS, payload: item }

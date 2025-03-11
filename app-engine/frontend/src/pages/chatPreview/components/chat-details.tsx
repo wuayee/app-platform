@@ -6,17 +6,24 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import EditModal from '../../components/edit-modal';
-import { AppBoxIcon, CreateAppIcon } from '@assets/icon';
+import { useTranslation } from 'react-i18next';
+import { AppBoxIcon, CreateAppIcon } from '@/assets/icon';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setOpenStar } from '@/store/chatStore/chatStore';
 import { findConfigValue } from '@/shared/utils/common';
-import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
-import robot2 from '@assets/images/ai/xiaohai.png';
-import { useTranslation } from 'react-i18next';
+import { convertImgPath } from '@/common/util';
+import EditModal from '@/pages/components/edit-modal';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
+import robot2 from '@/assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
 
-const ChatDetail = () => {
+/**
+ * 聊天运行时组件
+ *
+ * @param showMask 是否显示应用默认配置
+ * @constructor
+ */
+const ChatDetail = ({ showMask = false }) => {
   const { t } = useTranslation();
   const [modalInfo, setModalInfo] = useState({});
   const [opening, setOpening] = useState('');
@@ -80,16 +87,6 @@ const ChatDetail = () => {
               <div className='nav-title'>{t('createApp')}</div>
               <div className='nav-desc'>{t('createAppDescription')}</div>
             </div>
-            <div
-              className={`nav-right ${openStar ? 'nav-item-active' : ''}`}
-              onClick={() => dispatch(setOpenStar(true))}
-            >
-              <div className='tag-home-page'>
-                <AppBoxIcon />
-              </div>
-              <div className='nav-title'>{t('appTreasure')}</div>
-              <div className='nav-desc'>{t('appTreasureDescription')}</div>
-            </div>
           </div>
         </div>
       ) : (
@@ -106,15 +103,41 @@ const ChatDetail = () => {
               <div className='right'>{opening}</div>
             </div>
           </div>
-        )) : ''}
+        )) : <NormalAppInfo showMask={showMask} />}
       <EditModal type='add' modalRef={modalRef} appInfo={modalInfo} addAippCallBack={addAippCallBack} />
     </div>
   )}</>;
 };
 
+const NormalAppInfo = (props) => {
+  const { t } = useTranslation();
+  const { showMask } = props;
+  return <>{showMask ? <div className='top'>
+    <div className='head'>
+      <img src={knowledgeBase} alt="" />
+    </div>
+    <div className='title'>{t('app')}</div>
+    <div className='text'></div>
+    <div className='bottom'>
+      <div className='left'>
+      <img src={knowledgeBase} alt="" />
+      </div>
+      <div className='right'>{t('hello')}</div>
+    </div>
+  </div> : ''}</>;
+}
+
 const Img = (props) => {
   const { icon } = props;
-  return <>{<span>{icon ? <img src={icon} /> : <img src={knowledgeBase} />}</span>}</>;
+  const [imgPath, setImgPath] = useState('');
+  useEffect(() => {
+    if (icon) {
+      convertImgPath(icon).then(res => {
+        setImgPath(res);
+      });
+    }
+  }, [icon])
+  return <>{<span>{imgPath ? <img src={imgPath} /> : <img src={knowledgeBase} />}</span>}</>;
 };
 
 export default ChatDetail;

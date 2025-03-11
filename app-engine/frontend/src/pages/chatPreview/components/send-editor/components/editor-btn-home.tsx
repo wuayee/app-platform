@@ -19,7 +19,6 @@ import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from '../../star-apps';
 import ConversationConfiguration from './conversation-configuration';
-import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import {
@@ -32,10 +31,12 @@ import {
 import { setAtAppInfo, setAtAppId } from '@/store/appInfo/appInfo';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setUseMemory } from '@/store/common/common';
-import { updateChatId, findConfigValue } from "@/shared/utils/common";
+import { setSpaClassName, updateChatId, findConfigValue } from '@/shared/utils/common';
 import { isChatRunning } from '@/shared/utils/chat';
+import { convertImgPath } from '@/common/util';
 import { HOME_APP_ID } from '../common/config';
 import { useTranslation } from 'react-i18next';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 
 /**
  * 应用聊天输入框上方操作按钮组件
@@ -63,7 +64,6 @@ const EditorBtnHome = (props) => {
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAt, setShowAt] = useState(false);
@@ -83,7 +83,7 @@ const EditorBtnHome = (props) => {
     document.body.addEventListener('click', () => {
       setShowAt(false);
     })
-    setAppIcon(appInfo.attributes?.icon);
+    getImgPath(appInfo.attributes);
     setAppName(appInfo.name || t('app'));
     setMultiFileConfig(findConfigValue(appInfo, 'multimodal') || {});
   }, [appInfo]);
@@ -93,13 +93,20 @@ const EditorBtnHome = (props) => {
   }, [appId]);
   useEffect(() => {
     if (atAppInfo) {
-      setAppIcon(atAppInfo.attributes?.icon);
+      getImgPath(atAppInfo.attributes);
       setAppName(atAppInfo.name);
     } else {
-      setAppIcon(appInfo.attributes?.icon);
+      getImgPath(appInfo.attributes);
       setAppName(appInfo.name || t('app'));
     }
-  }, [atAppInfo])
+  }, [atAppInfo]);
+  // 获取图片
+  const getImgPath = async (cardInfo) => {
+    if (cardInfo && cardInfo.icon) {
+      const res:any = await convertImgPath(cardInfo.icon);
+      setAppIcon(res);
+    }
+  }
   // 监听storage事件
   const storageEvent = (event) => {
     if (event.key === 'storageMessage') {
@@ -150,7 +157,7 @@ const EditorBtnHome = (props) => {
     let { deleteChatId, refreshChat, deleteAppId } = data;
     if (appIdRef.current === deleteAppId && (deleteChatId === chatIdRef.current || refreshChat)) {
       dispatch(setChatId(null));
-      updateChatId(null, appIdRef.current, dimension);
+      updateChatId(null, aippId);
     }
   }
   // 清空历史记录
@@ -209,11 +216,6 @@ const EditorBtnHome = (props) => {
     }
     setModalOpen(true);
   }
-  // 清空聊天记录
-  const clearAllModal = () => {
-    if (isChatRunning()) { return; }
-    setIsModalOpen(true);
-  }
   //是否使用多轮对话
   const onMultiConverChange = (checked) => {
     dispatch(setUseMemory(checked));
@@ -222,7 +224,7 @@ const EditorBtnHome = (props) => {
   const onClickNewChat = () => {
     if (isChatRunning()) { return; }
     dispatch(setChatRunning(false));
-    updateChatId(null, aippId, dimension, appInfo)
+    updateChatId(null, aippId, appInfo)
     dispatch(setChatId(null));
     dispatch(setChatList([]));
     dispatch(setAtAppInfo(null));
@@ -248,13 +250,8 @@ const EditorBtnHome = (props) => {
     }
     setShowNotice(true);
   }
-  // 分享
-  const shareClick = () => {
-    if (isChatRunning()) { return; }
-    setEditorShow(true, 'share');
-  }
   return (
-    <div className={`btn-inner ${fileList.length === 0 ? 'btn-radius' : ''} ${showMask ? 'btn-inner-disabled' : ''}`}>
+    <div className={`${setSpaClassName('btn-inner')} ${fileList.length === 0 ? 'btn-radius' : ''} ${showMask ? 'btn-inner-disabled' : ''}`}>
       <div className='inner-left'>
         <div className='inner-item'>
           {appIcon ? <img src={appIcon} alt='' /> : <img src={knowledgeBase} alt='' />}

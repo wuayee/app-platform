@@ -9,8 +9,10 @@ import * as echarts from 'echarts';
 import { Card, Select } from 'antd';
 import { getAnalysisData } from '@/shared/http/apps';
 import { useParams } from 'react-router-dom';
+import { setSpaClassName } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import { timeOption, top5UserOption, tradeOption, speedOption } from './common';
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
 import './style.scoped.scss';
 
 const AnalyseCard = ({ info }) => (
@@ -21,7 +23,7 @@ const AnalyseCard = ({ info }) => (
         <span className='number'>{info?.num}</span>
         <span className='number-unit'>{info?.unit}</span>
       </div>
-      <img className='knowledge' src='./src/assets/images/knowledge/knowledge-base.png' />
+      <img className='knowledge' src={knowledgeImg} />
     </div>
   </Card>
 );
@@ -133,7 +135,7 @@ const AppAnalyse: React.FC = () => {
   }
 
   return (
-    <div className='app-analyzed'>
+    <div className={setSpaClassName('app-analyzed')}>
       <div className='select'>
         <div className='analyse'>{t('analyse')}</div>
         <Select

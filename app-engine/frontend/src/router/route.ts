@@ -15,7 +15,6 @@ import AppDetail from '../pages/appDetail';
 import AippIndex from '../pages/aippIndex';
 import AddFlow from '../pages/addFlow';
 import FlowDetail from '../pages/detailFlow';
-import ChatShare from '../pages/chatShare';
 import Apps from '../pages/apps';
 import AppDev from '../pages/appDev/index';
 import PlugeDetail from '../pages/plugin/detail/plugin-list';
@@ -38,16 +37,7 @@ export const routeList: MenuItem[] = [
     key: '/home',
     icon: Icons.home({}),
     label: i18n.t('homepage'),
-    component: ChatHome,
-    children: [
-      {
-        key: '/:tenantId/chatShare/:appId/:shareId',
-        icon: Icons.app({}),
-        label: i18n.t('shareConversation'),
-        component: ChatShare,
-        hidden: true,
-      },
-    ],
+    component: ChatHome
   },
   {
     key: '/chat/:uid',

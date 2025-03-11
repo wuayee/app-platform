@@ -15,6 +15,8 @@ import PluginCard from '@/components/plugin-card';
 import EmptyItem from '@/components/empty/empty-item';
 import DeployMent from '../deployment';
 import userImg from '@/assets/images/ai/user.jpg';
+import knowledgeImg from '@/assets/images/knowledge/plugin.png';
+import leftArrowImg from '@/assets/images/ai/left-arrow.png';
 import '../styles/plugin.scss';
 
 /**
@@ -35,7 +37,10 @@ const PliginList = (props) => {
     try {
       const res:any = await getPluginDetail(props.match.params.pluginId);
       if (res.code === 0) {
-        setPluginData(res.data.pluginToolDataList);
+        if (Array.isArray(res.data.pluginToolDataList)) {
+          res.data.pluginToolDataList.forEach(item => item.creator = (res.data.creator || ''));
+          setPluginData(res.data.pluginToolDataList);
+        }
         setData(res.data);
       }
     } finally {
@@ -57,10 +62,10 @@ const PliginList = (props) => {
         <div className='plugin-detail-list'>
           <div className='list-head'>
             <div className='list-back-icon flex'>
-              <img src='./src/assets/images/ai/left-arrow.png' onClick={() => window.history.back()} />
+              <img src={leftArrowImg} onClick={() => window.history.back()} />
             </div>
             <div className='list-detail-img flex'>
-              <img src='./src/assets/images/knowledge/plugin.png' />
+              <img src={knowledgeImg} />
             </div>
             <div className='list-detail-desc'>
               <div className='desc-top'>

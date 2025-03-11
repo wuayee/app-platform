@@ -5,9 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { del, get, post, put } from './http';
-import { httpUrlMap } from './httpConfig';
-
-const { PLUGIN_URL} = httpUrlMap[process.env.NODE_ENV];
+import serviceConfig from './httpConfig';
+const { PLUGIN_URL} = serviceConfig;
 
 // 测试集列表
 export function getEvalDataList(params) {

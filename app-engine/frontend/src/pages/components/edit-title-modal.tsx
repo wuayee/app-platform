@@ -52,7 +52,6 @@ const EditTitleModal = (props) => {
         title={t('modifyingBasicInfo')}
         width='600px'
         maskClosable={false}
-        forceRender={true}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}

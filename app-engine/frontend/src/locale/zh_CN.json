@@ -646,7 +646,6 @@
   "enterCommand": "输入指令",
   "userPromptWordTemplate": "用户提示词模版",
   "generatedTip": "名称和简介不能为空",
-  "AIGenerated": "AI生成",
   "addKnowledge": "添加知识库",
   "serchParamsSetting": "搜索参数配置",
   "searchMode": "搜索模式",

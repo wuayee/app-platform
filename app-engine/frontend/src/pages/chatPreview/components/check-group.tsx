@@ -7,8 +7,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Modal } from 'antd';
-import { shareDialog } from '@/shared/http/aipp';
-import { toClipboard } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList } from '@/store/chatStore/chatStore';
@@ -17,18 +15,12 @@ import '../styles/check-group.scss';
 
 const CheckGroup = (props) => {
   const { t } = useTranslation();
-  const { type, setEditorShow, deleteChat, reportClick, checkedChat, display } = props;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [shareUrl, setShareUrl] = useState('');
+  const { type, setEditorShow, deleteChat, checkedChat, display } = props;
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const currentLogId = useRef([]);
-  const appId = useAppSelector((state) => state.appStore.appId);
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const dispatch = useAppDispatch();
   const textMap = {
     share: t('share'),
@@ -46,56 +38,19 @@ const CheckGroup = (props) => {
   function cancle() {
     setEditorShow(false);
   }
-  function handleCancel() {
-    setEditorShow(false);
-    setIsModalOpen(false);
-  }
-  function copyLink() {
-    toClipboard(shareUrl);
-  }
   // 处理点击
   const handleShare = (e) => {
-    const resultArr = [];
-    const logIdArr = [];
-    const currentUser = localStorage.getItem('currentUser') || '';
-    checkedList.forEach((item, index) => {
-      item.shareUser = currentUser;
-      item.mode = 'share';
-      item.dimension = dimension.name;
-      if (dimension.id) {
-        item.dimensionValue = dimension;
-      }
-      resultArr.push({ query: JSON.stringify(item) });
-      logIdArr.push(Number(item.logId));
+    const logIdArr = checkedList.map(item => {
+      return Number(item.logId);
     });
-    if (type === 'share') {
-      shareConfirm(resultArr);
-    } else if (type === 'delete') {
-      currentLogId.current = logIdArr;
-      setDeleteOpen(true);
-    } else {
-      reportClick(resultArr);
-    }
+    currentLogId.current = logIdArr;
+    setDeleteOpen(true);
   };
   const confirm = () => {
     setLoading(false);
     deleteChat(currentLogId.current);
+    setDeleteOpen(false);
   };
-  // 分享
-  async function shareConfirm(result) {
-    setBtnLoading(true);
-    try {
-      const res = await shareDialog(tenantId, result);
-      if (res.code === 0) {
-        setIsModalOpen(true);
-        setShareUrl(
-          window.location.href.split('#')[0] + `#/${tenantId}/chatShare/${appId}/${res.data}`
-        );
-      }
-    } finally {
-      setBtnLoading(false);
-    }
-  }
   useEffect(() => {
     setCheckedList(checkedChat);
   }, [checkedChat]);
@@ -124,31 +79,12 @@ const CheckGroup = (props) => {
               <Button
                 type={checkedList.length === 0 ? 'default' : 'primary'}
                 disabled={checkedList.length === 0}
-                loading={btnLoading}
                 onClick={(e) => handleShare(e)}
               >
-                {type === 'share' && '复制分享链接'}
-                {(type !== 'share' && t('ok') + textMap[type]) || ''}
+                {(t('ok') + textMap[type])}
               </Button>
             </div>
           </div>
-          <Modal
-            title={t('copiedLinkTitle')}
-            open={isModalOpen}
-            onCancel={handleCancel}
-            footer={[
-              <Button key='back' onClick={handleCancel}>
-                {t('close')}
-              </Button>,
-            ]}
-          >
-            <div className='modal-share'>
-              <span className='share-text'>{shareUrl}</span>
-              <span className='link' onClick={copyLink}>
-                {t('copiedLink')}
-              </span>
-            </div>
-          </Modal>
           <Modal
             title='提示'
             open={deleteOpen}

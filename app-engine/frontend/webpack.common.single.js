@@ -8,9 +8,6 @@ const path = require('path');
 const rootPath = path.resolve(__dirname, './');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { DefinePlugin } = require('webpack');
-
-const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
   context: rootPath,
@@ -149,12 +146,7 @@ module.exports = {
       publicPath: '',
       chunks: ['main'],
     }),
-    new DefinePlugin({
-      'process.env.SSO_URL': JSON.stringify(process.env.SSO_URL),
-      RELATIVE_PATH_PREFIX: isDev ? '' : JSON.stringify('.'),
-      APP_ENGINE: isDev ? '' : JSON.stringify('/appengine'),
-      APP_BUILDER: isDev ? '' : JSON.stringify('/appbuilder'),
-    }),
+
     new CopyWebpackPlugin({
       patterns: [
         {

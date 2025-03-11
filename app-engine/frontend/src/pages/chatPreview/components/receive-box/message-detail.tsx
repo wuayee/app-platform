@@ -13,6 +13,7 @@ import { isChatRunning } from '@/shared/utils/chat';
 import { useAppSelector } from '@/store/hook';
 import Feedbacks from './feedbacks';
 import PictureList from './picture-list';
+import ThinkBlock from './think-block';
 import 'highlight.js/styles/monokai-sublime.min.css';
 import './styles/message-detail.scss';
 
@@ -27,15 +28,17 @@ import './styles/message-detail.scss';
  * @pictureList 图片列表
  */
 const MessageBox = (props: any) => {
-  const { content, instanceId, feedbackStatus, reference, msgType, pictureList } = props;
+  const { content, thinkTime, instanceId, finished, feedbackStatus, status, reference, msgType, pictureList } = props;
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [referenceStr, setReferenceStr] = useState('');
+  const [thinkContent, setThinkContent] = useState('');
+  const [answerContent, setAnswerContent] = useState('');
   const [referenceIndex, setReferenceIndex] = useState('0');
   const [replacedText, setReplacedText] = useState<any>(null);
   const chatReference = useAppSelector((state) => state.chatCommonStore.chatReference);
   const referenceList = useAppSelector((state) => state.chatCommonStore.referenceList);
-
+  
   // 正则替换
   const regExpReplace = (content: string, index: any) => {
     let strs = content;
@@ -57,12 +60,12 @@ const MessageBox = (props: any) => {
   };
 
   // 拼接content与reference
-  const replaceInfo = () => {
+  const replaceInfo = (content, type = '') => {
     let metaContent = [content];
     let mataStr = metaContent.map((item: any, index: any) => {
       return regExpReplace(item, index);
     });
-    setReplacedText(mataStr.join(''));
+    type ? setThinkContent(mataStr.join('')) : setReplacedText(mataStr.join(''));
   };
 
   // 点击弹出溯源的抽屉回调
@@ -84,14 +87,6 @@ const MessageBox = (props: any) => {
     }
   };
 
-  useEffect(() => {
-    if (msgType === 'META_MSG' || chatReference) {
-      replaceInfo();
-    } else {
-      setReplacedText(content);
-    }
-  }, [content, chatReference]);
-
   const getMessageContent = () => {
     if (pictureList) {
       return <PictureList pictureList={pictureList}></PictureList>;
@@ -106,17 +101,67 @@ const MessageBox = (props: any) => {
     }
   };
 
+  const recieveClick = (event) => {
+    if (event.target && event.target.nodeName.toLowerCase() === 'a') {
+      event.preventDefault();
+      window.open(event.target.href, '_blank');
+    }
+  }
+
+  useEffect(() => {
+    if (msgType === 'META_MSG' || chatReference) {
+      replaceInfo(answerContent);
+    } else {
+      setReplacedText(answerContent);
+    }
+  }, [answerContent]);
+
+  useEffect(() => {
+    const thinkStartIdx = content.indexOf('<think>');
+    let thinkEndIdx = content.indexOf('</think>');
+    if (thinkStartIdx > -1 && thinkEndIdx < 0) {
+      thinkEndIdx = content.length - '</think>'.length;
+    }
+    if (thinkEndIdx > 0) {
+      thinkEndIdx = thinkEndIdx + '</think>'.length;
+    }
+    if (thinkStartIdx > -1) {
+      const thinkContent = content.slice(thinkStartIdx, thinkEndIdx);
+      if (msgType === 'META_MSG' || chatReference) {
+        replaceInfo(thinkContent, 'deepseek');
+      } else {
+        setThinkContent(thinkContent);
+      }
+      setAnswerContent(content.slice(thinkEndIdx));
+    } else {
+      setAnswerContent(content);
+    }
+  }, [content]);
+
+  // 接受消息点击事件
+  useEffect(() => {
+    const container = document.querySelector('.message-box');
+    if (container) {
+      container.addEventListener('click', recieveClick);
+    }
+    return () => {
+      container && container.removeEventListener('click', recieveClick);
+    }
+  }, []);
+  
   return (
     <>
       <div className='receive-info'>
+        { (thinkContent && status !== 'TERMINATED') && <ThinkBlock content={thinkContent} thinkTime={thinkTime} />}
         {getMessageContent()}
+        { finished &&  
         <div className='footer'>
           <Feedbacks
             instanceId={instanceId}
             feedbackStatus={feedbackStatus}
             refreshFeedbackStatus={props.refreshFeedbackStatus}
           />
-        </div>
+        </div> }
         {reference?.length > 0 && (
           <ReferenceDrawer
             isOpen={isOpen}

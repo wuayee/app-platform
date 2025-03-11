@@ -12,6 +12,7 @@ import modelengine.fit.jober.aipp.dto.chat.QueryChatRequest;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatRsp;
 import modelengine.fit.jober.aipp.entity.ChatAndInstanceMap;
 import modelengine.fit.jober.aipp.entity.ChatInfo;
+import modelengine.fit.jober.aipp.po.MsgInfoPO;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -57,7 +58,7 @@ public interface AippChatMapper {
      * @param chatId 会话ID
      * @return 会话记录数目
      */
-    long getChatListCount(@Param("requestParam") QueryChatRequest request, @Param("chatId") String chatId);
+    long getChatListCount(@Param("requestParam") QueryChatRequest request, @Param("chatId") String chatId, @Param("createBy") String createBy);
 
     /**
      * 查询会话
@@ -113,12 +114,11 @@ public interface AippChatMapper {
     List<String> selectFormerInstanceByChat(String chatId, Integer limit);
 
     /**
-     * selectMsgByInstance
-     *
-     * @param instanceId InstanceId
-     * @return String
+     * 根据instance id列表批量查询对话消息
+     * @param instanceIds instance id列表
+     * @return 对应会话信息
      */
-    String selectMsgByInstance(String instanceId);
+    List<MsgInfoPO> selectMsgByInstanceIds(List<String> instanceIds);
 
     /**
      * countChat

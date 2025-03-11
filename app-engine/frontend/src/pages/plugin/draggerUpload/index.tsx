@@ -14,6 +14,9 @@ import { Message } from '@/shared/utils/message';
 import { fileValidate } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import { existDefs } from '@/shared/http/plugin';
+import uploadImg from '@/assets/images/ai/upload.png';
+import complateImg from '@/assets/images/ai/complate.png';
+import deleteImg from '@/assets/images/ai/delete.png';
 import './index.scoped.scss';
 
 /**
@@ -285,7 +288,7 @@ const DraggerUpload = (props) => {
     <div>
       <Upload.Dragger {...uploadProps}>
         <p className='ant-upload-drag-icon'>
-          <img width={32} height={32} src='./src/assets/images/ai/upload.png' />
+          <img width={32} height={32} src={uploadImg} />
         </p>
         <p className='ant-upload-text'>{t('fileUploadContent1')}</p>
         <p className='ant-upload-hint'>{t('fileUploadContent2')}</p>
@@ -299,8 +302,8 @@ const DraggerUpload = (props) => {
               <span>({bytesToSize(item.size)})</span>
             </div>
             <div className='file-item-right'>
-              <img src='./src/assets/images/ai/complate.png' />
-              <img src='./src/assets/images/ai/delete.png' onClick={() => onRemove(item.uid)} />
+              <img src={complateImg} />
+              <img src={deleteImg} onClick={() => onRemove(item.uid)} />
             </div>
           </div>
         ))}

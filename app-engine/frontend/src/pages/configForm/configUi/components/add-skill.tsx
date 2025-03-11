@@ -12,9 +12,11 @@ import { getPlugins } from '@/shared/http/plugin';
 import { createAipp } from '@/shared/http/aipp';
 import { pluginItems } from '../../common/common';
 import { Icons } from '@/components/icons';
-import ToolCard from '../../../addFlow/components/tool-card';
+import ToolCard from '@/pages/addFlow/components/tool-card';
 import Pagination from '@/components/pagination/index';
 import { useTranslation } from 'react-i18next';
+import LoadImg from '@/assets/images/ai/load.png';
+import AccountImg from '@/assets/images/ai/account.png';
 import '../styles/add-skill.scss';
 
 const AddSkill = (props) => {
@@ -137,8 +139,8 @@ const AddSkill = (props) => {
       }>
       <div className='mashup-add-drawer'>
         <div className='mashup-add-tab'>
-          <span className='active'><img src='./src/assets/images/ai/load.png' />{t('market')}</span>
-          <span><img src='./src/assets/images/ai/account.png' />{t('mine')}</span>
+          <span className='active'><img src={LoadImg} />{t('market')}</span>
+          <span><img src={AccountImg} />{t('mine')}</span>
         </div>
         <div className='mashup-add-tablist'>
           <Tabs

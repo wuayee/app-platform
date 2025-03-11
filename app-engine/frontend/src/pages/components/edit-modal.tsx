@@ -9,24 +9,29 @@ import { Input, Modal, Button, Form, Upload, Spin, Radio, Select } from 'antd';
 import { useParams } from 'react-router-dom';
 import { Message } from '@/shared/utils/message';
 import { uploadChatFile, updateAppInfo, createAipp, generatedRequest, createAgent, templateCreateAipp } from '@/shared/http/aipp';
-import { httpUrlMap } from '@/shared/http/httpConfig';
+import serviceConfig from '@/shared/http/httpConfig';
 import { updateFormInfo } from '@/shared/http/aipp';
 import { fileValidate, queryAppCategories } from '@/shared/utils/common';
-import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
-import assistant from '@/assets/images/appdevelop/assistant.png';
-import agent from '@/assets/images/appdevelop/agent.png';
-import workflow from '@/assets/images/appdevelop/workflow.png';
 import type { RadioChangeEvent } from 'antd';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import { APP_TYPE, APP_BUILT_TYPE, APP_BUILT_CLASSIFICATION } from './common/common';
 import { useTranslation } from 'react-i18next';
 import { findConfigItem, getConfigValue } from '@/shared/utils/common';
+import { convertImgPath } from '@/common/util';
 import { createGraphOperator } from '@fit-elsa/elsa-react';
 import { pick, isEmpty } from 'lodash';
+import assistant from '@/assets/images/appdevelop/assistant.png';
+import agent from '@/assets/images/appdevelop/agent.png';
+import workflow from '@/assets/images/appdevelop/workflow.png';
+import UploadImg from '@/assets/images/ai/upload2.png';
+import UploadOtherImg from '@/assets/images/ai/upload3.png';
+import AddImg from '@/assets/images/ai/pic-add.png';
+import BasicImg from '@/assets/images/basic.svg';
+import WorkFlowImg from '@/assets/images/workflow.svg';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
-const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = serviceConfig;
 const EditModal = (props) => {
   const { t } = useTranslation();
   const { modalRef, appInfo, updateAippCallBack, type, addAippCallBack } = props;
@@ -36,6 +41,7 @@ const EditModal = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filePath, setFilePath] = useState('');
+  const [imgPath, setImgPath] = useState('');
   const [showImg, setShowImg] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [appBuiltType, setAppBuiltType] = useState(APP_BUILT_TYPE.BASIC);
@@ -55,6 +61,7 @@ const EditModal = (props) => {
     }
     if (isTemplate) {
       setFilePath(appInfo.icon);
+      getImgPath(appInfo.icon);
       setShowImg(!isEmpty(appInfo.icon));
       form.setFieldsValue({...pick(appInfo, ['name', 'description']), app_type: appInfo.appType});
     } else {
@@ -65,15 +72,22 @@ const EditModal = (props) => {
         app_type: appInfo.attributes?.app_type
       });
       if (!type && appInfo.attributes?.icon) {
+        getImgPath(appInfo.attributes.icon);
         setFilePath(appInfo.attributes.icon);
         setShowImg(true);
       } else {
+        setImgPath('');
         setFilePath('');
         setShowImg(false);
       }
     }
   }, [isModalOpen]);
 
+  // 获取图片
+  const getImgPath = async (icon) => {
+    const res: any = await convertImgPath(icon);
+    setImgPath(res);
+  };
   const getTypes = async () => {
     const newTab = await queryAppCategories(tenantId, true);
     setTypes(newTab);
@@ -101,8 +115,6 @@ const EditModal = (props) => {
         description: formParams.description || '',
         icon: filePath || formParams.icon || '',
         app_type: formParams.app_type,
-        app_built_type: appInfo.appBuiltType,
-        app_category: appInfo.category,
         type: 'app'
       }
       const res = await templateCreateAipp(tenantId, params);
@@ -266,41 +278,8 @@ const EditModal = (props) => {
     }
     validateResult && pictureUpload(file);
   }
-  // ai生成图片
   const imgLoad = () => {
     setShowImg(true);
-  }
-  const generatedClick = async () => {
-    const name = form.getFieldValue('name');
-    const description = form.getFieldValue('description');
-    if (!name.trim().length || !description.trim().length) {
-      Message({ type: 'warning', content: t('generatedTip') });
-      return
-    }
-    setAiLoading(true);
-    const res: any = await generatedRequest({
-      name,
-      description,
-      width: 512,
-      height: 512
-    }, tenantId)
-    if (res.code == 0 && res.data) {
-      let data = `data:image/png;base64,${res.data}`
-      generatedProcess(data);
-    } else {
-      setAiLoading(false);
-    }
-  }
-  // base64转
-  const generatedProcess = (data) => {
-    let binaryData = atob(data.split(',')[1]);
-    let arrayBuffer = new ArrayBuffer(binaryData.length);
-    let uint8Array = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < binaryData.length; i++) {
-      uint8Array[i] = binaryData.charCodeAt(i);
-    }
-    let blob = new Blob([uint8Array], { type: 'image/png' });
-    pictureUpload(blob, 'ai.png')
   }
   // 上传图片
   async function pictureUpload(file, name = '') {
@@ -313,7 +292,11 @@ const EditModal = (props) => {
       formData.append('file', file);
       let res: any = await uploadChatFile(tenantId, appId, formData, headers);
       if (res.code === 0) {
-        setFilePath(`${AIPP_URL}/${tenantId}/file?filePath=${res.data.file_path}&fileName=${res.data.file_name}`);
+        let path = `${AIPP_URL}/${tenantId}/file?filePath=${res.data.file_path}&fileName=${res.data.file_name}`;
+        setFilePath(path);
+        convertImgPath(path).then(res => {
+          setImgPath(res);
+        });
       }
     } catch (err) {
       Message({ type: 'error', content: err.message || t('uploadImageFail') })
@@ -339,7 +322,6 @@ const EditModal = (props) => {
         width='526px'
         keyboard={false}
         maskClosable={false}
-        forceRender={true}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={[
@@ -357,7 +339,7 @@ const EditModal = (props) => {
               <span>
                 <img
                   style={{ marginRight: '4px' }}
-                  src='/src/assets/images/ai/pic-add.png'
+                  src={AddImg}
                   alt=''
                 />
                 {t('intelligentCreate')}
@@ -405,7 +387,7 @@ const EditModal = (props) => {
                 onClick={() => setAppBuiltType(APP_BUILT_TYPE.BASIC)}
               >
                 <div className='model-name'>
-                  <img src='./src/assets/images/basic.svg' alt='' />
+                  <img src={BasicImg} alt='' />
                   <span>{t('basicArrange')}</span>
                 </div>
                 <div className='model-desc'>{t('basicArrangeDescription')}</div>
@@ -415,7 +397,7 @@ const EditModal = (props) => {
                 onClick={() => setAppBuiltType(APP_BUILT_TYPE.WORK_FLOW)}
               >
                 <div className='model-name'>
-                  <img src='./src/assets/images/workflow.svg' alt='' />
+                  <img src={WorkFlowImg} alt='' />
                   <span>{t('workflowArrange')}</span>
                 </div>
                 <div className='model-desc'>{t('workflowArrangeDescription')}</div>
@@ -436,28 +418,22 @@ const EditModal = (props) => {
                       accept='.jpg,.png,.gif,.jpeg'
                     >
                       <span className={['upload-img-btn', filePath ? 'upload-img-uploaded' : ''].join(' ')}>
-                        {filePath ? (
+                        {imgPath ? (
                           <img
                             className={showImg ? 'img-send-item' : ''}
                             onLoad={imgLoad}
-                            src={filePath}
+                            src={imgPath}
                           />
                         ) : (
-                          <img src='/src/assets/images/ai/upload2.png' alt='' />
+                          <img src={UploadImg} alt='' />
                         )}
                         {showImg && (
                           <span className='upload-img-mask'>
-                            <img src='/src/assets/images/ai/upload3.png' alt='' />
+                            <img src={UploadOtherImg} alt='' />
                           </span>
                         )}
                       </span>
                     </Upload>
-                    <Spin spinning={aiLoading}>
-                      <span className='upload-add-content' onClick={generatedClick}>
-                        <img width={'100%'} src='/src/assets/images/ai/pic-add.png' alt='' />
-                        <span>{t('AIGenerated')}</span>
-                      </span>
-                    </Spin>
                   </div>
                 </Form.Item>
                 <Form.Item
@@ -496,6 +472,5 @@ const EditModal = (props) => {
     </>
   );
 };
-
 
 export default EditModal;

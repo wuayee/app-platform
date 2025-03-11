@@ -263,7 +263,7 @@ const FormDrawer = ({ formData, isAddOperate, drawerRef, refresh }) => {
               showPreview ? <Image
                 width={'100%'}
                 height={'100%'}
-                src={ isUpload ? imgUrl : `${origin}/${formEnv() ? 'appengine' : 'api/jober'}/static/${imgUrl}`}
+                src={ isUpload ? imgUrl : `${origin}/${formEnv() ? 'appbuilder' : 'api/jober'}/static/${imgUrl}`}
                 style={{ objectFit: 'contain' }}
               /> : <div className='no-preview'>
                 <img src={EmptyImg} alt="" />

@@ -5,9 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { del, get, post, put, download } from './http';
-import { httpUrlMap } from './httpConfig';
-
-const { AIPP_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+import serviceConfig from './httpConfig';
+const { AIPP_URL } = serviceConfig;
 
 // 获取表单列表
 export function getFormList(tenantId: string, data: { pageNum: number; pageSize: number; name?: string }) {

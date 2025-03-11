@@ -7,7 +7,6 @@ import {
   SET_CHAT_TYPE,
   SET_AT_CHAT_ID,
   SET_FORM_RECEIVED,
-  SET_INSPIRATION_DEMINSION,
   SET_REFERENCE,
   SET_LOGIN_STATUS,
   SET_REFERENCE_LIST,
@@ -25,7 +24,6 @@ const initialState = {
   chatId: '',
   atChatId: '',
   formReceived: false,
-  inspirationDeminsion: {},
   loginStatus: true,
   chatReference: [],
   referenceList: {},
@@ -52,8 +50,6 @@ const chatReducers = (state = initialState, action) => {
       return { ...state, atChatId: action.payload };
     case SET_FORM_RECEIVED:
       return { ...state, formReceived: action.payload };
-    case SET_INSPIRATION_DEMINSION:
-      return { ...state, inspirationDeminsion: action.payload };
     case SET_LOGIN_STATUS:
       return { ...state, loginStatus: action.payload };
     case SET_REFERENCE:

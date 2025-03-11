@@ -9,11 +9,12 @@ import { Checkbox } from 'antd';
 import { useLocation } from 'react-router-dom';
 import { ChatContext } from '@/pages/aippIndex/context';
 import { useAppSelector } from '@/store/hook';
+import { convertImgPath } from '@/common/util';
 import { scrollBottom } from '../../utils/chat-process';
 import MessageDetail from './message-detail';
 import SendBtn from '../send-box/send-btn';
 import RemoteForm from './render';
-import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import '../../styles/receive-box.scss';
 
 /**
@@ -25,10 +26,12 @@ import '../../styles/receive-box.scss';
  */
 const ReceiveBox = (props) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { checkCallBack, showCheck } = useContext(ChatContext);
   const {
     content,
     pictureList,
+    thinkTime,
     recieveType,
     formConfig,
     loading,
@@ -38,6 +41,7 @@ const ReceiveBox = (props) => {
     logId,
     instanceId,
     finished,
+    status,
     feedbackStatus,
     appName,
     appIcon,
@@ -56,9 +60,13 @@ const ReceiveBox = (props) => {
     }
   }, [location]);
   useEffect(() => {
-    setTimeout(() => {
+    if (chatRunning) {
       scrollBottom();
-    }, 500);
+    } else if (finished) {
+      setTimeout(() => {
+        scrollBottom();
+      }, 300);
+    }
   }, [props.chatItem]);
   function onChange(e) {
     props.chatItem.checked = e.target.checked;
@@ -68,21 +76,23 @@ const ReceiveBox = (props) => {
   // 设置显示类型
   function setReceiveDom(type) {
     if (type === 'form') {
-      return <RemoteForm uniqueId={logId} path={path} formConfig={formConfig} />        
+      return <RemoteForm uniqueId={logId} path={path} formConfig={formConfig} />
     }
-    return <MessageDetail 
-              content={content}
-              pictureList={pictureList}
-              markdownSyntax={markdownSyntax} 
-              finished={finished}
-              chartConfig={chartConfig}
-              filters={filters}
-              instanceId={instanceId}
-              feedbackStatus={feedbackStatus}
-              refreshFeedbackStatus={props.refreshFeedbackStatus}
-              reference={reference}
-              msgType={msgType}
-            />
+    return <MessageDetail
+      content={content}
+      pictureList={pictureList}
+      thinkTime={thinkTime}
+      markdownSyntax={markdownSyntax}
+      finished={finished}
+      chartConfig={chartConfig}
+      filters={filters}
+      status={status}
+      instanceId={instanceId}
+      feedbackStatus={feedbackStatus}
+      refreshFeedbackStatus={props.refreshFeedbackStatus}
+      reference={reference}
+      msgType={msgType}
+    />
   }
 
   return <>{(
@@ -113,9 +123,17 @@ const Loading = () => {
 }
 const Img = (props) => {
   const { iconPath } = props;
+  const [imgPath, setImgPath] = useState('');
+  useEffect(() => {
+    if (iconPath) {
+      convertImgPath(iconPath).then(res => {
+        setImgPath(res);
+      });
+    }
+  }, [iconPath]);
   return <>{(
     <span>
-      {iconPath ? <img src={iconPath} /> : <img src={knowledgeBase} />}
+      {imgPath ? <img src={imgPath} /> : <img src={knowledgeBase} />}
     </span>
   )}</>
 }

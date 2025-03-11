@@ -10,6 +10,8 @@ import { setConfigItem } from '@/store/appConfig/config';
 import LLM from './llm';
 import { Collapse, Form } from 'antd';
 import { pick } from 'lodash';
+import CloseImg from '@/assets/images/close_arrow.png';
+import OpenImg from '@/assets/images/open_arrow.png';
 const { Panel } = Collapse;
 
 const LLMContainer = (props) => {
@@ -52,7 +54,7 @@ const LLMContainer = (props) => {
   return <>
     <Collapse
       bordered={false}
-      expandIcon={({ isActive }) => isActive ? <img src="./src/assets/images/close_arrow.png" alt="" /> : <img src="./src/assets/images/open_arrow.png" alt="" />}
+      expandIcon={({ isActive }) => isActive ? <img src={CloseImg} alt="" /> : <img src={OpenImg} alt="" />}
       defaultActiveKey={['model']}
     >
       <Panel header={config.description} forceRender key='model' className="site-collapse-custom-panel">

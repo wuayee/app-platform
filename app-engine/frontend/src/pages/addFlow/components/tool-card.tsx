@@ -8,10 +8,16 @@ import React, { useState }from 'react';
 import { Drawer, Tag } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
-import Detail from '../../plugin/detail/detail';
+import { setSpaClassName } from '@/shared/utils/common';
 import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
 import { useTranslation } from 'react-i18next';
+import Detail from '../../plugin/detail/detail';
+import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
+import aiImg from '@/assets/images/ai/2.png';
+import workflowImg from '@/assets/images/ai/workflow.png';
+import applicationImg from '@/assets/images/ai/application.png';
+import userImg from '@/assets/images/ai/user.jpg';
 import '../styles/tool-card.scss';
 
 const ToolCard = ({ pluginData, tenantId }: any) => {
@@ -32,13 +38,14 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
       setIsShow(true);
     }
   }
+
   return (
-    <div className='plugin-card'>
+    <div className={setSpaClassName('plugin-card')}>
       <div className='plugin-card-header'>
         {
           pluginData.tags.includes('HUGGINGFACE') ?
-            <img src={`./src/assets/images/ai/${2}.png`} /> :
-            <img src='./src/assets/images/knowledge/knowledge-base.png' />
+            <img src={aiImg} /> :
+            <img src={knowledgeImg} />
         }
 
         <div>
@@ -46,12 +53,12 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
             <div className='tool-name'>
               <span className='text'>{pluginData.name}</span>
               {pluginData.tags.includes('WATERFLOW') || pluginData.tags.includes('HUGGINGFACE') ?
-                <img src='./src/assets/images/ai/workflow.png' alt='' /> :
-                <img src='./src/assets/images/ai/application.png' alt='' />}
+                <img src={workflowImg} alt='' /> :
+                <img src={applicationImg} alt='' />}
             </div>
           </div>
           <div className='plugin-card-user'>
-            <img width="18" height="18" src="./src/assets/images/ai/user.jpg" alt="" />
+            <img width="18" height="18" src={userImg} alt="" />
             <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
             {pluginData.tags.map((tag: string, index: number) =>{
               if (tag.trim().length > 0) {

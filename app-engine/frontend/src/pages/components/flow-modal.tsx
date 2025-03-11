@@ -8,6 +8,7 @@ import React, { useEffect, useState, useImperativeHandle, useRef } from 'react';
 import { Input, Modal, Tooltip, Button, Empty } from 'antd';
 import { UndoOutlined, PlusOutlined } from '@ant-design/icons';
 import { listData } from './common/mock';
+import { setSpaClassName } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
 import './styles/flow-modal.scss';
 
@@ -80,7 +81,7 @@ const FlowModal = (props) => {
           <span className='add-text'>{t('greenfield')}</span>
         </Button>
       </div>
-      <div className='search-list'>
+      <div className={setSpaClassName('search-list')}>
         {
           searchList.length ? searchList.map((item, index) => {
             return (

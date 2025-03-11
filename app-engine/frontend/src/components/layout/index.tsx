@@ -24,7 +24,8 @@ import {
 import { Provider } from 'react-redux';
 import { Icons, KnowledgeIcons } from '../icons/index';
 import store from '@/store/store';
-import { getUser, getRole } from '../../pages/helper';
+import { setSpaClassName } from '@/shared/utils/common';
+import { getUser, getOmsUser, getRole } from '../../pages/helper';
 import './style.scoped.scss';
 
 const { Content, Sider } = Layout;
@@ -66,7 +67,6 @@ const AppLayout: React.FC = () => {
       setDefaultActive(['/home']);
     }
   }
-
   const menuClick = (e: any) => {
     navigate(e.key);
   };
@@ -74,27 +74,28 @@ const AppLayout: React.FC = () => {
   const colorBgContainer = '#F0F2F4';
   const setClassName = () => {
     if (location.pathname.includes('home')) {
-      return 'home-chat layout-container'
+      return `${setSpaClassName('home-chat')} layout-container`
     } else if (location.pathname.includes('app')) {
-      return 'home-app layout-container'
+      return `${setSpaClassName('home-app')} layout-container`
     }
     return 'layout-container'
   }
   const layoutValidate = () => {
+    if (process.env.NODE_ENV !== 'development' && process.env.PACKAGE_MODE !== 'common') {
+      return false;
+    }
     if (location.pathname.includes('chatShare') || location.pathname.includes('add-flow')) {
       return false;
     }
-    if ((!location.pathname.includes('/chat/') || location.pathname.includes('/app/'))) {
-      return true;
-    } else if (location.pathname.includes('/chat/') && !location.pathname.includes('/app/')){
+    if (location.pathname.includes('/chat/') && !location.pathname.includes('/app/')){
       return false;
     }
-    return false;
+    return true;
   }
   useEffect(() => {
     const { pathname, search } = location;
     const route = getRouteByKey(flattenRouteList, pathname);
-    if (pathname.includes('/app-detail/') || pathname.includes('/add-flow/') || pathname.includes('/chatShare/')) {
+    if (pathname.includes('/app-detail/')) {
       setShowMenu(false);
     } else if (!route?.hidden || pathname.includes('/http')) {
       setShowMenu(true);
@@ -102,11 +103,16 @@ const AppLayout: React.FC = () => {
       setShowMenu(false);
     }
     getCurrentRoute(pathname);
+    parent?.window?.navigatePath?.('appengine', pathname + search);
   }, [location]);
 
   useEffect(() => {
-    getUser();
-    getRole();
+    if (process.env.PACKAGE_MODE === 'common') {
+      getUser();
+    } else {
+      getOmsUser();
+      getRole();
+    }
   }, [])
   return (
     <Layout>

@@ -5,10 +5,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { del, get, post, put } from './http';
-import { httpUrlMap } from './httpConfig';
-
-const { JANE_URL, AIPP_URL, PLUGIN_URL, APP_URL, LOGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+import serviceConfig from './httpConfig';
+const { AIPP_URL, PLUGIN_URL, APP_URL, LOGIN_URL } = serviceConfig;
 const sso_url = '/v1/user/sso_login_info';
+const sso_url_spa = '/framework/v1/sessions/current';
 
 // 获取当前用户信息
 export const getCurUser = () => {
@@ -23,21 +23,24 @@ export const getCurUser = () => {
     );
   });
 };
-// 上传图片
-export function uploadFile(data, headers) {
-  return post(`${JANE_URL}/jober/v1/jane/files`, data, { headers });
-}
+// 获取oms当前用户信息
+export const getOmsCurUser = () => {
+  return new Promise((resolve, reject) => {
+    get(`${LOGIN_URL}` + sso_url_spa).then(
+      (res) => {
+        resolve(res);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
 
-// 根据返回的地址获取语音转换的文字信息
-export function voiceToText(tenantId, voicePath, fileName) {
-  let url = `http://${window.location.host}${AIPP_URL}`;
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`, { voicePath: `${url}/${tenantId}/file?filePath=${voicePath}&fileName=${fileName}` });
+// 获取当前用户角色
+export function getUserRole() {
+  return get(`${LOGIN_URL}/framework/v1/sessions/current`);
 }
-// 文字转语音
-export function textToVoice(text, tone) {
-  return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`, { text, tone });
-}
-
 // 查询应用列表
 export function getAippList(tenant_id, params, limit, offset, name) {
   let url = `${AIPP_URL}/${tenant_id}/app?offset=${offset}&limit=${limit}`;

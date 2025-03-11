@@ -5,11 +5,6 @@
     "uniqueName": ""
   },
   {
-    "type": "manualCheckNodeState",
-    "name": "Manual Check",
-    "uniqueName": ""
-  },
-  {
     "type": "codeNodeState",
     "name": "Code",
     "uniqueName": ""

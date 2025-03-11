@@ -7,6 +7,10 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import EyeImg from '@/assets/images/eye_btn.svg';
+import CloseImg from '@/assets/images/close_btn.svg';
+import ToolImg from '@/assets/images/ai/tool.png';
+import WorkflowImg from '@/assets/images/ai/workflow.png';
 
 const SkillList = (props) => {
   const { t } = useTranslation();
@@ -36,8 +40,8 @@ const SkillList = (props) => {
   // 获取详情删除按钮
   const showOperate = (item) => {
     return (<span>
-      <img src="./src/assets/images/eye_btn.svg" alt="" style={{ cursor: 'pointer' }} onClick={() => workflowDetail(item)} />
-      <img src="./src/assets/images/close_btn.svg" style={{ marginLeft: 16, cursor: 'pointer' }} alt="" onClick={() => handleDelete(item)} />
+      <img src={EyeImg} alt="" style={{ cursor: 'pointer' }} onClick={() => workflowDetail(item)} />
+      <img src={CloseImg} style={{ marginLeft: 16, cursor: 'pointer' }} alt="" onClick={() => handleDelete(item)} />
     </span>);
   };
 
@@ -54,8 +58,8 @@ const SkillList = (props) => {
             <div className='item' onMouseEnter={() => handleHoverItem(index, 'enter')} onMouseLeave={() => handleHoverItem(index, 'leave')}>
               <span className='item-left'>
                 {item.type === 'tool' ?
-                  <img src='./src/assets/images/ai/tool.png' alt='' /> :
-                  <img src='./src/assets/images/ai/workflow.png' alt='' />
+                  <img src={ToolImg} alt='' /> :
+                  <img src={WorkflowImg} alt='' />
                 }
                 <span className='text'>{item.name || item}</span>
               </span>

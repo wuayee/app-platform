@@ -8,15 +8,15 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
-import { LeftArrowIcon } from '@assets/icon';
+import { LeftArrowIcon } from '@/assets/icon';
 import { Message } from '@/shared/utils/message';
 import {
   isJsonString,
   updateChatId,
   isInputEmpty,
-  enablePermission,
   findConfigValue,
-  getConfiguration
+  getConfiguration,
+  setSpaClassName
 } from '@/shared/utils/common';
 import { isChatRunning } from '@/shared/utils/chat';
 import { initChat } from './common/config';
@@ -30,10 +30,11 @@ import {
   messageProcess,
   messageProcessNormal,
   sendProcess,
-  deepClone
+  deepClone,
+  scrollBottom
 } from './utils/chat-process';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { setUseMemory, setDimension } from '@/store/common/common';
+import { setUseMemory } from '@/store/common/common';
 import {
   setAtChatId,
   setChatId,
@@ -43,6 +44,7 @@ import {
   setReference,
   setReferenceList,
 } from '@/store/chatStore/chatStore';
+import { v4 as uuidv4 } from 'uuid';
 import { storage } from '@/shared/storage';
 import { EventSourceParserStream } from '@/shared/eventsource-parser/stream';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
@@ -77,7 +79,6 @@ const ChatPreview = (props) => {
   const atChatId = useAppSelector((state) => state.chatCommonStore.atChatId);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
-  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const formReceived = useAppSelector((state) => state.chatCommonStore.formReceived);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
@@ -111,7 +112,7 @@ const ChatPreview = (props) => {
   const inspirationRef = useRef<any>(null);
   const isAutoSend = useRef<boolean>(false);
   const detailPage = location.pathname.indexOf('app-detail') !== -1;
-  const storageId = detailPage ? appId : aippId;
+  const storageId = aippId ? aippId : appId;
   const chatStatus = ['ARCHIVED', 'ERROR', 'TERMINATED'];
   const messageType = ['MSG', 'ERROR', 'META_MSG'];
 
@@ -136,25 +137,6 @@ const ChatPreview = (props) => {
   useEffect(() => {
     testRef.current = formReceived;
   }, [formReceived]);
-
-  // 切换App时，chatId为应用上次会话id
-  useEffect(() => {
-    if (appInfo.id && storageId && !dimension.noChange) {
-      let isDimension = enablePermission(appInfo);
-      if (!isDimension) {
-        dispatch(setChatId(storage.getChatId(storageId)));
-      } else {
-        const dimensionId = storage.get('dimension')?.[storageId]?.id;
-        const dimensions = storage.getDimensionChatId(storageId, dimensionId) || chatId;
-        dispatch(setChatId(dimensions));
-        if (historyRender.current) {
-          listRef.current = [];
-          dispatch(setChatList(deepClone(listRef.current)));
-          dimensions && initChatHistory(dimensions);
-        }
-      }
-    }
-  }, [dimension]);
 
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem, auto = false) {
@@ -184,6 +166,7 @@ const ChatPreview = (props) => {
         listRef.current = deepClone(chatArr);
         await dispatch(setChatList(chatArr));
         feedRef.current.initFeedbackStatus('all');
+        scrollToBottom();
       }
     } finally {
       setLoading(false);
@@ -200,13 +183,10 @@ const ChatPreview = (props) => {
   }, [appInfo.id]);
   // 获取历史记录处理
   const historyInit = () => {
-    let isDimension = enablePermission(appInfo);
     historyRender.current = true;
-    if (!isDimension) {
-      let chatId = storage.getChatId(storageId);
-      dispatch(setChatId(chatId));
-      chatId && initChatHistory(chatId);
-    }
+    let chatId = storage.getChatId(storageId);
+    dispatch(setChatId(chatId));
+    chatId && initChatHistory(chatId);
   }
   useEffect(() => {
     if (showMulti) {
@@ -290,6 +270,7 @@ const ChatPreview = (props) => {
     dispatch(setChatRunning(true));
     chatRender.current = true;
     chatMissionStart(value, fileList);
+    scrollBottom();
   };
   // 启动任务
   const chatMissionStart = async (value, fileList) => {
@@ -298,7 +279,6 @@ const ChatPreview = (props) => {
       'question': value,
       'context': {
         'use_memory': useMemory,
-        'dimension': dimension.value,
         'user_context': cloneDeep(userContext)
       }
     };
@@ -308,9 +288,6 @@ const ChatPreview = (props) => {
     if (atAppId) {
       chatParams.context.at_chat_id = atChatId;
       chatParams.context.at_app_id = atAppInfo.id;
-    }
-    if (enablePermission(appInfo)) {
-      chatParams.context.dimension_id = dimension.id;
     }
     if (fileList.length) {
       chatParams.context.user_context['$[FileDescription]$'] = fileList.map(item => {
@@ -359,6 +336,8 @@ const ChatPreview = (props) => {
       response = await sseChat(tenantId, params, isDebug, isAutoSend.current);
     }
     if (response.status !== 200) {
+      listRef.current[listRef.current.length - 2].logId = `${uuidv4()}-empty`;
+      listRef.current[listRef.current.length - 1].logId = `${uuidv4()}-empty`;
       chatRender.current && onStop(response.msg || response.suppressed || t('conversationFailed'));
       return;
     };
@@ -410,11 +389,6 @@ const ChatPreview = (props) => {
         setShowStop(true);
         return;
       }
-      // 用户自勾选
-      if (messageData.memory === 'UserSelect') {
-        selfSelect(messageData.instanceId, messageData.initContext);
-        return;
-      }
       // 智能表单
       if (messageData.formAppearance?.length) {
         let obj = messageProcess(runningInstanceId.current, messageData, atAppInfo);
@@ -439,7 +413,7 @@ const ChatPreview = (props) => {
           chatForm(obj);
           saveLocalChatId(messageData);
         }
-        if (log.type === 'QUESTION') {
+        if (log.type === 'QUESTION' || log.type === 'QUESTION_WITH_FILE' || log.type === 'FILE') {
           listRef.current[listRef.current.length - 2]['logId'] = Number(messageData.log_id);
           dispatch(setChatList(deepClone(listRef.current)));
         }
@@ -464,7 +438,7 @@ const ChatPreview = (props) => {
         dispatch(setReferenceList({}));
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       onStop(t('dataParseError'));
     }
   };
@@ -472,7 +446,7 @@ const ChatPreview = (props) => {
   const saveLocalChatId = (data) => {
     let { chat_id, at_chat_id } = data;
     if (chat_id) {
-      updateChatId(chat_id, storageId, dimension, appInfo);
+      updateChatId(chat_id, storageId);
       dispatch(setChatId(chat_id));
     }
     if (at_chat_id) {
@@ -486,40 +460,8 @@ const ChatPreview = (props) => {
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
     setShowStop(false);
+    scrollToBottom();
   };
-  // 用户自勾选
-  function selfSelect(instanceId, initContext) {
-    reportInstance.current = instanceId;
-    reportIContext.current = initContext;
-    dispatch(setChatList(deepClone(listRef.current)));
-    onStop(t('selectConversation'));
-    setCheckedList([]);
-    feedRef.current?.setCheckStatus();
-    setEditorShow(true, 'report');
-  }
-  // 用户自勾选确定回调
-  async function reportClick(list) {
-    let memoriesList = reportProcess(list, listRef);
-    let params = {
-      initContext: {
-        Question: listRef.current[listRef.current.length - 2].content,
-        ...reportIContext.current.initContext,
-        memories: JSON.stringify(memoriesList),
-      },
-    };
-    try {
-      const startes = await getReportInstance(tenantId, reportInstance.current, params, isDebug);
-      if (startes.status !== 200) {
-        onStop(t('conversationFailed'));
-        return;
-      };
-      listRef.current[listRef.current.length - 1].loading = true;
-      dispatch(setChatList(deepClone(listRef.current)));
-      chatStreaming(startes);
-    } finally {
-      setEditorShow(false);
-    }
-  }
   // 流式输出
   function chatStrInit(msg, initObj, status, logId) {
     let idx = 0;
@@ -528,6 +470,9 @@ const ChatPreview = (props) => {
       if (msgObj.chartData && msgObj.chartType) {
         initObj.chartConfig = msgObj;
       }
+    }
+    if (msg === '<think>') {
+      initObj.thinkStartTime = Date.now();
     }
     initObj.loading = false;
     if (status === 'ARCHIVED') {
@@ -539,6 +484,10 @@ const ChatPreview = (props) => {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
+      const { thinkTime } = listRef.current[idx];
+      if (thinkTime) {
+        initObj.thinkTime = thinkTime;
+      }
       const receiveItem = multiModelProcess(initObj);
       listRef.current.splice(idx, 1, deepClone(receiveItem));
     }
@@ -558,6 +507,9 @@ const ChatPreview = (props) => {
       item.content = str;
       if (status === 'ARCHIVED') {
         item.finished = true;
+      }
+      if (msg === '</think>' && item.thinkStartTime) {
+        item.thinkTime = Date.now() - item.thinkStartTime;
       }
       dispatch(setChatList(deepClone(listRef.current)));
     } else {
@@ -652,6 +604,8 @@ const ChatPreview = (props) => {
     }
     dispatch(setChatRunning(true));
     chatRender.current = true;
+    scrollToBottom();
+    setShowStop(false);
     chatStreaming(response);
   }
   // 用户自勾选删除对话回调
@@ -686,6 +640,12 @@ const ChatPreview = (props) => {
     }
   };
 
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      scrollBottom();
+    }, 300);
+  }
+
   useEffect(() => {
     setConfigAppInfo(atAppInfo || appInfo || {});
   }, [atAppInfo, appInfo]);
@@ -709,7 +669,7 @@ const ChatPreview = (props) => {
         <span className='icon-back' onClick={previewBack}>
           {showElsa && <LeftArrowIcon />}
         </span>
-        <div className={`chat-inner ${!detailPage ? 'chat-page-inner' : ''}`}>
+        <div className={`${setSpaClassName('chat-inner')} ${!detailPage ? 'chat-page-inner' : ''}`}>
           <div className={`chat-inner-left ${inspirationOpen && showInspiration ? 'chat-left-close' : 'no-border'}`}>
             <ChatMessage
               feedRef={feedRef}
@@ -726,7 +686,6 @@ const ChatPreview = (props) => {
               display={showCheck}
               setEditorShow={setEditorShow}
               checkedChat={checkedList}
-              reportClick={reportClick}
               deleteChat={deleteChat} />
             <SendEditor
               display={!showCheck}

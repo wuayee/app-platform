@@ -7,6 +7,7 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 import { Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
+import DeleteImg from '@/assets/images/delete_btn.svg';
 import '../styles/recommends.scss';
 
 const Recommend = (props) => {
@@ -95,7 +96,7 @@ const Recommend = (props) => {
                       {t('question')} {index + 1}
                     </span>
                     <span className='right'>
-                      <img src="./src/assets/images/delete_btn.svg" alt="" onClick={() => handleDeleteIns(index)} className={recommendValues.showRecommend ? '' : 'not-allowed'} />
+                      <img src={DeleteImg} alt="" onClick={() => handleDeleteIns(index)} className={recommendValues.showRecommend ? '' : 'not-allowed'} />
                     </span>
                   </div>
                   <div className='card-prompt'>
