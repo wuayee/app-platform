@@ -4,6 +4,7 @@
 
 package modelengine.fit.jade.aipp.model.service.impl;
 
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fitframework.annotation.Component;
@@ -24,12 +25,17 @@ public class CustomAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList() {
-        return defaultModelCenter.fetchModelList();
+    public ModelListDto fetchModelList(String type) {
+        return defaultModelCenter.fetchModelList(type);
     }
 
     @Override
     public String getModelBaseUrl(String tag) {
         return defaultModelCenter.getModelBaseUrl(tag);
+    }
+
+    @Override
+    public ModelAccessInfo getDefaultModel(String type) {
+        return defaultModelCenter.getDefaultModel(type);
     }
 }
