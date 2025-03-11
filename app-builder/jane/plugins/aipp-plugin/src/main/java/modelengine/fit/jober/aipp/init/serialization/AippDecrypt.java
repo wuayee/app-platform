@@ -7,6 +7,7 @@
 package modelengine.fit.jober.aipp.init.serialization;
 
 import modelengine.fit.security.Decryptor;
+import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.conf.ConfigDecryptor;
 import modelengine.fitframework.inspection.Validation;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
  * @author 刘信宏
  * @since 2024-01-08
  */
+@Component
 public class AippDecrypt implements ConfigDecryptor {
     private final Decryptor decryptor;
 

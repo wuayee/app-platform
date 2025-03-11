@@ -7,6 +7,7 @@
 package modelengine.fit.jane.flow.graph;
 
 import modelengine.fit.security.Decryptor;
+import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.conf.ConfigDecryptor;
 
 import java.util.Locale;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * @author 陈镕希
  * @since 2023-09-01
  */
+@Component
 public class FlowGraphSccConfigDecryptor implements ConfigDecryptor {
     private final Decryptor decryptor;
 

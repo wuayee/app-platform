@@ -16,6 +16,8 @@
     <modules>
         <module>authentication-service</module>
         <module>common-service</module>
+        <module>crypt-client</module>
+        <module>oms-service</module>
         <module>schema-service</module>
     </modules>
 </project>

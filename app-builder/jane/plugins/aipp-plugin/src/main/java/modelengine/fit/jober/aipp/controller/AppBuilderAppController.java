@@ -9,6 +9,8 @@ package modelengine.fit.jober.aipp.controller;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.events.AppCreatingEvent;
+import modelengine.fitframework.runtime.FitRuntime;
 import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.service.annotations.SpanAttr;
@@ -85,24 +87,28 @@ public class AppBuilderAppController extends AbstractController {
 
     private final LocaleService localeService;
 
+    private final FitRuntime fitRuntime;
+
     /**
      * 构造函数。
      *
-     * @param authenticator 表示认证器的 {@link Authenticator}。
-     * @param appService 表示app服务的 {@link AppBuilderAppService}。
+     * @param authenticator  表示认证器的 {@link Authenticator}。
+     * @param appService     表示app服务的 {@link AppBuilderAppService}。
      * @param appGenericable 表示app通用服务的 {@link AppBuilderAppService}。
-     * @param excludeNames 表示排除名称列表的 {@link List}{@code <}{@link String}{@code >}。
-     * @param localeService 表示获取国际化信息的 {@link LocaleService}。
+     * @param excludeNames   表示排除名称列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param localeService  表示获取国际化信息的 {@link LocaleService}。
+     * @param fitRuntime     表示FIT运行时环境的 {@link FitRuntime}。
      */
     public AppBuilderAppController(Authenticator authenticator, AppBuilderAppService appService,
-            modelengine.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
-            @Value("${app-engine.exclude-names}") List<String> excludeNames, LocaleService localeService) {
+                                   modelengine.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
+                                   @Value("${app-engine.exclude-names}") List<String> excludeNames, LocaleService localeService, FitRuntime fitRuntime) {
         super(authenticator);
         // 需要FIT框架支持exclude-names配置大括号
         this.excludeNames = replaceAsterisks(excludeNames);
         this.appService = appService;
         this.appGenericable = appGenericable;
         this.localeService = localeService;
+        this.fitRuntime = fitRuntime;
     }
 
     private static List<String> replaceAsterisks(List<String> excludeNames) {
@@ -205,6 +211,7 @@ public class AppBuilderAppController extends AbstractController {
             @PathVariable("tenant_id") String tenantId,
             @RequestBody @Validated @SpanAttr("name:$.name") AppBuilderAppCreateDto dto) {
         notNull(dto.getAppBuiltType(), "App built type cannot be null.");
+        this.fitRuntime.publisherOfEvents().publishEvent(new AppCreatingEvent(this));
         if (this.appService.getAppCount(tenantId, this.buildAppQueryCondition(new AppQueryCondition(), DEFAULT_TYPE))
                 >= APP_COUNT_LIMIT) {
             return Rsp.err(ERR_CODE, this.localeService.localize(AppBuilderAppController.ERR_LOCALE_CODE));
@@ -388,6 +395,7 @@ public class AppBuilderAppController extends AbstractController {
     @PostMapping(path = "/import", description = "导入应用配置")
     public Rsp<AppBuilderAppDto> importApp(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, PartitionedEntity appConfig) {
+        this.fitRuntime.publisherOfEvents().publishEvent(new AppCreatingEvent(this));
         if (this.appService.getAppCount(tenantId, this.buildAppQueryCondition(new AppQueryCondition(), DEFAULT_TYPE))
                 >= APP_COUNT_LIMIT) {
             throw new AippException(AippErrCode.TOO_MANY_APPS);

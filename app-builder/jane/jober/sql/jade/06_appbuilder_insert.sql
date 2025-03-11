@@ -384,14 +384,14 @@ INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574
 
 INSERT INTO aipp_system_config(config_key, config_value, config_group, config_parent) VALUES ('system', '{"template": "You ara a prompt generator, Your job is to generate prompt from the input of the user.\n\nThe Prompt must follow the style of the example below:\n\n###\ninput:\n生活助手\n\noutput:\n角色：你是一个智能生活助手。\n背景：作为一款集成多种智能功能的应用程序，你需要熟悉各种智能家居设备、日程安排、健康数据等相关知识。\n技能：智能家居控制照明、温控、安防、日程管理（提醒、安排等）、健康监测（睡眠、运行、饮食等）、信息查询、语音交互等。\n目标：为用户提供便捷。\n限制：你可以访问用户的智能家居设备、日历、健康数据等相关信息，并根据需要进行协作和响应。\n###\n\n**DO NOT GENERATE ANY OTHER CONTENT EXCEPT OF THE PROMPT TEMPLATE**\n\ninput: {{input}}"}', 'template', NULL) ON CONFLICT (config_group, config_key) DO NOTHING;
 
-INSERT INTO "app_builder_app_type" VALUES ('4db152b24f94473ab683b1acbfe3c865', '通用', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:11.275326', '2025-01-16 17:26:11.275326');
-INSERT INTO "app_builder_app_type" VALUES ('ad7fca4851394495a90723eb6bcd6141', '文章写作', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:53.880531', '2025-01-16 17:26:53.880531');
-INSERT INTO "app_builder_app_type" VALUES ('099201eaee2346a7bffd76bbdbfb0c7e', '编程开发', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:02.607163', '2025-01-16 17:27:02.607163');
-INSERT INTO "app_builder_app_type" VALUES ('19301209cff644e0bed7aede966226fa', '金融问数', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:15.121579', '2025-01-16 17:27:15.121579');
-INSERT INTO "app_builder_app_type" VALUES ('dadb32e11d0f49c8b3b2b3b78f32adcb', '知识问答', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:24.408541', '2025-01-16 17:27:24.408541');
-INSERT INTO "app_builder_app_type" VALUES ('bfce7a4f00ea464ca85b1bd691ffe774', '数字人', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:31.439755', '2025-01-16 17:27:31.439755');
-INSERT INTO "app_builder_app_type" VALUES ('b653edb7eb5a49be91abcd2c5877c6ad', '办公效率', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:40.941004', '2025-01-16 17:27:40.941004');
-INSERT INTO "app_builder_app_type" VALUES ('6cca24416a05436390e0a96712a4294e', '企业管理', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:50.566101', '2025-01-16 17:27:50.566101');
+INSERT INTO "app_builder_app_type" VALUES ('4db152b24f94473ab683b1acbfe3c865', '通用', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:11.275326', '2025-01-16 17:26:11.275326') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('ad7fca4851394495a90723eb6bcd6141', '文章写作', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:53.880531', '2025-01-16 17:26:53.880531') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('099201eaee2346a7bffd76bbdbfb0c7e', '编程开发', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:02.607163', '2025-01-16 17:27:02.607163') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('19301209cff644e0bed7aede966226fa', '金融问数', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:15.121579', '2025-01-16 17:27:15.121579') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('dadb32e11d0f49c8b3b2b3b78f32adcb', '知识问答', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:24.408541', '2025-01-16 17:27:24.408541') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('bfce7a4f00ea464ca85b1bd691ffe774', '数字人', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:31.439755', '2025-01-16 17:27:31.439755') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('b653edb7eb5a49be91abcd2c5877c6ad', '办公效率', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:40.941004', '2025-01-16 17:27:40.941004') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('6cca24416a05436390e0a96712a4294e', '企业管理', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:50.566101', '2025-01-16 17:27:50.566101') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb4687a8b9de3ac88ef1e3', 'semantic_search', 'en', 'Semantic search') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb4687a8b9de3ac88ef1e2', 'semantic_search', 'zh', '语义检索') ON CONFLICT (id) DO NOTHING;
