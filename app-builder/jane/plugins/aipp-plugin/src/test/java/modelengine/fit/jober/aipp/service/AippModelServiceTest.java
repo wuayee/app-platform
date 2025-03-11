@@ -16,6 +16,7 @@ import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.Prompt;
 import modelengine.fel.core.chat.support.AiMessage;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jober.aipp.domain.AippSystemConfig;
 import modelengine.fit.jober.aipp.dto.model.PromptGenerateDto;
@@ -27,10 +28,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Optional;
 
@@ -91,8 +92,11 @@ public class AippModelServiceTest {
 
         @Test
         @DisplayName("正常生成提示词")
-        @Disabled
         void shouldOkWhenGeneratePrompt() {
+            ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
+            when(model.getServiceName()).thenReturn("llm_model");
+            when(model.getTag()).thenReturn("llm_tag");
+            when(aippModelCenter.getDefaultModel(any())).thenReturn(model);
             when(aippModelCenter.getModelBaseUrl(anyString())).thenReturn("1111");
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                     Choir.just(new AiMessage("123")));

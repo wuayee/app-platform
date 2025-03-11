@@ -6,12 +6,11 @@
 
 package modelengine.fit.jober.aipp.controller;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-
 import modelengine.fit.http.protocol.Address;
 import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
 import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.support.DefaultCookieCollection;
+import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippParamException;
 import modelengine.fit.jober.aipp.dto.chat.CreateAppChatRequest;
@@ -19,7 +18,6 @@ import modelengine.fit.jober.aipp.service.AppChatService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

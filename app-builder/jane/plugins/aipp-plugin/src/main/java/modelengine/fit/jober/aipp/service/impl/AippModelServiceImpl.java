@@ -77,6 +77,5 @@ public class AippModelServiceImpl implements AippModelService {
         String prompt = new DefaultStringTemplate(template).render(values);
         ModelAccessInfo modelAccessInfo = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
         return this.chat(modelAccessInfo.getServiceName(), modelAccessInfo.getTag(), 0.3, prompt);
-
     }
 }
