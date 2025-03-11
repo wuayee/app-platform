@@ -163,7 +163,7 @@ const EditModal = (props) => {
         const agentParam = {
           description: formParams.description,
         };
-        const res: any = await createAgent(agentParam);
+        const res: any = await createAgent(tenantId, agentParam);
         agentName = res.data?.name;
         agentInfo.current = res.data;
       }
@@ -370,7 +370,7 @@ const EditModal = (props) => {
                 </Radio.Button>
                 <Radio.Button value='workflow' className='app-edit-btn'>
                   <img src={workflow} alt='' className='app-edit-btn-img' />
-                  {t('workFlow')}
+                  {t('workflow')}
                 </Radio.Button>
               </Radio.Group>
             </div>

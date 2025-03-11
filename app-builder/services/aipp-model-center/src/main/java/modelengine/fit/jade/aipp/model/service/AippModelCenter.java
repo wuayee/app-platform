@@ -6,6 +6,7 @@
 
 package modelengine.fit.jade.aipp.model.service;
 
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 
 /**
@@ -18,9 +19,10 @@ public interface AippModelCenter {
     /**
      * 查询接入的模型服务的列表。
      *
+     * @param type 标识模型类型的 {@link String}。
      * @return 表示模型服务列表的 {@link ModelListDto}，如果发生异常，返回空列表。
      */
-    ModelListDto fetchModelList();
+    ModelListDto fetchModelList(String type);
 
     /**
      * 根据 tag 映射模型所在的网关。
@@ -29,4 +31,12 @@ public interface AippModelCenter {
      * @return 表示模型网关地址的 {@link String}，配合 {@link ChatOptions} 使用。
      */
     String getModelBaseUrl(String tag);
+
+    /**
+     * 获取使用的模型服务信息。
+     *
+     * @param type 标识模型类型的 {@link String}。
+     * @return 表示模型服务信息的 {@link ModelAccessInfo}。
+     */
+    ModelAccessInfo getDefaultModel(String type);
 }

@@ -163,8 +163,10 @@ public class OperatorServiceImpl implements OperatorService {
             doc.getFooterList().forEach(h -> h.setHeaderFooter(newCTHdrFtrInstance()));
             // 文档内容不能为空
             String text = xwpfWordExtractor.getText();
+            // 文档内容为空
             if (StringUtils.isBlank(text)) {
-                throw new IOException("file is empty." + fileName);
+                log.info("file is empty, fileName: {}", fileName);
+                return StringUtils.EMPTY;
             }
             // 过滤多余空行
             return deleteBlankLine(text);

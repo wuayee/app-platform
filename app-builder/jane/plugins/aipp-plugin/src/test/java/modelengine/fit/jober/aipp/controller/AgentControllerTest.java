@@ -56,8 +56,8 @@ public class AgentControllerTest {
     @Test
     @DisplayName("测试根据描述生成智能体信息")
     void shouldReturnOkWhenGenerateAgentInfo() {
-        when(this.agentInfoGenerateService.generateName(anyString())).thenReturn("NAME");
-        when(this.agentInfoGenerateService.generateGreeeting(anyString())).thenReturn("GREETING");
+        when(this.agentInfoGenerateService.generateName(anyString(), any())).thenReturn("NAME");
+        when(this.agentInfoGenerateService.generateGreeting(anyString())).thenReturn("GREETING");
         when(this.agentInfoGenerateService.generatePrompt(anyString())).thenReturn("PROMPT");
         List<String> tools = new ArrayList<String>() {{
             add("UNIQUENAME");
@@ -65,7 +65,7 @@ public class AgentControllerTest {
         when(this.agentInfoGenerateService.selectTools(anyString(), any())).thenReturn(tools);
         AgentCreateInfoDto agentCreateInfoDto = new AgentCreateInfoDto();
         agentCreateInfoDto.setDescription("DESC");
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/api/agent")
+        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/api/tid/agent")
                 .jsonEntity(agentCreateInfoDto)
                 .responseType(Rsp.class);
         this.response = this.mockMvc.perform(requestBuilder);

@@ -424,12 +424,13 @@ public class AppBuilderAppServiceImplTest {
             String appId = "appId1";
             appCreateDto.setName(appName);
             appCreateDto.setAppCategory("chatbot");
+            appCreateDto.setDescription("");
             AppBuilderApp appTemplate = mockApp();
             AippCreateDto aippCreateDto = new AippCreateDto();
             aippCreateDto.setAippId("aippId1");
             when(appRepository.selectWithId(appId)).thenReturn(appTemplate);
             when(aippFlowService.previewAipp(anyString(), any(), any())).thenReturn(aippCreateDto);
-            when(aippModelCenter.fetchModelList()).thenReturn(null);
+            when(aippModelCenter.fetchModelList(any())).thenReturn(null);
             AppBuilderAppDto appBuilderAppDto = appBuilderAppService.create(appId, appCreateDto, context, false);
             assertThat(appBuilderAppDto.getName()).isEqualTo(appName);
             assertThat(appBuilderAppDto.getAppCategory()).isEqualTo("chatbot");

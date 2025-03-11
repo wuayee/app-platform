@@ -9,7 +9,6 @@ import { Spin } from 'antd';
 import { Message } from '@/shared/utils/message';
 import { InspirationIcon, RebotIcon } from '@/assets/icon';
 import { getRecommends } from '@/shared/http/chat';
-import { getModels } from '@/shared/http/appBuilder';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { useTranslation } from 'react-i18next';
@@ -31,8 +30,6 @@ const Recommends = (props) => {
   const [loading, setLoading] = useState(false);
   const [showRecommend, setShowRecommend] = useState(false);
   const [showInspiration, setShowInspiration] = useState(false);
-  const [model, setModel] = useState('');
-  const [modelTag, setModelTag] = useState('');
   const curRecommendList = useRef([]);
   const refreshRef = useRef<any>(true);
   const dispatch = useAppDispatch();
@@ -67,9 +64,7 @@ const Recommends = (props) => {
     let answer = chatList[chatLength - 1]?.content;
     let params = {
       question,
-      answer,
-      model,
-      modelTag
+      answer
     }
     recommendList.length > 0 && setLoading(true);
     try {
@@ -98,7 +93,6 @@ const Recommends = (props) => {
 
   useEffect(() => {
     if (!Object.keys(appInfo).length) return;
-    getModelTag();
     const recommendItem = findConfigValue(appInfo, 'recommend');
     const inspirationItem = findConfigValue(appInfo, 'inspiration');
     setShowRecommend(recommendItem?.showRecommend || false);
@@ -124,30 +118,6 @@ const Recommends = (props) => {
       }
     }
   }, [chatList]);
-
-  // 获取模型来源
-  const getModelTag = async () => {
-    const formProp = appInfo.configFormProperties;
-    if (!formProp) {
-      return;
-    }
-    const modelItem = findConfigValue(appInfo, 'model');
-    const modelValue = modelItem?.model || '';
-    setModel(modelValue);
-    const res = await getModels();
-    if (res && res.models) {
-      const modelList = res.models.filter(item => item.serviceName === modelValue);
-      if (modelList?.length) {
-        const modelInternalItem = modelList.find(item => item.tag === 'INTERNAL');
-        // 优先使用内部模型
-        if (modelInternalItem) {
-          setModelTag('INTERNAL');
-        } else {
-          setModelTag(modelList[0].tag);
-        }
-      }
-    }
-  };
 
   useEffect(() => {
     return () => {

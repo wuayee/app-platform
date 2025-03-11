@@ -70,7 +70,7 @@ class CheckerTest {
             when(pluginToolService.hasPluginTools(any())).thenReturn(Collections.singletonList(true));
             ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "INTERNAL");
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(true, true));
-            when(modelCenter.fetchModelList()).thenReturn(
+            when(modelCenter.fetchModelList(any())).thenReturn(
                     new ModelListDto(Collections.singletonList(modelAccessInfo), 1));
             List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto);
             Assertions.assertEquals(results.size(), 1);
@@ -98,7 +98,7 @@ class CheckerTest {
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(false, false, false));
             ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "EXTERNAL");
-            when(modelCenter.fetchModelList()).thenReturn(
+            when(modelCenter.fetchModelList(any())).thenReturn(
                     new ModelListDto(Collections.singletonList(modelAccessInfo), 1));
             List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto);
             Assertions.assertEquals(results.size(), 2);

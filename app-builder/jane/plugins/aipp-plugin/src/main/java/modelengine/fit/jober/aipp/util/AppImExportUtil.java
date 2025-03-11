@@ -127,6 +127,7 @@ public class AppImExportUtil {
 
         List<AppExportConfigProperty> exportProperties = configProperties.stream()
                 .map(configProperty -> convertToAppExportConfigProperty(configProperty, idToFormProperty))
+                .filter(appExportConfigProperty -> appExportConfigProperty.getFormProperty() != null)
                 .collect(Collectors.toList());
         AppExportForm exportForm = AppExportForm.builder()
                 .id(appBuilderForm.getId())

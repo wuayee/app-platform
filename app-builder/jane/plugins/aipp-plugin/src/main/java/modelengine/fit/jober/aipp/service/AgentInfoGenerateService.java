@@ -6,6 +6,8 @@
 
 package modelengine.fit.jober.aipp.service;
 
+import modelengine.fit.jane.common.entity.OperationContext;
+
 import java.util.List;
 
 /**
@@ -19,9 +21,10 @@ public interface AgentInfoGenerateService {
      * 根据描述生成智能体名字。
      *
      * @param desc 表示对智能体描述的 {@link String}。
+     * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 根据智能体描述所生成名字的 {@link String}。
      */
-    String generateName(String desc);
+    String generateName(String desc, OperationContext context);
 
     /**
      * 根据描述生成智能体开场白。
@@ -29,7 +32,7 @@ public interface AgentInfoGenerateService {
      * @param desc 表示对智能体描述的 {@link String}。
      * @return 根据智能体描述所生成开场白的 {@link String}。
      */
-    String generateGreeeting(String desc);
+    String generateGreeting(String desc);
 
     /**
      * 根据描述生成智能体提示词。

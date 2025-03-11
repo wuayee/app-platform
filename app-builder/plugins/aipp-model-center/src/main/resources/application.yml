@@ -4,3 +4,5 @@ fit:
       - 'modelengine.fit.jade.aipp.model'
 openai-urls:
   external: 'https://backend:8002/'
+defaultModel:
+  chatModel: 'Qwen2-72B-Instruct-GPTQ-Int4'

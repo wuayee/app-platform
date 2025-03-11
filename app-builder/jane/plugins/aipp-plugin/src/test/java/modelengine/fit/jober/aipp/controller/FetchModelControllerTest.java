@@ -7,6 +7,7 @@
 package modelengine.fit.jober.aipp.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.http.client.HttpClassicClientResponse;
@@ -59,7 +60,7 @@ public class FetchModelControllerTest {
                 .tag("testTag")
                 .build());
         ModelListDto modelListDto = ModelListDto.builder().models(modelList).total(modelList.size()).build();
-        when(this.aippModelCenter.fetchModelList()).thenReturn(modelListDto);
+        when(this.aippModelCenter.fetchModelList(any())).thenReturn(modelListDto);
 
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/v1/api/fetch/model-list")
                 .responseType(ModelListDto.class);

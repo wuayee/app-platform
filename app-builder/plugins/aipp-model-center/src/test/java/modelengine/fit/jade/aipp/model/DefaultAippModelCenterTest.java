@@ -72,7 +72,7 @@ public class DefaultAippModelCenterTest {
                 this.config,
                 this.container,
                 "http://localhost:" + this.server.getPort() + "/api/ui/serviceaccess/v1/service/LLM_SERVICE",
-                modelBaseUrls);
+                modelBaseUrls, "Qwen2-72B-Instruct-GPTQ-Int4");
         doAnswer((Answer<String>) invocation -> invocation.getArgument(0)).when(this.decryptor)
                 .decrypt(any(String.class));
     }
@@ -97,7 +97,7 @@ public class DefaultAippModelCenterTest {
         this.server.enqueue(new MockResponse().setBody(serializer.serialize(rspContent)).setHeader(
                 "Content-Type", "application/json"
         ));
-        ModelListDto modelListDto = aippModelCenter.fetchModelList();
+        ModelListDto modelListDto = aippModelCenter.fetchModelList(null);
         assertThat(modelListDto.getTotal()).isEqualTo(1);
         assertThat(modelListDto.getModels()).extracting(ModelAccessInfo::getServiceName).contains("testService");
         assertThat(modelListDto.getModels()).extracting(ModelAccessInfo::getTag).contains("EXTERNAL");
@@ -108,7 +108,7 @@ public class DefaultAippModelCenterTest {
     void testHttpResponseFailed() {
         this.server.enqueue(new MockResponse().setHeader("Content-Type", "application/json")
                 .setResponseCode(404));
-        ModelListDto modelListDto = aippModelCenter.fetchModelList();
+        ModelListDto modelListDto = aippModelCenter.fetchModelList(null);
         assertThat(modelListDto.getTotal()).isEqualTo(0);
     }
 
@@ -125,7 +125,7 @@ public class DefaultAippModelCenterTest {
                 "Content-Type", "application/json"
         ));
 
-        ModelListDto modelListDto = aippModelCenter.fetchModelList();
+        ModelListDto modelListDto = aippModelCenter.fetchModelList(null);
         assertThat(modelListDto.getTotal()).isEqualTo(0);
     }
 

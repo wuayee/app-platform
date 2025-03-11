@@ -8,7 +8,13 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import static modelengine.jade.carver.validation.ValidateTagMode.validateTagMode;
 
+import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jober.aipp.condition.AppQueryCondition;
+import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
+import modelengine.fit.jober.aipp.util.UUIDUtil;
 import modelengine.jade.carver.ListResult;
+import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.store.entity.query.PluginToolQuery;
 import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.PluginToolService;
@@ -45,6 +51,7 @@ import java.util.Map;
 @Component
 public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
     private static final Logger log = Logger.get(AppBuilderAppServiceImpl.class);
+    private static final String UI_WORD_KEY = "aipp.service.impl.agent.agent";
 
     private final AippModelService aippModelService;
 
@@ -52,30 +59,71 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
 
     private final PluginToolService toolService;
 
+    private final LocaleService localeService;
+
+    private final AppBuilderAppRepository appRepository;
+
+    private final String agentNameFormat = "^[\\u4E00-\\u9FA5A-Za-z0-9][\\u4E00-\\u9FA5A-Za-z0-9-_]*$";
+
     public AgentInfoGenerateServiceImpl(AippModelService aippModelService, AippModelCenter aippModelCenter,
-            PluginToolService toolService) {
+            PluginToolService toolService, LocaleService localeService, AppBuilderAppRepository appRepository) {
         this.aippModelService = aippModelService;
         this.aippModelCenter = aippModelCenter;
         this.toolService = toolService;
+        this.localeService = localeService;
+        this.appRepository = appRepository;
     }
 
     @Override
-    public String generateName(String desc) {
-        return this.generateByTemplate(desc, "prompt/promptGenerateName.txt");
+    public String generateName(String desc, OperationContext context) {
+        String name = this.generateByTemplate(desc, "prompt/promptGenerateName.txt");
+        if (!name.matches(this.agentNameFormat) || name.trim().isEmpty() || !this.isNameUnique(context, name)) {
+            name = this.localeService.localize(UI_WORD_KEY) + UUIDUtil.uuid();
+        }
+        return name;
+    }
+
+    private boolean isNameUnique(OperationContext context, String name) {
+        AppQueryCondition queryCondition =
+                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
+        if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
+            log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public String generateGreeeting(String desc) {
-        return this.generateByTemplate(desc, "prompt/promptGenerateGreeting.txt");
+    public String generateGreeting(String desc) {
+        try {
+            return this.generateByTemplate(desc, "prompt/promptGenerateGreeting.txt");
+        } catch (Exception e) {
+            log.error("Create agent generate greeting failed, reason:{}", e.getMessage());
+        }
+        return "";
     }
 
     @Override
     public String generatePrompt(String desc) {
-        return this.generateByTemplate(desc, "prompt/promptGeneratePrompt.txt");
+        try {
+            return this.generateByTemplate(desc, "prompt/promptGeneratePrompt.txt");
+        } catch (Exception e) {
+            log.error("Create agent generate prompt failed, reason:{}", e.getMessage());
+        }
+        return StringUtils.EMPTY;
     }
 
     @Override
     public List<String> selectTools(String desc, String creator) {
+        try {
+            return this.getToolsResult(desc, creator);
+        } catch (Exception e) {
+            log.error("Create agent select tools failed, reason:{}", e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+    private ArrayList<String> getToolsResult(String desc, String creator) {
         StringBuilder toolsCandidate = new StringBuilder();
         ListResult<PluginToolData> tools = this.getTools(creator);
         int count = tools.getCount();
@@ -121,23 +169,8 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
             log.error("read prompt template file fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
-        ModelAccessInfo model = getDefaultModel();
+        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
         String prompt = new DefaultStringTemplate(template).render(values);
         return aippModelService.chat(model.getServiceName(), model.getTag(), 0.0, prompt);
-    }
-
-    private ModelAccessInfo getDefaultModel() {
-        ModelAccessInfo firstModel = new ModelAccessInfo("", "");
-        ModelListDto modelList = this.aippModelCenter.fetchModelList();
-        if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
-            List<ModelAccessInfo> modelInfoList = modelList.getModels();
-            for (ModelAccessInfo info : modelInfoList) {
-                if (StringUtils.equals(info.getServiceName(), "Qwen2-72B-Instruct-GPTQ-Int4")) {
-                    return info;
-                }
-            }
-            firstModel = modelList.getModels().get(0);
-        }
-        return firstModel;
     }
 }

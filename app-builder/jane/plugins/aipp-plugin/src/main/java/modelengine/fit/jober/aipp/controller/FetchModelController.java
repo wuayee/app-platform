@@ -8,6 +8,7 @@ package modelengine.fit.jober.aipp.controller;
 
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fitframework.annotation.Component;
@@ -33,7 +34,7 @@ public class FetchModelController {
      * @return 表示模型列表信息的 {@link ModelListDto}。
      */
     @GetMapping()
-    public ModelListDto fetchModelList() {
-        return this.aippModelCenter.fetchModelList();
+    public ModelListDto fetchModelList(@RequestParam(value = "type", required = false) String type) {
+        return this.aippModelCenter.fetchModelList(type);
     }
 }

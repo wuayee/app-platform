@@ -37,7 +37,7 @@ export const sourceTabs = [
   { key: 'HUGGINGFACE', label: 'HuggingFace' },
   { key: 'LANGCHAIN', label: 'LangChain' },
   { key: 'LLAMAINDEX', label: 'LlamaIndex' },
-  { key: 'WATERFLOW', label: i18n.t('workFlow') },
+  { key: 'WATERFLOW', label: i18n.t('workflow') },
   { key: 'MINE', label: i18n.t('mine') },
 ];
 

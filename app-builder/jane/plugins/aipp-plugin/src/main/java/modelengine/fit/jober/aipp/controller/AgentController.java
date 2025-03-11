@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.controller;
 
+import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.PostMapping;
 import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
@@ -29,7 +30,7 @@ import modelengine.jade.service.annotations.SpanAttr;
  * @since 2024-12-6
  */
 @Component
-@RequestMapping(path = "/v1/api/agent")
+@RequestMapping(path = "/v1/api/{tenant_id}/agent")
 public class AgentController extends AbstractController {
     private final Authenticator authenticator;
     private final AgentInfoGenerateService agentInfoGenerateService;
@@ -56,13 +57,14 @@ public class AgentController extends AbstractController {
     @CarverSpan(value = "operation.aippChat.query")
     @PostMapping
     public Rsp<AgentInfoEntity> generateAgentInfo(HttpClassicServerRequest request,
-            @RequestBody @Validated @SpanAttr("description:$.description") AgentCreateInfoDto dto) {
+            @RequestBody @Validated @SpanAttr("description:$.description") AgentCreateInfoDto dto,
+            @PathVariable("tenant_id") String tenantId) {
         AgentInfoEntity entity = new AgentInfoEntity();
-        OperationContext context = this.contextOf(request, "");
-        entity.setName(this.agentInfoGenerateService.generateName(dto.getDescription()));
-        entity.setGreeting(this.agentInfoGenerateService.generateGreeeting(dto.getDescription()));
+        OperationContext context = this.contextOf(request, tenantId);
+        entity.setName(this.agentInfoGenerateService.generateName(dto.getDescription(), context));
+        entity.setGreeting(this.agentInfoGenerateService.generateGreeting(dto.getDescription()));
         entity.setPrompt(this.agentInfoGenerateService.generatePrompt(dto.getDescription()));
-        entity.setTools(this.agentInfoGenerateService.selectTools(dto.getDescription(), context.getEmployeeNumber()));
+        entity.setTools(this.agentInfoGenerateService.selectTools(dto.getDescription(), context.getOperator()));
         return Rsp.ok(entity);
     }
 }

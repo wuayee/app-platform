@@ -12,7 +12,9 @@ import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.support.HumanMessage;
 import modelengine.fel.core.template.support.DefaultStringTemplate;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.dto.model.PromptGenerateDto;
 import modelengine.fit.jober.aipp.repository.AippSystemConfigRepository;
 import modelengine.fit.jober.aipp.service.AippModelService;
@@ -73,6 +75,8 @@ public class AippModelServiceImpl implements AippModelService {
                 .orElseThrow(() -> new IllegalStateException(
                         StringUtils.format("Template not exist.type: {0}", param.getTemplateType())));
         String prompt = new DefaultStringTemplate(template).render(values);
-        return this.chat(param.getModel(), param.getModelTag(), param.getTemperature(), prompt);
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
+        return this.chat(modelAccessInfo.getServiceName(), modelAccessInfo.getTag(), 0.3, prompt);
+
     }
 }

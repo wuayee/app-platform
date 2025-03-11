@@ -313,10 +313,7 @@ public class AppBuilderAppServiceImpl
         } catch (AippTaskNotFoundException e) {
             throw new AippException(APP_PUBLISH_FAILED);
         }
-        AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
-        aippDto.setId(aippCreateDto.getAippId());
         String id = appDto.getId();
-        this.updateFlowGraph(id, appDto.getFlowGraph(), contextOf);
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
         if (AppState.getAppState(appBuilderApp.getState()) == AppState.PUBLISHED) {
             throw new AippException(AippErrCode.APP_HAS_PUBLISHED);
@@ -325,6 +322,13 @@ public class AppBuilderAppServiceImpl
         // 添加校验，禁止更低版本手动输入
         this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
         appBuilderApp.setVersion(appDto.getVersion());
+        AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
+        aippDto.setId(aippCreateDto.getAippId());
+        AppBuilderSaveConfigDto saveConfigDto = AppBuilderSaveConfigDto.builder()
+                .graph(JsonUtils.toJsonString(appDto.getFlowGraph().getAppearance()))
+                .input(appDto.getConfigFormProperties())
+                .build();
+        this.saveConfig(id, saveConfigDto, contextOf);
         Map<String, Object> appBuilderAppAttr = appBuilderApp.getAttributes();
         appBuilderAppAttr.put(PUBLISH_UPDATE_DESCRIPTION_KEY, aippDto.getPublishedDescription());
         appBuilderAppAttr.put(PUBLISH_UPDATE_LOG_KEY, aippDto.getPublishedUpdateLog());
@@ -547,7 +551,7 @@ public class AppBuilderAppServiceImpl
     public AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context,
             boolean isUpgrade) {
         if (dto != null && !isUpgrade) {
-            this.validateCreateApp(dto.getName(), context);
+            this.validateCreateApp(dto, context);
         }
         String[] firstModelInfo = this.getFirstModelInfo();
         AppBuilderApp templateApp = this.appFactory.create(appId);
@@ -631,13 +635,34 @@ public class AppBuilderAppServiceImpl
         return newVersion.length() > VERSION_LENGTH ? app.getVersion() : newVersion;
     }
 
-    private void validateCreateApp(String name, OperationContext context) {
+    private void validateCreateApp(AppBuilderAppCreateDto dto, OperationContext context) {
+        String name = dto.getName();
         this.validateAppName(name, context);
         AppQueryCondition queryCondition =
                 AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
         if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
             log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
+        }
+        if (dto.getDescription() != null) {
+            this.validateAppDescription(dto, context);
+        }
+        this.validateAppCategory(dto, context);
+    }
+
+    private void validateAppDescription(AppBuilderAppCreateDto dto, OperationContext context) {
+        if (dto.getDescription().length() > 300) {
+            log.error("Create aipp failed, [name={}, tenantId={}], app description is larger than 300.",
+                    dto.getName(), context.getTenantId());
+            throw new AippException(context, AippErrCode.APP_DESCRIPTION_LENGTH_OUT_OF_BOUNDS);
+        }
+    }
+
+    private void validateAppCategory(AppBuilderAppCreateDto dto, OperationContext context) {
+        if (dto.getAppCategory() == null) {
+            log.error("Create aipp failed, [name={}, tenantId={}], app category is null.",
+                    dto.getName(), context.getTenantId());
+            throw new AippException(context, AippErrCode.APP_CATEGORY_IS_NULL);
         }
     }
 
@@ -1932,7 +1957,7 @@ public class AppBuilderAppServiceImpl
     }
 
     private String[] getFirstModelInfo() {
-        ModelListDto modelList = this.aippModelCenter.fetchModelList();
+        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             ModelAccessInfo firstModel = modelList.getModels().get(0);
             return new String[] {firstModel.getServiceName(), firstModel.getTag()};

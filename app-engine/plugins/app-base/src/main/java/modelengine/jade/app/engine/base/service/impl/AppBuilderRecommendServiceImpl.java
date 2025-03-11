@@ -6,9 +6,6 @@
 
 package modelengine.jade.app.engine.base.service.impl;
 
-import modelengine.jade.app.engine.base.dto.AppBuilderRecommendDto;
-import modelengine.jade.app.engine.base.service.AppBuilderRecommendService;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 
@@ -20,11 +17,15 @@ import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.operators.models.ChatBlockModel;
 import modelengine.fel.engine.operators.prompts.Prompts;
+import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.serialization.SerializationException;
 import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.app.engine.base.dto.AppBuilderRecommendDto;
+import modelengine.jade.app.engine.base.service.AppBuilderRecommendService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,17 +45,20 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
 
     private final ChatModel chatModelService;
 
+    private final AippModelCenter aippModelCenter;
+
     private final Map<String, String> baseUrls;
 
     public AppBuilderRecommendServiceImpl(ChatModel chatModelService,
-        @Value("${openai-urls}") Map<String, String> baseUrls) {
+        @Value("${openai-urls}") Map<String, String> baseUrls, AippModelCenter aippModelCenter) {
         this.chatModelService = chatModelService;
         this.baseUrls = baseUrls;
+        this.aippModelCenter = aippModelCenter;
     }
 
     @Override
     public List<String> queryRecommends(AppBuilderRecommendDto recommendDto) {
-        String model = recommendDto.getModel();
+        String model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE).getServiceName();
         String modelTag = recommendDto.getModelTag() == null ? DEFAULT_MODEL_SOURCE : recommendDto.getModelTag();
         String historyPrompt = "Here are the chat histories between user and assistant, "
                 + "inside <history></history> XML tags.\n<history>\n{{history}}\n</history>\n\n";

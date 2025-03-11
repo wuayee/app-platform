@@ -117,8 +117,6 @@ const LLM = (props) => {
 
   const openGeneratePrompt = (isFormDrawer = false) => {
     setCurrentModelInfo({
-      model: form.getFieldValue('model'),
-      temperature: form.getFieldValue('temperature'),
       templateType: 'system',
     });
     promptWordRef.current.openPromptModal(isFormDrawer);

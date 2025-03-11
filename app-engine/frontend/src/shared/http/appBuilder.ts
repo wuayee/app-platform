@@ -33,7 +33,7 @@ const saveContent = (tenant_id, instance_id, value) => {
 // 获取模型列表接口
 const getModels = () => {
   return new Promise((resolve, reject) => {
-    get(`${AIPP_URL}/fetch/model-list?type=chat_completion`).then((res) => {
+    get(`${AIPP_URL}/fetch/model-list?type=chat_completions`).then((res) => {
       resolve(res);
     }, (error) => {
       reject(error);
