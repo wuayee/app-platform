@@ -424,6 +424,7 @@ public class AppBuilderAppServiceImplTest {
             String appId = "appId1";
             appCreateDto.setName(appName);
             appCreateDto.setAppCategory("chatbot");
+            appCreateDto.setDescription("");
             AppBuilderApp appTemplate = mockApp();
             AippCreateDto aippCreateDto = new AippCreateDto();
             aippCreateDto.setAippId("aippId1");
