@@ -11,6 +11,10 @@
 
     <artifactId>appengine-oms-adapter</artifactId>
 
+    <properties>
+        <skip.build>${skip.authentication.oms}</skip.build>
+    </properties>
+
     <dependencies>
         <!-- FIT core -->
         <dependency>
@@ -168,6 +172,7 @@
                     <execution>
                         <phase>install</phase>
                         <configuration>
+                            <skip>${skip.build}</skip>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       todir="../../../framework/fit/java/target/plugins"/>
