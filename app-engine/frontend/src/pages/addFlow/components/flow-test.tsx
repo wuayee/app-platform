@@ -302,6 +302,7 @@ const Index = (props) => {
       }
       <Drawer title={<h5>{t('debugRun')}</h5>} open={showDebug}
         onClose={handleCloseDebug} width={600}
+        maskClosable={false}
         footer={
           <Spin spinning={loading}>
             <div style={{ textAlign: 'right' }}>
@@ -337,7 +338,7 @@ const Index = (props) => {
             })}
             {
               multiFileConfig.useMultimodal &&
-              <Form.Item name='fileUrls' label='fileUrls'>
+              <Form.Item name='fileUrls' label={t('uploadFile')}>
                 <UploadFile maxCount={multiFileConfig.maxUploadFilesNum} fileList={fileList} updateFileList={setFileList} />
                 <FileList isDebug fileList={fileList} updateFileList={setFileList}></FileList>
               </Form.Item>

@@ -65,10 +65,10 @@ const Feedbacks = ({ instanceId, feedbackStatus, refreshFeedbackStatus }) => {
         <div className='feed-inner'>
           <div className='feed-left'> {t('receiveTips')}</div>
           <div className='feed-right'>
-            {feedbackStatus !== 0 && <LikeIcon title='点赞' onClick={likeClick} />}
-            {feedbackStatus === 0 && <LikeSelectIcon title='点赞' onClick={likeClick} />}
-            {feedbackStatus !== 1 && <UnlikeIcon title='点踩' onClick={unLikeClick} />}
-            {feedbackStatus === 1 && <UnlikeSelectIcon title='点踩' onClick={unLikeClick} />}
+            {feedbackStatus !== 0 && <LikeIcon title={t('like')} onClick={likeClick} />}
+            {feedbackStatus === 0 && <LikeSelectIcon title={t('like')} onClick={likeClick} />}
+            {feedbackStatus !== 1 && <UnlikeIcon title={t('unLike')} onClick={unLikeClick} />}
+            {feedbackStatus === 1 && <UnlikeSelectIcon title={t('unLike')} onClick={unLikeClick} />}
           </div>
           <Modal
             title={t('feedback')}

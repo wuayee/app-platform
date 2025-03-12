@@ -160,7 +160,7 @@ const Render = (props: {
     setLoading(true);
     const res: any = await saveContent(TENANT_ID, instanceId, params, logId, isDebug);
     if (res.status !== 200) {
-      Message({ type: 'warning', content: res.msg || '对话失败' });
+      Message({ type: 'warning', content: res.msg || t('conversationFailed') });
       return;
     }
     setLoading(false);

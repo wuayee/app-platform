@@ -88,8 +88,6 @@ const SendEditor = (props) => {
   const editorRef = useRef<any>(null);
   const promptMapRef = useRef<any>([]);
   const recommondRef = useRef<any>(null);
-  const recording = useRef(false);
-  const audioDomRef = useRef<any>(null);
   const isAlreadySent = useRef<any>(false);
   const isAutoSend = useRef<any>(false);
   const recommondListRef = useRef<any>([]);
