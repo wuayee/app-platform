@@ -94,7 +94,7 @@ public class AppChatServiceImplTest {
     @BeforeEach
     void before() {
         this.appChatService = new AppChatServiceImpl(this.appFactory, this.aippChatMapper, this.aippRunTimeService,
-                this.appService, this.aippLogService, this.appRepository, this.metaService, this.flowsService);
+                this.appService, this.aippLogService, this.appRepository, this.metaService, this.flowsService, null, null);
         CacheUtils.clear();
     }
 
@@ -233,7 +233,7 @@ public class AppChatServiceImplTest {
 
         @BeforeEach
         void setup() {
-            this.chatService = new AppChatServiceImpl(null, null, null, null, null, null, metaService1, flowsService1);
+            this.chatService = new AppChatServiceImpl(null, null, null, null, null, null, metaService1, flowsService1, null, null);
             Mockito.when(metaService1.list(Mockito.any(MetaFilter.class), Mockito.anyBoolean(), Mockito.eq(0L),
                             Mockito.anyInt(), Mockito.any(OperationContext.class), Mockito.any(MetaFilter.class)))
                     .thenAnswer((invocation) -> {
