@@ -1,6 +1,7 @@
 import { isJsonString, getUiD } from '@/shared/utils/common';
 import { queryInspirationSelect } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
+import i18n from "@/locale/i18n";
 import { v4 as uuidv4 } from 'uuid';
 
 // 历史会话消息处理
@@ -150,7 +151,7 @@ export const sendProcess = (chatRunning, value, chatFileList) => {
     return;
   }
   if (chatRunning) {
-    Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+    Message({ type: 'warning', content: i18n.t('tryLater') });
     return;
   }
   chatInitObj.logId = getUiD();

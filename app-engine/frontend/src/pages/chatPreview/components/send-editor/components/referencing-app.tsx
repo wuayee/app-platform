@@ -10,7 +10,6 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useAppSelector } from '@/store/hook';
 import { queryAppsApi } from '@/shared/http/apps';
 import { convertImgPath } from '@/common/util';
-import { FINANCE_APP_ID } from '../common/config';
 import { useTranslation } from 'react-i18next';
 import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import '../styles/referencing-app.scss';
@@ -42,11 +41,7 @@ const ReferencingApp = (props) => {
       const res = await queryAppsApi(tenantId, params);
       if (res.code === 0) {
         const { data, total } = res;
-        const list = data.filter(item => {
-          let aippId = item.runnables.APP.aippId;
-          return aippId !== FINANCE_APP_ID;
-        })
-        setAppArr(list);
+        setAppArr(data);
       }
     } finally {
       setTableLoading(false);

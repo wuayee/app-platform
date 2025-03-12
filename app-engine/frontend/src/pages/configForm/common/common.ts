@@ -15,23 +15,23 @@ const sourceTypes = [
 const multiModal = [
   {
     value: 'file',
-    label: '文件',
+    label: i18n.t('fileLabel'),
   },
   {
     value: 'image',
-    label: '图片',
+    label: i18n.t('picture'),
   },
   {
     value: 'radio',
-    label: '音频',
+    label: i18n.t('audio'),
   },
   {
     value: 'video',
-    label: '视频',
+    label: i18n.t('video'),
   },
 ];
 const pluginItems = [
-  { key: 'FIT', label: '工具' },
-  { key: 'WATERFLOW', label: '工具流' }
+  { key: 'FIT', label: i18n.t('tool') },
+  { key: 'WATERFLOW', label: i18n.t('workflow') }
 ];
 export { multiModal, sourceTypes, pluginItems };

@@ -1,3 +1,4 @@
+import i18n from "@/locale/i18n";
 
 // 获取灵感大全最深层数
 export const getDepth  =  (arr) => {
@@ -105,7 +106,7 @@ export const setItemLevel = (list, level = 1) => {
 export const findMyCategoryId = (list) => {
   for (let i = 0; i < list.length; i++) {
     const item = list[i];
-    if (item.title === '我的') {
+    if (item.title === i18n.t('mine')) {
       return item.id;
     }
     if (item.children && item.children.length > 0) {
