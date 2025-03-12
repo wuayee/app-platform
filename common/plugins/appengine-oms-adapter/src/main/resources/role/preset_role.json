@@ -42,7 +42,7 @@
     "supportLoginType": 1
   },
   {
-    "name": "AppTrialDeveloper",
+    "name": "AppExDeveloper",
     "nameCode": "app.trial.developer.name",
     "description": "app.trial.developer.description",
     "creatable": true,
