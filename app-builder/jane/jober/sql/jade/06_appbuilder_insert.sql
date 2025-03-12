@@ -65,7 +65,7 @@ INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_prope
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('0b3677d53d8da544a82bbe900e9d536b', 'jadewdnjbq', '3073f4896620fb488d9fd3349ee23504', '45515ca5da9d04428f41086e291b4d5d') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('0b3677d53d8da544a82bbe900e9d536c', 'jadewdnjbq', '3073f4896620fb488d9fd3349ee23512', '45515ca5da9d04428f41086e291b4d5d') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('0b3677d53d8da544a82bbe900e9d536d', 'jadewdnjbq', '3073f4896620fb488d9fd3349ee23506', '45515ca5da9d04428f41086e291b4d5d') ON CONFLICT (id) DO NOTHING;
-
+INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('9c49ff92405a4bad8359e24102e84da5', NULL, '2d587082600f466c8c3ab2839b6e08ae', '45515ca5da9d04428f41086e291b4d5d') ON CONFLICT (id) DO NOTHING;
 -- workflow
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('0b3677d53d8da544a82bbe900e9d5363', 'jadewdnjbq', '3073f4896620fb488d9fd3349ee23526', '45515ca5da9d04428f41086e291b4d5f') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('2045fe16f5fe854d884b2f272100d68e', 'jadewdnjbq', '6269e12e4a908b4ba0d455c402ce8c3e', '45515ca5da9d04428f41086e291b4d5f') ON CONFLICT (id) DO NOTHING;
@@ -75,6 +75,7 @@ INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_prope
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('0b3677d53d8da544a82bbe900e9d5327', 'jadewdnjbq', '46b39a9533bbb247a38e976d4af41eb6', '45515ca5da9d04428f41086e291b4d5f') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('3073f4896620fb488d9fd3349ee23508', 'jadewdnjbq', '46b39a9533bbb247a38e976d4af41eb7', '45515ca5da9d04428f41086e291b4d5f') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('3073f4896620fb488d9fd3349ee23509', 'jadewdnjbq', '46b39a9533bbb247a38e976d4af41eb8', '45515ca5da9d04428f41086e291b4d5f') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('0d33b5d8b1a048c890c305e066f27437', NULL, '50ad63f4a48048f18ad97d0d83ae6039', '45515ca5da9d04428f41086e291b4d5f') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('02c45dc213464a8bbf963047b726951b', 'jadewdnjbq', '371c57e777f34798b4b73e358277bd11', '31087fb069034824958791eb49757a0e') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('b54018bd4f444a578c4fd98585e55a38', 'jadewdnjbq', '81c1d2aa93df449a830714e84857928d', '31087fb069034824958791eb49757a0e') ON CONFLICT (id) DO NOTHING;
@@ -84,6 +85,7 @@ INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_prope
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('1728ee9834c34a4892f84e1794a86bc8', NULL, '1221f6eebc6d48f68cbbc567d991ed47', '31087fb069034824958791eb49757a0e') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('3f8f5f4b86a14312a2c161df2cbcbfb5', 'jade0pg2ag', '1051c017ab464b3882228183a1eb2575', '31087fb069034824958791eb49757a0e') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('d40d679480ae4fcfbd5e97da777c31e3', 'jadewdnjbq', '567911ab6f77492e99f99b8bd5c2b248', '31087fb069034824958791eb49757a0e') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."app_builder_config_property" ("id", "node_id", "form_property_id", "config_id") VALUES ('45b82c12a6294779b3086f59dabee1c0', NULL, '5b24c625a14a4a26b5c8f0206aafb15c', '31087fb069034824958791eb49757a0e') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "public"."app_builder_form" ("id", "name", "tenant_id", "appearance", "type", "create_by", "create_at", "update_by", "update_at", "form_suite_id", "version") VALUES ('b8986770a6ffef44bbf2a9f26d6fc1bc', 'llm_config', '31f20efc7e0848deab6a6bc10fc3021e', '{}', 'component', 'wzc', '2024-04-17 20:16:29', 'wzc', '2024-04-17 20:16:33', '5bdd730775ae40a395d3a4b560fb3b21', '1.0.0') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."app_builder_form" ("id", "name", "tenant_id", "appearance", "type", "create_by", "create_at", "update_by", "update_at", "form_suite_id", "version") VALUES ('b8986770a6ffef44bbf2a9f26d6fc1be', 'llm_config', '31f20efc7e0848deab6a6bc10fc3021e', '{}', 'component', 'wzc', '2024-04-17 20:16:29', 'wzc', '2024-04-17 20:16:33', 'f842408ca75b4d1082f758e72a5d2541', '1.0.0') ON CONFLICT (id) DO NOTHING;
@@ -395,3 +397,10 @@ INSERT INTO "app_builder_app_type" VALUES ('6cca24416a05436390e0a96712a4294e', '
 
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb4687a8b9de3ac88ef1e3', 'semantic_search', 'en', 'Semantic search') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb4687a8b9de3ac88ef1e2', 'semantic_search', 'zh', '语义检索') ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('429eed4c7c8e47c988bad6ed5023d4c9', 'file_extraction', 'zh', '文件提取') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('b50fdc44630c4ded848bdb8165c5464f', 'file_extraction', 'en', 'File Extraction') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c7f2755446714877b5be0d6a167386d1', 'question_displayName', 'zh', '用户问题') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('1fb34511fc3e4836908fa7b7539e840d', 'question_displayName', 'en', 'userQuestion') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('8d1d888d9735436fb673bdbd3cc57316', 'form_property_multimodal', 'zh', '多模态') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('380cb868c716469ab7e79ed1155957ae', 'form_property_multimodal', 'en', 'Multimodal') ON CONFLICT (id) DO NOTHING;
