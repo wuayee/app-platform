@@ -14,6 +14,7 @@
         <crypt.client.service.version>1.0.0-SNAPSHOT</crypt.client.service.version>
         <!-- Third-party versions -->
         <fce.version>COMMON_RC4.0-SNAPSHOT</fce.version>
+        <skip.build>${skip.authentication.oms}</skip.build>
     </properties>
 
     <dependencies>
@@ -128,6 +129,7 @@
                     <execution>
                         <phase>install</phase>
                         <configuration>
+                            <skip>${skip.build}</skip>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       todir="../../../framework/fit/java/target/plugins"/>

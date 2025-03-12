@@ -10,6 +10,10 @@
 
     <artifactId>authentication-default</artifactId>
 
+    <properties>
+        <skip.build>${skip.authentication.default}</skip.build>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>modelengine.fitframework</groupId>
@@ -119,6 +123,7 @@
                     <execution>
                         <phase>install</phase>
                         <configuration>
+                            <skip>${skip.build}</skip>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       todir="../../../framework/fit/java/target/plugins"/>
