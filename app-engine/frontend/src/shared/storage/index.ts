@@ -2,7 +2,6 @@
  * 本地缓存的操作对象
  * @type {{set(*=, *=): void, get(*=): (any|undefined), remove(*=): void}}
  */
-import { FINANCE_APP_ID } from '../../pages/chatPreview/components/send-editor/common/config';
   
 export const storage = {
   set(key, value) {
@@ -31,13 +30,5 @@ export const storage = {
    */
   getChatId(appId) {
     return storage.get('appChatMap')?.[appId]?.chatId || '';
-  },
-  /**
-   * 获取对话chatId
-   * @param {String} dimensionId 应用Id
-   * @return {String} 对话的chatId
-   */
-  getDimensionChatId(appId, dimensionId) {
-    return storage.get('appChatMap')?.[appId]?.dimensions?.[dimensionId] || '';
   },
 };
