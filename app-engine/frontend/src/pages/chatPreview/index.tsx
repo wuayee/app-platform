@@ -22,11 +22,10 @@ import { isChatRunning } from '@/shared/utils/chat';
 import { initChat } from './common/config';
 import { AippContext } from '../aippIndex/context';
 import { stopInstance, getChatRecentLog, clearChat} from '@/shared/http/aipp';
-import { sseChat, saveContent, getReportInstance } from '@/shared/http/sse';
+import { sseChat, saveContent } from '@/shared/http/sse';
 import {
   historyChatProcess,
   inspirationProcess,
-  reportProcess,
   messageProcess,
   messageProcessNormal,
   sendProcess,
@@ -83,7 +82,8 @@ const ChatPreview = (props) => {
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
-  const { appId, aippId } = useParams();
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const { aippId } = useParams();
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -104,8 +104,6 @@ const ChatPreview = (props) => {
   let currentInfo = useRef<any>();
   let feedRef = useRef<any>();
   let testRef = useRef<any>(false);
-  let reportInstance = useRef<any>('');
-  let reportIContext = useRef<any>(null);
   let historyRender = useRef<any>(false);
   let chatRender = useRef<any>(null);
   const listRef = useRef<any>([]);
@@ -251,7 +249,7 @@ const ChatPreview = (props) => {
   const validateSend = () => {
     let hasRunning = chatList.filter(item => item.status === 'RUNNING')[0];
     if (hasRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' })
+      Message({ type: 'warning', content: t('tryLater') })
       return false;
     }
     return true;
