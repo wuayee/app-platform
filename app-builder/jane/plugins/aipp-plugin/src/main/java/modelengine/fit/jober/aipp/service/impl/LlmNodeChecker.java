@@ -48,7 +48,7 @@ public class LlmNodeChecker extends AbstractNodeChecker {
         Map<String, CheckResult> resultMap = results.stream()
                 .collect(Collectors.toMap(CheckResult::getNodeId, result -> result));
 
-        List<ModelAccessInfo> modelInfos = fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE).getModels();
+        List<ModelAccessInfo> modelInfos = fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE, null).getModels();
         List<String> uniqueNames = this.getAllUniqueNames(appCheckDto, TOOL_NAME);
         Map<String, Boolean> toolResults = this.getToolResult(pluginToolService, uniqueNames);
 

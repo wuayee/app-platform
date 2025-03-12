@@ -35,6 +35,6 @@ public class FetchModelController {
      */
     @GetMapping()
     public ModelListDto fetchModelList(@RequestParam(value = "type", required = false) String type) {
-        return this.aippModelCenter.fetchModelList(type);
+        return this.aippModelCenter.fetchModelList(type, null);
     }
 }

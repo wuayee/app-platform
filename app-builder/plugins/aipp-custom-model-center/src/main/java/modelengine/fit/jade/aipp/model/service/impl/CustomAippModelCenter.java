@@ -10,6 +10,7 @@ package modelengine.fit.jade.aipp.model.service.impl;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 
@@ -28,8 +29,8 @@ public class CustomAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList(String type) {
-        return defaultModelCenter.fetchModelList(type);
+    public ModelListDto fetchModelList(String type, OperationContext context) {
+        return defaultModelCenter.fetchModelList(type, null);
     }
 
     @Override

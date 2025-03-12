@@ -15,6 +15,7 @@ import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippNotFoundException;
 import modelengine.fit.security.Decryptor;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @author 方誉州
  * @since 2024-10-21
  */
-@Component
+@Component("defaultAippModelCenter")
 public class DefaultAippModelCenter implements AippModelCenter {
     private static final Logger log = Logger.get(DefaultAippModelCenter.class);
     private static final int HTTP_CLIENT_TIMEOUT = 60 * 1000;
@@ -80,7 +81,7 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList(String type) {
+    public ModelListDto fetchModelList(String type, OperationContext context) {
         String url = type == null ? this.url : this.url + "?type=" + type;
         HttpClassicClientRequest request = this.httpClient.get().createRequest(HttpRequestMethod.GET, url);
         try (HttpClassicClientResponse<?> response = request.exchange()) {
@@ -134,7 +135,7 @@ public class DefaultAippModelCenter implements AippModelCenter {
     @Override
     public ModelAccessInfo getDefaultModel(String type) {
         ModelAccessInfo firstModel = new ModelAccessInfo("", "");
-        ModelListDto modelList = fetchModelList(type);
+        ModelListDto modelList = fetchModelList(type, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             List<ModelAccessInfo> modelInfoList = modelList.getModels();
             for (ModelAccessInfo info : modelInfoList) {
