@@ -9,14 +9,6 @@ package modelengine.fit.jober.aipp.fitable;
 import static modelengine.fit.jade.aipp.prompt.constant.Constant.PROMPT_METADATA_KEY;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.jade.waterflow.FlowInstanceService;
-import modelengine.fit.waterflow.entity.FlowErrorInfo;
-import modelengine.fit.waterflow.entity.JoberErrorInfo;
-import modelengine.fit.waterflow.spi.FlowCallbackService;
-import modelengine.fit.waterflow.spi.FlowExceptionService;
-import modelengine.fit.waterflow.spi.FlowableService;
-import modelengine.jade.common.globalization.LocaleService;
-
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.MessageType;
@@ -35,6 +27,7 @@ import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.aipp.prompt.PromptMessage;
 import modelengine.fit.jade.aipp.prompt.UserAdvice;
 import modelengine.fit.jade.aipp.prompt.repository.PromptBuilderChain;
+import modelengine.fit.jade.waterflow.FlowInstanceService;
 import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
 import modelengine.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
@@ -52,6 +45,11 @@ import modelengine.fit.jober.aipp.service.AippLogStreamService;
 import modelengine.fit.jober.aipp.util.DataUtils;
 import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fit.jober.aipp.vo.AippLogVO;
+import modelengine.fit.waterflow.entity.FlowErrorInfo;
+import modelengine.fit.waterflow.entity.JoberErrorInfo;
+import modelengine.fit.waterflow.spi.FlowCallbackService;
+import modelengine.fit.waterflow.spi.FlowExceptionService;
+import modelengine.fit.waterflow.spi.FlowableService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
@@ -66,6 +64,7 @@ import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.UuidUtils;
+import modelengine.jade.common.globalization.LocaleService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -317,7 +316,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
             log.info("check external service, default true");
             return true;
         }
-        return this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, null)
+        return this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, DataUtils.getOpContext(businessData))
                 .getModels()
                 .stream()
                 .filter(modelAccessInfo -> StringUtils.equals(modelAccessInfo.getTag(), "INTERNAL"))
