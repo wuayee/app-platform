@@ -8,33 +8,31 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import static modelengine.jade.carver.validation.ValidateTagMode.validateTagMode;
 
-import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jober.aipp.condition.AppQueryCondition;
-import modelengine.fit.jober.aipp.constants.AippConst;
-import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
-import modelengine.fit.jober.aipp.util.UUIDUtil;
-import modelengine.jade.carver.ListResult;
-import modelengine.jade.common.globalization.LocaleService;
-import modelengine.jade.store.entity.query.PluginToolQuery;
-import modelengine.jade.store.entity.transfer.PluginToolData;
-import modelengine.jade.store.service.PluginToolService;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import modelengine.fel.core.template.support.DefaultStringTemplate;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
-import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippException;
+import modelengine.fit.jober.aipp.condition.AppQueryCondition;
+import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
 import modelengine.fit.jober.aipp.service.AgentInfoGenerateService;
 import modelengine.fit.jober.aipp.service.AippModelService;
+import modelengine.fit.jober.aipp.util.UUIDUtil;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.IoUtils;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.carver.ListResult;
+import modelengine.jade.common.globalization.LocaleService;
+import modelengine.jade.store.entity.query.PluginToolQuery;
+import modelengine.jade.store.entity.transfer.PluginToolData;
+import modelengine.jade.store.service.PluginToolService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -169,7 +167,7 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
             log.error("read prompt template file fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
-        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
+        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, null);
         String prompt = new DefaultStringTemplate(template).render(values);
         return aippModelService.chat(model.getServiceName(), model.getTag(), 0.0, prompt);
     }

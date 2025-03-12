@@ -27,7 +27,7 @@ public interface AippModelCenter {
     ModelListDto fetchModelList(String type, OperationContext context);
 
     /**
-     * 根据 tag 映射模型所在的网关。
+     * 根据 tag 等信息查询模型的访问信息
      *
      * @param tag 表示模型服务来源的标签的 {@link String}。
      * @param modelName 标识模型名称的 {@link String}。
@@ -37,10 +37,11 @@ public interface AippModelCenter {
     ModelAccessInfo getModelAccessInfo(String tag, String modelName, OperationContext context);
 
     /**
-     * 获取使用的模型服务信息。
+     * 获取默认使用的模型服务信息。
      *
      * @param type 标识模型类型的 {@link String}。
+     * @param context 调用者的上下文数据的 {@link OperationContext}。
      * @return 表示模型服务信息的 {@link ModelAccessInfo}。
      */
-    ModelAccessInfo getDefaultModel(String type);
+    ModelAccessInfo getDefaultModel(String type, OperationContext context);
 }

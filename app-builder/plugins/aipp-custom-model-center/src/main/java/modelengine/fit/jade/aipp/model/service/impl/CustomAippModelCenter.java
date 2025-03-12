@@ -39,7 +39,7 @@ public class CustomAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelAccessInfo getDefaultModel(String type) {
-        return defaultModelCenter.getDefaultModel(type);
+    public ModelAccessInfo getDefaultModel(String type, OperationContext context) {
+        return defaultModelCenter.getDefaultModel(type, null);
     }
 }

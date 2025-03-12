@@ -133,7 +133,7 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelAccessInfo getDefaultModel(String type) {
+    public ModelAccessInfo getDefaultModel(String type, OperationContext context) {
         ModelAccessInfo firstModel = new ModelAccessInfo("", "", null, null);
         ModelListDto modelList = fetchModelList(type, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
