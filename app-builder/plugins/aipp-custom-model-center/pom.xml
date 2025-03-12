@@ -20,6 +20,18 @@
             <groupId>modelengine.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.service</groupId>
+            <artifactId>jade-common-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
