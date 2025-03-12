@@ -64,6 +64,7 @@ class DefaultDeployServiceTest {
         pluginDeployQueryConfig.setInterval(10);
         pluginDeployQueryConfig.setTimeout(60);
         pluginDeployQueryConfig.setToolsPath("/demo");
+        pluginDeployQueryConfig.setMaxToolSize(20);
         this.deployService =
                 new DefaultDeployService(this.mockPluginService, this.mockRegistryService, this.mockPluginToolService,
                         pluginDeployQueryConfig);
