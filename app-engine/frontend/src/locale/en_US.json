@@ -135,6 +135,7 @@
   "parsingFailed": "Parsing failed",
   "savingFailed": "Failed",
   "deleteFail": "Failed",
+  "uploadFile": "Upload File",
   "conversationFailed": "Failed",
   "runTerminate": "Terminate",
   "runResult": "Running Result",
