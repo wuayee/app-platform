@@ -34,8 +34,8 @@ public class CustomAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public String getModelBaseUrl(String tag) {
-        return defaultModelCenter.getModelBaseUrl(tag);
+    public ModelAccessInfo getModelAccessInfo(String tag, String modelName, OperationContext context) {
+        return defaultModelCenter.getModelAccessInfo(tag, null, null);
     }
 
     @Override

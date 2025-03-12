@@ -138,7 +138,7 @@ public class AgentInfoGenerateServiceImplTest {
     @NotNull
     private ModelListDto getModelListDto() {
         List<ModelAccessInfo> modelAccessInfos = new ArrayList<>();
-        modelAccessInfos.add(new ModelAccessInfo("MODEL", "TAG"));
+        modelAccessInfos.add(new ModelAccessInfo("MODEL", "TAG", null, null));
         ModelListDto dto = new ModelListDto();
         dto.setModels(modelAccessInfos);
         return dto;

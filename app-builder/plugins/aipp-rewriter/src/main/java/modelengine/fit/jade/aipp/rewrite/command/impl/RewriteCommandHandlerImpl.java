@@ -60,7 +60,7 @@ public class RewriteCommandHandlerImpl implements RewriteCommandHandler {
         variables.put(Constant.HISTORY_KEY, memory.text());
         ChatOption chatOption = ChatOption.custom()
                 .model(command.getModel())
-                .baseUrl(this.aippModelCenter.getModelBaseUrl(command.getModelTag()))
+                .baseUrl(this.aippModelCenter.getModelAccessInfo(command.getModelTag(), null, null).getBaseUrl())
                 .temperature(command.getTemperature())
                 .stream(false)
                 .build();

@@ -123,18 +123,18 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public String getModelBaseUrl(String tag) {
+    public ModelAccessInfo getModelAccessInfo(String tag, String modelName, OperationContext context) {
         String baseUrl = this.modelBaseUrls.get(tag.toLowerCase(Locale.ROOT));
         if (baseUrl == null) {
             log.warn("Unknown model tag: {}", tag);
             throw new AippNotFoundException(AippErrCode.NOT_FOUND, tag);
         }
-        return baseUrl;
+        return ModelAccessInfo.builder().baseUrl(baseUrl).build();
     }
 
     @Override
     public ModelAccessInfo getDefaultModel(String type) {
-        ModelAccessInfo firstModel = new ModelAccessInfo("", "");
+        ModelAccessInfo firstModel = new ModelAccessInfo("", "", null, null);
         ModelListDto modelList = fetchModelList(type, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             List<ModelAccessInfo> modelInfoList = modelList.getModels();
