@@ -67,7 +67,7 @@ export function getPublishAppId(tenantId, appId) {
 }
 // 获取公共访问应用的详情
 export function getPreviewAppInfo(uid) {
-  return get(`/app/chat/${uid}`);
+  return get(`${APP_URL}/chat/${uid}`);
 }
 // 点击去编排
 export function getAppInfoByVersion(tenantId, appId) {
@@ -172,26 +172,6 @@ export function uploadMultipleFile(data) {
 // 文件上传
 export function uploadImage(tenantId, data, headers) {
   return post(`${AIPP_URL}/${tenantId}/file`, data, { ...headers, 'Content-Type': 'multipart/form-data' });
-}
-// 图片预览
-export function picturePreview(tenantId, params) {
-  return get(`${AIPP_URL}/${tenantId}/file`, params);
-}
-// 分享对话
-export function shareDialog(tenantId, data) {
-  return post(`${AIPP_URL}/${tenantId}/share`, data);
-}
-// 获取分享对话内容
-export function getSharedDialog(tenantId, shareId) {
-  return get(`${AIPP_URL}/${tenantId}/share/${shareId}`);
-}
-// 用户自勾选
-export function getReportInstance(tenantId, instanceId, data) {
-  return post(`${AIPP_URL}/${tenantId}/start/instances/${instanceId}`, data);
-}
-// 启动对话实例
-export function startInstance(tenantId, appId, params) {
-  return post(`${AIPP_URL}/${tenantId}/aipp/${appId}/start`, params);
 }
 // 调试轮询
 export function reTestInstance(tenantId, aippId, instanceId, version) {
