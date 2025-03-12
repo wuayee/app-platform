@@ -10,6 +10,7 @@ store:
         timeout: 600
         interval: 10
         toolsPath: '/var/store/tools/'
+        maxToolSize: 20
   registry:
     query:
       pool:
