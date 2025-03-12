@@ -102,11 +102,6 @@ const SendEditor = (props) => {
       return editorRef.current.innerText.length > 0
     });
   }
-  const messageKeyPress = (e) => {
-    if (e.target.innerText.length >= 20000) {
-      e.preventDefault()
-    }
-  }
   // 清除内容
   function clearContent() {
     editorRef.current.innerText = '';
@@ -120,30 +115,6 @@ const SendEditor = (props) => {
     } else if (e.keyCode === 13) {
       e.preventDefault();
       sendMessage();
-    }
-  }
-  // 中文输入
-  const messageCompositionEnd = (e) => {
-    const diff = e.target.innerText.length - 20000;
-    if (diff > 0) {
-      const editorDom = document.getElementById('ctrl-promet');
-      let range = document.createRange();
-      let sel = window.getSelection();
-      let offset = sel.anchorOffset;
-      let node = sel.anchorNode;
-      let text = node.textContent;
-      range.selectNodeContents(node);
-      sel?.removeAllRanges();
-      setTimeout(() => {
-        sel?.addRange(range);
-        sel?.extend(node, offset);
-        document.execCommand('delete', false);
-        document.execCommand('insertText', false, text?.substring(0, offset - diff));
-        editorDom?.scrollTo({
-          top: editorDom.scrollHeight,
-          behavior: 'smooth',
-        });
-      }, 0)
     }
   }
   // 发送消息
@@ -325,9 +296,6 @@ const SendEditor = (props) => {
             contentEditable={true}
             onInput={messageChange}
             onKeyDown={messageKeyDown}
-            onKeyPress={messageKeyPress}
-            onPaste={(event) => messagePaste(event, 20000)}
-            onCompositionEnd={messageCompositionEnd}
             placeholder={showMask ? '' : t('askTip')}
           />
           <div className='send-icon' onClick={sendMessage}>
@@ -339,7 +307,6 @@ const SendEditor = (props) => {
               </Tooltip>
             }
           </div>
-          {showClear && <div className='send-num'>{textLenth}/20000</div>}
           {showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div>}
         </div>
       </div>

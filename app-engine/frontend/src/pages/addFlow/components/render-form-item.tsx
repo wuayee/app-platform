@@ -95,7 +95,6 @@ const RenderFormItem = (props) => {
       >
         <Input.TextArea
           placeholder={`${t('plsEnter')}`}
-          maxLength={name === QUESTION_NAME ? 20000 : 500}
           showCount
           rows={3}
           onBlur={(e) => handleStringItemBlur(e.target.value)}
