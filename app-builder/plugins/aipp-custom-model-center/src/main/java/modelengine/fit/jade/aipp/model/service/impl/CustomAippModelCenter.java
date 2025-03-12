@@ -51,11 +51,12 @@ public class CustomAippModelCenter implements AippModelCenter {
         if (CollectionUtils.isEmpty(modelList)) {
             return this.defaultModelCenter.fetchModelList(type, context);
         }
+        // 这里自定义按照用户分类返回数据的tag需要特殊处理，tag中额外存入用户信息，先快速打通功能，赶上320。格式："tag,userId"
         List<ModelAccessInfo> modelDtoList = modelList.stream()
                 .map(po -> ModelAccessInfo.builder()
                         .serviceName(po.getName())
                         .baseUrl(po.getBaseUrl())
-                        .tag(po.getTag())
+                        .tag(CustomTag.pack(context, po))
                         .build())
                 .collect(Collectors.toList());
         return ModelListDto.builder().models(modelDtoList).total(modelDtoList.size()).build();
@@ -63,14 +64,20 @@ public class CustomAippModelCenter implements AippModelCenter {
 
     @Override
     public ModelAccessInfo getModelAccessInfo(String tag, String modelName, OperationContext context) {
-        ModelAccessPo accessInfo = this.userModelRepo.getModelAccessInfo(context.getOperator(), tag, modelName);
-        if (accessInfo == null) {
+        // context暂时不使用，当前内置工具调用大模型场景用不了，统一基于tag特殊处理。
+        CustomTag customTag = CustomTag.unpack(tag);
+        if (customTag == null) {
             return this.defaultModelCenter.getModelAccessInfo(tag, modelName, context);
+        }
+        ModelAccessPo accessInfo = this.userModelRepo.getModelAccessInfo(customTag.userId, customTag.tag,
+                modelName);
+        if (accessInfo == null) {
+            return null;
         }
         return ModelAccessInfo.builder()
                 .serviceName(accessInfo.getModelPO().getName())
                 .baseUrl(accessInfo.getModelPO().getBaseUrl())
-                .tag(accessInfo.getModelPO().getTag())
+                .tag(CustomTag.pack(context, accessInfo.getModelPO()))
                 .accessKey(accessInfo.getApiKey())
                 .build();
     }
@@ -86,5 +93,29 @@ public class CustomAippModelCenter implements AippModelCenter {
                 .baseUrl(defaultModel.getBaseUrl())
                 .tag(defaultModel.getTag())
                 .build();
+    }
+
+    private static class CustomTag {
+        private String tag;
+
+        private String userId;
+
+        private CustomTag(String tag, String userId) {
+            this.tag = tag;
+            this.userId = userId;
+        }
+
+        private static String pack(OperationContext context, ModelPo po) {
+            return po.getTag() + "," + context.getOperator();
+        }
+
+        private static CustomTag unpack(String tag) {
+            // 格式："tag,userId"
+            String[] split = tag.split(",");
+            if (split.length != 2) {
+                return null;
+            }
+            return new CustomTag(split[0], split[1]);
+        }
     }
 }

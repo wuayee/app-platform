@@ -54,7 +54,7 @@ class CustomAippModelCenterTest {
         Assertions.assertEquals(1, modelList.getModels().size());
         ModelAccessInfo targetModelAccessInfo = modelList.getModels().get(0);
         Assertions.assertEquals(modelPo.getName(), targetModelAccessInfo.getServiceName());
-        Assertions.assertEquals(modelPo.getTag(), targetModelAccessInfo.getTag());
+        Assertions.assertEquals("tag1,user1", targetModelAccessInfo.getTag());
         Assertions.assertEquals(modelPo.getBaseUrl(), targetModelAccessInfo.getBaseUrl());
         Mockito.verify(this.defaultModelCenter, Mockito.times(0)).fetchModelList(Mockito.any(), Mockito.any());
     }
@@ -92,12 +92,12 @@ class CustomAippModelCenterTest {
         OperationContext context = new OperationContext();
         context.setOperator(userId);
 
-        ModelAccessInfo modelAccessInfo = this.customAippModelCenter.getModelAccessInfo(modelPo.getTag(),
-                modelPo.getName(), context);
+        ModelAccessInfo modelAccessInfo = this.customAippModelCenter.getModelAccessInfo("tag1,user1", modelPo.getName(),
+                context);
 
         Assertions.assertNotNull(modelAccessInfo);
         Assertions.assertEquals(modelPo.getName(), modelAccessInfo.getServiceName());
-        Assertions.assertEquals(modelPo.getTag(), modelAccessInfo.getTag());
+        Assertions.assertEquals("tag1,user1", modelAccessInfo.getTag());
         Assertions.assertEquals(modelPo.getBaseUrl(), modelAccessInfo.getBaseUrl());
         Assertions.assertEquals(modelAccessPo.getApiKey(), modelAccessInfo.getAccessKey());
         Mockito.verify(this.defaultModelCenter, Mockito.times(0))
