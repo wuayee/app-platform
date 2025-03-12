@@ -10,7 +10,8 @@ import { AippContext } from '../aippIndex/context';
 import ChatPreview from './index';
 
 // 公共参数，公共聊天界面
-const CommonChat = ({ contextProvider, previewBack }) => {
+const CommonChat = (props: any) => {
+  const { contextProvider, previewBack } = props;
   return (
     <AippContext.Provider value={{ ...contextProvider }}>
       <ChatPreview previewBack={previewBack} />

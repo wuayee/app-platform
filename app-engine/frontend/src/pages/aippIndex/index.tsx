@@ -16,7 +16,7 @@ import { updateFormInfo } from '@/shared/http/aipp';
 import { debounce, getUiD, getCurrentTime } from '@/shared/utils/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
-import { setAppId, setAppInfo, setChoseNodeId, setValidateInfo  } from '@/store/appInfo/appInfo';
+import { setAppId, setAippId, setAppInfo, setChoseNodeId, setValidateInfo  } from '@/store/appInfo/appInfo';
 import { setIsDebug } from "@/store/common/common";
 import { getUser } from '../helper';
 import { setTestStatus } from "@/store/flowTest/flowTest";
@@ -28,7 +28,7 @@ import { setTestStatus } from "@/store/flowTest/flowTest";
  * @constructor
  */
 const AippIndex = () => {
-  const { appId, tenantId } = useParams();
+  const { appId, tenantId, aippId } = useParams();
   const [showElsa, setShowElsa] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [saveTime, setSaveTime] = useState('');
@@ -50,6 +50,7 @@ const AippIndex = () => {
   useEffect(() => {
     dispatch(setAppInfo({}));
     dispatch(setAppId(appId));
+    aippId && dispatch(setAippId(aippId));
     dispatch(setInspirationOpen(false));
     getUser();
     getAippDetails();
@@ -59,6 +60,9 @@ const AippIndex = () => {
     return () => {
       dispatch(setChoseNodeId(''));
       dispatch(setValidateInfo([]));
+      dispatch(setAppInfo({}));
+      dispatch(setAppId(''));
+      dispatch(setAippId(''));
     };
   }, []);
 

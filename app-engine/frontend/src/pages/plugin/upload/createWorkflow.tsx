@@ -94,7 +94,7 @@ const CreateWorkfowDrawer = (props) => {
             style={{ width: 90, backgroundColor: '#2673e5', color: '#ffffff' }}
             onClick={async () => {
               await form.validateFields();
-              const icon = filePath && `${AIPP_URL}${formEnv() ? '/appbuilder' : '/api/jober'}/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
+              const icon = filePath && `${formEnv() ? '/appbuilder' : '/api/jober'}/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
               const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: form.getFieldValue('name'), icon: icon, description: form.getFieldValue('description'), app_built_type: 'workflow', app_category: 'workflow' });
               const aippId = res.data.id;
               sessionStorage.setItem('add-type', 'plugin');

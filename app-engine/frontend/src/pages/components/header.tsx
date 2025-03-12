@@ -81,6 +81,7 @@ const ChoreographyHead = (props) => {
     switch (e.key) {
       case 'history':
         versionDetail();
+        break;
       case 'export':
         handleExportApp();
         break;

@@ -144,7 +144,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal, setL
       await dispatch(setChatList(chatArr));
       dispatch(setChatId(chat_id));
       setOpen(false);
-      updateChatId(chat_id, aippId, appInfo);
+      updateChatId(chat_id, appId);
     } finally {
       setLoading(false);
     }
@@ -174,7 +174,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal, setL
       dispatch(setChatList([]));
       dispatch(setChatId(null));
       localStorage.setItem('storageMessage', JSON.stringify(storageParams));
-      updateChatId(null, aippId)
+      updateChatId(null, appId)
       setOpen(false);
     } catch {
       setLoading(false);
