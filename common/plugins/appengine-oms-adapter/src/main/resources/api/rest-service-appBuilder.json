@@ -670,7 +670,7 @@
   },
   {
     "Description": "公开访问url",
-    "ResourceKey": "GET /chat/([0-9a-fA-F]{16})",
+    "ResourceKey": "GET /appbuilder/chat/([0-9a-fA-F]{16})",
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
