@@ -24,7 +24,7 @@ import modelengine.fitframework.annotation.Component;
  * @since 2024-11-21
  */
 @Component
-@RequestMapping(path = "/chat")
+@RequestMapping(path = "/v1/api/chat")
 public class AppBuilderUrlController extends AbstractController {
     private final AppBuilderAppService appGenericable;
 
