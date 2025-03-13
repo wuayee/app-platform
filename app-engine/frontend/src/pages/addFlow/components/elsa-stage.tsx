@@ -209,6 +209,12 @@ const Stage = (props) => {
         connectKnowledgeRef.current.openModal();
         event.onSelect(groupId);
       });
+      // 循环节点
+      agent.onLoopSelect(({ onSelect }) => {
+        pluginCallback.current = onSelect;
+        setShowTools(true);
+        setModalTypes('loop');
+      });
     }).catch(() => {
       setSpinning && setSpinning(false);
     });
@@ -253,11 +259,19 @@ const Stage = (props) => {
   const toolsConfirm = (item) => {
     let obj = {};
     let uniqueName = '';
+    let loopObj = {};
     item.forEach((e) => {
       obj = e.schema;
       uniqueName = e.uniqueName;
+      loopObj = e;
     });
-    modalTypes === 'llmTool' ? pluginCallback.current(uniqueName) : pluginCallback.current(obj);
+    if (modalTypes === 'loop') {
+      pluginCallback.current(loopObj);
+    } else if (modalTypes === 'llmTool') {
+      pluginCallback.current(uniqueName);
+    } else {
+      pluginCallback.current(obj);
+    }
   }
   // 自定义表单选中
   const formConfirm = (item) => {

@@ -278,6 +278,15 @@ const jadeFlowAgent = (graph) => {
         addSelectEventListener('SELECT_SKILL', callback);
     };
 
+  /**
+   * 循环节点选择框中选择了某个工具、工具流.
+   *
+   * @param callback 回调函数.
+   */
+  self.onLoopSelect = (callback) => {
+    addSelectEventListener('SELECT_LOOP_PLUGIN', callback);
+  };
+
     /**
      * 当需要触发搜索参数配置时的回调.
      *

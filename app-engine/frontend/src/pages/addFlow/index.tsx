@@ -115,7 +115,7 @@ const AddFlow = (props) => {
         err.forEach((item) => {
           item.errorFields.forEach((errorField) => {
             errorField.errors.forEach((error) => {
-              Message({ type: 'warning', content: error});
+              Message({ type: 'warning', content: error || '编排节点必填校验未通过！'});
             });
           });
         });

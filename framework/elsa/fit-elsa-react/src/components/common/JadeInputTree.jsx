@@ -4,15 +4,15 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {Button, Col, Form, Row, Tree} from 'antd';
+import {Button, Col, Form, Popover, Radio, Row, Tree} from 'antd';
 import './jadeInputTree.css';
 import PropTypes from 'prop-types';
 import {JadeStopPropagationSelect} from './JadeStopPropagationSelect.jsx';
 import {JadeReferenceTreeSelect} from './JadeReferenceTreeSelect.jsx';
-import {useFormContext} from '@/components/DefaultRoot.jsx';
+import {useFormContext, useShapeContext} from '@/components/DefaultRoot.jsx';
 import {JadeInput} from '@/components/common/JadeInput.jsx';
 import {useTranslation} from 'react-i18next';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {MinusCircleOutlined} from '@ant-design/icons';
 import {JadeFieldName} from '@/components/common/JadeFieldName.jsx';
 import {JadeFormText} from '@/components/common/JadeFormText.jsx';
@@ -44,9 +44,10 @@ const defaultGetOptions = (node) => {
  *
  * @param data 数据.
  * @param level 层级.
+ * @param parentPath 父级路径（用于拼接）
  * @return {Omit<*, 'name'>} 树状结构.
  */
-const convert = (data, level) => {
+const convert = (data, level, parentPath) => {
   const {name, ...ans} = data;
   ans.level = level;
   ans.title = name;
@@ -54,8 +55,12 @@ const convert = (data, level) => {
   ans.isRequired = data.isRequired ?? false;
   ans.isHidden = data.isHidden ?? false;
   ans.isLeaf = data.from !== FROM_TYPE.EXPAND;
+
+  // 计算当前节点的路径
+  ans.path = parentPath ? `${parentPath}.${name}` : name;
+
   if (!ans.isLeaf) {
-    ans.children = data.value.map(v => convert(v, level + 1));
+    ans.children = data.value.map(v => convert(v, level + 1, ans.path));
   }
   return ans;
 };
@@ -73,6 +78,11 @@ const LEVEL_DISTANCE = 24;
  * @param onDelete 当触发删除时的回调.
  * @param defaultExpandAll 是否默认展开所有.
  * @param width 宽度.
+ * @param showRadio 是否需要展示Radio.
+ * @param radioValue Radio对应的值.
+ * @param radioTitle Radio对应的展示信息.
+ * @param updateRadioInfo 修改Radio信息的方法.
+ * @param radioRuleMessage Radio没填时的报错信息.
  * @return {JSX.Element}
  * @constructor
  */
@@ -86,19 +96,41 @@ export const JadeInputTree = (
     },
     defaultExpandAll = false,
     width = null,
+    showRadio = false,
+    radioValue,
+    radioTitle,
+    updateRadioInfo,
+    radioRuleMessage,
   }) => {
   const {t} = useTranslation();
-  const treeData = data.map(d => convert(d, 0));
+  const shape = useShapeContext();
+  const form = useFormContext();
+  const treeData = data.map(d => convert(d, 0, undefined));
+  const [openRadioId, setOpenRadioId] = useState(radioValue);
+
+  useEffect(() => {
+    form.setFieldsValue({ [`inputTree-RadioGroup-${shape.id}`]: openRadioId });
+  }, [openRadioId, form]);
+
+  const handleRadioChange = (e) => {
+    const nodePath = e.target.value;
+    setOpenRadioId(nodePath);
+    updateRadioInfo(nodePath);
+  };
 
   // 自定义标题展示.
   const displayTitle = (node, sameLevelNodes) => {
     return (<>
-      <TreeTitle node={node}
-                 sameLevelNodes={sameLevelNodes}
-                 updateItem={updateItem}
-                 shapeStatus={shapeStatus}
-                 getOptions={getOptions}
-                 onDelete={onDelete}/>
+      <TreeTitle
+        node={node}
+        sameLevelNodes={sameLevelNodes}
+        updateItem={updateItem}
+        shapeStatus={shapeStatus}
+        getOptions={getOptions}
+        onDelete={onDelete}
+        showRadio={showRadio}
+        radioTitle={radioTitle}  // 传递状态
+      />
     </>);
   };
 
@@ -125,6 +157,7 @@ export const JadeInputTree = (
     {treeData.filter(node => !node.isHidden).length > 0 && <div style={{width: width || 'fit-content'}}>
       <div style={{paddingLeft: '15px'}}>
         <Row>
+          {showRadio && <Col flex={`0 0 25px`}/>}
           <Col flex={`0 0 ${INPUT_WIDTH + 15}px`}>
             <span className={'jade-second-title-text'}>{t('fieldName')}</span>
           </Col>
@@ -133,9 +166,23 @@ export const JadeInputTree = (
           </Col>
         </Row>
       </div>
-      <Tree defaultExpandAll={defaultExpandAll} blockNode={true} className={'jade-ant-tree'} showLine={true}>
-        {renderTreeNodes(treeData)}
-      </Tree>
+      {showRadio ? (
+        <Form.Item
+          name={`inputTree-RadioGroup-${shape.id}`}
+          rules={[{required: true, message: t(radioRuleMessage)}]} // 必填验证
+          initialValue={openRadioId}
+        >
+          <Radio.Group value={openRadioId ?? undefined} onChange={handleRadioChange}>
+            <Tree defaultExpandAll={defaultExpandAll} blockNode className='jade-ant-tree' showLine>
+              {renderTreeNodes(treeData)}
+            </Tree>
+          </Radio.Group>
+        </Form.Item>
+      ) : (
+        <Tree defaultExpandAll={defaultExpandAll} blockNode className='jade-ant-tree' showLine>
+          {renderTreeNodes(treeData)}
+        </Tree>
+      )}
     </div>}
   </>);
 };
@@ -159,10 +206,12 @@ JadeInputTree.propTypes = {
  * @param shapeStatus 图形状态.
  * @param getOptions 获取options.
  * @param onDelete 删除时触发回调.
+ * @param showRadio 是否需要展示单选.
+ * @param radioTitle hover时radio的显示信息.
  * @return {JSX.Element}
  * @constructor
  */
-const TreeTitle = ({node, sameLevelNodes, updateItem, shapeStatus, getOptions, onDelete}) => {
+const TreeTitle = ({node, sameLevelNodes, updateItem, shapeStatus, getOptions, onDelete, showRadio = false, radioTitle}) => {
   const inputWidth = INPUT_WIDTH - (node.level * LEVEL_DISTANCE);
   const form = useFormContext();
   const {t} = useTranslation();
@@ -316,6 +365,14 @@ const TreeTitle = ({node, sameLevelNodes, updateItem, shapeStatus, getOptions, o
   return (<>
     <div className='jade-input-tree-title'>
       <Row wrap={false}>
+        {/* 只有 showSwitch 为 true 时才渲染 Switch */}
+        {showRadio && (
+          <Col flex="0 0 20px">
+            <Popover content={t(radioTitle)}>
+              <Radio value={node.path} />
+            </Popover>
+          </Col>
+        )}
         <Col flex={`0 0 ${inputWidth}px`} style={{width: inputWidth}}>
           <div className={'jade-input-tree-title-child'}>
             {getNameField(node, inputWidth)}
