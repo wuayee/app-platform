@@ -14,18 +14,6 @@ export function feedbacksRq(params) {
   return post(url, params);
 }
 
-// 创建对话
-export function creatChat(tenantId, params) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat`;
-  return post(url, params);
-}
-
-// 更新会话
-export function updateChat(tenantId, chatId, params) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat/${chatId}`;
-  return post(url, params);
-}
-
 // 查询应用对话列表
 export function getChatList(tenantId, params) {
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat/chat_list`;
@@ -36,12 +24,6 @@ export function getChatList(tenantId, params) {
 export function deleteChat(tenantId, chatId) {
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat?chat_id=${chatId}`;
   return del(url);
-}
-
-//查询对话详情
-export function getChatDetail(tenantId, chatId, params) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat/chat_list/${chatId}`;
-  return post(url, params);
 }
 
 //清空APP的历史对话

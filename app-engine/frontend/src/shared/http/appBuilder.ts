@@ -8,28 +8,6 @@ import { get, put } from "./http";
 import serviceConfig from './httpConfig';
 const { TOOL_URL, AIPP_URL, PLUGIN_URL } = serviceConfig;
 
-// mock获取生成经营报告数据
-const getMockChart = () => {
-  return new Promise((resolve, reject) => {
-    get(`/src/pages/chatPreview/components/runtimeForm/mock-Chart.json`).then((res) => {
-      resolve(res);
-    }, (error) => {
-      reject(error);
-    });
-  });
-};
-
-// 保存
-const saveContent = (tenant_id, instance_id, value) => {
-  return new Promise((resolve, reject) => {
-    put(`${AIPP_URL}/${tenant_id}/app/instances/${instance_id}`, value).then((res) => {
-      resolve(res);
-    }, (error) => {
-      reject(error);
-    })
-  })
-};
-
 // 获取模型列表接口
 const getModels = () => {
   return new Promise((resolve, reject) => {
@@ -172,13 +150,11 @@ const getConnectKnowledgeList = () =>{
   });
 }
 export {
-  getMockChart, 
-  saveContent, 
   getModels, 
   getTools, 
   getKnowledges, 
   getFitables, 
-  getAddFlowConfig, 
+  getAddFlowConfig,
   getWaterFlows, 
   getKnowledgesList,
   getHuggingFaceList,
