@@ -64,6 +64,6 @@ public class S3FileControllerTest {
         assertThat(s3FileMetaEntities).isNotEmpty();
         assertThat(s3FileMetaEntities.get(0)).extracting(S3FileMetaEntity::getFileName,
                 S3FileMetaEntity::getFileUrl,
-                S3FileMetaEntity::getFileType).containsExactly("name", "url", "type");
+                S3FileMetaEntity::getFileType).containsExactly("test.txt", "url", "type");
     }
 }

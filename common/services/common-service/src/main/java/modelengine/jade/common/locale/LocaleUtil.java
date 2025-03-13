@@ -6,6 +6,7 @@
 
 package modelengine.jade.common.locale;
 
+import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.authentication.context.UserContext;
@@ -29,6 +30,7 @@ public class LocaleUtil {
     private static final List<Locale> LOCALES = Collections.unmodifiableList(
             Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"),
                     new Locale("zh", "CN")));
+    private static final Logger log = Logger.get(LocaleUtil.class);
 
     /**
      * 获取系统语言的静态方法。
@@ -37,13 +39,18 @@ public class LocaleUtil {
      */
     public static Locale getLocale() {
         UserContext userContext = UserContextHolder.get();
-        Locale locale;
+        Locale locale = Locale.getDefault();
         if (userContext == null || StringUtils.isEmpty(userContext.getLanguage())) {
-            locale = java.util.Locale.getDefault();
+            return locale;
         } else {
-            List<java.util.Locale.LanguageRange> list = java.util.Locale.LanguageRange.parse(userContext.getLanguage());
-            locale = CollectionUtils.isEmpty(list) ? java.util.Locale.getDefault() : java.util.Locale.lookup(list,
-                    LOCALES);
+            try {
+                List<Locale.LanguageRange> list = Locale.LanguageRange.parse(userContext.getLanguage());
+                locale = CollectionUtils.isEmpty(list) ? Locale.getDefault() : Locale.lookup(list,
+                        LOCALES);
+            } catch (Exception ex) {
+                log.error("parse language from userContext failed, language is {}", userContext.getLanguage());
+                return locale;
+            }
         }
         return locale;
     }

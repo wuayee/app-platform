@@ -31,9 +31,11 @@ import modelengine.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +56,11 @@ public class DefaultAippModelCenter implements AippModelCenter {
             .put("client.http.secure.key-store-file", Boolean.FALSE)
             .put("client.http.secure.key-store-password", Boolean.TRUE)
             .build();
+    private static final List<String> excludeModels = new ArrayList<>(Arrays.asList("DeepSeek-R1",
+            "bge-large-zh",
+            "DeepSeek-R1-Distill-Qwen-32B",
+            "openai/whisper-large-v3",
+            "Qwen-QwQ-32B"));
 
     private final HttpClassicClientFactory httpClientFactory;
     private final Config config;
@@ -80,7 +87,7 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList(String type) {
+    public ModelListDto fetchModelList(String type, String scene) {
         String url = type == null ? this.url : this.url + "?type=" + type;
         HttpClassicClientRequest request = this.httpClient.get().createRequest(HttpRequestMethod.GET, url);
         try (HttpClassicClientResponse<?> response = request.exchange()) {
@@ -95,9 +102,8 @@ public class DefaultAippModelCenter implements AippModelCenter {
                         ObjectUtils.<Integer>cast(modelListRsp.get("code")),
                         ObjectUtils.<String>cast(modelListRsp.get("msg"))));
             }
-            List<ModelAccessInfo> modelList = ObjectUtils.<List<Map<String, Object>>>cast(modelListRsp.get("data"))
-                    .stream()
-                    .map(info -> {
+            List<ModelAccessInfo> modelList =
+                    ObjectUtils.<List<Map<String, Object>>>cast(modelListRsp.get("data")).stream().map(info -> {
                         // 兼容本地调试
                         String serviceName = ObjectUtils.cast(info.get("serviceName"));
                         String tag = ObjectUtils.cast(info.get("modelType"));
@@ -105,16 +111,14 @@ public class DefaultAippModelCenter implements AippModelCenter {
                             serviceName = ObjectUtils.cast(info.get("id"));
                             tag = "INTERNAL";
                         }
-                        return ModelAccessInfo.builder()
-                                .serviceName(serviceName)
-                                .tag(tag)
-                                .build();
-                    })
-                    .collect(Collectors.toList());
-            return ModelListDto.builder()
-                    .models(modelList)
-                    .total(modelList.size())
-                    .build();
+                        return ModelAccessInfo.builder().serviceName(serviceName).tag(tag).build();
+                    }).filter(info -> {
+                        if (Objects.equals(scene, "fastTextProcess")) {
+                            return !excludeModels.contains(info.getServiceName());
+                        }
+                        return true;
+                    }).collect(Collectors.toList());
+            return ModelListDto.builder().models(modelList).total(modelList.size()).build();
         } catch (IOException e) {
             log.error("Failed to fetch model list. cause: {}", e.getMessage());
             return ModelListDto.builder().models(new ArrayList<>()).total(0).build();
@@ -134,7 +138,7 @@ public class DefaultAippModelCenter implements AippModelCenter {
     @Override
     public ModelAccessInfo getDefaultModel(String type) {
         ModelAccessInfo firstModel = new ModelAccessInfo("", "");
-        ModelListDto modelList = fetchModelList(type);
+        ModelListDto modelList = fetchModelList(type, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             List<ModelAccessInfo> modelInfoList = modelList.getModels();
             for (ModelAccessInfo info : modelInfoList) {

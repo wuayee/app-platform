@@ -25,7 +25,7 @@ export const configMap = {
       {
         node: "llmNodeState",
         urls: {
-          llmModelEndpoint: `/llmApi/v1/api`,
+          llmModelEndpoint: "/modelApi/v1/api",
           toolListEndpoint: `${baseUrl}/store/plugins/tools`,
           workflowListEndpoint: ""
         },

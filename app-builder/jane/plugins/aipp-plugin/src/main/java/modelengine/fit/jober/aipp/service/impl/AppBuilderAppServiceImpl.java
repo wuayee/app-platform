@@ -1468,7 +1468,8 @@ public class AppBuilderAppServiceImpl
                 parent.addChild(dto);
             }
         }
-        return Collections.singletonList(formPropertyMapping.get(root));
+        AppBuilderConfigFormPropertyDto rootProperty = formPropertyMapping.get(root);
+        return rootProperty == null ? Collections.emptyList() : Collections.singletonList(rootProperty);
     }
 
     private void updateConfigPropertiesByAppBuilderConfigDto(String appId,
@@ -1957,7 +1958,7 @@ public class AppBuilderAppServiceImpl
     }
 
     private String[] getFirstModelInfo() {
-        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE);
+        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             ModelAccessInfo firstModel = modelList.getModels().get(0);
             return new String[] {firstModel.getServiceName(), firstModel.getTag()};
