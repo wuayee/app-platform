@@ -539,5 +539,121 @@
       "READ_ONLY",
       "AppVisitor"
     ]
+  },
+  {
+    "Description": "查询应用模板接口",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/template",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "创建应用模板接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/template/publish",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "删除应用模板接口",
+    "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/template/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "根据应用模板创建应用接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/template/create",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "生成智能体接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/agent",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "添加我的灵感接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/root",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+  "Description": "添加我的灵感接口",
+  "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/([0-9a-z]{6})",
+  "SkipCheck": false,
+  "Roles": [
+    "AppDeveloper",
+    "DataAppDeveloper",
+    "AppExDeveloper",
+    "FsDeveloper",
+    "SYS_ADMIN",
+    "READ_ONLY",
+    "AppVisitor"
+    ]
+  },
+  {
+    "Description": "更新我的灵感接口",
+    "ResourceKey": "PUT /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/([0-9a-z]{6})/inspiration/([0-9a-z]{6})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "删除我的灵感接口",
+    "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/([0-9a-z]{6})/inspiration/([0-9a-z]{6})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
   }
 ]
