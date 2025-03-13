@@ -20,12 +20,17 @@ export enum FileType {
   PDF = 'pdf',
   TXT = 'txt',
   DOCX = 'docx',
+  DOC = 'doc',
+  XLS = 'xls',
+  XLSX = 'xlsx',
   MD = 'md',
+  HTM = 'htm',
   HTML = 'html',
   PNG = 'png',
   JPG = 'jpg',
   JPEG = 'jpeg',
-  WAV = 'wav'
+  WAV = 'wav',
+  CSV = 'csv'
 };
 
 export enum PictureFileType {

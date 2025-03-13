@@ -165,8 +165,8 @@ export function uploadChatFile(tenantId, appId = '', data, headers) {
 
 }
 // 多文件上传
-export function uploadMultipleFile(data) {
-  return post(`${APP_URL}/s3/file`, data, { 'Content-Type': 'multipart/form-data' });
+export function uploadMultipleFile(tenantId, appId, data) {
+  return post(`${AIPP_URL}/${tenantId}/files?app_id=${appId}`, data, { 'Content-Type': 'multipart/form-data' });
 }
 
 // 文件上传

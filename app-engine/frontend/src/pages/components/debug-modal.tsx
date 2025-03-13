@@ -57,7 +57,11 @@ const DebugModal = ({ isWorkFlow, showElsa, mashupClick, closeDebug }) => {
     if (isWorkFlow) {
       switch (item.type) {
         case NodeType.LLM:
-          return `${item.serviceName}${t('doesNotExist')}`;
+          if (item.serviceName) {
+            return `${item.serviceName}${t('doesNotExist')}`;
+          } else {
+            return `${item.name}${t('tool')}${t('doesNotExist')}`;
+          }
         case NodeType.KNOWLEDGE_RETRIEVAL:
         case NodeType.RETRIEVAL:
         case NodeType.END:
@@ -78,10 +82,10 @@ const DebugModal = ({ isWorkFlow, showElsa, mashupClick, closeDebug }) => {
             return `${item.name}${t('tool')}${t('doesNotExist')}`;
           }
         case NodeType.KNOWLEDGE_RETRIEVAL:
-          return `${item.name}${t('knowledgeBase')}${t('doesNotExist')}`;
+          return `${item.name}${t('knowledgeBase')}${t('pleaseDeleteAndReconfigure')}`;
         case NodeType.HUGGING_FACE:
         case NodeType.TOOL_INVOKE:
-          return `${item.name}${t('tool')}${t('doesNotExist')}`;
+          return `${item.name}${t('tool')}${t('pleaseDeleteAndReconfigure')}`;
         default:
           break;
       }
