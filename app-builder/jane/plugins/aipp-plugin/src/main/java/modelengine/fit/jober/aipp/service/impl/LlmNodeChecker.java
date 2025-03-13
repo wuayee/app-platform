@@ -9,6 +9,7 @@ package modelengine.fit.jober.aipp.service.impl;
 import static modelengine.fit.jober.aipp.enums.NodeType.LLM_NODE;
 
 import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fitframework.util.ObjectUtils;
 import modelengine.jade.store.service.PluginToolService;
 
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class LlmNodeChecker extends AbstractNodeChecker {
-    private static final String TOOL_NAME = "tool";
+    private static final String TOOL_NAME = "plugin";
 
     private final AippModelCenter fetchModelService;
 
@@ -48,15 +49,16 @@ public class LlmNodeChecker extends AbstractNodeChecker {
         Map<String, CheckResult> resultMap = results.stream()
                 .collect(Collectors.toMap(CheckResult::getNodeId, result -> result));
 
-        List<ModelAccessInfo> modelInfos = fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE, null).getModels();
+        List<ModelAccessInfo> modelInfos =
+                fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE, null).getModels();
         List<String> uniqueNames = this.getAllUniqueNames(appCheckDto, TOOL_NAME);
         Map<String, Boolean> toolResults = this.getToolResult(pluginToolService, uniqueNames);
 
         appCheckDto.getNodeInfos().forEach(nodeInfo -> {
             String nodeId = nodeInfo.getNodeId();
-            Optional<Map<String, String>> modelConfig = nodeInfo.getConfigs()
+            Optional<Map<String, Object>> modelConfig = nodeInfo.getConfigs()
                     .stream()
-                    .filter(config -> StringUtils.equals(config.get(CONFIG_NAME_KEY), "accessInfo"))
+                    .filter(config -> StringUtils.equals(ObjectUtils.cast(config.get(CONFIG_NAME_KEY)), "accessInfo"))
                     .findFirst();
             modelConfig.ifPresent(modelConfigMap -> this.checkModel(modelConfigMap, nodeId, modelInfos, resultMap));
             this.checkTool(nodeInfo, TOOL_NAME, resultMap, toolResults);
@@ -65,7 +67,7 @@ public class LlmNodeChecker extends AbstractNodeChecker {
         return results;
     }
 
-    private void checkModel(Map<String, String> modelConfig, String nodeId, List<ModelAccessInfo> modelInfos,
+    private void checkModel(Map<String, Object> modelConfig, String nodeId, List<ModelAccessInfo> modelInfos,
             Map<String, CheckResult> resultMap) {
         if (isModelExists(modelConfig, modelInfos)) {
             return;
@@ -73,9 +75,10 @@ public class LlmNodeChecker extends AbstractNodeChecker {
         resultMap.get(nodeId).getConfigChecks().add(modelConfig);
     }
 
-    private static boolean isModelExists(Map<String, String> modelConfig, List<ModelAccessInfo> modelInfos) {
+    private static boolean isModelExists(Map<String, Object> modelConfig, List<ModelAccessInfo> modelInfos) {
         return modelInfos.stream()
-                .filter(info -> StringUtils.equals(info.getTag(), modelConfig.get("tag")))
-                .anyMatch(info -> StringUtils.equals(info.getServiceName(), modelConfig.get("serviceName")));
+                .filter(info -> StringUtils.equals(info.getTag(), ObjectUtils.cast(modelConfig.get("tag"))))
+                .anyMatch(info -> StringUtils.equals(info.getServiceName(),
+                        ObjectUtils.cast(modelConfig.get("serviceName"))));
     }
 }

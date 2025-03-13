@@ -6,7 +6,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -19,7 +19,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -32,7 +32,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -45,7 +45,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -58,7 +58,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -71,7 +71,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -84,7 +84,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -97,7 +97,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -110,7 +110,20 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "查询是否存在定义组",
+    "ResourceKey": "GET /appbuilder/tools/exist/defs",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -123,7 +136,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -136,7 +149,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -149,7 +162,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -161,7 +174,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -175,7 +188,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -183,12 +196,24 @@
   },
   {
     "Description": "保存上传插件文件",
-    "ResourceKey": "POST /appbuilder/plugins/save",
+    "ResourceKey": "POST /appbuilder/plugins/save/plugins",
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "保存上传http工具",
+    "ResourceKey": "POST /appbuilder/plugins/save/http",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -200,7 +225,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -212,7 +237,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]

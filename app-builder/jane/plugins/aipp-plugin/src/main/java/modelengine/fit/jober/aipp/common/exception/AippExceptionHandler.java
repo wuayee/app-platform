@@ -128,9 +128,14 @@ public class AippExceptionHandler {
         if (context == null || StringUtils.isEmpty(context.getLanguage())) {
             return defaultMsg;
         }
-        String language = context.getLanguage();
-        List<Locale.LanguageRange> list = Locale.LanguageRange.parse(language);
-        Locale locale = StringUtils.isNotEmpty(language) ? Locale.lookup(list, LOCALES) : Locale.getDefault();
+        Locale locale = Locale.getDefault();
+        try {
+            String language = context.getLanguage();
+            List<Locale.LanguageRange> list = Locale.LanguageRange.parse(language);
+            locale = StringUtils.isNotEmpty(language) ? Locale.lookup(list, LOCALES) : Locale.getDefault();
+        } catch (Exception ex) {
+            log.error("parse language from userContext failed, language is {}", context.getLanguage());
+        }
         try {
             return plugin.sr().getMessageWithDefault(locale, code, defaultMsg, params);
         } catch (NullPointerException | UnsupportedOperationException | ClassCastException e) {

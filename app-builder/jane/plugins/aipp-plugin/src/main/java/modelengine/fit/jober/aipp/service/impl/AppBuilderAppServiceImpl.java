@@ -1468,7 +1468,8 @@ public class AppBuilderAppServiceImpl
                 parent.addChild(dto);
             }
         }
-        return Collections.singletonList(formPropertyMapping.get(root));
+        AppBuilderConfigFormPropertyDto rootProperty = formPropertyMapping.get(root);
+        return rootProperty == null ? Collections.emptyList() : Collections.singletonList(rootProperty);
     }
 
     private void updateConfigPropertiesByAppBuilderConfigDto(String appId,

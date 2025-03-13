@@ -28,7 +28,8 @@ public interface OperatorService {
         AUDIO,
         TXT,
         HTML,
-        MARKDOWN
+        MARKDOWN,
+        CSV
     }
 
     /**

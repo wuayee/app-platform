@@ -171,7 +171,7 @@ const ChatRunning = () => {
             <Button type='text' onClick={() => { window.history.back() }}>{t('return')}</Button>
             <span className='running-app-name'>{appInfo.name}</span>
           </div>}
-          <CommonChat chatType='active' />
+          <CommonChat  />
           <Modal
             title={t('updateLog')}
             width={800}

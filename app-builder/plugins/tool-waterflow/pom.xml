@@ -48,6 +48,10 @@
             <groupId>modelengine.fit.jade.waterflow</groupId>
             <artifactId>waterflow-runtime-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.tool</groupId>
+            <artifactId>sync-tool-call-service</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>

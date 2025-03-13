@@ -78,6 +78,7 @@ class DefaultPluginDeployServiceTest {
         pluginDeployQueryConfig.setInterval(10);
         pluginDeployQueryConfig.setTimeout(60);
         pluginDeployQueryConfig.setToolsPath("/demo");
+        pluginDeployQueryConfig.setMaxToolSize(20);
         RegistryQueryPoolConfig registryQueryPoolConfig = new RegistryQueryPoolConfig();
         registryQueryPoolConfig.setCorePoolSize(20);
         registryQueryPoolConfig.setMaximumPoolSize(20);

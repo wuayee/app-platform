@@ -199,7 +199,7 @@ const AddIns = (props) => {
       return {
         key: uuid(),
         var: item,
-        varType: '选择框',
+        varType: t('selectionBox'),
         sourceType: 'input',
         sourceInfo: '',
         multiple: false

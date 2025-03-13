@@ -469,7 +469,7 @@ export const apiListData = {
             type: 'boolean',
           },
           dimensionId: {
-            description: '产品线的id信息',
+            description: 'id信息',
             examples: [''],
             type: 'string',
           },
@@ -482,7 +482,7 @@ export const apiListData = {
             $ref: '#/components/schemas/java.util.Map_of_java.lang.String_and_java.lang.Object',
           },
           dimension: {
-            description: '产品线的信息',
+            description: '信息',
             examples: [''],
             type: 'string',
           },
@@ -2013,4 +2013,8 @@ export const urlMap = {
   translationText: '/v1/tenants/{tenantId}/translation/text',
   apps: '/v1/tenants/{tenantId}/apps',
   appsConfig: '/v1/tenants/{tenantId}/apps/{appId}/config',
+};
+
+export const HTTPMap = {
+  http: 'http',
 };

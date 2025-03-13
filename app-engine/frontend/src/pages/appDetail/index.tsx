@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {Tabs} from 'antd';
+import { setSpaClassName } from '@/shared/utils/common';
 import GoBack from '@/components/go-back/GoBack';
 import AppOverview from './overview';
 import AppAnalyse from './analyse';
@@ -48,7 +49,7 @@ const AppDetail: React.FC = () => {
   }, [tabsKey]);
 
   return (
-    <div className='aui-fullpage'>
+    <div className={setSpaClassName('app-fullpage')}>
       <div className='aui-header-1'>
         <div className='aui-title-1'>
           <GoBack path={'/app-develop'} title={t('appDetail')} />

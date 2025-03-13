@@ -6,9 +6,6 @@
 
 package modelengine.fit.jober.aipp.aop;
 
-import modelengine.jade.authentication.context.UserContext;
-import modelengine.jade.authentication.context.UserContextHolder;
-
 import lombok.RequiredArgsConstructor;
 import modelengine.fit.jober.aipp.service.DatabaseFieldLocaleService;
 import modelengine.fitframework.annotation.Component;
@@ -17,10 +14,8 @@ import modelengine.fitframework.aop.annotation.Around;
 import modelengine.fitframework.aop.annotation.Aspect;
 import modelengine.fitframework.aop.annotation.Pointcut;
 import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.jade.authentication.context.UserContext;
-import modelengine.jade.authentication.context.UserContextHolder;
+import modelengine.jade.common.locale.LocaleUtil;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -88,7 +83,7 @@ public class LocaleAspect {
             try {
                 Object value = field.get(object);
                 if (value instanceof String) {
-                    field.set(object, getReplacedValue((String) value, getLocale()));
+                    field.set(object, getReplacedValue((String) value, LocaleUtil.getLocale()));
                 }
             } catch (IllegalAccessException e) {
                 log.error("get field locale source failed, field: {0} ", field);
@@ -109,17 +104,5 @@ public class LocaleAspect {
         }
         matcher.appendTail(result);
         return result.toString();
-    }
-
-    private static Locale getLocale() {
-        UserContext userContext = UserContextHolder.get();
-        Locale locale;
-        if (userContext == null || StringUtils.isEmpty(userContext.getLanguage())) {
-            locale = Locale.getDefault();
-        } else {
-            List<Locale.LanguageRange> list = Locale.LanguageRange.parse(userContext.getLanguage());
-            locale = CollectionUtils.isEmpty(list) ? Locale.getDefault() : Locale.lookup(list, LOCALES);
-        }
-        return locale;
     }
 }

@@ -44,11 +44,17 @@ const _QuestionClassificationPanel = ({disabled, shapeId, questionTypeList}) => 
     {questionTypeList.map((question, index) => {
       const questionId = question.value.find(item => item.name === 'id');
       const isLastIndex = index === questionTypeList.length - 1;
-
-      return (<ConnectorProvider key={`dynamic-${isLastIndex ? `999` : questionId.value}`} name={`dynamic-${isLastIndex ? `999` : `${index}|`}${questionId.value}`}>
-        <QuestionClassificationItem question={question} index={index} disabled={disabled} isLastIndex={isLastIndex}/>
-      </ConnectorProvider>);
+      if (!isLastIndex) {
+        return (<ConnectorProvider key={`dynamic-${isLastIndex ? `999` : questionId.value}`}
+                                   name={`dynamic-${isLastIndex ? `999` : `${index}|`}${questionId.value}`}>
+          <QuestionClassificationItem question={question} index={index} disabled={disabled} isLastIndex={isLastIndex}/>
+        </ConnectorProvider>);
+      }
     })}
+    {<ConnectorProvider key={`dynamic-999`} name={`dynamic-999`}>
+      <QuestionClassificationItem question={questionTypeList[questionTypeList.length - 1]} index={questionTypeList.length - 1} disabled={disabled}
+                                  isLastIndex={true}/>
+    </ConnectorProvider>}
   </>;
 
   return (<>

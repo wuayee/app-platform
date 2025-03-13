@@ -511,7 +511,6 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         if (businessData.containsKey("workflows")) {
             skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         }
-        skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         String model = ObjectUtils.cast(businessData.get("model"));
         Map<String, String> accessInfo = ObjectUtils.nullIf(ObjectUtils.cast(businessData.get("accessInfo")),
                 MapBuilder.<String, String>get().put("serviceName", model).put("tag", "INTERNAL").build());

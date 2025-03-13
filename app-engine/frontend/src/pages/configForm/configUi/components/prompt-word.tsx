@@ -134,10 +134,6 @@ const PromptWord = ({ promptWordRef, updatePromptValue, currentModelInfo }) => {
       <div className='prompt-content'>
         <div className='content-part'>
           <div className='generate-title ai-generate'>{'AI' + t('generate')}</div>
-          {/*<div className='model-name'>*/}
-          {/*  <img src={ModelIcon} alt="" style={{ marginRight: 8 }} />*/}
-          {/*  <span>{modelName}</span>*/}
-          {/*</div>*/}
           <div className='enter-command'>{t('enterCommand')}</div>
           <Input.TextArea
             value={command}

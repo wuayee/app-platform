@@ -8,6 +8,7 @@
 
   .file-container {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     padding: 8px;
     position: relative;
@@ -39,6 +40,9 @@
       margin-right: 0px;
       &:not(:last-child) {
         margin-bottom: 8px;
+      }
+      .file-name {
+        max-width: 400px !important;
       }
     }
 

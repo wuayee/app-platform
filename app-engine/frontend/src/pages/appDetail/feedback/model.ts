@@ -4,8 +4,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import i18n from "@/locale/i18n";
 export const feedbackType = {
-  '-1': "未反馈",
-  '0': "点赞",
-  '1': "点踩",
+  '-1': i18n.t('noFeedback'),
+  '0': i18n.t('like'),
+  '1': i18n.t('unLike'),
 };

@@ -7,6 +7,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, DatePicker, Drawer, Table } from 'antd';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { CloseOutlined } from '@ant-design/icons';
 import { feedbackType } from './model';
 import { AppIcons } from '@/components/icons/app';
@@ -21,40 +22,14 @@ const feedbackIcon = {
   '1': <AppIcons.DisLikeIcon style={{ verticalAlign: 'text-bottom' }} />,
 };
 
-const basicInfoCols = [
-  {
-    key: 'createTime',
-    label: '创建时间',
-  },
-  {
-    key: 'responseTime',
-    label: '响应速度',
-  },
-  {
-    key: 'createUser',
-    label: '用户',
-  },
-  {
-    key: 'userFeedback',
-    label: '用户反馈',
-    render: (value) => (
-      <div>
-        <span>{feedbackType[value]}</span> {feedbackIcon[value]}
-      </div>
-    ),
-  },
-];
-
 const FeedBack = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useState({});
-
   const { appId } = useParams();
   const currentRow = useRef(null);
-  const refreshData = () => {
-
-  };
+  const refreshData = () => {};
   useEffect(() => {
     refreshData();
   }, [searchParams]);
@@ -85,9 +60,32 @@ const FeedBack = () => {
     }
     setPage(1);
   };
+  const basicInfoCols = [
+    {
+      key: 'createTime',
+      label: t('createdAt'),
+    },
+    {
+      key: 'responseTime',
+      label: t('responseSpeed'),
+    },
+    {
+      key: 'createUser',
+      label: t('user'),
+    },
+    {
+      key: 'userFeedback',
+      label: t('userFeedback'),
+      render: (value) => (
+        <div>
+          <span>{feedbackType[value]}</span> {feedbackIcon[value]}
+        </div>
+      ),
+    },
+  ];
   const columns = [
     {
-      title: '用户提问',
+      title: t('userQuestion'),
       dataIndex: 'question',
       key: 'question',
       width: 300,
@@ -95,7 +93,7 @@ const FeedBack = () => {
       ...TableTextSearch('question'),
     },
     {
-      title: '应用问答',
+      title: t('applicationAnswer'),
       dataIndex: 'answer',
       key: 'answer',
       width: 300,
@@ -103,14 +101,14 @@ const FeedBack = () => {
       ...TableTextSearch('answer'),
     },
     {
-      title: '创建时间',
+      title: t('createdAt'),
       dataIndex: 'createTime',
       key: 'createTime',
       width: 200,
       sorter: (a: any, b: any) => Date.parse(a.createTime.replace(/-/g, "/")) - Date.parse(b.createTime.replace(/-/g, "/")),
     },
     {
-      title: '响应速度',
+      title: t('responseSpeed'),
       dataIndex: 'responseTime',
       key: 'responseTime',
       sorter: (a: any, b: any) => a.responseTime - b.responseTime,
@@ -119,7 +117,7 @@ const FeedBack = () => {
       </>
     },
     {
-      title: '用户反馈',
+      title: t('userFeedback'),
       dataIndex: 'userFeedback',
       key: 'userFeedback',
       render: (value, record) => (
@@ -129,7 +127,7 @@ const FeedBack = () => {
       ),
     },
     {
-      title: '操作',
+      title: t('operate'),
       dataIndex: 'operate',
       key: 'operate',
       render: (value, record) => (
@@ -139,7 +137,7 @@ const FeedBack = () => {
             setOpen(true);
           }}
         >
-          详情
+          {t('details')}
         </a>
       ),
     },
@@ -220,7 +218,7 @@ const FeedBack = () => {
             setPage(1);
           }}
         />
-        <Button type='primary' onClick={exportData}>导出</Button>
+        <Button type='primary' onClick={exportData}>{t('export')}</Button>
       </div>
       <Table
         dataSource={data}
@@ -232,7 +230,7 @@ const FeedBack = () => {
       />
       <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
       <Drawer
-        title='反馈详情'
+        title={t('feedbackDetails')}
         placement='right'
         size='large'
         closeIcon={false}
@@ -252,11 +250,11 @@ const FeedBack = () => {
               setOpen(false);
             }}
           >
-            关闭
+            {t('close')}
           </Button>
         }
       >
-        <div className='drawer-title'>基本信息</div>
+        <div className='drawer-title'>{t('basicInformation')}</div>
         <div
           style={{
             display: 'flex',
@@ -275,14 +273,14 @@ const FeedBack = () => {
             </div>
           ))}
         </div>
-        <div className='drawer-title'>问答详情</div>
-        <div className='drawer-sub-title'>用户提问</div>
+        <div className='drawer-title'>{t('answerDetails')}</div>
+        <div className='drawer-sub-title'>{t('userQuestion')}</div>
         <div className='question-card '>{currentRow.current?.question}</div>
-        <div className='drawer-sub-title'>用户回答</div>
+        <div className='drawer-sub-title'>{t('userAnswer')}</div>
         <div className='answer-card'>
           {currentRow.current?.answer}
         </div>
-        <div className='drawer-title'>用户反馈</div>
+        <div className='drawer-title'>{t('userFeedback')}</div>
         <div className='question-card '>{currentRow.current?.userFeedbackText}</div>
       </Drawer>
     </div>

@@ -55,6 +55,8 @@ import {textToImageNodeState} from '@/components/textToImage/textToImageNodeStat
 import {textToImageComponent} from '@/components/textToImage/textToImageComponent.jsx';
 import {noteNode} from '@/components/note/noteNode.jsx';
 import {noteComponent} from '@/components/note/noteComponent.jsx';
+import {loopNodeState} from '@/components/loopNode/loopNodeState.jsx';
+import {loopComponent} from '@/components/loopNode/loopComponent.jsx';
 
 /**
  * jadeFlow的专用画布.
@@ -155,6 +157,8 @@ export const jadeFlowGraph = (div, title) => {
     self.registerPlugin('textToImageComponent', textToImageComponent);
     self.registerPlugin('noteNode', noteNode);
     self.registerPlugin('noteComponent', noteComponent);
+    self.registerPlugin('loopNodeState', loopNodeState);
+    self.registerPlugin('loopComponent', loopComponent);
     return initialize.apply(self);
   };
 

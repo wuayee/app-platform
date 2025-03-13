@@ -6,11 +6,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Spin, Modal, Button } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { NewFeatIcon, RocketIcon, FixIcon } from '@/assets/icon';
 import { getAnnouncement } from '@/shared/http/apps';
 import './infomodal.module.scss';
 
 const InfoModal = () => {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [spinning, setSpining] = useState(true);
   const [lastAnnounceTime, setLastAnnounceTime] = useState(localStorage.getItem('lastAnnounceTime') || '2024-06-19 00:00:00');
@@ -66,13 +68,13 @@ const InfoModal = () => {
 
   const footer = () => <div className='center' style={{ width: '100%' }}>
     <Button onClick={() => setShowModal(false)}>
-      我知道了
+      {t('gotIt')}
     </Button>
   </div>
 
   return (
     <Modal
-      title={`更新日志`}
+      title={t('updateLog')}
       open={showModal}
       footer={spinning ? null : footer}
       keyboard

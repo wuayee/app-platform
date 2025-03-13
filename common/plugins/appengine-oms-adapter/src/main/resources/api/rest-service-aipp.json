@@ -6,7 +6,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -19,7 +19,72 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "创建应用业务分类",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/type",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "查询所有应用业务分类",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/app/type",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "根据业务分类查询应用业务分类",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/app/type/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "更新应用业务分类",
+    "ResourceKey": "PUT /appbuilder/v1/api/([0-9a-f]{32})/app/type/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "根据应用业务分类唯一标识删除应用业务分类",
+    "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/app/type/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -32,7 +97,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -45,7 +110,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -58,7 +123,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -71,7 +136,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -83,7 +148,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -97,7 +162,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -110,7 +175,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -123,7 +188,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -135,7 +200,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -149,7 +214,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -161,7 +226,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -173,7 +238,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -185,7 +250,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -198,7 +263,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -211,7 +276,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -224,7 +289,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -237,7 +302,20 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "根据type获取相应节点配置",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/store/nodes/list",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -250,7 +328,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -263,7 +341,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -277,7 +355,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -291,7 +369,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",

@@ -6,6 +6,7 @@
 
 package modelengine.fit.jade.aipp.s3.file.controller;
 
+import static modelengine.fit.jober.aipp.entity.FileExtensionEnum.getFileExtension;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.jade.service.annotations.CarverSpan;
@@ -26,6 +27,7 @@ import modelengine.fitframework.validation.Validated;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -73,8 +75,11 @@ public class S3FileController {
         for (NamedEntity entity : entityList) {
             FileEntity file = entity.asFile();
             String fileName = file.filename().replace(" ", "");
-            LOG.info("Received upload file:{}.", fileName);
-            metaEntities.add(this.s3Service.upload(file.getInputStream(), file.length(), fileName));
+            String uniqueFileName = UUID.randomUUID() + "." + getFileExtension(fileName);
+            LOG.info("Received upload file:{}, uniqueFileName:{}.", fileName, uniqueFileName);
+            S3FileMetaEntity s3FileMetaEntity = this.s3Service.upload(file.getInputStream(), file.length(), uniqueFileName);
+            s3FileMetaEntity.setFileName(fileName);
+            metaEntities.add(s3FileMetaEntity);
         }
         return metaEntities;
     }

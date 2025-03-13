@@ -14,7 +14,6 @@ import static modelengine.fit.jober.aipp.constants.AippConst.BUSINESS_INPUT_KEY;
 import static modelengine.fit.jober.aipp.enums.AppTypeEnum.APP;
 import static modelengine.fit.jober.aipp.service.impl.AippRunTimeServiceImpl.getMetaByAppId;
 
-import lombok.RequiredArgsConstructor;
 import modelengine.fit.jade.waterflow.FlowsService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.meta.multiversion.MetaService;
@@ -50,6 +49,7 @@ import modelengine.fit.jober.aipp.util.MetaUtils;
 import modelengine.fit.jober.aipp.util.UUIDUtil;
 import modelengine.fit.jober.common.ServerInternalException;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
@@ -75,7 +75,6 @@ import java.util.stream.Collectors;
  * @since 2024-07-23
  */
 @Component
-@RequiredArgsConstructor
 public class AppChatServiceImpl implements AppChatService {
     private static final Logger LOGGER = Logger.get(AppChatServiceImpl.class);
 
@@ -99,9 +98,31 @@ public class AppChatServiceImpl implements AppChatService {
 
     private final FlowsService flowsService;
 
+    private final int maxQuestionLen;
+    private final int maxUserContextLen;
+
+    public AppChatServiceImpl(AppBuilderAppFactory appFactory, AippChatMapper aippChatMapper,
+            AippRunTimeService aippRunTimeService, AppBuilderAppService appService, AippLogService aippLogService,
+            AppBuilderAppRepository appRepository, MetaService metaService, FlowsService flowsService,
+            @Value("${app.question.max-length}") Integer maxQuestionLen,
+            @Value("${app.user-context.max-length}") Integer maxUserContextLen) {
+        this.appFactory = appFactory;
+        this.aippChatMapper = aippChatMapper;
+        this.aippRunTimeService = aippRunTimeService;
+        this.appService = appService;
+        this.aippLogService = aippLogService;
+        this.appRepository = appRepository;
+        this.metaService = metaService;
+        this.flowsService = flowsService;
+        this.maxQuestionLen = maxQuestionLen != null ? maxQuestionLen : 20000;
+        this.maxUserContextLen = maxUserContextLen != null ? maxUserContextLen : 500;
+    }
+
     @Override
     public Choir<Object> chat(CreateAppChatRequest body, OperationContext context, boolean isDebug) {
-        LOGGER.info("[perf] [{}] chat start, appId={}, isDebug={}", System.currentTimeMillis(), body.getAppId(),
+        LOGGER.info("[perf] [{}] chat start, appId={}, isDebug={}",
+                System.currentTimeMillis(),
+                body.getAppId(),
                 isDebug);
         this.validateApp(body.getAppId());
         AppBuilderApp app = this.appFactory.create(body.getAppId());
@@ -118,13 +139,19 @@ public class AppChatServiceImpl implements AppChatService {
         this.appService.updateFlow(chatAppId, context);
         LOGGER.info("[perf] [{}] chat updateFlow end, appId={}", System.currentTimeMillis(), body.getAppId());
         this.addUserContext(body, businessData, isDebug, context, app.getType());
-        Tuple tuple = this.aippRunTimeService.createInstanceByApp(chatAppId, body.getQuestion(), businessData, context,
+        Tuple tuple = this.aippRunTimeService.createInstanceByApp(chatAppId,
+                body.getQuestion(),
+                businessData,
+                context,
                 isDebug);
         LOGGER.info("[perf] [{}] chat createInstanceByApp end, appId={}", System.currentTimeMillis(), body.getAppId());
         // 这tuple的两个值都不可能为null
         try {
-            this.saveChatInfos(body, context, ObjectUtils.cast(tuple.get(0).orElseThrow(this::generalServerException)),
-                    hasAtOtherApp, chatAppId);
+            this.saveChatInfos(body,
+                    context,
+                    ObjectUtils.cast(tuple.get(0).orElseThrow(this::generalServerException)),
+                    hasAtOtherApp,
+                    chatAppId);
         } catch (AippTaskNotFoundException e) {
             throw new AippException(TASK_NOT_FOUND);
         }
@@ -136,7 +163,11 @@ public class AppChatServiceImpl implements AppChatService {
 
     private boolean isInvalidQuestion(String appType, CreateAppChatRequest request) {
         return StringUtils.equals(APP.code(), appType) && (request.getQuestion() == null || !StringUtils.lengthBetween(
-                request.getQuestion(), 0, 20000, true, true));
+                request.getQuestion(),
+                0,
+                this.maxQuestionLen,
+                true,
+                true));
     }
 
     @Override
@@ -151,16 +182,16 @@ public class AppChatServiceImpl implements AppChatService {
         // 这个方法查询的chatList，0号位一定是原对话，1号位一定是at对话（如果有的话），详见本类saveChatInfo方法
         List<String> chatIds = this.aippChatMapper.selectChatIdByInstanceId(parentInstanceId);
         if (chatIds.isEmpty()) {
-            throw new IllegalArgumentException(
-                    StringUtils.format("The instance id {0} does not match any chat id.", parentInstanceId));
+            throw new IllegalArgumentException(StringUtils.format("The instance id {0} does not match any chat id.",
+                    parentInstanceId));
         }
         List<QueryChatRsp> chatList = this.aippChatMapper.selectChatListByChatIds(chatIds);
         if (CollectionUtils.isEmpty(chatList)) {
             LOGGER.error("chatList is empty.");
             throw new AippParamException(AippErrCode.RE_CHAT_FAILED, parentInstanceId);
         }
-        String restartMode = ObjectUtils.cast(
-                additionalContext.getOrDefault(AippConst.RESTART_MODE, RestartModeEnum.OVERWRITE.getMode()));
+        String restartMode = ObjectUtils.cast(additionalContext.getOrDefault(AippConst.RESTART_MODE,
+                RestartModeEnum.OVERWRITE.getMode()));
         additionalContext.put(AippConst.RESTART_MODE, restartMode);
         CreateAppChatRequest body = this.buildChatBody(parentInstanceId, additionalContext, chatList);
         if (StringUtils.equals(RestartModeEnum.OVERWRITE.getMode(), restartMode)) {
@@ -289,15 +320,20 @@ public class AppChatServiceImpl implements AppChatService {
             boolean isValid;
             switch (InputParamType.getParamType(param.getType())) {
                 case STRING_TYPE:
-                    isValid = userContext.get(paramName) instanceof String && StringUtils.lengthBetween(
-                            (String) userContext.get(paramName), 1, 500, true, true);
+                    isValid = userContext.get(paramName) instanceof String
+                            && StringUtils.lengthBetween((String) userContext.get(paramName),
+                            1,
+                            this.maxUserContextLen,
+                            true,
+                            true);
                     break;
                 case BOOLEAN_TYPE:
                     isValid = userContext.get(paramName) instanceof Boolean;
                     break;
                 case INTEGER_TYPE:
-                    isValid = userContext.get(paramName) instanceof Integer && ObjectUtils.between(
-                            (int) userContext.get(paramName), -999999999, 999999999);
+                    isValid =
+                            userContext.get(paramName) instanceof Integer && ObjectUtils.between((int) userContext.get(
+                                    paramName), -999999999, 999999999);
                     break;
                 case NUMBER_TYPE:
                     isValid = isValidNumber(userContext.get(paramName));
@@ -341,8 +377,8 @@ public class AppChatServiceImpl implements AppChatService {
     }
 
     private boolean hasAtOtherApp(CreateAppChatRequest body) {
-        return StringUtils.isNotBlank(body.getContext().getAtChatId()) || StringUtils.isNotBlank(
-                body.getContext().getAtAppId());
+        return StringUtils.isNotBlank(body.getContext().getAtChatId()) || StringUtils.isNotBlank(body.getContext()
+                .getAtAppId());
     }
 
     private void createChatId(CreateAppChatRequest body, boolean hasAtOtherApp, Map<String, Object> businessData) {

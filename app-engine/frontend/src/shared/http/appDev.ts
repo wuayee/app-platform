@@ -28,7 +28,7 @@ export function deleteAppApi(tenantId,appId) {
 
 /**
  * @description 更新收藏
- * @param {any} defaultApp - appid. 取消收藏设置为小海的id
+ * @param {any} defaultApp - appid. 取消收藏
  * @property {string} userName - 用户名.
  * 
  * */ 

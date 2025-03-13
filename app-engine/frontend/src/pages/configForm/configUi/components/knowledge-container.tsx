@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { setConfigItem } from '@/store/appConfig/config';
 import Knowledge from './knowledge';
@@ -16,6 +17,7 @@ import AddImg from '@/assets/images/add_btn.svg';
 const { Panel } = Collapse;
 
 const KnowledgeContainer = (props) => {
+  const { t } = useTranslation();
   const { graphOperator, config, updateData, validateList } = props;
   const [knowledge, setKnowledge] = useState([]);
   const [activePanelKey, setActivePanelKey] = useState(['']);
@@ -70,7 +72,7 @@ const KnowledgeContainer = (props) => {
       try {
         curKnowledge.current = graphOperator.getConfig(config.defaultValue);
       } catch {
-        Message({ type: 'warning', content: '能力配置数据与elsa数据节点不匹配' });
+        Message({ type: 'warning', content: t('dataError') });
       }
     } else {
       curKnowledge.current = config.defaultValue;

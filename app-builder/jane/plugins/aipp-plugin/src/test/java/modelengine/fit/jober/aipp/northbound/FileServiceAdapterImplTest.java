@@ -14,6 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.http.entity.FileEntity;
 import modelengine.fit.http.entity.PartitionedEntity;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.meta.multiversion.MetaService;
@@ -49,6 +50,8 @@ public class FileServiceAdapterImplTest {
 
     private final PartitionedEntity partitionedEntity = mock(PartitionedEntity.class);
 
+    private final FileEntity fileEntity = mock(FileEntity.class);
+
     private final MetaService metaService = mock(MetaService.class);
 
     private final FileServiceAdapter fileServiceAdapterImpl = new FileServiceAdapterImpl(fileService, metaService);
@@ -72,6 +75,6 @@ public class FileServiceAdapterImplTest {
                 partitionedEntity);
         assertThat(result.getFileName()).isEqualTo(fileRspDto.getFileName());
         assertThat(result.getFilePath()).isEqualTo(fileRspDto.getFilePath());
-        verify(fileService, times(1)).uploadFile(operationContext, tenantId, fileName, aippId, partitionedEntity);
+        verify(fileService, times(1)).uploadFile(operationContext, tenantId, fileName, aippId, fileEntity);
     }
 }

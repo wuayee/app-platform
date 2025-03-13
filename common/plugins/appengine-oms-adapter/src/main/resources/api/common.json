@@ -6,7 +6,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -18,7 +18,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -30,7 +30,20 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "删除指定的应用对话记录",
+    "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/log/logs",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -43,11 +56,51 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
       "AppVisitor"
+    ]
+  },
+  {
+    "Description": "根据appId查询应用历史记录",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/log/app/([0-9a-f]{32})/chat/recent",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "指定appId查询实例历史记录",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/log/app/([0-9a-f]{32})/recent",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "指定instanceId条件查询实例记录",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/log/instance/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
     ]
   },
   {
@@ -57,7 +110,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -71,7 +124,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -84,7 +137,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -97,7 +150,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -109,7 +162,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -122,7 +175,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -135,7 +188,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -148,7 +201,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -160,7 +213,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -173,7 +226,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",

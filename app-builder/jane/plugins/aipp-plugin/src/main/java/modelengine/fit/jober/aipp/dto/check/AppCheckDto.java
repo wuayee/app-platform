@@ -41,6 +41,6 @@ public class AppCheckDto {
 
         private String nodeName;
 
-        private List<Map<String, String>> configs;
+        private List<Map<String, Object>> configs;
     }
 }

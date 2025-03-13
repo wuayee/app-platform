@@ -62,6 +62,7 @@ const HttpIcon = (props) => <Icon component={() => (<BaseIcons.Http />)} {...pro
 const VariableAggregation = (props) => <Icon component={() => (<BaseIcons.VariableAggregation />)} {...props} />;
 const TextToImageIcon = (props) => <Icon component={() => (<BaseIcons.TextToImage />)} {...props} />;
 const FileExtractionIcon = (props) => <Icon component={() => (<BaseIcons.FileExtraction />)} {...props} />;
+const LoopIcon = (props) => <Icon component={() => (<BaseIcons.Loop />)} {...props} />;
 
 export {
   LeftArrowIcon,
@@ -117,6 +118,7 @@ export {
   HttpIcon,
   VariableAggregation,
   TextToImageIcon,
-  FileExtractionIcon
+  FileExtractionIcon,
+  LoopIcon,
 }
 

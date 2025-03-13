@@ -8,6 +8,9 @@ package modelengine.fit.jober.aipp.util;
 
 import static modelengine.fit.jober.aipp.constant.AippConstant.NAS_SHARE_DIR;
 
+import modelengine.fit.http.entity.FileEntity;
+import modelengine.fit.http.entity.NamedEntity;
+import modelengine.fit.http.entity.PartitionedEntity;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.FileUtils;
@@ -16,6 +19,7 @@ import modelengine.fitframework.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,5 +124,19 @@ public class AippFileUtils {
         } else {
             return StringUtils.EMPTY;
         }
+    }
+
+    /**
+     * 获得文件数据。
+     *
+     * @param receivedFile 接收到的文件
+     * @return 文件数据列表。
+     */
+    public static List<FileEntity> getFileEntity(PartitionedEntity receivedFile) {
+        List<NamedEntity> entities = receivedFile.entities()
+            .stream()
+            .filter(NamedEntity::isFile)
+            .toList();
+        return entities.stream().map(NamedEntity::asFile).toList();
     }
 }

@@ -48,9 +48,17 @@ const TemplateList = ({ tempalteRef, tabs }) => {
 
   useImperativeHandle(tempalteRef, () => {
     return {
-      open: () => setOpen(true),
+      open: () => openModal(),
     };
   });
+
+  const openModal = () => {
+    setTemplateKey(tabs?.[0]?.key);
+    setSearch('');
+    setPage(1);
+    setPageSize(8);
+    setOpen(true);
+  };
 
   const addAippCallBack = (appId: string, aippId: string) => {
     if (aippId) {

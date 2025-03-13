@@ -34,7 +34,8 @@ public class FetchModelController {
      * @return 表示模型列表信息的 {@link ModelListDto}。
      */
     @GetMapping()
-    public ModelListDto fetchModelList(@RequestParam(value = "type", required = false) String type) {
-        return this.aippModelCenter.fetchModelList(type, null);
+    public ModelListDto fetchModelList(@RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "scene", required = false) String scene) {
+        return this.aippModelCenter.fetchModelList(type, scene);
     }
 }

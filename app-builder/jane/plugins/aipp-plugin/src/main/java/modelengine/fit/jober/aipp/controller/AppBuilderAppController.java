@@ -8,13 +8,6 @@ package modelengine.fit.jober.aipp.controller;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-import modelengine.fit.jober.aipp.events.AppCreatingEvent;
-import modelengine.fitframework.runtime.FitRuntime;
-import modelengine.jade.common.globalization.LocaleService;
-import modelengine.jade.service.annotations.CarverSpan;
-import modelengine.jade.service.annotations.SpanAttr;
-
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
@@ -31,6 +24,7 @@ import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.jane.common.controller.AbstractController;
 import modelengine.fit.jane.common.response.Rsp;
+import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippException;
 import modelengine.fit.jober.aipp.condition.AppQueryCondition;
@@ -44,6 +38,7 @@ import modelengine.fit.jober.aipp.dto.PublishedAppResDto;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fit.jober.aipp.dto.export.AppExportDto;
+import modelengine.fit.jober.aipp.events.AppCreatingEvent;
 import modelengine.fit.jober.aipp.service.AppBuilderAppService;
 import modelengine.fit.jober.aipp.util.AppImExportUtil;
 import modelengine.fit.jober.aipp.util.ConvertUtils;
@@ -52,7 +47,11 @@ import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
+import modelengine.fitframework.runtime.FitRuntime;
 import modelengine.fitframework.validation.Validated;
+import modelengine.jade.common.globalization.LocaleService;
+import modelengine.jade.service.annotations.CarverSpan;
+import modelengine.jade.service.annotations.SpanAttr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -71,8 +70,6 @@ import java.util.stream.Collectors;
 public class AppBuilderAppController extends AbstractController {
     private static final String DEFAULT_TYPE = "app";
 
-    private static final int APP_COUNT_LIMIT = 200;
-
     private static final int ERR_CODE = -1;
 
     private static final String ERR_LOCALE_CODE = "90002920";
@@ -89,19 +86,22 @@ public class AppBuilderAppController extends AbstractController {
 
     private final FitRuntime fitRuntime;
 
+    private final int maxAppNum;
+
     /**
      * 构造函数。
      *
-     * @param authenticator  表示认证器的 {@link Authenticator}。
-     * @param appService     表示app服务的 {@link AppBuilderAppService}。
+     * @param authenticator 表示认证器的 {@link Authenticator}。
+     * @param appService 表示app服务的 {@link AppBuilderAppService}。
      * @param appGenericable 表示app通用服务的 {@link AppBuilderAppService}。
-     * @param excludeNames   表示排除名称列表的 {@link List}{@code <}{@link String}{@code >}。
-     * @param localeService  表示获取国际化信息的 {@link LocaleService}。
-     * @param fitRuntime     表示FIT运行时环境的 {@link FitRuntime}。
+     * @param excludeNames 表示排除名称列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param localeService 表示获取国际化信息的 {@link LocaleService}。
+     * @param fitRuntime 表示FIT运行时环境的 {@link FitRuntime}。
      */
     public AppBuilderAppController(Authenticator authenticator, AppBuilderAppService appService,
-                                   modelengine.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
-                                   @Value("${app-engine.exclude-names}") List<String> excludeNames, LocaleService localeService, FitRuntime fitRuntime) {
+            modelengine.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
+            @Value("${app-engine.exclude-names}") List<String> excludeNames,
+            @Value("${app.max-number}") Integer maxAppNum, LocaleService localeService, FitRuntime fitRuntime) {
         super(authenticator);
         // 需要FIT框架支持exclude-names配置大括号
         this.excludeNames = replaceAsterisks(excludeNames);
@@ -109,6 +109,7 @@ public class AppBuilderAppController extends AbstractController {
         this.appGenericable = appGenericable;
         this.localeService = localeService;
         this.fitRuntime = fitRuntime;
+        this.maxAppNum = maxAppNum != null ? maxAppNum : 200;
     }
 
     private static List<String> replaceAsterisks(List<String> excludeNames) {
@@ -178,8 +179,11 @@ public class AppBuilderAppController extends AbstractController {
             @PathVariable("app_id") String appId, @PathVariable("tenant_id") String tenantId,
             @RequestParam(value = "offset", defaultValue = "0") long offset,
             @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond) {
-        return Rsp.ok(
-                this.appService.recentPublished(cond, offset, limit, appId, this.contextOf(httpRequest, tenantId)));
+        return Rsp.ok(this.appService.recentPublished(cond,
+                offset,
+                limit,
+                appId,
+                this.contextOf(httpRequest, tenantId)));
     }
 
     /**
@@ -213,7 +217,7 @@ public class AppBuilderAppController extends AbstractController {
         notNull(dto.getAppBuiltType(), "App built type cannot be null.");
         this.fitRuntime.publisherOfEvents().publishEvent(new AppCreatingEvent(this));
         if (this.appService.getAppCount(tenantId, this.buildAppQueryCondition(new AppQueryCondition(), DEFAULT_TYPE))
-                >= APP_COUNT_LIMIT) {
+                >= this.maxAppNum) {
             return Rsp.err(ERR_CODE, this.localeService.localize(AppBuilderAppController.ERR_LOCALE_CODE));
         }
         return Rsp.ok(this.appService.create(appId, dto, this.contextOf(request, tenantId), false));
@@ -297,8 +301,8 @@ public class AppBuilderAppController extends AbstractController {
     @PostMapping(path = "/{app_id}/debug", description = "调试 app ")
     public Rsp<AippCreateDto> debug(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestBody @Validated @SpanAttr("name:$.name") AppBuilderAppDto appDto) {
-        return Rsp.ok(
-                ConvertUtils.toAippCreateDto(this.appGenericable.debug(appDto, this.contextOf(httpRequest, tenantId))));
+        return Rsp.ok(ConvertUtils.toAippCreateDto(this.appGenericable.debug(appDto,
+                this.contextOf(httpRequest, tenantId))));
     }
 
     /**
@@ -312,8 +316,8 @@ public class AppBuilderAppController extends AbstractController {
     @GetMapping(path = "/{app_id}/latest_published", description = "获取 app 最新发布版本信息")
     public Rsp<AippCreateDto> latestPublished(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId) {
-        return Rsp.ok(ConvertUtils.toAippCreateDto(
-                this.appGenericable.queryLatestPublished(appId, this.contextOf(httpRequest, tenantId))));
+        return Rsp.ok(ConvertUtils.toAippCreateDto(this.appGenericable.queryLatestPublished(appId,
+                this.contextOf(httpRequest, tenantId))));
     }
 
     /**
@@ -361,9 +365,11 @@ public class AppBuilderAppController extends AbstractController {
     public FileEntity export(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @PathVariable("app_id") String appId, HttpClassicServerResponse response) {
         AppExportDto configDto = this.appService.export(appId, this.contextOf(httpRequest, tenantId));
-        ByteArrayInputStream fileStream = new ByteArrayInputStream(
-                JsonUtils.toJsonString(configDto).getBytes(StandardCharsets.UTF_8));
-        return FileEntity.createAttachment(response, configDto.getApp().getName() + ".json", fileStream,
+        ByteArrayInputStream fileStream =
+                new ByteArrayInputStream(JsonUtils.toJsonString(configDto).getBytes(StandardCharsets.UTF_8));
+        return FileEntity.createAttachment(response,
+                configDto.getApp().getName() + ".json",
+                fileStream,
                 fileStream.available());
     }
 
@@ -397,7 +403,7 @@ public class AppBuilderAppController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, PartitionedEntity appConfig) {
         this.fitRuntime.publisherOfEvents().publishEvent(new AppCreatingEvent(this));
         if (this.appService.getAppCount(tenantId, this.buildAppQueryCondition(new AppQueryCondition(), DEFAULT_TYPE))
-                >= APP_COUNT_LIMIT) {
+                >= this.maxAppNum) {
             throw new AippException(AippErrCode.TOO_MANY_APPS);
         }
         if (appConfig.entities().isEmpty() || !appConfig.entities().get(0).isFile()) {

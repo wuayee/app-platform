@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.service.impl;
 
+import modelengine.fitframework.util.ObjectUtils;
 import modelengine.jade.store.service.PluginToolService;
 
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
@@ -86,7 +87,7 @@ public abstract class AbstractNodeChecker implements Checker {
         nodeInfo.getConfigs()
                 .stream()
                 .filter(config -> config.get(CONFIG_NAME_KEY).equals(configName))
-                .forEach(c -> uniqueNames.add(c.get(UNIQUE_NAME_KEY)));
+                .forEach(c -> uniqueNames.add(ObjectUtils.cast(c.get(UNIQUE_NAME_KEY))));
     }
 
     /**
@@ -99,10 +100,10 @@ public abstract class AbstractNodeChecker implements Checker {
      */
     public void checkTool(AppCheckDto.NodeInfo nodeInfo, String configName, Map<String, CheckResult> resultMap,
             Map<String, Boolean> toolResults) {
-        List<Map<String, String>> toolConfigs = nodeInfo.getConfigs()
+        List<Map<String, Object>> toolConfigs = nodeInfo.getConfigs()
                 .stream()
-                .filter(config -> StringUtils.equals(config.get(CONFIG_NAME_KEY), configName))
-                .collect(Collectors.toList());
+                .filter(config -> StringUtils.equals(ObjectUtils.cast(config.get(CONFIG_NAME_KEY)), configName))
+                .toList();
         toolConfigs.forEach(toolConfig -> {
             if (toolResults.get(toolConfig.get(UNIQUE_NAME_KEY))) {
                 return;
@@ -149,7 +150,7 @@ public abstract class AbstractNodeChecker implements Checker {
         if (nodeInfo == null) {
             return;
         }
-        List<Map<String, String>> configChecks = nodeInfo.getConfigs();
+        List<Map<String, Object>> configChecks = nodeInfo.getConfigs();
         result.setConfigChecks(configChecks);
 
         // 如果没有配置项，则标记为有效

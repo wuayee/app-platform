@@ -5,8 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React from 'react';
-import {Button, Collapse} from 'antd';
-import {PlusOutlined} from '@ant-design/icons';
+import {Button, Collapse, Popover} from 'antd';
+import {PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 
 const {Panel} = Collapse;
 
@@ -20,10 +20,11 @@ const {Panel} = Collapse;
  * @param panelStyle panel样式
  * @param disabled 禁用状态.
  * @param triggerSelect 选择的触发器.
+ * @param popoverContent 需要显示的冒泡内容.
  * @return {JSX.Element}
  * @constructor
  */
-const JadePanelCollapse = ({defaultActiveKey, panelKey, headerText, children, panelStyle, disabled, triggerSelect}) => {
+const JadePanelCollapse = ({defaultActiveKey, panelKey, headerText, children, panelStyle, disabled, triggerSelect, popoverContent}) => {
     return (<>
         <Collapse bordered={false} className="jade-collapse-custom-background-color"
                   defaultActiveKey={defaultActiveKey}>
@@ -34,6 +35,15 @@ const JadePanelCollapse = ({defaultActiveKey, panelKey, headerText, children, pa
                         className='panel-header'
                         style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
                         <span className='jade-panel-header-font'>{headerText}</span>
+                        {popoverContent ? (
+                          <Popover
+                            content={popoverContent}
+                            align={{offset: [0, 3]}}
+                            overlayClassName={'jade-custom-popover'}
+                          >
+                            <QuestionCircleOutlined className='jade-panel-header-popover-content'/>
+                          </Popover>
+                        ) : null}
                         <Button
                           disabled={disabled}
                           type='text' className='icon-button jade-panel-header-icon-position'
