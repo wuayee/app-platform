@@ -97,7 +97,7 @@ public class AippModelServiceTest {
             ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
             when(model.getServiceName()).thenReturn("llm_model");
             when(model.getTag()).thenReturn("llm_tag");
-            when(aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
+            when(aippModelCenter.getDefaultModel(any())).thenReturn(model);
             when(aippModelCenter.getModelAccessInfo(anyString(), any(), any())).thenReturn(
                     ModelAccessInfo.builder().baseUrl("1111").build());
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(

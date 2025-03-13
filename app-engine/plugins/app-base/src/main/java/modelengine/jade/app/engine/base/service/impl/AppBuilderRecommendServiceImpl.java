@@ -58,7 +58,7 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
 
     @Override
     public List<String> queryRecommends(AppBuilderRecommendDto recommendDto) {
-        String model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, null).getServiceName();
+        String model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE).getServiceName();
         String modelTag = recommendDto.getModelTag() == null ? DEFAULT_MODEL_SOURCE : recommendDto.getModelTag();
         String historyPrompt = "Here are the chat histories between user and assistant, "
                 + "inside <history></history> XML tags.\n<history>\n{{history}}\n</history>\n\n";
