@@ -111,7 +111,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
         "children": [
           {
             "title": "WebSocket调用",
-            "content": "支持<span id=jump-wss>Websocket调用</a>。"
+            "content": "支持<span id=jump-wss-oms>Websocket调用</a>。"
           },
           {
             "title": "Request Body",
@@ -266,9 +266,9 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
         ]
       },
       {
-        "id": 'wss-target',
+        "id": 'wss-target-oms',
         "method": "WSS",
-        "url": "<font color=#d0cdcd id=wss-target>/ws</font>",
+        "url": "<font color=#d0cdcd id=wss-target-oms>/ws</font>",
         "title": "**调用接口建立 websocket 连接**",
         "content": "建立 websocket 连接后，通过 websocket 的 session 发送对话请求并接收对话的响应。",
         "children": [
@@ -360,7 +360,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
 
   // 滚动到到wss部分
   const jumpToWss = () => {
-    document.querySelector('#wss-target')?.scrollIntoView(true);
+    document.querySelector('#wss-target-oms')?.scrollIntoView(true);
   };
 
   const handleAnchorClick = (e, target) => {
@@ -372,8 +372,8 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
   }
 
   const handleScroll = () => {
-    const sections = document.querySelectorAll('.document-markdown section');
-    const navLinks = document.querySelectorAll('.document-nav div');
+    const sections = document.querySelectorAll('.document-markdown-oms section');
+    const navLinks = document.querySelectorAll('.document-nav-oms div');
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
       const sectionHeight = section.clientHeight;
@@ -388,7 +388,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
 
   useEffect(() => {
     if (documentContent.length) {
-      document.querySelector('#jump-wss')?.addEventListener('click', jumpToWss);
+      document.querySelector('#jump-wss-oms')?.addEventListener('click', jumpToWss);
     }
   }, [documentContent]);
 
@@ -403,7 +403,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
 
   useEffect(() => {
     return () => {
-      document.querySelector('#jump-wss')?.removeEventListener('click', jumpToWss);
+      document.querySelector('#jump-wss-oms')?.removeEventListener('click', jumpToWss);
     }
   }, []);
 
@@ -414,7 +414,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
       open={drawerOpen}
       onClose={() => setDrawerOpen(false)}
       closable={false}
-      className='api-drawer'
+      className='api-drawer-oms'
       extra={
         <CloseOutlined
           onClick={() => {
@@ -423,7 +423,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
         />
       }
     >
-      <div className='document-nav'>
+      <div className='document-nav-oms'>
         <div 
           id='first-link'
           className={`nav-item ${currentNav === '#POST' ? 'current-nav' : ''}`}
@@ -431,13 +431,13 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
             POST
         </div>
         <div 
-          id='wss-target-link'
+          id='wss-target-oms-link'
           className={`nav-item ${currentNav === '#WSS' ? 'current-nav' : ''}`}
           onClick={(e) => handleAnchorClick(e, '#WSS')}>
             WSS
         </div>
       </div>
-      <div className='document-markdown' ref={documentRef}>
+      <div className='document-markdown-oms' ref={documentRef}>
         <div id='first'>
           <div className='content-title'>{t('basic')}URL</div>
           <div className='inner-code'>
