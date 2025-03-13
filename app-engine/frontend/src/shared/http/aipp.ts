@@ -216,3 +216,7 @@ export function getAppCategories (tenantId) {
 export function templateCreateAipp(tenantId, params) {
   return post(`${AIPP_URL}/${tenantId}/template/create`, params);
 }
+// 获取api文档
+export function getApiDocument() {
+  return get(`${AIPP_URL}/document`);
+}
