@@ -32,7 +32,7 @@ baseAxios.interceptors.request.use(
 
 baseAxios.interceptors.response.use(
   (response) => {
-    if (response.data.code === undefined || response.data.code === 0 || response.data.code === 200) {
+    if (response.data.code === undefined || response.data.code === 0 || response.data.code === 200 || response.data.code === '0') {
       return Promise.resolve(response.data);
     }
     Message({ type: 'error', content: response.data.msg || response.data.detail || i18n.t('requestFailed') });

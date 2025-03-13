@@ -104,3 +104,16 @@
 .home-app-spa {
   background-image: url('/apps/appengine/src/assets/images/bg3.png');
 }
+.apps_root-spa {
+  height: calc(100vh - 50px);
+}
+.app-fullpage-spa {
+  height: calc(100vh - 50px);
+  padding-top: 0;
+  .plugin-detail-list {
+    height: calc(100vh - 100px);
+  }
+  .market-block {
+    height: calc(100vh - 100px);
+  }
+}

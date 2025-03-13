@@ -92,6 +92,9 @@ const AppLayout: React.FC = () => {
     }
     return true;
   }
+  const isSpaMode = () => {
+    return (process.env.NODE_ENV !== 'development' && process.env.PACKAGE_MODE !== 'common')
+  }
   useEffect(() => {
     const { pathname, search } = location;
     const route = getRouteByKey(flattenRouteList, pathname);
@@ -153,7 +156,7 @@ const AppLayout: React.FC = () => {
     }
       <Layout className={setClassName()}>
         <Provider store={store}>
-          <Content style={{ padding: layoutValidate() ? '0 16px' : '0', background: colorBgContainer }}>
+          <Content style={{ padding: (layoutValidate() || isSpaMode()) ? '0 16px' : '0', background: colorBgContainer }}>
             <Switch>
               {flattenRouteList.map((route) => (
                 <Route
