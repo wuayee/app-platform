@@ -6,7 +6,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Drawer, Button, Spin } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { setSpaClassName, getCookie } from '@/shared/utils/common';
+import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { getPluginDetail } from '@/shared/http/plugin';
 import { PluginCardTypeE } from '../helper';
 import { useAppSelector } from '@/store/hook';
@@ -47,15 +48,23 @@ const PliginList = (props) => {
       setLoading(false);
     }
   };
+
+  // 联机帮助
+  const onlineHelp = () => {
+    window.open(`${window.parent.location.origin}/help${getCookie('locale').toLocaleLowerCase() === 'en-us' ? '/en' : '/zh'}/application_plug-in.html`, '_blank');
+  }
+
   useEffect(() => {
     getPluginList();
   }, []);
+
   return (
     <Spin spinning={loading}>
-      <div className='aui-fullpage plugin-detail'>
+      <div className={`${setSpaClassName('app-fullpage')} plugin-detail`}>
         <div className='aui-header-1 '>
           <div className='aui-title-1'>
             {t('pluginManagement')}
+            { process.env.PACKAGE_MODE === 'spa' && <QuestionCircleOutlined onClick={onlineHelp} style={{ marginLeft: '8px', fontSize: '18px' }} />}
           </div>
           { !readOnly && <Button type='primary' onClick={() => setOpen(true)}>{t('deploying')}</Button> }
         </div>

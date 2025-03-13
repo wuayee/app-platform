@@ -6,7 +6,8 @@
 
 import React, { useState } from 'react';
 import { Drawer, Button } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { setSpaClassName, getCookie } from '@/shared/utils/common';
+import { QuestionCircleOutlined, CloseOutlined } from '@ant-design/icons';
 import { useAppSelector } from '@/store/hook';
 import { useTranslation } from 'react-i18next';
 import MarketItems from './market';
@@ -35,11 +36,16 @@ const Plugin = () => {
     setOpen(true);
     setReload(!reload);
   }
+  // 联机帮助
+  const onlineHelp = () => {
+    window.open(`${window.parent.location.origin}/help${getCookie('locale').toLocaleLowerCase() === 'en-us' ? '/en' : '/zh'}/application_plug-in.html`, '_blank');
+  }
   return (
-    <div className='aui-fullpage' style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className={setSpaClassName('app-fullpage')} style={{ display: 'flex', flexDirection: 'column' }}>
       <div className='aui-header-1 '>
         <div className='aui-title-1'>
           {t('pluginManagement')}
+          { process.env.PACKAGE_MODE === 'spa' && <QuestionCircleOutlined onClick={onlineHelp} style={{ marginLeft: '8px', fontSize: '18px' }} /> }
         </div>
         { !readOnly && <Button type='primary' onClick={setDeployOpen}>{t('deploying')}</Button> }
       </div>

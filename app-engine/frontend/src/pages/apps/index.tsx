@@ -6,10 +6,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input, Spin } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Icons } from '@/components/icons';
 import { queryAppsApi } from '@/shared/http/apps';
 import AppCard from '@/components/appCard';
-import { debounce } from '@/shared/utils/common';
+import { debounce, getCookie, setSpaClassName } from '@/shared/utils/common';
 import { useHistory } from 'react-router-dom';
 import { deleteAppApi } from '@/shared/http/appDev';
 import Pagination from '@/components/pagination';
@@ -95,13 +96,19 @@ const Apps: React.FC = () => {
     }
   }
 
+  // 联机帮助
+  const onlineHelp = () => {
+    window.open(`${window.parent.location.origin}/help${getCookie('locale').toLocaleLowerCase() === 'en-us' ? '/en' : '/zh'}/application_market.html`, '_blank');
+  }
+
   useEffect(() => {
     queryApps();
   }, [page, pageSize, search]);
   return (
-    <div className='apps_root'>
+    <div className={setSpaClassName('apps_root')}>
       <div className='apps_header'>
         <div className='apps_title'>{t('applicationMarket')}</div>
+        { process.env.PACKAGE_MODE === 'spa' && <QuestionCircleOutlined onClick={onlineHelp} />}
       </div>
       <div className='apps_main'>
         <div className='operatorArea'>

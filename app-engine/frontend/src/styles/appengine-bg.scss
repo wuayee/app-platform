@@ -105,3 +105,17 @@
 .home-app {
   background-image: url('/src/assets/images/bg3.png');
 } 
+
+.apps_root {
+  height: 100vh;
+}
+.app-fullpage {
+  height: 100vh;
+  padding-top: 16px;
+  .plugin-detail-list {
+    height: calc(100vh - 66px);
+  }
+  .market-block {
+    height: calc(100vh - 66px);
+  }
+}

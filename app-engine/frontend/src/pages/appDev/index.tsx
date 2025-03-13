@@ -6,12 +6,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Dropdown, Modal, Spin, Tabs } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, DownOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { Icons } from '@/components/icons';
 import { exportApp } from '@/shared/http/aipp';
 import { deleteAppApi, queryAppDevApi } from '@/shared/http/appDev';
-import { debounce, queryAppCategories } from '@/shared/utils/common';
+import { debounce, setSpaClassName, queryAppCategories, getCookie } from '@/shared/utils/common';
 import { Message } from '@/shared/utils/message';
 import { TENANT_ID } from '../chatPreview/components/send-editor/common/config';
 import { tabItems, items } from './common';
@@ -234,6 +234,11 @@ const AppDev: React.FC = () => {
     </div>
   };
 
+  // 联机帮助
+  const onlineHelp = () => {
+    window.open(`${window.parent.location.origin}/help${getCookie('locale').toLocaleLowerCase() === 'en-us' ? '/en' : '/zh'}/application_development.html`, '_blank');
+  }
+
   useEffect(() => {
     const fetchTab = async () => {
       const newTab = await queryAppCategories(tenantId, false);
@@ -243,9 +248,10 @@ const AppDev: React.FC = () => {
   }, []);
 
   return (
-    <div className='apps_root'>
+    <div className={setSpaClassName('apps_root')}>
       <div className='apps_header'>
         <div className='apps_title'>{t('appDevelopment')}</div>
+        { process.env.PACKAGE_MODE === 'spa' && <QuestionCircleOutlined onClick={onlineHelp} />}
       </div>
       <div className='apps_main'>
         <div className='apps-haeader-content'>
