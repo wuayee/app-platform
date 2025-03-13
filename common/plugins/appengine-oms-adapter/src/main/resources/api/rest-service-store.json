@@ -183,7 +183,19 @@
   },
   {
     "Description": "保存上传插件文件",
-    "ResourceKey": "POST /appbuilder/plugins/save",
+    "ResourceKey": "POST /appbuilder/plugins/save/plugins",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "保存上传http工具",
+    "ResourceKey": "POST /appbuilder/plugins/save/http",
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
