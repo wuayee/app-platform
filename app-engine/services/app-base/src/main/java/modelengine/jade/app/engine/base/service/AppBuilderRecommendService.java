@@ -6,7 +6,6 @@
 
 package modelengine.jade.app.engine.base.service;
 
-import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.jade.app.engine.base.dto.AppBuilderRecommendDto;
 
 import java.util.List;
@@ -22,8 +21,7 @@ public interface AppBuilderRecommendService {
      * queryRecommends猜你想问推荐问题查询
      *
      * @param recommendDto 包含上次对话问答及模型信息
-     * @param context
      * @return List<String> 3个推荐问题列表
      */
-    List<String> queryRecommends(AppBuilderRecommendDto recommendDto, OperationContext context);
+    List<String> queryRecommends(AppBuilderRecommendDto recommendDto);
 }

@@ -90,7 +90,7 @@ public class AgentInfoGenerateServiceImplTest {
         when(model.getTag()).thenReturn("llm_tag");
         when(this.aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("GREETING");
-        assertThat(this.agentInfoGenerateService.generateGreeting("DESC", null)).isEqualTo("GREETING");
+        assertThat(this.agentInfoGenerateService.generateGreeting("DESC")).isEqualTo("GREETING");
     }
 
     @Test
@@ -101,7 +101,7 @@ public class AgentInfoGenerateServiceImplTest {
         when(model.getTag()).thenReturn("llm_tag");
         when(this.aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("PROMPT");
-        assertThat(this.agentInfoGenerateService.generatePrompt("DESC", null)).isEqualTo("PROMPT");
+        assertThat(this.agentInfoGenerateService.generatePrompt("DESC")).isEqualTo("PROMPT");
     }
 
     @Test
@@ -131,7 +131,7 @@ public class AgentInfoGenerateServiceImplTest {
         when(this.aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("[1,2]");
         when(this.toolService.getPluginTools(any(PluginToolQuery.class))).thenReturn(pluginToolDataListResult);
 
-        assertThat(this.agentInfoGenerateService.selectTools("DESC", "CREATOR", null)).containsExactly("UNIQUENAME2",
+        assertThat(this.agentInfoGenerateService.selectTools("DESC", "CREATOR")).containsExactly("UNIQUENAME2",
                 "UNIQUENAME3");
     }
 

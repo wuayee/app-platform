@@ -9,10 +9,7 @@ package modelengine.jade.app.engine.base.controller;
 import modelengine.fit.http.annotation.PostMapping;
 import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
-import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.jane.common.controller.AbstractController;
 import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fitframework.annotation.Component;
 import modelengine.jade.app.engine.base.dto.AppBuilderRecommendDto;
 import modelengine.jade.app.engine.base.service.AppBuilderRecommendService;
@@ -27,11 +24,10 @@ import java.util.List;
  */
 @Component
 @RequestMapping(path = "/v1/api/recommend")
-public class AppBuilderRecommendController extends AbstractController {
+public class AppBuilderRecommendController {
     private final AppBuilderRecommendService recommendService;
 
-    public AppBuilderRecommendController(AppBuilderRecommendService recommendService, Authenticator authenticator) {
-        super(authenticator);
+    public AppBuilderRecommendController(AppBuilderRecommendService recommendService) {
         this.recommendService = recommendService;
     }
 
@@ -42,8 +38,7 @@ public class AppBuilderRecommendController extends AbstractController {
      * @return 三个推荐问题列表
      */
     @PostMapping
-    public Rsp<List<String>> queryRecommends(HttpClassicServerRequest request,
-            @RequestBody AppBuilderRecommendDto recommendDto) {
-        return Rsp.ok(recommendService.queryRecommends(recommendDto, this.contextOf(request, "")));
+    public Rsp<List<String>> queryRecommends(@RequestBody AppBuilderRecommendDto recommendDto) {
+        return Rsp.ok(recommendService.queryRecommends(recommendDto));
     }
 }

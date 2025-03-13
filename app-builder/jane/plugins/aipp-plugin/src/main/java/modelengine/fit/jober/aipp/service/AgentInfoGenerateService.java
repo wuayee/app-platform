@@ -30,27 +30,24 @@ public interface AgentInfoGenerateService {
      * 根据描述生成智能体开场白。
      *
      * @param desc 表示对智能体描述的 {@link String}。
-     * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 根据智能体描述所生成开场白的 {@link String}。
      */
-    String generateGreeting(String desc, OperationContext context);
+    String generateGreeting(String desc);
 
     /**
      * 根据描述生成智能体提示词。
      *
      * @param desc 表示对智能体描述的 {@link String}。
-     * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 根据智能体描述所生成提示词的 {@link String}。
      */
-    String generatePrompt(String desc, OperationContext context);
+    String generatePrompt(String desc);
 
     /**
      * 根据描述选择智能体所需工具。
      *
      * @param desc 表示对智能体描述的 {@link String}。
      * @param creator 表示智能体创建者表示的 {@link String}。
-     * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 根据描述所匹配工具唯一标识的 {@link List}{@code <}{@link String}{@code >}。
      */
-    List<String> selectTools(String desc, String creator, OperationContext context);
+    List<String> selectTools(String desc, String creator);
 }

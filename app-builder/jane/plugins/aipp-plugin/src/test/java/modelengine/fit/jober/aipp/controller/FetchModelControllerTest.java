@@ -14,7 +14,6 @@ import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
-import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.Mock;
 import modelengine.fitframework.test.annotation.MvcTest;
@@ -44,8 +43,6 @@ public class FetchModelControllerTest {
     private MockMvc mockMvc;
     @Mock
     private AippModelCenter aippModelCenter;
-    @Mock
-    private Authenticator authenticator;
     private HttpClassicClientResponse<?> response;
 
     @AfterEach

@@ -17,7 +17,6 @@ import modelengine.fit.jade.aipp.extract.command.ContentExtractCommand;
 import modelengine.fit.jade.aipp.extract.command.ExtractCommandHandler;
 import modelengine.fit.jade.aipp.extract.domain.entity.ContentExtractor;
 import modelengine.fit.jade.aipp.memory.AippMemoryFactory;
-import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
@@ -58,12 +57,9 @@ public class ExtractCommandHandlerImpl implements ExtractCommandHandler {
         variables.put(TEXT_KEY, StringUtils.blankIf(command.getText(), StringUtils.EMPTY));
         variables.put(DESC_KEY, StringUtils.blankIf(command.getDesc(), StringUtils.EMPTY));
         variables.put(HISTORY_KEY, StringUtils.blankIf(memory.text(), StringUtils.EMPTY));
-        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getModelAccessInfo(command.getModelTag(),
-                command.getModel(), null);
         ChatOption chatOption = ChatOption.custom()
                 .model(command.getModel())
-                .baseUrl(modelAccessInfo.getBaseUrl())
-                .apiKey(modelAccessInfo.getAccessKey())
+                .baseUrl(this.aippModelCenter.getModelAccessInfo(command.getModelTag(), null, null).getBaseUrl())
                 .temperature(command.getTemperature())
                 .build();
         return this.contentExtractor.run(variables, command.getOutputSchema(), chatOption);
