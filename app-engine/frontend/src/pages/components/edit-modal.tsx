@@ -364,14 +364,15 @@ const EditModal = (props) => {
                   <img src={assistant} alt='' className='app-edit-btn-img' />
                   {t('conversationAssistant')}
                 </Radio.Button>
-                <Radio.Button value='agent' className='app-edit-btn app-edit-btn-position'>
+                {/* <Radio.Button value='agent' className='app-edit-btn app-edit-btn-position'> */}
+                <Radio.Button value='agent' className='app-edit-btn'>
                   <img src={agent} alt='' className='app-edit-btn-img' />
                   {t('agent')}
                 </Radio.Button>
-                <Radio.Button value='workflow' className='app-edit-btn'>
+                {/* <Radio.Button value='workflow' className='app-edit-btn'>
                   <img src={workflow} alt='' className='app-edit-btn-img' />
                   {t('workflow')}
-                </Radio.Button>
+                </Radio.Button> */}
               </Radio.Group>
             </div>
           </>
