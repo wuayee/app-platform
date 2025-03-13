@@ -201,16 +201,12 @@ public class FileServiceImpl implements FileService, CustomResourceHandler {
 
     @Override
     public FileRspDto uploadFile(OperationContext context, String tenantId, String fileName, String aippId,
-            PartitionedEntity receivedFile) throws IOException {
+            FileEntity receivedFile) throws IOException{
         String uniqueFileName = generateUniqueFileName(fileName);
         log.info("upload file fileName={} uniqueFileName={}", fileName, uniqueFileName);
         File targetFile = Paths.get(NAS_SHARE_DIR, uniqueFileName).toFile();
 
-        List<NamedEntity> entities = receivedFile.entities()
-                .stream()
-                .filter(NamedEntity::isFile)
-                .collect(Collectors.toList());
-        try (InputStream inStream = entities.get(0).asFile().getInputStream()) {
+        try (InputStream inStream = receivedFile.getInputStream()) {
             org.apache.commons.io.FileUtils.copyInputStreamToFile(inStream, targetFile);
             uploadedFileManageService.addFileRecord(aippId, context.getAccount(), targetFile.getCanonicalPath(),
                     Entities.generateId());

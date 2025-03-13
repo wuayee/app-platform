@@ -56,10 +56,9 @@ public interface FileService {
      * @param aippId AIPP ID
      * @param receivedFile 接收到的文件
      * @return 文件响应DTO
-     * @throws IOException 文件读取异常
      */
     FileRspDto uploadFile(OperationContext context, String tenantId, String fileName, String aippId,
-            PartitionedEntity receivedFile) throws IOException;
+            FileEntity receivedFile) throws IOException;
 
     /**
      * 上传表单文件。

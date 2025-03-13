@@ -8,6 +8,7 @@ package modelengine.fit.jober.aipp.northbound;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
+import modelengine.fit.http.entity.FileEntity;
 import modelengine.fit.http.entity.PartitionedEntity;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.meta.multiversion.MetaService;
@@ -17,11 +18,13 @@ import modelengine.fit.jober.aipp.common.exception.AippTaskNotFoundException;
 import modelengine.fit.jober.aipp.dto.chat.FileUploadInfo;
 import modelengine.fit.jober.aipp.genericable.adapter.FileServiceAdapter;
 import modelengine.fit.jober.aipp.service.FileService;
+import modelengine.fit.jober.aipp.util.AippFileUtils;
 import modelengine.fit.jober.aipp.util.MetaUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.beans.BeanUtils;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * {@link FileService} 的适配器类的实现类。
@@ -49,7 +52,11 @@ public class FileServiceAdapterImpl implements FileServiceAdapter {
         } catch (AippTaskNotFoundException e) {
             throw new AippException(AippErrCode.APP_NOT_FOUND);
         }
-        return BeanUtils.copyProperties(this.fileService.uploadFile(context, tenantId, fileName, aippId, receivedFile),
+        List<FileEntity> files = AippFileUtils.getFileEntity(receivedFile);
+        if (files.isEmpty()) {
+            throw new AippException(AippErrCode.UPLOAD_FAILED);
+        }
+        return BeanUtils.copyProperties(this.fileService.uploadFile(context, tenantId, fileName, aippId, files.get(0)),
                 FileUploadInfo.class);
     }
 }

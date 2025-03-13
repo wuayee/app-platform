@@ -6,10 +6,6 @@
 
 package modelengine.fit.jober.aipp.controller;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-
-import modelengine.jade.service.annotations.CarverSpan;
-import modelengine.jade.service.annotations.SpanAttr;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
 import modelengine.fit.http.annotation.PostMapping;
@@ -24,15 +20,22 @@ import modelengine.fit.http.server.HttpClassicServerResponse;
 import modelengine.fit.jane.common.controller.AbstractController;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.response.Rsp;
+import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.common.exception.AippErrCode;
+import modelengine.fit.jober.aipp.common.exception.AippException;
 import modelengine.fit.jober.aipp.dto.FileRspDto;
 import modelengine.fit.jober.aipp.dto.FormFileDto;
 import modelengine.fit.jober.aipp.dto.GenerateImageDto;
 import modelengine.fit.jober.aipp.service.FileService;
 import modelengine.fit.jober.aipp.service.OperatorService;
+import modelengine.fit.jober.aipp.util.AippFileUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
+import modelengine.jade.service.annotations.CarverSpan;
+import modelengine.jade.service.annotations.SpanAttr;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 文件接口
@@ -97,10 +100,14 @@ public class FileController extends AbstractController {
     @PostMapping(path = "/file", description = "上传文件")
     public Rsp<FileRspDto> uploadFile(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestHeader(value = "attachment-filename", defaultValue = "blank") @SpanAttr("fileName") String fileName,
-            @RequestParam(value = "aipp_id", required = false) String aippId, PartitionedEntity receivedFile)
-            throws IOException {
+            @RequestParam(value = "aipp_id", required = false) String aippId, PartitionedEntity receivedFile) throws IOException {
         OperationContext context = this.contextOf(httpRequest, tenantId);
-        FileRspDto fileRspDto = this.fileService.uploadFile(context, tenantId, fileName, aippId, receivedFile);
+
+        List<FileEntity> files = AippFileUtils.getFileEntity(receivedFile);
+        if (files.isEmpty()) {
+            throw new AippException(AippErrCode.UPLOAD_FAILED);
+        }
+        FileRspDto fileRspDto = this.fileService.uploadFile(context, tenantId, fileName, aippId, files.get(0));
         return Rsp.ok(fileRspDto);
     }
 
@@ -149,5 +156,34 @@ public class FileController extends AbstractController {
     public FileEntity getSmartFormTemplate(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId) throws IOException {
         return this.fileService.getSmartFormTemplate(httpRequest, contextOf(httpRequest, tenantId));
+    }
+
+    /**
+     * 批量上传文件
+     *
+     * @param httpRequest Http请求
+     * @param tenantId 租户ID
+     * @param appId APP ID
+     * @param receivedFiles 接收到的文件
+     * @return 文件响应DTO
+     */
+    @CarverSpan(value = "operation.file.batch.upload")
+    @PostMapping(path = "/files", description = "批量上传文件")
+    public Rsp<List<FileRspDto>> batchUploadFile(HttpClassicServerRequest httpRequest,
+        @PathVariable("tenant_id") String tenantId, @RequestParam(value = "app_id", required = false) String appId,
+        PartitionedEntity receivedFiles) {
+        OperationContext context = this.contextOf(httpRequest, tenantId);
+        List<FileRspDto> fileRspDtos = AippFileUtils.getFileEntity(receivedFiles)
+            .stream()
+            .map(
+                fileEntity -> {
+                    try {
+                        return this.fileService.uploadFile(context, tenantId, fileEntity.filename(), appId, fileEntity);
+                    } catch (IOException e) {
+                        throw new AippException(AippErrCode.UPLOAD_FAILED);
+                    }
+                })
+            .toList();
+        return Rsp.ok(fileRspDtos);
     }
 }
