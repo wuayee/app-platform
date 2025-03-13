@@ -6,6 +6,7 @@
 
 package modelengine.fit.jade.aipp.model.po;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -15,6 +16,7 @@ import lombok.Data;
  * @since 2025/3/11
  */
 @Data
+@Builder
 public class ModelAccessPo {
     ModelPo modelPO;
     String apiKey;
