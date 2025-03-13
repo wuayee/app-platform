@@ -69,7 +69,7 @@ const EditModal = (props) => {
         name: appInfo.name,
         description: appInfo.attributes?.description,
         icon: appInfo.attributes?.icon,
-        app_type: appInfo.attributes?.app_type
+        app_type: appInfo.attributes?.app_type || appInfo.appType,
       });
       if (!type && appInfo.attributes?.icon) {
         getImgPath(appInfo.attributes.icon);
