@@ -13,6 +13,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.jade.waterflow.FlowInstanceService;
+import modelengine.fit.waterflow.entity.FlowErrorInfo;
+import modelengine.jade.common.globalization.LocaleService;
+
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
@@ -29,7 +33,6 @@ import modelengine.fel.core.tool.ToolProvider;
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.operators.patterns.AbstractAgent;
-import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.aipp.prompt.PromptBuilder;
@@ -37,7 +40,6 @@ import modelengine.fit.jade.aipp.prompt.PromptMessage;
 import modelengine.fit.jade.aipp.prompt.PromptStrategy;
 import modelengine.fit.jade.aipp.prompt.UserAdvice;
 import modelengine.fit.jade.aipp.prompt.repository.PromptBuilderChain;
-import modelengine.fit.jade.waterflow.FlowInstanceService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
 import modelengine.fit.jane.meta.multiversion.MetaService;
@@ -49,13 +51,11 @@ import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AippLogStreamService;
 import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
-import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.ObjectUtils;
-import modelengine.jade.common.globalization.LocaleService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -126,9 +126,6 @@ public class LlmComponentTest {
             Object context = invocationOnMock.getArgument(1);
             return new PromptBuilderStub().build(ObjectUtils.cast(advice), ObjectUtils.cast(context));
         }).when(this.promptBuilderChain).build(any(), any());
-
-        when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
-                ModelAccessInfo.builder().build());
     }
 
     static class PromptBuilderStub implements PromptBuilder {

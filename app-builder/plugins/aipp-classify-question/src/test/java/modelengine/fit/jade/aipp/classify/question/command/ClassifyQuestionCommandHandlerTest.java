@@ -18,7 +18,6 @@ import modelengine.fel.core.memory.CacheMemory;
 import modelengine.fit.jade.aipp.classify.question.command.impl.ClassifyQuestionCommandHandlerImpl;
 import modelengine.fit.jade.aipp.classify.question.utils.TestUtils;
 import modelengine.fit.jade.aipp.memory.AippMemoryFactory;
-import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fitframework.flowable.Choir;
 
@@ -65,8 +64,7 @@ public class ClassifyQuestionCommandHandlerTest {
                 return histories;
             }
         });
-        when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
-                ModelAccessInfo.builder().baseUrl("/model").build());
+        when(this.aippModelCenter.getModelBaseUrl(any())).thenReturn("/model");
         when(this.modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                 Choir.just(new AiMessage("1")));
         ClassifyQuestionCommand command = TestUtils.getCommand();

@@ -74,8 +74,7 @@ public class AippModelServiceTest {
         @Test
         @DisplayName("chat接口正常")
         void shouldOkWhenChat() {
-            when(aippModelCenter.getModelAccessInfo(anyString(), any(), any())).thenReturn(
-                    ModelAccessInfo.builder().baseUrl("1111").build());
+            when(aippModelCenter.getModelBaseUrl(anyString())).thenReturn("1111");
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                     Choir.just(new AiMessage("123")));
 
@@ -98,8 +97,7 @@ public class AippModelServiceTest {
             when(model.getServiceName()).thenReturn("llm_model");
             when(model.getTag()).thenReturn("llm_tag");
             when(aippModelCenter.getDefaultModel(any())).thenReturn(model);
-            when(aippModelCenter.getModelAccessInfo(anyString(), any(), any())).thenReturn(
-                    ModelAccessInfo.builder().baseUrl("1111").build());
+            when(aippModelCenter.getModelBaseUrl(anyString())).thenReturn("1111");
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                     Choir.just(new AiMessage("123")));
             when(aippSystemConfigRepository.find(anyString(), anyString())).thenReturn(
@@ -119,8 +117,7 @@ public class AippModelServiceTest {
         @Test
         @DisplayName("系统配置不存在")
         void shouldThrowExceptionWhenConfigNotExists() {
-            when(aippModelCenter.getModelAccessInfo(anyString(), any(), any())).thenReturn(
-                    ModelAccessInfo.builder().baseUrl("1111").build());
+            when(aippModelCenter.getModelBaseUrl(anyString())).thenReturn("1111");
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                     Choir.just(new AiMessage("123")));
             when(aippSystemConfigRepository.find(anyString(), anyString())).thenReturn(Optional.empty());

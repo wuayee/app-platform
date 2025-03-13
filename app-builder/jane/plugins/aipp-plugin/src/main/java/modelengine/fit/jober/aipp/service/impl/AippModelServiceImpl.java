@@ -56,7 +56,7 @@ public class AippModelServiceImpl implements AippModelService {
     public String chat(String model, String tag, Double temperature, String prompt) {
         ChatOption chatOption = ChatOption.custom()
                 .model(model)
-                .baseUrl(this.aippModelCenter.getModelAccessInfo(tag, null, null).getBaseUrl())
+                .baseUrl(this.aippModelCenter.getModelBaseUrl(tag))
                 .temperature(temperature)
                 .stream(false)
                 .build();

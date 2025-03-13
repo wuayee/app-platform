@@ -66,7 +66,7 @@ public class PortsTest {
             queryParam.setStrategy("builtin");
             queryParam.setArgs(testCommand.getArgs());
             queryParam.setTemplate(testCommand.getTemplate());
-            queryParam.setAccessInfo(new ModelAccessInfo(testCommand.getModel(), testCommand.getModelTag(), null, null));
+            queryParam.setAccessInfo(new ModelAccessInfo(testCommand.getModel(), testCommand.getModelTag()));
             queryParam.setTemperature(testCommand.getTemperature());
             List<String> result = this.rewriteService.rewriteQuery(queryParam,
                     testCommand.getMemoryConfig(),

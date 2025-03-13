@@ -517,7 +517,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
         return ChatOption.custom()
                 .model(accessInfo.get("serviceName"))
-                .baseUrl(this.aippModelCenter.getModelAccessInfo(accessInfo.get("tag"), null, null).getBaseUrl())
+                .baseUrl(this.aippModelCenter.getModelBaseUrl(accessInfo.get("tag")))
                 .temperature(ObjectUtils.cast(businessData.get("temperature")))
                 .tools(this.toolProvider.getTool(skillNameList))
                 .user(DataUtils.getOpContext(businessData).getOperator())

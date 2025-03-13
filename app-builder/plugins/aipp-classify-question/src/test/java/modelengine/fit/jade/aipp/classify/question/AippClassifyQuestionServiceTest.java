@@ -63,7 +63,7 @@ public class AippClassifyQuestionServiceTest {
             param.setTemplate(command.getTemplate());
             param.setArgs(command.getArgs());
             param.setQuestionTypeList(command.getQuestionTypes());
-            param.setAccessInfo(new ModelAccessInfo(command.getModel(), command.getModelTag(), null, null));
+            param.setAccessInfo(new ModelAccessInfo(command.getModel(), command.getModelTag()));
             param.setTemperature(command.getTemperature());
             String result = this.classifyQuestionService.classifyQuestion(param, command.getMemoryConfig(),
                     command.getHistories());

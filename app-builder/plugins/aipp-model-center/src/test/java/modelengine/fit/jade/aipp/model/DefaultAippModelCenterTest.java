@@ -132,13 +132,10 @@ public class DefaultAippModelCenterTest {
     @Test
     @DisplayName("测试根据 tag 获取模型网管")
     void testGetModelBaseUrl() {
-        assertThat(aippModelCenter.getModelAccessInfo("internal", null, null).getBaseUrl()).isEqualTo(
-                "http://internal/model/");
-        assertThat(aippModelCenter.getModelAccessInfo("external", null, null).getBaseUrl()).isEqualTo(
-                "http://external/model/");
-        assertThat(aippModelCenter.getModelAccessInfo("INTERNAL", null, null).getBaseUrl()).isEqualTo(
-                "http://internal/model/");
-        assertThrows(AippNotFoundException.class, () -> aippModelCenter.getModelAccessInfo("unknown", null, null));
+        assertThat(aippModelCenter.getModelBaseUrl("internal")).isEqualTo("http://internal/model/");
+        assertThat(aippModelCenter.getModelBaseUrl("external")).isEqualTo("http://external/model/");
+        assertThat(aippModelCenter.getModelBaseUrl("INTERNAL")).isEqualTo("http://internal/model/");
+        assertThrows(AippNotFoundException.class, () -> aippModelCenter.getModelBaseUrl("unknown"));
     }
 }
 
