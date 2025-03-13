@@ -336,7 +336,7 @@ export const fileValidate = (file, fileTypes = ['jpg', 'png', 'jpeg', 'gif'], si
  * @param {String} cname 需要获取的字段
  * @return {String} 字段的值
  */
-export const getCookie = (cname) => {
+export function getCookie (cname)  {
   const name = `${cname}=`;
   const ca = document.cookie.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -353,7 +353,7 @@ export const getCookie = (cname) => {
  * @param {String} cname 需要设置的字段
  * @param {String} cvalue 需要设置的字段值
  */
-export const setCookie = (cname, cvalue) => {
+export function setCookie (cname, cvalue) {
   document.cookie = `${cname}=${cvalue};path=/`;
 }
 
