@@ -46,7 +46,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { storage } from '@/shared/storage';
 import { EventSourceParserStream } from '@/shared/eventsource-parser/stream';
-import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
+import { setAppId, setAippId, setAppInfo } from '@/store/appInfo/appInfo';
 import { useTranslation } from 'react-i18next';
 import { pick, cloneDeep } from 'lodash';
 import ChatMessage from './components/chat-message';
@@ -71,6 +71,8 @@ const ChatPreview = (props) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const aippId = useAppSelector((state) => state.appStore.aippId);
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const referenceList = useAppSelector((state) => state.chatCommonStore.referenceList);
@@ -82,8 +84,6 @@ const ChatPreview = (props) => {
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
-  const appId = useAppSelector((state) => state.appStore.appId);
-  const { aippId } = useParams();
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -110,7 +110,7 @@ const ChatPreview = (props) => {
   const inspirationRef = useRef<any>(null);
   const isAutoSend = useRef<boolean>(false);
   const detailPage = location.pathname.indexOf('app-detail') !== -1;
-  const storageId = aippId ? aippId : appId;
+  const storageId = detailPage ? aippId : appId;
   const chatStatus = ['ARCHIVED', 'ERROR', 'TERMINATED'];
   const messageType = ['MSG', 'ERROR', 'META_MSG'];
 
@@ -122,6 +122,7 @@ const ChatPreview = (props) => {
       dispatch(setAppInfo({}));
       dispatch(setAppId(null));
       dispatch(setChatId(undefined));
+      dispatch(setAippId(''));
       dispatch(setChatList([]));
       dispatch(setReference(false));
       dispatch(setReferenceList({}));

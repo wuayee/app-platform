@@ -53,10 +53,10 @@ import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 const EditorBtnHome = (props) => {
   const { t } = useTranslation();
   const { fileCallBack, editorRef, setEditorShow, setListCurrentList, showMask, fileList, display } = props;
-  const { aippId } = useParams();
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
+  const aippId = useAppSelector((state) => state.appStore.aippId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
@@ -75,9 +75,9 @@ const EditorBtnHome = (props) => {
   const [searchKey, setSearchKey] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [multiFileConfig, setMultiFileConfig] = useState<any>({});
-  let chatIdRef = useRef<any>(null);
-  let appIdRef = useRef<any>(null);
   const deleteId = useRef<any>([]);
+  const detailPage = location.href.indexOf('app-detail') !== -1;
+  const storageId = detailPage ? aippId : appId;
 
   useEffect(() => {
     document.body.addEventListener('click', () => {
@@ -87,10 +87,6 @@ const EditorBtnHome = (props) => {
     setAppName(appInfo.name || t('app'));
     setMultiFileConfig(findConfigValue(appInfo, 'multimodal') || {});
   }, [appInfo]);
-  useEffect(() => {
-    chatIdRef.current = chatId;
-    appIdRef.current = appId;
-  }, [appId]);
   useEffect(() => {
     if (atAppInfo) {
       getImgPath(atAppInfo.attributes);
@@ -155,9 +151,9 @@ const EditorBtnHome = (props) => {
   // 多标签删除会话ID问题
   const chatDeleteMessage = (data) => {
     let { deleteChatId, refreshChat, deleteAppId } = data;
-    if (appIdRef.current === deleteAppId && (deleteChatId === chatIdRef.current || refreshChat)) {
+    if (appId === deleteAppId && (deleteChatId === chatId || refreshChat)) {
       dispatch(setChatId(null));
-      updateChatId(null, aippId);
+      updateChatId(null, storageId);
     }
   }
   // 清空历史记录
@@ -224,7 +220,7 @@ const EditorBtnHome = (props) => {
   const onClickNewChat = () => {
     if (isChatRunning()) { return; }
     dispatch(setChatRunning(false));
-    updateChatId(null, aippId, appInfo)
+    updateChatId(null, storageId)
     dispatch(setChatId(null));
     dispatch(setChatList([]));
     dispatch(setAtAppInfo(null));

@@ -4,10 +4,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as echarts from 'echarts';
 import { Card, Select } from 'antd';
 import { getAnalysisData } from '@/shared/http/apps';
+import { getAppInfo } from '@/shared/http/aipp';
 import { useParams } from 'react-router-dom';
 import { setSpaClassName } from '@/shared/utils/common';
 import { useTranslation } from 'react-i18next';
@@ -41,8 +42,11 @@ const AppAnalyse: React.FC = () => {
   const [graphData, setgraphData] = useState({ allRequest: {}, allActive: {}, avgSpeed: {} });
   const [time, setTime] = useState('0');
   const [total, setTotal] = useState(0);
+  const [pageDisabled, setPageDisabled] = useState(true);
   const [speedList, setSpeedList] = useState([]);
-  const { appId } = useParams();
+  const { tenantId, appId } = useParams();
+  const state = useRef('inactive');
+  const timer = useRef<any>(null);
 
   const initData = () => {
     const tradeChart = echarts.init(document.getElementById('trade'));
@@ -56,13 +60,35 @@ const AppAnalyse: React.FC = () => {
     });
   }
 
+  const dataInit = () => {
+    if (state.current === 'active') {
+      timer.current && clearInterval(timer.current);
+      initData();
+      timer.current = setInterval(() => {
+        initData()
+      }, 60000);
+    }
+  }
+
   useEffect(() => {
-    initData();
-    const timer = setInterval(() => {
-      initData()
-    }, 60000);
-    return () => clearInterval(timer);
+    dataInit();
   }, [time]);
+
+  useEffect(() => {
+    getAppInfo(tenantId, appId).then((res) => {
+      if (res.data.attributes?.latest_version || res.data.state === 'active') {
+        state.current = 'active';
+        dataInit();
+        setPageDisabled(false);
+      } else {
+        setPageDisabled(true);
+      }
+    });
+    return () => {
+      timer.current && clearInterval(timer.current);
+      state.current = 'inactive';
+    };
+  }, []);
 
 
   // 设置Tab数据
@@ -144,6 +170,7 @@ const AppAnalyse: React.FC = () => {
             time
           }
           style={{ width: 120 }}
+          disabled={pageDisabled}
           onChange={setTime}
           options={timeOption}
         />
