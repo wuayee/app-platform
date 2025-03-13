@@ -43,9 +43,9 @@ if (process.env.PACKAGE_MODE === 'spa') {
   if (process.env.NODE_ENV === 'production') {
     basename = '/appengine'
   }
-  import(`@/styles/appengine-bg-spa.scss`);
+  import(`./styles/appengine-bg-spa.scss`);
 } else {
-  import(`@/styles/appengine-bg.scss`);
+  import(`./styles/appengine-bg.scss`);
 }
 const RouterComponent = isHashRouter ? HashRouter : BrowserRouter
 const AppRouter = ({ children }) => (

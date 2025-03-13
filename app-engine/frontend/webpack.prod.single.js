@@ -17,7 +17,7 @@ module.exports = merge(baseConfig, {
     filename: '[name].[contenthash:8].js',
     chunkFilename: 'chunk.[contenthash:8].js',
     crossOriginLoading: 'anonymous',
-    publicPath: '/apps/appengine',
+    publicPath: '/apps/appengine/',
   },
   plugins: [
     new SubresourceIntegrityPlugin({
