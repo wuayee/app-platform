@@ -46,7 +46,7 @@ const PublicCard = ({ type, url, detail, auth = false }) => {
 
   // 查看API秘钥
   const openKey = () => {
-    window.open(`https:${window.location.host}/modellite/apikey`);
+    window.open(`https:${window.location.host}/modellite/apikey/home`);
   };
 
   // 查看API文档

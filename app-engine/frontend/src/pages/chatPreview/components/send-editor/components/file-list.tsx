@@ -20,6 +20,7 @@ import mp4Icon from '@/assets/images/ai/mp4.svg';
 import pdfIcon from '@/assets/images/ai/pdf.svg';
 import txtIcon from '@/assets/images/ai/txt.svg';
 import excelIcon from '@/assets/images/ai/excel.svg';
+import csvIcon from '@/assets/images/ai/csv.svg';
 import deleteFileIcon from '@/assets/images/ai/delete_file.svg';
 import previewIcon from '@/assets/images/ai/preview_icon.svg';
 const pictureTypes = Object.values(PictureFileType);
@@ -83,6 +84,8 @@ const FileList = (props) => {
       case FileType.XLS:
       case FileType.XLSX:
         return excelIcon;
+      case FileType.CSV:
+        return csvIcon;
       default:
         break;
     }
