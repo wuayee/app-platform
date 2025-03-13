@@ -13,7 +13,7 @@ import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
 import { getAppInfo } from '@/shared/http/aipp';
 import { updateFormInfo } from '@/shared/http/aipp';
-import { debounce, getUiD, getCurrentTime } from '@/shared/utils/common';
+import { debounce, getUiD, getCurrentTime, setSpaClassName } from '@/shared/utils/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { setAppId, setAippId, setAppInfo, setChoseNodeId, setValidateInfo  } from '@/store/appInfo/appInfo';
@@ -149,7 +149,7 @@ const AippIndex = () => {
             openDebug={openDebug}
             addFlowRef={addFlowRef}
           />
-          <div className='layout-content'>
+          <div className={setSpaClassName('layout-content')}>
             {showElsa ?
               (
                 <AddFlow

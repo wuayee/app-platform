@@ -96,6 +96,7 @@
   background-image: url('/src/assets/images/source/sourcehover.png');
 }
 .app-analyzed {
+  height:calc(100vh - 160px);
   .card {
     background-image: url('/src/assets/images/knowledge/knowledge-background.png') !important;
   }
@@ -118,5 +119,32 @@
   }
   .market-block {
     height: calc(100vh - 66px);
+  }
+}
+.chat-page-inner {
+  .chat-inner-left {
+    height: 100vh !important;
+  }
+  .chat-right-close {
+    height: 100vh !important;
+  }
+}
+.chat-inner {
+  .chat-inner-left {
+    height: calc(100vh - 100px);
+  }
+  .chat-inner-right {
+    height: calc(100vh - 100px);
+  }
+  
+}
+.ant-layout {
+  .layout-content {
+    height: calc(100vh - 70px);
+  }
+}
+.layout-elsa-content {
+  .layout-content {
+    height: 100vh;
   }
 }

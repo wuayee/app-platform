@@ -4,7 +4,6 @@
   font-family: '';
   .layout-content {
     display: flex;
-    height: calc(100vh - 70px);
     position: relative;
     .chat-icon {
       position: absolute;
@@ -37,9 +36,6 @@
   }
   .chat-preview-elsa {
     display: none;
-  }
-  .layout-content {
-    height: 100vh;
   }
 }
 .layout-show-preview {

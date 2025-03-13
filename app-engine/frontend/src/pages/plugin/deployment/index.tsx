@@ -38,10 +38,6 @@ const DeployMent = ({ cancle, confirm }) => {
         uninstallNum -= 1;
       }
     });
-    if (list.length > 20) {
-      Message({ type: 'warning', content: t('selectedOptions') });
-      return
-    }
     setPluginNum(list.length);
     setDeployedNum(uninstallNum);
     setLoading(false);

@@ -95,6 +95,7 @@
   background-image: url('/apps/appengine/src/assets/images/source/sourcehover.png');
 }
 .app-analyzed-spa {
+  height:calc(100vh - 190px);
   .card {
     background-image: url('/apps/appengine/src/assets/images/knowledge/knowledge-background.png') !important;
   }
@@ -115,5 +116,31 @@
   }
   .market-block {
     height: calc(100vh - 100px);
+  }
+}
+.chat-page-inner-spa {
+  .chat-inner-left {
+    height: calc(100vh - 50px) !important;
+  }
+  .chat-right-close {
+    height: calc(100vh - 50px) !important;
+  }
+}
+.chat-inner-spa {
+  .chat-inner-left {
+    height: calc(100vh - 150px);
+  }
+  .chat-inner-right {
+    height: calc(100vh - 150px);
+  }
+}
+.ant-layout {
+  .layout-content-spa {
+    height: calc(100vh - 120px);
+  }
+}
+.layout-elsa-content {
+  .layout-content-spa {
+    height: calc(100vh - 50px);
   }
 }
