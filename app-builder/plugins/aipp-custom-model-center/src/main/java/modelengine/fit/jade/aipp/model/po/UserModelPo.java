@@ -20,5 +20,5 @@ public class UserModelPo extends BasePo {
     private String userId;
     private String modelId;
     private String apiKey;
-    private Boolean isDefault;
+    private int isDefault;
 }

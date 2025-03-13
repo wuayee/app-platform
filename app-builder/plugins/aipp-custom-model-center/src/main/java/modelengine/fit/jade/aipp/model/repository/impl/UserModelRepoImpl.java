@@ -6,13 +6,17 @@
 
 package modelengine.fit.jade.aipp.model.repository.impl;
 
+import modelengine.fit.jade.aipp.model.mapper.ModelMapper;
+import modelengine.fit.jade.aipp.model.mapper.UserModelMapper;
 import modelengine.fit.jade.aipp.model.po.ModelAccessPo;
 import modelengine.fit.jade.aipp.model.po.ModelPo;
+import modelengine.fit.jade.aipp.model.po.UserModelPo;
 import modelengine.fit.jade.aipp.model.repository.UserModelRepo;
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
-
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 表示用户模型信息的持久化层的接口 {@link UserModelRepo} 的实现。
@@ -22,18 +26,46 @@ import java.util.List;
  */
 @Component
 public class UserModelRepoImpl implements UserModelRepo {
+    private final ModelMapper modelMapper;
+    private final UserModelMapper userModelMapper;
+
+    public UserModelRepoImpl(ModelMapper modelMapper, UserModelMapper userModelMapper) {
+        this.modelMapper = modelMapper;
+        this.userModelMapper = userModelMapper;
+    }
+
     @Override
     public List<ModelPo> get(String userId) {
-        return null;
+        return this.getModelPos(this.userModelMapper.listUserModels(userId));
+    }
+
+    private List<ModelPo> getModelPos(List<UserModelPo> userModelPos) {
+        return this.modelMapper.listModels(userModelPos.stream()
+                .map(UserModelPo::getModelId)
+                .collect(Collectors.toList()));
     }
 
     @Override
     public ModelAccessPo getModelAccessInfo(String userId, String tag, String name) {
-        return null;
+        List<UserModelPo> userModelPos = this.userModelMapper.listUserModels(userId);
+        ModelPo modelPo = this.getModelPos(userModelPos)
+                .stream()
+                .filter(mp -> Objects.equals(mp.getTag(), tag) && Objects.equals(mp.getName(), name))
+                .findFirst()
+                .orElse(null);
+        if (modelPo == null) {
+            return null;
+        }
+        String apiKey = userModelPos.stream()
+                .filter(um -> Objects.equals(um.getModelId(), modelPo.getModelId()))
+                .map(UserModelPo::getApiKey)
+                .findFirst()
+                .orElse(null);
+        return ModelAccessPo.builder().modelPO(modelPo).apiKey(apiKey).build();
     }
 
     @Override
     public ModelPo getDefaultModel(String userId) {
-        return null;
+        return this.modelMapper.get(this.userModelMapper.getDefault(userId).getModelId());
     }
 }
