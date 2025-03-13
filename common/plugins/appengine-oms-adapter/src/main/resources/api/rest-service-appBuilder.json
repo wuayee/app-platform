@@ -114,6 +114,76 @@
     ]
   },
   {
+    "Description": "创建用户反馈记录",
+    "ResourceKey": "POST /appbuilder/aipp/usr/feedback",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "更新用户反馈信息",
+    "ResourceKey": "PATCH /appbuilder/aipp/usr/feedback/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "删除用户反馈信息",
+    "ResourceKey": "DELETE /appbuilder/aipp/usr/feedback/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "获取用户反馈信息列表",
+    "ResourceKey": "GET /appbuilder/aipp/usr/feedbacks",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "通过LogId获取对话信息列表",
+    "ResourceKey": "GET /appbuilder/aipp/usr/feedback/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
     "Description": "删除app",
     "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})",
     "SkipCheck": false,
