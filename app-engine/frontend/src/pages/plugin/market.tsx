@@ -131,10 +131,10 @@ const MarketItems = ({ reload, readOnly }) => {
       key: '1',
       label: <div onClick={(e) => uploadAdd(e)}>{t('customPlugin')}</div>,
     },
-    // {
-    //   key: '2',
-    //   label: <div onClick={() => history({ pathname: '/http' })}>{t('httpPlugin')}</div>,
-    // },
+    {
+      key: '2',
+      label: <div onClick={() => history({ pathname: '/http' })}>{t('httpPlugin')}</div>,
+    },
     {
       key: '3',
       label: <div onClick={(e) => workFlow(e)}>{t('workflow')}</div>,
@@ -165,13 +165,11 @@ const MarketItems = ({ reload, readOnly }) => {
           prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
           defaultValue={name}
         />
-        { !readOnly && ( process.env.PACKAGE_MODE !== 'common' ? <Button className='market-button'  onClick={(e) => uploadAdd(e)} >
-          {t('upload')}
-        </Button> : <Dropdown menu={{ items }}>
+        { !readOnly &&  <Dropdown menu={{ items }}>
           <Button className='market-button'>
             {t('upload')}
           </Button>
-        </Dropdown> )}
+        </Dropdown> }
         <UploadToolDrawer openSignal={isOpenPlugin} refreshPluginList={getPluginList} />
       </div>
       <Tabs
