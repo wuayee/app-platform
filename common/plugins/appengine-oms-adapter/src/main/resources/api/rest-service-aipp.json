@@ -309,6 +309,19 @@
     ]
   },
   {
+    "Description": "根据type获取相应节点配置",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/store/nodes/list",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppTrialDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
     "Description": "获取基础节点配置",
     "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/store/nodes/basic",
     "SkipCheck": false,
