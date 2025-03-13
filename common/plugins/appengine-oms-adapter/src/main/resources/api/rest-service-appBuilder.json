@@ -326,6 +326,18 @@
     ]
   },
   {
+    "Description": "批量上传文件",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/files",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
     "Description": "从nas下载文件",
     "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/file",
     "SkipCheck": false,
