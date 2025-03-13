@@ -72,7 +72,7 @@ export const convertReturnFormat = input => {
         return [{
             id: 'output_' + uuidv4(),
             name: name,
-            type: "Object",
+            type: 'Object',
             value: result
         }];
     };

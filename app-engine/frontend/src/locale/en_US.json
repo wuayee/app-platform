@@ -685,5 +685,9 @@
   "notSupportedUpload": "待翻译",
   "fileFormat": "待翻译",
   "similarityThresholdTips": "待翻译",
-  "chatAgentTips": "待翻译"
+  "chatAgentTips": "待翻译",
+  "pluginCannotBeEmpty": "待翻译",
+  "chooseToBeLoopParam": "待翻译",
+  "loopRadioIsRequired": "待翻译",
+  "loopSkillPopover": "待翻译"
 }

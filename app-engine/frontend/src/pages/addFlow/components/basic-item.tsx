@@ -21,7 +21,8 @@ import {
   HttpIcon,
   VariableAggregation,
   TextToImageIcon,
-  FileExtractionIcon
+  FileExtractionIcon,
+  LoopIcon,
 } from '@/assets/icon';
 import { handleClickAddBasicNode, handleDragBasicNode } from '../utils'
 
@@ -56,6 +57,7 @@ const BasicItems = (props: any) => {
       'textToImageNodeState': <TextToImageIcon />,
       'fileExtractionNodeState': <FileExtractionIcon />,
       'noteNode': <ClassificationIcon />,
+      'loopNodeState': <LoopIcon />,
     }[type];
   }
   return <>

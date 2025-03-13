@@ -68,5 +68,10 @@
     "type": "noteNode",
     "name": "注释",
     "uniqueName": ""
+  },
+  {
+    "type": "loopNodeState",
+    "name": "循环",
+    "uniqueName": ""
   }
 ]
