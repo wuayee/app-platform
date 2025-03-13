@@ -101,6 +101,7 @@ const Stage = (props) => {
   useEffect(() => {
     return () => {
       render.current = false;
+      window.agent = null;
       dispatch(setTestStatus(null));
     }
   }, [])
@@ -130,7 +131,7 @@ const Stage = (props) => {
         configs: CONFIGS,
         i18n,
         importStatements: [],
-        flowType: appInfo.type
+        flowType: appInfo.type === 'waterFlow' ? 'workflow' : appInfo.type
       });
     flow.then((agent) => {
       setSpinning && setSpinning(false);

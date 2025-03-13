@@ -192,10 +192,6 @@ export function getToolList(params) {
 export function generatePrompt(params) {
   return post(`${AIPP_URL}/model/prompt`, params);
 }
-// ai生成图片
-export function generatedRequest (params, tenantId) {
-  return post(`${AIPP_URL}/${tenantId}/generateImage`, params);
-}
 // 应用导入
 export function importApp(tenantId, data) {
   return post(`${AIPP_URL}/${tenantId}/app/import`, data, { 'Content-Type': 'multipart/form-data' });
@@ -219,4 +215,8 @@ export function getAppCategories (tenantId) {
 // 根据模板创建应用
 export function templateCreateAipp(tenantId, params) {
   return post(`${AIPP_URL}/${tenantId}/template/create`, params);
+}
+// 获取api文档
+export function getApiDocument() {
+  return get(`${AIPP_URL}/document`);
 }

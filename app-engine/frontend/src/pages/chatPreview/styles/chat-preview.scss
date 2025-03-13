@@ -49,7 +49,6 @@
   background-size: 100% 100%;
   .chat-inner-left {
     width: 100%;
-    height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
     transition: width .2s;
@@ -62,7 +61,6 @@
 
   .chat-inner-right {
     width: 360px;
-    height: calc(100vh - 50px);
     position: fixed;
     right: -355px;
     z-index: 600;
@@ -108,7 +106,6 @@
   margin: 0;
   width: 100%;
   .chat-inner-left {
-    height: 100vh;
     position: relative;
     overflow-x: auto;
     display: flex;
@@ -132,12 +129,8 @@
     right: 16px;
     background-color: #f4f9fd;
   }
-
   .chat-left-close {
     width: calc(100% - 365px);
-  }
-  .chat-right-close {
-    height: 100vh;
   }
 }
 

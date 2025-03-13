@@ -114,32 +114,6 @@ export function saveChart(tenantId: string, instanceId: string, params: any) {
   });
 }
 
-// 用户自勾选请求接口
-/**
- * @param {string} tenantId - 租户ID
- * @param {string} instanceId - 实例ID
- * @param {any} params - 需要保存的参数
- * @param {boolean} isDebug - 是否是调试状态
- * @return {Promise} 返回一个Promise对象，resolve的参数为请求的响应
- * @throws {Error} 如果请求失败，会抛出错误
- */
-export function getReportInstance(tenantId: string, instanceId: string, params: any, isDebug: boolean) {
-  let url = `${AIPP_URL}/${tenantId}/start/instances/${instanceId}?isDebug=${isDebug}`
-  return new Promise((resolve, reject) => {
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Auth-Token': getCookie('__Host-X-Auth-Token'),
-        'X-Csrf-Token': getCookie('__Host-X-Csrf-Token')
-      },
-      body: JSON.stringify(params)
-    }).then((res) => {
-      sseError(res, resolve);
-    })
-  });
-}
-
 // featch sse 错误处理
 const sseError = (res, resolve) => {
   if (res.status === 401) {

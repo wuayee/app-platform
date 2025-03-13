@@ -34,7 +34,7 @@ const ChatDetail = ({ showMask = false }) => {
   const navigate = useHistory().push;
   const location = useLocation();
   let modalRef = useRef<any>();
-  const isHomepage = appInfo.name === '小海' && !location.pathname.includes('app-detail');
+  const isHomepage = location.pathname.includes('home');
   const addApp = () => {
     setModalInfo(() => {
       modalRef.current.showModal();

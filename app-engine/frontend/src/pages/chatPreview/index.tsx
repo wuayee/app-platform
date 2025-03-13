@@ -668,7 +668,7 @@ const ChatPreview = (props) => {
         <span className='icon-back' onClick={previewBack}>
           {showElsa && <LeftArrowIcon />}
         </span>
-        <div className={`${setSpaClassName('chat-inner')} ${!detailPage ? 'chat-page-inner' : ''}`}>
+        <div className={`${setSpaClassName('chat-inner')} ${!detailPage ? setSpaClassName('chat-page-inner') : ''}`}>
           <div className={`chat-inner-left ${inspirationOpen && showInspiration ? 'chat-left-close' : 'no-border'}`}>
             <ChatMessage
               feedRef={feedRef}
