@@ -2014,3 +2014,7 @@ export const urlMap = {
   apps: '/v1/tenants/{tenantId}/apps',
   appsConfig: '/v1/tenants/{tenantId}/apps/{appId}/config',
 };
+
+export const HTTPMap = {
+  http: 'http',
+};

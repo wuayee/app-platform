@@ -21,6 +21,7 @@ import {
   resOKCode,
   reqWssData,
   resWssData,
+  HTTPMap,
 } from '../overview/common/config';
 import { v4 as uuidv4 } from 'uuid';
 import './styles/api.scss';
@@ -36,7 +37,7 @@ import './styles/api.scss';
  */
 const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
   const { t } = useTranslation();
-  const { appId } = useParams();
+  const { appId, tenantId } = useParams();
   const [documentContent, setDocumentContent] = useState([]);
   const [documentContentData, setDocumentContentData] = useState([]);
   const [currentNav, setCurrentNav] = useState('');
@@ -375,14 +376,14 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
         str += `${space.repeat(6 + deep)}"${item}": "",\n`;
       } else if (!sseFilterArr.includes(val.type) && val.type) {
         let values = val['examples'] ? val['examples'][0] : '';
-        str += `${space.repeat(6 + deep)}"${item}": "${values}",\n`;
+        str += `${space.repeat(6 + deep)}"${item}": "${values}"${item === Object.keys(properties).at(-1) ? '' : ','}\n`;
       } else {
         if (val.$ref) {
           let itemsRefStr = val.$ref;
           let childRefStr = itemsRefStr.substring(itemsRefStr.lastIndexOf('/') + 1);
           const res = buildSseSchemaString(childRefStr, deep + 2);
           str += `${space.repeat(6 + deep)}"${item}": ${res === '' ? ' {' : ' {\n'}`;
-          str += res === '' ? '}\n' : res;
+          str += res === '' ? '},\n' : res;
         } else if (val.type === 'array') {
           if (val.items.$ref) {
             let itemsStr = val.items.$ref;
@@ -410,7 +411,7 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
         }
       }
       if (index === Object.keys(properties).length - 1) {
-        str += `${space.repeat(4 + deep)}},\n`;
+        str += `${space.repeat(4 + deep)}}\n`;
       }
     });
     return str;
@@ -691,10 +692,10 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
           <div className='inner-code'>
             <div className='inner-code-title'>Websocket</div>
             <div className='inner-code-content inner-code-flex'>
-              <span>{url.replace(httpStr, 'wss://')}</span>
+              <span>{url.replace(HTTPMap.http, 'ws')}</span>
               <div
                 style={{ cursor: 'pointer' }}
-                onClick={() => toClipboard(url.replace(httpStr, 'wss://'))}
+                onClick={() => toClipboard(url.replace(HTTPMap.http, 'ws'))}
               >
                 <img src={copyCodeIcon} style={{ marginRight: 8 }} alt='' />
                 <span>Copy</span>
@@ -707,6 +708,17 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
           <div
             dangerouslySetInnerHTML={{ __html: markedProcess(tranlateCode(t('authTips'))) }}
           ></div>
+        </div>
+        <div>
+          <div className='content-title'>{t('appInformation')}</div>
+          <div>
+            <span>tennatId：</span>
+            {tenantId}
+          </div>
+          <div className='content-id'>
+            <span>appId：</span>
+            {appId}
+          </div>
         </div>
         {documentContent.map((item: any, index) => (
           <section
