@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { toClipboard } from '@/shared/utils/common';
 import { CopyIcon, DeleteIcon } from '@/assets/icon';
@@ -12,6 +12,7 @@ import { ChatContext } from '../../../aippIndex/context';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store/hook';
 import { Message } from '@/shared/utils/message';
+import { findConfigValue } from '@/shared/utils/common';
 import Add from '../inspiration/add-inspiration';
 import './styles/send-btn.scss'
 
@@ -19,9 +20,11 @@ import './styles/send-btn.scss'
 const SendBtn = (props) => {
   const { t } = useTranslation();
   const { content, sendType, isRecieve, formConfig = {} } = props;
+  const [showInspiration, setShowInspiration] = useState(false);
   const { setShareClass, addInspirationCb } = useContext(ChatContext);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const copyType = ['msg', 'text'];
   const detailPage = location.href.indexOf('app-detail') !== -1;
   const inspirationRef = useRef(null);
@@ -53,6 +56,12 @@ const SendBtn = (props) => {
     }
     return false;
   }
+
+  useEffect(() => {
+    const inspirationItem = findConfigValue(appInfo, 'inspiration');
+    setShowInspiration(inspirationItem?.showInspiration || false);
+  }, [appInfo]);
+
   return <>{(
     <div className='message-tip-box-send'>
       <div className='inner'>
@@ -66,7 +75,7 @@ const SendBtn = (props) => {
             <DeleteIcon className='hover-blue-icon' />
           </div>
         }
-        {(!isRecieve && !detailPage) && 
+        {(!isRecieve && !detailPage && showInspiration) &&
           <div title='添加灵感' onClick={addInspiration}>
             <PlusCircleOutlined  className='hover-blue-icon' style={{ fontSize: '18px', color: '#4D4D4D' }} />
           </div>

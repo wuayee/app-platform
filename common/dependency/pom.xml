@@ -24,6 +24,7 @@
         <aipp-genericable.version>1.0.0-SNAPSHOT</aipp-genericable.version>
         <authentication.version>1.0.0-SNAPSHOT</authentication.version>
         <schema-service.version>1.0.0-SNAPSHOT</schema-service.version>
+        <sync-tool-call-service.version>1.0.0-SNAPSHOT</sync-tool-call-service.version>
 
         <dynamic-form.version>0.0.1-SNAPSHOT</dynamic-form.version>
         <elsa.version>1.0.4</elsa.version>
@@ -446,6 +447,13 @@
                 <groupId>modelengine.fit.jade.service</groupId>
                 <artifactId>schema-service</artifactId>
                 <version>${schema-service.version}</version>
+            </dependency>
+
+            <!-- sync-tool-call-service -->
+            <dependency>
+                <groupId>modelengine.fit.jade.tool</groupId>
+                <artifactId>sync-tool-call-service</artifactId>
+                <version>${sync-tool-call-service.version}</version>
             </dependency>
 
             <!-- Third-party -->

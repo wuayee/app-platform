@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {updateInput} from '@/components/util/JadeConfigUtils.js';
-import {VALID_FORM_KEY} from '@/components/end/EndConst';
 
 export const ChangeFormByMetaDataReducer = () => {
   const self = {};

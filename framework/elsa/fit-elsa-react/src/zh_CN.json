@@ -687,5 +687,9 @@
   "greaterThanOrEqual": "大于等于",
   "lessThan": "小于",
   "lessThanOrEqual": "小于等于",
-  "notePlaceHolder" : "这是一个注释节点"
+  "notePlaceHolder" : "这是一个注释节点",
+  "pluginCannotBeEmpty": "插件不能为空",
+  "chooseToBeLoopParam": "设为循环参数",
+  "loopRadioIsRequired": "需选择循环参数",
+  "loopSkillPopover": "可选择工具或工作流作为循环调用的对象"
 }

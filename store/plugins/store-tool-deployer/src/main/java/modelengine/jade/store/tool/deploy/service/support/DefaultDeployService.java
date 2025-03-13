@@ -60,7 +60,6 @@ import java.util.stream.Collectors;
 @Component
 public class DefaultDeployService implements DeployService {
     private static final Logger log = Logger.get(DefaultDeployService.class);
-    private static final Integer MAX_DEPLOY_TOOL_SIZE = 20;
     private static final String OR = "OR";
     private static final int PAGE_SIZE = 100;
 
@@ -194,9 +193,9 @@ public class DefaultDeployService implements DeployService {
     }
 
     private void validateFitableExist(String genericableId, String fitableId) {
-        for (int i = 0; i < MAX_DEPLOY_TOOL_SIZE; i++) {
-            ListResult<PluginToolData> pluginTools = this.pluginToolService.getPluginTools(
-                    new PluginToolQuery.Builder().toolName(null)
+        for (int i = 0; i < this.pluginDeployQueryConfig.getMaxToolSize(); i++) {
+            ListResult<PluginToolData> pluginTools =
+                    this.pluginToolService.getPluginTools(new PluginToolQuery.Builder().toolName(null)
                             .includeTags(new HashSet<>())
                             .excludeTags(new HashSet<>())
                             .mode(OR)
@@ -227,7 +226,8 @@ public class DefaultDeployService implements DeployService {
                 if (deployedFitableId.equals(fitableId) && deployedGenericableId.equals(genericableId)) {
                     throw new ModelEngineException(PluginRetCode.PLUGIN_DEPLOY_FAILED,
                             StringUtils.format("The tool has been deployed. [genericableId={0}, fitableId={1}]",
-                                    genericableId, fitableId));
+                                    genericableId,
+                                    fitableId));
                 }
             }
         }

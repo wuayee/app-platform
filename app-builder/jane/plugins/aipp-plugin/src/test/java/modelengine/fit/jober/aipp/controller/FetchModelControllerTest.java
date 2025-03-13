@@ -60,7 +60,7 @@ public class FetchModelControllerTest {
                 .tag("testTag")
                 .build());
         ModelListDto modelListDto = ModelListDto.builder().models(modelList).total(modelList.size()).build();
-        when(this.aippModelCenter.fetchModelList(any())).thenReturn(modelListDto);
+        when(this.aippModelCenter.fetchModelList(any(), any())).thenReturn(modelListDto);
 
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/v1/api/fetch/model-list")
                 .responseType(ModelListDto.class);

@@ -18,8 +18,7 @@ import PropTypes from 'prop-types';
 import {TOOL_BAR_SIZE} from '@/components/note/const.js';
 import {useTranslation} from 'react-i18next';
 import {ResizeButton} from '@/components/note/ResizeButton.jsx';
-import {EVENT_TYPE} from '@fit-elsa/elsa-core';
-import {isPointInRect} from '@fit-elsa/elsa-core/common/util.js';
+import {EVENT_TYPE, isPointInRect} from '@fit-elsa/elsa-core';
 
 /**
  * 文本编辑组件

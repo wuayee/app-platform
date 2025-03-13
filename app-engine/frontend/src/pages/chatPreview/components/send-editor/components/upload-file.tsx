@@ -9,6 +9,7 @@ import { Upload } from 'antd';
 import { uploadMultipleFile } from '@/shared/http/aipp';
 import { Message } from '@/shared/utils/message';
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@/store/hook';
 import { FileType, PictureFileType } from '../common/config';
 import uploadImg from '@/assets/images/upload_icon.svg';
 const supportFileTypes = Object.values(FileType);
@@ -31,6 +32,8 @@ const UploadFile = (props) => {
   const [addFileList, setAddFileList] = useState([]);
   const isWarnLimit = useRef(false);
   const isWarnType = useRef(false);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
 
   const fileDataProcess = async (curFile, curfileList) => {
     const isLastFile = curFile.name === curfileList[curfileList.length - 1].name;
@@ -102,16 +105,16 @@ const UploadFile = (props) => {
     }))
     let resultData = [];
     try {
-      const result = await uploadMultipleFile(formData);
+      const result = await uploadMultipleFile(tenantId, appInfo.id, formData);
       if (result.code === 0 && result.data) {
         resultData = result.data;
       }
     } finally {
       updateFileList((preList) => {
         const curList = preList.map(file => {
-          const resultItem = resultData.find(item => item.file_name === file.name.replace(/\s+/g, ''));
+          const resultItem = resultData.find(item => item.file_name === file.name || item.file_name === file.name.replace(/\s+/g, ''));
           if (resultItem) {
-            return Object.assign(file, { ...resultItem, file_name: file.name }, { uploadStatus: 'success' });
+            return Object.assign(file, { file_name: file.name, file_url: resultItem.file_path }, { uploadStatus: 'success' });
           } else {
             const addItem = addFileList.find(item => item.name === file.name);
             if (addItem) {
@@ -152,7 +155,7 @@ const UploadFile = (props) => {
         <div className='import-upload' onClick={handleClick}>
           <img src={uploadImg} />
           <div className='upload-word'>{t('fileUploadContent1')}</div>
-          <div className='tips'>{t('chatSupportedFileTypes')}</div>
+          <div className='tips'>{`${t('chatSupportedFileTypes')}${supportFileTypes.join('/')}`}</div>
           <div className='tips'>
             <span>{t('chatFileSizeTip')}</span>
             <span>{`${t('chatFileLimitTip')}${maxCount}${t('num')}${t('file')}`}</span>

@@ -5,6 +5,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -15,6 +17,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -26,6 +30,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -37,6 +43,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -47,6 +55,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -58,6 +68,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -69,6 +81,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -79,6 +93,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -89,6 +105,78 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "创建用户反馈记录",
+    "ResourceKey": "POST /appbuilder/aipp/usr/feedback",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "更新用户反馈信息",
+    "ResourceKey": "PATCH /appbuilder/aipp/usr/feedback/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "删除用户反馈信息",
+    "ResourceKey": "DELETE /appbuilder/aipp/usr/feedback/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "获取用户反馈信息列表",
+    "ResourceKey": "GET /appbuilder/aipp/usr/feedbacks",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "通过LogId获取对话信息列表",
+    "ResourceKey": "GET /appbuilder/aipp/usr/feedback/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -101,6 +189,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -111,6 +201,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -121,6 +213,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -131,6 +225,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -143,6 +239,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -153,6 +251,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -165,6 +265,22 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "添加灵感",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/root",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -177,6 +293,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -189,6 +307,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -199,6 +319,20 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "批量上传文件",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/files",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -209,6 +343,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -221,6 +357,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -232,6 +370,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -242,6 +382,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -252,6 +394,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -262,6 +406,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -274,6 +420,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -284,6 +432,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -294,6 +444,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -306,6 +458,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -316,6 +470,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -326,6 +482,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -337,6 +495,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -347,6 +507,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -357,6 +519,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -367,6 +531,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -378,6 +544,124 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "查询应用模板接口",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/template",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "创建应用模板接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/template/publish",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "删除应用模板接口",
+    "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/template/([0-9a-f]{32})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "根据应用模板创建应用接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/template/create",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "生成智能体接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/agent",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
+    "Description": "添加我的灵感接口",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/root",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+  "Description": "添加我的灵感接口",
+  "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/([0-9a-z]{6})",
+  "SkipCheck": false,
+  "Roles": [
+    "AppDeveloper",
+    "DataAppDeveloper",
+    "AppExDeveloper",
+    "FsDeveloper",
+    "SYS_ADMIN",
+    "READ_ONLY",
+    "AppVisitor"
+    ]
+  },
+  {
+    "Description": "更新我的灵感接口",
+    "ResourceKey": "PUT /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/([0-9a-z]{6})/inspiration/([0-9a-z]{6})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
+    "Description": "删除我的灵感接口",
+    "ResourceKey": "DELETE /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/([0-9a-z]{6})/inspiration/([0-9a-z]{6})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",

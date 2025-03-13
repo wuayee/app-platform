@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,6 +126,7 @@ public class OperatorServiceImpl implements OperatorService {
             put(FileType.TXT, textExtractor);
             put(FileType.HTML, textExtractor);
             put(FileType.MARKDOWN, textExtractor);
+            put(FileType.CSV, textExtractor);
         }
     };
 
@@ -282,7 +284,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     private String extractExcelFile(String fileUrl) {
-        File file = this.s3Service.download(fileUrl);
+        File file = Paths.get(fileUrl).toFile();
         String excelContent = "";
         try (InputStream fis = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             Workbook workbook = new XSSFWorkbook(fis);
@@ -312,7 +314,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     private String extractPdfFile(String fileUrl) {
-        File pdfFile = this.s3Service.download(fileUrl);
+        File pdfFile = Paths.get(fileUrl).toFile();
         try {
             try (PDDocument doc = PDDocument.load(pdfFile)) {
                 return this.iterPdf(doc);
@@ -324,7 +326,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     private String extractWordFile(String fileUrl) {
-        File docFile = this.s3Service.download(fileUrl);
+        File docFile = Paths.get(fileUrl).toFile();
         try (InputStream fis = new BufferedInputStream(Files.newInputStream(docFile.toPath()))) {
             if (FileMagic.valueOf(fis) == FileMagic.OOXML) {
                 return extractDocHandle(fis, docFile.getName());
@@ -339,7 +341,7 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     private String extractTextFile(String fileUrl) {
-        File file = s3Service.download(fileUrl);
+        File file = Paths.get(fileUrl).toFile();
         try {
             return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
         } catch (IOException e) {

@@ -27,6 +27,27 @@ public class PluginDeployQueryConfig {
     /** 保存工具的路径。 */
     private String toolsPath;
 
+    /** 插件部署的最大数量 **/
+    private int maxToolSize;
+
+    /**
+     * 获取插件部署最大数量值。
+     *
+     * @return 表示插件部署的最大值的 {@code int}。
+     */
+    public int getMaxToolSize() {
+        return this.maxToolSize;
+    }
+
+    /**
+     * 设置插件部署的最大值。
+     *
+     * @param maxToolSize 表示插件部署最大值的 {@code int}。
+     */
+    public void setMaxToolSize(int maxToolSize) {
+        this.maxToolSize = maxToolSize;
+    }
+
     /**
      * 获取插件部署状态查询间隔。
      *

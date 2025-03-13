@@ -18,6 +18,7 @@
         <oms.version>1.0.0-SNAPSHOT</oms.version>
         <crypt.client.service.version>1.0.0-SNAPSHOT</crypt.client.service.version>
         <crypt.grpc.client.version>COMMON_RC4.0-SNAPSHOT</crypt.grpc.client.version>
+        <skip.build>${skip.authentication.oms}</skip.build>
     </properties>
 
     <dependencies>
@@ -160,6 +161,7 @@
                     <execution>
                         <phase>install</phase>
                         <configuration>
+                            <skip>${skip.build}</skip>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       todir="../../../framework/fit/java/target/plugins"/>

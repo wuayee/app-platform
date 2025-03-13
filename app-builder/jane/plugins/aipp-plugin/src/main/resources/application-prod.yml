@@ -73,6 +73,7 @@ tool:
     DOCUMENTEXTRACTORNODE: documentExtractorNode
     TEXTTOIMAGENODESTATE: textToImageNodeState
     FILEEXTRACTNODESTATE: fileExtractionNodeState
+    LOOPNODESTATE: loopNodeState
 export-meta:
   version: 1.0.1
 sensitive:

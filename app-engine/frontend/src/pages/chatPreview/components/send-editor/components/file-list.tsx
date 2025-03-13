@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { bytesToSize } from '@/common/util';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'antd';
+import { useAppSelector } from '@/store/hook';
+import serviceConfig from '@/shared/http/httpConfig';
 import { FileType, PictureFileType } from '../common/config';
 import '../styles/file-list.scss';
 import docxIcon from '@/assets/images/ai/docx.svg';
@@ -17,14 +19,17 @@ import mp3Icon from '@/assets/images/ai/mp3.svg';
 import mp4Icon from '@/assets/images/ai/mp4.svg';
 import pdfIcon from '@/assets/images/ai/pdf.svg';
 import txtIcon from '@/assets/images/ai/txt.svg';
+import excelIcon from '@/assets/images/ai/excel.svg';
+import csvIcon from '@/assets/images/ai/csv.svg';
 import deleteFileIcon from '@/assets/images/ai/delete_file.svg';
 import previewIcon from '@/assets/images/ai/preview_icon.svg';
 const pictureTypes = Object.values(PictureFileType);
-
+const { AIPP_URL } = serviceConfig;
 /**
  * 对话框上传多文件展示列表组件
  *
  * @param isChatUpload 是否是在对话输入框中上传.
+ * @param isDebug 是否是调试页面.
  * @param fileList 多文件列表.
  * @param updateFileList 更新文件列表的方法.
  * @return {JSX.Element}
@@ -33,12 +38,13 @@ const pictureTypes = Object.values(PictureFileType);
 const FileList = (props) => {
   const { isChatUpload = true, isDebug = false, fileList, updateFileList } = props;
   const { t } = useTranslation();
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const [showOperateIndex, setShowOperateIndex] = useState(-1);
 
   // 获取文件图标
-  const getFileIcon = (type, url) => {
+  const getFileIcon = (type, url, name) => {
     if (pictureTypes.includes(type.toLocaleLowerCase())) {
-      return <Image src={url} height={'100%'} width={'100%'} preview={{mask: getImgMask(), maskClassName: 'img-mask'}}/>
+      return <Image src={`${AIPP_URL}/${tenantId}/file?filePath=${url}&fileName=${name}`} height={'100%'} width={'100%'} preview={{ mask: getImgMask(), maskClassName: 'img-mask' }} />
     }
     return <img src={getOtherFileIcon(type.toLocaleLowerCase())} alt="" />
   };
@@ -62,7 +68,9 @@ const FileList = (props) => {
   const getOtherFileIcon = (type) => {
     switch (type) {
       case FileType.DOCX:
+      case FileType.DOC:
         return docxIcon;
+      case FileType.HTM:
       case FileType.HTML:
         return htmlIcon;
       case FileType.MD:
@@ -71,10 +79,17 @@ const FileList = (props) => {
         return pdfIcon;
       case FileType.TXT:
         return txtIcon;
+      case FileType.WAV:
+        return mp3Icon;
+      case FileType.XLS:
+      case FileType.XLSX:
+        return excelIcon;
+      case FileType.CSV:
+        return csvIcon;
       default:
         break;
     }
-  }
+  };
 
   // hover显示操作按钮
   const handleHoverItem = (index, operate) => {
@@ -104,7 +119,7 @@ const FileList = (props) => {
     }
   };
 
-  return <div className='chat-file-list' style={{flexDirection: isDebug ? 'column' : 'row'}}>
+  return <div className='chat-file-list' style={{ flexDirection: isDebug ? 'column' : 'row' }}>
     {
       fileList.map((file, index) =>
         <div className={`file-container ${isChatUpload ? 'editable' : ''} ${file.uploadStatus === 'failed' ? 'upload-failed' : ''} ${isDebug ? 'debug-item' : ''}`}
@@ -112,7 +127,7 @@ const FileList = (props) => {
           onMouseLeave={() => handleHoverItem(index, 'leave')}
           key={index}
         >
-          <div className='file-icon'>{getFileIcon(file.file_type, file.file_url)}</div>
+          <div className='file-icon'>{getFileIcon(file.file_type, file.file_url, file.file_name)}</div>
           <div className='file-content'>
             {getFileName(file.file_name)}
             {isChatUpload && <div className='file-detail'>{getDetail(file)}</div>}

@@ -147,7 +147,7 @@ public class EdmKnowledgeRepoServiceImpl implements KnowledgeRepoService {
                 .description(relevancyInfo.getDescription())
                 .type(FilterType.SIMILARITY_THRESHOLD)
                 .minimum(0)
-                .maximum(1)
+                .maximum(10)
                 .defaultValue(DEFAULT_THRESHOLD)
                 .build());
         KnowledgeI18nInfo rerankInfo = new KnowledgeI18nInfo(this.knowledgeI18nService.localizeText("rerankParam"),

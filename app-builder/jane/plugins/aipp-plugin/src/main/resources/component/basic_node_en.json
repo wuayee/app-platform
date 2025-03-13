@@ -68,5 +68,10 @@
     "type": "noteNode",
     "name": "Note",
     "uniqueName": ""
+  },
+  {
+    "type": "loopNodeState",
+    "name": "Loop",
+    "uniqueName": ""
   }
 ]

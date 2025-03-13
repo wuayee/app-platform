@@ -6,6 +6,11 @@
 
 package modelengine.jade.carver.tool.waterflow;
 
+import modelengine.fit.jade.tool.SyncToolCall;
+import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fitframework.util.MapBuilder;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.UuidUtils;
 import modelengine.jade.carver.tool.model.transfer.ToolData;
 import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.carver.tool.waterflow.invoker.ToolInvoker;
@@ -20,6 +25,7 @@ import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,7 +38,7 @@ import java.util.stream.Collectors;
  * @since 2024-4-17
  */
 @Component
-public class WaterFlowToolProvider implements ToolProvider {
+public class WaterFlowToolProvider implements ToolProvider, SyncToolCall {
     private final ToolService toolService;
 
     private final List<ToolInvoker> toolInvokers;
@@ -76,5 +82,21 @@ public class WaterFlowToolProvider implements ToolProvider {
         return Validation.notNull(
                 this.toolInvokers.stream().filter(toolInvoker -> toolInvoker.match(toolData)).findAny().orElse(null),
                 StringUtils.format("Cannot find tool invoker. [uniqueName={0}]", toolData.getUniqueName()));
+    }
+
+    @Override
+    @Fitable(id = "app-factory")
+    public String call(String uniqueName, String toolArgs) {
+        ToolCall toolCall = ToolCall.custom()
+                .id(UuidUtils.randomUuidString())
+                .name(uniqueName)
+                .index(0)
+                .arguments(toolArgs)
+                .build();
+        ToolInvoker toolInvoker = this.getToolInvoker(toolCall.name());
+        Map<String, Object> toolContext = MapBuilder.<String, Object>get()
+                .put(AippConst.CONTEXT_USER_ID, "jade")
+                .build();
+        return toolInvoker.invoke(toolCall, toolContext);
     }
 }

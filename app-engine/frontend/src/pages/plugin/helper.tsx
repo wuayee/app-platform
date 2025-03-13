@@ -67,7 +67,7 @@ export const minePluginCategories = [
   { key: 'LANGCHAIN', label: 'LangChain' },
   { key: 'LLAMAINDEX', label: 'LlamaIndex' },
   { key: 'CHATBOT', label: i18n.t('conversationAssistant') },
-  { key: 'AGENT', label: i18n.t('agent') },
+  // { key: 'AGENT', label: i18n.t('agent') },
   { key: 'WORKFLOW', label: i18n.t('workFlow') },
 ];
 
