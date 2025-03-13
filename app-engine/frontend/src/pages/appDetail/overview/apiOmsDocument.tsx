@@ -161,6 +161,16 @@ const DocumentDrawer = ({ drawerOpen, url, setDrawerOpen }) => {
               </div>
             </div>
           </div>
+          <div className='inner-code'>
+            <div className='inner-code-title'>Websocket</div>
+            <div className='inner-code-content'>
+              <span>{url}</span>
+              <div style={{ cursor: 'pointer' }} onClick={() => toClipboard(url)}>
+                <img src={copyCodeIcon} style={{ marginRight: 8 }} alt="" />
+                <span>Copy</span>
+              </div>
+            </div>
+          </div>
         </div>
         {
           documentContent.map((item, index) =>
