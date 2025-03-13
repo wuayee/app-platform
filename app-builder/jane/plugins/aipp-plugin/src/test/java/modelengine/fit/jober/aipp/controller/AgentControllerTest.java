@@ -57,12 +57,12 @@ public class AgentControllerTest {
     @DisplayName("测试根据描述生成智能体信息")
     void shouldReturnOkWhenGenerateAgentInfo() {
         when(this.agentInfoGenerateService.generateName(anyString(), any())).thenReturn("NAME");
-        when(this.agentInfoGenerateService.generateGreeting(anyString())).thenReturn("GREETING");
-        when(this.agentInfoGenerateService.generatePrompt(anyString())).thenReturn("PROMPT");
+        when(this.agentInfoGenerateService.generateGreeting(anyString(), any())).thenReturn("GREETING");
+        when(this.agentInfoGenerateService.generatePrompt(anyString(), any())).thenReturn("PROMPT");
         List<String> tools = new ArrayList<String>() {{
             add("UNIQUENAME");
         }};
-        when(this.agentInfoGenerateService.selectTools(anyString(), any())).thenReturn(tools);
+        when(this.agentInfoGenerateService.selectTools(anyString(), any(), any())).thenReturn(tools);
         AgentCreateInfoDto agentCreateInfoDto = new AgentCreateInfoDto();
         agentCreateInfoDto.setDescription("DESC");
         MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/api/tid/agent")

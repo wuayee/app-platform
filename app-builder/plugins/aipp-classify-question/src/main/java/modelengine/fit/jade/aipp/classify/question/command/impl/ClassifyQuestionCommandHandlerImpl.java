@@ -20,6 +20,7 @@ import modelengine.fit.jade.aipp.classify.question.command.ClassifyQuestionComma
 import modelengine.fit.jade.aipp.classify.question.command.ClassifyQuestionCommandHandler;
 import modelengine.fit.jade.aipp.classify.question.util.Constant;
 import modelengine.fit.jade.aipp.memory.AippMemoryFactory;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.flowable.Choir;
@@ -67,9 +68,12 @@ public class ClassifyQuestionCommandHandlerImpl implements ClassifyQuestionComma
         HashMap<String, String> variables = new HashMap<>(args);
         variables.put(Constant.HISTORY_KEY, memory.text());
         variables.put(Constant.TYPE_LIST_KEY, command.getTypeList());
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getModelAccessInfo(command.getModelTag(),
+                command.getModel(), null);
         ChatOption chatOption = ChatOption.custom()
                 .model(command.getModel())
-                .baseUrl(this.aippModelCenter.getModelAccessInfo(command.getModelTag(), null, null).getBaseUrl())
+                .baseUrl(modelAccessInfo.getBaseUrl())
+                .apiKey(modelAccessInfo.getAccessKey())
                 .temperature(command.getTemperature())
                 .stream(false)
                 .build();

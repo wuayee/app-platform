@@ -17,19 +17,18 @@ import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.operators.models.ChatBlockModel;
 import modelengine.fel.engine.operators.prompts.Prompts;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fitframework.annotation.Component;
-import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.serialization.SerializationException;
-import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.app.engine.base.dto.AppBuilderRecommendDto;
 import modelengine.jade.app.engine.base.service.AppBuilderRecommendService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 猜你想问serviceImpl
@@ -47,19 +46,15 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
 
     private final AippModelCenter aippModelCenter;
 
-    private final Map<String, String> baseUrls;
-
-    public AppBuilderRecommendServiceImpl(ChatModel chatModelService,
-        @Value("${openai-urls}") Map<String, String> baseUrls, AippModelCenter aippModelCenter) {
+    public AppBuilderRecommendServiceImpl(ChatModel chatModelService, AippModelCenter aippModelCenter) {
         this.chatModelService = chatModelService;
-        this.baseUrls = baseUrls;
         this.aippModelCenter = aippModelCenter;
     }
 
     @Override
-    public List<String> queryRecommends(AppBuilderRecommendDto recommendDto) {
-        String model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, null).getServiceName();
-        String modelTag = recommendDto.getModelTag() == null ? DEFAULT_MODEL_SOURCE : recommendDto.getModelTag();
+    public List<String> queryRecommends(AppBuilderRecommendDto recommendDto, OperationContext context) {
+        ModelAccessInfo defaultModel = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, context);
+        String model = defaultModel.getServiceName();
         String historyPrompt = "Here are the chat histories between user and assistant, "
                 + "inside <history></history> XML tags.\n<history>\n{{history}}\n</history>\n\n";
 
@@ -78,7 +73,8 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
                                 .model(model)
                                 .stream(false)
                                 .temperature(0.3)
-                                .baseUrl(this.baseUrls.get(StringUtils.toLowerCase(modelTag)))
+                                .baseUrl(defaultModel.getBaseUrl())
+                                .apiKey(defaultModel.getAccessKey())
                                 .build()))
                 .map(ChatMessage::text)
                 .close();

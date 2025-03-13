@@ -28,6 +28,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jane</groupId>
+            <artifactId>jane-common</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

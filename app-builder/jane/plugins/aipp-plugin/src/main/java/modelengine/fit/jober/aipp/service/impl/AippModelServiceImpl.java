@@ -54,9 +54,11 @@ public class AippModelServiceImpl implements AippModelService {
 
     @Override
     public String chat(String model, String tag, Double temperature, String prompt) {
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getModelAccessInfo(tag, model, null);
         ChatOption chatOption = ChatOption.custom()
                 .model(model)
-                .baseUrl(this.aippModelCenter.getModelAccessInfo(tag, null, null).getBaseUrl())
+                .baseUrl(modelAccessInfo.getBaseUrl())
+                .apiKey(modelAccessInfo.getAccessKey())
                 .temperature(temperature)
                 .stream(false)
                 .build();
