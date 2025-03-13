@@ -9,11 +9,8 @@ package modelengine.fit.jober.aipp.controller;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.RequestParam;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
-import modelengine.fit.jane.common.controller.AbstractController;
-import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fitframework.annotation.Component;
 
 /**
@@ -24,11 +21,10 @@ import modelengine.fitframework.annotation.Component;
  */
 @Component
 @RequestMapping(path = "/v1/api/fetch/model-list")
-public class FetchModelController extends AbstractController {
+public class FetchModelController {
     private final AippModelCenter aippModelCenter;
 
-    FetchModelController(AippModelCenter aippModelCenter, Authenticator authenticator) {
-        super(authenticator);
+    FetchModelController(AippModelCenter aippModelCenter) {
         this.aippModelCenter = aippModelCenter;
     }
 
@@ -38,8 +34,7 @@ public class FetchModelController extends AbstractController {
      * @return 表示模型列表信息的 {@link ModelListDto}。
      */
     @GetMapping()
-    public ModelListDto fetchModelList(HttpClassicServerRequest request,
-            @RequestParam(value = "type", required = false) String type) {
-        return this.aippModelCenter.fetchModelList(type, this.contextOf(request, ""));
+    public ModelListDto fetchModelList(@RequestParam(value = "type", required = false) String type) {
+        return this.aippModelCenter.fetchModelList(type, null);
     }
 }

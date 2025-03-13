@@ -553,7 +553,7 @@ public class AppBuilderAppServiceImpl
         if (dto != null && !isUpgrade) {
             this.validateCreateApp(dto, context);
         }
-        String[] firstModelInfo = this.getFirstModelInfo(context);
+        String[] firstModelInfo = this.getFirstModelInfo();
         AppBuilderApp templateApp = this.appFactory.create(appId);
         if (Objects.nonNull(dto)) {
             templateApp.setAppCategory(dto.getAppCategory());
@@ -1956,8 +1956,8 @@ public class AppBuilderAppServiceImpl
         }
     }
 
-    private String[] getFirstModelInfo(OperationContext context) {
-        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, context);
+    private String[] getFirstModelInfo() {
+        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             ModelAccessInfo firstModel = modelList.getModels().get(0);
             return new String[] {firstModel.getServiceName(), firstModel.getTag()};
