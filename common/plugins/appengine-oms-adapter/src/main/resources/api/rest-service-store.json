@@ -117,6 +117,19 @@
     ]
   },
   {
+    "Description": "查询是否存在定义组",
+    "ResourceKey": "GET /appbuilder/tools/exist/defs",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
     "Description": "添加应用",
     "ResourceKey": "POST /appbuilder/store/apps",
     "SkipCheck": false,
@@ -188,7 +201,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]

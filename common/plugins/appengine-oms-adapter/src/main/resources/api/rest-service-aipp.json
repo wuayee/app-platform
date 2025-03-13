@@ -32,7 +32,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -45,7 +45,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -58,7 +58,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -71,7 +71,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -84,7 +84,7 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
-      "AppTrialDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -298,6 +298,19 @@
   {
     "Description": "获取所有工具和基础节点配置",
     "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/store/nodes",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
+    "Description": "根据type获取相应节点配置",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/store/nodes/list",
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
