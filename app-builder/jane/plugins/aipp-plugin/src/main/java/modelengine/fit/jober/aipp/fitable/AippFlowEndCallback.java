@@ -167,7 +167,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
 
         // 子流程 callback 主流程
         String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
-        if (StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId)) {
+        if (StringUtils.isNotEmpty(parentCallbackId)) {
             this.brokerClient.getRouter(FlowCallbackService.class, "w8onlgq9xsw13jce4wvbcz3kbmjv3tuw")
                     .route(new FitableIdFilter(parentCallbackId))
                     .format(SerializationFormat.CBOR)
