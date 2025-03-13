@@ -32,7 +32,7 @@ const PublicCard = ({ type, url, detail, auth = false }) => {
   // 设置公开访问URL
   const setPreviewUrl = (url) => {
     let origin = window.location.origin;
-    return type === 'URL' ? `${origin}${process.env.PACKAGE_MODE === 'common' ? '/#' : ''}${url}` : `${origin}${url}`;
+    return type === 'URL' ? `${origin}${process.env.PACKAGE_MODE === 'common' ? '/#' : '/appengine'}${url}` : `${origin}${url}`;
   };
 
   // 复制
