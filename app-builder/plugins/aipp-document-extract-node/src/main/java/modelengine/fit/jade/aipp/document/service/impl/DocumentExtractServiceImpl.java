@@ -28,6 +28,7 @@ import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.LazyLoader;
 import modelengine.fitframework.util.StringUtils;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,7 +51,8 @@ public class DocumentExtractServiceImpl implements DocumentExtractService {
             FileType.TXT,
             FileType.WORD,
             FileType.EXCEL,
-            FileType.PDF));
+            FileType.PDF,
+            FileType.CSV));
     private final TextExtractor textExtractor;
     private final ImageExtractor imageExtractor;
     private final AudioExtractor audioExtractor;
@@ -91,7 +93,8 @@ public class DocumentExtractServiceImpl implements DocumentExtractService {
                 fileType = FileType.TXT;
             }
             BaseExtractor extractor = this.repository.get().get(fileType);
-            fileContent.append(ContentUtils.buildContent(ContentUtils.getFileName(fileUrl),
+            // 此处传入的fileurl不是完整的可以下载的url：/var/share/xxx.xx，需要在调用模型前拼成完整url
+            fileContent.append(ContentUtils.buildContent(Paths.get(fileUrl).getFileName().toString(),
                     extractor.extract(fileUrl, context)));
         }
         return fileContent.toString();
