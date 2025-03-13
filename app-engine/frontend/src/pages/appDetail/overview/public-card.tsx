@@ -117,7 +117,7 @@ const PublicCard = ({ type, url, detail, auth = false }) => {
           <Empty iconType='url' text={t('notReleasedYetTip')} />
         </div>
       )}
-      { process.env.PACKAGE_MODE === 'common' ? 
+      { process.env.PACKAGE_MODE === 'spa' ? 
       <DocumentOmsDrawer
         drawerOpen={drawerOpen}
         url={setPreviewUrl(url)}
