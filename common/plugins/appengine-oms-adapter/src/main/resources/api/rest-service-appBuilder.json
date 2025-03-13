@@ -669,8 +669,8 @@
     ]
   },
   {
-    "Description": "公开访问url",
-    "ResourceKey": "GET /appbuilder/chat/([0-9a-fA-F]{16})",
+    "Description": "公共URL查询应用信息",
+    "ResourceKey": "GET /appbuilder/v1/api/chat/([0-9a-zA-Z]{16})",
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
@@ -678,7 +678,6 @@
       "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
-      "READ_ONLY",
       "AppVisitor"
     ]
   }
