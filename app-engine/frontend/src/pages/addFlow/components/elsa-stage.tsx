@@ -101,6 +101,7 @@ const Stage = (props) => {
   useEffect(() => {
     return () => {
       render.current = false;
+      window.agent = null;
       dispatch(setTestStatus(null));
     }
   }, [])
