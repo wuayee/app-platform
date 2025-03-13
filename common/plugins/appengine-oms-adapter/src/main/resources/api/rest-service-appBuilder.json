@@ -274,6 +274,20 @@
     ]
   },
   {
+    "Description": "添加灵感",
+    "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt/root",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY",
+      "AppVisitor"
+    ]
+  },
+  {
     "Description": "查询所有的灵感类别",
     "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/prompt",
     "SkipCheck": false,
