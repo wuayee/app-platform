@@ -13,10 +13,10 @@ export const tabItems = [
     label: i18n.t('agent'),
     key: 'agent',
   },
-  {
-    label: i18n.t('workflow'),
-    key: 'workflow',
-  }
+  // {
+  //   label: i18n.t('workflow'),
+  //   key: 'workflow',
+  // }
 ]
 export const items = [
   {
