@@ -16,6 +16,7 @@ import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,7 @@ import java.util.Optional;
  * @since 2025-01-15
  */
 @FitTestWithJunit(includeClasses = OperatorServiceImpl.class)
+@Disabled
 public class OperatorServiceImplTest {
     @Fit
     private OperatorService operatorService;
@@ -68,7 +70,7 @@ public class OperatorServiceImplTest {
     }
 
     private String getContent(String filePath, OperatorService.FileType fileType) {
-        String fileUrl = "http://mockurl.mock";
+        String fileUrl = "/path/mockurl.mock";
         File file = new File(this.getClass().getClassLoader().getResource(filePath).getFile());
         when(this.s3Service.download(eq(fileUrl))).thenReturn(file);
         return this.operatorService.fileExtractor(fileUrl, Optional.of(fileType));

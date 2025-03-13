@@ -52,9 +52,9 @@ public class DocumentExtractServiceImplTest {
     @Test
     @DisplayName("测试解析文件成功")
     void shouldReturnOKWhenInvokeDocumentExtract() {
-        String imageUrl = "http://mock/mock.jpg";
-        String docUrl = "http://mock/mock.docx";
-        String audioUrl = "http://mock/mock.mp3";
+        String imageUrl = "/mock/mock.jpg";
+        String docUrl = "/mock/mock.docx";
+        String audioUrl = "/mock/mock.mp3";
         when(this.textExtractor.extract(eq(docUrl), anyMap())).thenReturn("textContent");
         when(this.imageExtractor.extract(eq(imageUrl), anyMap())).thenReturn("imageContent");
         when(this.audioExtractor.extract(eq(audioUrl), anyMap())).thenReturn("audioContent");
