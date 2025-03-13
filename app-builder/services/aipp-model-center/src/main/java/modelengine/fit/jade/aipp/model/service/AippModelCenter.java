@@ -20,9 +20,10 @@ public interface AippModelCenter {
      * 查询接入的模型服务的列表。
      *
      * @param type 标识模型类型的 {@link String}。
+     * @param scene 标识模型适用场景的 {@link String}。
      * @return 表示模型服务列表的 {@link ModelListDto}，如果发生异常，返回空列表。
      */
-    ModelListDto fetchModelList(String type);
+    ModelListDto fetchModelList(String type, String scene);
 
     /**
      * 根据 tag 映射模型所在的网关。

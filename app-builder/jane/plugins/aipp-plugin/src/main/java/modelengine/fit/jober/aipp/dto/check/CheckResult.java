@@ -33,5 +33,5 @@ public class CheckResult {
 
     private boolean isValid;
 
-    private List<Map<String, String>> configChecks;
+    private List<Map<String, Object>> configChecks;
 }

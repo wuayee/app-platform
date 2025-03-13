@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 /**
- * 用于登录的过滤器类。
+ * 用于静态资源的过滤器类。
  *
  * @author 邬涨财 w00575064
  * @since 2023-07-13
@@ -93,8 +93,8 @@ public class StaticResourceFilter implements HttpServerFilter {
     @Override
     public void doFilter(HttpClassicServerRequest request, HttpClassicServerResponse response,
             HttpServerFilterChain chain) throws DoHttpServerFilterException {
-        String uri = request.requestUri();
-        if (this.isStaticPath(uri)) {
+        String path = request.path();
+        if (this.isStaticPath(path)) {
             this.setResponseHeader(request, response);
         }
         chain.doFilter(request, response);

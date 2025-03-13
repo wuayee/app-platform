@@ -317,7 +317,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
             log.info("check external service, default true");
             return true;
         }
-        return this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE)
+        return this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, null)
                 .getModels()
                 .stream()
                 .filter(modelAccessInfo -> StringUtils.equals(modelAccessInfo.getTag(), "INTERNAL"))
@@ -511,7 +511,6 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         if (businessData.containsKey("workflows")) {
             skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         }
-        skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         String model = ObjectUtils.cast(businessData.get("model"));
         Map<String, String> accessInfo = ObjectUtils.nullIf(ObjectUtils.cast(businessData.get("accessInfo")),
                 MapBuilder.<String, String>get().put("serviceName", model).put("tag", "INTERNAL").build());

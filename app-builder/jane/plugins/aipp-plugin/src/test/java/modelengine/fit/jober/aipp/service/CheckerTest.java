@@ -62,15 +62,15 @@ class CheckerTest {
                     "{\"type\":\"llmNodeState\",\"nodeInfos\":[{\"nodeId\":\"llmnode1\",\"nodeName\":\"大模型1\","
                             + "\"configs\":[{\"id\":\"db5fdafa-4cbf-44ba-9cca-8a98f1f77112\","
                             + "\"configName\":\"accessInfo\"," + "\"serviceName\":\"Fake Model\",\"tag\":\"INTERNAL\"},"
-                            + "{\"id\":\"383537a2-4371-1744-be05-7b5ab50dec0b\",\"configName\":\"tool\","
+                            + "{\"id\":\"383537a2-4371-1744-be05-7b5ab50dec0b\",\"configName\":\"plugin\","
                             + "\"uniqueName\":\"2de8e815-187f-4aeb-9363-13e7836f4271\"},"
-                            + "{\"id\":\"06cefe21-e092-a04e-90c6-75e94030e0e2\",\"configName\":\"tool\","
+                            + "{\"id\":\"06cefe21-e092-a04e-90c6-75e94030e0e2\",\"configName\":\"plugin\","
                             + "\"uniqueName\":\"6834efb7-ba3d-f044-a875-4db8be8754b0\"}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Collections.singletonList(true));
             ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "INTERNAL");
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(true, true));
-            when(modelCenter.fetchModelList(any())).thenReturn(
+            when(modelCenter.fetchModelList(any(), any())).thenReturn(
                     new ModelListDto(Collections.singletonList(modelAccessInfo), 1));
             List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto);
             Assertions.assertEquals(results.size(), 1);
@@ -84,21 +84,21 @@ class CheckerTest {
                     "{\"type\":\"llmNodeState\",\"nodeInfos\":[{\"nodeId\":\"jadewdnjbq\",\"nodeName\":\"大模型\","
                             + "\"configs\":[{\"id\":\"db5fdafa-4cbf-44ba-9cca-8a98f1f77111\","
                             + "\"configName\":\"accessInfo\"," + "\"serviceName\":\"Fake Model\",\"tag\":\"INTERNAL\"},"
-                            + "{\"id\":\"0afbb780-5b15-e741-a138-754fad3caa15\",\"configName\":\"tool\","
+                            + "{\"id\":\"0afbb780-5b15-e741-a138-754fad3caa15\",\"configName\":\"plugin\","
                             + "\"uniqueName\":\"c373a626-f671-6040-8051-808185e9e5b4\"}]},{\"nodeId\":\"llmnode1\","
                             + "\"nodeName\":\"大模型1\",\"configs\":[{\"id\":\"db5fdafa-4cbf-44ba-9cca-8a98f1f77112\","
                             + "\"configName\":\"accessInfo\",\"serviceName\":\"Another Fake Model\","
                             + "\"tag\":\"INTERNAL\"},"
-                            + "{\"id\":\"383537a2-4371-1744-be05-7b5ab50dec0b\",\"configName\":\"tool\","
+                            + "{\"id\":\"383537a2-4371-1744-be05-7b5ab50dec0b\",\"configName\":\"plugin\","
                             + "\"uniqueName\":\"2de8e815-187f-4aeb-9363-13e7836f4271\"},"
-                            + "{\"id\":\"06cefe21-e092-a04e-90c6-75e94030e0e2\",\"configName\":\"tool\","
+                            + "{\"id\":\"06cefe21-e092-a04e-90c6-75e94030e0e2\",\"configName\":\"plugin\","
                             + "\"uniqueName\":\"6834efb7-ba3d-f044-a875-4db8be8754b0\"},"
-                            + "{\"id\":\"0afbb780-5b15-e741-a138-754fad3caa15\",\"configName\":\"tool\","
+                            + "{\"id\":\"0afbb780-5b15-e741-a138-754fad3caa15\",\"configName\":\"plugin\","
                             + "\"uniqueName\":\"c373a626-f671-6040-8051-808185e9e5b4\"}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(false, false, false));
             ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "EXTERNAL");
-            when(modelCenter.fetchModelList(any())).thenReturn(
+            when(modelCenter.fetchModelList(any(), any())).thenReturn(
                     new ModelListDto(Collections.singletonList(modelAccessInfo), 1));
             List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto);
             Assertions.assertEquals(results.size(), 2);
