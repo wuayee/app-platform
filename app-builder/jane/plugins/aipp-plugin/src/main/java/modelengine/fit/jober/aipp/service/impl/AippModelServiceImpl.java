@@ -75,7 +75,7 @@ public class AippModelServiceImpl implements AippModelService {
                 .orElseThrow(() -> new IllegalStateException(
                         StringUtils.format("Template not exist.type: {0}", param.getTemplateType())));
         String prompt = new DefaultStringTemplate(template).render(values);
-        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, null);
         return this.chat(modelAccessInfo.getServiceName(), modelAccessInfo.getTag(), 0.3, prompt);
     }
 }

@@ -169,7 +169,7 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
             log.error("read prompt template file fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
-        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
+        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, null);
         String prompt = new DefaultStringTemplate(template).render(values);
         return aippModelService.chat(model.getServiceName(), model.getTag(), 0.0, prompt);
     }
