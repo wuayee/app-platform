@@ -14,6 +14,7 @@ import { useAppSelector } from '@/store/hook';
 import Feedbacks from './feedbacks';
 import PictureList from './picture-list';
 import ThinkBlock from './think-block';
+import StepBlock from './step-block';
 import 'highlight.js/styles/monokai-sublime.min.css';
 import './styles/message-detail.scss';
 
@@ -35,6 +36,8 @@ const MessageBox = (props: any) => {
   const [thinkContent, setThinkContent] = useState('');
   const [answerContent, setAnswerContent] = useState('');
   const [referenceIndex, setReferenceIndex] = useState('0');
+  const [stepContent, setStepContent] = useState('');
+  const [showStep, setShowStep] = useState(false);
   const [replacedText, setReplacedText] = useState<any>(null);
   const chatReference = useAppSelector((state) => state.chatCommonStore.chatReference);
   const referenceList = useAppSelector((state) => state.chatCommonStore.referenceList);
@@ -108,14 +111,68 @@ const MessageBox = (props: any) => {
     }
   }
 
-  useEffect(() => {
-    if (msgType === 'META_MSG' || chatReference) {
-      replaceInfo(answerContent);
+  const getAgentOutput = (str: string) => {
+    let lastOpenTag:any = null;
+    let hasStepContent = false;
+    let tagMap:any = {
+      reasoning: '思考',
+      step: {
+        name: '步骤',
+        index: 1
+      },
+      tool: '工具结果'
+    }
+    tagMap.step.index = 1;
+    let output = str.replace(/<(\/?)(reasoning|step|tool|final)>/g,  (match, isClose, tag) => {
+      if (match && !['<final>', '</final>'].includes(match)) {
+        setShowStep(true);
+        hasStepContent = true;
+      }
+      if (isClose) {
+        if (tag === lastOpenTag) lastOpenTag = null;
+        return '</div>';
+      } else {
+        lastOpenTag = tag;
+        let tagTitle = ''
+        if (tag === 'step') {
+          tagTitle = tagMap[tag] ? `${tagMap[tag]['name']} ${tagMap.step.index}` : '';
+          tagMap.step.index += 1;
+        } else {
+          tagTitle = tagMap[tag] || '';
+        }
+        return `${ tagTitle ? `<div class="${tag}"><span>${tagTitle}</span>` : `<div class="${tag}">` }`;
+      }
+    });
+    if (lastOpenTag) {
+      output += '</div>';
+    };
+    if (!hasStepContent) {
+      return str
+    }
+    return setClosureLabel(output);
+  }
+
+  const setClosureLabel = (str:string) => {
+    const regex = /<div class="final">([\s\S]*?)<\/div>/;
+    const match = str.match(regex);
+    setStepContent(str.replace(regex, ''));
+    if (match && match[1]) {
+      return match[1].trim();
     } else {
-      setReplacedText(answerContent);
+      return '';
+    }
+  }
+
+  useEffect(() => {
+    const finalContent = getAgentOutput(answerContent);
+    if (msgType === 'META_MSG' || chatReference) {
+      replaceInfo(finalContent);
+    } else {
+      setReplacedText(finalContent);
     }
   }, [answerContent]);
 
+  
   useEffect(() => {
     const thinkStartIdx = content.indexOf('<think>');
     let thinkEndIdx = content.indexOf('</think>');
@@ -152,7 +209,8 @@ const MessageBox = (props: any) => {
   return (
     <>
       <div className='receive-info'>
-        { (thinkContent && status !== 'TERMINATED') && <ThinkBlock content={thinkContent} thinkTime={thinkTime} />}
+        {(thinkContent && status !== 'TERMINATED') && <ThinkBlock content={thinkContent} thinkTime={thinkTime} />}
+        {(showStep && status !== 'TERMINATED' ) && <StepBlock content={stepContent} finished={finished} />}
         {getMessageContent()}
         { finished &&  
         <div className='feed-footer'>
