@@ -67,7 +67,7 @@ export function getPublishAppId(tenantId, appId) {
 }
 // 获取公共访问应用的详情
 export function getPreviewAppInfo(uid) {
-  return get(`${APP_URL}/chat/${uid}`);
+  return get(`${AIPP_URL}/chat/${uid}`);
 }
 // 点击去编排
 export function getAppInfoByVersion(tenantId, appId) {
