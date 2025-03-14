@@ -46,10 +46,10 @@ public class CustomAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList(String type, OperationContext context) {
+    public ModelListDto fetchModelList(String type, String scene, OperationContext context) {
         List<ModelPo> modelList = this.userModelRepo.get(context.getOperator());
         if (CollectionUtils.isEmpty(modelList)) {
-            return this.defaultModelCenter.fetchModelList(type, context);
+            return this.defaultModelCenter.fetchModelList(type, scene, context);
         }
         // 这里自定义按照用户分类返回数据的tag需要特殊处理，tag中额外存入用户信息，先快速打通功能，赶上320。格式："tag,userId"
         List<ModelAccessInfo> modelDtoList = modelList.stream()

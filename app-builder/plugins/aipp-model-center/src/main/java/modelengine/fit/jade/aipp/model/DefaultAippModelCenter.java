@@ -15,6 +15,7 @@ import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippNotFoundException;
 import modelengine.fit.security.Decryptor;
@@ -87,7 +88,7 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public ModelListDto fetchModelList(String type, String scene) {
+    public ModelListDto fetchModelList(String type, String scene, OperationContext context) {
         String url = type == null ? this.url : this.url + "?type=" + type;
         HttpClassicClientRequest request = this.httpClient.get().createRequest(HttpRequestMethod.GET, url);
         try (HttpClassicClientResponse<?> response = request.exchange()) {
@@ -126,19 +127,19 @@ public class DefaultAippModelCenter implements AippModelCenter {
     }
 
     @Override
-    public String getModelBaseUrl(String tag) {
+    public ModelAccessInfo getModelAccessInfo(String tag, String modelName, OperationContext context) {
         String baseUrl = this.modelBaseUrls.get(tag.toLowerCase(Locale.ROOT));
         if (baseUrl == null) {
             log.warn("Unknown model tag: {}", tag);
             throw new AippNotFoundException(AippErrCode.NOT_FOUND, tag);
         }
-        return baseUrl;
+        return ModelAccessInfo.builder().baseUrl(baseUrl).build();
     }
 
     @Override
-    public ModelAccessInfo getDefaultModel(String type) {
-        ModelAccessInfo firstModel = new ModelAccessInfo("", "");
-        ModelListDto modelList = fetchModelList(type, null);
+    public ModelAccessInfo getDefaultModel(String type, OperationContext context) {
+        ModelAccessInfo firstModel = new ModelAccessInfo("", "", null, null);
+        ModelListDto modelList = fetchModelList(type, null, null);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             List<ModelAccessInfo> modelInfoList = modelList.getModels();
             for (ModelAccessInfo info : modelInfoList) {

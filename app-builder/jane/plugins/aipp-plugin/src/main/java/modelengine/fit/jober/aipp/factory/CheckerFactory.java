@@ -66,7 +66,7 @@ public class CheckerFactory {
      * @return 对应checker
      */
     public static Checker getChecker(String type) {
-        return CHECKER_MAP.getOrDefault(type, dto -> {
+        return CHECKER_MAP.getOrDefault(type, (dto, context) -> {
             throw new AippException(AippErrCode.UNSUPPORTED_NODE_TYPE, type);
         });
     }

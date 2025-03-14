@@ -68,11 +68,11 @@ class CheckerTest {
                             + "\"uniqueName\":\"6834efb7-ba3d-f044-a875-4db8be8754b0\"}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Collections.singletonList(true));
-            ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "INTERNAL");
+            ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "INTERNAL", "", "");
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(true, true));
-            when(modelCenter.fetchModelList(any(), any())).thenReturn(
+            when(modelCenter.fetchModelList(any(), any(), any())).thenReturn(
                     new ModelListDto(Collections.singletonList(modelAccessInfo), 1));
-            List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto);
+            List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto,null);
             Assertions.assertEquals(results.size(), 1);
             Assertions.assertTrue(results.get(0).isValid());
         }
@@ -97,10 +97,10 @@ class CheckerTest {
                             + "\"uniqueName\":\"c373a626-f671-6040-8051-808185e9e5b4\"}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(false, false, false));
-            ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "EXTERNAL");
-            when(modelCenter.fetchModelList(any(), any())).thenReturn(
+            ModelAccessInfo modelAccessInfo = new ModelAccessInfo("Fake Model", "EXTERNAL", "", "");
+            when(modelCenter.fetchModelList(any(), any(), any())).thenReturn(
                     new ModelListDto(Collections.singletonList(modelAccessInfo), 1));
-            List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto);
+            List<CheckResult> results = this.llmNodeChecker.validate(appCheckDto, null);
             Assertions.assertEquals(results.size(), 2);
             Assertions.assertFalse(results.get(0).isValid());
             Assertions.assertEquals(results.get(0).getConfigChecks().size(), 2);
@@ -132,7 +132,7 @@ class CheckerTest {
                     + "\"configName\":\"knowledgeRepos\",\"name\":\"k14\",\"description\":\"\",\"type\":\"VECTOR\","
                     + "\"createdAt\":\"2024-12-02 12:41:14\",\"checked\":true}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
-            List<CheckResult> results = this.retrievalNodeChecker.validate(appCheckDto);
+            List<CheckResult> results = this.retrievalNodeChecker.validate(appCheckDto, null);
             Assertions.assertEquals(results.size(), 2);
             Assertions.assertFalse(results.get(0).isValid());
             Assertions.assertEquals(results.get(0).getConfigChecks().size(), 2);
@@ -166,7 +166,7 @@ class CheckerTest {
                             + "\"uniqueName\":\"3e8c4186-5609-8148-a92e-3da9e4a1a660\"}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(true, true));
-            List<CheckResult> results = this.toolInvokeNodeChecker.validate(appCheckDto);
+            List<CheckResult> results = this.toolInvokeNodeChecker.validate(appCheckDto, null);
             Assertions.assertEquals(results.size(), 2);
             Assertions.assertTrue(results.get(0).isValid());
             Assertions.assertTrue(results.get(1).isValid());
@@ -184,7 +184,7 @@ class CheckerTest {
                             + "\"uniqueName\":\"3e8c4186-5609-8148-a92e-3da9e4a1a660\"}]}]}";
             AppCheckDto appCheckDto = JsonUtils.parseObject(testNode, AppCheckDto.class);
             when(pluginToolService.hasPluginTools(any())).thenReturn(Arrays.asList(true, false));
-            List<CheckResult> results = this.toolInvokeNodeChecker.validate(appCheckDto);
+            List<CheckResult> results = this.toolInvokeNodeChecker.validate(appCheckDto, null);
             Assertions.assertEquals(results.size(), 2);
             Assertions.assertTrue(results.get(0).isValid());
             Assertions.assertFalse(results.get(1).isValid());

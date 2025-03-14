@@ -318,7 +318,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
             log.info("check external service, default true");
             return true;
         }
-        return this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, DataUtils.getOpContext(businessData))
+        return this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, null, DataUtils.getOpContext(businessData))
                 .getModels()
                 .stream()
                 .filter(modelAccessInfo -> StringUtils.equals(modelAccessInfo.getTag(), "INTERNAL"))

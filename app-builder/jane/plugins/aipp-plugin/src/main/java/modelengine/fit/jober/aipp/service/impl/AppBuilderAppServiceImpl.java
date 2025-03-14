@@ -1265,11 +1265,11 @@ public class AppBuilderAppServiceImpl
     }
 
     @Override
-    public List<CheckResult> checkAvailable(List<AppCheckDto> appCheckDtos) {
+    public List<CheckResult> checkAvailable(List<AppCheckDto> appCheckDtos, OperationContext context) {
         List<CheckResult> results = new ArrayList<>();
         appCheckDtos.forEach(dto -> {
             Checker nodeChecker = CheckerFactory.getChecker(dto.getType());
-            results.addAll(nodeChecker.validate(dto));
+            results.addAll(nodeChecker.validate(dto, context));
         });
         return results.stream().filter(result -> !result.isValid()).collect(Collectors.toList());
     }
@@ -1958,7 +1958,7 @@ public class AppBuilderAppServiceImpl
     }
 
     private String[] getFirstModelInfo(OperationContext context) {
-        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, context);
+        ModelListDto modelList = this.aippModelCenter.fetchModelList(AippConst.CHAT_MODEL_TYPE, null, context);
         if (modelList != null && modelList.getModels() != null && !modelList.getModels().isEmpty()) {
             ModelAccessInfo firstModel = modelList.getModels().get(0);
             return new String[] {firstModel.getServiceName(), firstModel.getTag()};

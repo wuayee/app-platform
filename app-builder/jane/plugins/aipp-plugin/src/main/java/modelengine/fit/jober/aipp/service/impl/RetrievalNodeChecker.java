@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.service.impl;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fitframework.annotation.Component;
@@ -21,7 +22,7 @@ import java.util.List;
 @Component
 public class RetrievalNodeChecker extends AbstractNodeChecker {
     @Override
-    public List<CheckResult> validate(AppCheckDto appCheckDto) {
+    public List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context) {
         return this.invalidNodeConfig(appCheckDto, appCheckDto.getType());
     }
 }

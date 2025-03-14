@@ -188,10 +188,11 @@ public interface AppBuilderAppService {
      * 根据应用配置进行可用性校验。
      *
      * @param appCheckDtos 表示待检查配置项的{@link List}{@code <}{@link AppCheckDto}{@code >}。
+     * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 表示检查结果的 {@link List}{@code <}{@link AppCheckDto}{@code >}。
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.check")
-    List<CheckResult> checkAvailable(List<AppCheckDto> appCheckDtos);
+    List<CheckResult> checkAvailable(List<AppCheckDto> appCheckDtos, OperationContext context);
 
     /**
      * 导入应用。

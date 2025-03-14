@@ -6,14 +6,14 @@
 
 package modelengine.fit.jober.aipp.service.impl;
 
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.jade.store.service.PluginToolService;
-
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fit.jober.aipp.service.Checker;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.store.service.PluginToolService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -160,7 +160,7 @@ public abstract class AbstractNodeChecker implements Checker {
     }
 
     @Override
-    public List<CheckResult> validate(AppCheckDto appCheckDto) {
+    public List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context) {
         return Collections.emptyList();
     }
 }

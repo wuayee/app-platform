@@ -8,11 +8,11 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import static modelengine.fit.jober.aipp.enums.NodeType.TOOL_INVOKE_NODE;
 
-import modelengine.jade.store.service.PluginToolService;
-
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fitframework.annotation.Component;
+import modelengine.jade.store.service.PluginToolService;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class ToolInvokeNodeChecker extends AbstractNodeChecker {
     }
 
     @Override
-    public List<CheckResult> validate(AppCheckDto appCheckDto) {
+    public List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context) {
         List<CheckResult> results = initialResults(appCheckDto, TOOL_INVOKE_NODE.type());
         Map<String, CheckResult> resultMap = results.stream()
                 .collect(Collectors.toMap(CheckResult::getNodeId, result -> result));
