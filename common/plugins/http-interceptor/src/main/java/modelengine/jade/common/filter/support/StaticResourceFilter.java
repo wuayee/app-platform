@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-package com.huawei.jade.common.filter.support;
+package modelengine.jade.common.filter.support;
 
 import modelengine.fit.http.server.DoHttpServerFilterException;
 import modelengine.fit.http.server.HttpClassicServerRequest;
@@ -104,6 +104,7 @@ public class StaticResourceFilter implements HttpServerFilter {
         Optional<String> originOptional = HttpRequestUtils.header(req, "Origin");
         if (originOptional.isPresent() && StringUtils.isNotBlank(originOptional.get())) {
             String origin = originOptional.get();
+            log.info("Set access header. path:[{}]", req.path());
             resp.headers().set("Access-Control-Allow-Origin", origin);
             resp.headers().set("Access-Control-Allow-Credentials", "true");
         }
