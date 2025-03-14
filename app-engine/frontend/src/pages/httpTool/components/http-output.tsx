@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { updateTable, getDefaultExpandedRowKeys, findNodeAndAddChild, filterTable } from '../utils';
 import { initParams, paramsTypeOption, paramsArrayOption } from '../config';
 import ExpandImg from '@/assets/images/ai/expand.png';
+import DeleteRowImg from '@/assets/images/ai/delete-row.png';
 
 const HttpOutPut = (props) => {
   const { t } = useTranslation();
@@ -117,6 +118,7 @@ const HttpOutPut = (props) => {
           {addType.includes(record.type) && (
             <img onClick={() => addClick(record)} src={ExpandImg} alt='' />
           )}
+          {record.deep > 1 && <img onClick={() => deleteClick(record)} src={DeleteRowImg} alt='' />}
         </div>
       ),
     },
@@ -129,6 +131,12 @@ const HttpOutPut = (props) => {
     }
     return paramsTypeOption;
   };
+
+  // 删除
+  const deleteClick = (record) => {
+    filterTable(outputTableData, record.rowKey);
+    setOutputTableData(deepClone(outputTableData));
+  }
   return (
     <>
       <div className='http-tool-input'>
