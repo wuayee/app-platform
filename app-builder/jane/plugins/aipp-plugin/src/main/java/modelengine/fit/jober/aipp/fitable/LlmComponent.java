@@ -23,11 +23,13 @@ import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
 import modelengine.fel.engine.operators.patterns.AbstractAgent;
 import modelengine.fel.engine.operators.prompts.Prompts;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.aipp.prompt.PromptMessage;
 import modelengine.fit.jade.aipp.prompt.UserAdvice;
 import modelengine.fit.jade.aipp.prompt.repository.PromptBuilderChain;
 import modelengine.fit.jade.waterflow.FlowInstanceService;
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
 import modelengine.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
@@ -514,12 +516,16 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         Map<String, String> accessInfo = ObjectUtils.nullIf(ObjectUtils.cast(businessData.get("accessInfo")),
                 MapBuilder.<String, String>get().put("serviceName", model).put("tag", "INTERNAL").build());
         String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
+        OperationContext opContext = DataUtils.getOpContext(businessData);
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getModelAccessInfo(accessInfo.get("tag"),
+                accessInfo.get("serviceName"), opContext);
         return ChatOption.custom()
                 .model(accessInfo.get("serviceName"))
-                .baseUrl(this.aippModelCenter.getModelAccessInfo(accessInfo.get("tag"), null, null).getBaseUrl())
+                .baseUrl(modelAccessInfo.getBaseUrl())
+                .apiKey(modelAccessInfo.getAccessKey())
                 .temperature(ObjectUtils.cast(businessData.get("temperature")))
                 .tools(this.toolProvider.getTool(skillNameList))
-                .user(DataUtils.getOpContext(businessData).getOperator())
+                .user(opContext.getOperator())
                 .extras(Collections.singletonList(new ModelExtraHttpBody(new ModelExtraBody(chatId))))
                 .build();
     }
