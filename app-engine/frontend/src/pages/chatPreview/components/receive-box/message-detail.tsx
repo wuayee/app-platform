@@ -155,7 +155,7 @@ const MessageBox = (props: any) => {
         { (thinkContent && status !== 'TERMINATED') && <ThinkBlock content={thinkContent} thinkTime={thinkTime} />}
         {getMessageContent()}
         { finished &&  
-        <div className='footer'>
+        <div className='feed-footer'>
           <Feedbacks
             instanceId={instanceId}
             feedbackStatus={feedbackStatus}
