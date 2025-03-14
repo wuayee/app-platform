@@ -69,7 +69,7 @@ public class ClassifyQuestionCommandHandlerImpl implements ClassifyQuestionComma
         variables.put(Constant.TYPE_LIST_KEY, command.getTypeList());
         ChatOption chatOption = ChatOption.custom()
                 .model(command.getModel())
-                .baseUrl(this.aippModelCenter.getModelBaseUrl(command.getModelTag()))
+                .baseUrl(this.aippModelCenter.getModelAccessInfo(command.getModelTag(), null, null).getBaseUrl())
                 .temperature(command.getTemperature())
                 .stream(false)
                 .build();

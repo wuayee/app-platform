@@ -24,4 +24,6 @@ import lombok.NoArgsConstructor;
 public class ModelAccessInfo {
     private String serviceName;
     private String tag;
+    private String baseUrl;
+    private String accessKey;
 }

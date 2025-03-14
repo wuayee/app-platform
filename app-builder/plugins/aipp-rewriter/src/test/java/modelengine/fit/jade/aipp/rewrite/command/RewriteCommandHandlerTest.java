@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.memory.CacheMemory;
 import modelengine.fit.jade.aipp.memory.AippMemoryFactory;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.aipp.rewrite.command.impl.RewriteCommandHandlerImpl;
 import modelengine.fit.jade.aipp.rewrite.domain.entity.Rewriter;
@@ -67,7 +68,8 @@ public class RewriteCommandHandlerTest {
                 return histories;
             }
         });
-        when(this.aippModelCenter.getModelBaseUrl(any())).thenReturn("/model");
+        when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
+                ModelAccessInfo.builder().baseUrl("/model").build());
         when(rewriter.invoke(any())).thenReturn(result);
         assertThat(this.commandService.handle(TestUtils.getQueryCommand())).isEqualTo(result);
         ArgumentCaptor<RewriteParam> argument = ArgumentCaptor.forClass(RewriteParam.class);

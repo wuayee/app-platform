@@ -59,7 +59,7 @@ public class ExtractCommandHandlerImpl implements ExtractCommandHandler {
         variables.put(HISTORY_KEY, StringUtils.blankIf(memory.text(), StringUtils.EMPTY));
         ChatOption chatOption = ChatOption.custom()
                 .model(command.getModel())
-                .baseUrl(this.aippModelCenter.getModelBaseUrl(command.getModelTag()))
+                .baseUrl(this.aippModelCenter.getModelAccessInfo(command.getModelTag(), null, null).getBaseUrl())
                 .temperature(command.getTemperature())
                 .build();
         return this.contentExtractor.run(variables, command.getOutputSchema(), chatOption);
