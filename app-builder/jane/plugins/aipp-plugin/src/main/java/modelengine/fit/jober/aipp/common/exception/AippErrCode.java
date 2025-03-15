@@ -503,11 +503,6 @@ public enum AippErrCode implements ErrorCode, RetCode {
     IMPORT_CONFIG_FIELD_ERROR(90002968, "应用配置信息有误：{0}"),
 
     /**
-     * 应用导入配置的版本不匹配
-     */
-    IMPORT_CONFIG_UNMATCHED_VERSION(90002972, "应用配置版本不匹配，当前版本：{0}，应用配置版本：{1}"),
-
-    /**
      * 应用导出权限不足错误信息
      */
     EXPORT_CONFIG_UNAUTHED(90002969, "无权导出应用配置，请使用可写角色的账号进行操作"),
@@ -521,6 +516,16 @@ public enum AippErrCode implements ErrorCode, RetCode {
      * 可用性检查不支持的节点类型
      */
     UNSUPPORTED_NODE_TYPE(90002971, "可用性检查不支持的节点类型： {0}"),
+
+    /**
+     * 应用导入配置的版本不匹配
+     */
+    IMPORT_CONFIG_UNMATCHED_VERSION(90002972, "应用配置版本不匹配，当前版本：{0}，应用配置版本：{1}"),
+
+    /**
+     * 应用导出流程配置不正确
+     */
+    EXPORT_INVALID_FLOW_EXCEPTION(90002973, "应用流程配置不正确，导出失败"),
 
     /**
      * 生成图片失败

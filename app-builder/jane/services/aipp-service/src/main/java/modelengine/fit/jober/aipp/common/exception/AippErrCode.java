@@ -548,6 +548,11 @@ public enum AippErrCode implements ErrorCode, RetCode {
     IMPORT_CONFIG_UNMATCHED_VERSION(90002972, "应用配置版本不匹配，当前版本：{0}，应用配置版本：{1}"),
 
     /**
+     * 应用导出流程配置不正确
+     */
+    EXPORT_INVALID_FLOW_EXCEPTION(90002973, "应用流程配置不正确，导出失败"),
+
+    /**
      * 生成图片失败
      */
     GENERATE_IMAGE_FAILED(90002974, "生成图片失败，请稍后重试"),
