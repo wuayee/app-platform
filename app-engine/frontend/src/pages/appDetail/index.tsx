@@ -38,11 +38,11 @@ const AppDetail: React.FC = () => {
       label: t('feedback'),
       children: <FeedBack />,
     },
-    {
-      key: '4',
-      label: t('evaluate'),
-      children: <AppEvaluate />,
-    },
+    // {
+    //   key: '4',
+    //   label: t('evaluate'),
+    //   children: <AppEvaluate />,
+    // },
   ];
   useEffect(() => {
     setTabsKey(sessionStorage.getItem('defaultKey') as string || '1');
