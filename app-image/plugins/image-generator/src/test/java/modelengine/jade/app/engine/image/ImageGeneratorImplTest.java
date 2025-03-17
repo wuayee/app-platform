@@ -13,7 +13,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import modelengine.fel.core.image.ImageModel;
-import modelengine.fit.jade.aipp.s3.file.entity.S3FileMetaEntity;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.resource.web.Media;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
@@ -66,9 +65,6 @@ public class ImageGeneratorImplTest {
     void shouldOkWhenGenerateMultipleImages() {
         List<Media> images =
                 Collections.singletonList(new Media("image/jpeg", "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBg"));
-        S3FileMetaEntity entity1 = new S3FileMetaEntity("", "https://modelengine1.com", "");
-        S3FileMetaEntity entity2 = new S3FileMetaEntity("", "https://modelengine2.com", "");
-        S3FileMetaEntity entity3 = new S3FileMetaEntity("", "https://modelengine3.com", "");
         when(this.imageModel.generate(anyString(), any())).thenReturn(images, images, images);
         GenerateImageParam imageParam = new GenerateImageParam();
         imageParam.setArgs(new HashMap<>());
