@@ -185,7 +185,7 @@ const MarketItems = ({ reload, readOnly }) => {
             <div className='market-card' >
               {pluginData.map((card: any) => (
                 card.mapType === 'waterFlow' ?
-                  <WorkflowCard key={card.uniqueName} pluginData={card} type='plugin' /> :
+                  <WorkflowCard key={card.uniqueName} pluginData={card} type='plugin' getWaterFlowList={getWaterFlowList} /> :
                   <PluginCard
                     key={card.pluginId}
                     getPluginList={getPluginList}
