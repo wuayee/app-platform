@@ -29,8 +29,20 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
+            <groupId>modelengine.fit.integration</groupId>
+            <artifactId>fit-mybatis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fit.integration</groupId>
+            <artifactId>fit-druid</artifactId>
         </dependency>
 
         <!-- Test -->

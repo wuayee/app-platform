@@ -13,7 +13,9 @@ import modelengine.fit.jade.aipp.model.po.ModelPo;
 import modelengine.fit.jade.aipp.model.po.UserModelPo;
 import modelengine.fit.jade.aipp.model.repository.UserModelRepo;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,6 +42,9 @@ public class UserModelRepoImpl implements UserModelRepo {
     }
 
     private List<ModelPo> getModelPos(List<UserModelPo> userModelPos) {
+        if (CollectionUtils.isEmpty(userModelPos)) {
+            return Collections.emptyList();
+        }
         return this.modelMapper.listModels(userModelPos.stream()
                 .map(UserModelPo::getModelId)
                 .collect(Collectors.toList()));
@@ -66,6 +71,10 @@ public class UserModelRepoImpl implements UserModelRepo {
 
     @Override
     public ModelPo getDefaultModel(String userId) {
-        return this.modelMapper.get(this.userModelMapper.getDefault(userId).getModelId());
+        UserModelPo defaultModel = this.userModelMapper.getDefault(userId);
+        if (defaultModel == null) {
+            return null;
+        }
+        return this.modelMapper.get(defaultModel.getModelId());
     }
 }

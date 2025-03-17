@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * @author 方誉州
  * @since 2024-10-21
  */
-@Component
+@Component("defaultAippModelCenter")
 public class DefaultAippModelCenter implements AippModelCenter {
     private static final Logger log = Logger.get(DefaultAippModelCenter.class);
     private static final int HTTP_CLIENT_TIMEOUT = 60 * 1000;

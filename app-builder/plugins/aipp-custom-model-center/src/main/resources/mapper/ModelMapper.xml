@@ -24,6 +24,9 @@
         select
         <include refid="Base_Column_List"/>
         from t_app_engine_model
-        where model_id in #{modelIds}
+        where model_id in
+        <foreach item="item" index="index" collection="modelIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </select>
 </mapper>
