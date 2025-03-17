@@ -6,16 +6,15 @@
 
 package modelengine.fit.jober.aipp.tool.impl;
 
-import modelengine.jade.carver.tool.annotation.Attribute;
-import modelengine.jade.carver.tool.annotation.Group;
-import modelengine.jade.carver.tool.annotation.ToolMethod;
-import modelengine.fit.jade.aipp.s3.file.service.S3Service;
 import modelengine.fit.jober.aipp.entity.FileExtensionEnum;
 import modelengine.fit.jober.aipp.service.OperatorService;
 import modelengine.fit.jober.aipp.tool.FileTool;
 import modelengine.fit.jober.aipp.util.AippStringUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
+import modelengine.jade.carver.tool.annotation.Attribute;
+import modelengine.jade.carver.tool.annotation.Group;
+import modelengine.jade.carver.tool.annotation.ToolMethod;
 
 /**
  * 文件工具类实现。
@@ -28,7 +27,7 @@ import modelengine.fitframework.annotation.Fitable;
 public class FileToolImpl implements FileTool {
     private final OperatorService operatorService;
 
-    public FileToolImpl(OperatorService operatorService, S3Service s3Service) {
+    public FileToolImpl(OperatorService operatorService) {
         this.operatorService = operatorService;
     }
 

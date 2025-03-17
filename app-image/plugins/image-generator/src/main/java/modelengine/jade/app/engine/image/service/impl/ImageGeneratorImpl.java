@@ -10,7 +10,6 @@ import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fel.core.image.ImageModel;
 import modelengine.fel.core.image.ImageOption;
-import modelengine.fit.jade.aipp.s3.file.service.S3Service;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.annotation.Value;
@@ -20,7 +19,6 @@ import modelengine.jade.app.engine.image.entity.GenerateImageParam;
 import modelengine.jade.app.engine.image.service.ImageGenerator;
 import modelengine.jade.common.exception.ModelEngineException;
 
-import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
@@ -43,14 +41,12 @@ public class ImageGeneratorImpl implements ImageGenerator {
     private final String baselUrl;
     private final String imageGenModel;
     private final ImageModel imageModel;
-    private final S3Service s3Service;
 
     public ImageGeneratorImpl(@Value("${openai-urls.internal}") String baselUrl,
-            @Value("${model.imageGen.model}") String imageGenModel, ImageModel imageModel, S3Service s3Service) {
+            @Value("${model.imageGen.model}") String imageGenModel, ImageModel imageModel) {
         this.baselUrl = baselUrl;
         this.imageGenModel = imageGenModel;
         this.imageModel = imageModel;
-        this.s3Service = s3Service;
     }
 
     @Override
@@ -75,8 +71,8 @@ public class ImageGeneratorImpl implements ImageGenerator {
 
     private Media imageToS3Url(Media entity) {
         byte[] image = Base64.getDecoder().decode(entity.getData().getBytes());
-        String url =
-                this.s3Service.upload(new ByteArrayInputStream(image), image.length, generateFileName()).getFileUrl();
+        // 暂时去除s3依赖
+        String url = "mockUrl";
         try {
             return new Media(new URL(url));
         } catch (MalformedURLException ex) {

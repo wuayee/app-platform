@@ -25,23 +25,8 @@
     "uniqueName": ""
   },
   {
-    "type": "queryOptimizationNodeState",
-    "name": "问题优化",
-    "uniqueName": ""
-  },
-  {
     "type": "knowledgeRetrievalNodeState",
     "name": "知识检索",
-    "uniqueName": ""
-  },
-  {
-    "type": "textExtractionNodeState",
-    "name": "文本提取",
-    "uniqueName": ""
-  },
-  {
-    "type": "questionClassificationNodeCondition",
-    "name": "问题分类",
     "uniqueName": ""
   },
   {
@@ -52,11 +37,6 @@
   {
     "type": "variableAggregationNodeState",
     "name": "变量聚合",
-    "uniqueName": ""
-  },
-  {
-    "type": "textToImageNodeState",
-    "name": "文生图",
     "uniqueName": ""
   },
   {
