@@ -38,10 +38,6 @@
             <groupId>modelengine.jade.service</groupId>
             <artifactId>app-image-generator-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>modelengine.jade.service</groupId>
-            <artifactId>aipp-s3-file-service</artifactId>
-        </dependency>
 
         <!-- Lombok -->
         <dependency>
