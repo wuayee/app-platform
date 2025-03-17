@@ -42,7 +42,10 @@ public class OmsServiceRegister implements FitRuntimeStartedObserver {
     private static final List<String> AUTHORITY_RESOURCES = Arrays.asList("**/common.json",
             "**/rest-service-aipp.json",
             "**/rest-service-appBuilder.json",
-            "**/rest-service-store.json");
+            "**/rest-service-store.json",
+            "**/rest-service-eval.json",
+            "**/rest-service-metrics.json",
+            "**/rest-service-northApi.json");
 
     private final Plugin plugin;
     private final RegisterProcessor registerProcessor;

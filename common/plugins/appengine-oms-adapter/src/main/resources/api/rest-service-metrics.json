@@ -13,7 +13,7 @@
   },
   {
     "Description": "获取反馈数据接口",
-    "ResourceKey": "GET /appbuilder/metrics/feedback",
+    "ResourceKey": "POST /appbuilder/metrics/feedback",
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",

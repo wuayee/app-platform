@@ -680,5 +680,17 @@
       "SYS_ADMIN",
       "AppVisitor"
     ]
+  },
+  {
+    "Description": "智能生成提示词",
+    "ResourceKey": "POST /appbuilder/v1/api/model/prompt",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
   }
 ]

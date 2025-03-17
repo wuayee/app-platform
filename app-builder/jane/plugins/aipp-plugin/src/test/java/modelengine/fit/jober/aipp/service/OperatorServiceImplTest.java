@@ -7,10 +7,7 @@
 package modelengine.fit.jober.aipp.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
-import modelengine.fit.jade.aipp.s3.file.service.S3Service;
 import modelengine.fit.jober.aipp.service.impl.OperatorServiceImpl;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
@@ -34,9 +31,6 @@ import java.util.Optional;
 public class OperatorServiceImplTest {
     @Fit
     private OperatorService operatorService;
-
-    @Mock
-    private S3Service s3Service;
 
     @Mock
     private LLMService llmService;
@@ -72,7 +66,6 @@ public class OperatorServiceImplTest {
     private String getContent(String filePath, OperatorService.FileType fileType) {
         String fileUrl = "/path/mockurl.mock";
         File file = new File(this.getClass().getClassLoader().getResource(filePath).getFile());
-        when(this.s3Service.download(eq(fileUrl))).thenReturn(file);
         return this.operatorService.fileExtractor(fileUrl, Optional.of(fileType));
     }
 }

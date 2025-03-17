@@ -6,7 +6,6 @@
 
 package modelengine.fit.jober.aipp.service.impl;
 
-import modelengine.fit.jade.aipp.s3.file.service.S3Service;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippException;
 import modelengine.fit.jober.aipp.service.LLMService;
@@ -98,8 +97,6 @@ public class OperatorServiceImpl implements OperatorService {
 
     private final LLMService llmService;
 
-    private final S3Service s3Service;
-
     private final BrokerClient client;
 
     private final Function<String, String> pdfExtractor = this::extractPdfFile;
@@ -130,8 +127,7 @@ public class OperatorServiceImpl implements OperatorService {
         }
     };
 
-    public OperatorServiceImpl(S3Service s3Service, LLMService llmService, BrokerClient client) {
-        this.s3Service = s3Service;
+    public OperatorServiceImpl(LLMService llmService, BrokerClient client) {
         this.llmService = llmService;
         this.client = client;
     }
