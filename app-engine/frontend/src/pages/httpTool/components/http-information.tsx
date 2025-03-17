@@ -234,7 +234,6 @@ const InformationConfiguration = (props: any) => {
     if (type === 'prev') {
       setStepCurrent(1);
     } else {
-      setLoading(true);
       if (!validateUrl(formParams.url)) {
         form.setFields([
           {
@@ -244,6 +243,7 @@ const InformationConfiguration = (props: any) => {
         ]);
         return;
       }
+      setLoading(true);
       let params = requestParam(confirmHttpInfo);
       createHttp(params)
         .then((res: any) => {
