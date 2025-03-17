@@ -5,27 +5,42 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useState, useEffect } from 'react';
-import { Dropdown, MenuProps, Tag } from 'antd';
+import { Dropdown, MenuProps, Tag, message } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import { useAppSelector } from '@/store/hook';
 import { setSpaClassName } from '@/shared/utils/common';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
+import { deleteAppApi } from '@/shared/http/appDev';
 import { useTranslation } from 'react-i18next';
 import { convertImgPath } from '@/common/util';
 import knowledgeImg from '@/assets/images/knowledge/knowledge-base.png';
 import userImg from '@/assets/images/ai/user.jpg';
 import './style.scss';
 
-const WorkflowCard = ({ pluginData, type }: any) => {
+const WorkflowCard = ({ pluginData, type, getWaterFlowList }: any) => {
   const { t } = useTranslation();
   const [imgPath, setImgPath] = useState('');
   const navigate = useHistory().push;
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
+
+  // 删除工具流
+  const delWaterflow = async () => {
+    const res: any = await deleteAppApi(tenantId, pluginData?.id);
+    if(res.code === 0){
+      getWaterFlowList();
+      message.success(t('deleteSuccess'));
+    }
+  };
+
   const operatItems: MenuProps['items'] = [
     {
       label: <div onClick={DropdownItemClick}>{t('arrange')}</div>,
       key: 'choreography',
+    },
+    {
+      label: <div onClick={delWaterflow}>{t('delete')}</div>,
+      key: 'delete',
     },
   ];
   async function DropdownItemClick() {

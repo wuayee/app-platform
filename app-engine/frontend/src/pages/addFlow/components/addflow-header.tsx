@@ -98,7 +98,7 @@ const AddHeader = (props) => {
     <div>
       <div className='app-header'>
         <div className='logo'>
-          { workFlow ==='workFlow' && <LeftArrowIcon className='back-icon' onClick={handleBackClick} /> }
+          { <LeftArrowIcon className='back-icon' onClick={handleBackClick} /> }
           {imgPath ? <img src={imgPath} /> : <img src={knowledgeImg} />}
           <span className='header-text' title={appInfo?.name}>{appInfo?.name}</span>
           <img className='edit-icon' src={editImg} onClick={handleEditClick} />
