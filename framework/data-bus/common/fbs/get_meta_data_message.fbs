@@ -1,0 +1,7 @@
+namespace DataBus.Common;
+
+table GetMetaDataMessage {
+    object_key: string; // 客户端生成的存储对象UUID
+}
+
+root_type GetMetaDataMessage;
