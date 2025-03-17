@@ -151,4 +151,11 @@ public interface FlowDefinitionService {
      * @return FlowDefinition信息
      */
     FlowDefinitionResult getFlowDefinitionByGraphData(String flowGraph);
+
+    /**
+     * 验证graph data合法性
+     *
+     * @param definitionData 流程定义数据
+     */
+    void validateDefinitionData(String definitionData);
 }

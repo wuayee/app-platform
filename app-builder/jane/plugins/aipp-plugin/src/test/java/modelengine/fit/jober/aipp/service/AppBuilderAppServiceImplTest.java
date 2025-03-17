@@ -30,7 +30,9 @@ import static org.mockito.Mockito.when;
 import com.alibaba.fastjson.JSONObject;
 
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.waterflow.AippFlowDefinitionService;
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.service.FlowDefinitionService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
@@ -167,6 +169,12 @@ public class AppBuilderAppServiceImplTest {
     @Mock
     private AppTypeService appTypeService;
 
+    @Mock
+    private AippFlowDefinitionService aippFlowDefinitionService;
+
+    @Mock
+    private FlowDefinitionService flowDefinitionService;
+
     private AppBuilderAppServiceImpl appBuilderAppService;
 
     private static final LocalDateTime TIME = LocalDateTime.of(2024, 5, 6, 15, 15, 15);
@@ -183,7 +191,7 @@ public class AppBuilderAppServiceImplTest {
                 .put("version", "1.0.1")
                 .put("hash-template", "123")
                 .put("digest", "MD5")
-                .build(), appTypeService, null, null);
+                .build(), appTypeService, null, null, flowDefinitionService, aippFlowDefinitionService);
     }
 
     private AppBuilderApp mockApp() {
@@ -553,7 +561,7 @@ public class AppBuilderAppServiceImplTest {
                 this.aippFlowService, this.appRepository, null, 64, this.metaService, this.usrAppCollectionService,
                 this.appUpdateValidator, this.metaInstanceService, this.uploadedFileManageService, this.aippLogMapper,
                 this.flowsService, this.appService, this.aippChatService, this.aippModelCenter, this.aippChatMapper,
-                null, null, null, null);
+                null, null, null, null, null, null);
 
         @Test
         @DisplayName("更新 config")
@@ -755,6 +763,8 @@ public class AppBuilderAppServiceImplTest {
                     null,
                     null,
                     null,
+                    null,
+                    null,
                     null));
             doNothing().when(service).validateUpdateApp(any(), any(), any());
             doNothing().when(appUpdateValidator).validate(anyString());
@@ -841,7 +851,7 @@ public class AppBuilderAppServiceImplTest {
 
     @Test
     @DisplayName("测试应用导出")
-    void testExportAppConfig() {
+    void testExportAppConfig() throws NoSuchMethodException {
         AppBuilderApp mockApp = AppBuilderApp.builder()
                 .id("123456")
                 .configId("123456")
@@ -862,6 +872,7 @@ public class AppBuilderAppServiceImplTest {
                 .name("test")
                 .dataType("String")
                 .defaultValue("test")
+                .group("null")
                 .build());
         AppBuilderForm mockForm = mock(AppBuilderForm.class);
         AppBuilderConfig mockConfig = AppBuilderConfig.builder()
@@ -873,13 +884,15 @@ public class AppBuilderAppServiceImplTest {
         AppBuilderFlowGraph mockFlowGraph = AppBuilderFlowGraph.builder()
                 .id("123")
                 .name("testFlowGraph")
-                .appearance("testAppearance")
+                .appearance("{\"id\": \"testGraphId\"}")
                 .build();
         when(this.appRepository.selectWithId(anyString())).thenReturn(mockApp);
         when(this.configRepository.selectWithId(anyString())).thenReturn(mockConfig);
         when(this.flowGraphRepository.selectWithId(anyString())).thenReturn(mockFlowGraph);
         when(this.formPropertyRepository.selectWithAppId(anyString())).thenReturn(mockFormProperties);
         when(this.appTypeService.query(any(), any())).thenReturn(AppTypeDto.builder().name("单元测试").build());
+        when(this.aippFlowDefinitionService.getParsedGraphData(any(), any())).thenReturn("testFlowDefinition");
+        doNothing().when(this.flowDefinitionService).validateDefinitionData(any());
 
         OperationContext operationContext = new OperationContext();
         operationContext.setName("admin");
@@ -894,7 +907,7 @@ public class AppBuilderAppServiceImplTest {
                         AppExportFormProperty::getDefaultValue)
                 .containsExactly("test", "String", "\"test\"");
         assertThat(exportConfig.getFlowGraph()).extracting(AppExportFlowGraph::getName,
-                AppExportFlowGraph::getAppearance).containsExactly("testFlowGraph", "testAppearance");
+                AppExportFlowGraph::getAppearance).containsExactly("testFlowGraph", "{\"id\": \"testGraphId\"}");
     }
 
     @Test

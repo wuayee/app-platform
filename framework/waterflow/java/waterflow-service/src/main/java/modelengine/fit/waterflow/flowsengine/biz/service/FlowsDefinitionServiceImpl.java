@@ -56,6 +56,8 @@ import static modelengine.fit.jade.waterflow.ErrorCodes.INPUT_PARAM_IS_INVALID;
 public class FlowsDefinitionServiceImpl implements FlowDefinitionService {
     private static final Logger log = Logger.get(FlowsDefinitionServiceImpl.class);
 
+    private static final String DEFAULT_TENANT = "e3431aa80d224c278cdeb5003790e1a7";
+
     private final FlowParser flowParser;
 
     private final FlowValidator flowValidator;
@@ -68,6 +70,17 @@ public class FlowsDefinitionServiceImpl implements FlowDefinitionService {
 
     @Override
     public FlowDefinitionResult createFlows(String graphData, OperationContext context) {
+        FlowDefinition flowsDefinition = convertToDefinition(graphData, context);
+        flowDefinitionRepo.save(flowsDefinition, graphData);
+        return convert(flowsDefinition, graphData);
+    }
+
+    @Override
+    public void validateDefinitionData(String definitionData) {
+        this.convertToDefinition(definitionData, OperationContext.custom().tenantId(DEFAULT_TENANT).build());
+    }
+
+    private FlowDefinition convertToDefinition(String graphData, OperationContext context) {
         Validation.notBlank(graphData, () -> new WaterflowParamException(INPUT_PARAM_IS_EMPTY, "graphData"));
         FlowDefinition flowsDefinition;
         try {
@@ -85,8 +98,7 @@ public class FlowsDefinitionServiceImpl implements FlowDefinitionService {
             }
             throw new WaterflowException(FLOW_VALIDATE_ERROR, ex.getMessage());
         }
-        flowDefinitionRepo.save(flowsDefinition, graphData);
-        return convert(flowsDefinition, graphData);
+        return flowsDefinition;
     }
 
     @Override

@@ -37,7 +37,9 @@ import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.waterflow.AippFlowDefinitionService;
 import modelengine.fit.jade.waterflow.FlowsService;
+import modelengine.fit.jade.waterflow.service.FlowDefinitionService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.enums.DirectionEnum;
 import modelengine.fit.jane.common.response.Rsp;
@@ -245,6 +247,10 @@ public class AppBuilderAppServiceImpl
 
     private final AppTypeService appTypeService;
 
+    private final FlowDefinitionService flowDefinitionService;
+
+    private final AippFlowDefinitionService aippFlowDefinitionService;
+
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
             AppBuilderAppRepository appRepository, AppTemplateFactory templateFactory,
             @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService,
@@ -253,7 +259,8 @@ public class AppBuilderAppServiceImpl
             AippLogMapper aippLogMapper, FlowsService flowsService, AppService appService,
             AippChatService aippChatService, AippModelCenter aippModelCenter, AippChatMapper aippChatMapper,
             @Value("${export-meta}") Map<String, String> exportMeta, AppTypeService appTypeService,
-            PluginToolService pluginToolService, PluginService pluginService) {
+            PluginToolService pluginToolService, PluginService pluginService,
+            FlowDefinitionService flowDefinitionService, AippFlowDefinitionService aippFlowDefinitionService) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.templateFactory = templateFactory;
@@ -273,6 +280,8 @@ public class AppBuilderAppServiceImpl
         this.appTypeService = appTypeService;
         this.pluginToolService = pluginToolService;
         this.pluginService = pluginService;
+        this.flowDefinitionService = flowDefinitionService;
+        this.aippFlowDefinitionService = aippFlowDefinitionService;
     }
 
     @Override
@@ -1037,6 +1046,17 @@ public class AppBuilderAppServiceImpl
         AppBuilderApp app = this.appFactory.create(appId);
         if (!StringUtils.equals(app.getCreateBy(), context.getName())) {
             throw new AippException(AippErrCode.EXPORT_CONFIG_UNAUTHED);
+        }
+
+        // 校验流程编排合法性
+        try {
+            AppBuilderAppDto appDto = this.buildFullAppDto(app);
+            String flowDefinitionData = this.aippFlowDefinitionService.getParsedGraphData(
+                JsonUtils.toJsonString(appDto.getFlowGraph().getAppearance()), app.getVersion());
+            this.flowDefinitionService.validateDefinitionData(flowDefinitionData);
+        } catch (Exception e) {
+            log.error("app config export failed", e);
+            throw new AippException(AippErrCode.EXPORT_INVALID_FLOW_EXCEPTION);
         }
 
         try {
