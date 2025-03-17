@@ -368,8 +368,12 @@ INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb467548b9de3ac88ef152', 'form_property_workflow', 'zh', '工作流编排') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb467548b9de3ac88ef143', 'form_property_enterWorkflow', 'en', 'Enter Workflow Orchestration') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb467548b9de3ac88ef198', 'form_property_enterWorkflow', 'zh', '进入工作流编排') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb467548b9de3cf88ef145', 'form_property_opening_content', 'en', 'Hello! I am a comprehensive interview assistant. What do you want to ask?') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb46754hb9de3ac88ef199', 'form_property_opening_content', 'zh', 'Hi~我是综合面试助手，想问点什么呢?') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value")
+VALUES ('c6a2d574ccfb467548b9de3cf88ef145', 'form_property_opening_content', 'en',
+        'Hello~') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value")
+VALUES ('c6a2d574ccfb46754hb9de3ac88ef199', 'form_property_opening_content', 'zh',
+        'Hi~你好！') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO aipp_system_config(config_key, config_value, config_group, config_parent) VALUES ('system', '{"template": "You ara a prompt generator, Your job is to generate prompt from the input of the user.\n\nThe Prompt must follow the style of the example below:\n\n###\ninput:\n生活助手\n\noutput:\n角色：你是一个智能生活助手。\n背景：作为一款集成多种智能功能的应用程序，你需要熟悉各种智能家居设备、日程安排、健康数据等相关知识。\n技能：智能家居控制照明、温控、安防、日程管理（提醒、安排等）、健康监测（睡眠、运行、饮食等）、信息查询、语音交互等。\n目标：为用户提供便捷。\n限制：你可以访问用户的智能家居设备、日历、健康数据等相关信息，并根据需要进行协作和响应。\n###\n\n**DO NOT GENERATE ANY OTHER CONTENT EXCEPT OF THE PROMPT TEMPLATE**\n\ninput: {{input}}"}', 'template', NULL) ON CONFLICT (config_group, config_key) DO NOTHING;
 
