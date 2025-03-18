@@ -126,6 +126,16 @@
     height: calc(100vh - 50px) !important;
   }
 }
+.chat-running-full {
+  .chat-page-inner-spa {
+    .chat-inner-left {
+      height: 100vh !important;
+    }
+    .chat-right-close {
+      height: 100vh !important;
+    }
+  }
+}
 .chat-inner-spa {
   .chat-inner-left {
     height: calc(100vh - 150px);
