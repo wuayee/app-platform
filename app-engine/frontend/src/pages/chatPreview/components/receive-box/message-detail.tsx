@@ -89,7 +89,7 @@ const MessageBox = (props: any) => {
       }
     }
   };
-
+  // 设置接受消息显示内容 
   const getMessageContent = () => {
     if (pictureList) {
       return <PictureList pictureList={pictureList}></PictureList>;
@@ -103,24 +103,24 @@ const MessageBox = (props: any) => {
       );
     }
   };
-
+  // a标签点击（打开新窗口跳转）
   const recieveClick = (event) => {
     if (event.target && event.target.nodeName.toLowerCase() === 'a') {
       event.preventDefault();
       window.open(event.target.href, '_blank');
     }
   }
-
+  // 智能体调度工具内容处理
   const getAgentOutput = (str: string) => {
     let lastOpenTag:any = null;
     let hasStepContent = false;
     let tagMap:any = {
-      reasoning: '思考',
+      reasoning: t('thinking'),
       step: {
-        name: '步骤',
+        name: t('steps'),
         index: 1
       },
-      tool: '工具结果'
+      tool: t('toolResult')
     }
     tagMap.step.index = 1;
     let output = str.replace(/<(\/?)(reasoning|step|tool|final)>/g,  (match, isClose, tag) => {
@@ -151,7 +151,7 @@ const MessageBox = (props: any) => {
     }
     return setClosureLabel(output);
   }
-
+  // 智能体调度工具结束标签处理
   const setClosureLabel = (str:string) => {
     const regex = /<div class="final">([\s\S]*?)<\/div>/;
     const match = str.match(regex);
