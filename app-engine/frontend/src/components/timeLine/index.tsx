@@ -13,13 +13,13 @@ import { useTranslation } from "react-i18next";
 import tagImg from '@/assets/images/ai/tag.png';
 
 const TimeLineFc = (props) => {
-  const { open, setOpen } = props;
+  const { open, setOpen, type = '' } = props;
   const [timeList, setTimeList] = useState([]);
   const { tenantId, appId } = useParams();
   const { t } = useTranslation();
 
   useEffect(() => {
-    open && getVersion(tenantId, appId).then(res => {
+    open && getVersion(tenantId, appId, type).then(res => {
       if (res.code === 0) {
         setTimeList(res.data);
       }
