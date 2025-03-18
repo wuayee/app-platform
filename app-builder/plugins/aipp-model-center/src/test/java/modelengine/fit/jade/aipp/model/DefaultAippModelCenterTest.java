@@ -15,7 +15,6 @@ import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.okhttp.OkHttpClassicClientFactory;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jober.aipp.common.exception.AippNotFoundException;
 import modelengine.fit.security.Decryptor;
 import modelengine.fitframework.annotation.Fit;
@@ -47,7 +46,7 @@ import java.util.Map;
 @FitTestWithJunit(includeClasses = {OkHttpClassicClientFactory.class})
 public class DefaultAippModelCenterTest {
     private MockWebServer server;
-    private AippModelCenter aippModelCenter;
+    private DefaultAippModelCenter aippModelCenter;
     @Fit
     private Config config;
     @Fit

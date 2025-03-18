@@ -14,7 +14,7 @@ import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.protocol.HttpResponseStatus;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.aipp.model.service.AippModelCenterExtension;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippNotFoundException;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @since 2024-10-21
  */
 @Component("defaultAippModelCenter")
-public class DefaultAippModelCenter implements AippModelCenter {
+public class DefaultAippModelCenter implements AippModelCenterExtension {
     private static final Logger log = Logger.get(DefaultAippModelCenter.class);
     private static final int HTTP_CLIENT_TIMEOUT = 60 * 1000;
     private static final Map<String, Boolean> HTTPS_CONFIG_KEY_MAPS = MapBuilder.<String, Boolean>get()

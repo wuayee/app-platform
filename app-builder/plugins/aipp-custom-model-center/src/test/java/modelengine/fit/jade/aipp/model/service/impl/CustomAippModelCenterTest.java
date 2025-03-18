@@ -11,7 +11,7 @@ import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.po.ModelAccessPo;
 import modelengine.fit.jade.aipp.model.po.ModelPo;
 import modelengine.fit.jade.aipp.model.repository.UserModelRepo;
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.aipp.model.service.AippModelCenterExtension;
 import modelengine.fit.jane.common.entity.OperationContext;
 
 import org.junit.jupiter.api.Assertions;
@@ -32,7 +32,7 @@ class CustomAippModelCenterTest {
     private UserModelRepo userModelRepo;
 
     @Mock
-    private AippModelCenter defaultModelCenter;
+    private AippModelCenterExtension defaultModelCenter;
 
     @BeforeEach
     void setUp() {
