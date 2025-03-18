@@ -340,6 +340,7 @@ const ToolDrawer = (props) => {
                             modalType={modalType}
                             setShowModal={setShowModal}
                             checkData={checkData}
+                            searchName={searchName}
                           />
                         </div>
                       );

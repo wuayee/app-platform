@@ -26,6 +26,7 @@ import '../styles/tool-table.scss';
  * @param checkedList 添加工具列表数据
  * @param modalType 工作流不同类型弹窗状态
  * @param setShowModal 工具弹窗显示隐藏方法
+ * @param searchName 搜索插件名称
  */
 const ToolTable = (props: any) => {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ const ToolTable = (props: any) => {
     modalType,
     setShowModal,
     checkData,
+    searchName,
   } = props;
   const [getPluginData, setGetPluginData] = useState<any>([]);
   const modalTypes = ['pluginButtonTool', 'llmTool', 'loop'];
@@ -73,10 +75,11 @@ const ToolTable = (props: any) => {
         }
       }
     });
-    let newData = deepClone(getPluginData);
+    let newData = deepClone(pluginInfo);
     setGetPluginData(newData);
     if (modalTypes.includes(modalType)) {
       setShowModal(false);
+      searchName.current = '';
     }
   };
 
