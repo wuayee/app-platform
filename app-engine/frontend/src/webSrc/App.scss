@@ -1,0 +1,66 @@
+#root {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  background-image: url('/src/assets/png/background.png');
+  background-size: 100% 1000px;
+  background-repeat: no-repeat;
+}
+
+/*整个滚动条*/
+::-webkit-scrollbar {
+  height: 6px;
+  // background-color: transparent;
+}
+
+/*水平的整个滚动条*/
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+/*水平的滑块*/
+::-webkit-scrollbar-thumb:horizontal {
+  border-radius: 4px;
+  background: #cccccc;
+  cursor: pointer;
+}
+
+/*垂直的整个滚动条*/
+::-webkit-scrollbar:vertical {
+  width: 5px;
+}
+
+/*垂直的滑块*/
+::-webkit-scrollbar-thumb:vertical {
+  border-radius: 4px;
+  background: #cccccc;
+  cursor: pointer;
+}
+
+.logo {
+  /*height: 6em;*/
+  /*padding: 1.5em;*/
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
