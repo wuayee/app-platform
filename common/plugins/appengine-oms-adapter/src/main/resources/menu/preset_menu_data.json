@@ -14,6 +14,14 @@
         "scenId": "4"
       },
       {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
+        "scenId": "4"
+      },
+      {
         "roleName": "FsDeveloper",
         "scenId": "4"
       },
@@ -40,6 +48,14 @@
     "roleScenMap": [
       {
         "roleName": "AppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
         "scenId": "4"
       },
       {
@@ -71,6 +87,14 @@
         "scenId": "4"
       },
       {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
+        "scenId": "4"
+      },
+      {
         "roleName": "FsDeveloper",
         "scenId": "4"
       },
@@ -96,6 +120,14 @@
     "roleScenMap": [
       {
         "roleName": "AppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
         "scenId": "4"
       },
       {
@@ -127,6 +159,14 @@
         "scenId": "4"
       },
       {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
+        "scenId": "4"
+      },
+      {
         "roleName": "FsDeveloper",
         "scenId": "4"
       },
@@ -152,6 +192,14 @@
     "roleScenMap": [
       {
         "roleName": "AppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
         "scenId": "4"
       },
       {
@@ -184,6 +232,14 @@
     "roleScenMap": [
       {
         "roleName": "AppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "DataAppDeveloper",
+        "scenId": "4"
+      },
+      {
+        "roleName": "AppExDeveloper",
         "scenId": "4"
       },
       {

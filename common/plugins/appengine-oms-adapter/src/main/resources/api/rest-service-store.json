@@ -5,6 +5,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -16,6 +18,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -27,6 +31,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -38,6 +44,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -49,6 +57,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -60,6 +70,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -71,6 +83,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -82,6 +96,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -93,6 +109,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -105,6 +123,8 @@
     "Roles": [
       "AppDeveloper",
       "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
     ]
@@ -115,6 +135,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -126,6 +148,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -137,6 +161,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -148,6 +174,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -159,6 +187,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -170,6 +200,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -181,6 +213,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -192,6 +226,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -202,6 +238,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY",
@@ -214,6 +252,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN",
       "READ_ONLY"
@@ -225,6 +265,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -235,6 +277,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -245,6 +289,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
@@ -255,6 +301,8 @@
     "SkipCheck": false,
     "Roles": [
       "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
       "FsDeveloper",
       "SYS_ADMIN"
     ]
