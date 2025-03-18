@@ -28,7 +28,7 @@ const NodeIcon = ({ type }) => {
       'retrievalNodeState': <DataRetrievalIcon />,
       'llmNodeState': <LlmIcon />,
       'endNodeEnd': <EndIcon />,
-      'manualCheckNodeState': <ManualCheckIcon />,
+      'intelligentFormNodeState': <ManualCheckIcon />,
       'fitInvokeNodeState': <FitIcon />,
       'conditionNodeCondition': <IfIcon />,
       'toolInvokeNodeState': <FitIcon />,
@@ -36,7 +36,8 @@ const NodeIcon = ({ type }) => {
       'queryOptimizationNodeState': <QueryOptimizationIcon />,
       'knowledgeRetrievalNodeState': <KnowledgeRetrievalIcon />,
       'textExtractionNodeState': <TextExtractionIcon />,
-      'questionClassificationNodeCondition': <ClassificationIcon />
+      'questionClassificationNodeCondition': <ClassificationIcon />,
+      'manualCheckNodeState': <ManualCheckIcon />,
     }[type];
   }
 

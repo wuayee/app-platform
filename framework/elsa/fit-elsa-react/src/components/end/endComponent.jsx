@@ -7,13 +7,13 @@
 import {v4 as uuidv4} from 'uuid';
 import {defaultComponent} from '@/components/defaultComponent.js';
 import {
-    AddInputReducer,
-    ChangeFormByMetaDataReducer,
-    DeleteFormReducer,
-    ChangeModeReducer,
-    DeleteInputReducer,
-    EditOutputVariableReducer,
-    UpdateInputReducer,
+  AddInputReducer,
+  ChangeFormByMetaDataReducer,
+  DeleteFormReducer,
+  ChangeModeReducer,
+  DeleteInputReducer,
+  EditOutputVariableReducer,
+  UpdateInputReducer, UpdateLogStatusReducer,
 } from '@/components/end/reducers/reducers.js';
 import {EndNodeWrapper} from '@/components/end/EndNodeWrapper.jsx';
 import {FLOW_TYPE} from '@/common/Consts.js';
@@ -36,6 +36,7 @@ export const endComponent = (jadeConfig, shape) => {
     addReducer(builtInReducers, UpdateInputReducer(shape, self));
     addReducer(builtInReducers, DeleteInputReducer(shape, self));
     addReducer(builtInReducers, AddInputReducer(shape, self));
+    addReducer(builtInReducers, UpdateLogStatusReducer(shape, self));
 
   /**
    * 必填
@@ -86,6 +87,12 @@ export const endComponent = (jadeConfig, shape) => {
       referenceNode: '',
       referenceKey: '',
       referenceId: '',
+    }, {
+      id: uuidv4(),
+      from: 'Input',
+      name: 'enableLog',
+      type: 'Boolean',
+      value: false,
     }];
   };
 

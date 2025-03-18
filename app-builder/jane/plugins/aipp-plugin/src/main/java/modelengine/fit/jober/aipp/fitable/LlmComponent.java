@@ -350,7 +350,14 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
     private void llmOutputConsumer(AippLlmMeta llmMeta, Prompt trace, Map<String, Object> promptMetadata) {
         ChatMessage answer = trace.messages().get(trace.messages().size() - 1);
         if (answer.type() == MessageType.AI) {
-            addAnswer(llmMeta, answer.text(), ObjectUtils.nullIf(promptMetadata, Collections.emptyMap()));
+            List<ChatMessage> messages = trace.messages();
+            int humanIndex = this.lastHumanIndex(messages);
+            String text = trace.messages().stream()
+                    .skip(humanIndex)
+                    .filter(message -> message.type() == MessageType.AI)
+                    .map(ChatMessage::text)
+                    .collect(Collectors.joining());
+            addAnswer(llmMeta, text, ObjectUtils.nullIf(promptMetadata, Collections.emptyMap()));
             return;
         }
         // 还没保存trace数据，子流程就跑完了怎么办？（目前走到这里一定有表单阻塞，所以暂时不会有这个问题）
@@ -361,6 +368,15 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         } catch (AippJsonDecodeException e) {
             this.doOnAgentError(llmMeta, e.getMessage());
         }
+    }
+
+    private int lastHumanIndex(List<ChatMessage> messages) {
+        for (int i = messages.size() - 1; i >= 0; i--) {
+            if (MessageType.HUMAN == messages.get(i).type()) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private void addAnswer(AippLlmMeta llmMeta, String answer, Map<String, Object> promptMetadata) {

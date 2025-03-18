@@ -38,9 +38,7 @@ import {queryOptimizationComponent} from '@/components/queryOptimization/queryOp
 import {queryOptimizationNodeState} from '@/components/queryOptimization/queryOptimizationNodeState.jsx';
 import {textExtractionNodeState} from '@/components/textExtraction/textExtractionNodeState.jsx';
 import {textExtractionComponent} from '@/components/textExtraction/textExtractionComponent.jsx';
-import {
-  questionClassificationNodeCondition,
-} from '@/components/questionClassification/questionClassificationNodeCondition.jsx';
+import {questionClassificationNodeCondition} from '@/components/questionClassification/questionClassificationNodeCondition.jsx';
 import {questionClassificationComponent} from '@/components/questionClassification/questionClassificationComponent.jsx';
 import {variableAggregationNodeState} from '@/components/variableAggregation/variableAggregationNodeState.jsx';
 import {variableAggregationComponent} from '@/components/variableAggregation/variableAggregationComponent.jsx';
@@ -57,6 +55,8 @@ import {noteNode} from '@/components/note/noteNode.jsx';
 import {noteComponent} from '@/components/note/noteComponent.jsx';
 import {loopNodeState} from '@/components/loopNode/loopNodeState.jsx';
 import {loopComponent} from '@/components/loopNode/loopComponent.jsx';
+import {intelligentFormNodeState} from '@/components/intelligentForm/intelligentFormNodeState.jsx';
+import {intelligentFormComponent} from '@/components/intelligentForm/intelligentFormComponent.jsx';
 
 /**
  * jadeFlow的专用画布.
@@ -159,6 +159,8 @@ export const jadeFlowGraph = (div, title) => {
     self.registerPlugin('noteComponent', noteComponent);
     self.registerPlugin('loopNodeState', loopNodeState);
     self.registerPlugin('loopComponent', loopComponent);
+    self.registerPlugin('intelligentFormNodeState', intelligentFormNodeState);
+    self.registerPlugin('intelligentFormComponent', intelligentFormComponent);
     return initialize.apply(self);
   };
 

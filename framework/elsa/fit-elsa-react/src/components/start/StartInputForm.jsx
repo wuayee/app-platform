@@ -5,14 +5,15 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {Name} from './Name.jsx';
-import Type from './Type.jsx';
+import Type from '../common/Type.jsx';
 import Description from './Description.jsx';
 import PropTypes from 'prop-types'; // 导入 PropTypes
-import {useDispatch} from "@/components/DefaultRoot.jsx";
-import Required from "@/components/start/Required.jsx";
-import React from "react";
+import {useDispatch} from '@/components/DefaultRoot.jsx';
+import Required from '@/components/start/Required.jsx';
+import React from 'react';
 import Visible from '@/components/start/Visible.jsx';
 import {DisplayName} from '@/components/start/DisplayName.jsx';
+import {useTranslation} from 'react-i18next';
 
 /**
  * 开始节点入参表单
@@ -23,6 +24,7 @@ import {DisplayName} from '@/components/start/DisplayName.jsx';
  */
 const _StartInputForm = ({item, items}) => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     /**
      * 传递至子组件，用于使用dispatch更新
@@ -37,6 +39,11 @@ const _StartInputForm = ({item, items}) => {
         }
     };
 
+    const handleChange = (value) => {
+        handleFormValueChange("type", value); // 当选择框的值发生变化时调用父组件传递的回调函数
+        document.activeElement.blur();// 在选择后取消焦点
+    };
+
     return (<>
         <Name
           itemId={item.id}
@@ -46,7 +53,7 @@ const _StartInputForm = ({item, items}) => {
           onChange={handleFormValueChange}
           items={items}/>
         <DisplayName itemId={item.id} propValue={item.displayName} disableModifiable={item.disableModifiable} onChange={handleFormValueChange} items={items}/>
-        <Type itemId={item.id} propValue={item.type} disableModifiable={item.disableModifiable} onChange={handleFormValueChange}/>
+        <Type itemId={item.id} propValue={item.type} disableModifiable={item.disableModifiable} onChange={handleChange} labelName={t('fieldType')}/>
         <Description itemId={item.id} propValue={item.description} disableModifiable={item.disableModifiable} onChange={handleFormValueChange}/>
         <div style={{display: 'flex', flexDirection: 'row'}}>
             <Required itemId={item.id} propValue={item.isRequired} disableModifiable={item.disableModifiable} onChange={handleFormValueChange}/>

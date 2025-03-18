@@ -11,12 +11,14 @@ import {QuestionCircleOutlined} from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import ArrayUtil from '@/components/util/ArrayUtil.js';
 import {useTranslation} from 'react-i18next';
+import {JadeTree} from '@/components/common/JadeTree.jsx';
 
 const {Panel} = Collapse;
 
 _InvokeOutput.propTypes = {
   outputData: PropTypes.array,
   getDescription: PropTypes.func,
+  isObservableTree: PropTypes.bool,
 };
 
 /**
@@ -50,9 +52,10 @@ const getContent = (outputData, t) => {
  *
  * @param outputData 输出数据
  * @param getDescription 获取输出描述的方法
+ * @param isObservableTree 是否可被观察的树结构
  * @returns {JSX.Element}
  */
-function _InvokeOutput({outputData, getDescription = getContent}) {
+function _InvokeOutput({outputData, getDescription = getContent, isObservableTree = true}) {
   const {t} = useTranslation();
   const content = getDescription(outputData, t);
 
@@ -75,7 +78,7 @@ function _InvokeOutput({outputData, getDescription = getContent}) {
         </div>}
         key='InvokeOutput'>
         <div className={'jade-custom-panel-content'}>
-          <JadeObservableTree data={outputData}/>
+          {isObservableTree ? <JadeObservableTree data={outputData}/> : <JadeTree data={outputData}/>}
         </div>
       </Panel>
     </Collapse>
@@ -83,7 +86,7 @@ function _InvokeOutput({outputData, getDescription = getContent}) {
 }
 
 const areEqual = (prevProps, nextProps) => {
-  return ArrayUtil.isEqual(prevProps.outputData, nextProps.outputData);
+  return ArrayUtil.isEqual(prevProps.outputData, nextProps.outputData) && prevProps.isObservableTree === nextProps.isObservableTree;
 };
 
 export const InvokeOutput = React.memo(_InvokeOutput, areEqual);

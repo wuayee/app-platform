@@ -215,6 +215,7 @@ export const endNodeCompatibilityProcessor = (shapeData, graph, pageHandler) => 
       return;
     }
     const inputParam = inputParams[0];
+    addEndNodeEnableLog(inputParams);
     if (inputParam.from === FROM_TYPE.EXPAND) {
       inputParam.value.forEach(item => item.isRequired = true);
       return;
@@ -237,52 +238,64 @@ export const endNodeCompatibilityProcessor = (shapeData, graph, pageHandler) => 
     calculateLlmEnableLogStatus(inputParam);
   };
 
+  const addEndNodeEnableLog = (inputParams) => {
+    if (inputParams && !inputParams.some(item => item.name === 'enableLog')) {
+      inputParams.push({
+        id: uuidv4(),
+        from: 'Input',
+        name: 'enableLog',
+        type: 'Boolean',
+        value: false,
+      });
+    }
+  };
+
   const calculateLlmEnableLogStatus = (inputParam) => {
     if (inputParam.from !== FROM_TYPE.EXPAND) {
       return;
     }
 
-    const values = inputParam.value;
-
-    // 第一个引用若不是大模型，则后续的所有大模型节点enableLog都是false.
-    // 若第一个引用是对大模型的引用，遍历，后续【连续】的对大模型节点的引用.
+    // const values = inputParam.value;
+    //
+    // // 第一个引用若不是大模型，则后续的所有大模型节点enableLog都是false.
+    // // 若第一个引用是对大模型的引用，遍历，后续【连续】的对大模型节点的引用.
     const llmNodes = self.pageProcessor.getShapes(sd => sd.type === 'llmNodeState').map((n, i) => {
       return {index: i, data: n};
     });
+    //
+    // let indexes = []; // 记录所有需要输出日志的大模型的下标.
+    // for (let i = 0; i < values.length; i++) {
+    //   const input = values[i];
+    //
+    //   // 不是reference，或referenceKey不存在，退出循环.
+    //   if (input.from !== 'Reference' || !input.referenceKey) {
+    //     break;
+    //   }
+    //
+    //   // 引用的不是大模型，退出循环.
+    //   const node = llmNodes.find(n => n.data.id === input.referenceNode);
+    //   if (!node) {
+    //     break;
+    //   }
+    //
+    //   // 当前大模型节点的index小于indexes中的值，跳出循环.
+    //   if (indexes.length > 0 && node.index < indexes[indexes.length - 1]) {
+    //     break;
+    //   }
+    //
+    //   const chainNodes = self.pageProcessor.getNodesBetween(node.data, self.shapeData);
+    //   if (chainNodes.contains(n => n.type === 'conditionNodeCondition' || n.type === 'manualCheckNodeState')) {
+    //     break;
+    //   }
+    //
+    //   indexes.push(node.index);
+    // }
 
-    let indexes = []; // 记录所有需要输出日志的大模型的下标.
-    for (let i = 0; i < values.length; i++) {
-      const input = values[i];
-
-      // 不是reference，或referenceKey不存在，退出循环.
-      if (input.from !== 'Reference' || !input.referenceKey) {
-        break;
-      }
-
-      // 引用的不是大模型，退出循环.
-      const node = llmNodes.find(n => n.data.id === input.referenceNode);
-      if (!node) {
-        break;
-      }
-
-      // 当前大模型节点的index小于indexes中的值，跳出循环.
-      if (indexes.length > 0 && node.index < indexes[indexes.length - 1]) {
-        break;
-      }
-
-      const chainNodes = self.pageProcessor.getNodesBetween(node.data, self.shapeData);
-      if (chainNodes.contains(n => n.type === 'conditionNodeCondition' || n.type === 'manualCheckNodeState')) {
-        break;
-      }
-
-      indexes.push(node.index);
-    }
-
-    updateLlmFlowMetas(llmNodes, indexes);
+    updateLlmFlowMetas(llmNodes);
   };
 
-  const updateLlmFlowMetas = (llmNodes, indexes) => {
-    llmNodes.forEach((v, i) => {
+  const updateLlmFlowMetas = (llmNodes) => {
+    llmNodes.forEach((v) => {
       const inputParams = v.data.flowMeta.jober.converter.entity.inputParams;
       const enableLog = inputParams.find(ip => ip.name === 'enableLog');
       if (!enableLog) {
@@ -291,10 +304,8 @@ export const endNodeCompatibilityProcessor = (shapeData, graph, pageHandler) => 
           from: FROM_TYPE.INPUT,
           name: 'enableLog',
           type: DATA_TYPES.BOOLEAN,
-          value: indexes.contains(index => index === i),
+          value: true,
         });
-      } else {
-        enableLog.value = indexes.contains(index => index === i);
       }
     });
   };

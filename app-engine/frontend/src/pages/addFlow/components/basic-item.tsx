@@ -43,7 +43,7 @@ const BasicItems = (props: any) => {
       'retrievalNodeState': <DataRetrievalIcon />,
       'llmNodeState': <LlmIcon />,
       'endNodeEnd': <EndIcon />,
-      'manualCheckNodeState': <ManualCheckIcon />,
+      'intelligentFormNodeState': <ManualCheckIcon />,
       'fitInvokeNodeState': <FitIcon />,
       'conditionNodeCondition': <IfIcon />,
       'toolInvokeNodeState': <FitIcon />,
@@ -58,6 +58,7 @@ const BasicItems = (props: any) => {
       'fileExtractionNodeState': <FileExtractionIcon />,
       'noteNode': <ClassificationIcon />,
       'loopNodeState': <LoopIcon />,
+      'manualCheckNodeState': <ManualCheckIcon />,
     }[type];
   }
   return <>

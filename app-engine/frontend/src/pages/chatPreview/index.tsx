@@ -454,7 +454,11 @@ const ChatPreview = (props) => {
   };
   // 聊天表单
   const chatForm = (chatObj) => {
-    const idx = listRef.current.length - 1;
+    let idx = listRef.current.length - 1;
+    let lastItem = listRef.current[listRef.current.length - 1];
+    if (!lastItem.loading) {
+      idx = listRef.current.length;
+    }
     listRef.current.splice(idx, 1, chatObj);
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
@@ -590,17 +594,8 @@ const ChatPreview = (props) => {
   }
   function conditionConfirm(response, logId = undefined) {
     const reciveInitObj = deepClone(initChat);
-    if (logId) {
-      let currentChatItem = listRef.current.filter((item) => item.logId === logId)[0];
-      if (currentChatItem) {
-        let index = listRef.current.findIndex((item) => item.logId === logId);
-        listRef.current[index] = deepClone(reciveInitObj);
-        dispatch(setChatList(deepClone(listRef.current)));
-      }
-    } else {
-      let arr = [...listRef.current, reciveInitObj];
-      dispatch(setChatList(deepClone(arr)));
-    }
+    listRef.current.push(reciveInitObj);
+    dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(true));
     chatRender.current = true;
     scrollToBottom();

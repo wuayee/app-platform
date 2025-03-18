@@ -15,8 +15,8 @@
     "uniqueName": ""
   },
   {
-    "type": "manualCheckNodeState",
-    "name": "智能表单",
+    "type": "intelligentFormNodeState",
+    "name": "智能编排表单",
     "uniqueName": ""
   },
   {
@@ -68,5 +68,10 @@
     "type": "loopNodeState",
     "name": "循环",
     "uniqueName": ""
+  },
+  {
+  "type": "manualCheckNodeState",
+  "name": "人工表单",
+  "uniqueName": ""
   }
 ]

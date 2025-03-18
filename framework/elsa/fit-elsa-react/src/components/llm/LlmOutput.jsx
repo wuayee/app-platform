@@ -5,26 +5,32 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React from "react";
-import {Collapse, Popover} from 'antd';
+import {Checkbox, Collapse, Form, Popover} from 'antd';
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import "../common/style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
+import {useDispatch} from '@/components/DefaultRoot.jsx';
 
 const {Panel} = Collapse;
 
 _LlmOutput.propTypes = {
-    outputItems: PropTypes.array.isRequired
+    outputItems: PropTypes.array.isRequired,
+    enableLogData: PropTypes.object.isRequired,
+    disabled: PropTypes.bool.isRequired,
 };
 
 /**
  * 大模型节点输出表单。
  *
  * @param outputItems 出参.
+ * @param enableLogData 是否输出至聊天窗.
+ * @param disabled 是否禁止操作.
  * @returns {JSX.Element} 大模型节点输出表单的DOM。
  */
-function _LlmOutput({outputItems}) {
+function _LlmOutput({outputItems, enableLogData, disabled}) {
+    const dispatch = useDispatch();
     // 430演示大模型输出不需要新增和删除，暂时屏蔽
     // 添加新元素到 items 数组中，并将其 key 添加到当前展开的面板数组中
     // const addItem = () => {
@@ -86,6 +92,11 @@ function _LlmOutput({outputItems}) {
                     className="jade-panel"
                 >
                     <div className={"jade-custom-panel-content"}>
+                        <Form.Item className='jade-form-item' name={`enableLog-${enableLogData.id}`}>
+                            <Checkbox checked={enableLogData.value} disabled={disabled}
+                                      onChange={e => dispatch({ type: 'updateLogStatus', value: e.target.checked})}><span
+                              className={'jade-font-size'}>{t('pushResultToChat')}</span></Checkbox>
+                        </Form.Item>
                         <JadeObservableTree data={outputItems}/>
                         {/* 430演示大模型输出不允许用户操作，写死*/}
                         {/* <Row gutter={16}>*/}
@@ -183,7 +194,7 @@ function _LlmOutput({outputItems}) {
 
 // 对象不变，不刷新组件.
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.outputItems === nextProps.outputItems;
+    return prevProps.outputItems === nextProps.outputItems && prevProps.enableLogData === nextProps.enableLogData && prevProps.disabled === nextProps.disabled;
 };
 
 export const LlmOutput = React.memo(_LlmOutput, areEqual);

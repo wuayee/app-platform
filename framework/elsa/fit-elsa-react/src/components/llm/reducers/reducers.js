@@ -790,10 +790,10 @@ export const UpdateLogStatusReducer = () => {
    * @return {*} 处理之后的数据.
    */
   self.reduce = (config, action) => {
-    // 只要数据变了就行，不需要刷新组件.
     const newConfig = {...config};
-    const enableLog = config.inputParams.find(p => p.name === 'enableLog');
-    if (!enableLog) {
+    const enableLogIndex = config.inputParams.findIndex(p => p.name === 'enableLog');
+
+    if (enableLogIndex === -1) {
       newConfig.inputParams.push({
         id: uuidv4(),
         from: 'input',
@@ -802,7 +802,15 @@ export const UpdateLogStatusReducer = () => {
         value: action.value,
       });
     } else {
-      enableLog.value = action.value;
+      newConfig.inputParams = config.inputParams.map((item, index) => {
+        if (index === enableLogIndex) {
+          return {
+            ...item,
+            value: action.value,
+          };
+        }
+        return item;
+      });
     }
     return newConfig;
   };

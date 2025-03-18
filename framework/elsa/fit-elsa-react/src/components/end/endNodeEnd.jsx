@@ -10,7 +10,7 @@ import {DIRECTION} from '@fit-elsa/elsa-core';
 import {SECTION_TYPE} from '@/common/Consts.js';
 import {endNodeDrawer} from '@/components/end/endNodeDrawer.jsx';
 import {EndNodeConnectorValidator, FormValidator} from '@/components/base/validator.js';
-import {VALID_FORM_KEY} from '@/components/end/EndConst.js';
+import {SYSTEM_EXTRA_KEY, VALID_FORM_KEY} from '@/components/end/EndConst.js';
 
 /**
  * 结束节点shape
@@ -112,6 +112,7 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
             type: SECTION_TYPE.DEFAULT,
             data: self.getOutputData(Object.keys(self.input)
               .filter(key => !VALID_FORM_KEY.has(key))
+              .filter(key => !SYSTEM_EXTRA_KEY.has(key))
               .reduce((acc, key) => {
                   acc[key] = self.input[key];
                   return acc;

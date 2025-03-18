@@ -171,3 +171,10 @@ export const DEFAULT_KNOWLEDGE_REPO_GROUP_STRUCT = {
   from: FROM_TYPE.INPUT,
   value: DEFAULT_KNOWLEDGE_REPO_GROUP,
 };
+
+export const RENDER_TYPE = {
+  SELECT: 'Select',
+  RADIO: 'Radio',
+  INPUT: 'Input',
+  SWITCH: 'Switch',
+};

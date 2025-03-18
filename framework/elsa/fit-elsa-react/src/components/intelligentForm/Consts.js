@@ -4,6 +4,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-export const VALID_FORM_KEY = new Set(['endFormId', 'endFormName', 'endFormImgUrl']);
+import {RENDER_TYPE} from '@/common/Consts.js';
 
-export const SYSTEM_EXTRA_KEY = new Set(['enableLog']);
+export const RENDER_OPTIONS_TYPE = new Set([RENDER_TYPE.RADIO]);
