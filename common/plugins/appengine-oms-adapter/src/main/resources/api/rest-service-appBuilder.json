@@ -38,6 +38,17 @@
     ]
   },
   {
+    "Description": "获取应用的发布详情",
+    "ResourceKey": "GET /appbuilder/v1/api/([0-9a-f]{32})/app/published/unique_name/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN",
+      "READ_ONLY"
+    ]
+  },
+  {
     "Description": "调试App",
     "ResourceKey": "POST /appbuilder/v1/api/([0-9a-f]{32})/app/([0-9a-f]{32})/debug",
     "SkipCheck": false,
