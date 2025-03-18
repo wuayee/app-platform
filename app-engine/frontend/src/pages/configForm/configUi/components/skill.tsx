@@ -29,10 +29,11 @@ const Skill = (props) => {
   }
   // 选择数据后回调
   const confirmCallBack = (workFlowList, fitList) => {
-    setSkillList(fitList.concat(workFlowList));
-    updateData(fitList.map((item) => item.uniqueName), 'tools');
-    updateData(workFlowList.map((item) => item.uniqueName), 'workflows');
-  }
+    const toolList = fitList.concat(workFlowList);
+    setSkillList(toolList);
+    const uniqueNameList = toolList.map((item) => item.uniqueName);
+    updateData(uniqueNameList, 'tools');
+  };
   // 删除
   const deleteItem = (item) => {
     let workFlowList = [];
@@ -74,7 +75,7 @@ const Skill = (props) => {
   }
 
   // 更新每一条是否存在
-  const updateExistStatus= () => {
+  const updateExistStatus = () => {
     if (!validateList?.length) {
       return;
     }

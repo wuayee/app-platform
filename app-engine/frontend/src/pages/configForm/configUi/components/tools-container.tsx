@@ -26,7 +26,7 @@ const ToolsContainer = (props) => {
   // 更新工具和工作流
   const updateTools = (value, key) => {
     if (config.from === 'graph') {
-      graphOperator.update(configFromMap.current[key], value);
+      graphOperator.update(config.defaultValue[0], value);
     } else {
       dispatch(setConfigItem({ key: config.name, value }));
     }
@@ -45,21 +45,13 @@ const ToolsContainer = (props) => {
       setActivePanelKey(['tools']);
     }
   }, [pluginData]);
-  
+
   useEffect(() => {
     if (!config.from) {
       return;
-    } 
+    }
     if (config.from === 'graph') {
-      // 工具和工作流需要单独处理
-      if (Array.isArray(config.defaultValue) && Array.isArray(config.defaultValue[0])) {
-        let list = [];
-        config.defaultValue.forEach(it => {
-          configFromMap.current[it[1]] = it;
-          list = [...list, ...graphOperator.getConfig(it)];
-        })
-        setPluginData(list);
-      }
+      setPluginData(graphOperator.getConfig(config.defaultValue[0]));
     } else {
       setPluginData(config.defaultValue);
     }
@@ -76,7 +68,7 @@ const ToolsContainer = (props) => {
         <span>{config.description}</span>
         <img src={AddImg} style={{ width: 16, height: 16 }} alt="" onClick={addPlugin} />
       </div>} forceRender key='tools' className="site-collapse-custom-panel">
-        <Skill toolsRef={toolsRef} pluginData={pluginData} updateData={updateTools} validateList={validateList}/>
+        <Skill toolsRef={toolsRef} pluginData={pluginData} updateData={updateTools} validateList={validateList} />
       </Panel>
     </Collapse>
   </>
