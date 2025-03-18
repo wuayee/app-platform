@@ -58,12 +58,6 @@
 
         <!-- Third party -->
         <dependency>
-            <groupId>com.huawei.fce</groupId>
-            <artifactId>crypt-grpc-client</artifactId>
-            <version>COMMON_RC4.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>compile</scope>

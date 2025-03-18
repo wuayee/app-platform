@@ -6,9 +6,9 @@
 
 package modelengine.appbuilder.gateway.service;
 
-import com.huawei.framework.crypt.grpc.client.CryptClient;
-import com.huawei.framework.crypt.grpc.client.config.GlobalConfig;
-import com.huawei.framework.crypt.grpc.client.utils.PassUtils;
+import modelengine.framework.crypt.grpc.client.CryptClient;
+import modelengine.framework.crypt.grpc.client.config.GlobalConfig;
+import modelengine.framework.crypt.grpc.client.utils.PassUtils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

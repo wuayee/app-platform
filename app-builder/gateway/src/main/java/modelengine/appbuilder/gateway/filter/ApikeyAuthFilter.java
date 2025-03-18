@@ -6,8 +6,7 @@
 
 package modelengine.appbuilder.gateway.filter;
 
-import com.huawei.framework.crypt.grpc.client.exception.CryptoInvokeException;
-
+import modelengine.framework.crypt.grpc.client.exception.CryptoInvokeException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
