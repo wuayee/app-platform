@@ -180,8 +180,8 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
   );
 }
 // 获取版本历史记录
-export function getVersion(tenantId, appId) {
-  return get(`${AIPP_URL}/${tenantId}/app/${appId}/recentPublished`);
+export function getVersion(tenantId, appId, type) {
+  return get(`${AIPP_URL}/${tenantId}/app/${appId}/recentPublished${type ? '?type=waterFlow' : ''}`);
 }
 // 获取插件接口
 export function getToolList(params) {

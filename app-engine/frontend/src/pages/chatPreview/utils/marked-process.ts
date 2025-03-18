@@ -11,7 +11,11 @@ export const markedProcess = (content) => {
       span: ['class', 'data-reference'],
       br:['class'],
       font: ['color', 'id'],
-      think: []
+      think: [],
+      final: [],
+      reasoning: [],
+      tool: [],
+      step: []
     },
   };
   const clean = xss(content, config);

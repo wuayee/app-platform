@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, memo } from 'react';
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import React, { useState, useRef, memo } from 'react';
 import { UpOutlined } from '@ant-design/icons';
 import ThinkBtn from './think-btn';
 import './styles/think-block.scss';

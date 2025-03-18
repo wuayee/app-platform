@@ -908,5 +908,9 @@
   "pluginCannotBeEmpty": "插件不能为空",
   "chooseToBeLoopParam": "设为循环参数",
   "loopRadioIsRequired": "需选择循环参数",
-  "loopSkillPopover": "可选择工具或工作流作为循环调用的对象"
+  "loopSkillPopover": "可选择工具或工作流作为循环调用的对象",
+  "thinking": "思考",
+  "steps": "步骤",
+  "toolResult": "工具结果",
+  "thinkProcess": "思考过程"
 }

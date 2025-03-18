@@ -162,7 +162,7 @@ const AddHeader = (props) => {
         appInfo={appInfo}
       />
       {/* 工具流发布历史信息弹窗 */}
-      <TimeLineDrawer open={open} setOpen={setOpen} />
+      <TimeLineDrawer open={open} setOpen={setOpen} type='waterflow' />
     </div>
   )}</>
 };
