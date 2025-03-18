@@ -26,7 +26,9 @@ import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * log流式服务实现，单进程实现方案.
@@ -80,6 +82,8 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
                 : instance.getInfo().get(AippConst.INST_STATUS_KEY);
 
         AppChatRsp.Answer answer = this.buildAnswer(log);
+        Map<String, Object> extensionMap = new HashMap<>();
+        extensionMap.put("isEnableLog", log.isEnableLog());
         return AppChatRsp.builder()
                 .chatId(log.getChatId())
                 .atChatId(log.getAtChatId())
@@ -87,6 +91,7 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
                 .instanceId(instanceId)
                 .answer(Collections.singletonList(answer))
                 .logId(log.getLogId())
+                .extension(extensionMap)
                 .build();
     }
 

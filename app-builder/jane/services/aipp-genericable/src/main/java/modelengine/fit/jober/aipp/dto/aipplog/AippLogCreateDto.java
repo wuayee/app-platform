@@ -59,6 +59,9 @@ public class AippLogCreateDto {
     @Property(description = "log id")
     private String logId;
 
+    @Property(description = "是否打印日志")
+    private boolean isEnableLog;
+
     /**
      * 判断所有字段是否为空。
      *

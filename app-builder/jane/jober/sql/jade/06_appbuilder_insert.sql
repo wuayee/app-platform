@@ -117,6 +117,11 @@ VALUES ('516892f04231084ba6b2da145dd229cb', '小魔方问题溯源', '31f20efc7e
         '{"name": "conditionForm", "type": "file"}', 'runtime', 'modelengine.jade', '2024-07-03 11:02:05.022',
         'modelengine.jade', '2024-07-03 11:02:05.022', 'ff5e7a9e480c42538a2ea337b2fb2988',
         '1.0.0') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."app_builder_form" ("id", "name", "tenant_id", "appearance", "type", "create_by", "create_at",
+                                         "update_by", "update_at", "form_suite_id", "version")
+VALUES ('a910a3d38a4549eda1112beee008419d', '表单', '31f20efc7e0848deab6a6bc10fc3021e',
+        '{"imgUrl": "smart_form/b6255699-2e4f-409f-a578-b87b7435e389/form.png", "schema": {"return": {"type": "object", "properties": {"key": {"type": "object"}}}, "parameters": {"type": "object", "required": ["data", "schema"], "properties": {"data": {"type": "object", "default": {}}, "schema": {"type": "object", "default": {}}}}}, "fileName": "realSmartForm8.zip", "fileSize": 230991, "fileUuid": "4a9e63c2cefa4d9a98d111a2b7de5fcc", "iframeUrl": "smart_form/b6255699-2e4f-409f-a578-b87b7435e389/build/index.html", "description": ""}', 'runtime', 'Jade', '2025-03-18 18:08:01.815186', 'Jade', '2025-03-18 18:08:01.815231',
+        '9871f27cfeae473e9e978555c4af9a1e', '1.0.0');
 
 -- basic
 INSERT INTO "public"."app_builder_form_property" ("id", "form_id", "name", "data_type", "default_value", "data_from", "in_group", "description", "default_index", "app_id") VALUES ('d9fcb95f48d33648a4e12d629399d713', 'b8986770a6ffef44bbf2a9f26d6fc1bc', 'basic', 'String', 'null', 'none', 'null', 'i18n_appBuilder_{form_property_basic}', 0, 'df87073b9bc85a48a9b01eccc9afccc4') ON CONFLICT (id) DO NOTHING;

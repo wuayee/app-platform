@@ -443,7 +443,15 @@ public class AippLogServiceImpl implements AippLogService {
                 .path(path)
                 .chatId(chatId)
                 .atChatId(atChatId)
+                .isEnableLog(this.isEnableLog(businessData))
                 .build());
+    }
+
+    private Boolean isEnableLog(Map<String, Object> businessData) {
+        // 兼容老数据，老数据没有这个开关的时候（enableLog为null）默认返回true。
+        // 有开关后（enableLog为null），返回enableLog的值
+        return Objects.isNull(businessData.get(AippConst.BS_LLM_ENABLE_LOG))
+                || ObjectUtils.<Boolean>cast(businessData.get(AippConst.BS_LLM_ENABLE_LOG));
     }
 
     /**
