@@ -15,7 +15,7 @@
     "uniqueName": ""
   },
   {
-    "type": "manualCheckNodeState",
+    "type": "intelligentFormNodeState",
     "name": "Intelligent Form",
     "uniqueName": ""
   },
@@ -67,6 +67,11 @@
   {
     "type": "loopNodeState",
     "name": "Loop",
+    "uniqueName": ""
+  },
+  {
+    "type": "manualCheckNodeState",
+    "name": "Manual Form",
     "uniqueName": ""
   }
 ]

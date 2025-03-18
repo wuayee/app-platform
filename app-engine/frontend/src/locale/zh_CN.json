@@ -912,5 +912,22 @@
   "thinking": "思考",
   "steps": "步骤",
   "toolResult": "工具结果",
-  "thinkProcess": "思考过程"
+  "thinkProcess": "思考过程",
+  "formItem": "表单项",
+  "pleaseInsertFormItemName": "请输入名称",
+  "formItemNameMustBeUnique": "名称须唯一",
+  "formItemNameCannotBeEmpty": "名称不能为空",
+  "pleaseInsertFormItemDisplayName": "请输入展示名称",
+  "formItemDisplayNameMustBeUnique": "展示名称须唯一",
+  "formItemDisplayNameCannotBeEmpty": "展示名称不能为空",
+  "formItemDisplayNameRule": "只能包含大小写英文、数字和中文的字符串,可以包含中划线和下划线，但不能以中划线和下划线开头或结尾",
+  "formItemNameRule": "只能包含字母、数字或下划线，且必须以字母或下划线开头",
+  "formItemName": "表单项名称",
+  "formItemDisplayName": "表单项展示名称",
+  "formItemType": "表单项类型",
+  "formItemRenderType": "表单项渲染方式",
+  "formItemRenderTypeCannotBeEmpty": "渲染方式不能为空",
+  "formItemDefaultValue": "表单项默认值",
+  "formItemOptionsValue": "表单选项",
+  "pushResultToChat": "输出结果至聊天"
 }

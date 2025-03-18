@@ -694,5 +694,6 @@
   "thinking": "Thinking",
   "steps": "Steps",
   "toolResult": "Tool Result",
-  "thinkProcess": "Thinking Process"
+  "thinkProcess": "Thinking Process",
+  "pushResultToChat": "待翻译"
 }

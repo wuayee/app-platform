@@ -418,7 +418,7 @@ TreeTitle.propTypes = {
  * @return {JSX.Element}
  * @constructor
  */
-const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
+export const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
   const form = useFormContext();
   const {t} = useTranslation();
 

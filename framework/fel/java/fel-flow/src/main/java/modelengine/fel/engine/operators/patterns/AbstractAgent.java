@@ -60,7 +60,11 @@ public abstract class AbstractAgent<I, O> extends AbstractFlowPattern<I, O> {
             Map<String, Object> toolContext) {
         List<FlatChatMessage> collect = Optional.ofNullable(message.toolCalls())
                 .map(m -> m.stream()
-                        .map(toolCall -> toolProvider.call(toolCall, toolContext))
+                        .map(toolCall -> {
+                            FlatChatMessage toolResult = toolProvider.call(toolCall, toolContext);
+                            // System.out.println("tool result: " + toolResult.text());
+                            return toolResult;
+                        })
                         .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
         return ChatMessages.fromList(collect);

@@ -41,8 +41,24 @@ export const AddInputReducer = () => {
     const newInput = {...newConfig.inputParams[0]};
     const newRefInput = getDefaultReference(uuidv4());
     newRefInput.isRequired = true;
-    newInput.value.push(newRefInput);
-    newConfig.inputParams = [newInput];
+
+    if (newInput && newInput.value) {
+      newInput.value.push(newRefInput);
+    } else {
+      newInput.value = [newRefInput];
+    }
+
+    // 查找 enableLog 对象
+    const enableLogIndex = newConfig.inputParams.findIndex(item => item.name === 'enableLog');
+
+    if (enableLogIndex !== -1) {
+      // enableLog 对象存在，将其添加到 newConfig.inputParams 中
+      newConfig.inputParams = [newInput, newConfig.inputParams[enableLogIndex]];
+    } else {
+      // enableLog 对象不存在，只保留 newInput
+      newConfig.inputParams = [newInput];
+    }
+
     return newConfig;
   };
 
@@ -67,11 +83,26 @@ export const DeleteInputReducer = (shape) => {
    * @return {*} 处理之后的数据.
    */
   self.reduce = (config, action) => {
-    const newConfig = {...config};
-    const newInput = {...newConfig.inputParams[0]};
-    newInput.value = newInput.value.filter(v => v.id !== action.id);
-    newConfig.inputParams = [newInput];
-    notifyReferenceChange(shape, newConfig.inputParams);
+    const newConfig = { ...config };
+
+    // 查找 enableLog 对象
+    const enableLogIndex = newConfig.inputParams.findIndex(item => item.name === 'enableLog');
+
+    // 处理第一个 inputParams
+    const newInput = { ...newConfig.inputParams[0] };
+    if (newInput && newInput.value) {
+      newInput.value = newInput.value.filter(v => v.id !== action.id);
+    }
+
+    if (enableLogIndex !== -1) {
+      // enableLog 对象存在，将其添加到 newConfig.inputParams 中
+      newConfig.inputParams = [newInput, newConfig.inputParams[enableLogIndex]];
+    } else {
+      // enableLog 对象不存在，只保留 newInput
+      newConfig.inputParams = [newInput];
+    }
+
+    // notifyReferenceChange(shape, newConfig.inputParams);
     return newConfig;
   };
 
@@ -100,9 +131,9 @@ export const UpdateInputReducer = (shape) => {
     newConfig.inputParams = updateInput(config.inputParams, action.id, action.changes);
 
     // 当reference字段发生变化时才触发，修改name等操作不触发.
-    if (action.changes.some(c => c.key.startsWith('reference'))) {
-      notifyReferenceChange(shape, newConfig.inputParams);
-    }
+    // if (action.changes.some(c => c.key.startsWith('reference'))) {
+    //   notifyReferenceChange(shape, newConfig.inputParams);
+    // }
     return newConfig;
   };
 
@@ -269,6 +300,58 @@ export const EditOutputVariableReducer = () => {
     action.changes.forEach(change => {
       newFinalOutput[change.key] = change.value;
     });
+    return newConfig;
+  };
+
+  return self;
+};
+
+/**
+ * updateLogStatus 事件处理器.
+ *
+ * @return {{}} 处理器对象.
+ * @constructor
+ */
+export const UpdateLogStatusReducer = () => {
+  const self = {};
+  self.type = 'updateLogStatus';
+
+  /**
+   * 处理方法.
+   *
+   * @param config 配置数据.
+   * @param action 事件对象.
+   * @return {*} 处理之后的数据.
+   */
+  self.reduce = (config, action) => {
+    // 只要数据变了就行，不需要刷新组件.
+    const newConfig = {...config};
+    const enableLogIndex = config.inputParams.findIndex(p => p.name === 'enableLog');
+
+    if (enableLogIndex === -1) {
+      // enableLog 不存在，添加新的对象
+      newConfig.inputParams = [
+        ...config.inputParams,
+        {
+          id: uuidv4(),
+          from: 'input',
+          name: 'enableLog',
+          type: 'Boolean',
+          value: action.value,
+        },
+      ];
+    } else {
+      // enableLog 存在，创建新的对象并替换
+      newConfig.inputParams = config.inputParams.map((item, index) => {
+        if (index === enableLogIndex) {
+          return {
+            ...item,
+            value: action.value,
+          };
+        }
+        return item;
+      });
+    }
     return newConfig;
   };
 

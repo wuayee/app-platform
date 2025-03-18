@@ -55,6 +55,7 @@ export default function LlmFormWrapper({data, shapeStatus}) {
       .find(item => item.name === 'template'),
   };
   const knowledgeData = data.inputParams.find(item => item.name === 'knowledgeBases');
+  const enableLogData = data.inputParams.find(item => item.name === 'enableLog');
 
   const initItems = () => {
     return data.inputParams
@@ -168,7 +169,7 @@ export default function LlmFormWrapper({data, shapeStatus}) {
         modelData={modelData} shapeId={shape.id}
         modelOptions={modelOptions}/>
       <SkillForm disabled={shapeStatus.disabled} toolOptions={toolOptions}/>
-      <LlmOutput outputItems={data.outputParams}/>
+      <LlmOutput outputItems={data.outputParams} enableLogData={enableLogData} disabled={shapeStatus.disabled}/>
     </div>
   );
 }

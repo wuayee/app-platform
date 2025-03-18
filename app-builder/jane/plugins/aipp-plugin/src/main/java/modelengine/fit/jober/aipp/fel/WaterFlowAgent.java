@@ -6,6 +6,8 @@
 
 package modelengine.fit.jober.aipp.fel;
 
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
@@ -81,7 +83,10 @@ public class WaterFlowAgent extends AbstractAgent<Prompt, Prompt> {
 
     private boolean shouldRepeated(ChatMessage message) {
         Validation.notNull(message, "The message cannot be null.");
-        return CollectionUtils.isNotEmpty(message.toolCalls()) && !this.containAsyncTool(message);
+        // boolean repeat = CollectionUtils.isNotEmpty(message.toolCalls()) && !this.containAsyncTool(message);
+        boolean repeat = CollectionUtils.isNotEmpty(message.toolCalls()) && !this.containAsyncTool(message) && !message.text().contains("</final>");
+        // System.out.println("repeat: " + repeat + ". " + JSONObject.toJSONString(message.toolCalls()));
+        return repeat;
     }
 
     private boolean containAsyncTool(ChatMessage message) {

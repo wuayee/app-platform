@@ -680,3 +680,11 @@
 .monaco-editor .margin-view-overlays .codicon-folding-manual-collapsed, .monaco-editor .margin-view-overlays .codicon-folding-manual-expanded, .monaco-editor .margin-view-overlays .codicon-folding-expanded, .monaco-editor .margin-view-overlays .codicon-folding-collapsed {
     opacity: 1 !important;
 }
+
+.intelligent-form-left-select .ant-select-selector{
+    border-radius: 8px 0 0 8px !important;
+}
+
+.intelligent-form-right-select .ant-select-selector{
+    border-radius: 0 8px 8px 0 !important;
+}

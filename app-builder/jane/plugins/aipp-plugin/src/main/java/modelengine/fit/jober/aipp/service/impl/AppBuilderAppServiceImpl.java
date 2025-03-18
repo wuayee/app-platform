@@ -1902,7 +1902,8 @@ public class AppBuilderAppServiceImpl
             return null;
         } else if (StringUtils.equalsIgnoreCase("conditionNodeCondition", nodeType)) {
             return null;
-        } else if (StringUtils.equalsIgnoreCase("manualCheckNodeState", nodeType)) {
+        } else if (StringUtils.equalsIgnoreCase("manualCheckNodeState", nodeType) || StringUtils.equalsIgnoreCase(
+                "intelligentFormNodeState", nodeType)) {
             return node.getJSONObject("flowMeta")
                     .getJSONObject("task")
                     .getJSONObject("converter")

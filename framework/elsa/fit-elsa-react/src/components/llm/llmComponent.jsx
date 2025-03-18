@@ -117,7 +117,7 @@ export const llmComponent = (jadeConfig, shape) => {
                     from: 'Input',
                     name: 'enableLog',
                     type: 'Boolean',
-                    value: false,
+                    value: true,
                 },
                 {
                     id: uuidv4(),
