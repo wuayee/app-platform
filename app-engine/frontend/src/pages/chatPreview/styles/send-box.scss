@@ -30,6 +30,11 @@
         background-color: #5e7ce0;
         color: #ffffff;
       }
+      >div {
+        &::selection {
+          background-color: #344899;
+        }
+      }
       &:hover {
         .message-tip-box-send {
           width: max-content;
