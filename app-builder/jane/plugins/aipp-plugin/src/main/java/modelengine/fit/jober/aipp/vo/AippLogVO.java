@@ -52,6 +52,8 @@ public class AippLogVO {
 
     private String logId;
 
+    private boolean isEnableLog;
+
     /**
      * 通过 {@link AippLogCreateDto} 对象创建 {@link  AippLogVO} 对象.
      *
@@ -70,6 +72,7 @@ public class AippLogVO {
                 .chatId(dto.getChatId())
                 .atChatId(dto.getAtChatId())
                 .logId(dto.getLogId())
+                .isEnableLog(dto.isEnableLog())
                 .build();
     }
 

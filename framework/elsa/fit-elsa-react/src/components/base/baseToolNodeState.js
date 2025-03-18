@@ -39,7 +39,9 @@ export const baseToolNodeState = (id, x, y, width, height, parent, drawer) => {
   const processMetaData = self.processMetaData;
   self.processMetaData = (metaData) => {
     processMetaData.apply(self, [metaData]);
-    self.flowMeta.jober.entity.uniqueName = metaData.uniqueName;
+    if (metaData && metaData.uniqueName) {
+      self.flowMeta.jober.entity.uniqueName = metaData.uniqueName;
+    }
   };
 
   /**

@@ -426,7 +426,7 @@ const ChatPreview = (props) => {
           if (log.msgId !== null) {
             chatSplicing(log, msg, recieveChatItem, messageData.status);
           } else {
-            chatStrInit(msg, recieveChatItem, messageData.status, messageData.log_id);
+            chatStrInit(msg, recieveChatItem, messageData.status, messageData.log_id, messageData.extensions);
           }
         }
       });
@@ -466,8 +466,9 @@ const ChatPreview = (props) => {
     scrollToBottom();
   };
   // 流式输出
-  function chatStrInit(msg, initObj, status, logId) {
+  function chatStrInit(msg, initObj, status, logId, extensions = {}) {
     let idx = 0;
+    const receiveItem = multiModelProcess(initObj);
     if (isJsonString(msg)) {
       let msgObj = JSON.parse(msg);
       if (msgObj.chartData && msgObj.chartType) {
@@ -478,10 +479,17 @@ const ChatPreview = (props) => {
       initObj.thinkStartTime = Date.now();
     }
     initObj.loading = false;
+    idx = listRef.current.length - 1;
     if (status === 'ARCHIVED') {
       initObj.finished = true;
+      if (extensions.isEnableLog && !listRef.current[idx].loading) {
+        idx = listRef.current.length;
+      } else {
+        if (!extensions.isEnableLog) {
+          receiveItem.content = listRef.current[idx].content;
+        }
+      }
     }
-    idx = listRef.current.length - 1;
     if (testRef.current) {
       initObj.messageType = 'form';
       listRef.current.push(initObj);
@@ -491,7 +499,6 @@ const ChatPreview = (props) => {
       if (thinkTime) {
         initObj.thinkTime = thinkTime;
       }
-      const receiveItem = multiModelProcess(initObj);
       listRef.current.splice(idx, 1, deepClone(receiveItem));
     }
     listRef.current[listRef.current.length - 1]['logId'] = logId ? Number(logId) : '';
