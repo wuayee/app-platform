@@ -11,7 +11,7 @@ import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.po.ModelAccessPo;
 import modelengine.fit.jade.aipp.model.po.ModelPo;
 import modelengine.fit.jade.aipp.model.repository.UserModelRepo;
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.aipp.model.service.AippModelCenterExtension;
 import modelengine.fit.jane.common.entity.OperationContext;
 
 import org.junit.jupiter.api.Assertions;
@@ -32,7 +32,7 @@ class CustomAippModelCenterTest {
     private UserModelRepo userModelRepo;
 
     @Mock
-    private AippModelCenter defaultModelCenter;
+    private AippModelCenterExtension defaultModelCenter;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +47,7 @@ class CustomAippModelCenterTest {
         OperationContext context = new OperationContext();
         context.setOperator(userId);
 
-        ModelListDto modelList = this.customAippModelCenter.fetchModelList("type", context);
+        ModelListDto modelList = this.customAippModelCenter.fetchModelList("type", "scene", context);
 
         Assertions.assertNotNull(modelList);
         Assertions.assertEquals(1, modelList.getTotal());
@@ -56,13 +56,15 @@ class CustomAippModelCenterTest {
         Assertions.assertEquals(modelPo.getName(), targetModelAccessInfo.getServiceName());
         Assertions.assertEquals("tag1,user1", targetModelAccessInfo.getTag());
         Assertions.assertEquals(modelPo.getBaseUrl(), targetModelAccessInfo.getBaseUrl());
-        Mockito.verify(this.defaultModelCenter, Mockito.times(0)).fetchModelList(Mockito.any(), Mockito.any());
+        Mockito.verify(this.defaultModelCenter, Mockito.times(0))
+                .fetchModelList(Mockito.any(), Mockito.any(), Mockito.any());
     }
 
     @Test
     void shouldGetDefaultWhenFetchModelListGivenUserModelRepoNoData() {
         String userId = "user1";
         String type = "type";
+        String scene = "scene";
         ModelPo modelPo = new ModelPo("id", "gpt", "tag1", "http://xxx", type);
         ModelAccessInfo model1 = ModelAccessInfo.builder().serviceName("gpt").baseUrl("").tag("").build();
         Mockito.when(this.userModelRepo.get(userId)).thenReturn(Collections.emptyList());
@@ -72,21 +74,20 @@ class CustomAippModelCenterTest {
                 .build();
         OperationContext context = new OperationContext();
         context.setOperator(userId);
-        Mockito.when(this.defaultModelCenter.fetchModelList(type, context)).thenReturn(expectModelList);
+        Mockito.when(this.defaultModelCenter.fetchModelList(type, scene, context)).thenReturn(expectModelList);
 
-        ModelListDto modelList = this.customAippModelCenter.fetchModelList(type, context);
+        ModelListDto modelList = this.customAippModelCenter.fetchModelList(type, scene, context);
 
         Assertions.assertEquals(expectModelList, modelList);
-        Mockito.verify(this.defaultModelCenter, Mockito.times(1)).fetchModelList(Mockito.any(), Mockito.any());
+        Mockito.verify(this.defaultModelCenter, Mockito.times(1))
+                .fetchModelList(Mockito.any(), Mockito.any(), Mockito.any());
     }
 
     @Test
     void shouldGetResultWhenGetModelAccessInfoGivenUserModelRepoHasData() {
         String userId = "user1";
         ModelPo modelPo = new ModelPo("id", "gpt", "tag1", "http://xxx", "type");
-        ModelAccessPo modelAccessPo = new ModelAccessPo();
-        modelAccessPo.setModelPO(modelPo);
-        modelAccessPo.setApiKey("key");
+        ModelAccessPo modelAccessPo = ModelAccessPo.builder().modelPO(modelPo).apiKey("key").build();
         Mockito.when(this.userModelRepo.getModelAccessInfo(userId, modelPo.getTag(), modelPo.getName()))
                 .thenReturn(modelAccessPo);
         OperationContext context = new OperationContext();

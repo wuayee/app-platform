@@ -20,6 +20,7 @@ import modelengine.fit.jade.aipp.extract.domain.entity.ContentExtractor;
 import modelengine.fit.jade.aipp.extract.util.TestUtils;
 import modelengine.fit.jade.aipp.extract.utils.Constant;
 import modelengine.fit.jade.aipp.memory.AippMemoryFactory;
+import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
@@ -62,7 +63,8 @@ public class ExtractorCommandHandlerTest {
                 return histories;
             }
         });
-        when(this.aippModelCenter.getModelBaseUrl(any())).thenReturn("/model");
+        when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
+                ModelAccessInfo.builder().baseUrl("/model").build());
     }
 
     @Test

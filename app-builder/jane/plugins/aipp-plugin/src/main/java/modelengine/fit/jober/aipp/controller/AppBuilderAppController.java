@@ -385,7 +385,7 @@ public class AppBuilderAppController extends AbstractController {
     @PostMapping(path = "/available-check", description = "应用可用性校验")
     public Rsp<List<CheckResult>> checkAvailable(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestBody List<AppCheckDto> appCheckDtos) {
-        return Rsp.ok(this.appService.checkAvailable(appCheckDtos));
+        return Rsp.ok(this.appService.checkAvailable(appCheckDtos, this.contextOf(httpRequest, tenantId)));
     }
 
     /**

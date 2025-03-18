@@ -54,9 +54,11 @@ public class AippModelServiceImpl implements AippModelService {
 
     @Override
     public String chat(String model, String tag, Double temperature, String prompt) {
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getModelAccessInfo(tag, model, null);
         ChatOption chatOption = ChatOption.custom()
                 .model(model)
-                .baseUrl(this.aippModelCenter.getModelBaseUrl(tag))
+                .baseUrl(modelAccessInfo.getBaseUrl())
+                .apiKey(modelAccessInfo.getAccessKey())
                 .temperature(temperature)
                 .stream(false)
                 .build();
@@ -75,7 +77,7 @@ public class AippModelServiceImpl implements AippModelService {
                 .orElseThrow(() -> new IllegalStateException(
                         StringUtils.format("Template not exist.type: {0}", param.getTemplateType())));
         String prompt = new DefaultStringTemplate(template).render(values);
-        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
+        ModelAccessInfo modelAccessInfo = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, null);
         return this.chat(modelAccessInfo.getServiceName(), modelAccessInfo.getTag(), 0.3, prompt);
     }
 }

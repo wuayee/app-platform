@@ -8,16 +8,16 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import static modelengine.fit.jober.aipp.enums.NodeType.LLM_NODE;
 
-import modelengine.fit.jober.aipp.constants.AippConst;
-import modelengine.fitframework.util.ObjectUtils;
-import modelengine.jade.store.service.PluginToolService;
-
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.store.service.PluginToolService;
 
 import java.util.List;
 import java.util.Map;
@@ -44,13 +44,13 @@ public class LlmNodeChecker extends AbstractNodeChecker {
     }
 
     @Override
-    public List<CheckResult> validate(AppCheckDto appCheckDto) {
+    public List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context) {
         List<CheckResult> results = this.initialResults(appCheckDto, LLM_NODE.type());
         Map<String, CheckResult> resultMap = results.stream()
                 .collect(Collectors.toMap(CheckResult::getNodeId, result -> result));
 
         List<ModelAccessInfo> modelInfos =
-                fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE, null).getModels();
+                fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE, null, context).getModels();
         List<String> uniqueNames = this.getAllUniqueNames(appCheckDto, TOOL_NAME);
         Map<String, Boolean> toolResults = this.getToolResult(pluginToolService, uniqueNames);
 

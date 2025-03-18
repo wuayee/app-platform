@@ -77,7 +77,7 @@ public class AgentInfoGenerateServiceImplTest {
         ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
         when(model.getServiceName()).thenReturn("llm_model");
         when(model.getTag()).thenReturn("llm_tag");
-        when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
+        when(this.aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("NAME");
         assertThat(this.agentInfoGenerateService.generateName("DESC", new OperationContext())).isEqualTo("NAME");
     }
@@ -88,9 +88,9 @@ public class AgentInfoGenerateServiceImplTest {
         ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
         when(model.getServiceName()).thenReturn("llm_model");
         when(model.getTag()).thenReturn("llm_tag");
-        when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
+        when(this.aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("GREETING");
-        assertThat(this.agentInfoGenerateService.generateGreeting("DESC")).isEqualTo("GREETING");
+        assertThat(this.agentInfoGenerateService.generateGreeting("DESC", null)).isEqualTo("GREETING");
     }
 
     @Test
@@ -99,9 +99,9 @@ public class AgentInfoGenerateServiceImplTest {
         ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
         when(model.getServiceName()).thenReturn("llm_model");
         when(model.getTag()).thenReturn("llm_tag");
-        when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
+        when(this.aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
         when(aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("PROMPT");
-        assertThat(this.agentInfoGenerateService.generatePrompt("DESC")).isEqualTo("PROMPT");
+        assertThat(this.agentInfoGenerateService.generatePrompt("DESC", null)).isEqualTo("PROMPT");
     }
 
     @Test
@@ -127,18 +127,18 @@ public class AgentInfoGenerateServiceImplTest {
         ModelAccessInfo model = Mockito.mock(ModelAccessInfo.class);
         when(model.getServiceName()).thenReturn("llm_model");
         when(model.getTag()).thenReturn("llm_tag");
-        when(this.aippModelCenter.getDefaultModel(any())).thenReturn(model);
+        when(this.aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
         when(this.aippModelService.chat(anyString(), anyString(), anyDouble(), anyString())).thenReturn("[1,2]");
         when(this.toolService.getPluginTools(any(PluginToolQuery.class))).thenReturn(pluginToolDataListResult);
 
-        assertThat(this.agentInfoGenerateService.selectTools("DESC", "CREATOR")).containsExactly("UNIQUENAME2",
+        assertThat(this.agentInfoGenerateService.selectTools("DESC", "CREATOR", null)).containsExactly("UNIQUENAME2",
                 "UNIQUENAME3");
     }
 
     @NotNull
     private ModelListDto getModelListDto() {
         List<ModelAccessInfo> modelAccessInfos = new ArrayList<>();
-        modelAccessInfos.add(new ModelAccessInfo("MODEL", "TAG"));
+        modelAccessInfos.add(new ModelAccessInfo("MODEL", "TAG", null, null));
         ModelListDto dto = new ModelListDto();
         dto.setModels(modelAccessInfos);
         return dto;

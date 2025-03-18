@@ -438,7 +438,7 @@ public class AppBuilderAppServiceImplTest {
             aippCreateDto.setAippId("aippId1");
             when(appRepository.selectWithId(appId)).thenReturn(appTemplate);
             when(aippFlowService.previewAipp(anyString(), any(), any())).thenReturn(aippCreateDto);
-            when(aippModelCenter.fetchModelList(any(), any())).thenReturn(null);
+            when(aippModelCenter.fetchModelList(any(), any(), any())).thenReturn(null);
             AppBuilderAppDto appBuilderAppDto = appBuilderAppService.create(appId, appCreateDto, context, false);
             assertThat(appBuilderAppDto.getName()).isEqualTo(appName);
             assertThat(appBuilderAppDto.getAppCategory()).isEqualTo("chatbot");
@@ -922,7 +922,7 @@ public class AppBuilderAppServiceImplTest {
         try (MockedStatic<CheckerFactory> mockedStatic = mockStatic(CheckerFactory.class)) {
             mockedStatic.when(() -> CheckerFactory.getChecker(anyString())).thenReturn(new RetrievalNodeChecker());
             List<CheckResult> results = this.appBuilderAppService.checkAvailable(
-                    Collections.singletonList(appCheckDto));
+                    Collections.singletonList(appCheckDto), null);
             Assertions.assertFalse(results.get(0).isValid());
             Assertions.assertEquals(results.get(0).getConfigChecks().size(), 2);
         }

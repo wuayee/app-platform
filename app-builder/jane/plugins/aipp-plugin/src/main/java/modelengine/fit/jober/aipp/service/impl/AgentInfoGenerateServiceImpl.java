@@ -76,7 +76,7 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
 
     @Override
     public String generateName(String desc, OperationContext context) {
-        String name = this.generateByTemplate(desc, "prompt/promptGenerateName.txt");
+        String name = this.generateByTemplate(desc, "prompt/promptGenerateName.txt", context);
         if (!name.matches(this.agentNameFormat) || name.trim().isEmpty() || !this.isNameUnique(context, name)) {
             name = this.localeService.localize(UI_WORD_KEY) + UUIDUtil.uuid();
         }
@@ -94,9 +94,9 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
     }
 
     @Override
-    public String generateGreeting(String desc) {
+    public String generateGreeting(String desc, OperationContext context) {
         try {
-            return this.generateByTemplate(desc, "prompt/promptGenerateGreeting.txt");
+            return this.generateByTemplate(desc, "prompt/promptGenerateGreeting.txt", context);
         } catch (Exception e) {
             log.error("Create agent generate greeting failed, reason:{}", e.getMessage());
         }
@@ -104,9 +104,9 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
     }
 
     @Override
-    public String generatePrompt(String desc) {
+    public String generatePrompt(String desc, OperationContext context) {
         try {
-            return this.generateByTemplate(desc, "prompt/promptGeneratePrompt.txt");
+            return this.generateByTemplate(desc, "prompt/promptGeneratePrompt.txt", context);
         } catch (Exception e) {
             log.error("Create agent generate prompt failed, reason:{}", e.getMessage());
         }
@@ -114,16 +114,16 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
     }
 
     @Override
-    public List<String> selectTools(String desc, String creator) {
+    public List<String> selectTools(String desc, String creator, OperationContext context) {
         try {
-            return this.getToolsResult(desc, creator);
+            return this.getToolsResult(desc, creator, context);
         } catch (Exception e) {
             log.error("Create agent select tools failed, reason:{}", e.getMessage());
         }
         return new ArrayList<>();
     }
 
-    private ArrayList<String> getToolsResult(String desc, String creator) {
+    private ArrayList<String> getToolsResult(String desc, String creator, OperationContext context) {
         StringBuilder toolsCandidate = new StringBuilder();
         ListResult<PluginToolData> tools = this.getTools(creator);
         int count = tools.getCount();
@@ -133,7 +133,7 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
                     toolData.get(i).getDescription()));
         }
         String result = this.generateByTemplate("<Tools>\n" + toolsCandidate + "</Tools>\n" + "input: " + desc,
-                "prompt/promptOfSelectTools.txt");
+                "prompt/promptOfSelectTools.txt", context);
 
         ArrayList<Integer> toolsIndex;
         ObjectMapper mapper = new ObjectMapper();
@@ -160,7 +160,7 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
         return this.toolService.getPluginTools(pluginQuery);
     }
 
-    private String generateByTemplate(String input, String templatePath) {
+    private String generateByTemplate(String input, String templatePath, OperationContext context) {
         Map<String, String> values = MapBuilder.<String, String>get().put("input", input).build();
         String template;
         try {
@@ -169,7 +169,7 @@ public class AgentInfoGenerateServiceImpl implements AgentInfoGenerateService {
             log.error("read prompt template file fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
-        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE);
+        ModelAccessInfo model = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, context);
         String prompt = new DefaultStringTemplate(template).render(values);
         return aippModelService.chat(model.getServiceName(), model.getTag(), 0.0, prompt);
     }

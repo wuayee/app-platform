@@ -11,12 +11,12 @@ import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jane.common.entity.OperationContext;
 
 /**
- * 对接模型使能和服务接入模型源，并提供模型网关映射服务
+ * 对接模型使能和服务接入模型源，并提供模型网关映射服务的扩展接口，用于增加一层可配置选择实现的能力。
  *
- * @author 方誉州
- * @since 2024-10-21
+ * @author songyongtan
+ * @since 2025-03-17
  */
-public interface AippModelCenter {
+public interface AippModelCenterExtension {
     /**
      * 查询接入的模型服务的列表。
      *

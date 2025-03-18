@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.service;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 
@@ -19,10 +20,11 @@ import java.util.List;
  */
 public interface Checker {
     /**
-     * 校验配置合法性
+     * 校验配置合法性。
      *
-     * @param appCheckDto 待检查的配置
-     * @return 检查结果
+     * @param appCheckDto 待检查的配置。
+     * @param context 表示操作上下文的 {@link OperationContext}。
+     * @return 检查结果。
      */
-    List<CheckResult> validate(AppCheckDto appCheckDto);
+    List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context);
 }

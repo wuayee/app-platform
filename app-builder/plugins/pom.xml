@@ -32,5 +32,7 @@
         <module>waterflow-biz-common</module>
         <module>waterflow-graph</module>
         <module>waterflow-task-event-handler</module>
+        <module>aipp-custom-model-center</module>
+        <module>aipp-model-center-proxy</module>
     </modules>
 </project>

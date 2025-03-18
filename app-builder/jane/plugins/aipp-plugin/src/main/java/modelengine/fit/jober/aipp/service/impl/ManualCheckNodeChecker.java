@@ -8,6 +8,7 @@ package modelengine.fit.jober.aipp.service.impl;
 
 import static modelengine.fit.jober.aipp.enums.NodeType.MANUAL_CHECK_NODE;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fitframework.annotation.Component;
@@ -23,7 +24,7 @@ import java.util.List;
 @Component
 public class ManualCheckNodeChecker extends AbstractNodeChecker {
     @Override
-    public List<CheckResult> validate(AppCheckDto appCheckDto) {
+    public List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context) {
         return this.invalidNodeConfig(appCheckDto, MANUAL_CHECK_NODE.type());
     }
 }

@@ -15,7 +15,6 @@ import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.okhttp.OkHttpClassicClientFactory;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jober.aipp.common.exception.AippNotFoundException;
 import modelengine.fit.security.Decryptor;
 import modelengine.fitframework.annotation.Fit;
@@ -47,7 +46,7 @@ import java.util.Map;
 @FitTestWithJunit(includeClasses = {OkHttpClassicClientFactory.class})
 public class DefaultAippModelCenterTest {
     private MockWebServer server;
-    private AippModelCenter aippModelCenter;
+    private DefaultAippModelCenter aippModelCenter;
     @Fit
     private Config config;
     @Fit
@@ -97,7 +96,7 @@ public class DefaultAippModelCenterTest {
         this.server.enqueue(new MockResponse().setBody(serializer.serialize(rspContent)).setHeader(
                 "Content-Type", "application/json"
         ));
-        ModelListDto modelListDto = aippModelCenter.fetchModelList(null, null);
+        ModelListDto modelListDto = aippModelCenter.fetchModelList(null, null, null);
         assertThat(modelListDto.getTotal()).isEqualTo(1);
         assertThat(modelListDto.getModels()).extracting(ModelAccessInfo::getServiceName).contains("testService");
         assertThat(modelListDto.getModels()).extracting(ModelAccessInfo::getTag).contains("EXTERNAL");
@@ -108,7 +107,7 @@ public class DefaultAippModelCenterTest {
     void testHttpResponseFailed() {
         this.server.enqueue(new MockResponse().setHeader("Content-Type", "application/json")
                 .setResponseCode(404));
-        ModelListDto modelListDto = aippModelCenter.fetchModelList(null, null);
+        ModelListDto modelListDto = aippModelCenter.fetchModelList(null, null, null);
         assertThat(modelListDto.getTotal()).isEqualTo(0);
     }
 
@@ -125,17 +124,20 @@ public class DefaultAippModelCenterTest {
                 "Content-Type", "application/json"
         ));
 
-        ModelListDto modelListDto = aippModelCenter.fetchModelList(null, null);
+        ModelListDto modelListDto = aippModelCenter.fetchModelList(null, null, null);
         assertThat(modelListDto.getTotal()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("测试根据 tag 获取模型网管")
     void testGetModelBaseUrl() {
-        assertThat(aippModelCenter.getModelBaseUrl("internal")).isEqualTo("http://internal/model/");
-        assertThat(aippModelCenter.getModelBaseUrl("external")).isEqualTo("http://external/model/");
-        assertThat(aippModelCenter.getModelBaseUrl("INTERNAL")).isEqualTo("http://internal/model/");
-        assertThrows(AippNotFoundException.class, () -> aippModelCenter.getModelBaseUrl("unknown"));
+        assertThat(aippModelCenter.getModelAccessInfo("internal", null, null).getBaseUrl()).isEqualTo(
+                "http://internal/model/");
+        assertThat(aippModelCenter.getModelAccessInfo("external", null, null).getBaseUrl()).isEqualTo(
+                "http://external/model/");
+        assertThat(aippModelCenter.getModelAccessInfo("INTERNAL", null, null).getBaseUrl()).isEqualTo(
+                "http://internal/model/");
+        assertThrows(AippNotFoundException.class, () -> aippModelCenter.getModelAccessInfo("unknown", null, null));
     }
 }
 
