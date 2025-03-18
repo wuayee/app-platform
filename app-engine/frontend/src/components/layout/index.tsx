@@ -81,19 +81,10 @@ const AppLayout: React.FC = () => {
     return 'layout-container'
   }
   const layoutValidate = () => {
-    if (process.env.NODE_ENV !== 'development' && process.env.PACKAGE_MODE !== 'common') {
-      return false;
-    }
-    if (location.pathname.includes('chatShare') || location.pathname.includes('add-flow')) {
-      return false;
-    }
     if (location.pathname.includes('/chat/') && !location.pathname.includes('/app/')){
       return false;
     }
     return true;
-  }
-  const isSpaMode = () => {
-    return (process.env.NODE_ENV !== 'development' && process.env.PACKAGE_MODE !== 'common')
   }
   useEffect(() => {
     const { pathname, search } = location;
@@ -156,7 +147,7 @@ const AppLayout: React.FC = () => {
     }
       <Layout className={setClassName()}>
         <Provider store={store}>
-          <Content style={{ padding: (layoutValidate() || isSpaMode()) ? '0 16px' : '0', background: colorBgContainer }}>
+          <Content style={{ padding: (layoutValidate()) ? '0 16px' : '0', background: colorBgContainer }}>
             <Switch>
               {flattenRouteList.map((route) => (
                 <Route
