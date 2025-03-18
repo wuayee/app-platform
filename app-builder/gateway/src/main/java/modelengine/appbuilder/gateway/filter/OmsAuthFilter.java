@@ -9,8 +9,8 @@ package modelengine.appbuilder.gateway.filter;
 import static org.apache.http.util.Args.notBlank;
 import static org.springframework.util.Assert.notEmpty;
 
-import com.huawei.framework.crypt.grpc.client.CryptClient;
-import com.huawei.framework.crypt.grpc.client.exception.CryptoInvokeException;
+import modelengine.framework.crypt.grpc.client.CryptClient;
+import modelengine.framework.crypt.grpc.client.exception.CryptoInvokeException;
 
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.fasterxml.jackson.databind.ObjectMapper;

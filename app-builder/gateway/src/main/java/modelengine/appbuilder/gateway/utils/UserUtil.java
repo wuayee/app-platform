@@ -6,7 +6,7 @@
 
 package modelengine.appbuilder.gateway.utils;
 
-import com.huawei.framework.crypt.grpc.client.exception.CryptoInvokeException;
+import modelengine.framework.crypt.grpc.client.exception.CryptoInvokeException;
 
 import modelengine.appbuilder.gateway.jwt.JsonToken;
 import modelengine.appbuilder.gateway.jwt.JsonTokenPayload;

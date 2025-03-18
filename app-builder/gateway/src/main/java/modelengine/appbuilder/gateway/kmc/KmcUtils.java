@@ -6,7 +6,7 @@
 
 package modelengine.appbuilder.gateway.kmc;
 
-import com.huawei.framework.crypt.grpc.client.utils.PassUtils;
+import modelengine.framework.crypt.grpc.client.utils.PassUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

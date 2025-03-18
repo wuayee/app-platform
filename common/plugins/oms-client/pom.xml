@@ -59,11 +59,6 @@
             <artifactId>okhttp</artifactId>
             <version>${okhttp.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.huawei.fce</groupId>
-            <artifactId>crypt-grpc-client</artifactId>
-            <version>${crypt.grpc.client.version}</version>
-        </dependency>
 
         <!-- Nacos 需要该依赖，移除将报错 -->
         <dependency>

@@ -10,8 +10,8 @@ import static modelengine.fitframework.inspection.Validation.notNull;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
 
-import com.huawei.framework.crypt.grpc.client.CryptClient;
-import com.huawei.framework.crypt.grpc.client.exception.CryptoInvokeException;
+import modelengine.framework.crypt.grpc.client.CryptClient;
+import modelengine.framework.crypt.grpc.client.exception.CryptoInvokeException;
 
 import modelengine.fit.http.client.HttpClassicClient;
 import modelengine.fit.http.client.HttpClassicClientFactory;

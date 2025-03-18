@@ -6,7 +6,7 @@ package modelengine.fit.security.kmc;
 
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
-import com.huawei.framework.crypt.grpc.client.utils.PassUtils;
+import modelengine.framework.crypt.grpc.client.utils.PassUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

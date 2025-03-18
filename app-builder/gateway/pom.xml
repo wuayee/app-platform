@@ -125,17 +125,6 @@
             <version>${lombok.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fce</groupId>
-            <artifactId>monitor-event-sdk</artifactId>
-            <version>${oms.sdk.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>${dom4j.version}</version>
@@ -178,11 +167,6 @@
             <version>${netty-handler.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.huawei.fce</groupId>
-            <artifactId>crypt-grpc-client</artifactId>
-            <version>COMMON_RC4.0-SNAPSHOT</version>
-        </dependency>
         <!-- Nacos -->
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
@@ -193,11 +177,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.0.0-jre</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fce</groupId>
-            <artifactId>crypt-grpc-client</artifactId>
-            <version>${crypt.grpc.client.version}</version>
         </dependency>
     </dependencies>
 

@@ -6,10 +6,10 @@
 
 package modelengine.appbuilder.gateway.jwt;
 
-import com.huawei.framework.crypt.grpc.client.CryptClient;
-import com.huawei.framework.crypt.grpc.client.exception.CryptoInvokeException;
-import com.huawei.framework.crypt.grpc.client.model.CipherTextWithoutDomain;
-import com.huawei.framework.crypt.grpc.client.model.PlainTextWithoutDomain;
+import modelengine.framework.crypt.grpc.client.CryptClient;
+import modelengine.framework.crypt.grpc.client.exception.CryptoInvokeException;
+import modelengine.framework.crypt.grpc.client.model.CipherTextWithoutDomain;
+import modelengine.framework.crypt.grpc.client.model.PlainTextWithoutDomain;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
