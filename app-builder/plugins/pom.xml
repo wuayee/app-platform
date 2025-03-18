@@ -27,6 +27,7 @@
         <module>aipp-prompt-builder</module>
         <module>aipp-rewriter</module>
         <module>aipp-variable-aggregation</module>
+        <module>plugins-show-case-parent</module>
         <module>tool-waterflow</module>
         <module>waterflow-appfactory</module>
         <module>waterflow-biz-common</module>
