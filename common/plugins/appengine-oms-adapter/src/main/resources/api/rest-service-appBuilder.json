@@ -440,6 +440,18 @@
     ]
   },
   {
+    "Description": "查询知识库组标识列表",
+    "ResourceKey": "GET /appbuilder/knowledge-manager/list/groups",
+    "SkipCheck": false,
+    "Roles": [
+      "AppDeveloper",
+      "DataAppDeveloper",
+      "AppExDeveloper",
+      "FsDeveloper",
+      "SYS_ADMIN"
+    ]
+  },
+  {
     "Description": "查询知识库支持的检索参数信息",
     "ResourceKey": "GET /appbuilder/knowledge-manager/properties",
     "SkipCheck": false,
