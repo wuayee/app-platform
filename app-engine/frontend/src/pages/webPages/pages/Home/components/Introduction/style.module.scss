@@ -1,0 +1,40 @@
+.introduction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    margin-bottom: 84px;
+    .title {
+        font-size: 24px;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+    .sub-title {
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .primary-intro-container {
+        width: 1280px;
+        height: 416px;
+        display: flex;
+        justify-content: space-between;
+        background-image: url('/src/assets/svg/frameWork.svg');
+        position: relative;
+        margin-top: 24px;
+        box-shadow: 0 4px 16px 0 rgba(101, 104, 132, 0.06);
+        box-shadow: 0px 12px 20px 0px rgba(88, 96, 128, 0.18),0px 20px 30px 0px rgba(79, 116, 168, 0.1);
+        border-radius: 12px;
+        .text-container {
+            width: 424px;
+            height: 168px;
+            position: absolute;
+            left: 808px;
+            top: 84px;
+            text-align: left;
+            color: rgb(26, 26, 26);
+            line-height: 28px;
+            letter-spacing: 0;
+        }
+    }
+}
