@@ -460,6 +460,7 @@ const ChatPreview = (props) => {
     let idx = listRef.current.length - 1;
     let lastItem = listRef.current[listRef.current.length - 1];
     if (!lastItem.loading && !lastItem.step) {
+      listRef.current[idx].finished = true;
       idx = listRef.current.length;
     }
     listRef.current.splice(idx, 1, chatObj);
@@ -494,8 +495,7 @@ const ChatPreview = (props) => {
       }
     }
     if (extensions.isStepLog) {
-      if (!listRef.current[idx].step) {
-
+      if (!listRef.current[idx].step && !listRef.current[idx].loading) {
         idx = listRef.current.length;
       }
     }
