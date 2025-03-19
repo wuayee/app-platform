@@ -51,7 +51,7 @@ export class ConditionNodeConnectorValidator extends Validator {
   validate() {
     const nextEvents = this.node.getNextRunnableEvents();
     const i18n = this.node.graph.i18n;
-    if (nextEvents.length !== this.node.drawer.getLatestJadeConfig().branches.filter(b => b.runnable).length) {
+    if (nextEvents.length !== this.node.getBranches().filter(b => b.runnable).length) {
       return Promise.reject({
         errorFields: [{
           errors: [`${i18n?.t('node') ?? 'node'} ${this.node.text} ${i18n?.t('problemWithConnection') ?? 'problemWithConnection'}`],

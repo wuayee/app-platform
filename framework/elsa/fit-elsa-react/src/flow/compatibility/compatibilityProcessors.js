@@ -47,6 +47,8 @@ export const pageCompatibilityProcessor = (pageData, graph) => {
         return startNodeCompatibilityProcessor(shapeData, g, self);
       case 'knowledgeRetrievalNodeState':
         return knowledgeRetrievalCompatibilityProcessor(shapeData, g, self);
+      case 'questionClassificationNodeCondition':
+        return questionClassificationCompatibilityProcessor(shapeData, g, self);
       default:
         return shapeCompatibilityProcessor(shapeData, g, self);
     }
@@ -158,6 +160,31 @@ export const conditionCompatibilityProcessor = (shapeData, graph, pageHandler) =
 
   return self;
 };
+
+/**
+ * 问题分类节点兼容性处理器.
+ *
+ * @override
+ */
+export const questionClassificationCompatibilityProcessor = (shapeData, graph, pageHandler) => {
+  const self = shapeCompatibilityProcessor(shapeData, graph, pageHandler);
+
+  /**
+   * @override
+   */
+  const process = self.process;
+  self.process = () => {
+    process.apply(self);
+    self.shapeData.flowMeta.jober.converter.entity.inputParams.find(param => param.name === 'classifyQuestionParam').value.find(questionParam => questionParam.name === 'questionTypeList').value.forEach(b => {
+      if (b.runnable === undefined || b.runnable === null) {
+        b.runnable = true;
+      }
+    });
+  };
+
+  return self;
+};
+
 
 /**
  * 开始节点兼容性处理器.

@@ -8,6 +8,7 @@ import {v4 as uuidv4} from 'uuid';
 import {FileExtractionWrapper} from './FileExtractionWrapper.jsx';
 import {defaultComponent} from '../defaultComponent.js';
 import {ChangePromptReducer, EditInputReducer} from '@/components/fileExtraction/reducers.js';
+import {ChangeFlowMetaReducer} from '@/components/common/reducers/commonReducers.js';
 
 /**
  * 文件提取节点组件
@@ -21,6 +22,7 @@ export const fileExtractionComponent = (jadeConfig) => {
   const builtInReducers = new Map();
   addReducer(builtInReducers, EditInputReducer());
   addReducer(builtInReducers, ChangePromptReducer('fileExtractionParam'));
+  addReducer(builtInReducers, ChangeFlowMetaReducer());
 
   /**
    * 必须.

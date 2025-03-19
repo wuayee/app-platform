@@ -51,6 +51,7 @@ const _TextExtractionWrapper = ({data, shapeStatus}) => {
   const temperature = getConfigValue(extractParam, ['temperature'], EMPTY_STRING);
   const description = getConfigValue(extractParam, ['desc'], EMPTY_STRING);
   const serviceName = getConfigValue(extractParam, ['accessInfo', 'serviceName'], EMPTY_STRING);
+  const tag = getConfigValue(extractParam, ['accessInfo', 'tag'], EMPTY_STRING);
   const memoryConfig = data.inputParams.find(item => item.name === 'memoryConfig');
   const memorySwitch = data.inputParams.find(item => item.name === 'memorySwitch');
   const treeData = data.outputParams.find(item => item.name === 'output').value.find(v => v.name === 'extractedParams');
@@ -71,7 +72,7 @@ const _TextExtractionWrapper = ({data, shapeStatus}) => {
     <TextExtractionInput shapeStatus={shapeStatus} extractParam={extractParam} dispatch={dispatch}/>
     <TextExtractionSchema disabled={shapeStatus.disabled} output={treeData}/>
     <ModelConfig
-      modelOptions={modelOptions} temperature={temperature} serviceName={serviceName}
+      modelOptions={modelOptions} temperature={temperature} serviceName={serviceName} tag={tag}
       description={description} disabled={shapeStatus.disabled} promptPopover={'optimizationPromptPopover'}
       promptTitle={'textExtractionPrompt'}/>
     <HistoryConfig

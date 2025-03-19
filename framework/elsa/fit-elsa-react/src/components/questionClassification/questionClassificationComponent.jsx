@@ -114,6 +114,7 @@ export const questionClassificationComponent = (jadeConfig, shape) => {
                 type: 'Object',
                 from: 'Expand',
                 conditionType: 'if',
+                runnable: true,
                 value: [{
                   id: `questionTypeId_${uuidv4()}`,
                   name: 'id',
@@ -132,6 +133,7 @@ export const questionClassificationComponent = (jadeConfig, shape) => {
                 type: 'Object',
                 from: 'Expand',
                 conditionType: 'else',
+                runnable: true,
                 value: [{
                   id: `questionTypeId_${uuidv4()}`,
                   name: 'id',

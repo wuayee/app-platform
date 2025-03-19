@@ -234,6 +234,13 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
     };
 
     /**
+     * 获取分支数据.
+     */
+    self.getBranches = () => {
+        return self.drawer.getLatestJadeConfig().branches;
+    };
+
+    /**
      * override
      */
     self.pasted = () => {

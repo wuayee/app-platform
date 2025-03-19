@@ -7,7 +7,7 @@
 import {v4 as uuidv4} from 'uuid';
 import {TextToImageWrapper} from './TextToImageWrapper.jsx';
 import {defaultComponent} from '../defaultComponent.js';
-import {AddInputReducer, DeleteInputReducer, EditInputReducer} from '@/components/common/reducers/commonReducers.js';
+import {AddInputReducer, ChangeFlowMetaReducer, DeleteInputReducer, EditInputReducer} from '@/components/common/reducers/commonReducers.js';
 import {ChangePromptReducer} from '@/components/fileExtraction/reducers.js';
 import {ChangeImageCountReducer} from '@/components/textToImage/reducers.js';
 import {DATA_TYPES, FROM_TYPE} from '@/common/Consts.js';
@@ -27,6 +27,7 @@ export const textToImageComponent = (jadeConfig) => {
   addReducer(builtInReducers, DeleteInputReducer('imageParam'));
   addReducer(builtInReducers, ChangePromptReducer('imageParam'));
   addReducer(builtInReducers, ChangeImageCountReducer());
+  addReducer(builtInReducers, ChangeFlowMetaReducer());
 
   /**
    * 必须.

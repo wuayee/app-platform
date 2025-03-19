@@ -21,15 +21,17 @@ export const ChangeWindowValueReducer = () => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItemValue = (item) => {
       return item.name === 'property' ? {...item, value: action.value} : item;
     };
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, 'memoryConfig', _updateItemValue)),
     };
   };
@@ -52,9 +54,10 @@ export const ChangeWindowTypeReducer = () => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItem = (item) => {
       if (item.name === 'windowAlg') {
         return {...item, value: action.value};
@@ -67,6 +70,7 @@ export const ChangeWindowTypeReducer = () => {
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, 'memoryConfig', _updateItem)),
     };
   };
@@ -89,15 +93,17 @@ export const ChangeHistoryTypeReducer = () => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItemValue = (item) => {
       return item.name === 'serializeAlg' ? {...item, value: action.value} : item;
     };
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, 'memoryConfig', _updateItemValue)),
     };
   };
@@ -120,15 +126,17 @@ export const ChangePromptValueReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItemValue = (item) => {
       return item.name === 'template' ? {...item, value: action.value} : item;
     };
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, _updateItemValue)),
     };
   };
@@ -161,10 +169,12 @@ export const ChangeMemorySwitchReducer = () => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const newConfig = {...config};
+    newConfig.jadeNodeConfigChangeIgnored = jadeNodeConfigChangeIgnored;
     newConfig.inputParams = newConfig.inputParams.map(inputParam => {
       if (inputParam.name === 'memorySwitch') {
         return {...inputParam, value: action.value};
@@ -196,14 +206,16 @@ export const ChangeConfigReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItem = (item) =>
       item.id === action.id ? {...item, value: action.value} : item;
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, _updateItem)),
     };
   };
@@ -235,11 +247,13 @@ export const ChangeAccessInfoConfigReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, (item) => {
         const [serviceName, tag] = action.value.split('&&');
         return item.name === 'accessInfo' ? {
@@ -268,9 +282,10 @@ export const AddInputReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _addArgumentToItem = (item) => {
       if (item.name === 'args') {
         return {
@@ -296,6 +311,7 @@ export const AddInputReducer = (updateKey) => {
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, _addArgumentToItem)),
     };
   };
@@ -318,9 +334,10 @@ export const EditInputReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const applyChangesToValue = (v) => {
       if (v.id === action.id) {
         let newValue = {...v};
@@ -346,6 +363,7 @@ export const EditInputReducer = (updateKey) => {
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, updateItem)),
     };
   };
@@ -368,15 +386,17 @@ export const DeleteInputReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const filterArgs = (item) => {
       return item.name === 'args' ? {...item, value: item.value.filter(v => v.id !== action.id)} : item;
     };
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, filterArgs)),
     };
   };
@@ -399,11 +419,13 @@ export const ChangeFlowMetaReducer = () => {
    *
    * @param config 配置数据.
    * @param action 行为参数.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       enableStageDesc: action.data.enableStageDesc,
       stageDesc: action.data.stageDesc,
     };

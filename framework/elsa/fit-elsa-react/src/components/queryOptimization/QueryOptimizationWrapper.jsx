@@ -98,6 +98,7 @@ const _QueryOptimizationWrapper = ({data, shapeStatus}) => {
   const template = getConfigValue(rewriteParam, ['template'], EMPTY_STRING);
   const strategy = getConfigValue(rewriteParam, ['strategy'], EMPTY_STRING);
   const serviceName = getConfigValue(rewriteParam, ['accessInfo', 'serviceName'], EMPTY_STRING);
+  const tag = getConfigValue(rewriteParam, ['accessInfo', 'tag'], EMPTY_STRING);
   const memoryConfig = data.inputParams.find(item => item.name === 'memoryConfig');
   const {addItem, updateItem, deleteItem} = getInputOperateFunction(dispatch);
 
@@ -132,7 +133,7 @@ const _QueryOptimizationWrapper = ({data, shapeStatus}) => {
       maxInputLength={1000}/>
     <OptimizationConfig modelOptions={modelOptions} disabled={shapeStatus.disabled} template={template}
                         strategy={strategy} memoryConfig={memoryConfig} temperature={temperature}
-                        serviceName={serviceName}/>
+                        serviceName={serviceName} tag={tag}/>
     <InvokeOutput outputData={data.outputParams} getDescription={getOutputDescription}/>
   </>);
 };

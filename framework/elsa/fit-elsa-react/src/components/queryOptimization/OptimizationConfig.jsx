@@ -25,10 +25,11 @@ const {Panel} = Collapse;
  * @param temperature 温度对象
  * @param strategy 策略，表示模板类型
  * @param serviceName 模型对象
+ * @param tag 模型对象标签
  * @return {JSX.Element} 优化配置组件
  * @private
  */
-const _OptimizationConfig = ({disabled, modelOptions, template, memoryConfig, temperature, strategy, serviceName}) => {
+const _OptimizationConfig = ({disabled, modelOptions, template, memoryConfig, temperature, strategy, serviceName, tag}) => {
   const shape = useShapeContext();
   const shapeId = shape.id;
   const {t} = useTranslation();
@@ -52,7 +53,7 @@ const _OptimizationConfig = ({disabled, modelOptions, template, memoryConfig, te
         <div className={'jade-custom-panel-content'}>
           <Model
             disabled={disabled} shapeId={shapeId} modelOptions={modelOptions} temperature={temperature}
-            serviceName={serviceName}/>
+            serviceName={serviceName} tag={tag}/>
           <Template shapeId={shapeId} template={template} templateType={strategy.value} disabled={disabled}/>
           <MemoryConfig memoryConfig={memoryConfig} disabled={disabled} templateType={strategy.value}
                         isShowUseMemoryType={strategy.value === 'custom'} historyOption={historyOption}/>
@@ -70,6 +71,8 @@ _OptimizationConfig.propTypes = {
   memoryConfig: PropTypes.object.isRequired,
   temperature: PropTypes.object.isRequired,
   strategy: PropTypes.object.isRequired,
+  serviceName: PropTypes.object.isRequired,
+  tag: PropTypes.object.isRequired,
 };
 
 const areEqual = (prevProps, nextProps) => {
@@ -79,7 +82,9 @@ const areEqual = (prevProps, nextProps) => {
     prevProps.memoryConfig === nextProps.memoryConfig &&
     prevProps.temperature === nextProps.temperature &&
     prevProps.template === nextProps.template &&
-    prevProps.strategy === nextProps.strategy;
+    prevProps.strategy === nextProps.strategy &&
+    prevProps.serviceName === nextProps.serviceName &&
+    prevProps.tag === nextProps.tag;
 };
 
 export const OptimizationConfig = React.memo(_OptimizationConfig, areEqual);

@@ -45,11 +45,13 @@ export const ChangeQuestionClassificationDescReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, (item) => {
         if (item.name === 'questionTypeList') {
           return _buildQuestionTypeList(item, action);
@@ -78,9 +80,10 @@ export const AddQuestionClassificationReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItem = (item) => {
       if (item.name === 'questionTypeList') {
         const newQuestion = {
@@ -88,6 +91,7 @@ export const AddQuestionClassificationReducer = (updateKey) => {
           type: 'Object',
           from: 'Expand',
           conditionType: 'if',
+          runnable: true,
           value: [{
             id: `questionTypeId_${uuidv4()}`,
             name: 'id',
@@ -115,6 +119,7 @@ export const AddQuestionClassificationReducer = (updateKey) => {
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, _updateItem)),
     };
   };
@@ -137,9 +142,10 @@ export const DeleteQuestionClassificationReducer = (updateKey) => {
    *
    * @param config 配置数据.
    * @param action 事件对象.
+   * @param jadeNodeConfigChangeIgnored 该修改是否需要忽略，如忽略外部将不会处理此次dirty事件.
    * @return {*} 处理之后的数据.
    */
-  self.reduce = (config, action) => {
+  self.reduce = (config, action, jadeNodeConfigChangeIgnored = false) => {
     const _updateItem = (item) => {
       if (item.name === 'questionTypeList') {
         return {
@@ -153,6 +159,7 @@ export const DeleteQuestionClassificationReducer = (updateKey) => {
 
     return {
       ...config,
+      jadeNodeConfigChangeIgnored: jadeNodeConfigChangeIgnored,
       inputParams: config.inputParams.map(inputParam => updateInputParam(inputParam, updateKey, _updateItem)),
     };
   };
