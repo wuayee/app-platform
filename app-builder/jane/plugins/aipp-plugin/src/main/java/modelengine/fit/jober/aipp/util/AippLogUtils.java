@@ -7,11 +7,16 @@
 package modelengine.fit.jober.aipp.util;
 
 import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
+import modelengine.fit.jober.aipp.entity.AippInstLog;
 import modelengine.fit.jober.aipp.entity.AippLogData;
 import modelengine.fit.jober.aipp.enums.AippInstLogType;
+import modelengine.fit.jober.aipp.service.AippLogService;
+import modelengine.fit.jober.aipp.service.AopAippLogService;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,8 +39,8 @@ public class AippLogUtils {
      * @return 返回logData的有效性。
      **/
     public static boolean validFormMsg(AippLogData logData, String logType) {
-        if (!StringUtils.equals(AippInstLogType.FORM.name(), logType) && !StringUtils.equals(
-                AippInstLogType.HIDDEN_FORM.name(), logType)) {
+        if (!StringUtils.equals(AippInstLogType.FORM.name(), logType)
+                && !StringUtils.equals(AippInstLogType.HIDDEN_FORM.name(), logType)) {
             return true;
         }
         if (!isFormIdValid(logData.getFormId())) {
@@ -70,5 +75,25 @@ public class AippLogUtils {
             return "true".equalsIgnoreCase(logEnableKey);
         }
         return true;
+    }
+
+    public static String writePromptLog(String instanceId, String prompt, AippLogService aippLogService,
+            AopAippLogService aopAippLogService) {
+        List<AippInstLog> aippInstLogs = aippLogService.queryInstanceLogSince(instanceId, null);
+        AippInstLog aippInstLog = aippInstLogs.get(0);
+        Map<String, Object> map = JsonUtils.parseObject(aippInstLog.getLogData());
+        map.put("msg", prompt);
+
+        AippLogCreateDto aippLogCreateDto = AippLogCreateDto.builder()
+                .aippId(aippInstLog.getAippId())
+                .version(aippInstLog.getVersion())
+                .aippType(aippInstLog.getAippType())
+                .instanceId(aippInstLog.getInstanceId())
+                .logType(AippInstLogType.HIDDEN_QUESTION.name())
+                .logData(JsonUtils.toJsonString(map))
+                .createUserAccount(aippInstLog.getCreateUserAccount())
+                .path(aippInstLog.getPath())
+                .build();
+        return aopAippLogService.insertLog(aippLogCreateDto);
     }
 }
