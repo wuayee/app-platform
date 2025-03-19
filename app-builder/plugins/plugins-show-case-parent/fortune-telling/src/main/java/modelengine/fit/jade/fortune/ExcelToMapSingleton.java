@@ -13,7 +13,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -53,34 +52,34 @@ public class ExcelToMapSingleton {
 
     /**
      * 读取Excel文件并转换为Map
-     *
-     * @throws IOException 文件读取异常
      */
-    public void loadExcelData() throws IOException {
+    public void loadExcelData() {
         this.dataMap.clear();
         ClassLoader classLoader = getClass().getClassLoader();
         URL resourceUrl = classLoader.getResource(FILE_PATH);
-        if (resourceUrl == null) {
-            throw new FileNotFoundException("资源文件不存在: " + FILE_PATH);
-        }
 
-        try (InputStream fis = resourceUrl.openStream()) {
-            Workbook workbook = new XSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheetAt(0);
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) {
-                    continue;
-                }
+        try {
+            assert resourceUrl != null;
+            try (InputStream fis = resourceUrl.openStream()) {
+                Workbook workbook = new XSSFWorkbook(fis);
+                Sheet sheet = workbook.getSheetAt(0);
+                for (Row row : sheet) {
+                    if (row.getRowNum() == 0) {
+                        continue;
+                    }
 
-                Cell inputCell = row.getCell(0);
-                Cell outputCell = row.getCell(1);
-                String input = getCellValue(inputCell);
-                String output = getCellValue(outputCell);
-                if (!input.isEmpty() && !output.isEmpty()) {
-                    this.dataMap.put(input, output);
+                    Cell inputCell = row.getCell(0);
+                    Cell outputCell = row.getCell(1);
+                    String input = getCellValue(inputCell);
+                    String output = getCellValue(outputCell);
+                    if (!input.isEmpty() && !output.isEmpty()) {
+                        this.dataMap.put(input, output);
+                    }
                 }
+                workbook.close();
             }
-            workbook.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

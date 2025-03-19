@@ -24,7 +24,13 @@ import java.util.Map;
 @Group(name = "YijingImpl")
 @Component
 public class YijingServiceImpl implements YijingService {
-    private static final Map<String, String> FORTUNE = ExcelToMapSingleton.getInstance().getDataMap();
+    private final Map<String, String> fortune;
+
+    public YijingServiceImpl() {
+        ExcelToMapSingleton loader = ExcelToMapSingleton.getInstance();
+        loader.loadExcelData();
+        this.fortune = loader.getDataMap();
+    }
 
     @Override
     @Fitable("default")
@@ -33,6 +39,6 @@ public class YijingServiceImpl implements YijingService {
     })
     @Property(description = "易经查询结果")
     public String getForTune(String args) {
-        return FORTUNE.get(args);
+        return this.fortune.get(args);
     }
 }
