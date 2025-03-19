@@ -59,6 +59,7 @@
           margin-right: 36px;
           .name {
             text-align: center;
+            font-size: 16px;
           }
           img {
             width: 80px;
@@ -66,6 +67,16 @@
           }
         }
       }
+    }
+  }
+}
+
+@media screen and (max-width: 828px) {
+  .footer {
+    flex-direction: column;
+
+    .footer-item {
+      padding: 20px;
     }
   }
 }

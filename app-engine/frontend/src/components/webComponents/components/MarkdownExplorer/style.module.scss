@@ -54,7 +54,7 @@
       height: 32px;
       line-height: 32px;
       border-radius: 4px;
-      width: 248px;
+      // width: 248px;
     }
     :global(.ant-menu-item-selected) {
       background: rgb(247, 247, 247);
@@ -63,15 +63,54 @@
     }
     :global(.ant-menu-item .ant-menu-title-content) {
       display: inline-block;
-      width: 210px;
+      // width: 210px;
       text-align: left;
     }
   }
+
   .docs-container-content {
-    width: calc(100% - 286px);
+    width: 90vw;
     background-color: #ffffff;
     border-top-right-radius: 24px;
     padding-bottom: 24px;
     box-sizing: border-box;
+  }
+
+  .docs-menu-icon-wrap {
+    display: none;
+  }
+
+
+  @media screen and (max-width: 828px) {
+    .docs-container-sider {
+      display: none;
+      position: absolute;
+      width: 100vw;
+      z-index: 10;
+    }
+
+    .show {
+      display: block;
+    }
+
+    .docs-menu-icon-wrap {
+      display: block;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 26px;
+      height: 26px;
+      border-radius: 100%;
+      z-index: 100;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 9px 0px rgba(26, 26, 26, 0.15);
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    .docs-menu-icon {
+      width: 16px;
+      height: 16px;
+    }
   }
 }

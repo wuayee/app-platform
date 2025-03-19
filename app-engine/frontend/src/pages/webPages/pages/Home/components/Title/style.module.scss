@@ -16,6 +16,7 @@
         width: 100%;
         margin-top: 8px;
         margin-bottom: 20px;
+        font-size: 14px;
     }
     .start-btn {
         width: 109px;
@@ -31,5 +32,22 @@
         background: linear-gradient(135.00deg, rgb(94, 124, 224),rgb(70, 146, 255),rgb(111, 88, 254) 99.878%);
         color: #ffffff;
         font-weight: 700;
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 828px) {
+    .title {
+        padding: 48px 20px;
+        margin-top: 128px;
+        .start-desc {
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+        .start-btn {
+            width: 104px;
+            height: 40px;
+            border-radius: 20px;
+        }
     }
 }

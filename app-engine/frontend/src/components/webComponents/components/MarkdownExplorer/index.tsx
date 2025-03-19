@@ -11,6 +11,8 @@ import MarkdownViewer from '../../components/MarkdownViewer';
 import { useEffect, useState } from 'react';
 import code from '@assets/png/code.png';
 import docs from '@assets/png/docs.png';
+import docsMenu from '@assets/png/docs-menu.png';
+import docsClose from '@assets/png/close.png';
 
 const { Sider } = Layout;
 const MarkdownExplorer = ({
@@ -25,6 +27,7 @@ const MarkdownExplorer = ({
     const [currentMd, setCurrentMd] = useState(defaultCurrentMd);
     const [currentGroup, setCurrentGroup] = useState(defaultCurrentGroup);
     const [content, setContent] = useState('');
+    const [menuVisible, setMenuVisible] = useState(false);
     const loadMarkdownFile = async () => {
         try {
             const key = `./markdown/${currentGroup}/${currentMd}`;
@@ -38,6 +41,11 @@ const MarkdownExplorer = ({
     const onMenuClick = (e) => {
         setCurrentGroup(e.keyPath[e.keyPath.length - 1]);
         setCurrentMd(e.domEvent.target.textContent);
+        onToggleMemu();
+    }
+
+    const onToggleMemu = () => {
+        setMenuVisible(!menuVisible)
     }
 
     useEffect(() => {
@@ -47,13 +55,16 @@ const MarkdownExplorer = ({
     return (
         <>
             <div className={style['docs-container']}>
-                <div className={style['docs-container-sider']}>
+                <div className={style['docs-menu-icon-wrap']}>
+                    <img className={style['docs-menu-icon']} src={menuVisible ? docsClose : docsMenu} onClick={onToggleMemu}></img>
+                </div>
+                <div className={menuVisible ? style['docs-container-sider'] + ' ' + style['show'] : style['docs-container-sider']}>
                     <div className={style['docs-container-title']}>
                         { config.type === 'code' ? <img src={code} ></img> : <img src={docs} ></img> }
                         <span>{config.name}</span>
                     </div>
                     <div className={style['docs-container-sider-content']}>
-                        <Sider width={256} style={{ height: '100%' }} theme={'light'}>
+                        <Sider width='100%' style={{ height: '100%' }} theme={'light'}>
                             <Navigate items={config.items}
                                 onMenuClick={onMenuClick}
                                 defaultOpenKeys={defaultOpenKeys}

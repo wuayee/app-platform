@@ -28,6 +28,7 @@ const Title = () => {
                 Java 生态的 LangChain 替代方案（FEL）。原生 / Spring 双模运行，支持插件热插拔与智能聚散部署，无缝统一大模型与业务系统。
             </div>
             <div className={style['fit-inner']}>
+                <div className={style['fit-inner-img']}></div>
                 <div className={style['fit-inner-content']}>
                 <Detail title={'FIT Core：语言无界，算力随需'} link={'https://gitcode.com/ModelEngine/fit-framework/tree/main/framework/fit/java'}/>
                 <div className={style['fit-sub-text']}>多语言函数计算底座（Java/Python/C++）支持插件化热插拔，独创智能聚散部署——代码无需修改，单体应用与分布式服务一键切换，运行时自动路由本地调用或 RPC，让基础设施成为「隐形的伙伴」。</div>
