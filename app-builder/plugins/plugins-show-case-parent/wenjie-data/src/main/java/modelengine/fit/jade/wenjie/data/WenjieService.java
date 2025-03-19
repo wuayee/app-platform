@@ -9,6 +9,8 @@ import modelengine.fitframework.annotation.Property;
 import modelengine.jade.carver.tool.annotation.Group;
 import modelengine.jade.carver.tool.annotation.ToolMethod;
 
+import java.util.List;
+
 /**
  * TODO
  *
@@ -23,5 +25,5 @@ public interface WenjieService {
 
     @ToolMethod(name = "问界产品宣传图", description = "用于查询问界产品宣传图")
     @Genericable("modelengine.jober.aipp.wenjie.url")
-    String url(@Property(description = "车的型号", required = true) String carType);
+    List<String> url(@Property(description = "车的型号", required = true) String carType);
 }

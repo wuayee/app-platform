@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,13 +37,13 @@ import java.util.stream.Collectors;
 public class WenjieServiceImpl implements WenjieService {
     private static final Logger log = Logger.get(WenjieServiceImpl.class);
     // 基础图片 URL 前缀
-    private static final String BASE_URL = "https://www.aite-auto.com/images/";
+    private static final String BASE_URL = "";
 
     // 文件后缀，可以统一替换
     private static final String FILE_SUFFIX = ".jpg";
 
     // 构建车型名称与图片 URL 的 Map
-    private static final Map<String, String> carImageMap = new HashMap<>();
+    private static final Map<String, List<String>> carImageMap = new HashMap<>();
 
     private static final String DEFAULT_URL = BASE_URL + "default" + FILE_SUFFIX;
 
@@ -52,23 +55,45 @@ public class WenjieServiceImpl implements WenjieService {
     // 问界新M5 增程 Max, 问界新M5 增程 Max RS, 问界新M5 纯电 Max, 问界M5 EV, 问界M7 Plus 五座后驱版, 问界M7 Plus 五座四驱版, 问界M7 Plus 六座后驱版, 问界M7 Plus 六座四驱版, Seres 7, 问界M9 增程版 六座, 问界M9 增程版 五座, 问界M9 纯电版
     static {
         // 问界M5系列
-        carImageMap.put("问界新M5 增程 Max", BASE_URL + "M5_Extended_Max" + FILE_SUFFIX);
-        carImageMap.put("问界新M5 增程 Max RS", BASE_URL + "M5_Extended_Max_RS" + FILE_SUFFIX);
-        carImageMap.put("问界新M5 纯电 Max", BASE_URL + "M5_PureElectric_Max" + FILE_SUFFIX);
-        carImageMap.put("问界M5 EV", BASE_URL + "M5_EV" + FILE_SUFFIX);
+        List<String> m5CarImages = new ArrayList<>();
+        m5CarImages.add("M5_Exterior_1" + FILE_SUFFIX);
+        m5CarImages.add("M5_Exterior_2" + FILE_SUFFIX);
+        m5CarImages.add("M5_Game" + FILE_SUFFIX);
+        m5CarImages.add("M5_Trim" + FILE_SUFFIX);
+        carImageMap.put("问界新M5 增程 Max", m5CarImages);
+        carImageMap.put("问界新M5 增程 Max RS", m5CarImages);
+        carImageMap.put("问界新M5 纯电 Max", m5CarImages);
+        carImageMap.put("问界M5 EV", m5CarImages);
 
         // 问界M7系列
-        carImageMap.put("问界M7 Plus 五座后驱版", BASE_URL + "M7_Plus_5Dr" + FILE_SUFFIX);
-        carImageMap.put("问界M7 Plus 五座四驱版", BASE_URL + "M7_Plus_5D4WD" + FILE_SUFFIX);
-        carImageMap.put("问界M7 Plus 六座后驱版", BASE_URL + "M7_Plus_6Dr" + FILE_SUFFIX);
-        carImageMap.put("问界M7 Plus 六座四驱版", BASE_URL + "M7_Plus_6D4WD" + FILE_SUFFIX);
+        List<String> m7CarImages = new ArrayList<>();
+        m7CarImages.add("M7_Exterior_1" + FILE_SUFFIX);
+        m7CarImages.add("M7_Exterior_2" + FILE_SUFFIX);
+        m7CarImages.add("M7_Exterior_3" + FILE_SUFFIX);
+        m7CarImages.add("M7_Front" + FILE_SUFFIX);
+        List<String> m7_5SeatCarImages = new ArrayList<>(m7CarImages);
+        m7_5SeatCarImages.add("M7_Trim_5Seat" + FILE_SUFFIX);
+        List<String> m7_6SeatCarImages = new ArrayList<>(m7CarImages);
+        m7_6SeatCarImages.add("M7_Trim_6Seat" + FILE_SUFFIX);
+        carImageMap.put("问界M7 Plus 五座后驱版", m7_5SeatCarImages);
+        carImageMap.put("问界M7 Plus 五座四驱版", m7_5SeatCarImages);
+        carImageMap.put("问界M7 Plus 六座后驱版", m7_6SeatCarImages);
+        carImageMap.put("问界M7 Plus 六座四驱版", m7_6SeatCarImages);
         // 若有海外rebadged版本，也可以加入（如Seres 7）
-        carImageMap.put("Seres 7", BASE_URL + "Seres_7" + FILE_SUFFIX);
+        carImageMap.put("Seres 7", Collections.singletonList("M7_Seres" + FILE_SUFFIX));
 
         // 问界M9系列
-        carImageMap.put("问界M9 增程版 六座", BASE_URL + "M9_Extended_6Seat" + FILE_SUFFIX);
-        carImageMap.put("问界M9 增程版 五座", BASE_URL + "M9_Extended_5Seat" + FILE_SUFFIX);
-        carImageMap.put("问界M9 纯电版", BASE_URL + "M9_PureElectric" + FILE_SUFFIX);
+        List<String> m9CarImages = new ArrayList<>();
+        m9CarImages.add("M9_Exterior_1" + FILE_SUFFIX);
+        m9CarImages.add("M9_Exterior_2" + FILE_SUFFIX);
+        m9CarImages.add("M9_Trunk" + FILE_SUFFIX);
+        List<String> m9_5SeatCarImages = new ArrayList<>(m7CarImages);
+        m9_5SeatCarImages.add("M9_Trim_5Seat" + FILE_SUFFIX);
+        List<String> m9_6SeatCarImages = new ArrayList<>(m7CarImages);
+        m9_6SeatCarImages.add("M9_Trim_6Seat" + FILE_SUFFIX);
+        carImageMap.put("问界M9 增程版 六座", m9_6SeatCarImages);
+        carImageMap.put("问界M9 增程版 五座", m9_5SeatCarImages);
+        carImageMap.put("问界M9 纯电版", m9CarImages);
     }
 
     @Override
@@ -85,8 +110,8 @@ public class WenjieServiceImpl implements WenjieService {
     @ToolMethod(name = "问界车型宣传图片", description = "用于查询问界车型宣传图片", extensions = {
             @Attribute(key = "tags", value = "FIT")})
     @Property(description = "问界车型的宣传图片的访问地址")
-    public String url(String carType) {
-        String res = Optional.ofNullable(carImageMap.get(carType)).orElse(DEFAULT_URL);
+    public List<String> url(String carType) {
+        List<String> res = Collections.singletonList(Optional.ofNullable(carImageMap.get(carType)).orElse(DEFAULT_URL));
         log.warn("type:{} image is: {}", carType, res);
         return res;
     }
