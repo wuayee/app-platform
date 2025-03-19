@@ -2,43 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { getQueryParams } from './utils/index';
 import { DataContext } from './context';
-import Form from './components/form';
 import SmartForm from "./components/form";
 
 export default function App() {
 
-  // let xx = {};
-  let xx =
-  { "data" : {
-    "data": {
-      "aaa": "jane",
-      "aab": "1",
-      "aab-options": [
-        "insert",
-        "delete",
-        "update",
-        "select"
-      ]
-    },
-    "schema": {
-      "parameters": [
-        {
-          "name": "aaa",
-          "displayName": "aaa测试",
-          "type": "Boolean",
-          "renderType": "Switch"
-        },
-        {
-          "name": "aab",
-          "displayName": "aab测试",
-          "type": "String",
-          "renderType": "Radio"
-        }
-      ]
-    }
-  }};
-
-  const [receiveData, setReceiveData] = useState<any>(xx);
+  const [receiveData, setReceiveData] = useState<any>({});
   const uniqueId = getQueryParams(window.location.href);
 
   // 终止会话
@@ -58,7 +26,7 @@ export default function App() {
 
   useEffect(() => {
     window.addEventListener('message', function(event) {
-      if (event.data && event.data.data) {
+      if (window.self !== top && event.data) {
         setReceiveData(event.data);
       }
     });

@@ -6,7 +6,7 @@
 import {Button, Input, Radio, Select, Switch} from 'antd';
 import React, {useContext, useEffect, useState} from 'react';
 import {DataContext} from "../context";
-// import '../styles/form.scss';
+import '../styles/form.scss';
 
 const SmartForm = ({onSubmit, onCancel}) => {
 
@@ -54,8 +54,15 @@ const SmartForm = ({onSubmit, onCancel}) => {
     // // 初始化表单数据
     useEffect(() => {
         if (!data) return;
+        data.schema?.parameters?.forEach(item => {
+            const dynamicKey = `${item.name}-options`;
+            const dynamicOptions = data.data[dynamicKey] || [];
+            if (['Select', 'Radio'].includes(item.renderType) && !data.data[item.name]) {
+                data.data[item.name] = dynamicOptions[0] || '';
+            }
+        });
         setFormData(data.data);
-    }, [data])
+    }, [data]);
 
     if (!data) return (<div></div>);
 
@@ -70,7 +77,7 @@ const SmartForm = ({onSubmit, onCancel}) => {
             case 'input':
                 return (
                     <Input
-                        style={{width: '100%'}}
+                        style={{width: '100%', maxWidth: '900px'}}
                         value={formData[field.name] || ''}
                         onChange={(e) => handleChange(field.name, e.target.value)}
                     />
@@ -87,7 +94,7 @@ const SmartForm = ({onSubmit, onCancel}) => {
                             <Radio
                                 key={opt}
                                 value={opt}
-                                style={{marginBottom: '8px', marginLeft: '16px'}}
+                                style={{ margin: '6px 0' }}
                             >
                                 {opt}
                             </Radio>
@@ -99,7 +106,7 @@ const SmartForm = ({onSubmit, onCancel}) => {
                 const options = field.options || [];
                 return (
                     <Select
-                        style={{width: '100%'}}
+                        style={{width: '100%', maxWidth: '900px'}}
                         value={formData[field.name] || ''}
                         onChange={(val) => handleChange(field.name, val)}
                     >
@@ -140,21 +147,21 @@ const SmartForm = ({onSubmit, onCancel}) => {
         onCancel();
     };
     return (
-        <div style={{maxWidth: '200px', margin: '1rem', padding: '1rem'}}>
+        <div style={{padding: '0 24px'}}>
             {formSchema.map((field) => (
-                <div key={field.name} style={{marginBottom: '1rem'}}>
-                    <div style={{marginBottom: 4, fontWeight: 'bold'}}>{field.label}</div>
+                <div key={field.name} className='filed-node'>
+                    <div className='filed-node-label'>{field.label}</div>
                     {renderField(field)}
                 </div>
             ))}
-            <Button.Group style={{marginTop: '1rem', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
-                <Button type="primary" disabled={buttonsDisabled} onClick={submitForm}>
+            <div className='form-btn'>
+                <Button type="primary" style={{ marginRight: '16px' }} disabled={buttonsDisabled} onClick={submitForm}>
                     提交
                 </Button>
-                <Button type="primary" disabled={buttonsDisabled} onClick={cancelForm}>
+                <Button disabled={buttonsDisabled} onClick={cancelForm}>
                     取消
                 </Button>
-            </Button.Group>
+            </div>
         </div>
     );
 };
