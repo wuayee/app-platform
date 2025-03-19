@@ -1,18 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.tool.impl;
 
-import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
+import modelengine.fit.jober.aipp.domain.AppBuilderApp;
+import modelengine.fit.jober.aipp.domain.AppBuilderFormProperty;
 import modelengine.fit.jober.aipp.dto.AppBuilderPromptDto;
 import modelengine.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import modelengine.fit.jober.aipp.entity.AippInstLog;
 import modelengine.fit.jober.aipp.enums.AippInstLogType;
+import modelengine.fit.jober.aipp.factory.AppBuilderAppFactory;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AopAippLogService;
 import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
@@ -21,13 +19,14 @@ import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
+
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,56 +42,46 @@ import java.util.regex.Pattern;
 public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppTool {
     private static final Logger log = Logger.get(TzPromptWordSplicingAppToolImpl.class);
 
-    private static final String DEFAULT_TENANT_ID = "31f20efc7e0848deab6a6bc10fc3021e";
-
     private static final int TEMPLATE_TITLE_INDEX = 0;
-
     private static final Pattern TEMPLATE_PATTERN = Pattern.compile("<步骤[：:](.*?)>");
-
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("<([^<>]*)>[:：]\\s*(.*?)(?=(<[^<>]*>[:：]\\s*|$))",
             Pattern.DOTALL);
-
     private static final String VARIABLE_TEMPLATE_FORMAT = "{{%s}}";
-
     private static final int VARIABLE_KEY_INDEX = 1;
-
     private static final int VARIABLE_VALUE_INDEX = 2;
-
     private static final String LINE_BREAK = "\n";
-
     private static final String EMPTY_STRING = "";
-
-    private final AppBuilderPromptService appBuilderPromptService;
+    private static final String COLON = ":";
+    private static final String BACK_QUOTE = "```";
 
     private final AippLogService aippLogService;
-
     private final AopAippLogService aopAippLogService;
+    private final AppBuilderAppFactory appFactory;
 
     public TzPromptWordSplicingAppToolImpl(AppBuilderPromptService appBuilderPromptService,
-            AippLogService aippLogService, AopAippLogService aopAippLogService) {
-        this.appBuilderPromptService = appBuilderPromptService;
+            AippLogService aippLogService, AopAippLogService aopAippLogService, AppBuilderAppFactory appFactory) {
         this.aippLogService = aippLogService;
         this.aopAippLogService = aopAippLogService;
+        this.appFactory = appFactory;
     }
 
     @Override
     @Fitable("prompt.word.splice")
     public String promptWordSplice(String appId, String instanceId, String input) {
         // 判断输入中是否包含模板 不需要使用模板 直接返回String
-        String title = input.split(LINE_BREAK)[TEMPLATE_TITLE_INDEX];
-        String templateName = getTemplateName(title);
-        if (StringUtils.isEmpty(templateName)) {
+        String title = getTitle(input);
+        if (StringUtils.isEmpty(title)) {
+            log.info("[promptWordSplice]: conversation without template, the input is {}", input);
             return input;
         }
 
-        log.info("[promptWordSplice]: Start a conversation with template name {}", templateName);
+        log.info("[promptWordSplice]: Start a conversation with template name {}", title);
         try {
             Map<String, String> toBeReplacedVariables = getToBeReplacedVariables(input, title);
-            // 根据appId查到灵感大全树
-            String categoryId = getCategoryIdByTemplateName(appId, templateName);
-            // 根据categoryId查询某个灵感模板的详情
-            String promptTemplate = getPromptTemplate(appId, categoryId);
+            // 根据输入首行步骤名查询某个灵感模板的详情
+            String promptTemplate = getPromptTemplate(appId, title);
             if (StringUtils.isEmpty(promptTemplate)) {
+                log.info("[promptWordSplice]: the prompt template is null.");
                 return input;
             }
             // 替换模板中的变量
@@ -119,9 +108,11 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
 
     private String overridePromptTemplate(Map<String, String> toBeReplacedVariables, String promptTemplate) {
         String prompt = promptTemplate;
-        for (String key : toBeReplacedVariables.keySet()) {
+        for (Map.Entry<String, String> entry : toBeReplacedVariables.entrySet()) {
+            String key = entry.getKey();
             if (prompt.contains(key)) {
-                prompt = prompt.replace(key, toBeReplacedVariables.get(key));
+                String msg = entry.getValue();
+                prompt = prompt.replace(key, msg);
             } else {
                 log.info("Input key {} can not found in prompt template.", key);
             }
@@ -129,28 +120,26 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
         return prompt;
     }
 
-    private String getPromptTemplate(String appId, String categoryId) {
-        Rsp<AppBuilderPromptDto> inspirationsResponse = this.appBuilderPromptService.queryInspirations(appId,
-                categoryId, this.buildOperationContext(), true);
-        if (Rsp.ok().getCode() != inspirationsResponse.getCode()) {
-            log.info("Failed to query inspirations, appId is {}, category id is {}, error is {}",
-                    inspirationsResponse.getMsg());
-        }
-        return inspirationsResponse.getData().getInspirations().get(0).getPromptTemplate();
+    private String getPromptTemplate(String appId, String title) {
+        AppBuilderFormProperty inspiration = this.findInspirationProperty(appId);
+        Object defaultValue = inspiration.getDefaultValue();
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(defaultValue));
+        List<AppBuilderPromptDto.AppBuilderInspirationDto> inspirations = jsonObject.getObject("inspirations",
+                new TypeReference<List<AppBuilderPromptDto.AppBuilderInspirationDto>>() {});
+        return inspirations.stream()
+                .filter(inspirationDto -> inspirationDto.getPrompt().startsWith(title))
+                .map(AppBuilderPromptDto.AppBuilderInspirationDto::getPromptTemplate)
+                .findFirst()
+                .orElse(EMPTY_STRING);
     }
 
-    private String getCategoryIdByTemplateName(String appId, String templateName) {
-        Rsp<List<AppBuilderPromptCategoryDto>> promptCategoriesResponse
-                = this.appBuilderPromptService.listPromptCategories(appId, this.buildOperationContext(), true);
-        if (Rsp.ok().getCode() != promptCategoriesResponse.getCode()) {
-            log.info("Failed to query list prompt categories, appId is {}, error message is {}", appId,
-                    promptCategoriesResponse.getMsg());
-        }
-        String categoryId = findIdByTemplateName(promptCategoriesResponse.getData(), templateName);
-        if (StringUtils.isEmpty(categoryId)) {
-            log.info("The category id corresponding to the template name {} is not found.", templateName);
-        }
-        return categoryId;
+    private AppBuilderFormProperty findInspirationProperty(String appId) {
+        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
+        List<AppBuilderFormProperty> formProperties = appBuilderApp.getFormProperties();
+        return formProperties.stream()
+                .filter(fp -> fp.getName().equals("inspiration"))
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Don't find property 'inspiration'."));
     }
 
     private Map<String, String> getToBeReplacedVariables(String input, String title) {
@@ -165,9 +154,9 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
         return toBeReplacedVariables;
     }
 
-    private String getTemplateName(String title) {
+    private String getTitle(String title) {
         Matcher matcher = TEMPLATE_PATTERN.matcher(title);
-        return matcher.find() ? matcher.group(1).trim() : EMPTY_STRING;
+        return matcher.find() ? matcher.group(0) : EMPTY_STRING;
     }
 
     private AippLogCreateDto convertAippInstToDto(AippInstLog aippInstLog, String rewrittenInput) {
@@ -183,40 +172,5 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
                 .createUserAccount(aippInstLog.getCreateUserAccount())
                 .path(aippInstLog.getPath())
                 .build();
-    }
-
-    // 查找指定标题对应的categoryId
-    private String findIdByTemplateName(List<AppBuilderPromptCategoryDto> data, String title) {
-        for (AppBuilderPromptCategoryDto dto : data) {
-            Optional<String> result = findIdByTitleRecursive(dto, title);
-            if (result.isPresent()) {
-                return result.get();
-            }
-        }
-        return EMPTY_STRING;
-    }
-
-    // 递归查找标题对应的ID
-    private Optional<String> findIdByTitleRecursive(AppBuilderPromptCategoryDto dto, String title) {
-        if (dto.getTitle().equals(title)) {
-            return Optional.of(dto.getId());
-        }
-        if (CollectionUtils.isEmpty(dto.getChildren())) {
-            return Optional.empty();
-        }
-        for (AppBuilderPromptCategoryDto child : dto.getChildren()) {
-            Optional<String> result = findIdByTitleRecursive(child, title);
-            if (result.isPresent()) {
-                return result;
-            }
-        }
-        return Optional.empty();
-    }
-
-    private OperationContext buildOperationContext() {
-        OperationContext context = new OperationContext();
-        context.setTenantId(DEFAULT_TENANT_ID);
-        context.setOperator("modelengine.jade");
-        return context;
     }
 }
