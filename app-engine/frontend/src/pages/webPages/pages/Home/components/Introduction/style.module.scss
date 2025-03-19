@@ -14,27 +14,77 @@
         font-size: 14px;
         font-weight: 400;
     }
+    .content-container {
+        display: flex;
+        flex-direction: row;
+    }
     .primary-intro-container {
-        width: 1280px;
         height: 416px;
+        width: 100%;
         display: flex;
         justify-content: space-between;
-        background-image: url('/src/assets/svg/frameWork.svg');
+        background: #FFF;
         position: relative;
         margin-top: 24px;
         box-shadow: 0 4px 16px 0 rgba(101, 104, 132, 0.06);
         box-shadow: 0px 12px 20px 0px rgba(88, 96, 128, 0.18),0px 20px 30px 0px rgba(79, 116, 168, 0.1);
         border-radius: 12px;
+        .primary-intro-img {
+            width: 100%;
+            height: 100%;
+            background-image: url('/src/assets/svg/frameWork.svg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
         .text-container {
             width: 424px;
             height: 168px;
-            position: absolute;
-            left: 808px;
-            top: 84px;
             text-align: left;
             color: rgb(26, 26, 26);
             line-height: 28px;
             letter-spacing: 0;
+            position: absolute;
+            right: 48px;
+            top: 64px;
+        }
+        .text {
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+        .sub-text {
+            font-size: 16px;
+        }
+    }
+}
+
+@media screen and (max-width: 828px) {
+    .introduction {
+        .primary-intro-container {
+            flex-direction: column;
+            height: 420px;
+            border-radius: initial;
+            box-shadow: initial;
+            background: initial;
+
+            .primary-intro-img {
+                width: calc(100% - 40px);
+                height: initial;
+                flex: 1;
+                margin: 0 20px;
+                box-sizing: border-box;
+                border-radius: 8px;
+            }
+            
+            .text-container {
+                width: 100%;
+                height: initial;
+                flex: 1;
+                padding: 20px;
+                box-sizing: border-box;
+                position: initial;
+                top: initial;
+                right: initial;
+            }
         }
     }
 }

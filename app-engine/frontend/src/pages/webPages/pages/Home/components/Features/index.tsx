@@ -13,8 +13,9 @@ const Features = () => {
 
     return (
         <div className={style['features-container']}>
-            <div className={style['feature-card']} style={{ paddingRight: '0' }}>
-                <div className={style['feature-text']} style={{ marginRight: '32px' }}>
+            <div className={style['feature-card']}>
+                <img src={edatemate} className={style['feature-img-sm']} alt="" />
+                <div className={style['feature-text']}>
                     <div className={style['title']}>数据使能</div>
                     <div className={style['content']}>提供数据清洗和知识生成的一站式工具链，提升数据处理效率 </div>
                     <div className={style['sub-title']}>丰富的数据处理算子及自定义扩展功能</div>
@@ -26,9 +27,10 @@ const Features = () => {
                 </div>
                 <img src={edatemate} className={style['feature-img']} alt="" />
             </div>
-            <div className={style['feature-card']} style={{ paddingLeft: '0' }}>
+            <div className={style['feature-card']}>
+                <img src={modelLite} className={style['feature-img-sm']} alt="" />
                 <img src={modelLite} className={style['feature-img']} alt="" />
-                <div className={style['feature-text']} style={{ marginLeft: '32px' }}>
+                <div className={style['feature-text']}>
                     <div className={style['title']}>模型使能</div>
                     <div className={style['content']}>模型管理与评估，训练和推理服务部署任务一键式下发和管理；</div>
                     <div className={style['sub-title']}>管理</div>
@@ -45,8 +47,9 @@ const Features = () => {
                     <div className={style['content']}>支持模型评测结果的可视化分析和导出；</div>
                 </div>
             </div>
-            <div className={style['feature-card']} style={{ paddingRight: '0' }}>
-                <div className={style['feature-text']} style={{ marginRight: '32px' }}>
+            <div className={style['feature-card']}>
+                <img src={appengine} className={style['feature-img-sm']} alt="" />
+                <div className={style['feature-text']}>
                     <div className={style['title']}>应用使能</div>
                     <div className={style['content']}>一站式可视化应用编排，应用分钟级级发布</div>
                     <div className={style['sub-title']}>可视化应用编排</div>

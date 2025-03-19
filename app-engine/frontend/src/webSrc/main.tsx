@@ -9,6 +9,18 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
+// function setRem() {
+//   const baseSize = 192;  
+//   const scale = document.documentElement.clientWidth / 1920;
+//     document.documentElement.style.fontSize = (baseSize * Math.min(scale, 2)) + 'px';
+// }
+
+// setRem();
+// window.onresize = function() {
+//     setRem();
+// }
+
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

@@ -1,5 +1,6 @@
 .header {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
@@ -8,19 +9,32 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    height: 68px;
+    height: 64px;
     box-sizing: border-box;
     backdrop-filter: blur(4px);
     .logo {
         width: 175px;
         height: 28px;
     }
+    .menu-icon-wrap {
+        display: none;
+    }
+    .menu-icon {
+        width: 18px;
+        height: 18px;
+    }
     .header-button-group {
         display: flex;
-        gap: 10px;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+        flex: 1;
+        gap: 8px;
+        justify-content: center;
+        margin-left: -175px;
+        .text {
+            font-size: 14px;
+        }
+    }
+    .header-button-group-sm {
+        display: none;
     }
     .ant-btn {
         font-size: 14px;
@@ -34,5 +48,72 @@
         width: 14px;
         height: 14px;
         margin-right: 8px;
+    }
+}
+
+@media screen and (max-width: 828px) {
+    .header {
+        height: 64px;
+        padding: 15px 20px;
+        .menu-icon-wrap {
+            display: block;
+            width: 52px;
+            height: 32px;
+            border-radius: 16px;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .logo {
+            width: 125px;
+            height: 20px;
+        }
+
+        .header-button-group {
+            display: none;
+        }
+
+        .header-button-group-sm {
+            display: none;
+            justify-content: flex-start;
+            position: fixed;
+            flex-direction: column;
+            background: #FFFFFF;
+            top: 64px;
+            height: 396px;
+            left: 0;
+            right: 0;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            align-items: flex-start;
+            padding: 20px 10px;
+            transform: initial;
+            gap: 16px;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .header-button-group-sm li {
+            height: 32px;
+            padding: 0 24px;
+        }
+
+        .sub-menu img {
+            width: 18px;
+            height: 18px;
+            margin-right: 9px;
+        }
+
+        .header-button-group-sm.show {
+            display: flex;
+        }
     }
 }
