@@ -1,7 +1,35 @@
-.form-wrap {
-  .form-button-list {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+#custom-smart-form {
+  .filed-node {
+    margin-bottom: 16px;
+    .filed-node-label {
+      color: rgb(77, 77, 77);
+      margin-bottom: 6px;
+    }
+    .ant-input,
+    .ant-select-selector {
+      background-color: rgb(250, 249, 249);
+      border: none;
+      box-shadow: none !important;
+      border-radius: 8px;
+      padding: 0px, 10px, 0px, 10px;
+      height: 32px;
+      line-height: 32px;
+      color: rgb(77, 77, 77);
+    }
+    .ant-radio-wrapper {}
+  }
+  .ant-radio {
+    & + * {
+      display: inline-block;
+      max-width: calc(100% - 20px);
+      word-break: break-all;
+      color: rgb(26, 26, 26);
+    }
+  }
+  .form-btn {
+    .ant-btn {
+      width: 68px;
+      box-sizing: border-box;
+    }
   }
 }
