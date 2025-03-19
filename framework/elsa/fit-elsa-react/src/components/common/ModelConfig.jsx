@@ -24,6 +24,7 @@ const {Panel} = Collapse;
  * @param memoryConfig 记忆设置对象
  * @param temperature 温度对象
  * @param serviceName 模型对象
+ * @param tag 模型对象标签
  * @return {JSX.Element} 优化配置组件
  * @private
  */
@@ -35,6 +36,7 @@ const _ModelConfig = ({
                         serviceName,
                         promptPopover,
                         promptTitle,
+                        tag,
                       }) => {
   const shape = useShapeContext();
   const shapeId = shape.id;
@@ -76,7 +78,7 @@ const _ModelConfig = ({
         <div className={'jade-custom-panel-content'}>
           <Model
             disabled={disabled} shapeId={shapeId} modelOptions={modelOptions} temperature={temperature}
-            serviceName={serviceName}/>
+            serviceName={serviceName} tag={tag}/>
           <span>
             <span className='jade-panel-header-font'>{t(promptTitle)}</span>
           </span>
@@ -106,6 +108,7 @@ _ModelConfig.propTypes = {
   description: PropTypes.object.isRequired,
   temperature: PropTypes.object.isRequired,
   serviceName: PropTypes.object.isRequired,
+  tag: PropTypes.object.isRequired,
   promptPopover: PropTypes.string.isRequired,
   promptTitle: PropTypes.string.isRequired,
 };
@@ -116,6 +119,7 @@ const areEqual = (prevProps, nextProps) => {
     prevProps.temperature === nextProps.temperature &&
     prevProps.description === nextProps.description &&
     prevProps.serviceName === nextProps.serviceName &&
+    prevProps.tag === nextProps.tag &&
     prevProps.promptPopover === nextProps.promptPopover &&
     prevProps.promptTitle === nextProps.promptTitle;
 };

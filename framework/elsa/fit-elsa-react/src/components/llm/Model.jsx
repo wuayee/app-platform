@@ -50,7 +50,7 @@ const ModelSelect = ({shapeId, model, serviceName, tag, disabled, modelOptions})
           return Promise.resolve();
         },
       }]}
-      initialValue={serviceName?.value ?? model.value} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
+      initialValue={(serviceName?.value && tag?.value ? `${serviceName.value}&&${tag.value}` : null) ?? model?.value ?? serviceName?.value ?? ''} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
       validateTrigger='onBlur'
     >
       <JadeStopPropagationSelect
@@ -185,7 +185,6 @@ const _Model = ({shapeId, disabled, model, modelOptions, temperature, serviceNam
 
 _Model.propTypes = {
   shapeId: PropTypes.string.isRequired, // 确保 shapeId 是一个必需的string类型
-  model: PropTypes.object.isRequired, // 确保 model 是一个必需的object类型
   modelOptions: PropTypes.array.isRequired, // 确保 modelOptions 是一个必需的array类型
   disabled: PropTypes.bool, // 确保 modelOptions 是一个必需的array类型
   temperature: PropTypes.object.isRequired,

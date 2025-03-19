@@ -6,9 +6,7 @@
 
 import './style.css';
 import {DEFAULT_FLOW_META, SECTION_TYPE} from '@/common/Consts.js';
-import {
-  questionClassificationNodeDrawer,
-} from '@/components/questionClassification/questionClassificationNodeDrawer.jsx';
+import {questionClassificationNodeDrawer} from '@/components/questionClassification/questionClassificationNodeDrawer.jsx';
 import {conditionNodeCondition} from '@/components/condition/conditionNodeCondition.jsx';
 import {convertToBranchesFormat} from '@/components/util/JadeConfigUtils.js';
 
@@ -71,6 +69,13 @@ export const questionClassificationNodeCondition = (id, x, y, width, height, par
    */
   self.isReferenceAvailable = (preNodeInfos, observerProxy) => {
     return preNodeInfos.some(pre => pre.id === observerProxy.nodeId && pre.runnable === self.runnable);
+  };
+
+  /**
+   * @override
+   */
+  self.getBranches = () => {
+    return self.drawer.getLatestJadeConfig().inputParams.find(param => param.name === 'classifyQuestionParam').value.find(questionParam => questionParam.name === 'questionTypeList').value;
   };
 
   /**

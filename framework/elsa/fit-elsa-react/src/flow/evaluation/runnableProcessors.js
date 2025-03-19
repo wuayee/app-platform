@@ -48,7 +48,7 @@ const conditionProcessor = (shape) => {
         shape.statusManager.setRunnable(runnable);
         shape.statusManager.setEnableMask(!runnable);
         shape.statusManager.setReferenceDisabled(!runnable);
-        shape.getFlowMeta().conditionParams.branches.forEach((b, index) => {
+        shape.getBranches().forEach((b, index) => {
             const events = shape.getEventsByBranchId(b.id);
             const prevRunnable = b.runnable;
             const realRunnable = events.length > 0 && events.some(e => runnableFlow.has(e.id));

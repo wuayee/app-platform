@@ -85,6 +85,7 @@ const _QuestionClassificationWrapper = ({data, shapeStatus}) => {
   const classifyQuestionParam = data.inputParams.find(item => item.name === 'classifyQuestionParam');
   const temperature = getConfigValue(classifyQuestionParam, ['temperature'], EMPTY_STRING);
   const serviceName = getConfigValue(classifyQuestionParam, ['accessInfo', 'serviceName'], EMPTY_STRING);
+  const tag = getConfigValue(classifyQuestionParam, ['accessInfo', 'tag'], EMPTY_STRING);
   const memoryConfig = data.inputParams.find(item => item.name === 'memoryConfig');
   const memorySwitch = data.inputParams.find(item => item.name === 'memorySwitch');
   const questionTypeList = getConfigValue(classifyQuestionParam, ['questionTypeList'], 'value');
@@ -120,7 +121,7 @@ const _QuestionClassificationWrapper = ({data, shapeStatus}) => {
       content={inputDescription}
       maxInputLength={1000}/>
     <ModelConfig
-      modelOptions={modelOptions} temperature={temperature} serviceName={serviceName}
+      modelOptions={modelOptions} temperature={temperature} serviceName={serviceName} tag={tag}
       description={template} disabled={shapeStatus.disabled} promptTitle={'userPromptTemplate'}
       promptPopover={'questionClassificationPromptPopover'}/>
     <HistoryConfig
