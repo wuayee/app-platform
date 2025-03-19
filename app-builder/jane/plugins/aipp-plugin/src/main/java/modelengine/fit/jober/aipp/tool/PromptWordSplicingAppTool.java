@@ -9,12 +9,12 @@ package modelengine.fit.jober.aipp.tool;
 import modelengine.fitframework.annotation.Genericable;
 
 /**
- * 天舟相关接口
+ * 提示词拼接工具
  *
  * @author 晏钰坤
  * @since 2024/5/31
  */
-public interface TzPromptWordSplicingAppTool {
+public interface PromptWordSplicingAppTool {
     /**
      * 提示词拼接
      *
@@ -23,6 +23,6 @@ public interface TzPromptWordSplicingAppTool {
      * @param input 用户输入
      * @return 处理后的提示词
      */
-    @Genericable(id = "modelengine.fit.jober.aipp.tool.tianzhou.prompt.word.splice")
+    @Genericable(id = "modelengine.fit.jober.aipp.tool.prompt.word.splice")
     String promptWordSplice(String appId, String instanceId, String input);
 }

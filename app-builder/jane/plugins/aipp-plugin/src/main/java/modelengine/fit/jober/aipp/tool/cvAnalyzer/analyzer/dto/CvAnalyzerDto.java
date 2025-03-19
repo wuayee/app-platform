@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 天舟AI简历解析插件输出类。
+ * AI简历解析插件输出类。
  *
  * @author 杨璨宇
  * @since 2024/09/12
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TzCvAnalyzerDto {
+public class CvAnalyzerDto {
     private boolean isFileHandled;
     private String cvAnalyzerPrompt;
     private String errorMessage;

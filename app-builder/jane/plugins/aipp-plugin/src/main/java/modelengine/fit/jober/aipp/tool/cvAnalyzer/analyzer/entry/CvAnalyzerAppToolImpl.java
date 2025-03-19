@@ -8,7 +8,7 @@ package modelengine.fit.jober.aipp.tool.cvAnalyzer.analyzer.entry;
 
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AopAippLogService;
-import modelengine.fit.jober.aipp.tool.cvAnalyzer.analyzer.dto.TzCvAnalyzerDto;
+import modelengine.fit.jober.aipp.tool.cvAnalyzer.analyzer.dto.CvAnalyzerDto;
 import modelengine.fit.jober.aipp.tool.cvAnalyzer.analyzer.header.enums.HeaderEnum;
 import modelengine.fit.jober.aipp.tool.cvAnalyzer.analyzer.header.regexp.HeaderRegExp;
 import modelengine.fit.jober.aipp.tool.cvAnalyzer.extractor.TextExtractor;
@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * 天舟简历解析插件实现类
+ * 简历解析插件实现类
  * 1、提取简历文件的文本内容
  * 2、解析简历章节内容
  * 3、填充提示词模板，输出提示词
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Group(name = "Resume_Parsing_Plugin_Impl")
-public class TzCvAnalyzerAppToolImpl implements TzCvAnalyzerAppTool {
+public class CvAnalyzerAppToolImpl implements CvAnalyzerAppTool {
     public static final String HANDLE_FILE_KEY = "isFileHandled";
 
     private static final String FORMAT_ERROR_MESSAGE = "解析简历文件失败，如果是PDF格式，请尝试将PDF转换为Word格式，"
@@ -61,11 +61,11 @@ public class TzCvAnalyzerAppToolImpl implements TzCvAnalyzerAppTool {
     // 用户上传超大文本的异常场景，先截断文本再在结尾补全提示词，让大模型判断文本是否为简历
     private static final int CV_TEXT_MAX_LEN = 6000;
 
-    private final Logger logger = Logger.get(TzCvAnalyzerAppToolImpl.class);
+    private final Logger logger = Logger.get(CvAnalyzerAppToolImpl.class);
     private final AippLogService aippLogService;
     private final AopAippLogService aopAippLogService;
 
-    public TzCvAnalyzerAppToolImpl(AippLogService aippLogService, AopAippLogService aopAippLogService) {
+    public CvAnalyzerAppToolImpl(AippLogService aippLogService, AopAippLogService aopAippLogService) {
         this.aippLogService = aippLogService;
         this.aopAippLogService = aopAippLogService;
     }
@@ -79,22 +79,22 @@ public class TzCvAnalyzerAppToolImpl implements TzCvAnalyzerAppTool {
 
     @Override
     @Fitable("cv.analyzer")
-    @ToolMethod(name = "天舟AI简历解析插件", description = "解析简历内容，填充提示词模板，输出大模型提示词",
+    @ToolMethod(name = "AI简历解析插件", description = "解析简历内容，填充提示词模板，输出大模型提示词",
             extensions = {
                     @Attribute(key = "tags", value = "FIT"), @Attribute(key = "tags", value = "BUILTIN"),
             })
     @Property(description = "Map结构包含提示词以及插件处理过文件的标志位")
-    public final TzCvAnalyzerDto analyzeCv(@Property(description = "简历文件URL", required = true) String fileUrl,
+    public final CvAnalyzerDto analyzeCv(@Property(description = "简历文件URL", required = true) String fileUrl,
             @Property(description = "实例ID", required = true) String instanceId) {
         if (!isValidFilePath(fileUrl)) {
             logger.error("[CV Analyzer] invalid file URL: {}", fileUrl);
-            return new TzCvAnalyzerDto(false, StringUtils.EMPTY, StringUtils.EMPTY);
+            return new CvAnalyzerDto(false, StringUtils.EMPTY, StringUtils.EMPTY);
         }
 
         String cvText = extractText(fileUrl);
         if (StringUtils.isEmpty(cvText.trim())) {
             logger.error("[CV Analyzer] failed to extract text from file: {}", fileUrl);
-            return new TzCvAnalyzerDto(false, StringUtils.EMPTY, FORMAT_ERROR_MESSAGE);
+            return new CvAnalyzerDto(false, StringUtils.EMPTY, FORMAT_ERROR_MESSAGE);
         }
 
         String cleanedCvText = cleanCvText(cvText);
@@ -102,7 +102,7 @@ public class TzCvAnalyzerAppToolImpl implements TzCvAnalyzerAppTool {
         String prompt = buildPrompt(cleanedCvText);
 
         AippLogUtils.writePromptLog(instanceId, prompt, this.aippLogService, this.aopAippLogService);
-        return new TzCvAnalyzerDto(true, prompt, isCvFile(sections) ? StringUtils.EMPTY : CONTENT_ERROR_MESSAGE);
+        return new CvAnalyzerDto(true, prompt, isCvFile(sections) ? StringUtils.EMPTY : CONTENT_ERROR_MESSAGE);
     }
 
     private String extractText(String filePath) {
