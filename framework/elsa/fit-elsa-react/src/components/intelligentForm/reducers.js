@@ -28,6 +28,7 @@ export const AddParamReducer = () => {
       value: '',
       renderType: '',
       options: {
+        id: uuidv4(),
         from: FROM_TYPE.REFERENCE,
         referenceNode: "",
         referenceId: "",
