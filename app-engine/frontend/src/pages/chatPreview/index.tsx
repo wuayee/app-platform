@@ -397,12 +397,15 @@ const ChatPreview = (props) => {
       }
       // 过程日志打印
       if (messageData.extensions && messageData.extensions.enableStageDesc) {
-        let idx = listRef.current.length - 1;
+        let receiveItem:any = {
+          recieveType: 'msg',
+          content: '',
+          step: true
+        };
         let msg = messageData.extensions.stageDesc || '';
-        let recieveChatItem = listRef.current[idx];
-        recieveChatItem.recieveType = 'msg';
-        recieveChatItem.content = msg;
-        chatStrInit(msg, recieveChatItem, messageData.status, messageData.log_id);
+        receiveItem.content = msg;
+        receiveItem.logId = messageData.log_id;
+        chatStrInit(msg, receiveItem, messageData.status, messageData.log_id, { isStepLog: true });
         return
       }
       // 普通日志
@@ -456,7 +459,7 @@ const ChatPreview = (props) => {
   const chatForm = (chatObj) => {
     let idx = listRef.current.length - 1;
     let lastItem = listRef.current[listRef.current.length - 1];
-    if (!lastItem.loading) {
+    if (!lastItem.loading && !lastItem.step) {
       idx = listRef.current.length;
     }
     listRef.current.splice(idx, 1, chatObj);
@@ -466,7 +469,7 @@ const ChatPreview = (props) => {
     scrollToBottom();
   };
   // 流式输出
-  function chatStrInit(msg, initObj, status, logId, extensions = {}) {
+  function chatStrInit(msg, initObj, status, logId, extensions:any = {}) {
     let idx = 0;
     const receiveItem = multiModelProcess(initObj);
     if (isJsonString(msg)) {
@@ -485,9 +488,15 @@ const ChatPreview = (props) => {
       if (extensions.isEnableLog && !listRef.current[idx].loading) {
         idx = listRef.current.length;
       } else {
-        if (!extensions.isEnableLog) {
+        if (!extensions.isEnableLog && !listRef.current[idx].step) {
           receiveItem.content = listRef.current[idx].content;
         }
+      }
+    }
+    if (extensions.isStepLog) {
+      if (!listRef.current[idx].step) {
+
+        idx = listRef.current.length;
       }
     }
     if (testRef.current) {
@@ -601,6 +610,13 @@ const ChatPreview = (props) => {
   }
   function conditionConfirm(response, logId = undefined) {
     const reciveInitObj = deepClone(initChat);
+    if (logId) {
+      let currentChatItem = listRef.current.filter((item) => item.logId === logId)[0];
+      if (currentChatItem) {
+        let index = listRef.current.findIndex((item) => item.logId === logId);
+        listRef.current[index].status = 'ARCHIVED';
+      }
+    }
     listRef.current.push(reciveInitObj);
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(true));

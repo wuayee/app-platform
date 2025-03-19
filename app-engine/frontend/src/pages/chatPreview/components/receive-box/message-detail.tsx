@@ -73,11 +73,11 @@ const MessageBox = (props: any) => {
 
   // 点击弹出溯源的抽屉回调
   const onClickHTML = (e: any) => {
-    if (isChatRunning()) {
-      Message({ type: 'warning', content: t('tryLater') });
-      return;
-    }
     if (e.target.classList.contains('source-word')) {
+      if (isChatRunning()) {
+        Message({ type: 'warning', content: t('tryLater') });
+        return;
+      }
       e.target.classList.add('source-word-click');
       let strs = e.target.dataset.reference;
       let referenceIndex = strs.split('-')[0];
