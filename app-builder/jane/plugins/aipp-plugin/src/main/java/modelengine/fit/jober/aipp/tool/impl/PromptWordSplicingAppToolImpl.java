@@ -14,7 +14,7 @@ import modelengine.fit.jober.aipp.factory.AppBuilderAppFactory;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AopAippLogService;
 import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
-import modelengine.fit.jober.aipp.tool.TzPromptWordSplicingAppTool;
+import modelengine.fit.jober.aipp.tool.PromptWordSplicingAppTool;
 import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 天舟AI提示词拼接工具实现类
+ * AI提示词拼接工具实现类
  * 1、使用流程中的app_id找到对应的模板
  * 2、根据模板改写流程中的用户输入
  *
@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
  * @since 2024/5/31
  */
 @Component
-public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppTool {
-    private static final Logger log = Logger.get(TzPromptWordSplicingAppToolImpl.class);
+public class PromptWordSplicingAppToolImpl implements PromptWordSplicingAppTool {
+    private static final Logger log = Logger.get(PromptWordSplicingAppToolImpl.class);
 
     private static final int TEMPLATE_TITLE_INDEX = 0;
     private static final Pattern TEMPLATE_PATTERN = Pattern.compile("<步骤[：:](.*?)>");
@@ -58,7 +58,7 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
     private final AopAippLogService aopAippLogService;
     private final AppBuilderAppFactory appFactory;
 
-    public TzPromptWordSplicingAppToolImpl(AppBuilderPromptService appBuilderPromptService,
+    public PromptWordSplicingAppToolImpl(AppBuilderPromptService appBuilderPromptService,
             AippLogService aippLogService, AopAippLogService aopAippLogService, AppBuilderAppFactory appFactory) {
         this.aippLogService = aippLogService;
         this.aopAippLogService = aopAippLogService;
@@ -92,10 +92,10 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
             return overridePromptTemplate;
         } catch (IllegalArgumentException e) {
             log.error("regex syntax error, error is {}", e.getMessage());
-            return "天舟AI提示词拼接工具失败：" + e.getMessage();
+            return "AI提示词拼接工具失败：" + e.getMessage();
         } catch (Exception e) {
             log.error("Failed to prompt word splice, error is {}", e.getMessage(), e);
-            return "天舟AI提示词拼接工具失败：" + e.getMessage();
+            return "AI提示词拼接工具失败：" + e.getMessage();
         }
     }
 
