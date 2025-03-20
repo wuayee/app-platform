@@ -472,7 +472,6 @@ const ChatPreview = (props) => {
   // 流式输出
   function chatStrInit(msg, initObj, status, logId, extensions:any = {}) {
     let idx = 0;
-    const receiveItem = multiModelProcess(initObj);
     if (isJsonString(msg)) {
       let msgObj = JSON.parse(msg);
       if (msgObj.chartData && msgObj.chartType) {
@@ -490,7 +489,7 @@ const ChatPreview = (props) => {
         idx = listRef.current.length;
       } else {
         if (!extensions.isEnableLog && !listRef.current[idx].step) {
-          receiveItem.content = listRef.current[idx].content;
+          initObj.content = listRef.current[idx].content;
         }
       }
     }
@@ -504,10 +503,11 @@ const ChatPreview = (props) => {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
-      const { thinkTime } = listRef.current[idx];
+      const { thinkTime } = listRef.current[listRef.current.length - 1];
       if (thinkTime) {
         initObj.thinkTime = thinkTime;
       }
+      const receiveItem = multiModelProcess(initObj);
       listRef.current.splice(idx, 1, deepClone(receiveItem));
     }
     listRef.current[listRef.current.length - 1]['logId'] = logId ? Number(logId) : '';
