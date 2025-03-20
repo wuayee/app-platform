@@ -483,10 +483,6 @@ const ChatPreview = (props) => {
     }
     initObj.loading = false;
     idx = listRef.current.length - 1;
-    const { thinkTime } = listRef.current[idx];
-    if (thinkTime) {
-      initObj.thinkTime = thinkTime;
-    }
     if (status === 'ARCHIVED') {
       initObj.finished = true;
       if (extensions.isEnableLog && !listRef.current[idx].loading) {
@@ -507,6 +503,10 @@ const ChatPreview = (props) => {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
     } else {
+      const { thinkTime } = listRef.current[listRef.current.length - 1];
+      if (thinkTime) {
+        initObj.thinkTime = thinkTime;
+      }
       const receiveItem = multiModelProcess(initObj);
       listRef.current.splice(idx, 1, deepClone(receiveItem));
     }
