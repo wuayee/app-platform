@@ -34,7 +34,7 @@ const ToolItem = () => {
   const [pluginData, setPluginData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const searchName = useRef<any>(undefined);
-  const listType = useRef('owner');
+  const listType = useRef('market');
   useEffect(() => {
     getPluginList()
   }, [toolKey])
