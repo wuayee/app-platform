@@ -111,7 +111,7 @@ public class WenjieServiceImpl implements WenjieService {
             @Attribute(key = "tags", value = "FIT")})
     @Property(description = "问界车型的宣传图片的访问地址")
     public List<String> url(String carType) {
-        List<String> res = Collections.singletonList(Optional.ofNullable(carImageMap.get(carType)).orElse(DEFAULT_URL));
+        List<String> res = Optional.ofNullable(carImageMap.get(carType)).orElse(Collections.singletonList(DEFAULT_URL));
         log.warn("type:{} image is: {}", carType, res);
         return res;
     }
