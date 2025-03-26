@@ -29,17 +29,17 @@ class FrameworkState(Enum):
 
 @unique
 class FrameworkSubState(Enum):
-    UNKNOWN = auto()
-    BOOTING_INIT = auto()
-    ALL_PLUGIN_LOADED = FrameworkEvent.APPLICATION_STARTED
-    COMPONENT_LOADED = auto()
-    FIT_METADATA_LOADED = auto()
-    SERVER_STARTED = auto()
-    CONFIGURATION_SUBSCRIBED = auto()
-    FITABLE_REGISTERED = auto()
-    HEART_BEAT_STARTED = FrameworkEvent.FRAMEWORK_STARTED
-    RUNNING = auto()
-    SHUTDOWN = auto()
+    UNKNOWN = "unknown"
+    BOOTING_INIT = "booting_init"
+    ALL_PLUGIN_LOADED = "all_plugin_loaded"
+    COMPONENT_LOADED = "component_loaded"
+    FIT_METADATA_LOADED = "fit_metadata_loaded"
+    SERVER_STARTED = "server_started"
+    CONFIGURATION_SUBSCRIBED = "configuration_subscribed"
+    FITABLE_REGISTERED = "fitable_registered"
+    HEART_BEAT_STARTED = "heart_beat_started"
+    RUNNING = "running"
+    SHUTDOWN = "shutdown"
 
 
 @unique
@@ -72,13 +72,13 @@ class PluginState(Enum):
 
     其他，见：@broadcast_action
     """
-    UNKNOWN = auto()
-    INSTALLED = auto()
-    RESOLVED = auto()
-    STARTING = PluginEvent.STARTING
-    ACTIVE = PluginEvent.STARTED
-    STOPPING = PluginEvent.STOPPING
-    UNINSTALLED = PluginEvent.STOPPED
+    UNKNOWN = "unknown"
+    INSTALLED = "installed"
+    RESOLVED = "resolved"
+    STARTING = "starting"
+    ACTIVE = "active"
+    STOPPING = "stopping"
+    UNINSTALLED = "uninstalled"
 
 
 class PluginType(Enum):
@@ -100,6 +100,16 @@ class PluginType(Enum):
     SYSTEM = __LoadLevel(-7, -1, -4)
     USER = __LoadLevel(1, 7, 4)
 
+
+# 状态与事件的映射关系
+STATE_TO_EVENT = {
+    FrameworkSubState.ALL_PLUGIN_LOADED: FrameworkEvent.APPLICATION_STARTED,
+    FrameworkSubState.HEART_BEAT_STARTED: FrameworkEvent.FRAMEWORK_STARTED,
+    PluginState.STARTING: PluginEvent.STARTING,
+    PluginState.ACTIVE: PluginEvent.STARTED,
+    PluginState.STOPPING: PluginEvent.STOPPING,
+    PluginState.UNINSTALLED: PluginEvent.STOPPED,
+}
 
 FitState = Union[FrameworkState, FrameworkSubState, PluginState]
 FitEvent = Union[FrameworkEvent, PluginEvent]
