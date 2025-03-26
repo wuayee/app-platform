@@ -7,8 +7,8 @@
 功 能：cbor 序列化和反序列化方法
 """
 from typing import _GenericAlias, Any, Union, Iterable
-from fitframework.utils.serialize_utils import common_data_model_deserialize
 from fitframework.utils.cbor.cbor import encodes, decodes
+from fitframework.utils.serialize_utils import common_data_model_deserialize
 
 _Type = Union[type, _GenericAlias]
 _Stream = Union[str, bytes]
@@ -36,7 +36,8 @@ def cbor_deserialize(obj_types: Union[_Type, Iterable[_Type]],
     :return: 反序列化后的结果
     """
     # 防止某些自定义类复写了__iter__方法，故两个同时判断
-    if not (isinstance(obj_types, Iterable) and isinstance(obj_streams, Iterable)):
+    if not (isinstance(obj_types, Iterable) and (
+            isinstance(obj_streams, Iterable) and not isinstance(obj_streams, bytes))):
         obj_types, obj_streams = (obj_types,), (obj_streams,)
 
     result_s = []

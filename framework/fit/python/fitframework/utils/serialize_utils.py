@@ -6,6 +6,7 @@
 """
 功 能：类型检验、参数类型获取、以及反序列化过程中通用类型转特定类型等相关的内部方法实现类
 """
+import inspect
 from itertools import repeat
 from typing import _GenericAlias, List, Dict, Tuple, get_origin, get_args, TypeVar, Any, Union, Callable, get_type_hints
 import numpy
@@ -51,7 +52,7 @@ def get_parameter_types(obj: Union[Callable, Any], with_name: bool = False) \
     """
     if isinstance(obj, _GenericAlias):
         obj = get_origin(obj)
-    if not hasattr(obj, '__annotations__'):
+    if inspect.isclass(obj):
         obj = obj.__init__
     # 注意事项：如果采用 __annotations__ 方式获取注解，将导致无法正确解析 so 中 cyfunction 的函数签名
     sig = get_type_hints(obj)
