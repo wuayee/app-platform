@@ -8,9 +8,9 @@
 """
 import json
 from typing import _GenericAlias, Any, Union, Iterable
-from fitframework.utils.tools import b64encode_to_str
-from fitframework.utils.serialize_utils import common_data_model_deserialize
 from fitframework.const import DEFAULT_CODECS
+from fitframework.utils.serialize_utils import common_data_model_deserialize
+from fitframework.utils.tools import b64encode_to_str
 
 _Type = Union[type, _GenericAlias]
 _Stream = Union[str, bytes]
@@ -42,7 +42,8 @@ def json_deserialize(obj_types: Union[_Type, Iterable[_Type]],
     :return: 反序列化后的结果
     """
     # 防止某些自定义类复写了__iter__方法，故两个同时判断
-    if not (isinstance(obj_types, Iterable) and isinstance(obj_streams, Iterable)):
+    if not (isinstance(obj_types, Iterable) and (
+            isinstance(obj_streams, Iterable) and not isinstance(obj_streams, bytes))):
         obj_types, obj_streams = (obj_types,), (obj_streams,)
 
     result_s = []
