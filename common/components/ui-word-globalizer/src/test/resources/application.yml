@@ -1,0 +1,6 @@
+fit:
+  beans:
+    packages:
+      - 'modelengine.jade.common.ui.globalization'
+  messages:
+    basename: i18n/test

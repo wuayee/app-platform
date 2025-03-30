@@ -1,0 +1,96 @@
+{
+  "name": "http调用",
+  "description": "用户可使用该工具进行http调用",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "httpRequest": {
+        "type": "object",
+        "properties": {
+          "httpMethod": {
+            "type": "string",
+            "description": "http调用方法"
+          },
+          "url": {
+            "type": "string",
+            "description": "http调用路径"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "http调用超时时间"
+          },
+          "args": {
+            "type": "object",
+            "description": "引用参数"
+          },
+          "headers": {
+            "type": "object",
+            "description": "http请求头"
+          },
+          "params": {
+            "type": "object",
+            "description": "http请求参数"
+          },
+          "requestBody": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "http请求体类型，form-data/json/text等"
+              },
+              "data": {
+                "type": "object",
+                "description": "http请求体数据"
+              }
+            }
+          },
+          "authentication": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "http鉴权类型"
+              },
+              "header": {
+                "type": "string",
+                "description": "http鉴权请求头"
+              },
+              "authKey": {
+                "type": "string",
+                "description": "http鉴权key"
+              }
+            }
+          }
+        },
+        "required": [
+          "httpMethod",
+          "url"
+        ]
+      }
+    },
+    "required": [
+      "httpRequest"
+    ]
+  },
+  "order": [
+    "httpRequest"
+  ],
+  "return": {
+    "type": "object",
+    "properties": {
+      "status": {
+        "type": "integer",
+        "description": "http响应码"
+      },
+      "errorMsg": {
+        "type": "string",
+        "description": "http错误信息"
+      },
+      "data": {
+        "type": "object",
+        "description": "原始http返回信息"
+      }
+    },
+    "description": "http调用结果"
+  }
+}

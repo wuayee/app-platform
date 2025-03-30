@@ -1,0 +1,10 @@
+{
+  "checksum": "1633b0679eb3ec1152dc2bceafdbd6a688c03b2d04177aebe987aff6697857cf",
+  "type": "java",
+  "name": "testAgentFunctionCalling",
+  "description": "测试Agent的Function Calling能力",
+  "uniqueness": {
+    "artifactId": "agent-test",
+    "groupId": "modelengine.fit.jade.plugin"
+  }
+}

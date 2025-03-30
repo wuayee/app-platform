@@ -1,0 +1,11 @@
+server:
+  http:
+    port: 8087
+
+fit:
+  beans:
+    packages:
+      - 'modelengine.jade.app.engine.metrics.influxdb'
+
+mybatis:
+  mapper-locations: 'mapper/*Mapper.xml'

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>modelengine.fit.jade</groupId>
+        <artifactId>jade-app-builder-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>app-builder-plugin-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>aipp-classify-question</module>
+        <module>aipp-code</module>
+        <module>aipp-extractor</module>
+        <module>aipp-document-extract-node</module>
+        <module>aipp-http-call</module>
+        <module>aipp-loop-tool</module>
+        <module>aipp-memory</module>
+        <module>aipp-model-center</module>
+        <module>aipp-northbound</module>
+        <module>aipp-output-formatter</module>
+        <module>aipp-prompt-builder</module>
+        <module>aipp-rewriter</module>
+        <module>aipp-variable-aggregation</module>
+        <module>plugins-show-case-parent</module>
+        <module>tool-waterflow</module>
+        <module>waterflow-appfactory</module>
+        <module>waterflow-biz-common</module>
+        <module>waterflow-graph</module>
+        <module>waterflow-task-event-handler</module>
+        <module>aipp-custom-model-center</module>
+        <module>aipp-model-center-proxy</module>
+    </modules>
+</project>

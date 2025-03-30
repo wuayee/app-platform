@@ -1,0 +1,44 @@
+[
+  [
+    {
+      "id": "id0",
+      "score": 0.5,
+      "text": "text0"
+    }
+  ],
+  [
+    {
+      "id": "id1",
+      "score": 0.5,
+      "text": "text1"
+    }
+  ],
+  [
+    {
+      "id": "id2",
+      "score": 0.5,
+      "text": "text2"
+    }
+  ],
+  [
+    {
+      "id": "id3",
+      "score": 0.5,
+      "text": "text3"
+    }
+  ],
+  [
+    {
+      "id": "id4",
+      "score": 0.5,
+      "text": "text4"
+    }
+  ],
+  [
+    {
+      "id": "id5",
+      "score": 0.5,
+      "text": "text5"
+    }
+  ]
+]

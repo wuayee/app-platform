@@ -1,0 +1,62 @@
+[
+  {
+    "type": "llmNodeState",
+    "name": "大模型",
+    "uniqueName": ""
+  },
+  {
+    "type": "codeNodeState",
+    "name": "代码",
+    "uniqueName": ""
+  },
+  {
+    "type": "conditionNodeCondition",
+    "name": "条件",
+    "uniqueName": ""
+  },
+  {
+    "type": "intelligentFormNodeState",
+    "name": "智能编排表单",
+    "uniqueName": ""
+  },
+  {
+    "type": "endNodeEnd",
+    "name": "结束",
+    "uniqueName": ""
+  },
+  {
+    "type": "knowledgeRetrievalNodeState",
+    "name": "知识检索",
+    "uniqueName": ""
+  },
+  {
+    "type": "httpNodeState",
+    "name": "http调用",
+    "uniqueName": ""
+  },
+  {
+    "type": "variableAggregationNodeState",
+    "name": "变量聚合",
+    "uniqueName": ""
+  },
+  {
+    "type": "fileExtractionNodeState",
+    "name": "文件提取",
+    "uniqueName": ""
+  },
+  {
+    "type": "noteNode",
+    "name": "注释",
+    "uniqueName": ""
+  },
+  {
+    "type": "loopNodeState",
+    "name": "循环",
+    "uniqueName": ""
+  },
+  {
+  "type": "manualCheckNodeState",
+  "name": "人工表单",
+  "uniqueName": ""
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "json": "{\"name\": \"Sky\", \"age\": \"100\"}",
+    "schema": "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"string\"}}}"
+  },
+  {
+    "json": "{\"name\": \"Sky\", \"age\": 100}",
+    "schema": "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\"}}}"
+  },
+  {
+    "json": "{\"name\": \"Sky\", \"age\": 92236665344372036854775807}",
+    "schema": "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\"}}}"
+  },
+  {
+    "json": "{\"name\":\"Sky\",\"isMan\":true}",
+    "schema": "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"isMan\":{\"type\":\"boolean\"}}}"
+  },
+  {
+    "json": "{\"name\":\"Sky\",\"friend\":{\"name\":\"Rose\",\"isMan\":false}}",
+    "schema": "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"friend\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"isMan\":{\"type\":\"boolean\"}}}}}"
+  }
+]

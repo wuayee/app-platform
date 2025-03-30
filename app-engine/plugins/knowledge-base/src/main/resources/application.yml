@@ -1,0 +1,7 @@
+fit:
+  beans:
+    packages:
+      - 'modelengine.jade.app.engine'
+server:
+  http:
+    port: 12755

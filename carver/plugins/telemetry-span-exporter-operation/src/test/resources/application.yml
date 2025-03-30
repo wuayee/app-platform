@@ -1,0 +1,2 @@
+collector:
+  url: "http://localhost:8080/test"

@@ -1,0 +1,17 @@
+mybatis:
+  mapper-locations: mapper/*Mapper.xml
+
+fit:
+  beans:
+    packages:
+      - 'modelengine.fitframework'
+      - 'modelengine.fit.integration'
+  messages:
+    basename: i18n/messages
+
+jane:
+  flowsEngine:
+    retry:
+      scheduleRate: 60000
+
+distributed-lock-provider: databaseDistributedLockProvider

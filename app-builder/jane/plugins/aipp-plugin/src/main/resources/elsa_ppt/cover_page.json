@@ -1,0 +1,351 @@
+{
+  "id": "elsa-page:olunsn",
+  "animations": [],
+  "backColor": "#edebe9",
+  "basePage": "elsa-page:8nikol",
+  "bold": false,
+  "borderColor": "white",
+  "container": "elsa-page:olunsn",
+  "createTime": {
+    "$date": "2024-01-11T08:46:27.918Z"
+  },
+  "createUser": "夏斐",
+  "dirty": false,
+  "dockAlign": "top",
+  "dockMode": "none",
+  "fontColor": "whitesmoke",
+  "fontFace": "arial",
+  "fontSize": 18,
+  "fontStyle": "normal",
+  "fontWeight": "bold",
+  "hAlign": "center",
+  "height": 859,
+  "hideText": true,
+  "inMethod": "fadeIn",
+  "index": 2,
+  "isDeleted": false,
+  "isPage": true,
+  "isTemplate": false,
+  "isTerminal": false,
+  "italic": false,
+  "itemPad": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "itemScroll": {
+    "x": 0,
+    "y": 0
+  },
+  "itemSpace": 5,
+  "moveable": true,
+  "namespace": "presentation",
+  "outMethod": "fadeOut",
+  "shapesAs": {},
+  "text": "--",
+  "type": "presentationPage",
+  "updateTime": {
+    "$date": "2024-01-11T08:46:27.918Z"
+  },
+  "updateUser": "夏斐",
+  "vAlign": "center",
+  "version": "1.0.0",
+  "width": 1282,
+  "x": 0,
+  "y": 0,
+  "shapes": [
+    {
+      "id": "a162s9",
+      "allowLink": false,
+      "autoFit": true,
+      "backColor": "white",
+      "bold": false,
+      "borderColor": "darkgray",
+      "borderWidth": 0,
+      "createTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "createUser": "夏斐",
+      "dashWidth": 0,
+      "deletable": false,
+      "dirty": false,
+      "dockAlign": "top",
+      "height": 900,
+      "hideText": true,
+      "index": 100,
+      "isDeleted": false,
+      "italic": false,
+      "itemPad": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "itemScroll": {
+        "x": 0,
+        "y": 0
+      },
+      "itemSpace": 5,
+      "keepOrigin": true,
+      "moveable": false,
+      "namespace": "presentation",
+      "pad": 0,
+      "readOnly": true,
+      "referenceData": {
+        "placed": [
+          "hd3pim",
+          "q8fqpz"
+        ],
+        "wazoqe": {
+          "x": 0,
+          "y": 0
+        },
+        "r33wzk": {
+          "x": 1263,
+          "y": 783
+        }
+      },
+      "referencePage": "elsa-page:8nikol",
+      "referenceShape": "",
+      "selectable": false,
+      "text": "container",
+      "type": "presentationFrame",
+      "updateTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "updateUser": "夏斐",
+      "version": "1.0.0",
+      "width": 1600,
+      "x": 0,
+      "y": 0,
+      "container": "elsa-page:olunsn"
+    },
+    {
+      "id": "334mk7",
+      "allowLink": false,
+      "backColor": "RGBA(255,255,200,0)",
+      "bold": false,
+      "borderWidth": 0,
+      "createTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "createUser": "夏斐",
+      "dirty": false,
+      "dockAlign": "top",
+      "height": 10,
+      "hideText": true,
+      "index": 101,
+      "isDeleted": false,
+      "italic": false,
+      "itemPad": [
+        6,
+        6,
+        6,
+        6
+      ],
+      "itemScroll": {
+        "x": 0,
+        "y": 0
+      },
+      "itemSpace": 5,
+      "namespace": "elsa",
+      "selectable": false,
+      "text": "reference",
+      "type": "referenceVector",
+      "updateTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "updateUser": "夏斐",
+      "version": "1.0.0",
+      "width": 10,
+      "x": 1,
+      "y": 1,
+      "container": "a162s9"
+    },
+    {
+      "id": "9yazn8",
+      "backColor": "rgba(255,255,255,0)",
+      "bold": false,
+      "borderWidth": 0,
+      "createTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "createUser": "夏斐",
+      "dirty": true,
+      "emphasizeType": 1,
+      "height": 734.1206536917223,
+      "hideText": true,
+      "index": 102,
+      "isDeleted": false,
+      "italic": false,
+      "namespace": "elsa",
+      "src": "",
+      "text": "",
+      "type": "image",
+      "updateTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "updateUser": "夏斐",
+      "version": "1.0.0",
+      "width": 1600.5827857700451,
+      "x": 0.3114754098362482,
+      "y": -0.2255737704918488,
+      "container": "a162s9"
+    },
+    {
+      "id": "proo1j",
+      "backColor": "transparent",
+      "bold": false,
+      "borderWidth": 0,
+      "createTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "createUser": "夏斐",
+      "dirty": true,
+      "fontColor": "#000",
+      "fontFace": "微软雅黑",
+      "fontSize": 72,
+      "hAlign": "left",
+      "height": 89.24000000000001,
+      "index": 103,
+      "isDeleted": false,
+      "italic": false,
+      "namespace": "elsa",
+      "text": [
+        {
+          "attributes": {
+            "id": "tvk66p"
+          },
+          "name": "paragraph",
+          "children": [
+            {
+              "attributes": {
+                "fontSize": "72px",
+                "fontFamily": "微软雅黑"
+              },
+              "data": "这里是标题"
+            }
+          ],
+          "x": 394.44,
+          "y": 258.88,
+          "width": 848.08,
+          "height": 84.38
+        }
+      ],
+      "type": "text",
+      "updateTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "updateUser": "夏斐",
+      "vAlign": "top",
+      "version": "1.0.0",
+      "width": 1293.56,
+      "x": 134.16000000000008,
+      "y": 80.48000000000006,
+      "container": "a162s9"
+    },
+    {
+      "id": "ms3jyp",
+      "backColor": "transparent",
+      "bold": false,
+      "borderWidth": 0,
+      "createTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "createUser": "夏斐",
+      "dirty": true,
+      "fontColor": "#000",
+      "fontFace": "微软雅黑",
+      "fontSize": 40,
+      "hAlign": "left",
+      "height": 45.80000000000018,
+      "index": 104,
+      "isDeleted": false,
+      "italic": false,
+      "namespace": "elsa",
+      "text": [
+        {
+          "attributes": {
+            "id": "ugbr3r"
+          },
+          "name": "paragraph",
+          "children": [
+            {
+              "attributes": {
+                "fontFamily": "微软雅黑",
+                "fontSize": "40px"
+              },
+              "data": "夏斐"
+            }
+          ],
+          "x": 392.09,
+          "y": 365.13,
+          "width": 645.15,
+          "height": 46.88
+        }
+      ],
+      "type": "text",
+      "updateTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "updateUser": "夏斐",
+      "vAlign": "top",
+      "version": "1.0.0",
+      "width": 733.6400000000001,
+      "x": 140.76852459016433,
+      "y": 541.8347540983609,
+      "container": "a162s9"
+    },
+    {
+      "id": "4x8zg6",
+      "backColor": "transparent",
+      "bold": false,
+      "borderWidth": 0,
+      "createTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "createUser": "夏斐",
+      "dirty": true,
+      "fontColor": "#000",
+      "fontSize": 40,
+      "hAlign": "left",
+      "height": 67.56,
+      "index": 105,
+      "isDeleted": false,
+      "italic": false,
+      "namespace": "elsa",
+      "text": [
+        {
+          "attributes": {
+            "id": "1akm69"
+          },
+          "name": "paragraph",
+          "children": [
+            {
+              "attributes": {
+                "fontSize": "40px"
+              },
+              "data": "2024-1-11"
+            }
+          ],
+          "x": 390.53,
+          "y": 407.31,
+          "width": 199.15,
+          "height": 46.88
+        }
+      ],
+      "type": "text",
+      "updateTime": {
+        "$date": "2024-01-11T08:46:27.918Z"
+      },
+      "updateUser": "夏斐",
+      "vAlign": "top",
+      "version": "1.0.0",
+      "width": 263.4,
+      "x": 141.36,
+      "y": 614.799999999999,
+      "container": "a162s9"
+    }
+  ]
+}

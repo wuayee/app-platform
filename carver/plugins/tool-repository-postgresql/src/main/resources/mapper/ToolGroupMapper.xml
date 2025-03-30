@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.carver.tool.repository.pgsql.mapper.ToolGroupMapper">
+    <resultMap id="ToolGroup" type="modelengine.jade.carver.tool.repository.pgsql.model.entity.ToolGroupDo">
+        <result column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="name" property="name"/>
+        <result column="summary" property="summary"/>
+        <result column="description" property="description"/>
+        <result column="extensions" property="extensions"/>
+        <result column="definition_group_name" property="definitionGroupName"/>
+    </resultMap>
+    <insert id="add" parameterType="modelengine.jade.carver.tool.repository.pgsql.model.entity.ToolGroupDo">
+        insert into store_tool_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "name",
+            <if test="summary != null">"summary",</if>
+            <if test="description != null">"description",</if>
+            <if test="extensions != null">"extensions",</if>
+            "definition_group_name",
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{name},
+            <if test="summary != null">#{summary},</if>
+            <if test="description != null">#{description},</if>
+            <if test="extensions != null">cast(#{extensions} as json),</if>
+            #{definitionGroupName},
+        </trim>
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete
+        from "store_tool_group"
+        where definition_group_name = #{definitionGroupName} and name = #{name};
+    </delete>
+    <select id="get" resultMap="ToolGroup">
+        select "name", "summary", "description", "extensions", "definition_group_name"
+        from "store_tool_group"
+        where definition_group_name = #{definitionGroupName} and name = #{name};
+    </select>
+    <select id="getByDefGroupName" parameterType="List" resultMap="ToolGroup">
+        select "name", "summary", "description", "extensions", "definition_group_name"
+        from "store_tool_group"
+        where definition_group_name = #{definitionGroupName};
+    </select>
+    <delete id="deleteByDefGroupName" parameterType="String">
+        delete
+        from "store_tool_group"
+        where definition_group_name = #{definitionGroupName};
+    </delete>
+</mapper>

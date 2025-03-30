@@ -1,0 +1,62 @@
+[
+  {
+    "type": "llmNodeState",
+    "name": "Foundation Model",
+    "uniqueName": ""
+  },
+  {
+    "type": "codeNodeState",
+    "name": "Code",
+    "uniqueName": ""
+  },
+  {
+    "type": "conditionNodeCondition",
+    "name": "Condition",
+    "uniqueName": ""
+  },
+  {
+    "type": "intelligentFormNodeState",
+    "name": "Intelligent Form",
+    "uniqueName": ""
+  },
+  {
+    "type": "endNodeEnd",
+    "name": "End",
+    "uniqueName": ""
+  },
+  {
+    "type": "knowledgeRetrievalNodeState",
+    "name": "Knowledge Retrieval",
+    "uniqueName": ""
+  },
+  {
+    "type": "httpNodeState",
+    "name": "Http Call",
+    "uniqueName": ""
+  },
+  {
+    "type": "variableAggregationNodeState",
+    "name": "Variable Aggregation",
+    "uniqueName": ""
+  },
+  {
+    "type": "fileExtractionNodeState",
+    "name": "File Extraction",
+    "uniqueName": ""
+  },
+  {
+    "type": "noteNode",
+    "name": "Note",
+    "uniqueName": ""
+  },
+  {
+    "type": "loopNodeState",
+    "name": "Loop",
+    "uniqueName": ""
+  },
+  {
+    "type": "manualCheckNodeState",
+    "name": "Manual Form",
+    "uniqueName": ""
+  }
+]

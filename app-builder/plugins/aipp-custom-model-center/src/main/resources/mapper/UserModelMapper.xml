@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jade.aipp.model.mapper.UserModelMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jade.aipp.model.po.UserModelPo">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="modelId" column="model_id"/>
+        <result property="apiKey" column="api_key"/>
+        <result property="isDefault" column="is_default"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id, model_id, api_key, is_default
+    </sql>
+
+    <select id="listUserModels" resultType="modelengine.fit.jade.aipp.model.po.UserModelPo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_engine_user_model
+        where user_id = #{userId}
+    </select>
+
+    <select id="getDefault" resultType="modelengine.fit.jade.aipp.model.po.UserModelPo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_engine_user_model
+        where user_id = #{userId}
+        and is_default = 1
+    </select>
+</mapper>

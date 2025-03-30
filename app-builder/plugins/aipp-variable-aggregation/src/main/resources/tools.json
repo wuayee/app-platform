@@ -1,0 +1,26 @@
+{
+  "name": "变量聚合",
+  "description": "对多个变量聚合返回合适的变量",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "variables": {
+        "type": "array",
+        "item": {
+          "type": "object",
+          "description": "变量列表"
+        }
+      }
+    },
+    "required": [
+      "variables"
+    ]
+  },
+  "order": [
+    "variables"
+  ],
+  "return": {
+    "type": "object",
+    "description": "返回的变量"
+  }
+}

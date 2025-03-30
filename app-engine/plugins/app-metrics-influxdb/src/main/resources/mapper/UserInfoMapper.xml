@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.metrics.influxdb.mapper.UserInfoMapper">
+    <resultMap id="UserDepartmentInfo" type="modelengine.jade.app.engine.metrics.influxdb.UserDepartmentInfo">
+        <id property="depName1" column="l1_name"/>
+        <result property="depName2" column="l2_name"/>
+        <result property="depName3" column="l3_name"/>
+        <result property="depName4" column="l4_name"/>
+        <result property="depName5" column="l5_name"/>
+        <result property="depName6" column="l6_name"/>
+    </resultMap>
+
+    <select id="getUserDepartmentInfo" resultMap="UserDepartmentInfo">
+        WITH res AS (
+            SELECT full_name AS name, l1_name, l2_name, l3_name, l4_name, l5_name, l6_name, last_update_date
+            FROM tz_user_info
+            WHERE full_name = #{name}
+            UNION ALL
+            SELECT ucn AS name, l1_name, l2_name, l3_name, l4_name, l5_name, l6_name, last_update_date
+            FROM tz_user_info
+            WHERE ucn = #{name}
+        )
+        SELECT name, l1_name, l2_name, l3_name, l4_name, l5_name, l6_name
+        FROM res
+        ORDER BY last_update_date
+        LIMIT 1
+    </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.carver.tool.repository.pgsql.mapper.DefinitionGroupMapper">
+    <resultMap id="DefinitionGroup" type="modelengine.jade.carver.tool.repository.pgsql.model.entity.DefinitionGroupDo">
+        <result column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="name" property="name"/>
+        <result column="summary" property="summary"/>
+        <result column="description" property="description"/>
+        <result column="extensions" property="extensions"/>
+    </resultMap>
+    <insert id="add" parameterType="modelengine.jade.carver.tool.repository.pgsql.model.entity.DefinitionGroupDo">
+        insert into store_definition_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "name",
+            <if test="summary != null">"summary",</if>
+            <if test="description != null">"description",</if>
+            <if test="extensions != null">"extensions",</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{name},
+            <if test="summary != null">#{summary},</if>
+            <if test="description != null">#{description},</if>
+            <if test="extensions != null">cast(#{extensions} as json),</if>
+        </trim>
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete
+        from "store_definition_group"
+        where name = #{name};
+    </delete>
+    <select id="get" resultMap="DefinitionGroup">
+        select "name", "summary", "description", "extensions"
+        from "store_definition_group"
+        where name = #{name};
+    </select>
+</mapper>

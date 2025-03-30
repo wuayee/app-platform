@@ -1,0 +1,134 @@
+{
+  "name": "问题分类",
+  "description": "用户可使用默认模板进行问题分类，或进行自定义优化",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "classifyQuestionParam": {
+        "type": "object",
+        "properties": {
+          "accessInfo": {
+            "type": "object",
+            "description": "模型信息",
+            "properties": {
+              "serviceName": {
+                "type": "string",
+                "description": "模型名称"
+              },
+              "tag": {
+                "type": "string",
+                "description": "模型标签"
+              }
+            },
+            "required": [
+              "serviceName",
+              "tag"
+            ]
+          },
+          "temperature": {
+            "type": "number",
+            "description": "温度"
+          },
+          "template": {
+            "type": "string",
+            "description": "模板，内置模式代表问题背景、自定义模式代表提示词模板"
+          },
+          "args": {
+            "type": "object",
+            "description": "输入参数，必须包含 `query`"
+          },
+          "questionTypeList": {
+            "type": "array",
+            "item": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "问题分类ID"
+                },
+                "questionTypeDesc": {
+                  "type": "string",
+                  "description": "问题分类描述"
+                }
+              },
+              "required": [
+                "id",
+                "questionTypeDesc"
+              ]
+            }
+          }
+        },
+        "required": [
+          "accessInfo",
+          "temperature",
+          "args",
+          "questionTypeList"
+        ]
+      },
+      "memoryConfig": {
+        "type": "object",
+        "properties": {
+          "windowAlg": {
+            "type": "string",
+            "description": "历史记录消费策略",
+            "enum": [
+              "buffer_window",
+              "token_window"
+            ]
+          },
+          "serializeAlg": {
+            "type": "string",
+            "description": "历史记录序列化策略",
+            "enum": [
+              "full",
+              "question_only"
+            ]
+          },
+          "property": {
+            "type": "integer",
+            "description": "配置参数，对话轮次或者最大 token 数目"
+          }
+        },
+        "required": [
+          "windowAlg",
+          "serializeAlg",
+          "property"
+        ]
+      },
+      "histories": {
+        "type": "array",
+        "item": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "用户问题"
+            },
+            "answer": {
+              "type": "string",
+              "description": "模型输出"
+            }
+          },
+          "required": [
+            "question",
+            "answer"
+          ]
+        }
+      }
+    },
+    "required": [
+      "classifyQuestionParam",
+      "memoryConfig",
+      "histories"
+    ]
+  },
+  "order": [
+    "classifyQuestionParam",
+    "memoryConfig",
+    "histories"
+  ],
+  "return": {
+    "type": "string",
+    "description": "分类后返回的类型ID"
+  }
+}

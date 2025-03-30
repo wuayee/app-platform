@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.jober.aipp.mapper.AppBuilderConfigPropertyMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.jober.aipp.po.AppBuilderConfigPropertyPo">
+        <result column="id" property="id"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="form_property_id" property="formPropertyId"/>
+        <result column="config_id" property="configId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, node_id, form_property_id, config_id
+    </sql>
+
+    <select id="selectWithConfigId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppBuilderConfigPropertyPo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_config_property
+        where config_id = #{configId} and is_deleted = 0
+    </select>
+
+    <select id="selectWithId" resultMap="BaseResultMap"
+            resultType="modelengine.fit.jober.aipp.po.AppBuilderConfigPropertyPo">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_config_property
+        where id = #{id} and is_deleted = 0
+    </select>
+
+    <insert id="insertOne" parameterType="modelengine.fit.jober.aipp.po.AppBuilderConfigPropertyPo">
+        insert into app_builder_config_property (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id}, #{nodeId}, #{formPropertyId}, #{configId})
+    </insert>
+
+    <insert id="insertMore" parameterType="java.util.List">
+        insert into app_builder_config_property (
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="jadeConfigProperties" item="item" index="index" separator=",">
+            (#{item.id}, #{item.nodeId}, #{item.formPropertyId}, #{item.configId})
+        </foreach>
+    </insert>
+
+    <update id="updateOne" parameterType="modelengine.fit.jober.aipp.po.AppBuilderConfigPropertyPo">
+        update app_builder_config_property
+        <set>
+            <if test="nodeId != null">
+                node_id = #{node_id},
+            </if>
+            <if test="formPropertyId != null">
+                form_property_id = #{formPropertyId},
+            </if>
+            <if test="configId != null">
+                config_id = #{configId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMore" parameterType="java.util.List">
+        delete from app_builder_config_property
+        where id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id" index="index">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="deleteByConfigIds" parameterType="java.util.List">
+        UPDATE app_builder_config_property
+        set is_deleted = 1
+        where config_id in
+        <foreach collection="configIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

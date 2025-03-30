@@ -1,0 +1,62 @@
+{
+    "name": "更新流程定义时状态为active",
+    "description": "更新流程定义时状态为active",
+    "metaId": "service",
+    "version": "1.0.1",
+    "status": "inactive",
+    "nodes": [
+        {
+            "type": "start",
+            "metaId": "start1",
+            "triggerMode": "auto",
+            "name": "开始节点"
+        },
+        {
+            "type": "state",
+            "metaId": "state1",
+            "name": "测试自动执行fitable接口",
+            "triggerMode": "auto",
+            "jober": {
+                "type": "ECHO_JOBER",
+                "name": "创建"
+            }
+        },
+        {
+            "type": "state",
+            "metaId": "state2",
+            "name": "测试自动执行rest接口",
+            "triggerMode": "auto",
+            "jober": {
+                "name": "创建",
+                "type": "ECHO_JOBER"
+            }
+        },
+        {
+            "type": "end",
+            "metaId": "ender1",
+            "name": "",
+            "triggerMode": "auto"
+        },
+        {
+            "type": "event",
+            "metaId": "event1",
+            "name": "fitable完成分支创建任务",
+            "from": "start1",
+            "to": "state1"
+        },
+        {
+            "type": "event",
+            "metaId": "event2",
+            "name": "rest完成分支创建任务",
+            "from": "state1",
+            "to": "state2"
+        },
+        {
+            "type": "event",
+            "metaId": "event3",
+            "name": "结束流程",
+            "from": "state2",
+            "to": "ender1"
+        }
+    ]
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.app.engine.eval.mapper.EvalDatasetMapper">
+    <resultMap id="EvalDatasetVoResultMap" type="modelengine.jade.app.engine.eval.vo.EvalDatasetVo">
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="createdBy" column="created_by"/>
+    </resultMap>
+
+    <select id="getSchema" resultType="String">
+        SELECT schema
+        FROM t_app_engine_eval_dataset
+        WHERE id = #{datasetId}
+    </select>
+
+    <!-- 分页查询数据集元数据 -->
+    <select id="listEvalDataset" resultType="modelengine.jade.app.engine.eval.vo.EvalDatasetVo"
+            resultMap="EvalDatasetVoResultMap">
+        SELECT id,
+               name,
+               description,
+               created_at,
+               updated_at,
+               created_by,
+               updated_by
+        FROM t_app_engine_eval_dataset
+        WHERE app_id = #{appId}
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 按照数据集唯一标识查询指定数据集元数据 -->
+    <select id="getEvalDatasetById" resultType="modelengine.jade.app.engine.eval.vo.EvalDatasetVo"
+            resultMap="EvalDatasetVoResultMap">
+        SELECT id,
+               name,
+               description,
+               schema,
+               created_at,
+               updated_at,
+               created_by,
+               updated_by
+        FROM t_app_engine_eval_dataset
+        WHERE id = #{datasetId}
+    </select>
+
+    <!-- 查询数据集个数 -->
+    <select id="countEvalDataset" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM t_app_engine_eval_dataset
+        WHERE app_id = #{appId}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM t_app_engine_eval_dataset
+        WHERE id = #{datasetId}
+    </delete>
+
+    <delete id="delete">
+        DELETE
+        FROM t_app_engine_eval_dataset
+        WHERE id IN
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item})
+        </foreach>
+    </delete>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_app_engine_eval_dataset (name, description, schema, app_id, created_at, updated_at, created_by, updated_by)
+        VALUES (#{name}, #{description}, #{schema}, #{appId}, #{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy})
+    </insert>
+
+    <!-- 更新数据集相关信息 -->
+    <update id="updateEvaldataset">
+        UPDATE t_app_engine_eval_dataset
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            updated_at = #{updatedAt},
+            updated_by = #{updatedBy}
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

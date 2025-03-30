@@ -1,0 +1,31 @@
+{
+  "name": "rain_today",
+  "description": "该方法获取今天的下雨信息",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "location": {
+        "type": "string",
+        "description": "查询地点"
+      },
+      "date": {
+        "type": "integer",
+        "description": "查询日期"
+      }
+    },
+    "required": [
+      "location",
+      "date"
+    ]
+  },
+  "order": [
+    "location",
+    "date"
+  ],
+  "return": {
+    "type": "string",
+    "name": "Name",
+    "description": "description of return param",
+    "converter": ""
+  }
+}

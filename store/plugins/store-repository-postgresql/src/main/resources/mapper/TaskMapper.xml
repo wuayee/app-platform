@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.store.repository.pgsql.mapper.TaskMapper">
+    <resultMap id="Task" type="modelengine.jade.store.repository.pgsql.entity.TaskDo">
+        <result column="task_name" property="taskName"/>
+        <result column="context" property="context"/>
+        <result column="tool_unique_name" property="toolUniqueName"/>
+    </resultMap>
+    <select id="getTask" resultMap="Task">
+        select "task_name", "context", "tool_unique_name"
+        from "store_task"
+        where task_name = #{taskName}
+    </select>
+    <sql id="sortAndLimit">
+        order by i.updated_time desc
+        <if test="offset != null and offset >= 0">
+            offset #{offset}
+        </if>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </sql>
+    <select id="getTasks" parameterType="modelengine.jade.store.entity.query.TaskQuery" resultMap="Task">
+        select i."task_name", i."context", i."tool_unique_name"
+        from "store_task" i
+        <where>
+            <if test="toolUniqueName != null">
+                i."tool_unique_name" = #{toolUniqueName}
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+</mapper>

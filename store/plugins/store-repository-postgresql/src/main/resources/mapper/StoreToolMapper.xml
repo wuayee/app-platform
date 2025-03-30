@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.jade.store.repository.pgsql.mapper.StoreToolMapper">
+    <resultMap id="ToolIdentifier" type="modelengine.jade.carver.tool.model.entity.ToolIdentifier">
+        <result column="unique_name" property="uniqueName"/>
+        <result column="version" property="version"/>
+    </resultMap>
+    <sql id="getCount">
+        select count(i."creator")
+        from "store_tool" i
+                 left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                            from "store_tag" t
+                            group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
+    </sql>
+    <sql id="getOrSearchConditions">
+        and i."is_latest" = true
+        <if test="mode == 'AND' and includeTags != null and includeTags.size() > 0">
+            and tg.tags is not null
+            and (
+            <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+        </if>
+        <if test="mode == 'OR' and includeTags != null and includeTags.size() > 0">
+            and tg.tags is not null
+            and (
+            <foreach collection="includeTags" item="tag" open="" close="" separator=" or ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+        </if>
+        <if test="excludeTags != null and excludeTags.size() > 0">
+            and ( tg.tags is null
+            or not (
+            <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+            )
+        </if>
+    </sql>
+    <sql id="selectToolColumns">
+        select i."unique_name", i."version", i."updated_time"
+        from "store_tool" i
+    </sql>
+    <sql id="getOrSearchSelect">
+        <include refid="selectToolColumns"/>
+        left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+        from "store_tag" t
+        group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
+    </sql>
+    <sql id="sortAndLimit">
+        order by i.updated_time desc
+        <if test="offset != null and offset >= 0">
+            offset #{offset}
+        </if>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </sql>
+    <select id="getToolsCount" parameterType="modelengine.jade.store.entity.query.ToolQuery">
+        <include refid="getCount"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" = #{toolName}
+            </if>
+        </where>
+    </select>
+    <select id="searchToolsCount" parameterType="modelengine.jade.store.entity.query.ToolQuery">
+        <include refid="getCount"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" ilike '%\' || #{toolName} || '%' ESCAPE '\'
+            </if>
+        </where>
+    </select>
+    <select id="getTools" parameterType="modelengine.jade.store.entity.query.ToolQuery" resultMap="ToolIdentifier">
+        <include refid="getOrSearchSelect"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" = #{toolName}
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+    <select id="searchTools" parameterType="modelengine.jade.store.entity.query.ToolQuery" resultMap="ToolIdentifier">
+        <include refid="getOrSearchSelect"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" ilike '%\' || #{toolName} || '%' ESCAPE '\'
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+</mapper>
