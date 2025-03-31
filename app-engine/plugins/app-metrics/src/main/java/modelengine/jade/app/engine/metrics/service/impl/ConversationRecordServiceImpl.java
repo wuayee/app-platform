@@ -33,6 +33,6 @@ public class ConversationRecordServiceImpl implements ConversationRecordService 
      */
     @Override
     public void insertConversationRecord(ConversationRecordPo conversationRecordPo) {
-        // conversationRecordMapper.insertConversationRecord(conversationRecordPo);
+        conversationRecordMapper.insertConversationRecord(conversationRecordPo);
     }
 }

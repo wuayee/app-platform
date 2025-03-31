@@ -71,7 +71,7 @@ public class AppImExportUtil {
 
     private static final Pattern VERSION_PATTERN = Pattern.compile("\\d+\\.\\d+\\.\\d+");
 
-    private static final String ICON_URL_PATTERN = "/api/jober/v1/api/{0}/file?filePath={1}&fileName={2}";
+    private static final String ICON_URL_PATTERN = "/appbuilder/v1/api/{0}/file?filePath={1}&fileName={2}";
 
     private static final String[] FORM_PROPERTY_GROUP_SET = new String[] {
             "null", "ability", "basic", "workflow", "chat"
