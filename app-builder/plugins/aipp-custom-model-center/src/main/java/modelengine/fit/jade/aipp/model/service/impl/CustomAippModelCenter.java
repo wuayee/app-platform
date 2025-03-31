@@ -59,7 +59,6 @@ public class CustomAippModelCenter implements AippModelCenterExtension {
         List<ModelAccessInfo> modelDtoList = modelList.stream()
                 .map(po -> ModelAccessInfo.builder()
                         .serviceName(po.getName())
-                        .baseUrl(po.getBaseUrl())
                         .tag(CustomTag.pack(context, po))
                         .build())
                 .collect(Collectors.toList());
