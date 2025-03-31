@@ -49,7 +49,7 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
@@ -65,21 +65,21 @@
             <artifactId>poi-ooxml</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework.extension</groupId>
+            <groupId>org.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-druid</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
 
@@ -100,7 +100,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
             <scope>test</scope>
         </dependency>
@@ -109,7 +109,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>3.5.0-SNAPSHOT</version>
                 <configuration>
@@ -132,7 +132,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>3.5.0-SNAPSHOT</version>
                 <executions>

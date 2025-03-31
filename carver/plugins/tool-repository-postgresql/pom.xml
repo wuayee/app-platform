@@ -14,23 +14,23 @@
     <dependencies>
         <!-- FIT core -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework.extension</groupId>
+            <groupId>org.fitframework.extension</groupId>
             <artifactId>fit-transaction</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
 
@@ -81,12 +81,12 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
+            <groupId>org.fitframework.plugin</groupId>
             <artifactId>fit-message-serializer-json-jackson</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -99,7 +99,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <configuration>
@@ -122,7 +122,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

@@ -14,13 +14,13 @@
     <dependencies>
         <!-- FIT-core -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
 
         <!-- Service -->
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
@@ -28,7 +28,7 @@
             <artifactId>store-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-service-registry-and-discovery</artifactId>
         </dependency>
         <dependency>
@@ -56,13 +56,13 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
+            <groupId>org.fitframework.plugin</groupId>
             <artifactId>fit-message-serializer-json-jackson</artifactId>
             <version>${fit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -89,7 +89,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -108,7 +108,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

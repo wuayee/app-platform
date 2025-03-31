@@ -73,82 +73,82 @@
         <dependencies>
             <!-- FIT -->
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-api</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-http-protocol</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-server</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework.extension</groupId>
+                <groupId>org.fitframework.extension</groupId>
                 <artifactId>fit-transaction</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.integration</groupId>
+                <groupId>org.fitframework.integration</groupId>
                 <artifactId>fit-druid</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.integration</groupId>
+                <groupId>org.fitframework.integration</groupId>
                 <artifactId>fit-mybatis</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework.extension</groupId>
+                <groupId>org.fitframework.extension</groupId>
                 <artifactId>fit-validation</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework.extension</groupId>
+                <groupId>org.fitframework.extension</groupId>
                 <artifactId>fit-validation-hibernate</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-security</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework.extension</groupId>
+                <groupId>org.fitframework.extension</groupId>
                 <artifactId>fit-schedule</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-service-registry-and-discovery</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-data-repository-service</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.plugin</groupId>
+                <groupId>org.fitframework.plugin</groupId>
                 <artifactId>fit-message-serializer-json-jackson</artifactId>
                 <version>${fit.version}</version>
             </dependency>
@@ -587,7 +587,7 @@
 
             <!-- Test -->
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-test-framework</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>

@@ -24,19 +24,19 @@
             <artifactId>waterflow-runtime-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.ohscript</groupId>
+            <groupId>org.fitframework.ohscript</groupId>
             <artifactId>ohscript</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>modelengine.fitframework</groupId>
+                    <groupId>org.fitframework</groupId>
                     <artifactId>fit-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>modelengine.fitframework</groupId>
+                    <groupId>org.fitframework</groupId>
                     <artifactId>fit-util</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>modelengine.fit.service</groupId>
+                    <groupId>org.fitframework.service</groupId>
                     <artifactId>fit-http-classic</artifactId>
                 </exclusion>
             </exclusions>
@@ -46,7 +46,7 @@
             <artifactId>fastjson</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework.extension</groupId>
+            <groupId>org.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
         </dependency>
         <dependency>

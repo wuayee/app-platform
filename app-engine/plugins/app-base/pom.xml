@@ -21,11 +21,11 @@
         </dependency>
         <!-- Orm-MyBatis-Dependencies -->
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
         <dependency>
@@ -42,15 +42,15 @@
         </dependency>
         <!-- fit -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <!-- lombok -->
@@ -114,7 +114,7 @@
 
             <!-- Fit -->
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

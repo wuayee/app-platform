@@ -59,37 +59,37 @@
         <dependencies>
             <!-- FIT -->
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-api</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-http-classic</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-http-protocol</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-maven-plugin-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-util</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>
-                <groupId>modelengine.fit.service</groupId>
+                <groupId>org.fitframework.service</groupId>
                 <artifactId>fit-security</artifactId>
                 <version>${fit.version}</version>
             </dependency>
@@ -143,13 +143,13 @@
 
             <!-- Test -->
             <dependency>
-                <groupId>modelengine.fit.plugin</groupId>
+                <groupId>org.fitframework.plugin</groupId>
                 <artifactId>fit-message-serializer-json-jackson</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-test-framework</artifactId>
                 <version>${fit.version}</version>
                 <scope>test</scope>

@@ -16,11 +16,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
@@ -61,7 +61,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

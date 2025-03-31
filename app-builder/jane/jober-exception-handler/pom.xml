@@ -13,11 +13,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework.extension</groupId>
+            <groupId>org.fitframework.extension</groupId>
             <artifactId>fit-transaction</artifactId>
         </dependency>
         <dependency>

@@ -21,11 +21,11 @@
     <dependencies>
         <!-- FIT -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-maven-plugin-util</artifactId>
             <version>${fit.version}</version>
         </dependency>

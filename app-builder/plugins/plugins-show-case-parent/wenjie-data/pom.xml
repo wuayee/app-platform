@@ -15,15 +15,15 @@
     <dependencies>
         <!-- FIT -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
@@ -47,7 +47,7 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>modelengine.fit.plugin</groupId>
+            <groupId>org.fitframework.plugin</groupId>
             <artifactId>fit-message-serializer-json-jackson</artifactId>
             <scope>test</scope>
         </dependency>
@@ -84,7 +84,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>3.5.0-SNAPSHOT</version>
                 <executions>

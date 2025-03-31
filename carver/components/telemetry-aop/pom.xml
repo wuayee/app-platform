@@ -15,7 +15,7 @@
     <dependencies>
         <!--  FIT  -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
 
@@ -53,7 +53,7 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -78,7 +78,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

@@ -40,7 +40,7 @@
             <artifactId>waterflow-definition-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
     </dependencies>

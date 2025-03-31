@@ -15,7 +15,7 @@
     <dependencies>
         <!--  FIT  -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
 
@@ -43,7 +43,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -55,7 +55,7 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
             <scope>test</scope>
         </dependency>
@@ -69,7 +69,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>

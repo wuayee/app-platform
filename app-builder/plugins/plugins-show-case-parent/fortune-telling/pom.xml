@@ -45,7 +45,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>3.5.0-SNAPSHOT</version>
                 <executions>

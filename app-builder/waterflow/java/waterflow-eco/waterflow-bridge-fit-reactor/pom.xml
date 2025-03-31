@@ -15,7 +15,7 @@
             <artifactId>waterflow-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-reactor</artifactId>
         </dependency>
         <dependency>

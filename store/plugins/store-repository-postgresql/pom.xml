@@ -14,33 +14,33 @@
     <dependencies>
         <!-- FIT core -->
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework.extension</groupId>
+            <groupId>org.fitframework.extension</groupId>
             <artifactId>fit-transaction</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.integration</groupId>
+            <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
         </dependency>
 
         <!-- Services -->
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-http-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.service</groupId>
+            <groupId>org.fitframework.service</groupId>
             <artifactId>fit-security</artifactId>
         </dependency>
         <dependency>
@@ -100,7 +100,7 @@
             <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fitframework</groupId>
+            <groupId>org.fitframework</groupId>
             <artifactId>fit-test-framework</artifactId>
         </dependency>
         <dependency>
@@ -113,7 +113,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
@@ -132,7 +132,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>modelengine.fitframework</groupId>
+                <groupId>org.fitframework</groupId>
                 <artifactId>fit-dependency-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <executions>
