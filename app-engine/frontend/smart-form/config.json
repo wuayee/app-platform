@@ -1,0 +1,31 @@
+{
+  "schema": {
+    "parameters": {
+      "type": "object",
+      "required": [
+        "data",
+        "schema"
+      ],
+      "properties": {
+        "data": {
+          "type": "object",
+          "default": {
+          }
+        },
+        "schema": {
+          "type": "object",
+          "default": {
+          }
+        }
+      }
+    },
+    "return": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+.time {
+  width: 200px;
+  background-color: antiquewhite;
+}
+.question-card {
+  background-color: #f0f2f4;
+  height: 140px;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: scroll;
+}
+.answer-card {
+  background-color: #f0f2f4;
+  height: 140px;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: scroll;
+}
+.appenine-detail {
+  .page-component {
+    margin-top: 12px;
+  }
+}
+
+.drawer-title{
+  font-weight: 600;
+  margin-top: 10px;
+}
+.drawer-sub-title{
+  font-size: 12px;
+  color: #4d4d4d;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+

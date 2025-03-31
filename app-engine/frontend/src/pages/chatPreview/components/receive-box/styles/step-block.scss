@@ -1,0 +1,59 @@
+.appengine-step-tool {
+  background-color: rgb(247, 247, 247);
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 8px;
+  height: auto;
+  .appengine-step-process {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 0 12px;
+    .step-text {
+      margin: 0 8px;
+    }
+    .step-arrow {
+      width: 10px;
+      height: 10px;
+      transform: rotate(180deg);
+    }
+  }
+  .appengine-step-content {
+    overflow: hidden;
+    >div {
+      white-space: pre-line;
+      color: rgb(77, 77, 77);
+      line-height: 30px;
+      border-radius: 8px;
+      padding: 8px;
+      background-color: #ffffff;
+      margin-bottom: 12px;
+      span {
+        font-weight: 500;
+        display: block;
+      }
+    }
+    .reasoning {
+      span {
+        color: rgb(38, 115, 229);
+      }
+    }
+    .step {
+      span {
+        color: rgb(64, 172, 255);
+      }
+    }
+    .tool {
+      span {
+        color: rgb(61, 204, 171);
+      }
+    }
+  }
+  .step--info-html-collapse {
+    margin-bottom: 0;
+    .step-arrow {
+      transform: rotate(0deg);
+    }
+  }
+}
