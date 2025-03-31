@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.task_new.mapper.MetaMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.task_new.po.MetaPo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="version" property="version"/>
+        <result column="template_id" property="templateId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="attributes" property="attributes"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_by" property="updatedBy"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, version, template_id, tenant_id, attributes, created_by, created_at, updated_by, updated_at
+    </sql>
+
+    <insert id="insertOne" parameterType="modelengine.fit.task_new.po.MetaPo">
+        insert into task_new
+        (<include refid="Base_Column_List"/>)
+        values (#{id}, #{name}, #{version}, #{templateId}, #{tenantId}, #{attributes}::jsonb, #{createdBy},
+        #{createdAt},
+        #{updatedBy}, #{updatedAt})
+    </insert>
+
+    <update id="updateOne" parameterType="modelengine.fit.task_new.po.MetaPo">
+        update task_new
+        <set>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="attributes != null">
+                attributes = #{attributes}::jsonb,
+            </if>
+            <if test="updatedBy != null">
+                updated_by = #{updatedBy},
+            </if>
+            <if test="updatedAt != null">
+                updated_at = #{updatedAt}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="deleteOne">
+        update task_new
+        set is_deleted = 1
+        where id = #{id}
+    </update>
+
+    <select id="retrieveByName" resultMap="BaseResultMap" resultType="modelengine.fit.task_new.po.MetaPo">
+        select <include refid="Base_Column_List"/>
+        from task_new
+        where name = #{name}
+        and is_deleted = 0
+        limit 1
+    </select>
+
+    <select id="retrieve" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from task_new
+        where id = #{id}
+        and is_deleted = 0
+    </select>
+
+    <sql id="whereCondition">
+        <where>
+            is_deleted = 0
+            <if test="metaFilter.metaIds != null and !metaFilter.metaIds.isEmpty()">
+                and template_id in
+                <foreach item="metaId" collection="metaFilter.metaIds" open="(" separator="," close=")">
+                    #{metaId}
+                </foreach>
+            </if>
+            <if test="metaFilter.versionIds != null and !metaFilter.versionIds.isEmpty()">
+                and id in
+                <foreach item="versionId" collection="metaFilter.versionIds" open="(" separator="," close=")">
+                    #{versionId}
+                </foreach>
+            </if>
+            <if test="metaFilter.names != null and !metaFilter.names.isEmpty()">
+                and name in
+                <foreach item="name" collection="metaFilter.names" open="(" separator="," close=")">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="metaFilter.creators != null and !metaFilter.creators.isEmpty()">
+                and created_by in
+                <foreach item="creator" collection="metaFilter.creators" open="(" separator="," close=")">
+                    #{creator}
+                </foreach>
+            </if>
+            <if test="metaFilter.versions != null and !metaFilter.versions.isEmpty()">
+                and version in
+                <foreach item="version" collection="metaFilter.versions" open="(" separator="," close=")">
+                    #{version}
+                </foreach>
+            </if>
+            <if test="attributes != null and attributes.size() > 0">
+                <foreach collection="attributes" item="value" index="key" separator=" AND " open=" AND ">
+                    attributes ->> '${key}' = #{value}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <sql id="orderBySql">
+        <if test="orderBy != null">
+            order by
+            <choose>
+                <when test="orderBy.field == 'created_at'">created_at</when>
+                <when test="orderBy.field == 'updated_at'">updated_at</when>
+            </choose>
+            <choose>
+                <when test="orderBy.direction == 'desc'">DESC</when>
+                <otherwise>ASC</otherwise>
+            </choose>
+        </if>
+    </sql>
+
+    <select id="list" resultMap="BaseResultMap" resultType="modelengine.fit.task_new.po.MetaPo">
+        select <include refid="Base_Column_List"/>
+        from task_new
+        <include refid="whereCondition"/>
+        <include refid="orderBySql"/>
+        offset #{offset} limit #{limit}
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(*)
+        from task_new
+        <include refid="whereCondition"/>
+    </select>
+
+    <select id="listLatest" resultMap="BaseResultMap" resultType="modelengine.fit.task_new.po.MetaPo">
+        select s.id, s.name, s.version, s.template_id, s.tenant_id, s.attributes, s.created_by, s.created_at, s.updated_by, s.updated_at
+        from
+        (select <include refid="Base_Column_List"/>, row_number()
+            over (partition by template_id <include refid="orderBySql"/>) as group_idx
+            from task_new
+            <include refid="whereCondition"/>) s
+        where s.group_idx=1
+        offset #{offset} limit #{limit}
+    </select>
+
+    <select id="getLatestCount" resultType="int">
+        select count(*)
+        from
+        (select <include refid="Base_Column_List"/>, row_number()
+        over (partition by template_id <include refid="orderBySql"/>) as group_idx
+        from task_new
+        <include refid="whereCondition"/>) s
+        where s.group_idx=1
+    </select>
+</mapper>

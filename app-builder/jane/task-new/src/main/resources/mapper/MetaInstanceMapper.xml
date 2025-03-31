@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modelengine.fit.task_new.mapper.MetaInstanceMapper">
+    <resultMap id="BaseResultMap" type="modelengine.fit.task_new.po.MetaInstancePo">
+        <result column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
+        <result column="creator" property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_by" property="modifyBy"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="flow_instance_id" property="flowInstanceId"/>
+        <result column="curr_form_id" property="currFormId"/>
+        <result column="curr_form_version" property="currFormVersion"/>
+        <result column="curr_form_data" property="currFormData"/>
+        <result column="smart_form_time" property="smartFormTime"/>
+        <result column="resume_duration" property="resumeDuration"/>
+        <result column="instance_status" property="instanceStatus"/>
+        <result column="instance_progress" property="instanceProgress"/>
+        <result column="instance_agent_result" property="instanceAgentResult"/>
+        <result column="instance_child_instance_id" property="instanceChildInstanceId"/>
+        <result column="instance_curr_node_id" property="instanceCurrNodeId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        , task_id, task_name, creator, create_time, modify_by, modify_time, finish_time, flow_instance_id, curr_form_id, curr_form_version, curr_form_data, smart_form_time, resume_duration, instance_status, instance_progress, instance_agent_result, instance_child_instance_id, instance_curr_node_id
+    </sql>
+
+    <insert id="insertOne" parameterType="modelengine.fit.task_new.po.MetaInstancePo">
+        insert into task_instance_new (
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id}, #{taskId}, #{taskName}, #{creator}, #{createTime}, #{modifyBy}, #{modifyTime}, #{finishTime},
+        #{flowInstanceId}, #{currFormId}, #{currFormVersion}, #{currFormData}, #{smartFormTime}, #{resumeDuration}, #{instanceStatus}, #{instanceProgress}, #{instanceAgentResult}, #{instanceChildInstanceId}, #{instanceCurrNodeId})
+    </insert>
+
+    <update id="updateOne" parameterType="modelengine.fit.task_new.po.MetaInstancePo">
+        update task_instance_new
+        <set>
+            <if test="taskName != null">
+                task_name = #{taskName},
+            </if>
+            <if test="modifyBy != null">
+                modify_by = #{modifyBy},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="finishTime != null">
+                finish_time = #{finishTime},
+            </if>
+            <if test="flowInstanceId != null">
+                flow_instance_id = #{flowInstanceId},
+            </if>
+            <if test="currFormId != null">
+                curr_form_id = #{currFormId},
+            </if>
+            <if test="currFormVersion != null">
+                curr_form_version = #{currFormVersion},
+            </if>
+            <if test="currFormData != null">
+                curr_form_data = #{currFormData},
+            </if>
+            <if test="smartFormTime != null">
+                smart_form_time = #{smartFormTime},
+            </if>
+            <if test="resumeDuration != null">
+                resume_duration = #{resumeDuration},
+            </if>
+            <if test="instanceStatus != null">
+                instance_status = #{instanceStatus},
+            </if>
+            <if test="instanceProgress != null">
+                instance_progress = #{instanceProgress},
+            </if>
+            <if test="instanceAgentResult != null">
+                instance_agent_result = #{instanceAgentResult},
+            </if>
+            <if test="instanceChildInstanceId != null">
+                instance_child_instance_id = #{instanceChildInstanceId},
+            </if>
+            <if test="instanceCurrNodeId != null">
+                instance_curr_node_id = #{instanceCurrNodeId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="delete" parameterType="java.util.List">
+        UPDATE task_instance_new
+        set is_deleted = 1
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="select" resultMap="BaseResultMap"
+            resultType="modelengine.fit.task_new.po.MetaInstancePo">
+        select
+        <include refid="Base_Column_List"/>
+        from task_instance_new
+        <where>
+            true and is_deleted = 0
+            <if test="metaIds != null and metaIds.size() > 0">
+                and task_id in
+                <foreach collection="metaIds" item="metaId" index="index" open="(" separator="," close=")">
+                    #{metaId}
+                </foreach>
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                and id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY modify_time offset #{offset} limit #{limit}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(*)
+        from task_instance_new
+        <where>
+            true and is_deleted = 0
+            <if test="metaIds != null and metaIds.size()> 0">
+                and task_id in
+                <foreach collection="metaIds" item="metaId" index="index" open="(" separator="," close=")">
+                    #{metaId}
+                </foreach>
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                and id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

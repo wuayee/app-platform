@@ -26,6 +26,7 @@
         <module>jane-common-component</module>
         <module>jober-exception-handler</module>
         <module>jober-common</module>
+        <module>task-new</module>
     </modules>
 
 </project>
