@@ -133,7 +133,7 @@ public class DefaultAippModelCenter implements AippModelCenterExtension {
             log.warn("Unknown model tag: {}", tag);
             throw new AippNotFoundException(AippErrCode.NOT_FOUND, tag);
         }
-        return ModelAccessInfo.builder().baseUrl(baseUrl).build();
+        return ModelAccessInfo.builder().serviceName(modelName).tag(tag).baseUrl(baseUrl).build();
     }
 
     @Override
