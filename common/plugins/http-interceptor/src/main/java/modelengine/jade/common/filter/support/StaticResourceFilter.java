@@ -55,10 +55,13 @@ public class StaticResourceFilter implements HttpServerFilter {
             ".pdf");
     private final List<String> matchPatterns;
     private final List<String> mismatchPatterns;
+    private final boolean isFilterEffective;
 
-    public StaticResourceFilter(@Value("${include}") String includeUrls, @Value("${exclude}") String excludeUrls) {
+    public StaticResourceFilter(@Value("${include}") String includeUrls, @Value("${exclude}") String excludeUrls,
+            @Value("${filters.StaticResourceFilter}") boolean isFilterEffective) {
         this.matchPatterns = this.splitUrls(ObjectUtils.nullIf(includeUrls, DEFAULT_MATCH_PATTERNS));
         this.mismatchPatterns = this.splitUrls(ObjectUtils.nullIf(excludeUrls, StringUtils.EMPTY));
+        this.isFilterEffective = isFilterEffective;
     }
 
     private List<String> splitUrls(String urls) {
@@ -93,6 +96,10 @@ public class StaticResourceFilter implements HttpServerFilter {
     @Override
     public void doFilter(HttpClassicServerRequest request, HttpClassicServerResponse response,
             HttpServerFilterChain chain) throws DoHttpServerFilterException {
+        if (!this.isFilterEffective) {
+            chain.doFilter(request, response);
+            return;
+        }
         String path = request.path();
         if (this.isStaticPath(path)) {
             this.setResponseHeader(request, response);
