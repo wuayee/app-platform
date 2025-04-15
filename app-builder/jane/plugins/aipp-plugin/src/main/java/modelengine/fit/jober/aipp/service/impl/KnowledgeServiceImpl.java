@@ -1,11 +1,12 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
+import modelengine.fit.jober.aipp.common.PageResponse;
+import modelengine.fit.jober.aipp.condition.KnowledgeQueryCondition;
+import modelengine.fit.jober.aipp.service.KnowledgeService;
 import modelengine.jade.app.engine.knowledge.dto.KRepoDto;
 import modelengine.jade.app.engine.knowledge.dto.KTableDto;
 import modelengine.jade.app.engine.knowledge.params.RepoQueryParam;
@@ -13,9 +14,6 @@ import modelengine.jade.app.engine.knowledge.service.KRepoService;
 import modelengine.jade.app.engine.knowledge.service.KTableService;
 import modelengine.jade.app.engine.knowledge.service.param.PageQueryParam;
 
-import modelengine.fit.jober.aipp.common.PageResponse;
-import modelengine.fit.jober.aipp.condition.KnowledgeQueryCondition;
-import modelengine.fit.jober.aipp.service.KnowledgeService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 
@@ -28,7 +26,6 @@ import modelengine.fitframework.util.StringUtils;
 @Component
 public class KnowledgeServiceImpl implements KnowledgeService {
     private final KRepoService kRepoService;
-
     private final KTableService kTableService;
 
     public KnowledgeServiceImpl(KRepoService kRepoService, KTableService kTableService) {
@@ -40,7 +37,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     @Override
     public PageResponse<KRepoDto> listKnowledgeRepo(KnowledgeQueryCondition cond, Integer pageNum, Integer pageSize) {
         RepoQueryParam param = this.buildRepoQueryParam(pageNum, pageSize, cond);
-        return new PageResponse<>(this.safelyConvertToLongType(this.kRepoService.queryReposCount(param)), null,
+        return new PageResponse<>(this.safelyConvertToLongType(this.kRepoService.queryReposCount(param)),
+                null,
                 this.kRepoService.queryReposByName(param));
     }
 
@@ -59,7 +57,8 @@ public class KnowledgeServiceImpl implements KnowledgeService {
         PageQueryParam param = new PageQueryParam();
         param.setPageNum(pageNum);
         param.setPageSize(pageSize);
-        return new PageResponse<>(this.safelyConvertToLongType(this.kTableService.getTableCountByRepoId(repoId)), null,
+        return new PageResponse<>(this.safelyConvertToLongType(this.kTableService.getTableCountByRepoId(repoId)),
+                null,
                 this.kTableService.getByRepoId(repoId, param));
     }
 

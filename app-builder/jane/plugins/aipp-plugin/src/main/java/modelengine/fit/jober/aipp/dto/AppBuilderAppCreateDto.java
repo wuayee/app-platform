@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto;
 
@@ -13,6 +11,7 @@ import lombok.NoArgsConstructor;
 import modelengine.fitframework.annotation.Property;
 
 /**
+ *
  * This class is used to create a new application.
  * 应用创建Dto
  *
@@ -25,21 +24,16 @@ import modelengine.fitframework.annotation.Property;
 @NoArgsConstructor
 public class AppBuilderAppCreateDto {
     private String name;
-
     private String description;
-
     private String icon;
-
     private String greeting;
 
     @Property(name = "app_type")
     private String appType;
-
     private String type;
 
     @Property(name = "store_id")
     private String storeId;
-
     @Property(name = "app_built_type")
     private String appBuiltType;
 

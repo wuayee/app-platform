@@ -1,11 +1,10 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -56,4 +55,15 @@ public interface UploadedFileManageService {
      * @param status 文件是否可以清理的标识
      */
     void updateRecord(String appId, String fileName, Integer status);
+
+    /**
+     * 拷贝图标文件.
+     *
+     * @param icon 图标.
+     * @param aippId 应用id.
+     * @param operator 操作人.
+     * @return {@link String} 拷贝后的图标.
+     * @throws IOException io异常.
+     */
+    String copyIconFiles(String icon, String aippId, String operator) throws IOException;
 }

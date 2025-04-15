@@ -1,21 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import modelengine.fit.jober.aipp.dto.ModelDto;
 import modelengine.fit.jober.aipp.dto.PluginToolDto;
 import modelengine.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import modelengine.fit.jober.aipp.dto.StoreNodeInfoDto;
-
 import modelengine.jade.store.entity.query.PluginToolQuery;
 import modelengine.jade.store.entity.query.ToolQuery;
-
-import modelengine.fit.jane.common.entity.OperationContext;
 
 import java.util.List;
 

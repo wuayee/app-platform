@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.northbound;
 
@@ -21,6 +19,8 @@ import modelengine.fit.jober.aipp.dto.chat.QueryChatRspDto;
 import modelengine.fit.jober.aipp.service.AippChatService;
 import modelengine.fit.jober.common.RangeResult;
 import modelengine.fit.jober.common.RangedResultSet;
+
+import modelengine.fit.jober.aipp.northbound.AippChatServiceAdapterImpl;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.beans.BeanUtils;
 import modelengine.fitframework.serialization.ObjectSerializer;
@@ -41,11 +41,9 @@ import java.util.List;
 @DisplayName("测试 AippChatServiceAdapterImpl")
 public class AippChatServiceAdapterImplTest {
     private final AippChatService aippChatService = mock(AippChatService.class);
-
     private final ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
-
-    private final AippChatServiceAdapterImpl aippChatServiceAdapterImpl = new AippChatServiceAdapterImpl(
-            aippChatService, serializer);
+    private final AippChatServiceAdapterImpl aippChatServiceAdapterImpl =
+            new AippChatServiceAdapterImpl(aippChatService, serializer);
 
     @Test
     @DisplayName("当查询会话列表时，返回结果正确。")
@@ -66,8 +64,8 @@ public class AippChatServiceAdapterImplTest {
         queryChatRspDto2.setCurrentTime(456);
 
         List<QueryChatRspDto> queryChatRspDtoList = Arrays.asList(queryChatRspDto1, queryChatRspDto2);
-        RangedResultSet<QueryChatRspDto> rangedResultSet = RangedResultSet.create(queryChatRspDtoList,
-                new RangeResult(1, 2, 3));
+        RangedResultSet<QueryChatRspDto> rangedResultSet =
+                RangedResultSet.create(queryChatRspDtoList, new RangeResult(1, 2, 3));
         when(aippChatService.queryChatList(queryChatRequest, operationContext)).thenReturn(rangedResultSet);
         RangedResultSet<ChatInfo> result = aippChatServiceAdapterImpl.queryChatList(body, operationContext);
         assertThat(result.getResults()).hasSize(2);
@@ -75,8 +73,9 @@ public class AippChatServiceAdapterImplTest {
         QueryChatRspDto queryChatRspDtoOriginal1 = queryChatRspDtoList.get(0);
         assertThat(chatInfo1.getAppId()).isEqualTo(queryChatRspDtoOriginal1.getAppId());
         assertThat(chatInfo1.getChatId()).isEqualTo(queryChatRspDtoOriginal1.getChatId());
-        assertThat(chatInfo1.getMessageList().get(0).getAppName()).isEqualTo(
-                queryChatRspDtoOriginal1.getMassageList().get(0).getAppName());
+        assertThat(chatInfo1.getMessageList().get(0).getAppName()).isEqualTo(queryChatRspDtoOriginal1.getMassageList()
+                .get(0)
+                .getAppName());
         ChatInfo chatInfo2 = result.getResults().get(1);
         QueryChatRspDto queryChatRspDtoOriginal2 = queryChatRspDtoList.get(1);
         assertThat(chatInfo2.getChatId()).isEqualTo(queryChatRspDtoOriginal2.getChatId());

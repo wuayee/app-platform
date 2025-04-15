@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -13,15 +11,17 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fit.waterflow.spi.FlowExceptionService;
-import modelengine.jade.common.globalization.LocaleService;
-
-import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.entity.ChatSession;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
+import modelengine.fit.waterflow.entity.FlowErrorInfo;
+import modelengine.jade.common.globalization.LocaleService;
+
+import modelengine.fit.jober.aipp.fitable.AippFlowExceptionHandle;
+import modelengine.fit.jober.aipp.fitable.ToolExceptionHandle;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.FitableNotFoundException;
 import modelengine.fitframework.broker.client.Invoker;
@@ -29,7 +29,6 @@ import modelengine.fitframework.broker.client.Router;
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
 import modelengine.fitframework.flowable.emitter.DefaultEmitter;
 import modelengine.fitframework.util.MapBuilder;
-import modelengine.jade.common.globalization.LocaleService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,9 +65,6 @@ public class AippFlowExceptionHandleTest {
     private AippLogService aippLogService;
 
     @Mock
-    private MetaInstanceService metaInstanceService;
-
-    @Mock
     private LocaleService localeService;
 
     @Mock
@@ -80,21 +76,20 @@ public class AippFlowExceptionHandleTest {
     @Mock
     private BrokerClient brokerClient;
 
+    @Mock
+    private AppTaskInstanceService appTaskInstanceService;
+
     @BeforeEach
     void setUp() {
-        this.aippFlowExceptionHandle = new AippFlowExceptionHandle(this.aippLogService,
-                this.metaInstanceService,
-                this.localeService,
-                this.appChatSessionService,
-                this.toolExceptionHandle,
-                this.brokerClient);
+        this.aippFlowExceptionHandle = new AippFlowExceptionHandle(this.aippLogService, this.localeService,
+                this.appChatSessionService, this.toolExceptionHandle, this.brokerClient, this.appTaskInstanceService);
     }
 
     @Test
     @DisplayName("测试构造方法")
     void shouldSuccessWhenConstruct() {
         String opContext = "{\"tenantId\": \"test\"," + "\"operator\": \"test\"," + "\"globalUserId\":\"test\","
-                + "\"account\": \"account\"," + "\"employeeNumber\": \"employeeNumber\"," + "\"name\": \"name\","
+                + "\"account\":\"account\"," + "\"employeeNumber\": \"employeeNumber\"," + "\"name\": \"name\","
                 + "\"operatorIp\": \"operatorIp\"," + "\"sourcePlatform\": \"sourcePlatform\","
                 + "\"language\": \"language\"}";
         List<Map<String, Object>> flowData = Arrays.asList(MapBuilder.<String, Object>get()
@@ -138,9 +133,12 @@ public class AippFlowExceptionHandleTest {
         Mockito.when(this.appChatSessionService.getSession(anyString())).thenReturn(Optional.empty());
         Router router = Mockito.mock(Router.class);
         Invoker invoker = Mockito.mock(Invoker.class);
-        Mockito.when(router.route(ArgumentMatchers.argThat(arg -> (arg instanceof FitableIdFilter) && arg.toString()
-                .equals("FitableIdFilter{fitableIds=[parent]}")))).thenReturn(invoker);
-        Mockito.when(invoker.invoke(nodeId, flowData, flowErrorInfo)).thenReturn(null);
+        Mockito.when(router.route(ArgumentMatchers.argThat(
+                        arg -> (arg instanceof FitableIdFilter) && arg.toString()
+                                .equals("FitableIdFilter{fitableIds=[parent]}"))))
+                .thenReturn(invoker);
+        Mockito.when(invoker.invoke(nodeId, flowData, flowErrorInfo))
+                .thenReturn(null);
         Mockito.when(this.brokerClient.getRouter(FlowExceptionService.class,
                 FlowExceptionService.HANDLE_EXCEPTION_GENERICABLE)).thenReturn(router);
 
@@ -168,8 +166,7 @@ public class AippFlowExceptionHandleTest {
                         FlowExceptionService.HANDLE_EXCEPTION_GENERICABLE))
                 .thenThrow(new FitableNotFoundException("not found"));
 
-        Assertions.assertDoesNotThrow(() -> this.aippFlowExceptionHandle.handleException(nodeId,
-                flowData,
-                flowErrorInfo));
+        Assertions.assertDoesNotThrow(
+                () -> this.aippFlowExceptionHandle.handleException(nodeId, flowData, flowErrorInfo));
     }
 }

@@ -1,11 +1,10 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jober.aipp.condition.AppQueryCondition;
 import modelengine.fit.jober.aipp.dto.AippCreateDto;
@@ -19,12 +18,11 @@ import modelengine.fit.jober.aipp.dto.AppBuilderSaveConfigDto;
 import modelengine.fit.jober.aipp.dto.PublishedAppResDto;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
-import modelengine.fit.jober.aipp.dto.export.AppExportDto;
 import modelengine.fit.jober.aipp.dto.template.TemplateAppCreateDto;
 import modelengine.fit.jober.aipp.dto.template.TemplateInfoDto;
 import modelengine.fit.jober.common.RangedResultSet;
+
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;
@@ -48,6 +46,7 @@ public interface AppBuilderAppService {
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.create")
     AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context, boolean isUpgrade);
+
 
     /**
      * 查询已创建的应用数量。
@@ -122,7 +121,7 @@ public interface AppBuilderAppService {
      * @param appId 表示应用唯一标识的 {@link String}。
      * @param name 表示应用配置信息的名称的 {@link String}。
      * @return 获取到的应用配置信息的
-     * {@link Optional}{@code <}{@link AppBuilderConfigFormPropertyDto}{@code >}。
+     *         {@link Optional}{@code <}{@link AppBuilderConfigFormPropertyDto}{@code >}。
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.get.property.by.name")
     Optional<AppBuilderConfigFormPropertyDto> getPropertyByName(String appId, String name);
@@ -138,8 +137,8 @@ public interface AppBuilderAppService {
      * @return 获取到的列表信息集合
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.list")
-    Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond, HttpClassicServerRequest httpRequest,
-            String tenantId, long offset, int limit);
+    Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
+            HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit);
 
     /**
      * 删除应用。
@@ -169,20 +168,11 @@ public interface AppBuilderAppService {
      *
      * @param uniqueName 表示应用发布的唯一名称
      * @param context 表示操作上下文的 {@link OperationContext}。
+     *
      * @return 获取到的发布详情的 {@link PublishedAppResDto}。
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.published")
     PublishedAppResDto published(String uniqueName, OperationContext context);
-
-    /**
-     * 导出应用配置。
-     *
-     * @param appId 表示应用的唯一表示的 {@link String}。
-     * @param context 表示操作上下文的 {@link OperationContext}。
-     * @return 导出的应用配置信息的 {@link AppExportDto}。
-     */
-    @Genericable(id = "modelengine.fit.jober.aipp.service.app.export")
-    AppExportDto export(String appId, OperationContext context);
 
     /**
      * 根据应用配置进行可用性校验。
@@ -193,16 +183,6 @@ public interface AppBuilderAppService {
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.check")
     List<CheckResult> checkAvailable(List<AppCheckDto> appCheckDtos, OperationContext context);
-
-    /**
-     * 导入应用。
-     *
-     * @param appConfig 表示上传的应用配置文件的 {@link String}。
-     * @param context 表示操作上下文的 {@link OperationContext}。
-     * @return 表示创建的应用的 {@link AppBuilderAppDto}。
-     */
-    @Genericable(id = "modelengine.fit.jober.aipp.service.app.import")
-    AppBuilderAppDto importApp(String appConfig, OperationContext context);
 
     /**
      * 将应用发布为应用模板。

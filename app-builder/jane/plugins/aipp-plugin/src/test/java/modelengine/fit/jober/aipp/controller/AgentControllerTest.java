@@ -12,12 +12,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-
-import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.jane.common.response.Rsp;
+import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.dto.AgentCreateInfoDto;
 import modelengine.fit.jober.aipp.service.AgentInfoGenerateService;
+
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.Mock;
 import modelengine.fitframework.test.annotation.MvcTest;
@@ -65,9 +65,8 @@ public class AgentControllerTest {
         when(this.agentInfoGenerateService.selectTools(anyString(), any(), any())).thenReturn(tools);
         AgentCreateInfoDto agentCreateInfoDto = new AgentCreateInfoDto();
         agentCreateInfoDto.setDescription("DESC");
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/v1/api/tid/agent")
-                .jsonEntity(agentCreateInfoDto)
-                .responseType(Rsp.class);
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/v1/api/tid/agent").jsonEntity(agentCreateInfoDto).responseType(Rsp.class);
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
         Rsp<Map<String, Object>> entityRsp = ObjectUtils.cast(response.objectEntity().get().object());

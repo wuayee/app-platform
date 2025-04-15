@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.condition;
 
@@ -42,6 +40,16 @@ public class AppQueryCondition {
     private String appCategory;
 
     private List<String> excludeNames;
+
+    private String appSuiteId;
+
+    private String orderBy;
+
+    private String sort;
+
+    private long offset;
+
+    private int limit;
 
     @RequestParam(name = "app_type", required = false)
     private String appType;

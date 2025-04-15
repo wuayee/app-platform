@@ -1,17 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fel;
 
-import modelengine.fel.core.chat.ChatModel;
+import modelengine.fit.jober.aipp.constants.AippConst;
+
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.Prompt;
-import modelengine.fel.core.tool.ToolProvider;
+import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.engine.operators.patterns.AbstractAgent;
-import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fel.core.tool.ToolProvider;
 import modelengine.fitframework.annotation.Bean;
 import modelengine.fitframework.annotation.Component;
 
@@ -32,7 +31,8 @@ public class FelComponentConfig {
      * }{@link Prompt}{@code >}。
      */
     @Bean(AippConst.WATER_FLOW_AGENT_BEAN)
-    public AbstractAgent<Prompt, Prompt> getWaterFlowAgent(ToolProvider toolProvider, ChatModel chatModel) {
+    public AbstractAgent<Prompt, Prompt> getWaterFlowAgent(ToolProvider toolProvider,
+            ChatModel chatModel) {
         return new WaterFlowAgent(toolProvider, chatModel, ChatOption.custom().temperature(0.0D).build());
     }
 }

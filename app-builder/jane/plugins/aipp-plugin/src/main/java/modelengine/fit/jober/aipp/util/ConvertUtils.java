@@ -1,17 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
-import modelengine.fit.appbuilder.security.util.XssUtils;
 import modelengine.fit.jober.aipp.domain.AppBuilderApp;
 import modelengine.fit.jober.aipp.dto.AippCreateDto;
 import modelengine.fit.jober.aipp.dto.AippDto;
 import modelengine.fit.jober.aipp.dto.AppBuilderAppDto;
 import modelengine.fit.jober.aipp.genericable.entity.AippCreate;
+
+import modelengine.fit.appbuilder.security.util.XssUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;

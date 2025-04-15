@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto.audio;
 
@@ -23,10 +21,8 @@ import modelengine.fitframework.annotation.Property;
 public class SummarySection {
     @Property(description = "音频坐标, 格式HH:mm:ss")
     private String position;
-
     @Property(description = "摘要标题")
     private String title;
-
     @Property(description = "片段摘要")
     private String text;
 }

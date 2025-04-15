@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ *  Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.factory;
 
@@ -13,8 +11,6 @@ import static modelengine.fit.jober.aipp.enums.NodeType.OLD_RETRIEVAL_NODE;
 import static modelengine.fit.jober.aipp.enums.NodeType.RETRIEVAL_NODE;
 import static modelengine.fit.jober.aipp.enums.NodeType.TOOL_INVOKE_NODE;
 
-import modelengine.jade.store.service.PluginToolService;
-
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippException;
@@ -24,6 +20,8 @@ import modelengine.fit.jober.aipp.service.impl.LlmNodeChecker;
 import modelengine.fit.jober.aipp.service.impl.ManualCheckNodeChecker;
 import modelengine.fit.jober.aipp.service.impl.RetrievalNodeChecker;
 import modelengine.fit.jober.aipp.service.impl.ToolInvokeNodeChecker;
+import modelengine.jade.store.service.PluginToolService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Initialize;
 

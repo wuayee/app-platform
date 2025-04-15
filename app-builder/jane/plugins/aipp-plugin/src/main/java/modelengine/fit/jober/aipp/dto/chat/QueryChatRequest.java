@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto.chat;
 
@@ -15,8 +13,8 @@ import modelengine.fitframework.annotation.Property;
 /**
  * 查询会话请求提
  *
- * @author 翟卉馨
- * @since 2024-05-29
+ *  @author 翟卉馨
+ *  @since 2024-05-29
  */
 @Builder
 @Data

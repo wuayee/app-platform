@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
@@ -36,16 +34,13 @@ import java.util.Collections;
  */
 public class LlmServiceTest {
     private static final ChatModel OPENAI_CLIENT_MOCK = mock(ChatModel.class);
-
     private static final VoiceService VOICE_SERVICE_MOCK = mock(VoiceService.class);
-
-    private static final HttpClassicClientFactory FACTORY_MOCK = mock(HttpClassicClientFactory.class,
-            RETURNS_DEEP_STUBS);
+    private static final HttpClassicClientFactory FACTORY_MOCK =
+            mock(HttpClassicClientFactory.class, RETURNS_DEEP_STUBS);
 
     @Test
     void testAskWithText() {
-        LLMService llmServiceMock = new LLMServiceImpl(null, null, OPENAI_CLIENT_MOCK,
-                VOICE_SERVICE_MOCK, FACTORY_MOCK);
+        LLMService llmServiceMock = new LLMServiceImpl(OPENAI_CLIENT_MOCK);
         Choir<ChatMessage> responseMock = mock(Choir.class, RETURNS_DEEP_STUBS);
         try {
             when(OPENAI_CLIENT_MOCK.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(responseMock);

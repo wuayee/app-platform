@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -11,29 +9,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
 
 import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
-import modelengine.fit.jane.meta.multiversion.MetaService;
-import modelengine.fit.jane.meta.multiversion.definition.Meta;
-import modelengine.fit.jane.meta.multiversion.definition.MetaFilter;
-import modelengine.fit.jane.meta.multiversion.instance.Instance;
-import modelengine.fit.jane.meta.multiversion.instance.MetaInstanceFilter;
-import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
+import modelengine.fit.jober.aipp.domains.task.AppTask;
+import modelengine.fit.jober.aipp.domains.taskinstance.AppTaskInstance;
 import modelengine.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
 import modelengine.fit.jober.aipp.service.AippFlowRuntimeInfoService;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
+import modelengine.fit.jober.aipp.domains.task.service.AppTaskService;
 import modelengine.fit.jober.aipp.service.impl.AippFlowRuntimeInfoServiceImpl;
-import modelengine.fit.jober.common.RangeResult;
-import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.fit.jober.entity.consts.NodeTypes;
 import modelengine.fit.runtime.entity.Parameter;
 import modelengine.fit.runtime.entity.RuntimeData;
+
 import modelengine.fit.waterflow.domain.enums.FlowNodeStatus;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -44,9 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -58,10 +47,10 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class AippFlowRuntimeInfoServiceTest {
     @Mock
-    private MetaService metaService;
+    private AppTaskInstanceService appTaskInstanceService;
 
     @Mock
-    private MetaInstanceService metaInstanceService;
+    private AppTaskService appTaskService;
 
     @Mock
     private AppBuilderRuntimeInfoRepository repository;
@@ -73,7 +62,8 @@ public class AippFlowRuntimeInfoServiceTest {
      */
     @BeforeEach
     void setUp() {
-        this.service = new AippFlowRuntimeInfoServiceImpl(this.metaService, this.metaInstanceService, this.repository);
+        this.service = new AippFlowRuntimeInfoServiceImpl(this.repository, this.appTaskInstanceService,
+                this.appTaskService);
     }
 
     /**
@@ -81,27 +71,12 @@ public class AippFlowRuntimeInfoServiceTest {
      */
     @Test
     void shouldOptionalEmptyWhenNoRuntimeInfo() {
-        // before
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put(AippConst.ATTR_APP_ID_KEY, "app1");
-        Meta meta = new Meta();
-        meta.setAttributes(attributes);
-        meta.setVersionId("version1");
-        RangedResultSet<Meta> metaRangedResultSet = new RangedResultSet<>();
-        metaRangedResultSet.setResults(Collections.singletonList(meta));
-        doReturn(metaRangedResultSet).when(this.metaService)
-                .list(any(MetaFilter.class), anyBoolean(), anyLong(), anyInt(), any(OperationContext.class),
-                        any(MetaFilter.class));
+        doReturn(Optional.of(AppTask.asEntity().setTaskId("version1").setAppId("app1").build())).when(
+                this.appTaskService).getLatest(anyString(), anyString(), any(OperationContext.class));
 
-        Map<String, String> info = new HashMap<>();
-        info.put(AippConst.INST_FLOW_INST_ID_KEY, "trace1");
-        Instance instance = new Instance();
-        instance.setInfo(info);
-        RangedResultSet<Instance> resultSet = new RangedResultSet<>();
-        resultSet.setResults(Collections.singletonList(instance));
-        resultSet.setRange(new RangeResult(10, 10, 10));
-        doReturn(resultSet).when(this.metaInstanceService)
-                .list(anyString(), any(MetaInstanceFilter.class), anyLong(), anyInt(), any(OperationContext.class));
+        Optional<AppTaskInstance> result = Optional.of(AppTaskInstance.asEntity().setFlowTraceId("trace1").build());
+        doReturn(result).when(this.appTaskInstanceService)
+                .getInstance(anyString(), anyString(), any(OperationContext.class));
 
         doReturn(Collections.emptyList()).when(this.repository).selectByTraceId(anyString());
 
@@ -118,27 +93,13 @@ public class AippFlowRuntimeInfoServiceTest {
      */
     @Test
     void shouldThrowIllegalStateExceptionWhenNoStartNodeInfo() {
-        // before
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put(AippConst.ATTR_APP_ID_KEY, "app1");
-        Meta meta = new Meta();
-        meta.setAttributes(attributes);
-        meta.setVersionId("version1");
-        RangedResultSet<Meta> metaRangedResultSet = new RangedResultSet<>();
-        metaRangedResultSet.setResults(Collections.singletonList(meta));
-        doReturn(metaRangedResultSet).when(this.metaService)
-                .list(any(MetaFilter.class), anyBoolean(), anyLong(), anyInt(), any(OperationContext.class),
-                        any(MetaFilter.class));
+        doReturn(Optional.of(AppTask.asEntity().setTaskId("version1").setAppId("app1").build())).when(
+                this.appTaskService).getLatest(anyString(), anyString(), any(OperationContext.class));
 
-        Map<String, String> info = new HashMap<>();
-        info.put(AippConst.INST_FLOW_INST_ID_KEY, "trace1");
-        Instance instance = new Instance();
-        instance.setInfo(info);
-        RangedResultSet<Instance> resultSet = new RangedResultSet<>();
-        resultSet.setResults(Collections.singletonList(instance));
-        resultSet.setRange(new RangeResult(10, 10, 10));
-        doReturn(resultSet).when(this.metaInstanceService)
-                .list(anyString(), any(MetaInstanceFilter.class), anyLong(), anyInt(), any(OperationContext.class));
+        Optional<AppTaskInstance> instanceOp = Optional.of(
+                AppTaskInstance.asEntity().setFlowTraceId("trace1").build());
+        doReturn(instanceOp).when(this.appTaskInstanceService)
+                .getInstance(anyString(), anyString(), any(OperationContext.class));
 
         List<AppBuilderRuntimeInfo> infos = new ArrayList<>();
         infos.add(AppBuilderRuntimeInfo.builder().nodeType(NodeTypes.STATE.getType()).build());
@@ -191,26 +152,12 @@ public class AippFlowRuntimeInfoServiceTest {
     }
 
     private void mockData() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put(AippConst.ATTR_APP_ID_KEY, "app1");
-        Meta meta = new Meta();
-        meta.setAttributes(attributes);
-        meta.setVersionId("version1");
-        RangedResultSet<Meta> metaRangedResultSet = new RangedResultSet<>();
-        metaRangedResultSet.setResults(Collections.singletonList(meta));
-        doReturn(metaRangedResultSet).when(this.metaService)
-                .list(any(MetaFilter.class), anyBoolean(), anyLong(), anyInt(), any(OperationContext.class),
-                        any(MetaFilter.class));
+        doReturn(Optional.of(AppTask.asEntity().setTaskId("version1").setAppId("app1").build())).when(
+                this.appTaskService).getLatest(anyString(), anyString(), any(OperationContext.class));
 
-        Map<String, String> info = new HashMap<>();
-        info.put(AippConst.INST_FLOW_INST_ID_KEY, "trace1");
-        Instance instance = new Instance();
-        instance.setInfo(info);
-        RangedResultSet<Instance> resultSet = new RangedResultSet<>();
-        resultSet.setResults(Collections.singletonList(instance));
-        resultSet.setRange(new RangeResult(10, 10, 10));
-        doReturn(resultSet).when(this.metaInstanceService)
-                .list(anyString(), any(MetaInstanceFilter.class), anyLong(), anyInt(), any(OperationContext.class));
+        Optional<AppTaskInstance> result = Optional.of(AppTaskInstance.asEntity().setFlowTraceId("trace1").build());
+        doReturn(result).when(this.appTaskInstanceService)
+                .getInstance(anyString(), anyString(), any(OperationContext.class));
 
         List<AppBuilderRuntimeInfo> infos = new ArrayList<>();
         Parameter startParameter = new Parameter();

@@ -1,16 +1,15 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
-import modelengine.fit.http.websocket.Session;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AippStreamService;
 import modelengine.fit.jober.aipp.util.AippLogUtils;
 import modelengine.fit.jober.aipp.util.JsonUtils;
+
+import modelengine.fit.http.websocket.Session;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 

@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.mapper;
 
@@ -44,7 +42,7 @@ public interface AippChatMapper {
      * 查询会话记录
      *
      * @param request 表示请求体的 {@link QueryChatRequest}。
-     * @param chatId 表示会话 ID 的 {@link String}。
+     * @param chatId  表示会话 ID 的 {@link String}。
      * @param user 表示创建该会话的用户的 {@link String}。
      * @return List<QueryChatRsp>
      */
@@ -65,11 +63,11 @@ public interface AippChatMapper {
      *
      * @param chatId 会话ID
      * @param offset 起始查询
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return List<ChatDto>
      */
     List<ChatDto> selectChat(@Param("chatId") String chatId, @Param("offset") Integer offset,
-            @Param("limit") Integer limit);
+                             @Param("limit") Integer limit);
 
     /**
      * 删除会话
@@ -99,7 +97,7 @@ public interface AippChatMapper {
      * 查询实例记录
      *
      * @param chatId 会话ID
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return List<String>
      */
     List<String> selectInstanceByChat(String chatId, Integer limit);
@@ -108,7 +106,7 @@ public interface AippChatMapper {
      * 查询历史实例记录
      *
      * @param chatId 会话ID
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return List<String> 实例id列表
      */
     List<String> selectFormerInstanceByChat(String chatId, Integer limit);
@@ -176,6 +174,6 @@ public interface AippChatMapper {
      * @param queryChatInfoRequest 请求体
      * @return List<QueryChatRsp> 会话记录列表
      */
-    List<QueryChatRsp> selectChatByCondition(@Param("condition") Map<String, String> condition,
-            @Param("requestParam") QueryChatInfoRequest queryChatInfoRequest);
+    List<QueryChatRsp> selectChatByCondition(@Param("condition") Map<String, String> condition, @Param("requestParam")
+    QueryChatInfoRequest queryChatInfoRequest);
 }

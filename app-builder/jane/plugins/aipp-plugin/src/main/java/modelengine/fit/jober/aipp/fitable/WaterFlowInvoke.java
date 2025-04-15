@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -10,6 +8,7 @@ import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.WaterFlowService;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.genericable.AippRunTimeService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
@@ -37,7 +36,9 @@ public class WaterFlowInvoke implements WaterFlowService {
     @Fitable(id = "water.flow.invoke")
     public String invoke(String tenantId, String aippId, String version, Map<String, Object> inputParams) {
         Map<String, Object> initContext = this.buildInitContext(inputParams);
-        return this.aippRunTimeService.createAippInstance(aippId, version, initContext,
+        return this.aippRunTimeService.createAippInstance(aippId,
+                version,
+                initContext,
                 this.buildOperationContext(tenantId, initContext));
     }
 

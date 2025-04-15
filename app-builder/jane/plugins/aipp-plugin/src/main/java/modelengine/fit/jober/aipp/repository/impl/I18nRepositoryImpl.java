@@ -1,14 +1,13 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.repository.impl;
 
 import modelengine.fit.jober.aipp.mapper.I18nMapper;
 import modelengine.fit.jober.aipp.po.I18nPo;
 import modelengine.fit.jober.aipp.repository.I18nRepository;
+
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
@@ -32,8 +31,13 @@ public class I18nRepositoryImpl implements I18nRepository {
     @Override
     public Map<String, Map<String, String>> selectResource() {
         List<I18nPo> i18nPoList = this.i18nMapper.selectResource();
-        return i18nPoList.stream()
-                .collect(Collectors.groupingBy(I18nPo::getLanguage,
-                        Collectors.toMap(I18nPo::getKey, I18nPo::getValue, (existing, replacement) -> existing)));
+        return i18nPoList.stream().collect(Collectors.groupingBy(
+                I18nPo::getLanguage,
+                Collectors.toMap(
+                        I18nPo::getKey,
+                        I18nPo::getValue,
+                        (existing, replacement) -> existing)
+                )
+        );
     }
 }

@@ -1,19 +1,18 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
+
+import modelengine.fit.jober.aipp.common.exception.AippJsonDecodeException;
+import modelengine.fit.jober.aipp.enums.LlmModelNameEnum;
+import modelengine.fit.jober.aipp.service.LLMService;
 
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.support.HumanMessage;
-import modelengine.fit.jober.aipp.common.exception.AippJsonDecodeException;
-import modelengine.fit.jober.aipp.enums.LlmModelNameEnum;
-import modelengine.fit.jober.aipp.service.LLMService;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;

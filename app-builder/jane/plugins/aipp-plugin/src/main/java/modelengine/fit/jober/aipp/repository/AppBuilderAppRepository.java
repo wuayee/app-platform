@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.repository;
 
@@ -35,7 +33,8 @@ public interface AppBuilderAppRepository {
      * @param limit 表示获取到的个数的 {@code int}。
      * @return 表示获取到的最新的 app 对象列表的 {@link List}{@code <}{@link AppBuilderApp}{@code >}。
      */
-    List<AppBuilderApp> selectWithLatestApp(AppQueryCondition cond, String tenantId, long offset, int limit);
+    List<AppBuilderApp> selectWithLatestApp(AppQueryCondition cond, String tenantId,
+            long offset, int limit);
 
     /**
      * 根据查询条件获取的 app 对象列表。

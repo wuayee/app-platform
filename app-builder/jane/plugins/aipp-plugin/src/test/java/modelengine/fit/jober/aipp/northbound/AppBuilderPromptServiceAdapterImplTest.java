@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.northbound;
 
@@ -19,6 +17,9 @@ import modelengine.fit.jober.aipp.dto.AppBuilderPromptDto;
 import modelengine.fit.jober.aipp.dto.chat.PromptCategory;
 import modelengine.fit.jober.aipp.dto.chat.PromptInfo;
 import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
+
+import modelengine.fit.jober.aipp.northbound.AippChatServiceAdapterImpl;
+import modelengine.fit.jober.aipp.northbound.AppBuilderPromptServiceAdapterImpl;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.serialization.ObjectSerializer;
 
@@ -39,11 +40,9 @@ import java.util.List;
 @DisplayName("测试 AppBuilderPromptServiceAdapterImpl")
 public class AppBuilderPromptServiceAdapterImplTest {
     private final ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
-
     private final AppBuilderPromptService appBuilderPromptService = mock(AppBuilderPromptService.class);
-
-    private final AppBuilderPromptServiceAdapterImpl appBuilderPromptServiceAdapter
-            = new AppBuilderPromptServiceAdapterImpl(appBuilderPromptService, serializer);
+    private final AppBuilderPromptServiceAdapterImpl appBuilderPromptServiceAdapter =
+            new AppBuilderPromptServiceAdapterImpl(appBuilderPromptService, serializer);
 
     @Test
     @DisplayName("当查询灵感类别时返回正确结果。")
@@ -55,8 +54,11 @@ public class AppBuilderPromptServiceAdapterImplTest {
         categoryDto1.setId("Id1");
         categoryDto1.setTitle("Title1");
         categoryDto1.setDisable(false);
-        categoryDto1.setChildren(
-                Collections.singletonList(new AppBuilderPromptCategoryDto("Title1", "Id1", null, false, null)));
+        categoryDto1.setChildren(Collections.singletonList(new AppBuilderPromptCategoryDto("Title1",
+                "Id1",
+                null,
+                false,
+                null)));
         AppBuilderPromptCategoryDto categoryDto2 = new AppBuilderPromptCategoryDto();
         categoryDto2.setId("Id2");
         categoryDto2.setTitle("Title2");
@@ -66,8 +68,8 @@ public class AppBuilderPromptServiceAdapterImplTest {
         Rsp<List<AppBuilderPromptCategoryDto>> mockResponse = Rsp.ok(categoryDtos);
 
         when(appBuilderPromptService.listPromptCategories(appId, operationContext, isDebug)).thenReturn(mockResponse);
-        List<PromptCategory> result = appBuilderPromptServiceAdapter.listPromptCategories(appId, operationContext,
-                isDebug);
+        List<PromptCategory> result =
+                appBuilderPromptServiceAdapter.listPromptCategories(appId, operationContext, isDebug);
         assertThat(result).isNotNull().hasSize(2);
         PromptCategory adapter1 = result.get(0);
         assertThat(adapter1).extracting(PromptCategory::getId, PromptCategory::getTitle)
@@ -84,13 +86,25 @@ public class AppBuilderPromptServiceAdapterImplTest {
     @DisplayName("当灵感大全数据类转换成适配器类时返回正确结果。")
     void shouldReturnOkWhenDtoConvertToAdapter() {
         AppBuilderPromptDto dto = new AppBuilderPromptDto();
-        dto.setInspirations(Collections.singletonList(
-                new AppBuilderPromptDto.AppBuilderInspirationDto("name", "id", "prompt", "promptTemplate", "category",
-                        "description", true, Arrays.asList(
-                        new AppBuilderPromptDto.AppBuilderPromptVarDataDto("key", "var", "varType", "sourceType",
-                                "sourceInfo", true),
-                        new AppBuilderPromptDto.AppBuilderPromptVarDataDto("key2", "var2", "varType2", "sourceType2",
-                                "sourceInfo2", true)))));
+        dto.setInspirations(Collections.singletonList(new AppBuilderPromptDto.AppBuilderInspirationDto("name",
+                "id",
+                "prompt",
+                "promptTemplate",
+                "category",
+                "description",
+                true,
+                Arrays.asList(new AppBuilderPromptDto.AppBuilderPromptVarDataDto("key",
+                                "var",
+                                "varType",
+                                "sourceType",
+                                "sourceInfo",
+                                true),
+                        new AppBuilderPromptDto.AppBuilderPromptVarDataDto("key2",
+                                "var2",
+                                "varType2",
+                                "sourceType2",
+                                "sourceInfo2",
+                                true)))));
         dto.setCategories(new ArrayList<>());
         PromptInfo result = appBuilderPromptServiceAdapter.appBuilderPromptDtoConvertToAdapter(dto);
         assertThat(result.getInspirations().get(0).getId()).isEqualTo("id");

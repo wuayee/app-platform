@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto;
 
@@ -31,18 +29,20 @@ public class AippComponentFlowItemDtoTest {
                 + "        \"fitables\": [\n" + "          \"modelengine.fit.jober.aipp.fitable.LLMImage2Text\"\n"
                 + "        ]\n" + "      },\n" + "      \"group\": [\"imageProcessor\"]}";
         AippComponentFlowItemDto obj = JsonUtils.parseObject(jsonString, AippComponentFlowItemDto.class);
-        Assertions.assertEquals(obj, AippComponentFlowItemDto.builder()
-                .type("aippState")
-                .name("提取图像信息")
-                .icon("xx.icon")
-                .description("这是一个图像信息提取节点")
-                .triggerMode("auto")
-                .jober(Stream.of(new AbstractMap.SimpleImmutableEntry<>("type", "GENERAL_JOBER"),
-                                new AbstractMap.SimpleImmutableEntry<>("name", "提取图像信息"),
-                                new AbstractMap.SimpleImmutableEntry<>("fitables",
-                                        Collections.singletonList("modelengine.fit.jober.aipp.fitable" + ".LLMImage2Text")))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
-                .group(Collections.singletonList("imageProcessor"))
-                .build());
+        Assertions.assertEquals(obj,
+                AippComponentFlowItemDto.builder()
+                        .type("aippState")
+                        .name("提取图像信息")
+                        .icon("xx.icon")
+                        .description("这是一个图像信息提取节点")
+                        .triggerMode("auto")
+                        .jober(Stream.of(new AbstractMap.SimpleImmutableEntry<>("type", "GENERAL_JOBER"),
+                                        new AbstractMap.SimpleImmutableEntry<>("name", "提取图像信息"),
+                                        new AbstractMap.SimpleImmutableEntry<>("fitables",
+                                                Collections.singletonList(
+                                                        "modelengine.fit.jober.aipp.fitable" + ".LLMImage2Text")))
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                        .group(Collections.singletonList("imageProcessor"))
+                        .build());
     }
 }

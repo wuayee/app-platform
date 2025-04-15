@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -83,11 +81,8 @@ public class ConvertUtilsTest {
     @Test
     @DisplayName("toAippCreate")
     void testToAippCreate() {
-        AippCreateDto dto = AippCreateDto.builder()
-                .aippId("aippId")
-                .toolUniqueName("uniqueName")
-                .version("1.0.0")
-                .build();
+        AippCreateDto dto =
+                AippCreateDto.builder().aippId("aippId").toolUniqueName("uniqueName").version("1.0.0").build();
 
         AippCreate aippCreate = Assertions.assertDoesNotThrow(() -> ConvertUtils.toAippCreate(dto));
 

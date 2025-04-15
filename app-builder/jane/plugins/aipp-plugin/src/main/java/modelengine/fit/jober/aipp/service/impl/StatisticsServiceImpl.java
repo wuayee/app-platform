@@ -1,13 +1,8 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
-
-import modelengine.jade.store.service.PluginService;
-import modelengine.jade.store.service.support.DeployStatus;
 
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.condition.AppQueryCondition;
@@ -17,6 +12,9 @@ import modelengine.fit.jober.aipp.enums.AppTypeEnum;
 import modelengine.fit.jober.aipp.service.AppBuilderAppService;
 import modelengine.fit.jober.aipp.service.AppBuilderFormService;
 import modelengine.fit.jober.aipp.service.StatisticsService;
+import modelengine.jade.store.service.PluginService;
+import modelengine.jade.store.service.support.DeployStatus;
+
 import modelengine.fitframework.annotation.Component;
 
 /**
@@ -30,9 +28,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private static final String RUNTIME = "runtime";
 
     private final PluginService pluginService;
-
     private final AppBuilderFormService appBuilderFormService;
-
     private final AppBuilderAppService appBuilderAppService;
 
     public StatisticsServiceImpl(PluginService pluginService, AppBuilderFormService appBuilderFormService,

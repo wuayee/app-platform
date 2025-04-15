@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -58,9 +56,8 @@ public class AsyncAppNodeListenerTest {
                         MapBuilder.<String, Object>get().put(endNodeId, endExecuteInfo).build())
                 .build());
 
-        Map<String, Object> contextData = MapBuilder.<String, Object>get()
-                .put(FlowDataConstant.FLOW_NODE_ID, endNodeId)
-                .build();
+        Map<String, Object> contextData =
+                MapBuilder.<String, Object>get().put(FlowDataConstant.FLOW_NODE_ID, endNodeId).build();
 
         Map<String, Object> context = MapBuilder.<String, Object>get()
                 .put(AippConst.BS_DATA_KEY, businessData)
@@ -82,9 +79,8 @@ public class AsyncAppNodeListenerTest {
         Map<String, Object> businessData = buildAppBasicBusinessData(flowDataId);
 
         String endNodeId = "endNodeId";
-        Map<String, Object> contextData = MapBuilder.<String, Object>get()
-                .put(FlowDataConstant.FLOW_NODE_ID, endNodeId)
-                .build();
+        Map<String, Object> contextData =
+                MapBuilder.<String, Object>get().put(FlowDataConstant.FLOW_NODE_ID, endNodeId).build();
 
         Map<String, Object> context = MapBuilder.<String, Object>get()
                 .put(AippConst.BS_DATA_KEY, businessData)
@@ -103,9 +99,8 @@ public class AsyncAppNodeListenerTest {
         Map<String, Object> businessData = buildAppBasicBusinessData(flowDataId);
 
         String exceptionNodeId = "endNodeId";
-        Map<String, Object> contextData = MapBuilder.<String, Object>get()
-                .put(FlowDataConstant.FLOW_NODE_ID, exceptionNodeId)
-                .build();
+        Map<String, Object> contextData =
+                MapBuilder.<String, Object>get().put(FlowDataConstant.FLOW_NODE_ID, exceptionNodeId).build();
 
         Map<String, Object> context = MapBuilder.<String, Object>get()
                 .put(AippConst.BS_DATA_KEY, businessData)

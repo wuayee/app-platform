@@ -29,26 +29,20 @@ public class CacheUtils {
     /**
      * 用于缓存appId to app
      */
-    public static final Cache<String, AppBuilderAppPo> APP_CACHE = Caffeine.newBuilder()
-            .expireAfterAccess(48, TimeUnit.HOURS)
-            .maximumSize(30)
-            .build();
+    public static final Cache<String, AppBuilderAppPo> APP_CACHE =
+            Caffeine.newBuilder().expireAfterAccess(48, TimeUnit.HOURS).maximumSize(30).build();
 
     /**
      * 用于缓存flowDefinitionId to flowInfo
      */
-    public static final Cache<String, FlowInfo> FLOW_CACHE = Caffeine.newBuilder()
-            .expireAfterAccess(48, TimeUnit.HOURS)
-            .maximumSize(30)
-            .build();
+    public static final Cache<String, FlowInfo> FLOW_CACHE =
+            Caffeine.newBuilder().expireAfterAccess(48, TimeUnit.HOURS).maximumSize(30).build();
 
     /**
      * 用于缓存app_id和aipp_id的关系
      */
-    public static final Cache<String, String> APP_ID_TO_AIPP_ID_CACHE = Caffeine.newBuilder()
-            .expireAfterAccess(30, TimeUnit.DAYS)
-            .maximumSize(1000)
-            .build();
+    public static final Cache<String, String> APP_ID_TO_AIPP_ID_CACHE =
+            Caffeine.newBuilder().expireAfterAccess(30, TimeUnit.DAYS).maximumSize(1000).build();
 
     /**
      * 清理缓存
@@ -72,7 +66,7 @@ public class CacheUtils {
      * @return 缓存的FlowInfo
      */
     public static FlowInfo getPublishedFlowWithCache(FlowsService flowsService, String flowDefinitionId,
-                                                     OperationContext context) {
+            OperationContext context) {
         return FLOW_CACHE.get(flowDefinitionId, id -> flowsService.getFlows(id, context));
     }
 }

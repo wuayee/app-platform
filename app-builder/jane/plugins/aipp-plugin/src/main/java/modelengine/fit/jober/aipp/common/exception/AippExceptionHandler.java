@@ -1,17 +1,15 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.common.exception;
 
+import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jane.common.response.Rsp;
 import lombok.RequiredArgsConstructor;
 import modelengine.fit.http.annotation.ExceptionHandler;
 import modelengine.fit.http.annotation.ResponseStatus;
 import modelengine.fit.http.protocol.HttpResponseStatus;
-import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.plugin.Plugin;
@@ -51,8 +49,7 @@ public class AippExceptionHandler {
     @ResponseStatus(HttpResponseStatus.OK)
     public Rsp<String> handleThrowable(Throwable exception) {
         log.error(exception.getClass().getName(), exception);
-        return Rsp.err(modelengine.fit.jober.aipp.common.exception.AippErrCode.UNKNOWN.getErrorCode(),
-                AippErrCode.UNKNOWN.getMessage());
+        return Rsp.err(AippErrCode.UNKNOWN.getErrorCode(), AippErrCode.UNKNOWN.getMessage());
     }
 
     /**
@@ -66,7 +63,9 @@ public class AippExceptionHandler {
     public Rsp<String> handleAippParamException(AippParamException exception) {
         log.error(exception.getClass().getName(), exception);
         return Rsp.err(exception.getCode(),
-                getLocaleMessage(String.valueOf(exception.getCode()), exception.getMessage(), exception.getArgs(),
+                getLocaleMessage(String.valueOf(exception.getCode()),
+                        exception.getMessage(),
+                        exception.getArgs(),
                         exception.getContext()));
     }
 
@@ -81,7 +80,9 @@ public class AippExceptionHandler {
     public Rsp<String> handleAippException(AippException exception) {
         log.error(exception.getClass().getName(), exception);
         return Rsp.err(exception.getCode(),
-                getLocaleMessage(String.valueOf(exception.getCode()), exception.getMessage(), exception.getArgs(),
+                getLocaleMessage(String.valueOf(exception.getCode()),
+                        exception.getMessage(),
+                        exception.getArgs(),
                         exception.getContext()));
     }
 
@@ -96,7 +97,9 @@ public class AippExceptionHandler {
     public Rsp<String> handleAippNotFoundException(AippNotFoundException exception) {
         log.error(exception.getClass().getName(), exception);
         return Rsp.err(exception.getCode(),
-                getLocaleMessage(String.valueOf(exception.getCode()), exception.getMessage(), exception.getArgs(),
+                getLocaleMessage(String.valueOf(exception.getCode()),
+                        exception.getMessage(),
+                        exception.getArgs(),
                         exception.getContext()));
     }
 
@@ -111,7 +114,9 @@ public class AippExceptionHandler {
     public Rsp<String> handleAippForbiddenException(AippForbiddenException exception) {
         log.error(exception.getClass().getName(), exception);
         return Rsp.err(exception.getCode(),
-                getLocaleMessage(String.valueOf(exception.getCode()), exception.getMessage(), exception.getArgs(),
+                getLocaleMessage(String.valueOf(exception.getCode()),
+                        exception.getMessage(),
+                        exception.getArgs(),
                         exception.getContext()));
     }
 

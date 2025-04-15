@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.enums;
 
@@ -14,8 +12,11 @@ package modelengine.fit.jober.aipp.enums;
  */
 public enum ToolCategoryEnum {
     HUGGINGFACE("HuggingFace"),
+
     LANGCHAIN("LangChain"),
+
     LLAMAINDEX("LlamaIndex"),
+
     BUILTIN("Builtin");
 
     private final String name;

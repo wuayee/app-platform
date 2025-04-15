@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.enums;
 
@@ -24,13 +22,9 @@ public enum AppCategory {
     FIT("工具", "fit", "TOOL", "FIT", "huawei");
 
     private final String description;
-
     private final String type;
-
     private final String category;
-
     private final String tag;
-
     private final String source;
 
     AppCategory(String description, String type, String category, String tag, String source) {

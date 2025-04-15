@@ -1,12 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.controller;
 
+import modelengine.fit.jane.common.controller.AbstractController;
+import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.common.PageResponse;
+import modelengine.fit.jober.aipp.condition.AippQueryCondition;
+import modelengine.fit.jober.aipp.condition.PaginationCondition;
+import modelengine.fit.jober.aipp.domains.appversion.service.AppVersionService;
+import modelengine.fit.jober.aipp.dto.AippCreateDto;
+import modelengine.fit.jober.aipp.dto.AippDetailDto;
+import modelengine.fit.jober.aipp.dto.AippDto;
+import modelengine.fit.jober.aipp.dto.AippOverviewRspDto;
+import modelengine.fit.jober.aipp.dto.AippVersionDto;
+import modelengine.fit.jober.aipp.service.AippFlowService;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.service.annotations.SpanAttr;
 
@@ -20,17 +30,6 @@ import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.jane.common.controller.AbstractController;
-import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jober.aipp.common.PageResponse;
-import modelengine.fit.jober.aipp.condition.AippQueryCondition;
-import modelengine.fit.jober.aipp.condition.PaginationCondition;
-import modelengine.fit.jober.aipp.dto.AippCreateDto;
-import modelengine.fit.jober.aipp.dto.AippDetailDto;
-import modelengine.fit.jober.aipp.dto.AippDto;
-import modelengine.fit.jober.aipp.dto.AippOverviewRspDto;
-import modelengine.fit.jober.aipp.dto.AippVersionDto;
-import modelengine.fit.jober.aipp.service.AippFlowService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.validation.Validated;
@@ -47,6 +46,7 @@ import java.util.List;
 @RequestMapping(path = "/v1/api/{tenant_id}/aipp-info", group = "aipp编排管理接口")
 public class AippFlowController extends AbstractController {
     private final AippFlowService aippFlowService;
+    private final AppVersionService appVersionService;
 
     /**
      * AippFlowController
@@ -54,9 +54,11 @@ public class AippFlowController extends AbstractController {
      * @param authenticator authenticator
      * @param aippFlowService aippFlowService
      */
-    public AippFlowController(Authenticator authenticator, @Fit AippFlowService aippFlowService) {
+    public AippFlowController(Authenticator authenticator, @Fit AippFlowService aippFlowService,
+            AppVersionService appVersionService) {
         super(authenticator);
         this.aippFlowService = aippFlowService;
+        this.appVersionService = appVersionService;
     }
 
     /**
@@ -136,7 +138,8 @@ public class AippFlowController extends AbstractController {
     @CarverSpan(value = "operation.flow.update")
     @PutMapping(path = "/{aipp_id}", description = "更新aipp")
     public Rsp<AippCreateDto> updateAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") @SpanAttr("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttr("aipp_id") String aippId,
             @RequestBody @SpanAttr("version:$.version") AippDto aippDto) {
         aippDto.setId(aippId);
         return Rsp.ok(this.aippFlowService.update(aippDto, this.contextOf(httpRequest, tenantId)));
@@ -155,11 +158,12 @@ public class AippFlowController extends AbstractController {
     @CarverSpan(value = "operation.flow.preview")
     @PostMapping(path = "/{aipp_id}/preview", description = "预览aipp")
     public Rsp<AippCreateDto> previewAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") @SpanAttr("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttr("aipp_id") String aippId,
             @RequestParam("version") @SpanAttr("version") String baselineVersion, @RequestBody AippDto aippDto) {
         aippDto.setId(aippId);
-        return Rsp.ok(
-                this.aippFlowService.previewAipp(baselineVersion, aippDto, this.contextOf(httpRequest, tenantId)));
+        return Rsp.ok(this.appVersionService.retrieval(aippDto.getAppId())
+                .preview(baselineVersion, aippDto, this.contextOf(httpRequest, tenantId)));
     }
 
     /**
@@ -193,7 +197,8 @@ public class AippFlowController extends AbstractController {
     @CarverSpan(value = "operation.flow.upgrade")
     @PostMapping(path = "/{aipp_id}/upgrade", description = "升级aipp")
     public Rsp<AippCreateDto> upgradeAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") @SpanAttr("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") @SpanAttr("aipp_id") String aippId,
             @RequestParam("version") @SpanAttr("version") String baselineVersion, @RequestBody AippDto aippDto) {
         aippDto.setId(aippId);
         return Rsp.ok(this.aippFlowService.upgrade(baselineVersion, aippDto, contextOf(httpRequest, tenantId)));

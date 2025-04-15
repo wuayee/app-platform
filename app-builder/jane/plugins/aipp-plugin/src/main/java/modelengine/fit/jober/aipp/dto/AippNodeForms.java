@@ -1,17 +1,15 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto;
+
+import modelengine.fit.dynamicform.entity.FormMetaInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import modelengine.fit.dynamicform.entity.FormMetaInfo;
-import modelengine.fit.jober.entity.consts.NodeTypes;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ import java.util.List;
 public class AippNodeForms {
     /**
      * 节点类型
-     * 查看 {@link NodeTypes}
+     * 查看 {@link modelengine.fit.jober.entity.consts.NodeTypes}
      */
     private String type;
 

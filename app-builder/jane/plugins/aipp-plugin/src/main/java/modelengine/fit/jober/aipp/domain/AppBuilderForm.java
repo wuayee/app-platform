@@ -1,17 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.domain;
+
+import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
-import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 
 import java.util.Map;
 
@@ -28,19 +27,12 @@ import java.util.Map;
 @Slf4j
 public class AppBuilderForm extends BaseDomain {
     private String id;
-
     private String name;
-
     private String tenantId;
-
     private Map<String, Object> appearance;
-
     private String type;
-
     private String version;
-
     private String formSuiteId;
-
     private AppBuilderFormPropertyRepository formPropertyRepository;
 
     public AppBuilderForm(AppBuilderFormPropertyRepository formPropertyRepository) {

@@ -207,7 +207,9 @@ public final class ObjectUtils {
      * @return 表示强制转换后的对象的 {@link Object}。
      */
     public static <T> T cast(Object obj) {
-        // noinspection unchecked
+        if (obj == null) {
+            return null;
+        }
         return (T) obj;
     }
 

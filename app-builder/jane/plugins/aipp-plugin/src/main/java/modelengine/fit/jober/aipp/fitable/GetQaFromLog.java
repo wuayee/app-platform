@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ *  Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -12,6 +10,7 @@ import modelengine.fit.jober.aipp.enums.AippInstLogType;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppInspirationService;
 import modelengine.fit.jober.aipp.util.JsonUtils;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;
@@ -39,8 +38,8 @@ public class GetQaFromLog implements AppInspirationService {
 
     @Override
     @Fitable(id = "GetQAFromLog")
-    public List<Map<String, Object>> getCustomizedLogs(Map<String, Object> params, String aippId, String appType,
-            OperationContext context) {
+    public List<Map<String, Object>> getCustomizedLogs(Map<String, Object> params, String aippId,
+            String appType, OperationContext context) {
         List<AippInstLogDataDto> logs = aippLogService.queryRecentLogsSinceResume(aippId, appType, context);
         List<Map<String, Object>> res = new ArrayList<>();
         for (AippInstLogDataDto log : logs) {

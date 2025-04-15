@@ -1,23 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ *  Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.controller;
 
+
+
 import static modelengine.jade.common.Result.calculateOffset;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-import modelengine.jade.store.entity.query.PluginToolQuery;
-
-import modelengine.fit.http.annotation.GetMapping;
-import modelengine.fit.http.annotation.PathVariable;
-import modelengine.fit.http.annotation.RequestMapping;
-import modelengine.fit.http.annotation.RequestParam;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jane.common.controller.AbstractController;
 import modelengine.fit.jane.common.response.Rsp;
+import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import modelengine.fit.jober.aipp.dto.ModelDto;
@@ -26,6 +19,13 @@ import modelengine.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import modelengine.fit.jober.aipp.dto.StoreNodeInfoDto;
 import modelengine.fit.jober.aipp.enums.NodeTypeEnum;
 import modelengine.fit.jober.aipp.service.StoreService;
+import modelengine.jade.store.entity.query.PluginToolQuery;
+
+import modelengine.fit.http.annotation.GetMapping;
+import modelengine.fit.http.annotation.PathVariable;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.annotation.RequestParam;
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 
@@ -64,6 +64,7 @@ public class StoreController extends AbstractController {
      * @param tag 标签
      * @param version 版本
      * @return 查询结果
+     *
      * @deprecated
      */
     @Deprecated
@@ -72,7 +73,8 @@ public class StoreController extends AbstractController {
             @RequestParam(value = "mode", defaultValue = "AND", required = false) String mode,
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-            @RequestParam(value = "tag") String tag, @RequestParam(value = "version") String version) {
+            @RequestParam(value = "tag") String tag,
+            @RequestParam(value = "version") String version) {
         return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, mode, pageNum, pageSize, version));
     }
 
@@ -117,7 +119,8 @@ public class StoreController extends AbstractController {
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "isDeployed", defaultValue = "false", required = false) Boolean isDeployed) {
-        PluginToolQuery pluginToolQuery = new PluginToolQuery.Builder().toolName(name)
+        PluginToolQuery pluginToolQuery = new PluginToolQuery.Builder()
+                .toolName(name)
                 .includeTags(new HashSet<>(includeTags))
                 .excludeTags(new HashSet<>(excludeTags))
                 .mode(mode)
@@ -137,8 +140,8 @@ public class StoreController extends AbstractController {
      */
     @GetMapping(path = "/nodes/list", description = "获取节点配置")
     public Rsp<List<StoreNodeInfoDto>> getNodesList(@RequestParam(value = "type") String type) {
-        if (StringUtils.equals(type, NodeTypeEnum.BASIC.type()) || StringUtils.equals(type,
-                NodeTypeEnum.EVALUATION.type())) {
+        if (StringUtils.equals(type, NodeTypeEnum.BASIC.type())
+                || StringUtils.equals(type, NodeTypeEnum.EVALUATION.type())) {
             return Rsp.ok(this.storeService.getNode(type));
         }
         return Rsp.err(AippErrCode.INPUT_PARAM_IS_INVALID.getErrorCode(),

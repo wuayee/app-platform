@@ -1,30 +1,28 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
-import static modelengine.fit.jober.aipp.init.serialization.AippComponentInitiator.COMPONENT_DATA;
+import static modelengine.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import modelengine.jade.store.entity.query.PluginToolQuery;
-import modelengine.jade.store.entity.transfer.PluginToolData;
-import modelengine.jade.store.service.EcoTaskService;
-import modelengine.jade.store.service.HuggingFaceModelService;
-import modelengine.jade.store.service.PluginToolService;
-
-import modelengine.jade.carver.ListResult;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.dto.PluginToolDto;
 import modelengine.fit.jober.aipp.dto.StoreNodeInfoDto;
 import modelengine.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import modelengine.fit.jober.aipp.service.impl.StoreServiceImpl;
+import modelengine.jade.carver.ListResult;
+import modelengine.jade.store.entity.query.PluginToolQuery;
+import modelengine.jade.store.entity.transfer.PluginToolData;
+import modelengine.jade.store.service.EcoTaskService;
+import modelengine.jade.store.service.HuggingFaceModelService;
+import modelengine.jade.store.service.PluginToolService;
+
 import modelengine.fitframework.util.IoUtils;
 import modelengine.fitframework.util.MapBuilder;
 
@@ -48,22 +46,16 @@ import java.util.Map;
 @DisplayName("测试 StoreServiceImpl")
 public class StoreServiceImplTest {
     private static final String RESOURCE_PATH = "component";
-
     private static final String BASIC_NODE_ZH_PATH = "/basic_node_zh.json";
-
     private static final String BASIC_NODE_EN_PATH = "/basic_node_en.json";
-
     private static final String EVALUATION_NODE_ZH_PATH = "/evaluation_node_zh.json";
-
     private static final String EVALUATION_NODE_EN_PATH = "/evaluation_node_en.json";
-
     private static final Map<String, String> TAGS = MapBuilder.<String, String>get()
             .put("CODENODESTATE", "codeNodeState")
             .put("QUERYOPTIMIZATIONNODESTATE", "queryOptimizationNodeState")
             .build();
 
     private PluginToolService pluginToolService;
-
     private StoreServiceImpl storeService;
 
     @BeforeEach

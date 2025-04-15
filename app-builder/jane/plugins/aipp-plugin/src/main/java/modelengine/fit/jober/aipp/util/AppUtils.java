@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -26,7 +24,10 @@ public class AppUtils {
      * @return 表示替换处理后的询接口排除的应用名称的 {@link List}{@code <}{@link String}{@code >}。
      */
     public static List<String> replaceAsterisks(List<String> excludeNames) {
-        return excludeNames.stream().map(s -> s.replaceAll("\\*(\\w+)\\*", "{$1}")).collect(Collectors.toList());
+        return excludeNames
+                .stream()
+                .map(s -> s.replaceAll("\\*(\\w+)\\*", "{$1}"))
+                .collect(Collectors.toList());
     }
 
     /**

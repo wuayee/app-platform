@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.tool.impl;
 
@@ -47,14 +49,19 @@ public class PromptWordSplicingAppToolImpl implements PromptWordSplicingAppTool 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("<([^<>]*)>[:：]\\s*(.*?)(?=(<[^<>]*>[:：]\\s*|$))",
             Pattern.DOTALL);
     private static final String VARIABLE_TEMPLATE_FORMAT = "{{%s}}";
+
     private static final int VARIABLE_KEY_INDEX = 1;
+
     private static final int VARIABLE_VALUE_INDEX = 2;
+
     private static final String LINE_BREAK = "\n";
+
     private static final String EMPTY_STRING = "";
     private static final String COLON = ":";
     private static final String BACK_QUOTE = "```";
 
     private final AippLogService aippLogService;
+
     private final AopAippLogService aopAippLogService;
     private final AppBuilderAppFactory appFactory;
 
@@ -163,14 +170,14 @@ public class PromptWordSplicingAppToolImpl implements PromptWordSplicingAppTool 
         Map<String, Object> map = JsonUtils.parseObject(aippInstLog.getLogData());
         map.put("msg", rewrittenInput);
         return AippLogCreateDto.builder()
-                .aippId(aippInstLog.getAippId())
-                .version(aippInstLog.getVersion())
-                .aippType(aippInstLog.getAippType())
-                .instanceId(aippInstLog.getInstanceId())
-                .logType(AippInstLogType.HIDDEN_QUESTION.name())
-                .logData(JsonUtils.toJsonString(map))
-                .createUserAccount(aippInstLog.getCreateUserAccount())
-                .path(aippInstLog.getPath())
-                .build();
+            .aippId(aippInstLog.getAippId())
+            .version(aippInstLog.getVersion())
+            .aippType(aippInstLog.getAippType())
+            .instanceId(aippInstLog.getInstanceId())
+            .logType(AippInstLogType.HIDDEN_QUESTION.name())
+            .logData(JsonUtils.toJsonString(map))
+            .createUserAccount(aippInstLog.getCreateUserAccount())
+            .path(aippInstLog.getPath())
+            .build();
     }
 }

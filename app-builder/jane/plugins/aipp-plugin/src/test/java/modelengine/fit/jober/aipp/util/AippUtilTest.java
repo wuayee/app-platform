@@ -1,14 +1,14 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.common.exceptions.JobberException;
+
+import modelengine.fit.jober.aipp.util.DataUtils;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
 
@@ -121,8 +121,8 @@ public class AippUtilTest {
     @DisplayName("getBusiness失败：列表为空")
     void testGetBusinessWithEmptyInputList() {
         List<Map<String, Object>> flowData = new ArrayList<>();
-        JobberException exception = Assertions.assertThrows(JobberException.class,
-                () -> DataUtils.getBusiness(flowData));
+        JobberException exception =
+                Assertions.assertThrows(JobberException.class, () -> DataUtils.getBusiness(flowData));
         Assertions.assertEquals(10000000, exception.getCode());
     }
 
@@ -131,8 +131,8 @@ public class AippUtilTest {
     void testGetBusinessWithoutBusinessData() {
         List<Map<String, Object>> flowData = new ArrayList<>();
         flowData.add(new HashMap<>());
-        JobberException exception = Assertions.assertThrows(JobberException.class,
-                () -> DataUtils.getBusiness(flowData));
+        JobberException exception =
+                Assertions.assertThrows(JobberException.class, () -> DataUtils.getBusiness(flowData));
         Assertions.assertEquals(10000000, exception.getCode());
     }
 
@@ -166,8 +166,8 @@ public class AippUtilTest {
     @DisplayName("getContextData失败：列表为空")
     void testGetContextDataWithEmptyInputList() {
         List<Map<String, Object>> flowData = new ArrayList<>();
-        JobberException exception = Assertions.assertThrows(JobberException.class,
-                () -> DataUtils.getContextData(flowData));
+        JobberException exception =
+                Assertions.assertThrows(JobberException.class, () -> DataUtils.getContextData(flowData));
         Assertions.assertEquals(10000000, exception.getCode());
     }
 
@@ -176,8 +176,8 @@ public class AippUtilTest {
     void testGetContextDataWithoutContextData() {
         List<Map<String, Object>> flowData = new ArrayList<>();
         flowData.add(new HashMap<>());
-        JobberException exception = Assertions.assertThrows(JobberException.class,
-                () -> DataUtils.getContextData(flowData));
+        JobberException exception =
+                Assertions.assertThrows(JobberException.class, () -> DataUtils.getContextData(flowData));
         Assertions.assertEquals(10000000, exception.getCode());
     }
 
@@ -215,8 +215,8 @@ public class AippUtilTest {
         flowData.add(MapBuilder.get(() -> new HashMap<String, Object>())
                 .put(AippConst.CONTEXT_DATA_KEY, contextData)
                 .build());
-        JobberException exception = Assertions.assertThrows(JobberException.class,
-                () -> DataUtils.getFlowTraceId(flowData));
+        JobberException exception =
+                Assertions.assertThrows(JobberException.class, () -> DataUtils.getFlowTraceId(flowData));
         Assertions.assertEquals(10000006, exception.getCode());
         traceIds.add("11");
         String traceId = Assertions.assertDoesNotThrow(() -> DataUtils.getFlowTraceId(flowData));

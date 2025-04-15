@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -12,6 +10,7 @@ import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppLogService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 
@@ -35,9 +34,9 @@ public class MemoryAfterTzPromptWordSplice implements AppLogService {
     @Override
     @Fitable(id = "modelengine.fit.jober.aipp.fitable.MemoryAfterTzPromptWordSplice")
     public List<Map<String, Object>> getCustomizedLogs(Map<String, Object> params, String aippId, String aippType,
-            OperationContext context) {
+        OperationContext context) {
         List<AippInstLogDataDto> logs = this.aippLogService.queryAippRecentInstLogAfterSplice(aippId, aippType, 5,
-                context);
+            context);
         return getLogMaps(logs);
     }
 }

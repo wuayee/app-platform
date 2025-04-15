@@ -1,20 +1,19 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
-import modelengine.fit.jade.waterflow.FlowInstanceService;
 import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.waterflow.entity.JoberErrorInfo;
+import modelengine.fit.waterflow.spi.FlowCallbackService;
+
+import modelengine.fit.jade.waterflow.FlowInstanceService;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.util.DataUtils;
 import modelengine.fit.jober.common.FlowDataConstant;
-import modelengine.fit.jober.util.FlowDataUtils;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
-import modelengine.fit.waterflow.entity.JoberErrorInfo;
-import modelengine.fit.waterflow.spi.FlowCallbackService;
+import modelengine.fit.jober.util.FlowDataUtils;
 import modelengine.fit.waterflow.spi.FlowExceptionService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
@@ -60,8 +59,8 @@ public class AsyncAppNodeListener implements FlowCallbackService, FlowExceptionS
         LOG.info("[AppNodeListener] handle callback. instanceId={}, parentInstanceId={}, parentFlowDataId={}",
                 instanceId, parentInstanceId, parentFlowDataId);
 
-        List<Map<String, Object>> executeInfo = FlowDataUtils.getExecuteInfo(businessData,
-                FlowDataUtils.getNodeId(contextData));
+        List<Map<String, Object>> executeInfo =
+                FlowDataUtils.getExecuteInfo(businessData, FlowDataUtils.getNodeId(contextData));
         if (executeInfo.isEmpty()) {
             LOG.error("Can not find the node app output. parentInstanceId={}, parentFlowDataId={}, instanceId={}",
                     parentInstanceId, parentFlowDataId, instanceId);

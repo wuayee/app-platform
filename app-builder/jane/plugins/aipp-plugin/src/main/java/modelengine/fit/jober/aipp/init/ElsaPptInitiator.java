@@ -1,12 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
-package modelengine.fit.jober.aipp.init.serialization;
+package modelengine.fit.jober.aipp.init;
 
 import modelengine.fit.jober.aipp.common.ResourceLoader;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Initialize;
 import modelengine.fitframework.log.Logger;
@@ -60,15 +59,10 @@ public class ElsaPptInitiator {
     private static final Logger log = Logger.get(ElsaPptInitiator.class);
 
     private static final String RESOURCE_PATH = "elsa_ppt";
-
     private static final String GRAPH_PATH = "/graph.json";
-
     private static final String COVER_PAGE_PATH = "/cover_page.json";
-
     private static final String CONTENT_PAGE_PATH = "/content_page.json";
-
     private static final String BASE_COVER_PAGE_PATH = "/base_cover_page.json";
-
     private static final String BASE_CONTENT_PAGE_PATH = "/base_content_page.json";
 
     private final Plugin plugin;
@@ -80,8 +74,10 @@ public class ElsaPptInitiator {
     @Initialize
     private void loadElsaPptData() throws IOException {
         log.info("load elsa ppt data.");
-        ELSA_PPT_DATA.put(GRAPH_KEY, ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + GRAPH_PATH));
-        ELSA_PPT_DATA.put(COVER_PAGE_KEY, ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + COVER_PAGE_PATH));
+        ELSA_PPT_DATA.put(GRAPH_KEY,
+                ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + GRAPH_PATH));
+        ELSA_PPT_DATA.put(COVER_PAGE_KEY,
+                ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + COVER_PAGE_PATH));
         ELSA_PPT_DATA.put(CONTENT_PAGE_KEY,
                 ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + CONTENT_PAGE_PATH));
         ELSA_PPT_DATA.put(BASE_COVER_PAGE_KEY,

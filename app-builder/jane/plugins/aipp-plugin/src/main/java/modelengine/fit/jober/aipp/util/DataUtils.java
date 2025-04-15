@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -14,6 +12,7 @@ import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.common.ErrorCodes;
 import modelengine.fit.jober.common.exceptions.JobberException;
+
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
@@ -40,7 +39,6 @@ public class DataUtils {
      * prompt的正则pattern中表示key的group
      */
     private static final int KEY_GROUP = 1;
-
     private static final Logger log = Logger.get(DataUtils.class);
 
     /**
@@ -202,7 +200,9 @@ public class DataUtils {
      */
     public static String getAppId(Map<String, Object> businessData) {
         Object appId = notNull(businessData.get(AippConst.ATTR_APP_ID_KEY), "App id cannot be null.");
-        return isInstanceOf(appId, String.class, "App id cast error, it must be string. [type={0}]",
+        return isInstanceOf(appId,
+                String.class,
+                "App id cast error, it must be string. [type={0}]",
                 appId.getClass().getName());
     }
 }

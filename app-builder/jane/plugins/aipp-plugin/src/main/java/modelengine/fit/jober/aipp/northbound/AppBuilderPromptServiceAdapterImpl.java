@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.northbound;
 
@@ -16,6 +14,7 @@ import modelengine.fit.jober.aipp.dto.chat.PromptCategory;
 import modelengine.fit.jober.aipp.dto.chat.PromptInfo;
 import modelengine.fit.jober.aipp.genericable.adapter.AppBuilderPromptServiceAdapter;
 import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.serialization.ObjectSerializer;
@@ -32,20 +31,19 @@ import java.util.stream.Collectors;
 @Component
 public class AppBuilderPromptServiceAdapterImpl implements AppBuilderPromptServiceAdapter {
     private final AppBuilderPromptService appBuilderPromptService;
-
     private final ObjectSerializer objectSerializer;
 
     public AppBuilderPromptServiceAdapterImpl(AppBuilderPromptService appBuilderPromptService,
             @Fit(alias = "json") ObjectSerializer objectSerializer) {
-        this.appBuilderPromptService = notNull(appBuilderPromptService,
-                "The app builder prompt service cannot be null.");
+        this.appBuilderPromptService =
+                notNull(appBuilderPromptService, "The app builder prompt service cannot be null.");
         this.objectSerializer = notNull(objectSerializer, "The object serializer cannot be null.");
     }
 
     @Override
     public List<PromptCategory> listPromptCategories(String appId, OperationContext operationContext, boolean isDebug) {
-        Rsp<List<AppBuilderPromptCategoryDto>> rsp = this.appBuilderPromptService.listPromptCategories(appId,
-                operationContext, isDebug);
+        Rsp<List<AppBuilderPromptCategoryDto>> rsp =
+                this.appBuilderPromptService.listPromptCategories(appId, operationContext, isDebug);
         return rsp.getData()
                 .stream()
                 .map(appBuilderPromptCategoryDto -> this.objectSerializer.<PromptCategory>deserialize(
@@ -56,8 +54,8 @@ public class AppBuilderPromptServiceAdapterImpl implements AppBuilderPromptServi
     @Override
     public PromptInfo queryInspirations(String appId, String categoryId, OperationContext operationContext,
             boolean isDebug) {
-        Rsp<AppBuilderPromptDto> rsp = this.appBuilderPromptService.queryInspirations(appId, categoryId,
-                operationContext, isDebug);
+        Rsp<AppBuilderPromptDto> rsp =
+                this.appBuilderPromptService.queryInspirations(appId, categoryId, operationContext, isDebug);
         AppBuilderPromptDto appBuilderPromptDto = rsp.getData();
         return this.appBuilderPromptDtoConvertToAdapter(appBuilderPromptDto);
     }

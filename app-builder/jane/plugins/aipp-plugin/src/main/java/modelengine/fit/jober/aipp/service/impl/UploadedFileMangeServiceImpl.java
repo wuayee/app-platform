@@ -1,25 +1,29 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
+import modelengine.fit.jane.task.util.Entities;
 import modelengine.fit.jober.aipp.common.exception.AippException;
 import modelengine.fit.jober.aipp.dto.aipplog.AippUploadedFileInfoDto;
 import modelengine.fit.jober.aipp.mapper.AippUploadedFileMapper;
 import modelengine.fit.jober.aipp.service.UploadedFileManageService;
+import modelengine.fit.jober.aipp.util.AippFileUtils;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.schedule.annotation.Scheduled;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.FileUtils;
+import modelengine.fitframework.util.IoUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -120,8 +124,10 @@ public class UploadedFileMangeServiceImpl implements UploadedFileManageService {
     @Override
     public void addFileRecord(String aipp, String createUserAccount, String filename, String fileUuid) {
         if (Stream.of(createUserAccount, filename).allMatch(s -> s != null && !s.isEmpty())) {
-            aippUploadedFileMapper.insertFileRecord(
-                    new AippUploadedFileInfoDto(aipp, createUserAccount, filename, fileUuid));
+            aippUploadedFileMapper.insertFileRecord(new AippUploadedFileInfoDto(aipp,
+                    createUserAccount,
+                    filename,
+                    fileUuid));
         }
     }
 
@@ -144,5 +150,21 @@ public class UploadedFileMangeServiceImpl implements UploadedFileManageService {
     @Override
     public void updateRecord(String appId, String fileName, Integer status) {
         aippUploadedFileMapper.updateRecord(appId, fileName, status);
+    }
+
+    @Override
+    public String copyIconFiles(String icon, String aippId, String operator) throws IOException {
+        File originIcon = FileUtils.canonicalize(AippFileUtils.getFileNameFromIcon(icon));
+        String originIconName = originIcon.getName();
+        String copiedIconName = UUID.randomUUID() + FileUtils.extension(originIconName);
+        File copiedIcon = FileUtils.canonicalize(originIcon.getCanonicalPath().replace(originIconName, copiedIconName));
+        IoUtils.copy(originIcon, copiedIcon);
+        this.addFileRecord(
+                aippId,
+                operator,
+                copiedIcon.getCanonicalPath(),
+                Entities.generateId()
+        );
+        return icon.replace(originIconName, copiedIconName);
     }
 }

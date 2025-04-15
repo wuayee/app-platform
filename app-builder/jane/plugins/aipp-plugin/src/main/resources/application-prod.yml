@@ -35,7 +35,7 @@ app-engine:
   endpoint: http://80.11.128.66:31111
   pathPrefix:
   exclude-names:
-    - 'i18n_appBuilder_*xiaohai*'
+    - 'i18n_appBuilder_*demo*'
   resource:
     path-prefix: /static/
   form:
@@ -52,10 +52,6 @@ elsa:
   endpoint:
   elsaKey:
 model:
-  xiaohai:
-    knowledge:
-    file:
-    read-timeout: 60000
   imageGen:
     model: multi-modal_chinese_stable_diffusion_v1.0
     share_url:

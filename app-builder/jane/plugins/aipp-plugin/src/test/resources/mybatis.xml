@@ -45,5 +45,6 @@
         <mapper resource="mapper/AppBuilderFormPropertyMapper.xml"/>
         <mapper resource="mapper/AppBuilderRuntimeInfoMapper.xml"/>
         <mapper resource="mapper/AppTemplateMapper.xml"/>
+        <mapper resource="mapper/AippChatMapper.xml"/>
     </mappers>
 </configuration>

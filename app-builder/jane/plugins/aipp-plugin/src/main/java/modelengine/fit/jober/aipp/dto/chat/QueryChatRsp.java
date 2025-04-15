@@ -1,18 +1,23 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto.chat;
+
+import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.enums.AppState;
+import modelengine.fit.jober.aipp.util.JsonUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 查询会话响应体
@@ -20,6 +25,7 @@ import java.util.List;
  * @author 翟卉馨
  * @since 2024-05-29
  */
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -69,4 +75,15 @@ public class QueryChatRsp {
 
     @Property(description = "total", name = "total")
     private Integer total;
+
+    /**
+     * chat是否是调试模式.
+     *
+     * @return true/false.
+     */
+    public boolean isDebug() {
+        Map<String, Object> jsonAttributes = JsonUtils.parseObject(this.getAttributes());
+        String state = ObjectUtils.cast(jsonAttributes.get(AippConst.ATTR_CHAT_STATE_KEY));
+        return StringUtils.equals(AppState.INACTIVE.getName(), state);
+    }
 }

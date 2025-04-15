@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -44,13 +42,15 @@ public class HttpUtils {
     public static String sendHttpRequest(HttpClassicClientRequest httpRequest) throws IOException {
         try (HttpClassicClientResponse<Object> response = HttpUtils.execute(httpRequest)) {
             if (response.statusCode() != HttpResponseStatus.OK.statusCode()) {
-                throw new IOException(
-                        String.format(Locale.ROOT, "send http fail. url=%s result=%d", httpRequest.requestUri(),
-                                response.statusCode()));
+                throw new IOException(String.format(Locale.ROOT,
+                        "send http fail. url=%s result=%d",
+                        httpRequest.requestUri(),
+                        response.statusCode()));
             }
             if (!response.textEntity().isPresent()) {
-                throw new IOException(
-                        String.format(Locale.ROOT, "get empty response entity, url=%s", httpRequest.requestUri()));
+                throw new IOException(String.format(Locale.ROOT,
+                        "get empty response entity, url=%s",
+                        httpRequest.requestUri()));
             }
             return response.textEntity().get().content();
         }

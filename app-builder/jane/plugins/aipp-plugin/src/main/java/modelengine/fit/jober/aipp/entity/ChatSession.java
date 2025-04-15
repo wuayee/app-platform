@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.entity;
 
@@ -24,15 +22,10 @@ import java.util.Locale;
 @Setter
 public class ChatSession<T> {
     Emitter<Object> emitter;
-
     String appId;
-
     boolean isDebug;
-
     Locale locale;
-
     LocalDateTime expireTime;
-
     boolean isOccupied;
 
     public ChatSession(Emitter<Object> emitter, String appId, boolean isDebug, Locale locale) {

@@ -1,10 +1,13 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
+
+import modelengine.fit.jober.aipp.common.exception.AippJsonDecodeException;
+import modelengine.fit.jober.aipp.common.exception.AippJsonEncodeException;
+import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
+import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
@@ -13,10 +16,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import modelengine.fit.jober.aipp.common.exception.AippJsonDecodeException;
-import modelengine.fit.jober.aipp.common.exception.AippJsonEncodeException;
-import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
-import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
 import modelengine.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -106,8 +105,8 @@ public interface JsonUtils {
     static boolean isValidJson(String jsonLikeString) {
         boolean isValid;
         try {
-            TreeNode node = new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
-                    .readTree(jsonLikeString);
+            TreeNode node =
+                    new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(jsonLikeString);
             isValid = Objects.nonNull(node);
         } catch (JsonProcessingException e) {
             isValid = false;

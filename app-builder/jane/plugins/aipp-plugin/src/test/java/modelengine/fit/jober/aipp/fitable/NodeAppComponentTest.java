@@ -1,18 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.genericable.AippRunTimeService;
 import modelengine.fit.jober.common.FlowDataConstant;
+
+import modelengine.fit.jober.aipp.fitable.NodeAppComponent;
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -44,7 +43,6 @@ class NodeAppComponentTest {
     }
 
     @Test
-    @Disabled
     void shouldCallCreateAippInstanceWhenHandleTaskGivenValidContext() {
         String instanceId = "parentInstanceId1";
         Map<String, Object> businessData = buildAppBasicBusinessData(instanceId);
