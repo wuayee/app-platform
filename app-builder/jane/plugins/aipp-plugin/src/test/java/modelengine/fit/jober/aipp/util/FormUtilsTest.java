@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -12,6 +10,8 @@ import modelengine.fit.jober.aipp.domain.AppBuilderFormProperty;
 import modelengine.fit.jober.aipp.entity.AippLogData;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
+import modelengine.fit.jober.aipp.util.FormUtils;
+import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.Assertions;
@@ -60,8 +60,8 @@ public class FormUtilsTest {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("model", "Qianwen");
         String parentId = "parentId";
-        Map<String, Object> form = Assertions.assertDoesNotThrow(
-                () -> FormUtils.buildFormData(businessData, inputForm, parentId));
+        Map<String, Object> form =
+                Assertions.assertDoesNotThrow(() -> FormUtils.buildFormData(businessData, inputForm, parentId));
         Assertions.assertEquals(3, form.size());
         Assertions.assertTrue(form.containsKey(AippConst.FORM_APPEARANCE_KEY));
     }

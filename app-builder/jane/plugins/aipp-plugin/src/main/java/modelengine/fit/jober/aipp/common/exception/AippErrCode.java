@@ -1,15 +1,13 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.common.exception;
 
+import modelengine.fit.jane.common.response.ErrorCode;
 import modelengine.jade.common.code.RetCode;
 
 import lombok.AllArgsConstructor;
-import modelengine.fit.jane.common.response.ErrorCode;
 
 /**
  * Aipp 错误码。
@@ -757,7 +755,6 @@ public enum AippErrCode implements ErrorCode, RetCode {
     ERROR_CODE_BUTT(99999999, "Error code butt.");
 
     private final int code;
-
     private final String msg;
 
     /**

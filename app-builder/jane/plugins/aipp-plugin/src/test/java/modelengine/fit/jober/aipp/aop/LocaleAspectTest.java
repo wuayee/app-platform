@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.aop;
 
@@ -11,14 +9,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
+import modelengine.fit.jober.aipp.service.DatabaseFieldLocaleService;
 import modelengine.jade.authentication.context.UserContext;
 import modelengine.jade.authentication.context.UserContextHolder;
 
-import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
-import modelengine.fit.jober.aipp.service.DatabaseFieldLocaleService;
+import modelengine.fit.jober.aipp.aop.LocaleAspect;
 import modelengine.fitframework.aop.ProceedingJoinPoint;
-import modelengine.jade.authentication.context.UserContext;
-import modelengine.jade.authentication.context.UserContextHolder;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,9 +39,7 @@ import java.util.Locale;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LocaleAspectTest {
     private DatabaseFieldLocaleService localeService;
-
     private ProceedingJoinPoint pjp;
-
     private MockedStatic<UserContextHolder> opContextHolderMock;
 
     @BeforeEach
@@ -52,7 +47,8 @@ public class LocaleAspectTest {
         this.localeService = mock(DatabaseFieldLocaleService.class);
         this.pjp = mock(ProceedingJoinPoint.class);
         this.opContextHolderMock = mockStatic(UserContextHolder.class);
-        opContextHolderMock.when(UserContextHolder::get).thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
+        opContextHolderMock.when(UserContextHolder::get)
+                .thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
     }
 
     @AfterEach
@@ -89,8 +85,8 @@ public class LocaleAspectTest {
         AppBuilderAppPo resultPo;
         if (object instanceof AppBuilderAppPo) {
             resultPo = (AppBuilderAppPo) object;
-            assertThat(resultPo.getAttributes()).isEqualTo(
-                    "{\"description:\":\"this is llm description\", \"icon\": \"http://ab\", \"greeting\": "
+            assertThat(resultPo.getAttributes())
+                    .isEqualTo("{\"description:\":\"this is llm description\", \"icon\": \"http://ab\", \"greeting\": "
                             + "\"hello\", \"app_type\": \"interview_assistant\"}");
         }
     }
@@ -122,8 +118,8 @@ public class LocaleAspectTest {
         }
         if (resultList.get(1) instanceof AppBuilderAppPo) {
             resultPo2 = (AppBuilderAppPo) resultList.get(1);
-            assertThat(resultPo2.getAttributes()).isEqualTo(
-                    "{\"description:\":\"this is llm description\", \"icon\": \"http://ab\", \"greeting\": "
+            assertThat(resultPo2.getAttributes())
+                    .isEqualTo("{\"description:\":\"this is llm description\", \"icon\": \"http://ab\", \"greeting\": "
                             + "\"hello\", \"app_type\": \"interview_assistant\"}");
         }
     }

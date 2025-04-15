@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -16,6 +14,7 @@ import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.http.client.HttpClassicClientRequest;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.http.entity.TextEntity;
+import modelengine.fit.jober.aipp.util.HttpUtils;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +24,8 @@ import java.util.Optional;
 /**
  * HttpUtils工具的测试类
  *
- * @author 方誉州
  * @since 2024-07-31
+ * @author 方誉州
  */
 public class HttpUtilTest {
     @Test

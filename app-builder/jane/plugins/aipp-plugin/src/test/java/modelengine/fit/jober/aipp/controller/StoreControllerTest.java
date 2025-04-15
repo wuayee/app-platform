@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.controller;
 
@@ -11,16 +9,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-import modelengine.jade.authentication.context.UserContext;
-import modelengine.jade.authentication.context.UserContextHolder;
-
-import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.jane.common.response.Rsp;
+import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.dto.PluginToolDto;
 import modelengine.fit.jober.aipp.dto.StoreNodeInfoDto;
 import modelengine.fit.jober.aipp.service.StoreService;
+import modelengine.jade.authentication.context.UserContext;
+import modelengine.jade.authentication.context.UserContextHolder;
+
+import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.Mock;
 import modelengine.fitframework.test.annotation.MvcTest;
@@ -28,8 +26,6 @@ import modelengine.fitframework.test.domain.mvc.MockMvc;
 import modelengine.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import modelengine.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import modelengine.fitframework.util.TypeUtils;
-import modelengine.jade.authentication.context.UserContext;
-import modelengine.jade.authentication.context.UserContextHolder;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,15 +58,14 @@ public class StoreControllerTest {
     private StoreService storeService;
 
     private StoreController storeController;
-
     private HttpClassicClientResponse<?> response;
-
     private MockedStatic<UserContextHolder> opContextHolderMock;
 
     @BeforeEach
     void setUp() {
         opContextHolderMock = mockStatic(UserContextHolder.class);
-        this.opContextHolderMock.when(UserContextHolder::get).thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
+        this.opContextHolderMock.when(UserContextHolder::get)
+                .thenReturn(new UserContext("Jane", "127.0.0.1", "en"));
         this.storeController = new StoreController(this.authenticator, this.storeService);
     }
 
@@ -86,13 +81,14 @@ public class StoreControllerTest {
     @DisplayName("当根据参数查询工具时，返回正确结果。")
     void shouldReturnCorrectPluginsWhenGetPlugins() {
         PluginToolDto pluginToolDto = new PluginToolDto();
-        Mockito.when(this.storeService.getPlugins(any(), any())).thenReturn(pluginToolDto);
-        MockRequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-                        "/v1/api/31f20efc7e0848deab6a6bc10fc3021e/store/plugins")
-                .param("excludeTags", "APP")
-                .param("pageNum", "1")
-                .param("pageSize", "10")
-                .responseType(TypeUtils.parameterized(Rsp.class, new Type[] {PluginToolDto.class}));
+        Mockito.when(this.storeService.getPlugins(any(), any()))
+                .thenReturn(pluginToolDto);
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.get("/v1/api/31f20efc7e0848deab6a6bc10fc3021e/store/plugins")
+                        .param("excludeTags", "APP")
+                        .param("pageNum", "1")
+                        .param("pageSize", "10")
+                        .responseType(TypeUtils.parameterized(Rsp.class, new Type[] {PluginToolDto.class}));
         this.response = this.mockMvc.perform(requestBuilder);
         assertThat(this.response.statusCode()).isEqualTo(200);
     }
@@ -103,7 +99,8 @@ public class StoreControllerTest {
         List<StoreNodeInfoDto> storeNodeInfoDto = new ArrayList<>();
         Rsp<List<StoreNodeInfoDto>> rsp1 = this.storeController.getNodesList("basic");
         Rsp<List<StoreNodeInfoDto>> rsp2 = this.storeController.getNodesList("evaluation");
-        Mockito.when(this.storeService.getNode(anyString())).thenReturn(storeNodeInfoDto);
+        Mockito.when(this.storeService.getNode(anyString()))
+                .thenReturn(storeNodeInfoDto);
         assertThat(rsp1.getCode()).isEqualTo(0);
         assertThat(rsp2.getCode()).isEqualTo(0);
     }

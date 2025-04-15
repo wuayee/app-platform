@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -39,8 +37,8 @@ public class JsonUtilsTest {
     @DisplayName("测试String转Map失败")
     void testParseObjectFailed() {
         String str = "{\"hello\": \"world\"";
-        AippJsonDecodeException aippJsonDecodeException = Assertions.assertThrows(AippJsonDecodeException.class,
-                () -> JsonUtils.parseObject(str));
+        AippJsonDecodeException aippJsonDecodeException =
+                Assertions.assertThrows(AippJsonDecodeException.class, () -> JsonUtils.parseObject(str));
         Assertions.assertEquals(90002900, aippJsonDecodeException.getCode());
     }
 
@@ -84,7 +82,6 @@ public class JsonUtilsTest {
     @Data
     private static class TestEntity {
         private String hello;
-
         private Integer start;
     }
 }

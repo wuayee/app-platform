@@ -1,12 +1,15 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.controller;
 
+import modelengine.fit.jane.common.controller.AbstractController;
+import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.dto.AppBuilderFormDto;
+import modelengine.fit.jober.aipp.service.AppBuilderFormService;
+import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.service.annotations.SpanAttr;
 
@@ -19,11 +22,6 @@ import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.jane.common.controller.AbstractController;
-import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jober.aipp.dto.AppBuilderFormDto;
-import modelengine.fit.jober.aipp.service.AppBuilderFormService;
-import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;

@@ -21,7 +21,8 @@
 					{"id": 0, "Name": "股市动向", "Desc": "查找3天内的股市涨跌"}
 					{"id": 1, "Name": "应用创建工具", "Desc": "按用户意图创建应用"}
 					{"id": 2, "Name": "华尔街news", "Desc": "查询华尔街信息"}
-					{"id": 3, "Name": "Python代码工具", "Desc": "执行python代码"}
+					{"id": 3, "Name": "华为财经小魔方", "Desc": "获取华为财经数据"}
+					{"id": 4, "Name": "Python代码工具", "Desc": "执行python代码"}
 				</Tools>
 				input: 财经顾问。
             </input>
@@ -33,7 +34,8 @@
 					{"id": 0, "Name": "股市动向", "Desc": "查找3天内的股市涨跌"}
 					{"id": 1, "Name": "应用创建工具", "Desc": "按用户意图创建应用"}
 					{"id": 2, "Name": "华尔街news", "Desc": "查询华尔街信息"}
-					{"id": 3, "Name": "Python代码工具", "Desc": "执行python代码"}
+					{"id": 3, "Name": "华为财经小魔方", "Desc": "获取华为财经数据"}
+					{"id": 4, "Name": "Python代码工具", "Desc": "执行python代码"}
 				</Tools>
 				input: 喝水提醒。
             </input>

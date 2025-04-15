@@ -1,13 +1,12 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.enums;
 
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippParamException;
+
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -32,7 +31,6 @@ public enum FormPropertyTypeEnum {
     LIST("List", java.util.List.class);
 
     private final String code;
-
     private final Class<?> clazz;
 
     FormPropertyTypeEnum(String code, Class<?> clazz) {

@@ -1,19 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.dto;
+
+import modelengine.fit.jane.common.validation.Size;
+import modelengine.fit.jober.aipp.constants.AippConst;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import modelengine.fit.jane.common.validation.Size;
 import modelengine.fitframework.annotation.Property;
+import modelengine.fitframework.util.ObjectUtils;
+import modelengine.fitframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Aipp创建/更新参数
@@ -69,4 +72,51 @@ public class AippDto {
 
     @Property(description = "应用分类")
     private String appCategory;
+
+    /**
+     * 获取元数据id.
+     *
+     * @return 元数据id.
+     */
+    public String getMetaId() {
+        return String.valueOf(this.flowViewData.getOrDefault(AippConst.FLOW_CONFIG_ID_KEY, StringUtils.EMPTY));
+    }
+
+    /**
+     * 获取版本.
+     *
+     * @return 版本.
+     */
+    public String getVersion() {
+        return Optional.ofNullable(this.version)
+                .orElseGet(() -> String.valueOf(
+                        this.flowViewData.getOrDefault(AippConst.FLOW_CONFIG_VERSION_KEY, StringUtils.EMPTY)));
+    }
+
+    /**
+     * 获取流程id.
+     *
+     * @return 流程id.
+     */
+    public String getFlowId() {
+        return ObjectUtils.cast(this.flowViewData.get(AippConst.FLOW_CONFIG_ID_KEY));
+    }
+
+    /**
+     * 获取preview版本.
+     *
+     * @return preview版本.
+     */
+    public String getPreviewVersion() {
+        return ObjectUtils.cast(this.flowViewData.get(AippConst.FLOW_CONFIG_VERSION_KEY));
+    }
+
+    /**
+     * 设置预览版本.
+     *
+     * @param previewVersion 预览版本.
+     */
+    public void setPreviewVersion(String previewVersion) {
+        this.flowViewData.put(AippConst.FLOW_CONFIG_VERSION_KEY, previewVersion);
+    }
 }

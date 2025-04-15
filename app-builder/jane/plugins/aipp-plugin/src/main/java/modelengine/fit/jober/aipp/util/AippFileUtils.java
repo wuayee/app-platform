@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -34,9 +32,7 @@ public class AippFileUtils {
      * 上传文件会上传到该共享目录。
      */
     private static final String DOWNLOAD_FILE_ORIGIN = "/v1/api/31f20efc7e0848deab6a6bc10fc3021e/file?";
-
     private static final Pattern PATTERN = Pattern.compile("filePath=([^&]+)");
-
     private static final Logger log = Logger.get(AippFileUtils.class);
 
     /**

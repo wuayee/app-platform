@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.serializer;
 
@@ -11,6 +9,7 @@ package modelengine.fit.jober.aipp.serializer;
  *
  * @param <Domain> 领域对象类型
  * @param <PO> 数据对象类型
+ *
  * @author 邬涨财
  * @since 2024-04-17
  */

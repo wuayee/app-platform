@@ -1,13 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ *  Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
-import modelengine.fit.jober.aipp.dto.FitableInfoDto;
 import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jober.aipp.dto.FitableInfoDto;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +36,6 @@ public interface GenericableManageService {
      * @param operationContext 操作上下文
      * @return 执行结果
      */
-    List<Map<String, Object>> executeInspirationFitable(String fitableId, String appId, String appType,
-            OperationContext operationContext);
+    List<Map<String, Object>> executeInspirationFitable(String fitableId,
+            String appId, String appType, OperationContext operationContext);
 }

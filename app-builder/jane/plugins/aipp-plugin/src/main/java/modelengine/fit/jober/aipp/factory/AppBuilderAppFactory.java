@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.factory;
 
@@ -16,6 +14,7 @@ import modelengine.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
@@ -32,21 +31,18 @@ import java.util.stream.Collectors;
 @Component
 public class AppBuilderAppFactory {
     private final AppBuilderFlowGraphRepository flowGraphRepository;
-
     private final AppBuilderConfigRepository configRepository;
-
     private final AppBuilderFormRepository formRepository;
-
     private final AppBuilderConfigPropertyRepository configPropertyRepository;
-
     private final AppBuilderFormPropertyRepository formPropertyRepository;
-
     private final AppBuilderAppRepository appRepository;
 
     public AppBuilderAppFactory(AppBuilderFlowGraphRepository flowGraphRepository,
-            AppBuilderConfigRepository configRepository, AppBuilderFormRepository formRepository,
+            AppBuilderConfigRepository configRepository,
+            AppBuilderFormRepository formRepository,
             AppBuilderConfigPropertyRepository configPropertyRepository,
-            AppBuilderFormPropertyRepository formPropertyRepository, AppBuilderAppRepository appRepository) {
+            AppBuilderFormPropertyRepository formPropertyRepository,
+            AppBuilderAppRepository appRepository) {
         this.flowGraphRepository = flowGraphRepository;
         this.configRepository = configRepository;
         this.configPropertyRepository = configPropertyRepository;
@@ -61,8 +57,11 @@ public class AppBuilderAppFactory {
      * @return AppBuilderApp。
      */
     public AppBuilderApp create() {
-        return new AppBuilderApp(this.flowGraphRepository, this.configRepository, this.formRepository,
-                this.configPropertyRepository, this.formPropertyRepository);
+        return new AppBuilderApp(this.flowGraphRepository,
+                this.configRepository,
+                this.formRepository,
+                this.configPropertyRepository,
+                this.formPropertyRepository);
     }
 
     /**

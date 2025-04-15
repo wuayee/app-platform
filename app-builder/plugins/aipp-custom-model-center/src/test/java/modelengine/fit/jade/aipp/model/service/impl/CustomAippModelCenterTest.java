@@ -136,7 +136,7 @@ class CustomAippModelCenterTest {
 
         Assertions.assertNotNull(modelAccessInfo);
         Assertions.assertEquals(modelPo.getName(), modelAccessInfo.getServiceName());
-        Assertions.assertEquals(modelPo.getTag(), modelAccessInfo.getTag());
+        Assertions.assertEquals("tag1,user1", modelAccessInfo.getTag());
         Assertions.assertEquals(modelPo.getBaseUrl(), modelAccessInfo.getBaseUrl());
         Mockito.verify(this.defaultModelCenter, Mockito.times(0)).getDefaultModel(Mockito.any(), Mockito.any());
     }

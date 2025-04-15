@@ -307,5 +307,4 @@ create table if not exists app_template (
      update_by varchar(64) not null,
      update_at timestamp(6) not null default CURRENT_TIMESTAMP,
      is_deleted int2 not null default 0
-)
-;
+);

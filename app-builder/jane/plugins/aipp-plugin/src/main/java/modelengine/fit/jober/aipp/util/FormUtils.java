@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.util;
 
@@ -16,6 +14,7 @@ import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domain.AppBuilderForm;
 import modelengine.fit.jober.aipp.domain.AppBuilderFormProperty;
 import modelengine.fit.jober.aipp.entity.AippLogData;
+
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
@@ -36,11 +35,8 @@ import java.util.stream.Collectors;
  */
 public class FormUtils {
     private static final Logger log = Logger.get(FormUtils.class);
-
     private static final String SCHEMA_KEY = "schema";
-
     private static final String PARAMETERS_KEY = "parameters";
-
     private static final String PROPERTIES_KEY = "properties";
 
     /**
@@ -51,6 +47,7 @@ public class FormUtils {
      * @param parentInstanceId 表示父实例 Id 的 {@link String}。
      * @return 表示构建后的表单数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}。
      */
+
     public static Map<String, Object> buildFormData(Map<String, Object> businessData, AppBuilderForm appBuilderForm,
             String parentInstanceId) {
         Map<String, Object> form = new HashMap<>();
@@ -61,7 +58,8 @@ public class FormUtils {
         return form;
     }
 
-    private static Map<String, Object> buildFormData(Map<String, Object> businessData, Map<String, Object> appearance) {
+    private static Map<String, Object> buildFormData(Map<String, Object> businessData,
+            Map<String, Object> appearance) {
         Map<String, Object> formDataMap = new HashMap<>();
         if (appearance == null) {
             return formDataMap;
@@ -100,8 +98,8 @@ public class FormUtils {
      */
     public static AippLogData buildLogDataWithFormData(List<AppBuilderFormProperty> formProperties, String formId,
             String formVersion, Map<String, Object> businessData) {
-        List<FormMetaQueryParameter> parameter = Collections.singletonList(
-                new FormMetaQueryParameter(formId, formVersion));
+        List<FormMetaQueryParameter> parameter =
+                Collections.singletonList(new FormMetaQueryParameter(formId, formVersion));
 
         Map<String, Object> formArgs = buildFormMetaInfos(parameter, formProperties).stream()
                 .flatMap(item -> item.getFormMetaItems().stream().map(FormMetaItem::getKey))

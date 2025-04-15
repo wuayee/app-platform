@@ -1,20 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import modelengine.jade.store.service.PluginService;
-import modelengine.jade.store.service.support.DeployStatus;
-
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.StatisticsDTO;
 import modelengine.fit.jober.aipp.service.impl.StatisticsServiceImpl;
+import modelengine.jade.store.service.PluginService;
+import modelengine.jade.store.service.support.DeployStatus;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

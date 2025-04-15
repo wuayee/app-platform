@@ -1,18 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.domain;
+
+import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
+import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
-import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
-import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
 import modelengine.fitframework.inspection.Validation;
 
 /**
@@ -28,27 +27,18 @@ import modelengine.fitframework.inspection.Validation;
 @Slf4j
 public class AppBuilderComponent extends BaseDomain {
     private String id;
-
     private String name;
-
     private String type;
-
     private String description;
-
     private String formId;
-
     private String serviceId;
-
     private String tenantId;
-
     private AppBuilderForm form;
-
     private AppBuilderFormRepository formRepository;
-
     private AppBuilderFormPropertyRepository formPropertyRepository;
 
     public AppBuilderComponent(AppBuilderFormRepository formRepository,
-            AppBuilderFormPropertyRepository formPropertyRepository) {
+                               AppBuilderFormPropertyRepository formPropertyRepository) {
         this.formRepository = formRepository;
         this.formPropertyRepository = formPropertyRepository;
     }

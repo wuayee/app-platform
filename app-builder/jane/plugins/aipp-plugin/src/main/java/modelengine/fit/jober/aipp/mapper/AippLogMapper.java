@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.mapper;
 
@@ -180,7 +178,15 @@ public interface AippLogMapper {
      * @param logTypes 表示指定日志类型列表的 {@link List}{@code <}{@link String}{@code >}。
      * @return 表示 aipp 实例历史记录的 {@link List}{@code <}{@link AippInstLog}{@code >}。
      */
-    List<AippInstLog> getLogsByInstanceIdAndLogTypes(String instanceId, @Param("logTypes") List<String> logTypes);
+    List<AippInstLog> getLogsByInstanceIdAndLogTypes(String instanceId, @Param("logTypes")List<String> logTypes);
+
+    /**
+     * 查询路径以 instanceId 开始，并且满足logTypes的日志.
+     *
+     * @param instanceId 任务实例id.
+     * @return 表示 aipp 实例历史记录的 {@link List}{@code <}{@link AippInstLog}{@code >}。
+     */
+    List<AippInstLog> getLogsStartWithInstanceId(String instanceId);
 
     /**
      * 删除指定实例的历史记录。

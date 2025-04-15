@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -12,10 +10,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import modelengine.jade.app.engine.knowledge.service.KnowledgeBaseService;
-
 import modelengine.fit.jober.aipp.TestUtils;
 import modelengine.fit.jober.aipp.util.DataUtils;
+import modelengine.jade.app.engine.knowledge.service.KnowledgeBaseService;
 import modelengine.fitframework.util.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,15 +39,10 @@ import java.util.Map;
 @ExtendWith(MockitoExtension.class)
 public class NaiveRAGComponentTest {
     private static final String NAIVE_RAG_KNOWLEDGE_KEY = "knowledge";
-
     private static final String NAIVE_RAG_QUERY_KEY = "query";
-
     private static final String NAIVE_RAG_MAXIMUM_KEY = "maximum";
-
     private static final String NAIVE_RAG_OUTPUT = "retrievalOutput";
-
     private static final String DUMMY_QUERY = "This is query.";
-
     private static final Integer DUMMY_MAXIMUM = 3;
 
     @Mock
@@ -107,8 +99,8 @@ public class NaiveRAGComponentTest {
         Map<String, Object> exceptResult = new HashMap<String, Object>() {{
             put("retrievalOutput", exceptNaiveRAGOutput);
         }};
-        when(this.knowledgeBaseServiceMock.vectorSearchKnowledgeTable(any())).thenReturn(
-                Arrays.asList(exceptNaiveRAGOutput));
+        when(this.knowledgeBaseServiceMock.vectorSearchKnowledgeTable(any()))
+                .thenReturn(Arrays.asList(exceptNaiveRAGOutput));
         List<Map<String, Object>> flowData = TestUtils.buildFlowDataWithExtraConfig(businessData, null);
         List<Map<String, Object>> resultFlowData = this.naiveRAGComponent.handleTask(flowData);
         Map<String, Object> resultBusinessData = DataUtils.getBusiness(resultFlowData);

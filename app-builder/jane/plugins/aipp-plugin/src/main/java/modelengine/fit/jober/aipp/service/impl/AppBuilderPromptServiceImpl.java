@@ -1,19 +1,12 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
-
-import modelengine.jade.common.globalization.LocaleService;
-
-import com.alibaba.fastjson.JSONObject;
 
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.meta.multiversion.MetaService;
-import modelengine.fit.jane.meta.multiversion.definition.Meta;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.jober.aipp.common.exception.AippParamException;
 import modelengine.fit.jober.aipp.condition.InspirationQueryCondition;
@@ -27,12 +20,14 @@ import modelengine.fit.jober.aipp.po.InspirationPo;
 import modelengine.fit.jober.aipp.repository.AppBuilderInspirationRepository;
 import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
 import modelengine.fit.jober.aipp.util.JsonUtils;
-import modelengine.fit.jober.aipp.util.MetaUtils;
 import modelengine.fit.jober.aipp.util.UUIDUtil;
+import modelengine.jade.common.globalization.LocaleService;
+
+import com.alibaba.fastjson.JSONObject;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.fitframework.log.Logger;
-import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -76,8 +71,8 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
             boolean isDebug) {
         PromptProperty promptProperty = this.findInspirationProperty(appId);
         AppBuilderPromptCategoryDto category = promptProperty.getCategoryById(categoryId);
-        List<InspirationPo> customInspirationList = this.getCustomInspirationListWithCategoryId(categoryId, category,
-                appId, context);
+        List<InspirationPo> customInspirationList =
+                this.getCustomInspirationListWithCategoryId(categoryId, category, appId, context);
 
         // 判断是否直接查看的是“我的”类目下的灵感大全
         boolean isCustomCategory = promptProperty.isCustomCategory(categoryId);
@@ -87,11 +82,15 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
             category = this.buildCustomCategory(categoryId, customInspirationList);
             inspirations = this.getInspirationsWhenIsCustomCategory(customInspirationList);
         } else {
-            inspirations = this.getInspirationsWhenIsNotCustomCategory(isDebug, category, customInspirationList,
+            inspirations = this.getInspirationsWhenIsNotCustomCategory(isDebug,
+                    category,
+                    customInspirationList,
                     promptProperty.getInspirationsByCategoryId(categoryId));
         }
-        return Rsp.ok(
-                AppBuilderPromptDto.builder().inspirations(inspirations).categories(category.getChildren()).build());
+        return Rsp.ok(AppBuilderPromptDto.builder()
+                .inspirations(inspirations)
+                .categories(category.getChildren())
+                .build());
     }
 
     private void checkCustomQueryValid(String categoryId, boolean isDebug, List<InspirationPo> customInspirationList) {
@@ -142,9 +141,12 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
 
     private List<InspirationPo> getCustomInspirationList(String appId, OperationContext context, String parentId,
             String categoryId) {
-        String aippId = this.getAippIdByAppId(appId, context);
-        return this.inspirationRepo.selectWithCondition(
-                new InspirationQueryCondition(aippId, parentId, categoryId, context.getOperator()));
+        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
+        String aippId = appBuilderApp.getAppSuiteId();
+        return this.inspirationRepo.selectWithCondition(new InspirationQueryCondition(aippId,
+                parentId,
+                categoryId,
+                context.getOperator()));
     }
 
     private void mergeCustomInspirations(List<InspirationPo> customInspirationList,
@@ -163,7 +165,8 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
     private void mergeCustomCategories(List<InspirationPo> customInspirationList,
             List<AppBuilderPromptCategoryDto> categories) {
         Map<String, String> categoryMap = customInspirationList.stream()
-                .collect(Collectors.toMap(InspirationPo::getParentId, InspirationPo::getCategoryId,
+                .collect(Collectors.toMap(InspirationPo::getParentId,
+                        InspirationPo::getCategoryId,
                         (oldValue, newValue) -> oldValue));
         this.mergeCustomCategoriesRecurse(categories, categoryMap);
     }
@@ -203,8 +206,11 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
             String categoryId = category.getId();
             if (categoryMap.containsKey(categoryId)) {
                 String customCategoryId = categoryMap.get(categoryId);
-                AppBuilderPromptCategoryDto customCategory = new AppBuilderPromptCategoryDto(msg, customCategoryId,
-                        categoryId + ":" + customCategoryId, true, new ArrayList<>());
+                AppBuilderPromptCategoryDto customCategory = new AppBuilderPromptCategoryDto(msg,
+                        customCategoryId,
+                        categoryId + ":" + customCategoryId,
+                        true,
+                        new ArrayList<>());
                 category.getChildren().add(customCategory);
                 categoryMap.remove(categoryId);
             }
@@ -215,23 +221,15 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
         });
     }
 
-    private String getAippIdByAppId(String appId, OperationContext context) {
-        List<Meta> metas = MetaUtils.getAllMetasByAppId(this.metaService, appId, context);
-        if (CollectionUtils.isEmpty(metas)) {
-            log.error("Meta can not be null.");
-            throw new AippParamException(AippErrCode.QUERY_INSPIRATION_FAILED);
-        }
-        return metas.get(0).getId();
-    }
-
     @Override
     public void addCustomInspiration(String appId, String parentId,
             AppBuilderPromptDto.AppBuilderInspirationDto inspirationDto, OperationContext context) {
-        String aippId = getAippIdByAppId(appId, context);
+        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
+        String aippId = appBuilderApp.getAppSuiteId();
         String customId;
         // 查询是否已存在"我的"类目
-        Optional<String> categoryId = this.inspirationRepo.findCustomCategoryId(aippId, parentId,
-                context.getOperator());
+        Optional<String> categoryId =
+                this.inspirationRepo.findCustomCategoryId(aippId, parentId, context.getOperator());
         customId = categoryId.orElseGet(() -> UUIDUtil.uuid().substring(0, 6));
         InspirationPo inspirationPo = buildInspirationPo(parentId, inspirationDto, context, customId, aippId);
         this.inspirationRepo.addCustomInspiration(inspirationPo);
@@ -255,8 +253,10 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
     @Override
     public void updateCustomInspiration(String appId, String categoryId, String inspirationId,
             AppBuilderPromptDto.AppBuilderInspirationDto inspirationDto, OperationContext context) {
-        String aippId = getAippIdByAppId(appId, context);
-        Validation.equals(inspirationId, inspirationDto.getId(),
+        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
+        String aippId = appBuilderApp.getAppSuiteId();
+        Validation.equals(inspirationId,
+                inspirationDto.getId(),
                 () -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID, "inspiration id"));
         this.inspirationRepo.updateCustomInspiration(inspirationId,
                 buildInspirationPo(null, inspirationDto, context, categoryId, aippId));
@@ -265,7 +265,8 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
     @Override
     public void deleteCustomInspiration(String appId, String categoryId, String inspirationId,
             OperationContext context) {
-        String aippId = getAippIdByAppId(appId, context);
+        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
+        String aippId = appBuilderApp.getAppSuiteId();
         this.inspirationRepo.deleteCustomInspiration(aippId, categoryId, inspirationId, context.getOperator());
     }
 }

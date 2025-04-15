@@ -1,16 +1,14 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
-package modelengine.fit.jober.aipp.init.serialization;
-
-import modelengine.jade.common.locale.LocaleUtil;
+package modelengine.fit.jober.aipp.init;
 
 import modelengine.fit.jober.aipp.common.ResourceLoader;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.util.JsonUtils;
+import modelengine.jade.common.locale.LocaleUtil;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Initialize;
 import modelengine.fitframework.log.Logger;
@@ -33,25 +31,15 @@ public class AippComponentInitiator {
      * 流程/表单组件数据
      */
     public static final Map<String, String> COMPONENT_DATA = new HashMap<>();
-
     private static final Logger log = Logger.get(AippComponentInitiator.class);
-
     private static final String RESOURCE_PATH = "component";
-
     private static final String FLOW_ZH_PATH = "/flow_zh.json";
-
     private static final String FLOW_EN_PATH = "/flow_en.json";
-
     private static final String FORM_ZH_PATH = "/form_zh.json";
-
     private static final String FORM_EN_PATH = "/form_en.json";
-
     private static final String BASIC_NODE_ZH_PATH = "/basic_node_zh.json";
-
     private static final String BASIC_NODE_EN_PATH = "/basic_node_en.json";
-
     private static final String EVALUATION_NODE_ZH_PATH = "/evaluation_node_zh.json";
-
     private static final String EVALUATION_NODE_EN_PATH = "/evaluation_node_en.json";
 
     private final Plugin plugin;
@@ -71,8 +59,7 @@ public class AippComponentInitiator {
      */
     public static <T> T getLocaleObject(String enKey, String zhKey, Class<T> targetClass) {
         return JsonUtils.parseObject(LocaleUtil.getLocale().getLanguage().equals(Locale.ENGLISH.getLanguage())
-                ? COMPONENT_DATA.get(enKey)
-                : COMPONENT_DATA.get(zhKey), targetClass);
+                ? COMPONENT_DATA.get(enKey) : COMPONENT_DATA.get(zhKey), targetClass);
     }
 
     @Initialize

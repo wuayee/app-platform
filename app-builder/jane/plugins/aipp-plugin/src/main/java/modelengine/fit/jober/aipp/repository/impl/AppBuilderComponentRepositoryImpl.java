@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.repository.impl;
 
@@ -21,7 +19,6 @@ import modelengine.fitframework.annotation.Component;
 @Component
 public class AppBuilderComponentRepositoryImpl implements AppBuilderComponentRepository {
     private final AppBuilderComponentMapper appBuilderComponentMapper;
-
     private final AppBuilderComponentSerializer serializer;
 
     public AppBuilderComponentRepositoryImpl(AppBuilderComponentMapper appBuilderComponentMapper) {

@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.repository.impl;
 
@@ -10,6 +8,7 @@ import modelengine.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
 import modelengine.fit.jober.aipp.mapper.AppBuilderRuntimeInfoMapper;
 import modelengine.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
 import modelengine.fit.jober.aipp.serializer.impl.AppBuilderRuntimeInfoSerializer;
+
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class AppBuilderRuntimeInfoRepositoryImpl implements AppBuilderRuntimeInfoRepository {
     private final AppBuilderRuntimeInfoMapper mapper;
-
     private final AppBuilderRuntimeInfoSerializer serializer;
 
     public AppBuilderRuntimeInfoRepositoryImpl(AppBuilderRuntimeInfoMapper mapper) {

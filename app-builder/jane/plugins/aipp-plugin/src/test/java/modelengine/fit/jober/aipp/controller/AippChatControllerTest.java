@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.controller;
 
@@ -12,6 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.dto.chat.QueryChatRequest;
+import modelengine.fit.jober.aipp.service.AippChatService;
 
 import modelengine.fit.http.HttpResource;
 import modelengine.fit.http.protocol.Address;
@@ -20,8 +20,6 @@ import modelengine.fit.http.protocol.ReadableMessageBody;
 import modelengine.fit.http.protocol.RequestLine;
 import modelengine.fit.http.protocol.ServerRequest;
 import modelengine.fit.http.server.support.DefaultHttpClassicServerRequest;
-import modelengine.fit.jober.aipp.dto.chat.QueryChatRequest;
-import modelengine.fit.jober.aipp.service.AippChatService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

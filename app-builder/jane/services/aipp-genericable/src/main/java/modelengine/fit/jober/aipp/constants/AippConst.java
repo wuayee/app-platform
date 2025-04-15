@@ -742,6 +742,16 @@ public class AippConst {
     public static final String BS_CHAT_ID = "chatId";
 
     /**
+     * business中的原始会话的id的key，用于应用之间@的场景.
+     */
+    public static final String BS_ORIGIN_CHAT_ID = "originChatId";
+
+    /**
+     * business中的原始应用版本的id的key，用于应用之间@的场景.
+     */
+    public static final String BS_ORIGIN_APP_ID = "originAppId";
+
+    /**
      * aippId
      */
     public static final String AIPP_ID = "aippId";

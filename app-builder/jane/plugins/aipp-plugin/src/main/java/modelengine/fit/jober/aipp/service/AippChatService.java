@@ -1,13 +1,12 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippTaskNotFoundException;
+import modelengine.fit.jober.aipp.dto.chat.ChatCreateEntity;
 import modelengine.fit.jober.aipp.dto.chat.ChatInfoRspDto;
 import modelengine.fit.jober.aipp.dto.chat.CreateChatRequest;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatInfoRequest;
@@ -17,7 +16,6 @@ import modelengine.fit.jober.aipp.dto.chat.QueryChatRspDto;
 import modelengine.fit.jober.common.RangedResultSet;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 历史会话服务接口.
@@ -45,7 +43,7 @@ public interface AippChatService {
      * @throws AippTaskNotFoundException 任务不存在异常
      */
     QueryChatRsp queryChat(QueryChatRequest body, String chatId, OperationContext context)
-            throws AippTaskNotFoundException;
+        throws AippTaskNotFoundException;
 
     /**
      * 缓存运行时数据.
@@ -76,17 +74,7 @@ public interface AippChatService {
      * @throws AippTaskNotFoundException 任务不存在异常
      */
     QueryChatRsp updateChat(String originChatId, CreateChatRequest body, OperationContext context)
-            throws AippTaskNotFoundException;
-
-    /**
-     * 重新发起会话。
-     *
-     * @param currentInstanceId 需要重新发起会话的实例 ID。
-     * @param additionalContext 重新会话需要的信息，如是否使用多轮对话等等。
-     * @param context 上下文。
-     * @return 表示会话相应体的 {@link QueryChatRsp}。
-     */
-    QueryChatRsp restartChat(String currentInstanceId, Map<String, Object> additionalContext, OperationContext context);
+        throws AippTaskNotFoundException;
 
     /**
      * 查询对话列表集合
@@ -96,4 +84,12 @@ public interface AippChatService {
      * @return 表示会话相应体列表 {@link ChatInfoRspDto}。List<ChatInfoRspDto>
      */
     List<ChatInfoRspDto> queryChatInfo(QueryChatInfoRequest queryChatInfoRequest, OperationContext context);
+
+    /**
+     * 保存会话数据.
+     *
+     * @param chatCreateEntity 待保存数据.
+     * @param context 操作人上下文信息.
+     */
+    void saveChatInfo(ChatCreateEntity chatCreateEntity, OperationContext context);
 }

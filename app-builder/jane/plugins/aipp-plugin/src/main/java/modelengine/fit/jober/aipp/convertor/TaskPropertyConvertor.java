@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.convertor;
 
@@ -52,9 +50,9 @@ public interface TaskPropertyConvertor {
      */
     @Mapping(target = "name", expression = "java(modelengine.fit.jane.Undefinable.defined(taskProperty.getName()))")
     @Mapping(target = "dataType",
-            expression = "java(modelengine.fit.jane.Undefinable.defined(taskProperty.getDataType()))")
+                expression = "java(modelengine.fit.jane.Undefinable.defined(taskProperty.getDataType()))")
     @Mapping(target = "description",
-            expression = "java(modelengine.fit.jane.Undefinable.defined(taskProperty.getDescription()))")
+                expression = "java(modelengine.fit.jane.Undefinable.defined(taskProperty.getDescription()))")
     @Mapping(target = "scope", expression = "java(modelengine.fit.jane.Undefinable.defined(taskProperty.getScope()))")
     @Mapping(target = "required", ignore = true)
     @Mapping(target = "identifiable", ignore = true)

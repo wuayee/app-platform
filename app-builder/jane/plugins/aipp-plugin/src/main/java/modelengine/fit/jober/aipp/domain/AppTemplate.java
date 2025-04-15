@@ -1,20 +1,21 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2025. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import static modelengine.fitframework.util.ObjectUtils.cast;
+
 import modelengine.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import modelengine.fitframework.inspection.Validation;
 
 import java.util.List;
@@ -32,43 +33,24 @@ import java.util.Map;
 @SuperBuilder
 public class AppTemplate extends BaseDomain {
     private String id;
-
     private String name;
-
     private String builtType;
-
     private String category;
-
     private Map<String, Object> attributes;
-
     private String appType;
-
     private long like;
-
     private long collection;
-
     private long usage;
-
     private String version;
-
     private String configId;
-
     private String flowGraphId;
-
     private AppBuilderFlowGraph flowGraph;
-
     private AppBuilderConfig config;
-
     private List<AppBuilderFormProperty> formProperties;
-
     private AppBuilderFlowGraphRepository flowGraphRepository;
-
     private AppBuilderConfigRepository configRepository;
-
     private AppBuilderConfigPropertyRepository configPropertyRepository;
-
     private AppBuilderFormRepository formRepository;
-
     private AppBuilderFormPropertyRepository formPropertyRepository;
 
     public AppTemplate(AppBuilderFlowGraphRepository flowGraphRepository, AppBuilderConfigRepository configRepository,
@@ -125,5 +107,41 @@ public class AppTemplate extends BaseDomain {
 
     private List<AppBuilderFormProperty> loadFormProperties() {
         return this.formPropertyRepository.selectWithAppId(this.id);
+    }
+
+    /**
+     * 获取 icon.
+     *
+     * @return {@link String} icon路径.
+     */
+    public String getIcon() {
+        return cast(this.attributes.get("icon"));
+    }
+
+    /**
+     * 设置icon.
+     *
+     * @param icon 图标.
+     */
+    public void setIcon(String icon) {
+        this.attributes.put("icon", icon);
+    }
+
+    /**
+     * 获取描述.
+     *
+     * @return {@link String} 描述信息.
+     */
+    public String getDescription() {
+        return cast(this.attributes.get("description"));
+    }
+
+    /**
+     * 设置描述信息.
+     *
+     * @param description 描述信息.
+     */
+    public void setDescription(String description) {
+        this.attributes.put("description", description);
     }
 }

@@ -1,17 +1,15 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
+import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.util.DataUtils;
 import modelengine.fit.waterflow.spi.FlowableService;
 import modelengine.jade.app.engine.knowledge.dto.KbVectorSearchDto;
 import modelengine.jade.app.engine.knowledge.service.KnowledgeBaseService;
 
-import modelengine.fit.jober.aipp.constants.AippConst;
-import modelengine.fit.jober.aipp.util.DataUtils;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fitable;
 import modelengine.fitframework.log.Logger;

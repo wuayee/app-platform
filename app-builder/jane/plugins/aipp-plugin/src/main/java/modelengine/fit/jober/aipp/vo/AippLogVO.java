@@ -1,18 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.vo;
+
+import modelengine.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
+import modelengine.fit.jober.aipp.enums.AippInstLogType;
+import modelengine.fit.jober.aipp.util.AippLogUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import modelengine.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
-import modelengine.fit.jober.aipp.enums.AippInstLogType;
-import modelengine.fit.jober.aipp.util.AippLogUtils;
 import modelengine.fitframework.util.StringUtils;
 
 import java.util.Collections;
@@ -82,10 +81,10 @@ public class AippLogVO {
      * @return true/false.true,代表需要在前端展示;false,表示不需要在前端展示.
      */
     public boolean displayable() {
-        return !(StringUtils.equals(AippInstLogType.FORM.name(), this.logType) || StringUtils.equals(
-                AippInstLogType.HIDDEN_MSG.name(), this.logType) || StringUtils.equals(
-                AippInstLogType.HIDDEN_QUESTION.name(), this.logType) || StringUtils.equals(
-                AippInstLogType.HIDDEN_FORM.name(), this.logType));
+        return !(StringUtils.equals(AippInstLogType.FORM.name(), this.logType)
+                || StringUtils.equals(AippInstLogType.HIDDEN_MSG.name(), this.logType) || StringUtils.equals(
+                AippInstLogType.HIDDEN_QUESTION.name(),
+                this.logType) || StringUtils.equals(AippInstLogType.HIDDEN_FORM.name(), this.logType));
     }
 
     /**

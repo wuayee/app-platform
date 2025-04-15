@@ -1,14 +1,22 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jane.common.response.Rsp;
+import modelengine.fit.jober.aipp.common.exception.AippErrCode;
+import modelengine.fit.jober.aipp.common.exception.AippException;
+import modelengine.fit.jober.aipp.config.FormFileUploadConfig;
+import modelengine.fit.jober.aipp.dto.GenerateImageDto;
+import modelengine.fit.jober.aipp.service.FileService;
+import modelengine.fit.jober.aipp.service.UploadedFileManageService;
+import modelengine.fit.jober.aipp.validation.FormFileValidator;
 
 import modelengine.fit.http.HttpMessage;
 import modelengine.fit.http.client.HttpClassicClient;
@@ -29,15 +37,6 @@ import modelengine.fit.http.header.support.DefaultHeaderValue;
 import modelengine.fit.http.header.support.DefaultParameterCollection;
 import modelengine.fit.http.protocol.HttpRequestMethod;
 import modelengine.fit.http.protocol.HttpResponseStatus;
-import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jober.aipp.common.exception.AippErrCode;
-import modelengine.fit.jober.aipp.common.exception.AippException;
-import modelengine.fit.jober.aipp.config.FormFileUploadConfig;
-import modelengine.fit.jober.aipp.dto.GenerateImageDto;
-import modelengine.fit.jober.aipp.service.FileService;
-import modelengine.fit.jober.aipp.service.UploadedFileManageService;
-import modelengine.fit.jober.aipp.validation.FormFileValidator;
 import modelengine.fitframework.util.FileUtils;
 import modelengine.fitframework.util.ObjectUtils;
 
@@ -98,9 +97,15 @@ class FileServiceImplTest {
         ContentType contentType = new DefaultContentType(headerValue);
         Optional<ContentType> optionalContentType = Optional.of(contentType);
         when(this.httpMessage.contentType()).thenReturn(optionalContentType);
-        this.fileService = new FileServiceImpl(this.httpClassicClientFactory, URL, "model", this.formFileValidator,
-                this.uploadedFileManageService, this.formFileUploadConfig, "form", "form/temporary", "", "form",
-                "/file/");
+        this.fileService = new FileServiceImpl(this.httpClassicClientFactory,
+                URL,
+                "model",
+                this.formFileValidator,
+                this.uploadedFileManageService,
+                this.formFileUploadConfig,
+                "form",
+                "form/temporary",
+                "", "form", "/file/");
     }
 
     @Test
@@ -178,22 +183,27 @@ class FileServiceImplTest {
     @DisplayName("当解压缩文件时，如果文件小于5M，解压缩成功")
     void givenNotExceed5MThenUnzipSucceed()
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, URISyntaxException {
-        Method unZipFormFileMethod = FileServiceImpl.class.getDeclaredMethod("unZipFormFile", String.class,
-                String.class, String.class, List.class);
+        Method unZipFormFileMethod = FileServiceImpl.class.getDeclaredMethod("unZipFormFile",
+                String.class,
+                String.class,
+                String.class,
+                List.class);
         unZipFormFileMethod.setAccessible(true);
         List<NamedEntity> namedEntities = new ArrayList<>();
         NamedEntity namedEntity = Mockito.mock(NamedEntity.class);
-        InputStream inputStream = FileServiceImplTest.class.getClassLoader()
-                .getResourceAsStream("form/testNotExceed5M.zip");
-        FileEntity fileEntity = FileEntity.create(httpMessage, "entityFileName", inputStream, 0,
-                FileEntity.Position.INLINE, null);
+        InputStream inputStream =
+                FileServiceImplTest.class.getClassLoader().getResourceAsStream("form/testNotExceed5M.zip");
+        FileEntity fileEntity =
+                FileEntity.create(httpMessage, "entityFileName", inputStream, 0, FileEntity.Position.INLINE, null);
         when(namedEntity.asFile()).thenReturn(fileEntity);
         namedEntities.add(namedEntity);
         String fromTemporaryPath = Paths.get(ClassLoader.getSystemResource("form_temporary").toURI()).toString();
         String from = Paths.get(ClassLoader.getSystemResource("form").toURI()).toString();
-        File unzipFile = ObjectUtils.cast(
-                unZipFormFileMethod.invoke(this.fileService, "form/testNotExceed5M.zip", fromTemporaryPath, from,
-                        namedEntities));
+        File unzipFile = ObjectUtils.cast(unZipFormFileMethod.invoke(this.fileService,
+                "form/testNotExceed5M.zip",
+                fromTemporaryPath,
+                from,
+                namedEntities));
         List<File> unzipFiles = FileUtils.list(unzipFile);
         Assertions.assertEquals(unzipFiles.size(), 3);
         FileUtils.delete(unzipFile);

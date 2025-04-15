@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.common.thread;
 
@@ -12,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 流处理器
+ *  流处理器
  *
  * @author 陈潇文
  * @since 2024-12-18

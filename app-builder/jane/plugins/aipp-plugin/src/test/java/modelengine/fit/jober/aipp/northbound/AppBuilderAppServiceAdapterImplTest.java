@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.northbound;
 
@@ -16,6 +14,9 @@ import modelengine.fit.jober.aipp.dto.chat.AppMetadata;
 import modelengine.fit.jober.aipp.service.AppBuilderAppService;
 import modelengine.fit.jober.common.RangeResult;
 import modelengine.fit.jober.common.RangedResultSet;
+
+import modelengine.fit.jober.aipp.northbound.AippChatServiceAdapterImpl;
+import modelengine.fit.jober.aipp.northbound.AppBuilderAppServiceAdapterImpl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,9 +32,8 @@ import java.util.Arrays;
 @DisplayName("测试 AppBuilderAppServiceAdapterImpl")
 public class AppBuilderAppServiceAdapterImplTest {
     private final AppBuilderAppService appBuilderAppService = mock(AppBuilderAppService.class);
-
-    private final AppBuilderAppServiceAdapterImpl appBuilderAppServiceAdapterImpl = new AppBuilderAppServiceAdapterImpl(
-            appBuilderAppService);
+    private final AppBuilderAppServiceAdapterImpl appBuilderAppServiceAdapterImpl =
+            new AppBuilderAppServiceAdapterImpl(appBuilderAppService);
 
     @Test
     @DisplayName("测试应用元数据类转换为适配器类。")
@@ -51,11 +51,11 @@ public class AppBuilderAppServiceAdapterImplTest {
         when(appMetadata2.getType()).thenReturn("testType2");
         when(appMetadata2.getName()).thenReturn("testName2");
 
-        Rsp<RangedResultSet<AppBuilderAppMetadataDto>> rsp = Rsp.ok(
-                RangedResultSet.create(Arrays.asList(appBuilderAppMetadataDto1, appBuilderAppMetadataDto2),
+        Rsp<RangedResultSet<AppBuilderAppMetadataDto>> rsp =
+                Rsp.ok(RangedResultSet.create(Arrays.asList(appBuilderAppMetadataDto1, appBuilderAppMetadataDto2),
                         new RangeResult(1, 2, 3)));
-        RangedResultSet<AppMetadata> result = appBuilderAppServiceAdapterImpl.appMetadataDtoConvertToAdapter(
-                rsp.getData());
+        RangedResultSet<AppMetadata> result =
+                appBuilderAppServiceAdapterImpl.appMetadataDtoConvertToAdapter(rsp.getData());
         assertThat(result.getResults()).hasSize(2)
                 .extracting(AppMetadata::getName)
                 .containsExactly("testName1", "testName2");

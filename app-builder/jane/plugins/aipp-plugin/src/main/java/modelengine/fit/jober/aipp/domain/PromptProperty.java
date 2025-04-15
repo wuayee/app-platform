@@ -1,18 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.domain;
+
+import modelengine.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
+import modelengine.fit.jober.aipp.dto.AppBuilderPromptDto;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import modelengine.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderPromptDto;
 import modelengine.fitframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -31,9 +30,7 @@ import java.util.stream.Collectors;
 @Data
 public class PromptProperty extends AppBuilderFormProperty {
     private JSONObject data;
-
     private List<AppBuilderPromptCategoryDto> categories;
-
     private List<AppBuilderPromptDto.AppBuilderInspirationDto> inspirations;
 
     /**
@@ -42,9 +39,18 @@ public class PromptProperty extends AppBuilderFormProperty {
      * @param property property
      */
     public PromptProperty(AppBuilderFormProperty property) {
-        super(property.getId(), property.getFormId(), property.getName(), property.getDataType(),
-                property.getDefaultValue(), property.getFrom(), property.getGroup(), property.getDescription(),
-                property.getIndex(), property.getAppId(), null, null);
+        super(property.getId(),
+                property.getFormId(),
+                property.getName(),
+                property.getDataType(),
+                property.getDefaultValue(),
+                property.getFrom(),
+                property.getGroup(),
+                property.getDescription(),
+                property.getIndex(),
+                property.getAppId(),
+                null,
+                null);
 
         Object defaultValue = this.getDefaultValue();
         this.data = JSONObject.parseObject(JSONObject.toJSONString(defaultValue));

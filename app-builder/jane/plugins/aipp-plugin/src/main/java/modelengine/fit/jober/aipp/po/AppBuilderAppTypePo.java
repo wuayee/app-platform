@@ -1,17 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.po;
+
+import modelengine.fit.jober.aipp.aop.LocaleField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import modelengine.fit.jober.aipp.aop.LocaleField;
 
 import java.time.LocalDateTime;
 
@@ -28,13 +27,9 @@ import java.time.LocalDateTime;
 @Builder
 public class AppBuilderAppTypePo {
     private String id;
-
     @LocaleField
     private String name;
-
     private String tenantId;
-
     private LocalDateTime createAt;
-
     private LocalDateTime updateAt;
 }

@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -12,12 +10,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import modelengine.fit.jober.aipp.common.exception.AippErrCode;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.store.entity.transfer.PluginToolData;
 import modelengine.jade.store.service.PluginToolService;
 
-import modelengine.fit.jober.aipp.common.exception.AippErrCode;
+import modelengine.fit.jober.aipp.fitable.ToolExceptionHandle;
 import modelengine.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +48,6 @@ public class ToolExceptionHandleTest {
         MockitoAnnotations.openMocks(this);
         toolExceptionHandle = new ToolExceptionHandle(localeService, pluginToolService);
     }
-
     @Test
     void testGetFixErrorMsg_withDialogue_andToolId() {
         FlowErrorInfo errorMessage = new FlowErrorInfo();
@@ -64,9 +62,9 @@ public class ToolExceptionHandleTest {
         PluginToolData pluginToolDataMock = mock(PluginToolData.class);
         doReturn(pluginToolDataMock).when(pluginToolService).getPluginTool("tool123");
         doReturn("Tool Name").when(pluginToolDataMock).getName();
-        doReturn("工具调用异常，请检查工具后重试。").doReturn("{0}节点执行出错，出错原因：{1}工具执行出错，{2}")
-                .when(localeService)
-                .localize(any(Locale.class), anyString(), any());
+        doReturn("工具调用异常，请检查工具后重试。")
+            .doReturn("{0}节点执行出错，出错原因：{1}工具执行出错，{2}")
+            .when(localeService).localize(any(Locale.class), anyString(), any());
         String result = toolExceptionHandle.getFixErrorMsg(errorMessage, Locale.CHINESE, true);
         assertEquals("Node1节点执行出错，出错原因：Tool Name工具执行出错，工具调用异常，请检查工具后重试。", result);
     }
@@ -85,9 +83,9 @@ public class ToolExceptionHandleTest {
         PluginToolData pluginToolDataMock = mock(PluginToolData.class);
         doReturn(pluginToolDataMock).when(pluginToolService).getPluginTool("tool123");
         doReturn("").when(pluginToolDataMock).getName();
-        doReturn("工具调用异常，请检查工具后重试。").doReturn("执行出错，出错原因：{0}")
-                .when(localeService)
-                .localize(any(Locale.class), anyString(), any());
+        doReturn("工具调用异常，请检查工具后重试。")
+            .doReturn("执行出错，出错原因：{0}")
+            .when(localeService).localize(any(Locale.class), anyString(), any());
         String result = toolExceptionHandle.getFixErrorMsg(errorMessage, Locale.CHINESE, false);
         assertEquals("执行出错，出错原因：工具调用异常，请检查工具后重试。", result);
     }
@@ -139,9 +137,9 @@ public class ToolExceptionHandleTest {
         properties.put("toolId", "");
         errorMessage.setProperties(properties);
 
-        doReturn("工具调用异常，请检查工具后重试。").doReturn("{0}节点执行出错，原因：{1}")
-                .when(localeService)
-                .localize(any(Locale.class), anyString(), any());
+        doReturn("工具调用异常，请检查工具后重试。")
+            .doReturn("{0}节点执行出错，原因：{1}")
+            .when(localeService).localize(any(Locale.class), anyString(), any());
 
         String result = toolExceptionHandle.getFixErrorMsg(errorMessage, Locale.CHINESE, true);
         assertEquals("Node1节点执行出错，原因：工具调用异常，请检查工具后重试。", result);

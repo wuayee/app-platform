@@ -1,15 +1,18 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.controller;
 
+import modelengine.fit.jane.common.controller.AbstractController;
+import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.task.gateway.Authenticator;
-
+import modelengine.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
+import modelengine.fit.jober.aipp.dto.AppBuilderPromptDto;
+import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.service.annotations.SpanAttr;
+
 import modelengine.fit.http.annotation.DeleteMapping;
 import modelengine.fit.http.annotation.GetMapping;
 import modelengine.fit.http.annotation.PathVariable;
@@ -19,11 +22,6 @@ import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.annotation.RequestParam;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.jane.common.controller.AbstractController;
-import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderPromptDto;
-import modelengine.fit.jober.aipp.service.AppBuilderPromptService;
 import modelengine.fitframework.annotation.Component;
 
 import java.util.List;
@@ -121,7 +119,10 @@ public class AppBuilderPromptController extends AbstractController {
             @SpanAttr("app_id") @PathVariable("app_id") String appId,
             @SpanAttr("inspiration_id") @PathVariable("inspiration_id") String inspirationId,
             @RequestBody AppBuilderPromptDto.AppBuilderInspirationDto inspirationDto) {
-        this.service.updateCustomInspiration(appId, categoryId, inspirationId, inspirationDto,
+        this.service.updateCustomInspiration(appId,
+                categoryId,
+                inspirationId,
+                inspirationDto,
                 this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }

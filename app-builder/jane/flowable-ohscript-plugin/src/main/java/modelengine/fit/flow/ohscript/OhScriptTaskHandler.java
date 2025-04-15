@@ -9,7 +9,7 @@ package modelengine.fit.flow.ohscript;
 import static modelengine.fitframework.inspection.Validation.notNull;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
-import modelengine.fit.jober.FlowableService;
+import modelengine.fit.waterflow.spi.FlowableService;
 import modelengine.fit.jober.common.OhscriptExecuteException;
 import modelengine.fit.jober.common.TypeNotSupportException;
 

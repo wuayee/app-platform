@@ -1,19 +1,20 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.fitable;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
+import modelengine.fit.jober.aipp.domains.business.RunContext;
 import modelengine.fit.jober.aipp.dto.chat.AppChatRsp;
 import modelengine.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
 import modelengine.fit.jober.aipp.service.AppChatSseService;
 import modelengine.fit.jober.aipp.service.RuntimeInfoService;
 import modelengine.fit.jober.aipp.util.ConvertUtils;
+
 import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fit.waterflow.entity.FlowNodePublishInfo;
@@ -40,13 +41,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class FlowPublishSubscriber implements FlowPublishService {
     private final AppBuilderRuntimeInfoRepository runtimeInfoRepository;
-
     private final RuntimeInfoService runtimeInfoService;
-
     private final ToolExceptionHandle toolExceptionHandle;
-
     private final AppChatSessionService appChatSessionService;
-
     private final AppChatSseService appChatSSEService;
 
     /**
@@ -72,9 +69,10 @@ public class FlowPublishSubscriber implements FlowPublishService {
     @Override
     public void publishNodeInfo(FlowNodePublishInfo flowNodePublishInfo) {
         Map<String, Object> businessData = flowNodePublishInfo.getBusinessData();
-        String aippInstId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
-        String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
-        String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
+        RunContext runContext = new RunContext(businessData, new OperationContext());
+        String aippInstId = runContext.getTaskInstanceId();
+        String chatId = runContext.getOriginChatId();
+        String atChatId = runContext.getAtChatId();
         String stage = flowNodePublishInfo.getFlowContext() == null
                 ? StringUtils.EMPTY
                 : flowNodePublishInfo.getFlowContext().getStage();
@@ -87,14 +85,14 @@ public class FlowPublishSubscriber implements FlowPublishService {
     }
 
     private void stageProcessedHandle(FlowNodePublishInfo flowNodePublishInfo, Map<String, Object> businessData,
-                                      String aippInstId) {
+            String aippInstId) {
         FlowPublishContext context = flowNodePublishInfo.getFlowContext();
         String traceId = context.getTraceId();
         String nodeId = flowNodePublishInfo.getNodeId();
         String nodeType = flowNodePublishInfo.getNodeType();
         FlowErrorInfo errorInfo = flowNodePublishInfo.getErrorMsg();
         AtomicReference<Locale> locale = new AtomicReference<>(Locale.getDefault());
-        appChatSessionService.getSession(aippInstId).ifPresent(e -> locale.set(e.getLocale()));
+        this.appChatSessionService.getSession(aippInstId).ifPresent(e -> locale.set(e.getLocale()));
         ToolExceptionHandle.handleFitException(errorInfo);
         String finalErrorMsg = this.toolExceptionHandle.getFixErrorMsg(errorInfo, locale.get(), false);
         if (StringUtils.isBlank(finalErrorMsg)) {
@@ -124,8 +122,8 @@ public class FlowPublishSubscriber implements FlowPublishService {
     private void stageBeforeHandle(FlowNodePublishInfo flowNodePublishInfo, String aippInstId, String chatId,
             String atChatId) {
         Map<String, Object> nodeProperties = flowNodePublishInfo.getNodeProperties();
-        if (nodeProperties.containsKey("enableStageDesc") && ObjectUtils.<Boolean>cast(
-                nodeProperties.get("enableStageDesc"))) {
+        if (nodeProperties.containsKey("enableStageDesc") && ObjectUtils.<Boolean>cast(nodeProperties.get(
+                "enableStageDesc"))) {
             AppChatRsp appChatRsp = AppChatRsp.builder()
                     .chatId(chatId)
                     .atChatId(atChatId)

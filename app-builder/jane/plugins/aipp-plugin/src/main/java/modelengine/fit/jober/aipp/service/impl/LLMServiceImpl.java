@@ -1,32 +1,23 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.Prompt;
 import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.support.HumanMessage;
-import modelengine.fit.http.client.HttpClassicClientFactory;
 import modelengine.fit.jober.aipp.enums.LlmModelNameEnum;
 import modelengine.fit.jober.aipp.service.LLMService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
-import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.jade.voice.service.VoiceService;
 
 import java.util.List;
 
@@ -42,22 +33,8 @@ public class LLMServiceImpl implements LLMService {
 
     private final ChatModel chatModel;
 
-    private final String appengineEndPoint;
-
-    private final String pathPrefix;
-
-    private final VoiceService voiceService;
-
-    private final HttpClassicClientFactory httpClientFactory;
-
-    public LLMServiceImpl(@Value("${app-engine.endpoint}") String endpoint,
-            @Value("${app-engine.pathPrefix}") String pathPrefix,
-            @Fit ChatModel chatModel, @Fit VoiceService voiceService, @Fit HttpClassicClientFactory httpClientFactory) {
+    public LLMServiceImpl(@Fit ChatModel chatModel) {
         this.chatModel = chatModel;
-        this.appengineEndPoint = endpoint;
-        this.pathPrefix = pathPrefix;
-        this.voiceService = voiceService;
-        this.httpClientFactory = httpClientFactory;
     }
 
     @Override
@@ -88,15 +65,5 @@ public class LLMServiceImpl implements LLMService {
         String ans = messages.get(0).text();
         log.info("question={} ans={}", ObjectUtils.<String>cast(prompt.messages().get(0).text()), ans);
         return ans;
-    }
-
-    @Builder
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class XiaohaiReq {
-        private String employeeId;
-
-        private String question;
     }
 }

@@ -1,17 +1,17 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
 import static org.mockito.Mockito.mock;
 
 import modelengine.fit.jober.aipp.entity.ChatSession;
+import modelengine.fit.jober.aipp.mapper.AippLogMapper;
 import modelengine.fit.jober.aipp.mapper.AppChatNumMapper;
 import modelengine.fit.jober.aipp.service.impl.AppChatSessionServiceImpl;
 import modelengine.fit.jober.aipp.service.impl.AppChatSseServiceImpl;
+
 import modelengine.fitframework.flowable.Emitter;
 import modelengine.fitframework.flowable.emitter.DefaultEmitter;
 
@@ -41,25 +41,25 @@ public class AppChatSseServiceImplTest {
     private Emitter<Object> emitter;
 
     @Mock
-    private AippLogService logService;
+    private AippLogMapper aippLogMapper;
 
     private AppChatSessionService appChatSessionService;
-
     private final AppChatNumMapper mockMapper = mock(AppChatNumMapper.class);
 
     @BeforeEach
     void before() {
         this.appChatSessionService = new AppChatSessionServiceImpl(mockMapper);
-        this.appChatSseService = new AppChatSseServiceImpl(logService, appChatSessionService);
+        this.appChatSseService = new AppChatSseServiceImpl(aippLogMapper, appChatSessionService);
     }
 
     @Test
     @DisplayName("测试获取")
     void testGetEmitter() {
         Emitter<Object> e = new DefaultEmitter<>();
-        this.appChatSessionService.addSession("hello", new ChatSession<>(e, "123", true, Locale.ENGLISH));
-        Optional<ChatSession<Object>> hello = Assertions.assertDoesNotThrow(
-                () -> this.appChatSseService.getEmitter("hello"));
+        this.appChatSessionService.addSession("hello",
+                new ChatSession<>(e, "123", true, Locale.ENGLISH));
+        Optional<ChatSession<Object>> hello =
+                Assertions.assertDoesNotThrow(() -> this.appChatSseService.getEmitter("hello"));
         Assertions.assertTrue(hello.isPresent());
         Assertions.assertEquals(e, hello.get().getEmitter());
     }
@@ -78,7 +78,7 @@ public class AppChatSseServiceImplTest {
     @DisplayName("测试发送最后的消息到祖先")
     void testSendLastAncestor() {
         this.appChatSessionService.addSession("hello", new ChatSession<>(emitter, "123", true, Locale.ENGLISH));
-        Mockito.when(logService.getParentPath("hello world")).thenReturn("world/hello");
+        Mockito.when(aippLogMapper.getParentPath("hello world")).thenReturn("world/hello");
         Assertions.assertDoesNotThrow(() -> appChatSseService.sendToAncestorLastData("hello world", "hello"));
         Mockito.verify(emitter, Mockito.times(1)).emit("hello");
         Mockito.verify(emitter, Mockito.times(1)).complete();

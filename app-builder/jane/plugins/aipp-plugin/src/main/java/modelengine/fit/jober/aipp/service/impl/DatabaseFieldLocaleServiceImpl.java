@@ -1,13 +1,12 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
 import modelengine.fit.jober.aipp.repository.I18nRepository;
 import modelengine.fit.jober.aipp.service.DatabaseFieldLocaleService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Initialize;
 import modelengine.fitframework.log.Logger;
@@ -25,7 +24,6 @@ import java.util.Map;
 @Component
 public class DatabaseFieldLocaleServiceImpl implements DatabaseFieldLocaleService {
     private static final Logger log = Logger.get(DatabaseFieldLocaleServiceImpl.class);
-
     private static Map<String, Map<String, String>> resourceMap = null;
 
     private final I18nRepository i18nRepository;

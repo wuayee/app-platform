@@ -1,17 +1,16 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import modelengine.fit.jober.aipp.entity.ChatSession;
-import modelengine.fit.jober.aipp.service.AippLogService;
+import modelengine.fit.jober.aipp.mapper.AippLogMapper;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
 import modelengine.fit.jober.aipp.service.AppChatSseService;
 import modelengine.fit.jober.aipp.util.AippLogUtils;
+
+import lombok.RequiredArgsConstructor;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 
@@ -26,8 +25,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class AppChatSseServiceImpl implements AppChatSseService {
-    private final AippLogService logService;
-
+    private final AippLogMapper aippLogMapper;
     private final AppChatSessionService appChatSessionService;
 
     @Override
@@ -62,7 +60,7 @@ public class AppChatSseServiceImpl implements AppChatSseService {
     }
 
     private String getProcessedInstanceId(String instanceId) {
-        String path = this.logService.getParentPath(instanceId);
+        String path = this.aippLogMapper.getParentPath(instanceId);
         if (StringUtils.isNotEmpty(path)) {
             return path.split(AippLogUtils.PATH_DELIMITER)[1];
         }

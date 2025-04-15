@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.po;
 
@@ -25,24 +23,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AppBuilderFormPo {
     private String id;
-
     private String name;
-
     private String tenantId;
-
     private String appearance;
-
     private String createBy;
-
     private String updateBy;
-
     private String type;
-
     private LocalDateTime createAt;
-
     private LocalDateTime updateAt;
-
     private String version;
-
     private String formSuiteId;
 }

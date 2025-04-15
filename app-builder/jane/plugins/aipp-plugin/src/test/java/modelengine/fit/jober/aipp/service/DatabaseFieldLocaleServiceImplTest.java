@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.service;
 
@@ -33,7 +31,6 @@ import java.util.Locale;
 @DisplayName("DatabaseFieldLocaleService")
 public class DatabaseFieldLocaleServiceImplTest {
     private I18nMapper i18nMapper;
-
     private DatabaseFieldLocaleServiceImplTestExt databaseFieldLocaleServiceImplTestExt;
 
     @BeforeEach
@@ -51,10 +48,10 @@ public class DatabaseFieldLocaleServiceImplTest {
         i18nPoList.add(new I18nPo("123", "name", "en", "ZhangSan"));
         Mockito.when(this.i18nMapper.selectResource()).thenReturn(i18nPoList);
         this.databaseFieldLocaleServiceImplTestExt.loadResource();
-        assertThat(this.databaseFieldLocaleServiceImplTestExt.getLocaleMessage("name", Locale.ENGLISH)).isEqualTo(
-                "ZhangSan");
-        assertThat(this.databaseFieldLocaleServiceImplTestExt.getLocaleMessage("name", Locale.CHINESE)).isEqualTo(
-                "张三");
+        assertThat(this.databaseFieldLocaleServiceImplTestExt.getLocaleMessage("name", Locale.ENGLISH))
+                .isEqualTo("ZhangSan");
+        assertThat(this.databaseFieldLocaleServiceImplTestExt.getLocaleMessage("name", Locale.CHINESE))
+                .isEqualTo("张三");
     }
 
     private static class DatabaseFieldLocaleServiceImplTestExt extends DatabaseFieldLocaleServiceImpl {

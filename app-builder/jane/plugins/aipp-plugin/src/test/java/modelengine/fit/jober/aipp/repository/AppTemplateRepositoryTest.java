@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.repository;
 
@@ -30,8 +28,8 @@ import java.util.List;
  */
 public class AppTemplateRepositoryTest extends DatabaseBaseTest {
     @Fit
-    private final AppTemplateMapper templateMapper = sqlSessionManager.openSession(true)
-            .getMapper(AppTemplateMapper.class);
+    private final AppTemplateMapper templateMapper =
+            sqlSessionManager.openSession(true).getMapper(AppTemplateMapper.class);
 
     private AppTemplateRepository templateRepository;
 
@@ -75,11 +73,14 @@ public class AppTemplateRepositoryTest extends DatabaseBaseTest {
     @Test
     @DisplayName("测试查询应用模板并排序")
     void testQueryTemplateWithOrderBy() {
-        TemplateQueryCondition cond = TemplateQueryCondition.builder().orderBy("usage").offset(0).limit(8).build();
+        TemplateQueryCondition cond = TemplateQueryCondition.builder()
+                .orderBy("usage")
+                .offset(0)
+                .limit(8)
+                .build();
         List<AppTemplate> result = this.templateRepository.selectWithCondition(cond);
         assertThat(result).hasSize(6)
                 .element(0)
-                .extracting(AppTemplate::getId)
-                .isEqualTo("3e29eb82f92f43259b4c514ddb96c0a8");
+                .extracting(AppTemplate::getId).isEqualTo("3e29eb82f92f43259b4c514ddb96c0a8");
     }
 }

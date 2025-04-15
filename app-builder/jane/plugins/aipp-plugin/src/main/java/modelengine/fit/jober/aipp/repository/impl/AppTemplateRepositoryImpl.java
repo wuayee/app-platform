@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.repository.impl;
 
@@ -25,7 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class AppTemplateRepositoryImpl implements AppTemplateRepository {
     private final AppTemplateMapper appTemplateMapper;
-
     private final AppTemplateSerializer serializer;
 
     public AppTemplateRepositoryImpl(AppTemplateMapper appTemplateMapper) {
@@ -35,8 +32,7 @@ public class AppTemplateRepositoryImpl implements AppTemplateRepository {
 
     @Override
     public List<AppTemplate> selectWithCondition(TemplateQueryCondition cond) {
-        return this.appTemplateMapper.selectWithCondition(cond)
-                .stream()
+        return this.appTemplateMapper.selectWithCondition(cond).stream()
                 .map(this.serializer::deserialize)
                 .collect(Collectors.toList());
     }

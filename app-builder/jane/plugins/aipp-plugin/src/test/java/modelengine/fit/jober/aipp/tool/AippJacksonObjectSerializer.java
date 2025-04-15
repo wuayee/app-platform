@@ -1,12 +1,13 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.tool;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
+
+import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
+import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactoryBuilder;
@@ -17,8 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
-import modelengine.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.serialization.ObjectSerializer;
 import modelengine.fitframework.serialization.SerializationException;
@@ -55,8 +54,9 @@ public class AippJacksonObjectSerializer implements ObjectSerializer {
         customSerialization.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(dateTimeFormat));
         customSerialization.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(dateTimeFormat));
 
-        this.mapper = JsonMapper.builder(new JsonFactoryBuilder().streamReadConstraints(
-                        StreamReadConstraints.builder().maxStringLength(Integer.MAX_VALUE).build()).build())
+        this.mapper = JsonMapper.builder(new JsonFactoryBuilder().streamReadConstraints(StreamReadConstraints.builder()
+                        .maxStringLength(Integer.MAX_VALUE)
+                        .build()).build())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .addModule(customSerialization)
                 .build();

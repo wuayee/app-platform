@@ -1,8 +1,6 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.northbound;
 
@@ -16,6 +14,7 @@ import modelengine.fit.jober.aipp.dto.chat.QueryChatRspDto;
 import modelengine.fit.jober.aipp.genericable.adapter.AippChatServiceAdapter;
 import modelengine.fit.jober.aipp.service.AippChatService;
 import modelengine.fit.jober.common.RangedResultSet;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.beans.BeanUtils;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 @Component
 public class AippChatServiceAdapterImpl implements AippChatServiceAdapter {
     private final AippChatService aippChatService;
-
     private final ObjectSerializer serializer;
 
     public AippChatServiceAdapterImpl(AippChatService aippChatService,
@@ -44,8 +42,8 @@ public class AippChatServiceAdapterImpl implements AippChatServiceAdapter {
     @Override
     public RangedResultSet<ChatInfo> queryChatList(ChatQueryParams params, OperationContext operationContext) {
         QueryChatRequest queryChatRequest = BeanUtils.copyProperties(params, QueryChatRequest.class);
-        RangedResultSet<QueryChatRspDto> rangedResultSet = this.aippChatService.queryChatList(queryChatRequest,
-                operationContext);
+        RangedResultSet<QueryChatRspDto> rangedResultSet =
+                this.aippChatService.queryChatList(queryChatRequest, operationContext);
         return this.queryChatRspDtoConvertToAdapter(rangedResultSet);
     }
 

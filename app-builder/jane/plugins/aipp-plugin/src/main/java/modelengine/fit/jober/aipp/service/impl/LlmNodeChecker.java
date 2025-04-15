@@ -14,6 +14,8 @@ import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
+import modelengine.jade.store.service.PluginToolService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
@@ -47,7 +49,7 @@ public class LlmNodeChecker extends AbstractNodeChecker {
     public List<CheckResult> validate(AppCheckDto appCheckDto, OperationContext context) {
         List<CheckResult> results = this.initialResults(appCheckDto, LLM_NODE.type());
         Map<String, CheckResult> resultMap = results.stream()
-                .collect(Collectors.toMap(CheckResult::getNodeId, result -> result));
+            .collect(Collectors.toMap(CheckResult::getNodeId, result -> result));
 
         List<ModelAccessInfo> modelInfos =
                 fetchModelService.fetchModelList(AippConst.CHAT_MODEL_TYPE, null, context).getModels();

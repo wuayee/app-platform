@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+ */
+
+package modelengine.fit.jober.aipp.domains.log;
+
+import static modelengine.fit.jober.aipp.enums.AippInstLogType.FORM;
+
+import modelengine.fit.jober.aipp.entity.AippInstLog;
+import modelengine.fit.jober.aipp.entity.AippLogData;
+import modelengine.fit.jober.aipp.util.JsonUtils;
+
+import lombok.RequiredArgsConstructor;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.util.MapBuilder;
+
+import java.util.Map;
+
+/**
+ * {@link AppLog} 的工厂类
+ *
+ * @author 张越
+ * @since 2025-02-07
+ */
+@Component
+@RequiredArgsConstructor
+public class AppLogFactory {
+    private static final String FORM_DATA = "formData";
+    private static final String FORM_APPEARANCE = "formAppearance";
+
+    /**
+     * 通过 {@link AippInstLog} 和任务id创建一个实例对象.
+     *
+     * @param logData 日志对象.
+     * @return {@link AppLog} 对象.
+     */
+    public AppLog create(AippInstLog logData) {
+        if (FORM.name().equals(logData.getLogType())) {
+            AippLogData form = JsonUtils.parseObject(logData.getLogData(), AippLogData.class);
+            if (form != null) {
+                Map<String, String> newLogData = MapBuilder.<String, String>get()
+                        .put(FORM_DATA, form.getFormData())
+                        .put(FORM_APPEARANCE, form.getFormAppearance())
+                        .build();
+                logData.setLogData(JsonUtils.toJsonString(newLogData));
+            }
+        }
+        return new AppLog(logData);
+    }
+}

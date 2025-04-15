@@ -1,14 +1,11 @@
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
- *  This file is a part of the ModelEngine Project.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
 
 package modelengine.fit.jober.aipp.northbound;
 
 import static modelengine.fitframework.inspection.Validation.notNull;
 
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jober.aipp.condition.AppQueryCondition;
 import modelengine.fit.jober.aipp.dto.AppBuilderAppMetadataDto;
@@ -17,6 +14,8 @@ import modelengine.fit.jober.aipp.dto.chat.AppQueryParams;
 import modelengine.fit.jober.aipp.genericable.adapter.AppBuilderAppServiceAdapter;
 import modelengine.fit.jober.aipp.service.AppBuilderAppService;
 import modelengine.fit.jober.common.RangedResultSet;
+
+import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.beans.BeanUtils;
 
@@ -46,7 +45,10 @@ public class AppBuilderAppServiceAdapterImpl implements AppBuilderAppServiceAdap
         appQueryCondition.setTenantId(tenantId);
         appQueryCondition.setType(params.getType());
         Rsp<RangedResultSet<AppBuilderAppMetadataDto>> rsp = this.appBuilderAppService.list(appQueryCondition,
-                httpRequest, tenantId, params.getOffset(), params.getLimit());
+                httpRequest,
+                tenantId,
+                params.getOffset(),
+                params.getLimit());
         return this.appMetadataDtoConvertToAdapter(rsp.getData());
     }
 
