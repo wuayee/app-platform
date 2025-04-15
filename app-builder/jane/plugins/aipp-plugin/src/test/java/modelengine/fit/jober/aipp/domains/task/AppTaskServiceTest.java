@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.domains.task;
 
@@ -30,9 +32,6 @@ import modelengine.fit.jober.aipp.domains.task.service.AppTaskService;
 import modelengine.fit.jober.aipp.domains.task.service.impl.AppTaskServiceImpl;
 import modelengine.fit.jober.aipp.enums.JaneCategory;
 import modelengine.fit.jober.common.RangedResultSet;
-
-import modelengine.fit.jober.aipp.domains.task.AppTask;
-import modelengine.fit.jober.aipp.domains.task.AppTaskFactory;
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.BeforeEach;

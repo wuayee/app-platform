@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.domains.log;
 
@@ -8,9 +10,6 @@ import modelengine.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import modelengine.fit.jober.aipp.entity.AippInstLog;
 import modelengine.fit.jober.aipp.enums.AippInstLogType;
 import modelengine.fit.jober.aipp.enums.AippTypeEnum;
-
-import modelengine.fit.jober.aipp.domains.log.AppLog;
-import modelengine.fit.jober.aipp.domains.log.AppLogFactory;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

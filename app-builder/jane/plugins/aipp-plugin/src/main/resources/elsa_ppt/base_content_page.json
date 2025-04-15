@@ -5,7 +5,7 @@
   "createTime": {
     "$date": "2024-01-11T08:46:27.918Z"
   },
-  "createUser": "夏斐 x00576283",
+  "createUser": "夏斐",
   "graphId": "9cdf81f71c414f1f96fa42ce38355a5c",
   "index": 1,
   "isDeleted": false,
@@ -15,7 +15,7 @@
   "updateTime": {
     "$date": "2024-01-11T08:46:27.918Z"
   },
-  "updateUser": "夏斐 x00576283",
+  "updateUser": "夏斐",
   "version": "1.0.0",
   "shapes": [
     {
@@ -28,7 +28,7 @@
       "createTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "createUser": "夏斐 x00576283",
+      "createUser": "夏斐",
       "dashWidth": 5,
       "deletable": true,
       "dragable": true,
@@ -70,7 +70,7 @@
       "updateTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "updateUser": "夏斐 x00576283",
+      "updateUser": "夏斐",
       "vAlign": "top",
       "version": "1.0.0",
       "visible": true,
@@ -82,13 +82,13 @@
     {
       "id": "cdgfd7",
       "backColor": "#ffffff00",
-      "background": "http://s3-hc-dgg.hics.huawei.com/fit.elsa-g.bucket/presentation/svg/logo.svg",
+      "background": "",
       "borderWidth": 0,
       "comments": [],
       "createTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "createUser": "夏斐 x00576283",
+      "createUser": "夏斐",
       "deletable": false,
       "dragable": false,
       "height": 35,
@@ -106,7 +106,7 @@
       "updateTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "updateUser": "夏斐 x00576283",
+      "updateUser": "夏斐",
       "vAlign": "center",
       "version": "1.0.0",
       "visible": true,
@@ -123,7 +123,7 @@
       "createTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "createUser": "夏斐 x00576283",
+      "createUser": "夏斐",
       "deletable": true,
       "dockAlign": "top",
       "dragable": true,
@@ -148,7 +148,7 @@
       "updateTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "updateUser": "夏斐 x00576283",
+      "updateUser": "夏斐",
       "version": "1.0.0",
       "visible": true,
       "width": 2.1,
@@ -166,7 +166,7 @@
       "createTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "createUser": "夏斐 x00576283",
+      "createUser": "夏斐",
       "dashWidth": 5,
       "deletable": true,
       "dragable": true,
@@ -194,7 +194,7 @@
       "updateTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "updateUser": "夏斐 x00576283",
+      "updateUser": "夏斐",
       "version": "1.0.0",
       "visible": true,
       "width": 1332,
@@ -211,7 +211,7 @@
       "createTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "createUser": "夏斐 x00576283",
+      "createUser": "夏斐",
       "dashWidth": 0,
       "deletable": false,
       "dockAlign": "top",
@@ -247,7 +247,7 @@
       "updateTime": {
         "$date": "2024-01-11T08:46:27.918Z"
       },
-      "updateUser": "夏斐 x00576283",
+      "updateUser": "夏斐",
       "version": "1.0.0",
       "visible": true,
       "width": 1600,

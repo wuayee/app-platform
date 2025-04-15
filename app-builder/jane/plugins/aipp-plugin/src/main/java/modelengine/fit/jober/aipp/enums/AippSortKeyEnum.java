@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.enums;
 
@@ -14,7 +16,7 @@ import java.util.Arrays;
 /**
  * 枚举类，用于表示排序的key
  *
- * @author: 00664640
+ * @author 孙怡菲
  * @since: 2024-05-10
  */
 @Getter

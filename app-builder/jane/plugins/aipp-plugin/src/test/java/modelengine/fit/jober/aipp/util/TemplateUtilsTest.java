@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.util;
 
@@ -9,7 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import modelengine.fit.jober.aipp.domain.AppBuilderApp;
 import modelengine.fit.jober.aipp.domain.AppTemplate;
 import modelengine.fit.jober.aipp.dto.template.TemplateInfoDto;
-import modelengine.fit.jober.aipp.util.TemplateUtils;
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.DisplayName;

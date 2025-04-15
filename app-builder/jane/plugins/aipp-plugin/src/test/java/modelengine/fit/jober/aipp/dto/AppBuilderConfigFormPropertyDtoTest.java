@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.dto;
 
@@ -17,7 +19,6 @@ import java.util.List;
  * @author 鲁为
  * @since 2024-10-29
  */
-
 public class AppBuilderConfigFormPropertyDtoTest {
     @Test
     @DisplayName("测试构造传输类")

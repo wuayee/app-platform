@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.aop;
 
@@ -11,11 +13,9 @@ import static org.mockito.Mockito.when;
 
 import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
 import modelengine.fit.jober.aipp.service.DatabaseFieldLocaleService;
+import modelengine.fitframework.aop.ProceedingJoinPoint;
 import modelengine.jade.authentication.context.UserContext;
 import modelengine.jade.authentication.context.UserContextHolder;
-
-import modelengine.fit.jober.aipp.aop.LocaleAspect;
-import modelengine.fitframework.aop.ProceedingJoinPoint;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

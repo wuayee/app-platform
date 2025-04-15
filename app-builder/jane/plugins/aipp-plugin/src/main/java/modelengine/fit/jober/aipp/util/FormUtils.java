@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.util;
 
@@ -47,7 +49,6 @@ public class FormUtils {
      * @param parentInstanceId 表示父实例 Id 的 {@link String}。
      * @return 表示构建后的表单数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}。
      */
-
     public static Map<String, Object> buildFormData(Map<String, Object> businessData, AppBuilderForm appBuilderForm,
             String parentInstanceId) {
         Map<String, Object> form = new HashMap<>();

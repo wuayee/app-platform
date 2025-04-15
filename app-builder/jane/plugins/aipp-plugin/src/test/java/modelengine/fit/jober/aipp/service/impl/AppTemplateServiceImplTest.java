@@ -235,8 +235,8 @@ public class AppTemplateServiceImplTest {
         template.getAttributes().put("app_type", "编程开发");
         template.getAttributes().put("greeting", "1");
         template.getAttributes().put("description", "1");
-        template.setCreateBy("yaojiang wx1299574");
-        template.setUpdateBy("yaojiang wx1299574");
+        template.setCreateBy("yaojiang");
+        template.setUpdateBy("yaojiang");
         template.setUpdateAt(TIME);
         template.setCreateAt(TIME);
         template.setVersion("1.1.1");
@@ -269,8 +269,8 @@ public class AppTemplateServiceImplTest {
         appBuilderApp.getAttributes().put("greeting", "1");
         appBuilderApp.getAttributes().put("description", "1");
         appBuilderApp.setState("inactive");
-        appBuilderApp.setCreateBy("yaojiang wx1299574");
-        appBuilderApp.setUpdateBy("yaojiang wx1299574");
+        appBuilderApp.setCreateBy("yaojiang");
+        appBuilderApp.setUpdateBy("yaojiang");
         appBuilderApp.setUpdateAt(TIME);
         appBuilderApp.setCreateAt(TIME);
         appBuilderApp.setVersion("1.0.0");
@@ -294,8 +294,8 @@ public class AppTemplateServiceImplTest {
 
         config.setUpdateAt(TIME);
         config.setCreateAt(TIME);
-        config.setCreateBy("yaojiang wx1299574");
-        config.setUpdateBy("yaojiang wx1299574");
+        config.setCreateBy("yaojiang");
+        config.setUpdateBy("yaojiang");
         config.setTenantId("727d7157b3d24209aefd59eb7d1c49ff");
 
         config.setForm(mockForm());
@@ -317,8 +317,8 @@ public class AppTemplateServiceImplTest {
         form.setTenantId("727d7157b3d24209aefd59eb7d1c49ff");
         form.setUpdateAt(TIME);
         form.setCreateAt(TIME);
-        form.setCreateBy("yaojiang wx1299574");
-        form.setUpdateBy("yaojiang wx1299574");
+        form.setCreateBy("yaojiang");
+        form.setUpdateBy("yaojiang");
         form.setType("component");
         form.setAppearance(null);
         return form;
@@ -395,8 +395,8 @@ public class AppTemplateServiceImplTest {
         AppBuilderFlowGraph graph = new AppBuilderFlowGraph("69e9dec999384b1791e24a3032010e77", "graph", appearance);
         graph.setUpdateAt(TIME);
         graph.setCreateAt(TIME);
-        graph.setCreateBy("yaojiang wx1299574");
-        graph.setUpdateBy("yaojiang wx1299574");
+        graph.setCreateBy("yaojiang");
+        graph.setUpdateBy("yaojiang");
         return graph;
     }
 }

@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.service;
 
@@ -46,7 +48,6 @@ public interface AppBuilderAppService {
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.create")
     AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context, boolean isUpgrade);
-
 
     /**
      * 查询已创建的应用数量。
@@ -168,7 +169,6 @@ public interface AppBuilderAppService {
      *
      * @param uniqueName 表示应用发布的唯一名称
      * @param context 表示操作上下文的 {@link OperationContext}。
-     *
      * @return 获取到的发布详情的 {@link PublishedAppResDto}。
      */
     @Genericable(id = "modelengine.fit.jober.aipp.service.app.published")

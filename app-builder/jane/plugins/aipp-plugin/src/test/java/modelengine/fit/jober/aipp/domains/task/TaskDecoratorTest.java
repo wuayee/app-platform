@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.domains.task;
 
@@ -21,11 +23,8 @@ import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceSe
 import modelengine.fit.jober.aipp.enums.AippInstLogType;
 import modelengine.fit.jober.aipp.enums.MetaInstStatusEnum;
 import modelengine.fit.jober.aipp.service.AippLogService;
-import modelengine.jade.common.globalization.LocaleService;
-
-import modelengine.fit.jober.aipp.domains.task.AppTask;
-import modelengine.fit.jober.aipp.domains.task.TaskDecorator;
 import modelengine.fitframework.util.MapBuilder;
+import modelengine.jade.common.globalization.LocaleService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

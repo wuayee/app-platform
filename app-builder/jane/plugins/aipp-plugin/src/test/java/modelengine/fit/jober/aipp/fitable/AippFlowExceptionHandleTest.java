@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.fitable;
 
@@ -11,17 +13,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import modelengine.fit.waterflow.spi.FlowExceptionService;
 import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
 import modelengine.fit.jober.aipp.entity.ChatSession;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
-import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
-import modelengine.jade.common.globalization.LocaleService;
-
-import modelengine.fit.jober.aipp.fitable.AippFlowExceptionHandle;
-import modelengine.fit.jober.aipp.fitable.ToolExceptionHandle;
+import modelengine.fit.waterflow.spi.FlowExceptionService;
 import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.FitableNotFoundException;
 import modelengine.fitframework.broker.client.Invoker;
@@ -29,6 +27,7 @@ import modelengine.fitframework.broker.client.Router;
 import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
 import modelengine.fitframework.flowable.emitter.DefaultEmitter;
 import modelengine.fitframework.util.MapBuilder;
+import modelengine.jade.common.globalization.LocaleService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
