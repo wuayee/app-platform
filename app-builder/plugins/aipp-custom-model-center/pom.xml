@@ -44,6 +44,10 @@
             <groupId>org.fitframework.integration</groupId>
             <artifactId>fit-druid</artifactId>
         </dependency>
+        <dependency>
+            <groupId>modelengine.fit.jade.service</groupId>
+            <artifactId>tool-service</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>
