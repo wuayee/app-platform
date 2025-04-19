@@ -253,7 +253,7 @@ public class AITOServiceImpl implements AITOService {
     }
 
     private String readDescribes() {
-        return readResourceFile("data/a.txt");
+        return readResourceFile("data/AITO.txt");
     }
 
     /**
