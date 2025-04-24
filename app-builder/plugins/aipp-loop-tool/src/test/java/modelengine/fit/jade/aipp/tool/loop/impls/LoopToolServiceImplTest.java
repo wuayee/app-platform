@@ -100,7 +100,7 @@ class LoopToolServiceImplTest {
                         toolInfo,
                         MapBuilder.<String, Object>get().put(AippConst.CONTEXT_INSTANCE_ID, aippInstanceId).build()));
 
-        Assertions.assertEquals("Already terminated.", exception.getMessage());
+        Assertions.assertEquals("Already terminated. [aippInstanceId=1]", exception.getMessage());
         verify(this.toolCallService, times(1)).call(anyString(), anyMap());
     }
 

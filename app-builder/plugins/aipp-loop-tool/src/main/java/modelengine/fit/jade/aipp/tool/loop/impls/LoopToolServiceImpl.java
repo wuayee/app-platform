@@ -120,7 +120,7 @@ public class LoopToolServiceImpl implements LoopToolService {
             Object apply = this.toolCallService.call(toolInfo.getUniqueName(), args);
             list.add(apply);
             if (StringUtils.isNotEmpty(aippInstanceId) && !this.isInstanceRunning(aippInstanceId)) {
-                throw new IllegalStateException(StringUtils.format("{0} is already terminated.", aippInstanceId));
+                throw new IllegalStateException(StringUtils.format("Already terminated. [aippInstanceId={0}]", aippInstanceId));
             }
         }
         return list;
