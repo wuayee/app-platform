@@ -945,7 +945,7 @@ public class AppBuilderAppServiceImplTest {
                 Collections.singletonList(app));
         AppQueryCondition cond = new AppQueryCondition();
         cond.setAppCategory("chatbot");
-        RangedResultSet<AppBuilderAppMetadataDto> metaData = this.appBuilderAppService.list(cond, null, "tenantId", 0L,
+        RangedResultSet<AppBuilderAppMetadataDto> metaData = this.appBuilderAppService.list(cond, new OperationContext(), 0L,
                 10).getData();
         AppBuilderAppMetadataDto dto = metaData.getResults().get(0);
         assertThat(dto).extracting(AppBuilderAppMetadataDto::getAppCategory).isEqualTo("chatbot");

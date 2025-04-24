@@ -33,7 +33,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.opentelemetry.api.trace.Span;
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
@@ -529,12 +528,16 @@ public class AppBuilderAppServiceImpl
     @Override
     @Fitable(id = "default")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
-            HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
-        List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, tenantId, offset, limit)
+            OperationContext context, long offset, int limit) {
+        if (cond == null) {
+            cond = new AppQueryCondition();
+        }
+        cond.setCreateBy(context.getOperator());
+        List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, context.getTenantId(), offset, limit)
                 .stream()
                 .map(this::buildAppMetaData)
                 .collect(Collectors.toList());
-        long total = this.appRepository.countWithLatestApp(tenantId, cond);
+        long total = this.appRepository.countWithLatestApp(context.getTenantId(), cond);
         return Rsp.ok(RangedResultSet.create(result, offset, limit, total));
     }
 
