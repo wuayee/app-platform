@@ -42,8 +42,9 @@
 
         <!-- Component -->
         <dependency>
-            <groupId>modelengine.fit.jade.caver</groupId>
+            <groupId>org.fitframework.fel</groupId>
             <artifactId>tool-info</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Test -->
