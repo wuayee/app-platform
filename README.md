@@ -16,6 +16,7 @@
    AppPlatform 前端采用 React 框架进行开发，基于函数式组件构建，通过模块化设计实现了应用开发，应用市场，智能表单和插件管理等核心功能模块。其中应用开发模块为核心模块，提供可视化界面支持AI应用的完整生命周期管理，包含了应用创建，编排，调试，运行，和发布全流程；智能表单模块可通过 Json Schema 自动渲染可交互表单，与 AI 模型服务集成，实现表单填写与实时推理；插件模块支持开发者上传自定义插件扩展应用工程能力，并提供了插件安装和卸载等功能。此外，前端流程编排还基于 [Elsa 图形引擎](https://github.com/ModelEngine-Group/fit-framework/tree/main/framework/elsa)，Elsa 图形引擎是一款基于原生 JS 打造而成的先进图形处理工具。通过统一的数据格式，可以让图形跨平台跨应用进行展示和协作，为用户提供灵活、高性能的图形渲染与交互能力，适用于复杂可视化场景的开发需求。
 
 ---------
+
 ## 关键特性
 
 1. **低代码图形化界面**：产品人员可以通过直观的图形界面创建 AI 应用，而无需深入了解底层代码即可进行高效的编辑和调试。同时支持多模型协同运作，使用户能够根据特定的业务需求，将不同的 AI 模型通过编排整合到同一个应用流程中。
@@ -42,7 +43,7 @@ mvn clean install
 **输出目录**
 
 ```
-framework/fit/java/target
+build/
 ```
 
 考虑到后端模块基于 FIT 框架。所以需要将输出目录与 FIT 框架的编译产物结合。将输出目录的 plugins 目录与 shared 目录分别与框架编译产物输出目录的 plugins 与 shared 目录相结合。
@@ -50,9 +51,13 @@ framework/fit/java/target
 **启动命令**
 
 ```
-framework/fit/java/target/bin/fit start -Dfit.profiles.active=prod
+fit start -Dfit.profiles.active=prod
 ```
+
+> 这里直接使用了 `fit` 命令，该命令请参考 `fit-framework` 项目的指导手册。
+
 ---------
+
 ## 前端环境配置
 
 - 开发环境：`WebStorm`、`Visual Studio Code`
