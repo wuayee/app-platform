@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.util;
 
@@ -8,14 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import modelengine.fit.jober.aipp.util.RandomPathUtils;
-
 import org.junit.jupiter.api.Test;
 
 /**
  * {@link RandomPathUtils} 的单元测试
  *
- * @author lizhichao 00829434
+ * @author lizhichao
  * @since 2024-11-28
  */
 class RandomPathUtilsTest {

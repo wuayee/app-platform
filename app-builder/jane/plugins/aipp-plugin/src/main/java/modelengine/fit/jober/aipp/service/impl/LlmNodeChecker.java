@@ -14,8 +14,6 @@ import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.dto.check.AppCheckDto;
 import modelengine.fit.jober.aipp.dto.check.CheckResult;
-import modelengine.jade.store.service.PluginToolService;
-
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;

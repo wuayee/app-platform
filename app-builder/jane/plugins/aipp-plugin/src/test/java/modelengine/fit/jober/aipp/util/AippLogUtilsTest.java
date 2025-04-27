@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.util;
 
@@ -10,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.entity.AippLogData;
-import modelengine.fit.jober.aipp.util.AippLogUtils;
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.DisplayName;

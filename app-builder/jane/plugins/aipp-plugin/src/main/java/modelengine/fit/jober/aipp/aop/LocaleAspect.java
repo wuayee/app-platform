@@ -46,7 +46,7 @@ public class LocaleAspect {
 
     private final DatabaseFieldLocaleService localeService;
 
-    @Pointcut("@annotation(modelengine.fit.jober.aipp.aipp.aop.Locale)")
+    @Pointcut("@annotation(modelengine.fit.jober.aipp.aop.Locale)")
     private void localePointCut() {
     }
 

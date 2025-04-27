@@ -128,7 +128,6 @@ public class AippLogServiceImpl implements AippLogService {
         return recentLogData;
     }
 
-
     private List<String> getMetaIds(String appId, OperationContext context, String aippType) {
         return this.appTaskService.getTasksByAppId(appId, aippType, context)
                 .stream()

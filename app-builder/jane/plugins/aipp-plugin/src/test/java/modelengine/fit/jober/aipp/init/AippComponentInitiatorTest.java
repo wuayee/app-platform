@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.init;
 
@@ -11,8 +13,6 @@ import static org.mockito.Mockito.mockStatic;
 import modelengine.fit.jober.aipp.common.ResourceLoader;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.dto.AippFormComponentDto;
-
-import modelengine.fit.jober.aipp.init.AippComponentInitiator;
 import modelengine.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.AfterEach;

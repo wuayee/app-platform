@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.domains.task;
 
@@ -18,9 +20,6 @@ import modelengine.fit.jober.aipp.dto.AippNodeForms;
 import modelengine.fit.jober.aipp.enums.JaneCategory;
 import modelengine.fit.jober.entity.consts.NodeTypes;
 import modelengine.fit.jober.entity.task.TaskProperty;
-
-import modelengine.fit.jober.aipp.domains.task.AppTask;
-import modelengine.fit.jober.aipp.domains.task.TaskEntity;
 import modelengine.fitframework.util.MapBuilder;
 
 import org.junit.jupiter.api.DisplayName;

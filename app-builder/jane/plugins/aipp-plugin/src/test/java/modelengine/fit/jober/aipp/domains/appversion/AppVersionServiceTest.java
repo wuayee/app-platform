@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.domains.appversion;
 
@@ -487,7 +489,7 @@ public class AppVersionServiceTest {
 
         // when.
         OperationContext context = new OperationContext();
-        context.setOperator("zy z00225536");
+        context.setOperator("zy");
         this.appVersionService.update("app_version_1", AppBuilderAppDto.builder()
                 .name("myApp")
                 .type(AppTypeEnum.APP.code())
@@ -497,7 +499,7 @@ public class AppVersionServiceTest {
                 .build(), context);
 
         // then.
-        assertEquals("zy z00225536", data.getUpdateBy());
+        assertEquals("zy", data.getUpdateBy());
         assertEquals(AppTypeEnum.APP.code(), data.getType());
         assertEquals(NORMAL.name(), data.getAppType());
         assertEquals(AppState.INACTIVE.getName(), data.getState());
@@ -530,15 +532,15 @@ public class AppVersionServiceTest {
 
         // when.
         OperationContext context = new OperationContext();
-        context.setOperator("zy z00225536");
+        context.setOperator("zy");
         this.appVersionService.update("app_version_1",
                 AppBuilderFlowGraphDto.builder().name("myApp").appearance(new HashMap<>()).build(), context);
 
         // then.
-        assertEquals("zy z00225536", graph.getUpdateBy());
+        assertEquals("zy", graph.getUpdateBy());
         assertEquals("myApp", graph.getName());
         assertEquals("{}", graph.getAppearance());
-        assertEquals("zy z00225536", data.getUpdateBy());
+        assertEquals("zy", data.getUpdateBy());
     }
 
     @Test
@@ -553,7 +555,7 @@ public class AppVersionServiceTest {
 
         // when.
         OperationContext context = new OperationContext();
-        context.setOperator("zy z00225536");
+        context.setOperator("zy");
         AippException exception = assertThrows(AippException.class, () -> this.appVersionService.update("app_version_1",
                 AppBuilderFlowGraphDto.builder().name("myApp").appearance(new HashMap<>()).build(), context));
 
@@ -577,7 +579,7 @@ public class AppVersionServiceTest {
 
         // when.
         OperationContext context = new OperationContext();
-        context.setOperator("zy z00225536");
+        context.setOperator("zy");
         this.appVersionService.update("app_version_1", AppBuilderSaveConfigDto.builder()
                 .graph("graphxxx")
                 .input(List.of(AppBuilderConfigFormPropertyDto.builder().build()))

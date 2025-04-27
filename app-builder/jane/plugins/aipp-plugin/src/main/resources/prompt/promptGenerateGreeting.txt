@@ -11,10 +11,6 @@
             <input>Google查询，能通过Google获取互联网信息</input>
             <output>有问题可以随便问我哦。</output>
         </example>
-        <example>
-            <input>汇总财经数据，回答数据问题</input>
-            <output>所有的财经数据都在我脑袋里面啦，向我提问吧！</output>
-        </example>
     </examples>
 </instruction>
 

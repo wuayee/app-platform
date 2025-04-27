@@ -11,10 +11,6 @@
             <input>Google查询，能通过Google获取互联网信息</input>
             <output>查询引擎</output>
         </example>
-        <example>
-            <input>汇总财经数据，回答数据问题</input>
-            <output>财经小魔方</output>
-        </example>
     </examples>
 </instruction>
 

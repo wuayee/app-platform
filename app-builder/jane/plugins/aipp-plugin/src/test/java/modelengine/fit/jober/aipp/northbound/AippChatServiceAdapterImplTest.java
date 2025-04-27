@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.northbound;
 
@@ -19,8 +21,6 @@ import modelengine.fit.jober.aipp.dto.chat.QueryChatRspDto;
 import modelengine.fit.jober.aipp.service.AippChatService;
 import modelengine.fit.jober.common.RangeResult;
 import modelengine.fit.jober.common.RangedResultSet;
-
-import modelengine.fit.jober.aipp.northbound.AippChatServiceAdapterImpl;
 import modelengine.fit.serialization.json.jackson.JacksonObjectSerializer;
 import modelengine.fitframework.beans.BeanUtils;
 import modelengine.fitframework.serialization.ObjectSerializer;

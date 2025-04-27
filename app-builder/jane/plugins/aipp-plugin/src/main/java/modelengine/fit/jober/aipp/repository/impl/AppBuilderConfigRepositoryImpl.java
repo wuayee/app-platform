@@ -1,6 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 
 package modelengine.fit.jober.aipp.repository.impl;
 
@@ -40,7 +42,6 @@ public class AppBuilderConfigRepositoryImpl implements AppBuilderConfigRepositor
     public AppBuilderConfig selectWithId(String id) {
         return this.serializer.deserialize(this.appBuilderConfigMapper.selectWithId(id));
     }
-
 
     @Override
     public void insertOne(AppBuilderConfig appBuilderConfig) {
