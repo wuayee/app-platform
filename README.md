@@ -55,6 +55,8 @@ fit start -Dfit.profiles.active=prod
 ```
 
 > 这里直接使用了 `fit` 命令，该命令请参考 `fit-framework` 项目的指导手册。
+> 
+> 当前，`app-platform` 使用了 `fit` 的 3.5.0-SNAPSHOT 版本，因此，如果采用手动编译，需要在 `fit-framework` 仓库中切换到 `3.5.x` 分支进行编译构建操作。
 
 ---------
 
