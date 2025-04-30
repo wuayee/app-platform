@@ -53,7 +53,7 @@ CTestTestfile.cmake
 
 # Third-parties
 third_party/*
-!third_party/third_party.mm.xml
+!third_party/.gitmodules
 !third_party/CMakeLists.txt
 
 # IDEs

@@ -9,7 +9,6 @@
 ./build.sh help
 
 # 下载三方依赖
-# 环境中没有git-mm的时候会请求许可下载
 ./build.sh prepare
 
 # 构建
