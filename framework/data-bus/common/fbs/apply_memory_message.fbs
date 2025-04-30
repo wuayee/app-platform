@@ -1,0 +1,8 @@
+namespace DataBus.Common;
+
+table ApplyMemoryMessage {
+    object_key: string; // 客户端生成的存储对象UUID
+    memory_size: ulong;
+}
+
+root_type ApplyMemoryMessage;
