@@ -20,9 +20,6 @@ namespace Resource {
 
 /**
  * 共享内存元数据。
- *
- * @author l00862071
- * @since 2024-06-19
  */
 struct MemoryMetadata {
     MemoryMetadata(int32_t sharedMemoryId, uint64_t memorySize, const std::shared_ptr<UserData>& userData)

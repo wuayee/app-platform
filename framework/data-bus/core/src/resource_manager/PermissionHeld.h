@@ -18,9 +18,6 @@ namespace Resource {
 
 /**
  * 客户端当前持有的权限。
- *
- * @author l00862071
- * @since 2024-05-28
  */
 struct PermissionHeld {
     PermissionHeld(int32_t sharedMemoryId, Common::PermissionType permissionType) : sharedMemoryId(sharedMemoryId),
