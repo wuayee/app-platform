@@ -58,7 +58,7 @@ const CopyApp = ({ copyRef }) => {
       const copyParam = {
         name: formParams.name,
         description: attributes.description,
-        icon: filePath,
+        icon: '',
         app_type: attributes.app_type,
         app_built_type: appBuiltType,
         type,
