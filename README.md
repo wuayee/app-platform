@@ -122,7 +122,7 @@ fit start -Dfit.profiles.active=prod
 
 - 环境要求：node.js  >= 20
 
-- ELSA 框架编译产物：参考 ELSA 的编译构建章节（待补充）
+- ELSA 框架编译产物：参考 [ELSA](https://github.com/ModelEngine-Group/fit-framework/blob/main/framework/elsa/README.md) 的编译构建章节
 
 **修改 ELSA 依赖地址**
 
