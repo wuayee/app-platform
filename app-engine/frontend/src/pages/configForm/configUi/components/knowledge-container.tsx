@@ -23,7 +23,8 @@ const KnowledgeContainer = (props) => {
   const { graphOperator, config, updateData, validateList } = props;
   const [knowledge, setKnowledge] = useState([]);
   const [groupConfig, setGroupConfig] = useState({});
-  const [groupId, setGroupId] = useState('default');
+  const [groupId, setGroupId] = useState('');
+  const [knowledgeConfigId, setKnowledgeConfigId] = useState('');
   const [activePanelKey, setActivePanelKey] = useState(['']);
   const knowledgeRef: any = useRef(null);
   const curKnowledge = useRef(null);
@@ -55,8 +56,9 @@ const KnowledgeContainer = (props) => {
     const groupConfig = [config[0], 'option'];
     const groupValue = graphOperator.getConfig(groupConfig);
     if (groupValue) {
-      const { groupId } = groupValue;
+      const { groupId, knowledgeConfigId } = groupValue;
       groupId && setGroupId(groupId);
+      setKnowledgeConfigId(knowledgeConfigId);
       setGroupConfig(groupConfig);
       curGroupValue.current = groupValue;
     }
@@ -69,10 +71,12 @@ const KnowledgeContainer = (props) => {
   }
 
   // 更新groupId
-  const updateGroupId = (val) => {
-    setGroupId(val);
-    if (curGroupValue.current.groupId !== val) {
-      curGroupValue.current.groupId = val;
+  const updateKnowledgeOption = (groupId: String, knowledgeConfigId:String) => {
+    setGroupId(groupId);
+    setKnowledgeConfigId(knowledgeConfigId);
+    if (curGroupValue.current.groupId !== groupId) {
+      curGroupValue.current.groupId = groupId;
+      curGroupValue.current.knowledgeConfigId = knowledgeConfigId;
       graphOperator.update(groupConfig, curGroupValue.current);
       updateData();
     }
@@ -134,11 +138,12 @@ const KnowledgeContainer = (props) => {
         </div>
         <img src={AddImg} style={{ width: 16, height: 16 }} alt="" onClick={addKnowledgeBase} />
       </div>} forceRender key='knowledge' className="site-collapse-custom-panel">
-        <Knowledge
-          knowledgeRef={knowledgeRef}
+        <Knowledge 
+          knowledgeRef={knowledgeRef} 
           knowledge={knowledge}
           groupId={groupId}
-          updateData={updateKnowledge}
+          knowledgeConfigId={knowledgeConfigId}
+          updateData={updateKnowledge} 
         />
       </Panel>
     </Collapse>
@@ -146,7 +151,7 @@ const KnowledgeContainer = (props) => {
     <ConnectKnowledge
       modelRef={connectKnowledgeRef}
       groupId={groupId}
-      updateGroupId={updateGroupId}
+      updateKnowledgeOption={updateKnowledgeOption}
     />
   </>
 };

@@ -65,7 +65,8 @@ const Stage = (props) => {
   const [skillList, setSkillList] = useState([]);
   const [promptValue, setPromptValue] = useState('');
   const [currentModelInfo, setCurrentModelInfo] = useState({});
-  const [groupId, setGroupId] = useState("");
+  const [groupId, setGroupId] = useState('');
+  const [knowledgeConfigId, setKnowledgeConfigId] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo } = useContext(FlowContext);
   const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
@@ -151,10 +152,11 @@ const Stage = (props) => {
       });
       // 知识库模态框
       agent.onKnowledgeBaseSelect((args) => {
-        let { selectedKnowledgeBases, onSelect, groupId } = args;
+        let { selectedKnowledgeBases, onSelect, groupId, selectedKnowledgeConfigId } = args;
         setGroupId(groupId);
+        setKnowledgeConfigId(selectedKnowledgeConfigId);
         knowledgeCallback.current = onSelect;
-        modalRef.current.showModal(selectedKnowledgeBases, groupId);
+        modalRef.current.showModal(selectedKnowledgeBases, groupId, selectedKnowledgeConfigId);
       });
       // 插件模态框
       agent.onPluginSelect((args) => {
@@ -209,8 +211,9 @@ const Stage = (props) => {
       agent.listen('SELECT_KNOWLEDGE_BASE_GROUP', (event) => {
         connectKnowledgeEvent.current = event;
         connectKnowledgeRef.current.openModal();
-        event.onSelect(groupId);
+        event.onSelect(groupId, knowledgeConfigId);
         setGroupId(event.selectedGroupId);
+        setKnowledgeConfigId(event.selectedKnowledgeConfigId);
       });
       // 循环节点
       agent.onLoopSelect(({ onSelect }) => {
@@ -252,18 +255,22 @@ const Stage = (props) => {
       dispatch(setTestTime(0));
     }
   }
+
   // hugging-face模型选中
   const onModelSelectCallBack = (model) => {
     modelCallback.current(model);
   }
+
   // 知识库选中
   const handleKnowledgeChange = (value) => {
     knowledgeCallback.current(value);
   }
+
   // 搜索参数配置选中
   const handleSearchChange = (value) => {
     searchCallback.current(value);
   };
+
   // 插件工具流选中
   const toolsConfirm = (item) => {
     let obj = {};
@@ -286,11 +293,13 @@ const Stage = (props) => {
       pluginCallback.current(obj);
     }
   }
+
   // 自定义表单选中
   const formConfirm = (item) => {
     formCallback.current(item);
     setShowDrawer(false);
   }
+
   // 数据实时保存
   const handleChange = useCallback(debounce((id) => elsaChange(id), 2000), []);
   function elsaChange(id: any) {
@@ -298,6 +307,7 @@ const Stage = (props) => {
     currentApp.current.flowGraph.appearance = graphChangeData;
     updateAppRunningFlow(id);
   }
+
   // 编辑更新应用
   async function updateAppRunningFlow(id = undefined) {
     currentChange.current = false;
@@ -310,6 +320,7 @@ const Stage = (props) => {
       setSaveTime(getCurrentTime());
     }
   }
+
   // 拖拽完成回调
   function handleDragEnter(e) {
     const nodeTab = e.dataTransfer.getData('itemTab');
@@ -379,12 +390,13 @@ const Stage = (props) => {
     }
   }, []);
 
-
   // 更新groupId
-  const updateGroupId = (val) => {
-    connectKnowledgeEvent.current.onSelect(val);
-    setGroupId(val);
+  const updateKnowledgeOption = (groupId: String, knowledgeConfigId:String) => {
+    connectKnowledgeEvent.current.onSelect(groupId, knowledgeConfigId);
+    setGroupId(groupId);
+    setKnowledgeConfigId(knowledgeConfigId);
   };
+
   return <>
     <div
       className='content-right'
@@ -468,7 +480,7 @@ const Stage = (props) => {
     <ConnectKnowledge
       modelRef={connectKnowledgeRef}
       groupId={groupId}
-      updateGroupId={updateGroupId}
+      updateKnowledgeOption={updateKnowledgeOption}
     ></ConnectKnowledge>
   </>
 };
