@@ -6,6 +6,8 @@
 
 package modelengine.fit.jober.aipp.controller;
 
+import modelengine.fit.jane.common.controller.AbstractController;
+import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.dto.chat.ChatInfoRspDto;
 import modelengine.fit.jober.aipp.common.exception.AippTaskNotFoundException;

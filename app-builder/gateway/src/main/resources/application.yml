@@ -1,0 +1,171 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway,health
+  endpoint:
+    gateway:
+      enabled: true
+
+server:
+  port: 8005
+  ssl:
+    enabled: true
+    key-store: ${SERVER_HTTP_SECURE_KEY_STORE_FILE}
+    key-store-password:
+    key-store-type: PKCS12
+    key-alias: global_identity
+    key-password:
+
+httpClient:
+  max-conn-total: 30
+  max-per-route: 30
+  ssl:
+    insecure: true #测试：临时信任所有证书
+    key-store: ${CLIENT_HTTP_SECURE_KEY_STORE_FILE}
+    common-password:
+    trust-store: ${CLIENT_HTTP_SECURE_TRUST_STORE_FILE}
+
+spring:
+  application:
+    name: app-builder-gateway
+  cloud:
+    gateway:
+      routes:
+      - id: app-builder-smart_form
+        uri: https://app-builder:8004
+        predicates:
+        - Path=/appbuilder/static/smart_form/**
+        filters:
+        - StripPrefix=1
+        - OmsAuthFilter
+        - name: Retry
+          args:
+            retries: 10 # 重试次数
+            statuses:
+            - INTERNAL_SERVER_ERROR
+            - BAD_GATEWAY
+            - SERVICE_UNAVAILABLE
+            - GATEWAY_TIMEOUT
+            methods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+            - PATCH
+            - OPTIONS
+            - TRACE
+            exceptions:
+            - java.net.SocketException
+            - java.net.ConnectException
+
+      - id: app-builder-file
+        uri: https://app-builder:8004
+        predicates:
+        - Path=/appbuilder/v1/api/{tenantId}/file
+        filters:
+        - StripPrefix=1
+        - OmsAuthFilter
+        - name: Retry
+          args:
+            retries: 10 # 重试次数
+            statuses:
+            - INTERNAL_SERVER_ERROR
+            - BAD_GATEWAY
+            - SERVICE_UNAVAILABLE
+            - GATEWAY_TIMEOUT
+            methods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+            - PATCH
+            - OPTIONS
+            - TRACE
+            exceptions:
+            - java.net.SocketException
+            - java.net.ConnectException
+
+      - id: app-builder-app-chat-route
+        uri: https://app-builder:8004
+        predicates:
+        - Path=/agent/**
+        filters:
+        - StripPrefix=1
+        - ApikeyAuthFilter
+        - name: Retry
+          args:
+            retries: 10 # 重试次数
+            statuses:
+            - INTERNAL_SERVER_ERROR
+            - BAD_GATEWAY
+            - SERVICE_UNAVAILABLE
+            - GATEWAY_TIMEOUT
+            methods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+            - PATCH
+            - OPTIONS
+            - TRACE
+            exceptions:
+            - java.net.SocketException
+            - java.net.ConnectException
+
+      - id: app-builder-ws-route
+        uri: wss://app-builder:8004
+        predicates:
+        - Path=/agent/v1/api/{tenantId}/ws
+        - Header=Connection, Upgrade
+        filters:
+        - StripPrefix=1
+        - ApikeyAuthFilter
+        - name: Retry
+          args:
+            retries: 10 # 重试次数
+            statuses:
+            - INTERNAL_SERVER_ERROR
+            - BAD_GATEWAY
+            - SERVICE_UNAVAILABLE
+            - GATEWAY_TIMEOUT
+            methods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+            - PATCH
+            - OPTIONS
+            - TRACE
+            exceptions:
+            - java.net.SocketException
+            - java.net.ConnectException
+
+loadbalancer:
+  client:
+    name: app-builder-gateway
+
+logging:
+  config: classpath:log4j2.xml
+
+opt-log:
+  resource-base-name: i18n.gatewayOptLog
+
+current:
+  token: ${MACHINE_TOKEN}
+
+oms:
+  gateway:
+    url: https://omsservice:18082/
+  apikey:
+    url: https://model-lite-gateway:9080/api_manage/v1/verify/
+  service-name: Framework
+
+nacos:
+  address: https://consulservice:18302
+  username: consul
+  password: ${NACOS_PASSWORD}
+  tls-enabled: true
+  client-auth: true
+  client-trust-cert: /opt/huawei/fce/runtime/security/server_cert/nacos/nacos.crt
+  logging-path: /log/app/nacos

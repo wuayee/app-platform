@@ -12,7 +12,6 @@ import com.alibaba.fastjson.JSONException;
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
-import modelengine.fel.core.model.http.SecureConfig;
 import modelengine.fel.core.util.Tip;
 import modelengine.fel.engine.flows.AiFlows;
 import modelengine.fel.engine.flows.AiProcessFlow;
@@ -56,8 +55,6 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
     @Override
     public List<String> queryRecommends(AppBuilderRecommendDto recommendDto, OperationContext context) {
         ModelAccessInfo defaultModel = this.aippModelCenter.getDefaultModel(AippConst.CHAT_MODEL_TYPE, context);
-        ModelAccessInfo modelAccessInfo =
-                this.aippModelCenter.getModelAccessInfo(defaultModel.getTag(), defaultModel.getServiceName(), context);
         String model = defaultModel.getServiceName();
         String historyPrompt = "Here are the chat histories between user and assistant, "
                 + "inside <history></history> XML tags.\n<history>\n{{history}}\n</history>\n\n";
@@ -77,11 +74,8 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
                                 .model(model)
                                 .stream(false)
                                 .temperature(0.3)
-                                .baseUrl(modelAccessInfo.getBaseUrl())
-                                .secureConfig(modelAccessInfo.isSystemModel()
-                                        ? null
-                                        : SecureConfig.custom().ignoreTrust(true).build())
-                                .apiKey(modelAccessInfo.getAccessKey())
+                                .baseUrl(defaultModel.getBaseUrl())
+                                .apiKey(defaultModel.getAccessKey())
                                 .build()))
                 .map(ChatMessage::text)
                 .close();

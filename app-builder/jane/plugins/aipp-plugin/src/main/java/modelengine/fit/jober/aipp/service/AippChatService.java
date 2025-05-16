@@ -8,6 +8,7 @@ package modelengine.fit.jober.aipp.service;
 
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippTaskNotFoundException;
+import modelengine.fit.jober.aipp.dto.chat.ChatCreateEntity;
 import modelengine.fit.jober.aipp.dto.chat.ChatInfoRspDto;
 import modelengine.fit.jober.aipp.dto.chat.CreateChatRequest;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatInfoRequest;
@@ -96,4 +97,12 @@ public interface AippChatService {
      * @return 表示会话相应体列表 {@link ChatInfoRspDto}。List<ChatInfoRspDto>
      */
     List<ChatInfoRspDto> queryChatInfo(QueryChatInfoRequest queryChatInfoRequest, OperationContext context);
+
+    /**
+     * 保存会话数据.
+     *
+     * @param chatCreateEntity 待保存数据.
+     * @param context 操作人上下文信息.
+     */
+    void saveChatInfo(ChatCreateEntity chatCreateEntity, OperationContext context);
 }

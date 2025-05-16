@@ -75,7 +75,7 @@ public class AippModelServiceTest {
         @DisplayName("chat接口正常")
         void shouldOkWhenChat() {
             when(aippModelCenter.getModelAccessInfo(anyString(), any(), any())).thenReturn(
-                    ModelAccessInfo.builder().baseUrl("1111").tag("tag").build());
+                    ModelAccessInfo.builder().baseUrl("1111").build());
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                     Choir.just(new AiMessage("123")));
 
@@ -99,7 +99,7 @@ public class AippModelServiceTest {
             when(model.getTag()).thenReturn("llm_tag");
             when(aippModelCenter.getDefaultModel(any(), any())).thenReturn(model);
             when(aippModelCenter.getModelAccessInfo(anyString(), any(), any())).thenReturn(
-                    ModelAccessInfo.builder().baseUrl("1111").tag("tag").build());
+                    ModelAccessInfo.builder().baseUrl("1111").build());
             when(modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                     Choir.just(new AiMessage("123")));
             when(aippSystemConfigRepository.find(anyString(), anyString())).thenReturn(
@@ -112,7 +112,7 @@ public class AippModelServiceTest {
             param.setTemperature(0.2);
             param.setTemplateType("user");
 
-            String result = aippModelService.generatePrompt(param, null);
+            String result = aippModelService.generatePrompt(param);
             Assertions.assertEquals(result, "123");
         }
 
@@ -132,7 +132,7 @@ public class AippModelServiceTest {
             param.setTemperature(0.2);
             param.setTemplateType("user");
 
-            Assertions.assertThrows(IllegalStateException.class, () -> aippModelService.generatePrompt(param, null));
+            Assertions.assertThrows(IllegalStateException.class, () -> aippModelService.generatePrompt(param));
         }
     }
 }

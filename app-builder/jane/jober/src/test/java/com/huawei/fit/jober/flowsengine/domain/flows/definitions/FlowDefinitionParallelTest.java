@@ -1,0 +1,185 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.flowsengine.domain.flows.definitions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import modelengine.fit.jober.FlowsDataBaseTest;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * 流程定义核心测试类
+ *
+ * @author 高诗意
+ * @since 2023/08/22
+ */
+@DisplayName("流程实例在内存中并行运行测试集合")
+@Disabled
+class FlowDefinitionParallelTest {
+    @Nested
+    @DisplayName("流程实例流转多并发场景测试集合，复用内存持久化测试场景")
+    class FlowAutoParallelExecutorInPersist extends FlowsDataBaseTest {
+        private static final String FILE_PATH_PREFIX = "flows/executors/";
+
+        private final FlowDefinitionTest flowDefinitionTest = new FlowDefinitionTest();
+
+        private final FlowDefinitionTest.FlowAutoExecutorInMemoryTest flowAutoExecutorInMemoryTest
+                = flowDefinitionTest.new FlowAutoExecutorInMemoryTest();
+
+        private final FlowDefinitionTest.FlowManualExecutorInMemoryTest flowManualExecutorInMemoryTest
+                = flowDefinitionTest.new FlowManualExecutorInMemoryTest();
+
+        private final FlowDefinitionTest.FlowAutoExecutorInMemoryWithJoberIncludeFitableTest
+                flowAutoExecutorInMemoryWithJoberIncludeFitableTest
+                = flowDefinitionTest.new FlowAutoExecutorInMemoryWithJoberIncludeFitableTest();
+
+        private final FlowDefinitionTest.FlowAutoExecutorInMemoryMToNTest flowAutoExecutorInMemoryMToNTest
+                = flowDefinitionTest.new FlowAutoExecutorInMemoryMToNTest();
+
+        private final FlowDefinitionTest.FlowAutoExecutorInPersistMToNWithFilterBatchSizeOne
+                flowAutoExecutorInPersistMToNWithFilterMinimumSizeOne
+                = flowDefinitionTest.new FlowAutoExecutorInPersistMToNWithFilterBatchSizeOne();
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1只有state节点的并发场景")
+        void testFlowsExecutorWithOnlyStateNode1To1Parallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowAutoExecutorInMemoryTest::testFlowsExecutorWithOnlyStateNode1To1);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1只有state节点第一个节点错误的并发场景")
+        void testFlowsExecutorStateNodeWithErrorForFirstNode1To1Parallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowAutoExecutorInMemoryTest::testFlowsExecutorStateNodeWithErrorForFirstNode1To1);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1包含condition节点的分支1通过并发场景")
+        void testFlowsExecutorWithConditionNodeFirstBranchTrueParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowAutoExecutorInMemoryTest::testFlowsExecutorWithConditionNodeFirstBranchTrue);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1包含condition节点的分支2驳回并发场景")
+        void testFlowsExecutorWithConditionNodeSecondBranchFalseParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowAutoExecutorInMemoryTest::testFlowsExecutorWithConditionNodeSecondBranchFalse);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("测试流程实例自动流转1到1包含condition节点异常并发场景")
+        void testFlowsExecutorConditionNodeWithErrorParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowAutoExecutorInMemoryTest::testFlowsExecutorConditionNodeWithError);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("流程实例1到1包含condition节点人工任务分支1通过的并发场景测试")
+        void testFlowsManualExecutorWithConditionNodeFirstBranchTrueParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowManualExecutorInMemoryTest::testFlowsManualExecutorWithConditionNodeFirstBranchTrue);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("流程实例1到1包含condition节点人工任务分支1驳回的并发场景测试")
+        void testFlowsManualExecutorWithConditionNodeFirstBranchFalseParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes,
+                    flowManualExecutorInMemoryTest::testFlowsManualExecutorWithConditionNodeFirstBranchFalse);
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("流程实例1到1只有state节点的执行GeneralJober任务并发场景测试")
+        void testFlowsExecuteGeneralJoberParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes, () -> {
+                flowAutoExecutorInMemoryWithJoberIncludeFitableTest.testFlowsExecuteGeneralJober();
+            });
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Test
+        @DisplayName("流程实例m到n包含condition节点一次只offer一个数据的并发场景测试")
+        void testFlowsExecuteProduceFromMToNForOfferOneDataParallel() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes, () -> {
+                flowAutoExecutorInMemoryMToNTest.testFlowsExecuteProduceFromMToNForOfferOneData();
+            });
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Disabled
+        @Test
+        @DisplayName("流程实例m到n最小SIZE过滤器为多单线程offer的场景测试")
+        void testFlowsExecuteProduceFromMToNWithMinimumSizeOneInMultiThread() throws Throwable {
+            CountDownLatch latch = new CountDownLatch(threadNum);
+            AtomicInteger failTimes = new AtomicInteger(0);
+            List<Thread> threads = getThreads(latch, failTimes, () -> {
+                flowAutoExecutorInPersistMToNWithFilterMinimumSizeOne
+                        .testFlowsExecuteProduceFromMToNWithMinimumSizeOneInSingleThread();
+            });
+            threads.forEach(Thread::start);
+            latch.await();
+            assertEquals(0, failTimes.get());
+        }
+
+        @Override
+        protected String getFilePathPrefix() {
+            return FILE_PATH_PREFIX;
+        }
+    }
+}

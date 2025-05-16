@@ -1,0 +1,1 @@
+DELETE FROM "index_property" WHERE "property_id" = ?

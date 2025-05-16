@@ -1,0 +1,1 @@
+INSERT INTO "list_text"("id", "instance_id", "property_id", "index", "value") VALUES(?, ?, ?, ?, ?), (?, ?, ?, ?, ?)

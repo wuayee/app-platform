@@ -134,11 +134,11 @@ const KnowledgeContainer = (props) => {
         </div>
         <img src={AddImg} style={{ width: 16, height: 16 }} alt="" onClick={addKnowledgeBase} />
       </div>} forceRender key='knowledge' className="site-collapse-custom-panel">
-        <Knowledge 
-          knowledgeRef={knowledgeRef} 
+        <Knowledge
+          knowledgeRef={knowledgeRef}
           knowledge={knowledge}
           groupId={groupId}
-          updateData={updateKnowledge} 
+          updateData={updateKnowledge}
         />
       </Panel>
     </Collapse>

@@ -6,6 +6,7 @@
 
 package modelengine.fit.jade.aipp.model.po;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import modelengine.jade.common.po.BasePo;
 
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  * @since 2025/3/11
  */
 @Data
+@AllArgsConstructor
 public class ModelPo extends BasePo {
     private String modelId;
     private String name;

@@ -1,0 +1,1 @@
+SELECT COUNT(1) FROM "task_instance_deleted" WHERE "id" = ? AND "task_id" = ?

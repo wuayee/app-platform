@@ -1,0 +1,141 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.taskcenter.domain.util.support;
+
+import modelengine.fit.jane.task.domain.TaskProperty;
+import modelengine.fit.jane.task.util.OperationContext;
+import modelengine.fit.jober.entity.InstanceChanged;
+import modelengine.fit.jober.entity.InstanceMessage;
+import modelengine.fit.jober.entity.PropertyValue;
+import modelengine.fit.jober.taskcenter.domain.SourceEntity;
+import modelengine.fit.jober.taskcenter.domain.TaskEntity;
+import modelengine.fit.jober.taskcenter.domain.TaskInstance;
+import modelengine.fit.jober.taskcenter.domain.util.PrimaryKey;
+import modelengine.fit.jober.taskcenter.domain.util.PrimaryValue;
+import modelengine.fit.jober.taskcenter.util.Enums;
+import modelengine.fitframework.broker.client.BrokerClient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * 为通知程序提供基类。
+ *
+ * @author 梁济时
+ * @since 2023-08-28
+ */
+public abstract class AbstractNotifier {
+    private final BrokerClient brokerClient;
+
+    private final TaskEntity task;
+
+    private Map<String, TaskProperty> properties;
+
+    private PrimaryKey primaryKey;
+
+    private boolean isPrimaryKeyLoaded;
+
+    /**
+     * 构造函数
+     *
+     * @param brokerClient 调度器
+     * @param task 任务
+     */
+    public AbstractNotifier(BrokerClient brokerClient, TaskEntity task) {
+        this.brokerClient = brokerClient;
+        this.task = task;
+        this.isPrimaryKeyLoaded = false;
+    }
+
+    /**
+     * 返回调度器
+     *
+     * @return 调度器
+     */
+    protected final BrokerClient broker() {
+        return this.brokerClient;
+    }
+
+    /**
+     * 返回任务
+     *
+     * @return 任务
+     */
+    protected final TaskEntity task() {
+        return this.task;
+    }
+
+    /**
+     * properties
+     *
+     * @return Map<String, PropertyEntity>
+     */
+    protected final Map<String, TaskProperty> properties() {
+        if (this.properties == null) {
+            this.properties = this.task().getProperties().stream().collect(
+                    Collectors.toMap(TaskProperty::name, Function.identity()));
+        }
+        return this.properties;
+    }
+
+    /**
+     * primaries
+     *
+     * @param instance instance
+     * @return List<PropertyValue>
+     */
+    protected final List<PropertyValue> primaries(TaskInstance instance) {
+        PrimaryKey pk = this.primaryKey();
+        if (pk == null) {
+            return Collections.emptyList();
+        }
+        PrimaryValue primaryValue = this.task().computePrimaryValue(instance.info());
+        List<PropertyValue> primaries = new ArrayList<>(primaryValue.values().size());
+        for (Map.Entry<String, Object> entry : primaryValue.values().entrySet()) {
+            PropertyValue primary = new InstanceChanged.ChangedPropertyValue();
+            TaskProperty property = this.properties().get(entry.getKey());
+            primary.setProperty(property.name());
+            primary.setDataType(Enums.toString(property.dataType()));
+            primary.setValue(property.dataType().toString(entry.getValue()));
+            primaries.add(primary);
+        }
+        return primaries;
+    }
+
+    private PrimaryKey primaryKey() {
+        if (!this.isPrimaryKeyLoaded) {
+            this.primaryKey = PrimaryKey.of(this.task());
+            this.isPrimaryKeyLoaded = true;
+        }
+        return this.primaryKey;
+    }
+
+    /**
+     * fillInstanceInfo
+     *
+     * @param info info
+     * @param instance instance
+     * @param context context
+     */
+    protected final void fillInstanceInfo(InstanceMessage info, TaskInstance instance, OperationContext context) {
+        info.setTaskId(instance.task().getId());
+        info.setInstanceId(instance.id());
+        info.setTaskTypeId(instance.type().id());
+        SourceEntity source = instance.source();
+        if (source != null) {
+            info.setSourceName(source.getName());
+            info.setSourceApp(source.getApp());
+        }
+        info.setTenant(context.tenantId());
+        info.setOperator(context.operator());
+        info.setPrimaries(this.primaries(instance));
+    }
+}

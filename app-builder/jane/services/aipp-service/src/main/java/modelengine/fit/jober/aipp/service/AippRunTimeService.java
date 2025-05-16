@@ -7,12 +7,8 @@
 package modelengine.fit.jober.aipp.service;
 
 import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jober.aipp.dto.AippInstanceCreateDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderAppDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import modelengine.fit.jober.aipp.vo.MetaVo;
 import modelengine.fitframework.flowable.Choir;
-import modelengine.fitframework.model.Tuple;
 
 import java.util.Map;
 
@@ -33,19 +29,6 @@ public interface AippRunTimeService {
      * @return 实例id
      */
     String createAippInstance(String aippId, String version, Map<String, Object> initContext, OperationContext context);
-
-    /**
-     * 指定版本启动一个App
-     *
-     * @param appId appId
-     * @param question 对话提问
-     * @param businessData 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
-     * @param context 操作上下文
-     * @param isDebug 是否是调试对话
-     * @return 实例id
-     */
-    Tuple createInstanceByApp(String appId, String question, Map<String, Object> businessData,
-            OperationContext context, boolean isDebug);
 
     /**
      * 查询app对应的metaVo
@@ -70,17 +53,6 @@ public interface AippRunTimeService {
             OperationContext context, boolean isDebug);
 
     /**
-     * 启动一个最新版本的Aipp
-     *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
-     * @return 实例响应
-     */
-    AippInstanceCreateDto createAippInstanceLatest(String aippId, Map<String, Object> initContext,
-            OperationContext context);
-
-    /**
      * 删除应用实例
      *
      * @param context 操作上下文
@@ -89,6 +61,19 @@ public interface AippRunTimeService {
      * @param instanceId 实例id
      */
     void deleteAippInstance(String aippId, String version, String instanceId, OperationContext context);
+
+    /**
+     * 查询应用实例信息列表
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp 版本
+     * @param cond 查询条件
+     * @param page 分页条件
+     * @return AIPP 实例列表
+     */
+    PageResponse<AippInstanceDto> listInstance(String aippId, String version, AippInstanceQueryCondition cond,
+            PaginationCondition page, OperationContext context);
 
     /**
      * 更新表单数据，并恢复实例任务执行
@@ -133,15 +118,4 @@ public interface AippRunTimeService {
      * @param context 操作上下文
      */
     void terminateAllPreviewInstances(String aippId, String versionId, boolean isDeleteLog, OperationContext context);
-
-    /**
-     * 启动对话实例
-     *
-     * @param appDto      app信息
-     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
-     * @param context     操作上下文
-     * @return 实例id
-     */
-    AppBuilderAppStartDto startInstance(AppBuilderAppDto appDto, Map<String, Object> initContext,
-        OperationContext context);
 }

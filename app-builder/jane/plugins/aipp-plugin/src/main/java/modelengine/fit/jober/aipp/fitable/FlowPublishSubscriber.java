@@ -6,8 +6,10 @@
 
 package modelengine.fit.jober.aipp.fitable;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
+import modelengine.fit.jober.aipp.domains.business.RunContext;
 import modelengine.fit.jober.aipp.dto.chat.AppChatRsp;
 import modelengine.fit.jober.aipp.entity.ChatSession;
 import modelengine.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
@@ -15,6 +17,7 @@ import modelengine.fit.jober.aipp.service.AppChatSessionService;
 import modelengine.fit.jober.aipp.service.AppChatSseService;
 import modelengine.fit.jober.aipp.service.RuntimeInfoService;
 import modelengine.fit.jober.aipp.util.ConvertUtils;
+
 import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fit.waterflow.entity.FlowNodePublishInfo;
@@ -41,13 +44,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class FlowPublishSubscriber implements FlowPublishService {
     private final AppBuilderRuntimeInfoRepository runtimeInfoRepository;
-
     private final RuntimeInfoService runtimeInfoService;
-
     private final ToolExceptionHandle toolExceptionHandle;
-
     private final AppChatSessionService appChatSessionService;
-
     private final AppChatSseService appChatSSEService;
 
     /**
@@ -73,9 +72,10 @@ public class FlowPublishSubscriber implements FlowPublishService {
     @Override
     public void publishNodeInfo(FlowNodePublishInfo flowNodePublishInfo) {
         Map<String, Object> businessData = flowNodePublishInfo.getBusinessData();
-        String aippInstId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
-        String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
-        String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
+        RunContext runContext = new RunContext(businessData, new OperationContext());
+        String aippInstId = runContext.getTaskInstanceId();
+        String chatId = runContext.getOriginChatId();
+        String atChatId = runContext.getAtChatId();
         String stage = flowNodePublishInfo.getFlowContext() == null
                 ? StringUtils.EMPTY
                 : flowNodePublishInfo.getFlowContext().getStage();

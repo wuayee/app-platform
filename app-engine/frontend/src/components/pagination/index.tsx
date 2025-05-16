@@ -71,8 +71,8 @@ const App: React.FC = (props: paginationProps = defaultConfig) => {
     <>
       {
         (props.total > 0) && <div className='page-component'>
-          { config.showTotalFunc && ( cLocale !== 'en-us' ? 
-            <span>{t('total')} {props.total} {t('piece')}</span> : 
+          { config.showTotalFunc && ( cLocale !== 'en-us' ?
+            <span>{t('total')} {props.total} {t('piece')}</span> :
             <span>{t('total')}：{props.total} </span>)
           }
           <Pagination {...config} />

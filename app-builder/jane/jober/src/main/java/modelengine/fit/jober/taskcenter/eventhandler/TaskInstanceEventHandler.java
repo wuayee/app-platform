@@ -1,0 +1,240 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) 2025 Huawei Technologies Co., Ltd. All rights reserved.
+ *  This file is a part of the ModelEngine Project.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+package modelengine.fit.jober.taskcenter.eventhandler;
+
+import modelengine.fit.jober.InstanceChangedService;
+import modelengine.fit.jober.common.util.ParamUtils;
+import modelengine.fit.jober.entity.instance.Instance;
+import modelengine.fit.jober.entity.task.Task;
+import modelengine.fit.jober.taskcenter.domain.InstanceEvent;
+import modelengine.fit.jober.taskcenter.domain.InstanceEventType;
+import modelengine.fit.jober.taskcenter.domain.SourceEntity;
+import modelengine.fit.jober.taskcenter.domain.TaskEntity;
+import modelengine.fit.jober.taskcenter.domain.TaskInstance;
+import modelengine.fit.jober.taskcenter.domain.TaskType;
+import modelengine.fit.jober.taskcenter.event.TaskInstanceCreatedEvent;
+import modelengine.fit.jober.taskcenter.event.TaskInstanceDeletedEvent;
+import modelengine.fit.jober.taskcenter.event.TaskInstanceEvent;
+import modelengine.fit.jober.taskcenter.event.TaskInstanceModifiedEvent;
+import modelengine.fit.jober.taskcenter.eventhandler.converter.InstanceConverter;
+import modelengine.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.broker.client.BrokerClient;
+import modelengine.fitframework.broker.client.filter.route.FitableIdFilter;
+import modelengine.fitframework.event.EventHandler;
+import modelengine.fitframework.exception.FitException;
+import modelengine.fitframework.log.Logger;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+/**
+ * 为任务实例的事件提供处理程序。
+ *
+ * @author 梁济时
+ * @since 2023-10-19
+ */
+public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
+    private static final Logger log = Logger.get(TaskInstanceEventHandler.class);
+
+    private static final int TIME_OUT_PERIOD = 500000000;
+
+    private final BrokerClient brokerClient;
+
+    private final String genericableId;
+
+    private final InstanceEventType type;
+
+    public TaskInstanceEventHandler(BrokerClient brokerClient, String genericableId, InstanceEventType type) {
+        this.brokerClient = brokerClient;
+        this.genericableId = genericableId;
+        this.type = type;
+    }
+
+    /**
+     * 处理事件。
+     *
+     * @param event 表示事件数据的 {@link E}。
+     */
+    public void handleEvent(E event) {
+        List<SourceEntity> sources = this.getSourcesToPublish(event.task(), event.instance());
+        for (SourceEntity source : sources) {
+            this.publishToSource(source, event);
+        }
+    }
+
+    /**
+     * 获取待发布到的数据源的列表。
+     *
+     * @param task 表示发生变化的任务实例所属的任务定义的 {@link TaskEntity}。
+     * @param instance 表示发生变化的任务实例的 {@link TaskInstance}。
+     * @return 表示待通知到的任务数据源的列表的 {@link List}{@code <}{@link SourceEntity}{@code >}。
+     */
+    protected List<SourceEntity> getSourcesToPublish(TaskEntity task, TaskInstance instance) {
+        if (instance.source() == null) {
+            return TaskType.lookup(task.getTypes(), instance.type().id()).sources();
+        } else {
+            return Collections.singletonList(instance.source());
+        }
+    }
+
+    private void publishToSource(SourceEntity source, E event) {
+        List<String> fitableIds = source.getEvents()
+                .stream()
+                .filter(this::is)
+                .map(InstanceEvent::fitableId)
+                .collect(Collectors.toList());
+        for (String fitableId : fitableIds) {
+            Object[] args = this.arguments(event);
+            log.info("Notify fitable that task instance has been {}. [fitableId={}, taskId={}, instanceId={}]",
+                    this.type, fitableId, event.task().getId(), event.instance().id());
+            long cost = System.currentTimeMillis();
+            try {
+                this.brokerClient.getRouter(InstanceChangedService.class, genericableId)
+                        .route(new FitableIdFilter(fitableId))
+                        .timeout(TIME_OUT_PERIOD, TimeUnit.MILLISECONDS)
+                        .invoke(args);
+                cost = System.currentTimeMillis() - cost;
+                log.info("Successful to notify fitable. Total {} milliseconds cost.", cost);
+            } catch (FitException e) {
+                cost = System.currentTimeMillis() - cost;
+                log.error("Failed to notify fitable. Total {} milliseconds cost.", cost);
+                log.error(e.getClass().getName(), e);
+            }
+        }
+    }
+
+    private boolean is(InstanceEvent event) {
+        return event.type() == this.type;
+    }
+
+    /**
+     * 生成通知 Genericable 的调用参数。
+     *
+     * @param event 表示事件数据的 {@link E}。
+     * @return 表示 Genericable 的调用参数的 {@link Object}{@code []}。
+     */
+    protected abstract Object[] arguments(E event);
+
+    /**
+     * 任务实例创建事件Handler。
+     *
+     * @author 陈镕希
+     * @since 2023-09-08
+     */
+    @Component
+    public static class Created extends TaskInstanceEventHandler<TaskInstanceCreatedEvent>
+            implements EventHandler<TaskInstanceCreatedEvent> {
+        private static final Logger log = Logger.get(Created.class);
+
+        private static final String INSTANCE_CHANGED_CREATE_GENERICABLE_ID = "e1c7adbb69f148c3b81d0067ad02799f";
+
+        private final TaskConverter taskConverter;
+
+        private final InstanceConverter instanceConverter;
+
+        /**
+         * 生成通知 Genericable 的调用参数。
+         *
+         * @param taskConverter 表示任务转换器的 {@link TaskConverter}。
+         * @param instanceConverter 表示实例转换器的 {@link InstanceConverter}。
+         * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+         */
+        public Created(TaskConverter taskConverter, InstanceConverter instanceConverter, BrokerClient brokerClient) {
+            super(brokerClient, INSTANCE_CHANGED_CREATE_GENERICABLE_ID, InstanceEventType.CREATED);
+            this.taskConverter = taskConverter;
+            this.instanceConverter = instanceConverter;
+        }
+
+        @Override
+        protected Object[] arguments(TaskInstanceCreatedEvent event) {
+            Task task = taskConverter.convert(event.task(), event.context());
+            Instance instance = instanceConverter.convert(event.task(), event.instance());
+            return new Object[] {task, instance, ParamUtils.convertOperationContext(event.context())};
+        }
+    }
+
+    /**
+     * 任务实例修改事件Handler。
+     *
+     * @author 陈镕希
+     * @since 2023-09-08
+     */
+    @Component
+    public static class Modified extends TaskInstanceEventHandler<TaskInstanceModifiedEvent>
+            implements EventHandler<TaskInstanceModifiedEvent> {
+        private static final Logger log = Logger.get(Modified.class);
+
+        private static final String INSTANCE_CHANGED_UPDATE_GENERICABLE_ID = "59e2aeaeffad4242bf8c446be11d20e6";
+
+        private final TaskConverter taskConverter;
+
+        private final InstanceConverter instanceConverter;
+
+        /**
+         * 生成通知 Genericable 的调用参数。
+         *
+         * @param taskConverter 表示任务转换器的 {@link TaskConverter}。
+         * @param instanceConverter 表示实例转换器的 {@link InstanceConverter}。
+         * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+         */
+        public Modified(TaskConverter taskConverter, InstanceConverter instanceConverter, BrokerClient brokerClient) {
+            super(brokerClient, INSTANCE_CHANGED_UPDATE_GENERICABLE_ID, InstanceEventType.MODIFIED);
+            this.taskConverter = taskConverter;
+            this.instanceConverter = instanceConverter;
+        }
+
+        @Override
+        protected Object[] arguments(TaskInstanceModifiedEvent event) {
+            Task task = taskConverter.convert(event.task(), event.context());
+            Instance instance = instanceConverter.convert(event.task(), event.instance());
+            Map<String, Object> values = event.values();
+            return new Object[] {task, instance, values, ParamUtils.convertOperationContext(event.context())};
+        }
+    }
+
+    /**
+     * 任务实例删除事件Handler。
+     *
+     * @author 陈镕希
+     * @since 2023-09-08
+     */
+    @Component
+    public static class Deleted extends TaskInstanceEventHandler<TaskInstanceDeletedEvent>
+            implements EventHandler<TaskInstanceDeletedEvent> {
+        private static final Logger log = Logger.get(Deleted.class);
+
+        private static final String INSTANCE_CHANGED_DELETE_GENERICABLE_ID = "47227b3e78924058b428f9a125938d59";
+
+        private final TaskConverter taskConverter;
+
+        private final InstanceConverter instanceConverter;
+
+        /**
+         * 生成通知 Genericable 的调用参数。
+         *
+         * @param taskConverter 表示任务转换器的 {@link TaskConverter}。
+         * @param instanceConverter 表示实例转换器的 {@link InstanceConverter}。
+         * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+         */
+        public Deleted(TaskConverter taskConverter, InstanceConverter instanceConverter, BrokerClient brokerClient) {
+            super(brokerClient, INSTANCE_CHANGED_DELETE_GENERICABLE_ID, InstanceEventType.DELETED);
+            this.taskConverter = taskConverter;
+            this.instanceConverter = instanceConverter;
+        }
+
+        @Override
+        protected Object[] arguments(TaskInstanceDeletedEvent event) {
+            Task task = this.taskConverter.convert(event.task(), event.context());
+            Instance instance = this.instanceConverter.convert(event.task(), event.instance());
+            return new Object[] {task, instance, ParamUtils.convertOperationContext(event.context())};
+        }
+    }
+}

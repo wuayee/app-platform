@@ -25,6 +25,7 @@ import modelengine.fitframework.util.SecurityUtils;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.fitframework.util.ThreadUtils;
 import modelengine.jade.carver.ListResult;
+import modelengine.jade.carver.tool.info.schema.PluginSchema;
 import modelengine.jade.common.exception.ModelEngineException;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.store.code.PluginRetCode;
@@ -186,7 +187,8 @@ public class DefaultDeployService implements DeployService {
         FitableInfo fitableInfo = new FitableInfo();
         fitableInfo.setFitableId(PluginDeployManagementUtils.requireStringInMapObject(runnable.get(FITABLE_ID)));
         fitableInfo.setFitableVersion(DEFAULT_VERSION);
-        fitableInfo.setGenericableId(PluginDeployManagementUtils.requireStringInMapObject(runnable.get(GENERICABLE_ID)));
+        fitableInfo.setGenericableId(
+                PluginDeployManagementUtils.requireStringInMapObject(runnable.get(GENERICABLE_ID)));
         fitableInfo.setGenericableVersion(DEFAULT_VERSION);
         return fitableInfo;
     }

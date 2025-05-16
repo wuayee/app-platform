@@ -43,15 +43,11 @@ public class AippModelServiceImpl implements AippModelService {
     private static final Logger log = Logger.get(AippModelServiceImpl.class);
 
     private static final String INPUT = "input";
-
     private static final String TEMPLATE_GROUP = "template";
-
     private static final String TEMPLATE_ATTRIBUTE = "template";
 
     private final ChatModel modelService;
-
     private final AippModelCenter aippModelCenter;
-
     private final AippSystemConfigRepository aippSystemConfigRepository;
 
     public AippModelServiceImpl(ChatModel modelService, AippModelCenter aippModelCenter,
@@ -80,7 +76,7 @@ public class AippModelServiceImpl implements AippModelService {
     }
 
     @Override
-    public String generatePrompt(PromptGenerateDto param, OperationContext context) {
+    public String generatePrompt(PromptGenerateDto param) {
         Map<String, String> values = MapBuilder.<String, String>get().put(INPUT, param.getInput()).build();
         String template = this.aippSystemConfigRepository.find(TEMPLATE_GROUP, param.getTemplateType())
                 .map(c -> c.getValueAttributeString(TEMPLATE_ATTRIBUTE))

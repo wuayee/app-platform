@@ -1,0 +1,32 @@
+namespace DataBus.Common;
+
+enum ErrorType : byte {
+  None = 0,
+  NotConnectedToDataBus = 1, // 仅SDK使用
+  DataBusDisconnected = 2, // 仅SDK使用
+  OutOfMemory = 3,
+  PermissionDenied = 4,
+  Timeout = 5,
+  IllegalMessageHeader = 6,
+  IllegalMessageBody = 7,
+  MallocFailed = 8,
+  KeyNotFound = 9,
+  KeyAlreadyExists = 10,
+  MemoryNotFound = 11,
+  MemoryReadError = 12,
+  MemoryWriteError = 13,
+  UnknownPermissionType = 14,
+  DuplicatePermitApplication = 15,
+  IllegalStateForPermitApplication = 16,
+  IllegalStateForPermitRelease = 17,
+  IOOutOfBounds = 18,
+  PlatformNotSupported = 19,
+  UnknownError = 127
+}
+
+// 修改此 Enum 请务必与 DataBus 开发组人员确认
+enum PermissionType : byte {
+  None = 0,
+  Read = 1,
+  Write = 2
+}

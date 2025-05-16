@@ -6,6 +6,24 @@
 
 package modelengine.jade.knowledge;
 
+import static modelengine.jade.knowledge.enums.FilterType.REFERENCE_TOP_K;
+import static modelengine.jade.knowledge.enums.FilterType.SIMILARITY_THRESHOLD;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import modelengine.jade.authentication.AuthenticationService;
+import modelengine.jade.carver.tool.model.transfer.ToolGroupData;
+import modelengine.jade.carver.tool.service.ToolGroupService;
+import modelengine.jade.common.filter.support.LoginFilter;
+import modelengine.jade.common.vo.PageVo;
+import modelengine.jade.knowledge.controller.KnowledgeController;
+import modelengine.jade.knowledge.controller.entity.KnowledgeRepoInfo;
+import modelengine.jade.knowledge.controller.vo.KnowledgePropertyVo;
+import modelengine.jade.knowledge.enums.IndexType;
+import modelengine.jade.knowledge.support.FlatFilterConfig;
+
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fitframework.annotation.Fit;

@@ -6,17 +6,17 @@
 
 package modelengine.fit.jober.aipp.controller;
 
+import modelengine.fit.jane.common.controller.AbstractController;
+import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.dto.model.PromptGenerateDto;
+import modelengine.fit.jober.aipp.service.AippModelService;
 import modelengine.jade.service.annotations.CarverSpan;
 
 import modelengine.fit.http.annotation.PostMapping;
 import modelengine.fit.http.annotation.RequestBody;
 import modelengine.fit.http.annotation.RequestMapping;
 import modelengine.fit.http.server.HttpClassicServerRequest;
-import modelengine.fit.jane.common.controller.AbstractController;
-import modelengine.fit.jane.common.response.Rsp;
-import modelengine.fit.jober.aipp.dto.model.PromptGenerateDto;
-import modelengine.fit.jober.aipp.service.AippModelService;
 import modelengine.fitframework.annotation.Component;
 
 /**
@@ -45,6 +45,6 @@ public class AippPromptController extends AbstractController {
     @CarverSpan(value = "operation.aippPrompt.prompt")
     @PostMapping(path = "/prompt", description = "智能生成提示词")
     public Rsp<String> prompt(HttpClassicServerRequest httpRequest, @RequestBody PromptGenerateDto param) {
-        return Rsp.ok(this.aippModelService.generatePrompt(param, this.contextOf(httpRequest, "")));
+        return Rsp.ok(this.aippModelService.generatePrompt(param));
     }
 }
