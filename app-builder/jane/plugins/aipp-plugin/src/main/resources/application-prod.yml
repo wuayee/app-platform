@@ -51,6 +51,11 @@ app-engine:
   file:
     upload:
       maxStorageRatio: 0.9
+  max-number: 200
+  question:
+    max-length: 20000
+  user-context:
+    max-length: 500
 elsa:
   endpoint:
   elsaKey:

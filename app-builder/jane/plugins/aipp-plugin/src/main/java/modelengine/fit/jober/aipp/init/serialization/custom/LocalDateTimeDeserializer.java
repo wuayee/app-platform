@@ -3,7 +3,6 @@
  *  This file is a part of the ModelEngine Project.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
 package modelengine.fit.jober.aipp.init.serialization.custom;
 
 import static modelengine.fit.jober.aipp.constants.AippConst.DEFAULT_DATE_TIME_FORMAT;
