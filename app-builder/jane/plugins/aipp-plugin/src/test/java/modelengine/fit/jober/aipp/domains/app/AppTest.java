@@ -33,6 +33,7 @@ import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
 import modelengine.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
+import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.store.service.AppService;
 import modelengine.jade.store.service.PluginService;
 import modelengine.jade.store.service.PluginToolService;
@@ -146,12 +147,12 @@ public class AppTest {
         AppBuilderAppPo data = AppBuilderAppPo.builder().updateAt(LocalDateTime.now()).name("myApp").build();
         when(appVersion.getData()).thenReturn(data);
         when(this.appVersionFactory.create(any(), any())).thenReturn(appVersion);
-        doNothing().when(appVersion).importData(any(), anyString(), any(), any());
+        doNothing().when(appVersion).importData(any(), anyString(), StringUtils.EMPTY, any(), any());
         doNothing().when(this.appVersionService).validateAppName(anyString(), any());
         doNothing().when(this.appVersionService).save(any());
 
         // when.
-        AppVersion version = app.importData(AppExportDto.builder().build(), new OperationContext());
+        AppVersion version = app.importData(AppExportDto.builder().build(), StringUtils.EMPTY, new OperationContext());
 
         // then.
         assertEquals(appVersion, version);

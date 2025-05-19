@@ -112,7 +112,7 @@ public class AippModelServiceTest {
             param.setTemperature(0.2);
             param.setTemplateType("user");
 
-            String result = aippModelService.generatePrompt(param);
+            String result = aippModelService.generatePrompt(param, null);
             Assertions.assertEquals(result, "123");
         }
 
@@ -132,7 +132,7 @@ public class AippModelServiceTest {
             param.setTemperature(0.2);
             param.setTemplateType("user");
 
-            Assertions.assertThrows(IllegalStateException.class, () -> aippModelService.generatePrompt(param));
+            Assertions.assertThrows(IllegalStateException.class, () -> aippModelService.generatePrompt(param, null));
         }
     }
 }

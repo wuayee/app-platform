@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.domains.appversion;
 
+import modelengine.fel.tool.service.ToolService;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.waterflow.AippFlowDefinitionService;
 import modelengine.fit.jade.waterflow.FlowsService;
@@ -24,8 +25,8 @@ import modelengine.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.UploadedFileManageService;
-import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.common.globalization.LocaleService;
+import modelengine.jade.knowledge.KnowledgeCenterService;
 import modelengine.jade.store.service.AppService;
 import modelengine.jade.store.service.PluginService;
 
@@ -65,4 +66,5 @@ public class Dependencies {
     private FlowDefinitionService flowDefinitionService;
     private Integer maxQuestionLen;
     private Integer maxUserContextLen;
+    private KnowledgeCenterService knowledgeCenterService;
 }

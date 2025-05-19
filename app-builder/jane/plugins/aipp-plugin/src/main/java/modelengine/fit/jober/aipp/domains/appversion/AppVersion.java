@@ -29,6 +29,7 @@ import static modelengine.fit.jober.aipp.util.UsefulUtils.doIfNull;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
 import lombok.Getter;
+import modelengine.fel.tool.service.ToolService;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
@@ -115,8 +116,9 @@ import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.MapUtils;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.common.globalization.LocaleService;
+import modelengine.jade.knowledge.KnowledgeCenterService;
+import modelengine.jade.knowledge.dto.KnowledgeDto;
 import modelengine.jade.store.service.AppService;
 import modelengine.jade.store.service.PluginService;
 
@@ -224,6 +226,8 @@ public class AppVersion {
 
     private FlowDefinitionService flowDefinitionService;
 
+    private final KnowledgeCenterService knowledgeCenterService;
+
     AppVersion(AppBuilderAppPo data, Dependencies dependencies) {
         this.data = data;
         this.attributes = StringUtils.isBlank(data.getAttributes())
@@ -253,6 +257,7 @@ public class AppVersion {
         this.flowDefinitionService = dependencies.getFlowDefinitionService();
         this.maxQuestionLen = dependencies.getMaxQuestionLen();
         this.maxUserContextLen = dependencies.getMaxUserContextLen();
+        this.knowledgeCenterService = dependencies.getKnowledgeCenterService();
     }
 
     /**
@@ -488,12 +493,14 @@ public class AppVersion {
     }
 
     private void startTask(RunContext context, ChatSession<Object> session) {
-        this.updateFlows(context.getOperationContext());
+        if (context.isDebug()) {
+            this.updateFlows(context.getOperationContext());
+        }
         LOGGER.info("[perf] [{}] chat updateFlow end, appId={}", System.currentTimeMillis(), this.data.getAppId());
 
         // 获取将要运行的任务对象.
         OperationContext ctx = context.getOperationContext();
-        AppTask task = context.isDebug() ? this.getAnyTask(ctx) : this.getAnyPublishedTask(ctx);
+        AppTask task = context.isDebug() ? this.getLatestTask(ctx) : this.getLatestPublishedTask(ctx);
 
         // 添加用户上下文数据，输入参数校验.
         this.validateUserContext(task, context.getUserContext(), context.getOperationContext());
@@ -544,12 +551,12 @@ public class AppVersion {
     }
 
     /**
-     * 获取任意任务.
+     * 获取最新创建的任务.
      *
      * @param ctx 操作人上下文信息.
      * @return {@link AppTask} 任务对象.
      */
-    public AppTask getAnyTask(OperationContext ctx) {
+    public AppTask getLatestTask(OperationContext ctx) {
         return this.appTaskService.getTasksByAppId(this.data.getAppId(), ctx)
                 .stream()
                 .peek(t -> t.setAppVersion(this))
@@ -563,7 +570,7 @@ public class AppVersion {
      * @param ctx 操作人上下文信息.
      * @return {@link AppTask} 任务对象.
      */
-    public AppTask getAnyPublishedTask(OperationContext ctx) {
+    public AppTask getLatestPublishedTask(OperationContext ctx) {
         return this.getPublishedTasks(ctx)
                 .stream()
                 .findFirst()
@@ -712,6 +719,7 @@ public class AppVersion {
         // 画布数据.
         AppBuilderFlowGraph graph = this.getFlowGraph();
         graph.setModelInfo(this.getFirstModelInfo(context));
+        graph.setKnowledgeInfo(this.getFirstKnowledgeInfo(context));
         graph.clone(context);
         this.data.setFlowGraphId(graph.getId());
 
@@ -755,6 +763,10 @@ public class AppVersion {
         AippCreateDto aippCreateDto = this.preview(version, this.converterFactory.convert(this, AippDto.class),
                 context);
         this.data.setAppSuiteId(aippCreateDto.getAippId());
+    }
+
+    private KnowledgeDto getFirstKnowledgeInfo(OperationContext context) {
+        return this.knowledgeCenterService.getSupportKnowledges(context.getOperator()).get(0);
     }
 
     private String[] getFirstModelInfo(OperationContext context) {
@@ -857,14 +869,22 @@ public class AppVersion {
     }
 
     /**
+     * 创建应用.
+     */
+    public void create() {
+        this.data.setState(AppState.INACTIVE.getName());
+    }
+
+    /**
      * 导入应用数据。
      *
      * @param appDto 导入应用的基础信息。
      * @param appSuiteId app唯一标识。
+     * @param contextRoot 请求上下文根
      * @param context 操作上下文。
      * @param exportMeta 应用导入导出元数据。
      */
-    public void importData(AppExportDto appDto, String appSuiteId, OperationContext context,
+    public void importData(AppExportDto appDto, String appSuiteId, String contextRoot, OperationContext context,
             Map<String, String> exportMeta) {
         // 检查导入应用配置是否合法
         if (!StringUtils.equals(appDto.getVersion(), exportMeta.get("version"))) {
@@ -889,7 +909,7 @@ public class AppVersion {
         this.formProperties = AppImExportUtil.getFormProperties(this.config.getConfigProperties());
 
         // 对于有头像的应用数据，需要保存头像文件
-        String iconPath = appDto.getIconPath(context);
+        String iconPath = appDto.getIconPath(contextRoot, context);
         if (!StringUtils.isBlank(iconPath)) {
             this.setIcon(iconPath);
             this.uploadedFileManageService.addFileRecord(this.getData().getAppId(), context.getAccount(),

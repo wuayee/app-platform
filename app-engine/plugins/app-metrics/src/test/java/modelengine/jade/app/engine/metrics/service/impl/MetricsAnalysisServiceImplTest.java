@@ -100,7 +100,7 @@ class MetricsAnalysisServiceImplTest {
         Meta meta = this.buildMeta();
         RangeResult rangeResult = new RangeResult(0, 0, 1);
         RangedResultSet set = new RangedResultSet(Collections.singletonList(meta), rangeResult);
-        when(metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any(), any())).thenReturn(set);
+        when(metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any())).thenReturn(set);
         Map<String, Map<String, Object>> basicMetrics = MapBuilder.<String, Map<String, Object>>get()
                 .put("average_response_time",
                         MapBuilder.<String, Object>get().put("value", new BigDecimal(500.46)).build())
@@ -134,7 +134,7 @@ class MetricsAnalysisServiceImplTest {
         Meta meta = this.buildMeta();
         RangeResult rangeResult = new RangeResult(0, 0, 1);
         RangedResultSet set = new RangedResultSet(Collections.singletonList(meta), rangeResult);
-        when(metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any(), any())).thenReturn(set);
+        when(metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any())).thenReturn(set);
         Map<String, Map<String, Object>> basicMetrics = MapBuilder.<String, Map<String, Object>>get()
                 .put("average_response_time",
                         MapBuilder.<String, Object>get().put("value", new BigDecimal(500.46)).build())

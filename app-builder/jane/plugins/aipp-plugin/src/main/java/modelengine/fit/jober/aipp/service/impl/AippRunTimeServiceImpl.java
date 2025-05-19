@@ -26,7 +26,6 @@ import modelengine.fit.jober.aipp.common.exception.AippForbiddenException;
 import modelengine.fit.jober.aipp.condition.AippInstanceQueryCondition;
 import modelengine.fit.jober.aipp.condition.PaginationCondition;
 import modelengine.fit.jober.aipp.constants.AippConst;
-import modelengine.fit.jober.aipp.domains.appversion.AppVersion;
 import modelengine.fit.jober.aipp.domains.appversion.service.AppVersionService;
 import modelengine.fit.jober.aipp.domains.business.RunContext;
 import modelengine.fit.jober.aipp.domains.task.AppTask;
@@ -48,6 +47,7 @@ import modelengine.fit.jober.aipp.service.AopAippLogService;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
 import modelengine.fit.jober.aipp.service.AppChatSseService;
 import modelengine.fit.jober.aipp.service.RuntimeInfoService;
+import modelengine.fit.jober.aipp.util.CacheUtils;
 import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fit.jober.aipp.vo.MetaVo;
 import modelengine.fit.jober.common.ErrorCodes;
@@ -164,8 +164,7 @@ public class AippRunTimeServiceImpl
     @Fitable("default")
     public String createLatestAippInstanceByAppId(String appId, boolean isDebug, Map<String, Object> initContext,
             OperationContext context) {
-        AppVersion appVersion = this.appVersionService.retrieval(appId);
-        AppTask task = isDebug ? appVersion.getAnyTask(context) : appVersion.getAnyPublishedTask(context);
+        AppTask task = CacheUtils.getAppTaskByAppId(this.appVersionService, appId, isDebug, context);
 
         // 启动任务.
         RunContext ctx = new RunContext(ObjectUtils.cast(initContext.get(AippConst.BS_INIT_CONTEXT_KEY)), context);
@@ -178,22 +177,22 @@ public class AippRunTimeServiceImpl
 
     @Override
     public MetaVo queryLatestMetaVoByAppId(String appId, boolean isDebug, OperationContext context) {
-        AppVersion appVersion = this.appVersionService.retrieval(appId);
-        AppTask task = isDebug ? appVersion.getAnyTask(context) : appVersion.getAnyPublishedTask(context);
-        return MetaVo.builder().id(appVersion.getData().getAppSuiteId()).version(task.getEntity().getVersion()).build();
+        AppTask task = CacheUtils.getAppTaskByAppId(this.appVersionService, appId, isDebug, context);
+        return MetaVo.builder().id(task.getEntity().getAppSuiteId()).version(task.getEntity().getVersion()).build();
     }
 
     @Override
     @Fitable("default")
     public Boolean isInstanceRunning(String instanceId, OperationContext context) {
-        String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
-
-        Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
-        Map<String, String> instInfo = instDetail.getInfo();
+        Optional<AppTaskInstance> instanceOptional = appTaskInstanceService.getInstanceById(instanceId, context);
+        if (instanceOptional.isEmpty()) {
+            return false;
+        }
+        Map<String, Object> instInfo = instanceOptional.get().getEntity().getInfos();
         if (!instInfo.containsKey(AippConst.INST_STATUS_KEY)) {
             return false;
         }
-        return MetaInstStatusEnum.getMetaInstStatus(instInfo.get(AippConst.INST_STATUS_KEY))
+        return MetaInstStatusEnum.getMetaInstStatus(ObjectUtils.cast(instInfo.get(AippConst.INST_STATUS_KEY)))
                 == MetaInstStatusEnum.RUNNING;
     }
 

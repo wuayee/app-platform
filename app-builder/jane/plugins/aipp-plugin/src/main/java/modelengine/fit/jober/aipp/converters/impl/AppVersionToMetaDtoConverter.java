@@ -55,6 +55,7 @@ public class AppVersionToMetaDtoConverter implements EntityConverter {
                     .updateAt(s.getData().getUpdateAt())
                     .appCategory(s.getData().getAppCategory())
                     .tags(tags)
+                    .appBuiltType(s.getData().getAppBuiltType())
                     .build();
         }).orElse(null);
     }

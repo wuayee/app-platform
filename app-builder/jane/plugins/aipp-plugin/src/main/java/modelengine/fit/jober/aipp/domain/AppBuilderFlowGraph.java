@@ -32,6 +32,7 @@ import lombok.experimental.SuperBuilder;
 import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.knowledge.dto.KnowledgeDto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -59,6 +60,7 @@ public class AppBuilderFlowGraph extends BaseDomain {
     private static final String APP_BUILDER_DEFAULT_MODEL_NAME = "#app_builder_default_model_name#";
     private static final String APP_BUILDER_DEFAULT_SERVICE_NAME = "#app_builder_default_service_name#";
     private static final String APP_BUILDER_DEFAULT_TAG = "#app_builder_default_tag#";
+    private static final String APP_BUILDER_DEFAULT_KNOWLEDGE_SET = "#app_builder_default_knowledge_set#";
     private static final int MODEL_LIST_SERVICE_NAME = 0;
     private static final int MODEL_LIST_TAG = 1;
 
@@ -76,6 +78,15 @@ public class AppBuilderFlowGraph extends BaseDomain {
                 .replace(APP_BUILDER_DEFAULT_MODEL_NAME, modelInfo[MODEL_LIST_SERVICE_NAME])
                 .replace(APP_BUILDER_DEFAULT_SERVICE_NAME, modelInfo[MODEL_LIST_SERVICE_NAME])
                 .replace(APP_BUILDER_DEFAULT_TAG, modelInfo[MODEL_LIST_TAG]));
+    }
+
+    /**
+     * 设置知识库信息.
+     *
+     * @param knowledgeInfo 知识库信息.
+     */
+    public void setKnowledgeInfo(KnowledgeDto knowledgeInfo) {
+        this.setAppearance(this.getAppearance().replace(APP_BUILDER_DEFAULT_KNOWLEDGE_SET, knowledgeInfo.getGroupId()));
     }
 
     /**

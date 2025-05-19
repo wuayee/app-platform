@@ -62,7 +62,6 @@ import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.transaction.Transactional;
 import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.knowledge.KnowledgeCenterService;
-import modelengine.jade.knowledge.dto.KnowledgeDto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -85,6 +84,7 @@ public class AppBuilderAppServiceImpl
         implements AppBuilderAppService, modelengine.fit.jober.aipp.genericable.AppBuilderAppService {
     private static final Logger log = Logger.get(AppBuilderAppServiceImpl.class);
     private static final int PATH_LENGTH = 16;
+    private static final String APP_BUILDER_DEFAULT_KNOWLEDGE_SET = "#app_builder_default_knowledge_set#";
 
     private final AppTemplateFactory templateFactory;
     private final UploadedFileManageService uploadedFileManageService;
@@ -172,7 +172,7 @@ public class AppBuilderAppServiceImpl
     @Override
     public AippCreate queryLatestPublished(String appId, OperationContext context) {
         AppVersion appVersion = this.appVersionService.retrieval(appId);
-        AppTask appTask = appVersion.getAnyPublishedTask(context);
+        AppTask appTask = appVersion.getLatestPublishedTask(context);
         String latestAppId = appTask.getEntity().getAppId();
         return AippCreate.builder()
                 .version(appTask.getEntity().getVersion())
@@ -192,8 +192,8 @@ public class AppBuilderAppServiceImpl
 
     @Override
     @Fitable(id = "default")
-    public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
-            HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
+    public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond, OperationContext context,
+            long offset, int limit) {
         if (cond == null) {
             cond = new AppQueryCondition();
         }

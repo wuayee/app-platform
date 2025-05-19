@@ -23,8 +23,6 @@ import modelengine.fit.jober.aipp.dto.check.CheckResult;
 import modelengine.fit.jober.aipp.dto.template.TemplateAppCreateDto;
 import modelengine.fit.jober.aipp.dto.template.TemplateInfoDto;
 import modelengine.fit.jober.common.RangedResultSet;
-
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Genericable;
 
 import java.util.List;

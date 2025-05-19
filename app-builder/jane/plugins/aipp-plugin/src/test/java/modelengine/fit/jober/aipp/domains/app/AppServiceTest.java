@@ -35,6 +35,7 @@ import modelengine.fit.jober.aipp.enums.AppCategory;
 import modelengine.fit.jober.aipp.enums.AppTypeEnum;
 import modelengine.fit.jober.aipp.po.AppBuilderAppPo;
 import modelengine.fit.jober.aipp.service.UploadedFileManageService;
+import modelengine.fitframework.util.StringUtils;
 import modelengine.jade.app.engine.base.service.UsrAppCollectionService;
 import modelengine.jade.store.service.AppService;
 import modelengine.fitframework.util.IoUtils;
@@ -69,7 +70,7 @@ public class AppServiceTest {
         this.usrAppCollectionService = mock(UsrAppCollectionService.class);
         ConverterFactory converterFactory = new ConverterFactory(List.of(new AppVersionToAppDtoConverter()));
         this.appDomainService = new AppDomainServiceImpl(this.appFactory, this.appVersionService,
-                this.uploadedFileManageService, this.usrAppCollectionService, converterFactory);
+                this.uploadedFileManageService, this.usrAppCollectionService, converterFactory, StringUtils.EMPTY);
     }
 
     @Test
@@ -108,7 +109,7 @@ public class AppServiceTest {
         when(this.appFactory.create(anyString())).thenReturn(app);
 
         AppVersion appVersion = mock(AppVersion.class);
-        when(app.importData(any(), any())).thenReturn(appVersion);
+        when(app.importData(any(), "", any())).thenReturn(appVersion);
         when(appVersion.getData()).thenReturn(AppBuilderAppPo.builder()
                 .id("app_version_1")
                 .name("myApp")

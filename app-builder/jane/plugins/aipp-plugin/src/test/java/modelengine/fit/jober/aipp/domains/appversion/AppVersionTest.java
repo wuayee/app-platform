@@ -34,6 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import modelengine.fel.tool.service.ToolService;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
 import modelengine.fit.jade.aipp.model.dto.ModelListDto;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
@@ -100,7 +101,6 @@ import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.fit.jober.common.exceptions.JobberException;
 import modelengine.fitframework.util.IoUtils;
 import modelengine.fitframework.util.MapBuilder;
-import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.common.globalization.LocaleService;
 import modelengine.jade.store.service.AppService;
 import modelengine.jade.store.service.PluginService;
@@ -113,7 +113,6 @@ import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -195,7 +194,10 @@ public class AppVersionTest {
                 this.templateFactory,
                 this.appTaskInstanceService,
                 this.localeService,
-                this.aippModelCenter, converterFactory, this.aippFlowDefinitionService, this.flowDefinitionService, 20000, 300);
+                this.aippModelCenter,
+                converterFactory,
+                this.aippFlowDefinitionService,
+                this.flowDefinitionService, 20000, 300, null);
     }
 
     /**
@@ -1192,7 +1194,7 @@ public class AppVersionTest {
             dto.setVersion("1.0.0");
             Map<String, String> exportMeta = MapBuilder.<String, String>get().put("version", "1.0.1").build();
             AippException exception = assertThrows(AippException.class,
-                    () -> appVersion.importData(dto, "app_1", operationContext, exportMeta));
+                    () -> appVersion.importData(dto, "app_1", "", operationContext, exportMeta));
 
             // then.
             assertEquals(AippErrCode.IMPORT_CONFIG_UNMATCHED_VERSION.getCode(), exception.getCode());
@@ -1217,7 +1219,7 @@ public class AppVersionTest {
             operationContext.setTenantId("31f20efc7e0848deab6a6bc10fc30111");
             AppExportDto dto = this.buildExportDto();
             Map<String, String> exportMeta = MapBuilder.<String, String>get().put("version", "1.0.1").build();
-            appVersion.importData(dto, "app_1", operationContext, exportMeta);
+            appVersion.importData(dto, "app_1", "", operationContext, exportMeta);
 
             // then.
             assertEquals("weather", appVersion.getData().getName());

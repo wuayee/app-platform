@@ -12,15 +12,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.jane.common.response.Rsp;
 import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fit.jober.aipp.dto.AgentCreateInfoDto;
 import modelengine.fit.jober.aipp.service.AgentInfoGenerateService;
-
-import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.Mock;
 import modelengine.fitframework.test.annotation.MvcTest;

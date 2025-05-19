@@ -13,9 +13,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
-import modelengine.fit.jane.task.gateway.Authenticator;
-import modelengine.jade.authentication.AuthenticationService;
-
 import modelengine.fit.http.protocol.Address;
 import modelengine.fit.http.protocol.support.DefaultMessageHeaders;
 import modelengine.fit.http.server.HttpClassicServerRequest;

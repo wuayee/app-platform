@@ -181,6 +181,7 @@ public class AppVersionServiceImpl implements AppVersionService {
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
         }
         AppVersion template = this.retrieval(templateId);
+        template.create();
         template.cloneVersion(dto, DEFAULT_APP_VERSION, AppTypeEnum.APP.name(), context);
         this.save(template);
         return template;

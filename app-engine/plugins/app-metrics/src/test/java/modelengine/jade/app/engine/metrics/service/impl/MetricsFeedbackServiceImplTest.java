@@ -88,7 +88,7 @@ class MetricsFeedbackServiceImplTest {
         Meta meta = this.buildMeta();
         RangeResult rangeResult = new RangeResult(0, 0, 1);
         RangedResultSet set = new RangedResultSet(Collections.singletonList(meta), rangeResult);
-        when(metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any(), any())).thenReturn(set);
+        when(metaService.list(any(), anyBoolean(), anyLong(), anyInt(), any())).thenReturn(set);
 
         MetricsFeedbackDto metricsFeedbackDTO = new MetricsFeedbackDto();
         metricsFeedbackDTO.setPageIndex(0);

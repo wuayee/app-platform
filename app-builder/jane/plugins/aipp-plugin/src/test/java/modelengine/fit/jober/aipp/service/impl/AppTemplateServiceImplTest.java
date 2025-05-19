@@ -149,6 +149,8 @@ public class AppTemplateServiceImplTest {
     @DisplayName("测试将应用发布为应用模板")
     void testPublishAppTemplateFromApp() throws IOException {
         AppBuilderApp app = this.mockApp();
+        AppVersion mockappVersion = mock(AppVersion.class);
+        when(this.appVersionService.retrieval(anyString())).thenReturn(mockappVersion);
 
         File mockFile = File.createTempFile("old_test_icon", ".png");
         TemplateAppCreateDto mockDto = this.mockCreateDto();

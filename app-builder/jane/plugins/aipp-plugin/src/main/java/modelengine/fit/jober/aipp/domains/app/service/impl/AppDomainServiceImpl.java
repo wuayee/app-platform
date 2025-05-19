@@ -19,6 +19,7 @@ import modelengine.fit.jober.aipp.domains.appversion.service.AppVersionService;
 import modelengine.fit.jober.aipp.dto.AppBuilderAppDto;
 import modelengine.fit.jober.aipp.dto.export.AppExportDto;
 import modelengine.fit.jober.aipp.service.UploadedFileManageService;
+import modelengine.fitframework.annotation.Value;
 import modelengine.jade.app.engine.base.service.UsrAppCollectionService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,6 +50,9 @@ public class AppDomainServiceImpl implements AppDomainService {
     private final UsrAppCollectionService usrAppCollectionService;
     private final ConverterFactory converterFactory;
 
+    @Value("${app-engine.contextRoot}")
+    private final String contextRoot;
+
     @Override
     @Transactional
     public void deleteByAppId(String appId, OperationContext context) {
@@ -67,7 +71,7 @@ public class AppDomainServiceImpl implements AppDomainService {
             AppExportDto appExportDto = new ObjectMapper().readValue(appConfig, AppExportDto.class);
             String suiteId = Entities.generateId();
             App app = this.appFactory.create(suiteId);
-            AppVersion appVersion = app.importData(appExportDto, context);
+            AppVersion appVersion = app.importData(appExportDto, this.contextRoot, context);
             return this.converterFactory.convert(appVersion, AppBuilderAppDto.class);
         } catch (JsonProcessingException e) {
             log.error("Imported config file is not json", e);

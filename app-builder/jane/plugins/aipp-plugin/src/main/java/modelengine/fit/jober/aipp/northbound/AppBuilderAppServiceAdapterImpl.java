@@ -17,8 +17,6 @@ import modelengine.fit.jober.aipp.dto.chat.AppQueryParams;
 import modelengine.fit.jober.aipp.genericable.adapter.AppBuilderAppServiceAdapter;
 import modelengine.fit.jober.aipp.service.AppBuilderAppService;
 import modelengine.fit.jober.common.RangedResultSet;
-
-import modelengine.fit.http.server.HttpClassicServerRequest;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.beans.BeanUtils;
 

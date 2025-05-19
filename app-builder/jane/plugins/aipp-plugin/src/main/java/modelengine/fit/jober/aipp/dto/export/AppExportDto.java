@@ -46,10 +46,11 @@ public class AppExportDto {
     /**
      * 获取icon路径.
      *
+     * @param contextRoot 请求上下文根
      * @param context 操作人上下文信息.
      * @return {@link String} icon路径.
      */
-    public String getIconPath(OperationContext context) {
+    public String getIconPath(String contextRoot, OperationContext context) {
         Object iconAttr = this.app.getAttributes().get("icon");
         String iconContent = iconAttr instanceof Map ? ObjectUtils.cast(
                 ObjectUtils.<Map<String, Object>>cast(iconAttr).get("content")) : StringUtils.EMPTY;
@@ -57,7 +58,7 @@ public class AppExportDto {
             return iconContent;
         }
         String iconExtension = ObjectUtils.cast(ObjectUtils.<Map<String, Object>>cast(iconAttr).get("type"));
-        return AppImExportUtil.saveIconFile(iconContent, iconExtension, context.getTenantId());
+        return AppImExportUtil.saveIconFile(iconContent, iconExtension, context.getTenantId(), contextRoot);
     }
 
     /**

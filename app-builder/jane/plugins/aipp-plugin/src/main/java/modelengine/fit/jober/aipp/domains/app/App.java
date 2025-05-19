@@ -113,12 +113,13 @@ public class App {
      * 导入版本数据。
      *
      * @param appDto 应用导入导出基本信息。
+     * @param contextRoot 请求上下文根
      * @param context 操作上下文。
      * @return {@link AppVersion} 版本对象。
      */
-    public AppVersion importData(AppExportDto appDto, OperationContext context) {
+    public AppVersion importData(AppExportDto appDto, String contextRoot, OperationContext context) {
         AppVersion appVersion = this.appVersionFactory.create(new AppBuilderAppPo(), this.appVersionRepository);
-        appVersion.importData(appDto, this.appSuiteId, context, this.exportMeta);
+        appVersion.importData(appDto, this.appSuiteId, contextRoot, context, this.exportMeta);
         this.appVersionService.validateAppName(appVersion.getData().getName(), context);
         this.appVersionService.save(appVersion);
         return appVersion;

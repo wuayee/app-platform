@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.domains.appversion.publish;
 
+import modelengine.fel.tool.service.ToolService;
 import modelengine.fit.jane.task.util.Entities;
 import modelengine.fit.jober.WaterFlowService;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
@@ -15,7 +16,6 @@ import modelengine.fit.jober.aipp.domains.appversion.AppVersion;
 import modelengine.fit.jober.aipp.domains.appversion.PublishContext;
 import modelengine.fit.jober.aipp.domains.appversion.ToolSchemaBuilder;
 import modelengine.fit.jober.aipp.enums.AppCategory;
-import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.store.entity.transfer.AppData;
 import modelengine.jade.store.entity.transfer.AppPublishData;
 import modelengine.jade.store.entity.transfer.PluginData;

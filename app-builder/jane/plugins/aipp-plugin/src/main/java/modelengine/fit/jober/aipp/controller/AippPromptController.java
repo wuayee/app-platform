@@ -45,6 +45,6 @@ public class AippPromptController extends AbstractController {
     @CarverSpan(value = "operation.aippPrompt.prompt")
     @PostMapping(path = "/prompt", description = "智能生成提示词")
     public Rsp<String> prompt(HttpClassicServerRequest httpRequest, @RequestBody PromptGenerateDto param) {
-        return Rsp.ok(this.aippModelService.generatePrompt(param));
+        return Rsp.ok(this.aippModelService.generatePrompt(param, this.contextOf(httpRequest, "")));
     }
 }

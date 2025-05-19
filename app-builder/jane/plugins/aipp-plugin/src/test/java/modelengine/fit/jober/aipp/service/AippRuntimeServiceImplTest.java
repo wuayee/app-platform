@@ -169,7 +169,7 @@ public class AippRuntimeServiceImplTest {
         AppTask appTask = Mockito.mock(AppTask.class);
 
         AppVersion appVersion = mock(AppVersion.class);
-        when(appVersion.getAnyTask(any())).thenReturn(appTask);
+        when(appVersion.getLatestTask(any())).thenReturn(appTask);
 
         when(this.appVersionService.retrieval(anyString())).thenReturn(appVersion);
 

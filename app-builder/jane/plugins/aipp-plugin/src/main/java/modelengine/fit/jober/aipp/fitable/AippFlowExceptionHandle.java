@@ -7,25 +7,18 @@
 package modelengine.fit.jober.aipp.fitable;
 
 import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
-import modelengine.fit.jane.meta.multiversion.instance.Instance;
-import modelengine.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
-
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domains.taskinstance.AppTaskInstance;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
 import modelengine.fit.jober.aipp.entity.AippInstLog;
 import modelengine.fit.jober.aipp.enums.AippInstLogType;
 import modelengine.fit.jober.aipp.enums.MetaInstStatusEnum;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
-import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
 import modelengine.fit.jober.aipp.util.DataUtils;
-import modelengine.fit.jober.aipp.util.MetaInstanceUtils;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fit.waterflow.spi.FlowExceptionService;
-import modelengine.jade.common.globalization.LocaleService;
-
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
@@ -42,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 流程异常处理服务
@@ -75,8 +69,12 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
 
     private void addErrorLog(String aippInstId, List<Map<String, Object>> contexts, boolean enableErrorDetails,
             Locale locale, String errorMessage) {
-        Instance instance = MetaInstanceUtils.getInstanceDetailByInstanceId(aippInstId, null, this.metaInstanceService);
-        String instanceStatus = instance.getInfo().get(AippConst.INST_STATUS_KEY);
+        Optional<AppTaskInstance> instanceOptional = this.appTaskInstanceService.getInstanceById(aippInstId, null);
+        if (instanceOptional.isEmpty()) {
+            return;
+        }
+        String instanceStatus =
+                ObjectUtils.cast(instanceOptional.get().getEntity().getInfos().get(AippConst.INST_STATUS_KEY));
         if (MetaInstStatusEnum.TERMINATED.name().equals(instanceStatus)) {
             log.debug("Aipp instance is already terminated. [aippInstId={}]", aippInstId);
             return;

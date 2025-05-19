@@ -12,12 +12,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jane.meta.multiversion.MetaService;
 import modelengine.fit.jober.aipp.domains.appversion.repository.AppVersionRepository;
 import modelengine.fit.jober.aipp.domains.chat.repository.AppChatRepository;
 import modelengine.fit.jober.aipp.domains.task.service.AppTaskService;
-import modelengine.fit.jane.meta.multiversion.MetaService;
-import modelengine.fit.jane.meta.multiversion.definition.Meta;
-import modelengine.fit.jane.meta.multiversion.definition.MetaFilter;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatRequest;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatRsp;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatRspDto;
@@ -26,15 +24,12 @@ import modelengine.fit.jober.aipp.mapper.AippLogMapper;
 import modelengine.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import modelengine.fit.jober.aipp.repository.AppBuilderAppRepository;
 import modelengine.fit.jober.aipp.service.impl.AippChatServiceImpl;
-import modelengine.fit.jober.common.RangeResult;
 import modelengine.fit.jober.common.RangedResultSet;
-
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

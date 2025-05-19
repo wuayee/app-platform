@@ -17,6 +17,8 @@ import modelengine.fit.jober.common.ServerInternalException;
 import modelengine.fit.jober.common.TooManyRequestException;
 import modelengine.fitframework.annotation.Genericable;
 
+import java.util.List;
+
 /**
  * 元数据实例服务
  *
@@ -74,7 +76,6 @@ public interface MetaInstanceService {
      * 查询meta实例。
      *
      * @param versionId 表示实例所属meta唯一标识的 {@link String}。
-     * @param filter 表示meta实例过滤器的 {@link MetaInstanceFilter}。
      * @param offset 表示查询到的meta版本的结果集在全量结果集中的偏移量的 64 位整数。
      * @param limit 表示查询到的meta版本的结果集中的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
@@ -83,6 +84,29 @@ public interface MetaInstanceService {
     @Genericable(id = "fcf1745068eb47559af543a037b89ef4")
     RangedResultSet<Instance> list(String versionId, MetaInstanceFilter filter, long offset, int limit,
             OperationContext context);
+
+    /**
+     * 查询meta实例。
+     *
+     * @param versionId 表示实例所属meta唯一标识的 {@link String}。
+     * @param offset 表示查询到的meta版本的结果集在全量结果集中的偏移量的 64 位整数。
+     * @param limit 表示查询到的meta版本的结果集中的最大数量的 32 位整数。
+     * @param context 表示操作上下文的 {@link OperationContext}。
+     * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link Instance}{@code >}。
+     */
+    @Genericable(id = "fcf1745068eb47559af543a037b89eg4")
+    RangedResultSet<Instance> list(String versionId, long offset, int limit, OperationContext context);
+
+    /**
+     * 查询meta实例。
+     *
+     * @param ids 表示实例id集合。
+     * @param limit 表示查询到的meta版本的结果集中的最大数量的 32 位整数。
+     * @param context 表示操作上下文的 {@link OperationContext}。
+     * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link Instance}{@code >}。
+     */
+    @Genericable(id = "fcf1745068eb47559af543a037b89eg5")
+    RangedResultSet<Instance> list(List<String> ids, long offset, int limit, OperationContext context);
 
     /**
      * 根据给定的实例唯一标识获取对应的 meta 唯一标识。

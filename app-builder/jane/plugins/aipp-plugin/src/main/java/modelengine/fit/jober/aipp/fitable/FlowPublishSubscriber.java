@@ -7,7 +7,6 @@
 package modelengine.fit.jober.aipp.fitable;
 
 import modelengine.fit.jane.common.entity.OperationContext;
-import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
 import modelengine.fit.jober.aipp.domains.business.RunContext;
 import modelengine.fit.jober.aipp.dto.chat.AppChatRsp;
@@ -17,7 +16,6 @@ import modelengine.fit.jober.aipp.service.AppChatSessionService;
 import modelengine.fit.jober.aipp.service.AppChatSseService;
 import modelengine.fit.jober.aipp.service.RuntimeInfoService;
 import modelengine.fit.jober.aipp.util.ConvertUtils;
-
 import modelengine.fit.waterflow.domain.enums.FlowTraceStatus;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fit.waterflow.entity.FlowNodePublishInfo;

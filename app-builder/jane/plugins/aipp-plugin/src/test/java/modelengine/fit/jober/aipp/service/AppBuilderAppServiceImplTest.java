@@ -19,11 +19,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.alibaba.fastjson.JSONObject;
-
-import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.waterflow.AippFlowDefinitionService;
-import modelengine.fit.jade.waterflow.FlowsService;
 import modelengine.fit.jade.waterflow.service.FlowDefinitionService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
@@ -57,6 +53,7 @@ import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fit.jober.common.RangedResultSet;
 
 import modelengine.fitframework.util.StringUtils;
+import modelengine.jade.knowledge.KnowledgeCenterService;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -106,6 +103,9 @@ public class AppBuilderAppServiceImplTest {
 
     private MockedStatic<ConvertUtils> mockConvertUtils;
 
+    @Mock
+    private KnowledgeCenterService knowledgeCenterService;
+
     @BeforeEach
     public void before() {
         this.converterFactory = mock(ConverterFactory.class);
@@ -114,7 +114,7 @@ public class AppBuilderAppServiceImplTest {
                 this.appTaskService,
                 this.appVersionService,
                 this.appDomainService,
-                this.appDomainFactory, this.converterFactory);
+                this.appDomainFactory, this.converterFactory, this.knowledgeCenterService);
         mockConvertUtils = mockStatic(ConvertUtils.class);
 
     }
@@ -229,7 +229,7 @@ public class AppBuilderAppServiceImplTest {
         AppVersion appVersion = spy(mockAppVersion(appPo));
         AppTask appTask = AppTask.asEntity().setVersion(version).setAppId(appId).build();
         when(appVersionService.retrieval(any())).thenReturn(appVersion);
-        doReturn(appTask).when(appVersion).getAnyPublishedTask(any());
+        doReturn(appTask).when(appVersion).getLatestPublishedTask(any());
 
         AippCreate aippCreate = this.appBuilderAppService.queryLatestPublished(appId, new OperationContext());
 
@@ -311,8 +311,8 @@ public class AppBuilderAppServiceImplTest {
         when(appVersionService.pageListByTenantId(condition, tenantId, offset, limit)).thenReturn(mockResultSet);
         when(converterFactory.convert(any(), any())).thenReturn(AppBuilderAppMetadataDto.builder().build());
 
-        RangedResultSet<AppBuilderAppMetadataDto> resultSet = this.appBuilderAppService.list(condition, null, tenantId,
-            offset, limit).getData();
+        RangedResultSet<AppBuilderAppMetadataDto> resultSet =
+                this.appBuilderAppService.list(condition, new OperationContext(), offset, limit).getData();
 
         assertEquals(1, resultSet.getResults().size());
         assertEquals(offset, resultSet.getRange().getOffset());
@@ -328,11 +328,30 @@ public class AppBuilderAppServiceImplTest {
      * @return {@link AppVersion} 应用版本对象.
      */
     public static AppVersion mockAppVersion(AppBuilderAppPo appPo) {
-        AppVersionFactory appVersionFactory = new AppVersionFactory(null, null,
-            null, null, null, null, null,
-            null, null, null, null, null,
-            null, null, null, null,
-            null, null, null, null, null, 20000, 300);
+        AppVersionFactory appVersionFactory = new AppVersionFactory(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                20000,
+                300,
+                null);
         if (StringUtils.isBlank(appPo.getConfigId())) {
             appPo.setConfigId("defaultConfigId");
         }

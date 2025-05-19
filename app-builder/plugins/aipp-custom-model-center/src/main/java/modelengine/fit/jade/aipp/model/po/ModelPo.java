@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
  * @since 2025/3/11
  */
 @Data
-@AllArgsConstructor
 public class ModelPo extends BasePo {
     private String modelId;
     private String name;

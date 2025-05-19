@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.domains.appversion;
 
+import modelengine.fel.tool.service.ToolService;
 import modelengine.fit.jade.aipp.model.service.AippModelCenter;
 import modelengine.fit.jade.waterflow.AippFlowDefinitionService;
 import modelengine.fit.jade.waterflow.FlowsService;
@@ -26,8 +27,8 @@ import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.UploadedFileManageService;
 import modelengine.fitframework.annotation.Value;
-import modelengine.jade.carver.tool.service.ToolService;
 import modelengine.jade.common.globalization.LocaleService;
+import modelengine.jade.knowledge.KnowledgeCenterService;
 import modelengine.jade.store.service.AppService;
 import modelengine.jade.store.service.PluginService;
 
@@ -66,6 +67,7 @@ public class AppVersionFactory {
     private final FlowDefinitionService flowDefinitionService;
     private final @Value("${app.question.max-length}") Integer maxQuestionLen;
     private final @Value("${app.user-context.max-length}") Integer maxUserContextLen;
+    private final KnowledgeCenterService knowledgeCenterService;
 
     public AppVersionFactory(AppBuilderFormPropertyRepository formPropertyRepository, AppTaskService appTaskService,
             AppBuilderConfigRepository configRepository, AppBuilderFormRepository formRepository,
@@ -77,7 +79,8 @@ public class AppVersionFactory {
             AppTaskInstanceService appTaskInstanceService, LocaleService localeService, AippModelCenter aippModelCenter,
             ConverterFactory converterFactory, AippFlowDefinitionService aippFlowDefinitionService,
             FlowDefinitionService flowDefinitionService, @Value("${app.question.max-length}") Integer maxQuestionLen,
-            @Value("${app.user-context.max-length}") Integer maxUserContextLen) {
+            @Value("${app.user-context.max-length}") Integer maxUserContextLen,
+            KnowledgeCenterService knowledgeCenterService) {
         this.formPropertyRepository = formPropertyRepository;
         this.appTaskService = appTaskService;
         this.configRepository = configRepository;
@@ -101,6 +104,7 @@ public class AppVersionFactory {
         this.flowDefinitionService = flowDefinitionService;
         this.maxQuestionLen = maxQuestionLen != null ? maxQuestionLen : 20000;
         this.maxUserContextLen = maxUserContextLen != null ? maxUserContextLen : 500;
+        this.knowledgeCenterService = knowledgeCenterService;
     }
 
     /**
@@ -136,6 +140,7 @@ public class AppVersionFactory {
                 .flowDefinitionService(this.flowDefinitionService)
                 .maxQuestionLen(this.maxQuestionLen)
                 .maxUserContextLen(this.maxUserContextLen)
+                .knowledgeCenterService(this.knowledgeCenterService)
                 .build());
     }
 }

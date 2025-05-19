@@ -6,14 +6,12 @@
 
 package modelengine.fit.jober.aipp.dto;
 
-import modelengine.fit.jane.common.validation.Size;
-import modelengine.fit.jober.aipp.constants.AippConst;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import modelengine.fit.jane.common.validation.Size;
+import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fitframework.annotation.Property;
 import modelengine.fitframework.util.ObjectUtils;
 import modelengine.fitframework.util.StringUtils;

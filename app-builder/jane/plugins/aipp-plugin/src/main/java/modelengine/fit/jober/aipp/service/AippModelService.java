@@ -6,6 +6,7 @@
 
 package modelengine.fit.jober.aipp.service;
 
+import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.dto.model.PromptGenerateDto;
 
 /**
@@ -30,7 +31,8 @@ public interface AippModelService {
      * 生成提示词模板.
      *
      * @param param {@link PromptGenerateDto} 对象.
+     * @param context {@link OperationContext} 对象
      * @return {@link String} 提示词模板.
      */
-    String generatePrompt(PromptGenerateDto param);
+    String generatePrompt(PromptGenerateDto param, OperationContext context);
 }

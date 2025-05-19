@@ -18,7 +18,6 @@ import modelengine.fit.jober.aipp.dto.chat.QueryChatRspDto;
 import modelengine.fit.jober.common.RangedResultSet;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 历史会话服务接口.
@@ -78,16 +77,6 @@ public interface AippChatService {
      */
     QueryChatRsp updateChat(String originChatId, CreateChatRequest body, OperationContext context)
             throws AippTaskNotFoundException;
-
-    /**
-     * 重新发起会话。
-     *
-     * @param currentInstanceId 需要重新发起会话的实例 ID。
-     * @param additionalContext 重新会话需要的信息，如是否使用多轮对话等等。
-     * @param context 上下文。
-     * @return 表示会话相应体的 {@link QueryChatRsp}。
-     */
-    QueryChatRsp restartChat(String currentInstanceId, Map<String, Object> additionalContext, OperationContext context);
 
     /**
      * 查询对话列表集合

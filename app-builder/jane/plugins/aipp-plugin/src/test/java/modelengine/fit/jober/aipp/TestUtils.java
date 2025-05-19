@@ -123,7 +123,7 @@ public class TestUtils {
      */
     public static void mockMetaListReturnSingleItem6(Meta metaExpected, MetaService metaServiceMock) {
         Mockito.doReturn(RangedResultSet.create(Collections.singletonList(metaExpected), 0L, 1, 1L))
-                .when(metaServiceMock).list(any(), eq(true), eq(0L), eq(1), any(), any());
+                .when(metaServiceMock).list(any(), eq(true), eq(0L), eq(1), any());
     }
 
     /**

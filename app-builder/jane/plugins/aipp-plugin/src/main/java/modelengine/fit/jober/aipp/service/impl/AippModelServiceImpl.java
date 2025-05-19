@@ -26,9 +26,9 @@ import modelengine.fit.jober.aipp.service.AippModelService;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.exception.ClientException;
 import modelengine.fitframework.flowable.Choir;
+import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.MapBuilder;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fitframework.log.Logger;
 
 import java.util.Map;
 
@@ -76,7 +76,7 @@ public class AippModelServiceImpl implements AippModelService {
     }
 
     @Override
-    public String generatePrompt(PromptGenerateDto param) {
+    public String generatePrompt(PromptGenerateDto param, OperationContext context) {
         Map<String, String> values = MapBuilder.<String, String>get().put(INPUT, param.getInput()).build();
         String template = this.aippSystemConfigRepository.find(TEMPLATE_GROUP, param.getTemplateType())
                 .map(c -> c.getValueAttributeString(TEMPLATE_ATTRIBUTE))

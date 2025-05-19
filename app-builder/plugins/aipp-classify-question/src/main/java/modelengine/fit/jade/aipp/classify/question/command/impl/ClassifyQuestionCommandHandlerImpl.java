@@ -14,6 +14,7 @@ import modelengine.fel.core.chat.ChatOption;
 import modelengine.fel.core.chat.support.ChatMessages;
 import modelengine.fel.core.chat.support.HumanMessage;
 import modelengine.fel.core.memory.Memory;
+import modelengine.fel.core.model.http.SecureConfig;
 import modelengine.fel.core.template.support.DefaultStringTemplate;
 import modelengine.fit.jade.aipp.classify.question.QuestionType;
 import modelengine.fit.jade.aipp.classify.question.command.ClassifyQuestionCommand;

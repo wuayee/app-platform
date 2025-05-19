@@ -133,7 +133,7 @@ public interface AppTaskService {
     List<AppTask> getPreviewTasks(String appSuiteId, OperationContext ctx);
 
     /**
-     * 按查询条件获取最新创建的所有任务.
+     * 按查询条件获取最新创建的所有任务，并按创建时间排序
      *
      * @param appId 应用版本的唯一标识.
      * @param ctx 操作人上下文信息.
