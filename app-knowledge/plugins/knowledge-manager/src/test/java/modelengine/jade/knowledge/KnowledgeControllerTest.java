@@ -13,7 +13,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import modelengine.fel.tool.service.ToolGroupService;
 import modelengine.fit.http.client.HttpClassicClientResponse;
 import modelengine.fit.jane.task.gateway.Authenticator;
 import modelengine.fitframework.annotation.Fit;
