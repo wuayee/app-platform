@@ -66,7 +66,7 @@ public class ClassifyQuestionCommandHandlerTest {
             }
         });
         when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
-                ModelAccessInfo.builder().baseUrl("/model").tag("tag").build());
+                ModelAccessInfo.builder().baseUrl("/model").build());
         when(this.modelService.generate(any(Prompt.class), any(ChatOption.class))).thenReturn(
                 Choir.just(new AiMessage("f47ac10b-58cc-4372-a567-0e02b2c3d479")));
         ClassifyQuestionCommand command = TestUtils.getCommand();

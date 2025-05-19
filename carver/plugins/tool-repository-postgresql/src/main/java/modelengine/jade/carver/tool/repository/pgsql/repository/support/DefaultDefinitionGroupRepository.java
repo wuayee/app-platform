@@ -16,6 +16,10 @@ import modelengine.jade.carver.tool.repository.pgsql.mapper.DefinitionGroupMappe
 import modelengine.jade.carver.tool.repository.pgsql.model.entity.DefinitionGroupDo;
 import modelengine.jade.carver.tool.repository.pgsql.repository.DefinitionGroupRepository;
 
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.annotation.Fit;
+import modelengine.fitframework.serialization.ObjectSerializer;
+
 import java.util.Optional;
 
 /**

@@ -1,0 +1,11 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table ReleasePermissionMessage {
+    permission: PermissionType;
+    object_key: string; // 客户端生成的存储对象UUID
+    memory_key: int = -1; // System V生成的共享内存ID；未设定时，默认值为-1
+}
+
+root_type ReleasePermissionMessage;

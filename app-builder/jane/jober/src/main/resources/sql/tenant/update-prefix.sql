@@ -1,0 +1,1 @@
+UPDATE "tenant" SET "updated_by" = ?, "updated_at" = ?

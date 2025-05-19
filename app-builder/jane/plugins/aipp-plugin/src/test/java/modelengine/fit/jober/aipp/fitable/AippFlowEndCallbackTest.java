@@ -38,7 +38,10 @@ import modelengine.fit.jober.aipp.repository.AppBuilderFormRepository;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppBuilderFormService;
 import modelengine.fit.jober.aipp.service.AppChatSseService;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
+import modelengine.fit.jober.aipp.domains.task.service.AppTaskService;
 import modelengine.fit.jober.aipp.util.JsonUtils;
+import modelengine.jade.app.engine.metrics.service.ConversationRecordService;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.test.annotation.FitTestWithJunit;
 import modelengine.fitframework.test.annotation.Mock;
@@ -67,31 +70,23 @@ import java.util.stream.Collectors;
 @FitTestWithJunit(includeClasses = {AippFlowEndCallback.class})
 class AippFlowEndCallbackTest {
     @Mock
-    private MetaService metaService;
-
-    @Mock
     private AippLogService aippLogService;
-
     @Mock
     private ConversationRecordService conversationRecordService;
-
     @Mock
     private AppBuilderFormService formService;
-
-    @Mock
-    private MetaInstanceService metaInstanceService;
-
     @Mock
     private AppChatSseService appChatSseService;
-
     @Mock
     private AppBuilderFormRepository formRepository;
-
     @Mock
     private AppBuilderAppFactory appFactory;
-
     @Mock
     private OutputFormatterChain formatterChain;
+    @Mock
+    private AppTaskService appTaskService;
+    @Mock
+    private AppTaskInstanceService appTaskInstanceService;
 
     @Fit
     private AippFlowEndCallback aippFlowEndCallback;
@@ -123,7 +118,7 @@ class AippFlowEndCallbackTest {
         AppBuilderFormPropertyRepository formPropertyRepository = mock(AppBuilderFormPropertyRepository.class);
         AppBuilderForm appBuilderForm = new AppBuilderForm(formPropertyRepository);
         when(this.formService.selectWithId(anyString())).thenReturn(appBuilderForm);
-        when(this.metaService.retrieve(anyString(), any(OperationContext.class))).thenReturn(TestUtils.buildMeta());
+        when(this.appTaskService.getTaskById(any(), any())).thenReturn(Optional.of(TestUtils.buildTask()));
         when(this.formatterChain.handle(any())).thenReturn(Optional.empty());
 
         this.aippFlowEndCallback.callback(TestUtils.buildFlowDataWithExtraConfig(buildBusinessData(), null));
@@ -136,12 +131,12 @@ class AippFlowEndCallbackTest {
         AppBuilderFormPropertyRepository formPropertyRepository = mock(AppBuilderFormPropertyRepository.class);
         AppBuilderForm appBuilderForm = new AppBuilderForm(formPropertyRepository);
         when(this.formService.selectWithId(anyString())).thenReturn(appBuilderForm);
-        when(this.metaService.retrieve(anyString(), any(OperationContext.class))).thenReturn(TestUtils.buildMeta());
+        when(this.appTaskService.getTaskById(any(), any())).thenReturn(Optional.of(TestUtils.buildTask()));
         when(this.formatterChain.handle(any())).thenReturn(Optional.empty());
 
         Map<String, Object> businessData = buildBusinessData();
-        businessData.put(AippConst.BS_AIPP_FINAL_OUTPUT,
-                MapBuilder.<String, String>get().put("key0", "value0").put("key1", "value1").build());
+        businessData.put(AippConst.BS_AIPP_FINAL_OUTPUT, MapBuilder.<String, String>get()
+                .put("key0", "value0").put("key1", "value1").build());
         this.aippFlowEndCallback.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
 
         verify(this.formatterChain).handle(argThat(args -> {
@@ -157,7 +152,7 @@ class AippFlowEndCallbackTest {
         AppBuilderFormPropertyRepository formPropertyRepository = mock(AppBuilderFormPropertyRepository.class);
         AppBuilderForm appBuilderForm = new AppBuilderForm(formPropertyRepository);
         when(this.formService.selectWithId(anyString())).thenReturn(appBuilderForm);
-        when(this.metaService.retrieve(anyString(), any(OperationContext.class))).thenReturn(TestUtils.buildMeta());
+        when(this.appTaskService.getTaskById(any(), any())).thenReturn(Optional.of(TestUtils.buildTask()));
         doAnswer(args -> {
             Object argument = args.getArgument(0);
             return Optional.of(new ResponsibilityResult(new OutputMessageStub(argument), Constant.LLM_OUTPUT));
@@ -173,11 +168,13 @@ class AippFlowEndCallbackTest {
         AppBuilderFormPropertyRepository formPropertyRepository = mock(AppBuilderFormPropertyRepository.class);
         AppBuilderForm appBuilderForm = new AppBuilderForm(formPropertyRepository);
         when(this.formService.selectWithId(anyString())).thenReturn(appBuilderForm);
-        when(this.metaService.retrieve(anyString(), any(OperationContext.class))).thenReturn(TestUtils.buildMeta());
+        when(this.appTaskService.getTaskById(any(), any())).thenReturn(Optional.of(TestUtils.buildTask()));
         doNothing().when(this.appChatSseService).sendToAncestorLastData(anyString(), any());
         when(this.formRepository.selectWithId(anyString())).thenReturn(null);
         when(this.formatterChain.handle(any())).thenReturn(Optional.empty());
-        AppBuilderApp app = AppBuilderApp.builder().formProperties(Collections.emptyList()).build();
+        AppBuilderApp app = AppBuilderApp.builder()
+                .formProperties(Collections.emptyList())
+                .build();
         when(this.appFactory.create("appId1")).thenReturn(app);
 
         Map<String, Object> businessData = buildBusinessData();

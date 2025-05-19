@@ -118,7 +118,7 @@ const PluginCard = ({ pluginData, cardType, getPluginList, pluginId, pluginRoot,
               </span>
             </div>
           </div>
-          { !readOnly && !(!pluginRoot || pluginData?.isBuiltin) && 
+          { !readOnly && !(!pluginRoot || pluginData?.isBuiltin) &&
             <div className='footer-icon' onClick={(e) => {e.stopPropagation()}}>
               <Dropdown menu={{ items }} trigger={['click']}>
                 <EllipsisOutlined className='footer-more' />

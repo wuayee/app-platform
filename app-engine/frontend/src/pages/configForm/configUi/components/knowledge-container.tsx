@@ -141,7 +141,7 @@ const KnowledgeContainer = (props) => {
           knowledge={knowledge}
           groupId={groupId}
           knowledgeConfigId={knowledgeConfigId}
-          updateData={updateKnowledge} 
+          updateData={updateKnowledge}
         />
       </Panel>
     </Collapse>

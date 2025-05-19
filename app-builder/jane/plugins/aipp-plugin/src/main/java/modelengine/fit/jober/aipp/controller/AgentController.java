@@ -26,6 +26,14 @@ import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.validation.Validated;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.service.annotations.SpanAttr;
+
+import modelengine.fit.http.annotation.PostMapping;
+import modelengine.fit.http.annotation.RequestBody;
+import modelengine.fit.http.annotation.RequestMapping;
+import modelengine.fit.http.server.HttpClassicServerRequest;
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.validation.Validated;
+
 /**
  * 表示智能体信息获取接口集。
  *

@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import lombok.AllArgsConstructor;
 import modelengine.fit.jade.aipp.tool.loop.LoopToolService;
 import modelengine.fit.jade.aipp.tool.loop.dependencies.ToolCallService;
 import modelengine.fit.jade.aipp.tool.loop.entities.Config;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
  * @since 2025/3/10
  */
 @Component
+@AllArgsConstructor
 @Group(name = "LoopToolImpl")
 public class LoopToolServiceImpl implements LoopToolService {
     private static final String DEFAULT_OPERATOR = "Jade";

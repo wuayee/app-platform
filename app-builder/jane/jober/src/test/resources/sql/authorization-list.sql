@@ -1,0 +1,1 @@
+SELECT "id", "system", "user", "token", "expiration", "created_by", "created_at", "updated_by", "updated_at" FROM "authorization" WHERE "id" IN (?) AND "user" IN (?) AND ("system" LIKE ? ESCAPE '\') OFFSET ? LIMIT ?

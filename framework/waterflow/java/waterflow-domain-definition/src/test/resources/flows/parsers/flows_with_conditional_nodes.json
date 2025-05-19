@@ -1,0 +1,11 @@
+{
+  "status": "active",
+  "nodes": [
+    {
+      "type": "condition",
+      "metaId": "j7rlcr",
+      "triggerMode": "manual",
+      "name": ""
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+/**
+ * Copyright (c) 2024 Huawei Technologies Co., Ltd. All rights reserved.
+ * This file is a part of the ModelEngine Project.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
+
+#ifndef DATABUS_WAITING_PERMIT_REQUEST_H
+#define DATABUS_WAITING_PERMIT_REQUEST_H
+
+#include "fbs/common_generated.h"
+#include "UserData.h"
+
+namespace DataBus {
+namespace Resource {
+
+// 共享内存块信息结构体
+struct WaitingPermitRequest {
+    // 禁用默认构造器
+    WaitingPermitRequest() = delete;
+    WaitingPermitRequest(const WaitingPermitRequest&) = delete;
+    WaitingPermitRequest& operator=(const WaitingPermitRequest&) = default;
+    WaitingPermitRequest(int32_t pApplicant, uint32_t seq, DataBus::Common::PermissionType pType,
+                         bool isOperatingUserData, const std::shared_ptr<UserData>& userData)
+        : applicant(pApplicant), seq(seq), permissionType(pType), isOperatingUserData(isOperatingUserData),
+        userData(userData) {}
+    int32_t applicant; // 权限申请客户端
+    uint32_t seq; // 权限申请请求序列号
+    DataBus::Common::PermissionType permissionType; // 权限类型
+    bool isOperatingUserData; // 是否操作用户自定义数据
+    std::shared_ptr<UserData> userData; // 用户自定义元数据
+};
+}  // namespace Resource
+}  // namespace DataBus
+
+#endif // DATABUS_WAITING_PERMIT_REQUEST_H

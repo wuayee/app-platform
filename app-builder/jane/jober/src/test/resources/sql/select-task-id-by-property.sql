@@ -1,0 +1,1 @@
+SELECT "task_id" FROM "task_property" WHERE "id" = ?

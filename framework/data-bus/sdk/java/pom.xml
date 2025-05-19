@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>modelengine.databus</groupId>
+    <artifactId>java-sdk</artifactId>
+    <version>0.2.18</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.antrun.version>3.1.0</maven.antrun.version>
+        <maven.resources.version>3.3.1</maven.resources.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <assertj.version>3.22.0</assertj.version>
+        <junit5.version>5.9.2</junit5.version>
+        <mockito.version>4.11.0</mockito.version>
+        <log4j2.version>2.23.1</log4j2.version>
+        <fitframework.version>3.5.0-SNAPSHOT</fitframework.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.flatbuffers</groupId>
+            <artifactId>flatbuffers-java</artifactId>
+            <version>23.5.26</version>
+        </dependency>
+        <dependency>
+            <groupId>modelengine.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+            <version>${fitframework.version}</version>
+        </dependency>
+        <!-- Log4j2 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>build-on-unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven.antrun.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <chmod file="scripts/build_jni_library_unix.sh" perm="ugo+rx"/>
+                                        <exec executable="/bin/bash">
+                                            <arg line="scripts/build_jni_library_unix.sh"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>${maven.resources.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/resources/jni</directory>
+                                            <includes>
+                                                <include>**/*.so</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <outputDirectory>${project.build.directory}/classes/jni</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

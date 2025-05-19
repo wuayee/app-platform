@@ -1,0 +1,1 @@
+SELECT "id", "index_id", "property_id" FROM "index_property" WHERE "index_id" IN (?)

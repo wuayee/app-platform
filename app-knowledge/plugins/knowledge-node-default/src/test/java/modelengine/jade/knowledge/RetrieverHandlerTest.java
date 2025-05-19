@@ -19,7 +19,9 @@ import modelengine.jade.knowledge.router.KnowledgeServiceRouter;
 import modelengine.jade.knowledge.util.RetrieverServiceUtils;
 
 import modelengine.fel.core.document.MeasurableDocument;
+import modelengine.fitframework.broker.client.BrokerClient;
 import modelengine.fitframework.broker.client.Invoker;
+import modelengine.fitframework.broker.client.Router;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

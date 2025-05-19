@@ -23,10 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AippUploadedFileInfoDto {
     private String aippId;
-
     private String createUserAccount;
-
     private String filename;
-
     private String fileUuid;
 }

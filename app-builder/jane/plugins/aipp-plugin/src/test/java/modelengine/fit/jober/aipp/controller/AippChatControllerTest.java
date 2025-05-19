@@ -12,6 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import modelengine.fit.jane.task.gateway.Authenticator;
+import modelengine.fit.jober.aipp.dto.chat.QueryChatRequest;
+import modelengine.fit.jober.aipp.service.AippChatService;
 
 import modelengine.fit.http.HttpResource;
 import modelengine.fit.http.protocol.Address;

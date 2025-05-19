@@ -11,16 +11,21 @@ import modelengine.fit.jane.meta.multiversion.MetaInstanceService;
 import modelengine.fit.jane.meta.multiversion.instance.Instance;
 import modelengine.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import modelengine.fit.jober.aipp.common.exception.AippErrCode;
+
 import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.domains.taskinstance.AppTaskInstance;
 import modelengine.fit.jober.aipp.entity.AippInstLog;
 import modelengine.fit.jober.aipp.enums.AippInstLogType;
 import modelengine.fit.jober.aipp.enums.MetaInstStatusEnum;
 import modelengine.fit.jober.aipp.service.AippLogService;
 import modelengine.fit.jober.aipp.service.AppChatSessionService;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
 import modelengine.fit.jober.aipp.util.DataUtils;
 import modelengine.fit.jober.aipp.util.MetaInstanceUtils;
 import modelengine.fit.waterflow.entity.FlowErrorInfo;
 import modelengine.fit.waterflow.spi.FlowExceptionService;
+import modelengine.jade.common.globalization.LocaleService;
+
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.annotation.Fit;
 import modelengine.fitframework.annotation.Fitable;
@@ -47,32 +52,25 @@ import java.util.Objects;
 @Component
 public class AippFlowExceptionHandle implements FlowExceptionService {
     private static final Logger log = Logger.get(AippFlowExceptionHandle.class);
-
     private static final String UI_WORD_KEY = "aipp.fitable.AippFlowExceptionHandle";
-
     private static final String UI_WORD_KEY_HINT = "aipp.fitable.AippFlowExceptionHandle.hint";
 
     private final AippLogService aippLogService;
-
-    private final MetaInstanceService metaInstanceService;
-
     private final LocaleService localeService;
-
     private final ToolExceptionHandle toolExceptionHandle;
-
     private final AppChatSessionService appChatSessionService;
-
     private final BrokerClient brokerClient;
+    private final AppTaskInstanceService appTaskInstanceService;
 
-    public AippFlowExceptionHandle(@Fit AippLogService aippLogService, @Fit MetaInstanceService metaInstanceService,
-            @Fit LocaleService localeService, @Fit AppChatSessionService appChatSessionService,
-            @Fit ToolExceptionHandle toolExceptionHandle, @Fit BrokerClient brokerClient) {
+    public AippFlowExceptionHandle(@Fit AippLogService aippLogService, @Fit LocaleService localeService,
+            @Fit AppChatSessionService appChatSessionService, @Fit ToolExceptionHandle toolExceptionHandle,
+            @Fit BrokerClient brokerClient, @Fit AppTaskInstanceService appTaskInstanceService) {
         this.aippLogService = aippLogService;
-        this.metaInstanceService = metaInstanceService;
         this.localeService = localeService;
         this.appChatSessionService = appChatSessionService;
         this.toolExceptionHandle = toolExceptionHandle;
         this.brokerClient = brokerClient;
+        this.appTaskInstanceService = appTaskInstanceService;
     }
 
     private void addErrorLog(String aippInstId, List<Map<String, Object>> contexts, boolean enableErrorDetails,
@@ -111,17 +109,19 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
     public void handleException(String nodeId, List<Map<String, Object>> contexts, FlowErrorInfo errorMessage) {
         Map<String, Object> businessData = DataUtils.getBusiness(contexts);
         String versionId = ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY));
-        log.error("versionId {} nodeId {} errorMessage {}", versionId, nodeId, errorMessage.getErrorMessage());
+        log.error("versionId {} nodeId {} errorMessage {}",
+                versionId,
+                nodeId,
+                errorMessage.getErrorMessage());
         log.debug("handleException businessData {}", businessData);
         String aippInstId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
-        InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
-                .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
-                .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
-                .build();
         OperationContext context = DataUtils.getOpContext(businessData);
-        metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
+        this.appTaskInstanceService.update(AppTaskInstance.asUpdate(versionId, aippInstId)
+                .setFinishTime(LocalDateTime.now())
+                .setStatus(MetaInstStatusEnum.ERROR.name())
+                .build(), context);
         this.appChatSessionService.getSession(aippInstId).ifPresent(e -> {
-            this.toolExceptionHandle.handleFitException(errorMessage);
+            ToolExceptionHandle.handleFitException(errorMessage);
             String finalErrorMsg = this.toolExceptionHandle.getFixErrorMsg(errorMessage, e.getLocale(), true);
             boolean enableErrorDetails = e.isDebug() || isModelError(errorMessage);
             addErrorLog(aippInstId, contexts, enableErrorDetails, e.getLocale(), finalErrorMsg);
@@ -138,8 +138,8 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
                 log.info("Call parent exception fitable successfully, fitableId:{}, aippInstId {}.",
                         parentExceptionFitableId, aippInstId);
             } catch (FitException exception) {
-                log.error("Call parent exception fitable error, fitableId:{}, aippInstId {}.", parentExceptionFitableId,
-                        aippInstId);
+                log.error("Call parent exception fitable error, fitableId:{}, aippInstId {}.",
+                        parentExceptionFitableId, aippInstId);
                 log.error("exception: ", exception);
             }
         }

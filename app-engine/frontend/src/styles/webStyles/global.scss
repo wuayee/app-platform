@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    // background: #F6F6F6;
+    color: black;
+    font-size: 12px;
+    background-image: url('/src/assets/png/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.nav-links a {
+    margin: 0 15px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.hero-section h1 {
+    font-size: 40px;
+}
+
+.hero-section p {
+    font-size: 18px;
+    color: #666;
+}

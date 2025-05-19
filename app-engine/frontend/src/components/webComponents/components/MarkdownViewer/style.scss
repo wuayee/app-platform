@@ -1,0 +1,60 @@
+.markdown-body {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+  box-sizing: border-box;
+  border-top-right-radius: 24px;
+  padding: 24px 8px 0 24px;
+  pre {
+    margin-bottom: 0;
+    code {
+      display: block;
+      width: 100%;
+      overflow: auto;
+    }
+  }
+}
+/* 代码块样式 */
+.code-block {
+  position: relative;
+  margin: 1em 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 代码内容 */
+pre {
+  margin: 0;
+  padding: 1em;
+  overflow-x: auto;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+/* 复制按钮 */
+.copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  &::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    background-image: url('/src/assets/png/copy.png');
+    background-size: 100% 100%;
+    margin-right: 6px;
+    display: inline-block;
+  }
+}

@@ -12,6 +12,9 @@ import modelengine.jade.carver.telemetry.aop.CarverSpanAspect;
 import modelengine.jade.service.annotations.CarverSpan;
 import modelengine.jade.service.annotations.SpanAttr;
 
+import modelengine.fitframework.annotation.Component;
+import modelengine.fitframework.log.Logger;
+
 /**
  * 为 {@link CarverSpanAspect} 测试创建的类，测试复杂对象调用流程。
  *
