@@ -6,6 +6,10 @@
 
 package modelengine.jade.knowledge.service;
 
+import modelengine.fel.tool.annotation.Attribute;
+import modelengine.fel.tool.annotation.Group;
+import modelengine.fel.tool.annotation.ToolMethod;
+import modelengine.fit.jane.task.util.Entities;
 import modelengine.fit.security.Decryptor;
 import modelengine.fit.security.Encryptor;
 import modelengine.fitframework.annotation.Component;
@@ -15,9 +19,6 @@ import modelengine.fitframework.log.Logger;
 import modelengine.fitframework.util.CollectionUtils;
 import modelengine.fitframework.util.LongUtils;
 import modelengine.fitframework.util.StringUtils;
-import modelengine.fel.tool.annotation.Attribute;
-import modelengine.fel.tool.annotation.Group;
-import modelengine.fel.tool.annotation.ToolMethod;
 import modelengine.jade.knowledge.KnowledgeCenterService;
 import modelengine.jade.knowledge.code.KnowledgeManagerRetCode;
 import modelengine.jade.knowledge.condition.KnowledgeConfigQueryCondition;
@@ -85,6 +86,7 @@ public class KnowledgeCenterServiceImpl implements KnowledgeCenterService {
                     .build();
             this.knowledgeCenterRepo.updateOthersIsDefaultFalse(condition);
         }
+        knowledgeConfigDto.setKnowledgeConfigId(Entities.generateId());
         this.knowledgeCenterRepo.insertKnowledgeConfig(this.getKnowledgeConfigPo(knowledgeConfigDto));
     }
 
@@ -178,16 +180,31 @@ public class KnowledgeCenterServiceImpl implements KnowledgeCenterService {
 
     @Override
     @Fitable(id = FITABLE_ID)
-    public String getApiKey(String userId, String groupId, String defaultValue) {
+    public String getApiKey(String knowledgeConfigId, String defaultValue) {
+        if (StringUtils.isEmpty(knowledgeConfigId)) {
+            return defaultValue;
+        }
         KnowledgeConfigQueryCondition cond =
-                KnowledgeConfigQueryCondition.builder().userId(userId).groupId(groupId).isDefault(1).build();
+                KnowledgeConfigQueryCondition.builder().knowledgeConfigId(knowledgeConfigId).build();
         List<KnowledgeConfigPo> result = this.knowledgeCenterRepo.listKnowledgeConfigByCondition(cond);
         if (result.isEmpty()) {
-            log.info("No available api key. [knowledge groupId={}, userId={}]", groupId, userId);
             return defaultValue;
         }
         this.validateConfigNum(result);
         return this.decryptor.decrypt(result.get(0).getApiKey());
+    }
+
+    @Override
+    @Fitable(id = FITABLE_ID)
+    public String getKnowledgeConfigId(String userId, String groupId) {
+        KnowledgeConfigQueryCondition cond =
+                KnowledgeConfigQueryCondition.builder().userId(userId).groupId(groupId).isDefault(1).build();
+        List<KnowledgeConfigPo> result = this.knowledgeCenterRepo.listKnowledgeConfigByCondition(cond);
+        if (result.isEmpty()) {
+            return "";
+        }
+        this.validateConfigNum(result);
+        return result.get(0).getKnowledgeConfigId();
     }
 
     private void validateConfigNum(List<KnowledgeConfigPo> result) {
@@ -221,6 +238,7 @@ public class KnowledgeCenterServiceImpl implements KnowledgeCenterService {
                 .createdAt(LocalDateTime.now())
                 .updatedBy(knowledgeConfigDto.getUserId())
                 .updatedAt(LocalDateTime.now())
+                .knowledgeConfigId(knowledgeConfigDto.getKnowledgeConfigId())
                 .build();
     }
 
