@@ -22,7 +22,7 @@ import { getAddFlowConfig, getEvaluateConfig } from '@/shared/http/appBuilder';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setAppInfo, setValidateInfo } from '@/store/appInfo/appInfo';
 import { setTestStatus, setTestTime } from '@/store/flowTest/flowTest';
-import { FlowContext } from '../../aippIndex/context';
+import { FlowContext, RenderContext } from '../../aippIndex/context';
 import CreateTestSet from '../../appDetail/evaluate/testSet/createTestset/createTestSet';
 import AddSearch from '../../configForm/configUi/components/add-search';
 import { configMap } from '../config';
@@ -69,6 +69,7 @@ const Stage = (props) => {
   const [knowledgeConfigId, setKnowledgeConfigId] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setFlowInfo } = useContext(FlowContext);
+  const { renderRef, elsaReadOnlyRef } = useContext(RenderContext);
   const testStatus = useAppSelector((state) => state.flowTestStore.testStatus);
   const appValidateInfo = useAppSelector((state) => state.appStore.validateInfo);
   const choseNodeId = useAppSelector((state) => state.appStore.choseNodeId);
@@ -79,7 +80,6 @@ const Stage = (props) => {
   const pluginCallback = useRef<any>();
   const formCallback = useRef<any>();
   const currentApp = useRef<any>();
-  const render = useRef<any>(false);
   const currentChange = useRef<any>(false);
   const modalRef = useRef<any>();
   const openModalRef = useRef<any>();
@@ -91,16 +91,16 @@ const Stage = (props) => {
   const connectKnowledgeEvent = useRef<any>();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (appInfo.name && !render.current) {
-      render.current = true;
+    if (appInfo.name && !renderRef.current) {
+      renderRef.current = true;
       currentApp.current = JSON.parse(JSON.stringify(appInfo));
       window.agent = null;
-      setElsaData();
+      setElsaData(elsaReadOnlyRef.current);
     }
   }, [appInfo]);
   useEffect(() => {
     return () => {
-      render.current = false;
+      renderRef.current = false;
       window.agent = null;
       dispatch(setTestStatus(null));
     }
@@ -113,7 +113,7 @@ const Stage = (props) => {
   }
   const realAppId = getQueryString('appId');
   // 编辑工作流
-  function setElsaData() {
+  function setElsaData(readOnly: boolean) {
     let graphData = appInfo.flowGraph?.appearance || {};
     const stageDom = document.getElementById('stage');
     let data = JSON.parse(JSON.stringify(graphData));
@@ -226,6 +226,9 @@ const Stage = (props) => {
         setShowTools(true);
         setModalTypes('parallel');
       });
+      if (readOnly) {
+        agent.readOnly();
+      }
     }).catch(() => {
       setSpinning && setSpinning(false);
     });
@@ -302,6 +305,9 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce((id) => elsaChange(id), 2000), []);
   function elsaChange(id: any) {
+    if (elsaReadOnlyRef.current) {
+      return;
+    }
     let graphChangeData = window.agent.serialize();
     currentApp.current.flowGraph.appearance = graphChangeData;
     updateAppRunningFlow(id);
