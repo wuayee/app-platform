@@ -182,7 +182,7 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
 // 获取版本历史记录
 export function getVersion(tenantId, appId, type, offset, limit) {
   return get(
-    `${AIPP_URL}/${tenantId}/app/${appId}/recentPublished?offset=${offset}&limit=${limit}${type ? '&type=waterFlow' : ''}`
+    `${AIPP_URL}/${tenantId}/app/${appId}/recentPublished?offset=${offset}&limit=${limit}${type ? `&type=${type}` : ''}`
   );
 }
 // 获取插件接口

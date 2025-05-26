@@ -166,7 +166,7 @@ const AddHeader = (props) => {
         open={open}
         setOpen={setOpen}
         updateAippCallBack ={updateAippCallBack }
-        workflow={workFlow} type='waterflow'
+        workflow={workFlow} type='waterFlow'
       />
     </div>
   )}</>
