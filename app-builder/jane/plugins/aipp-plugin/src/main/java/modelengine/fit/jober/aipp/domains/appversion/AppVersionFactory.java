@@ -68,6 +68,7 @@ public class AppVersionFactory {
     private final Integer maxQuestionLen;
     private final Integer maxUserContextLen;
     private final KnowledgeCenterService knowledgeCenterService;
+    private final String resourcePath;
 
     public AppVersionFactory(AppBuilderFormPropertyRepository formPropertyRepository, AppTaskService appTaskService,
             AppBuilderConfigRepository configRepository, AppBuilderFormRepository formRepository,
@@ -81,7 +82,8 @@ public class AppVersionFactory {
             FlowDefinitionService flowDefinitionService,
             @Value("${app-engine.question.max-length}") Integer maxQuestionLen,
             @Value("${app-engine.user-context.max-length}") Integer maxUserContextLen,
-            KnowledgeCenterService knowledgeCenterService) {
+            KnowledgeCenterService knowledgeCenterService,
+            @Value("${app-engine.resource.path}") String resourcePath) {
         this.formPropertyRepository = formPropertyRepository;
         this.appTaskService = appTaskService;
         this.configRepository = configRepository;
@@ -106,6 +108,7 @@ public class AppVersionFactory {
         this.maxQuestionLen = maxQuestionLen != null ? maxQuestionLen : 20000;
         this.maxUserContextLen = maxUserContextLen != null ? maxUserContextLen : 500;
         this.knowledgeCenterService = knowledgeCenterService;
+        this.resourcePath = resourcePath;
     }
 
     /**
@@ -142,6 +145,7 @@ public class AppVersionFactory {
                 .maxQuestionLen(this.maxQuestionLen)
                 .maxUserContextLen(this.maxUserContextLen)
                 .knowledgeCenterService(this.knowledgeCenterService)
+                .resourcePath(this.resourcePath)
                 .build());
     }
 }

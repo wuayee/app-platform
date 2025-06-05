@@ -192,6 +192,7 @@ public class AppVersion {
     private final AippFlowDefinitionService aippFlowDefinitionService;
     private final FlowDefinitionService flowDefinitionService;
     private final KnowledgeCenterService knowledgeCenterService;
+    private final String resourcePath;
 
     AppVersion(AppBuilderAppPo data, Dependencies dependencies) {
         this.data = data;
@@ -223,6 +224,7 @@ public class AppVersion {
         this.maxQuestionLen = dependencies.getMaxQuestionLen();
         this.maxUserContextLen = dependencies.getMaxUserContextLen();
         this.knowledgeCenterService = dependencies.getKnowledgeCenterService();
+        this.resourcePath = dependencies.getResourcePath();
     }
 
     /**
@@ -879,7 +881,7 @@ public class AppVersion {
         this.formProperties = AppImExportUtil.getFormProperties(this.config.getConfigProperties());
 
         // 对于有头像的应用数据，需要保存头像文件
-        String iconPath = appDto.getIconPath(contextRoot, context);
+        String iconPath = appDto.getIconPath(contextRoot, this.resourcePath, context);
         if (!StringUtils.isBlank(iconPath)) {
             this.setIcon(iconPath);
             this.uploadedFileManageService.addFileRecord(this.getData().getAppId(), context.getAccount(),

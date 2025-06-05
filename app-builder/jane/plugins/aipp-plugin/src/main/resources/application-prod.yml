@@ -38,7 +38,8 @@ app-engine:
   exclude-names:
     - 'i18n_appBuilder_*demo*'
   resource:
-    path-prefix: /static/
+    url-prefix: /static/
+    path: /var/share
   form:
     create:
       maximumNum: 400

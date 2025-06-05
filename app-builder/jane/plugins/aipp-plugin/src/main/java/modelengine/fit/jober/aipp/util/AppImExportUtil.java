@@ -531,16 +531,18 @@ public class AppImExportUtil {
      * @param iconExtension 表示图像类型后缀的 {@link String}。
      * @param tenantId 表示租户 id 的 {@link String}。
      * @param contextRoot 表示请求上下文根的 {@link String}。
+     * @param resourcePath 表示资源目录的 {@link String}。
      * @return 表示构造好的图像的路径，可以存放在 attribute 中的 {@link String}。
      */
-    public static String saveIconFile(String iconContent, String iconExtension, String tenantId, String contextRoot) {
+    public static String saveIconFile(String iconContent, String iconExtension, String tenantId, String contextRoot,
+            String resourcePath) {
         boolean isValidExtension = Stream.of(LEGAL_ICON_TYPE)
                 .anyMatch(type -> StringUtils.equalsIgnoreCase(type, iconExtension));
         if (!isValidExtension) {
             return StringUtils.EMPTY;
         }
         String newFileName = UUIDUtil.uuid() + "." + iconExtension;
-        File iconFile = Paths.get(NAS_SHARE_DIR, newFileName).toFile();
+        File iconFile = Paths.get(resourcePath, newFileName).toFile();
         byte[] iconBytes = iconContent.getBytes(StandardCharsets.UTF_8);
         try (InputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(iconBytes))) {
             FileUtils.copyInputStreamToFile(inputStream, iconFile);
