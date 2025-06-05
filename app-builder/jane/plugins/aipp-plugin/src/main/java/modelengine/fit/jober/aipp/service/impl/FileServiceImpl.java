@@ -95,7 +95,7 @@ public class FileServiceImpl implements FileService, CustomResourceHandler {
     private final String formFullPath;
     private final String pathPrefix;
     private final String groupName;
-    private final String resourcePathPrefix;
+    private final String resourceUrlPrefix;
 
     private final HttpClassicClientFactory httpClassicClientFactory;
 
@@ -111,7 +111,7 @@ public class FileServiceImpl implements FileService, CustomResourceHandler {
             @Value("${app-engine.form.temporary-path}") String temporaryPath,
             @Value("${app-engine.form.group-name}") String groupName,
             @Value("${app-engine.form.path}") String formPath,
-            @Value("${app-engine.resource.path-prefix}") String resourcePathPrefix) {
+            @Value("${app-engine.resource.url-prefix}") String resourceUrlPrefix) {
         this.httpClassicClientFactory = httpClassicClientFactory;
         this.imageGenModelUrl = imageGenModelUrl;
         this.imageGenModel = imageGenModel;
@@ -122,7 +122,7 @@ public class FileServiceImpl implements FileService, CustomResourceHandler {
         this.formFullPath = pathPrefix + formPath;
         this.formFullTemporaryPath = pathPrefix + temporaryPath;
         this.groupName = groupName;
-        this.resourcePathPrefix = resourcePathPrefix;
+        this.resourceUrlPrefix = resourceUrlPrefix;
     }
 
     @Override
@@ -326,12 +326,12 @@ public class FileServiceImpl implements FileService, CustomResourceHandler {
     public FileEntity handle(String positionName, HttpClassicServerRequest request,
             HttpClassicServerResponse response) {
         String requestPath = request.path();
-        int urlPathPrefixIndex = requestPath.indexOf(this.resourcePathPrefix);
+        int urlPathPrefixIndex = requestPath.indexOf(this.resourceUrlPrefix);
         if (urlPathPrefixIndex == -1 || requestPath.contains("..")) {
             log.error("Url is invalid. Url={}", requestPath);
             throw new IllegalArgumentException(requestPath);
         }
-        String formPath = requestPath.substring(urlPathPrefixIndex + this.resourcePathPrefix.length());
+        String formPath = requestPath.substring(urlPathPrefixIndex + this.resourceUrlPrefix.length());
         String handledFormFullPath = this.getFormFullPath(formPath);
         Path path = Paths.get(handledFormFullPath);
         if (!path.toFile().exists()) {
@@ -356,7 +356,7 @@ public class FileServiceImpl implements FileService, CustomResourceHandler {
 
     @Override
     public boolean canHandle(String positionName, HttpClassicServerRequest request) {
-        int urlPathPrefixIndex = request.path().indexOf(this.resourcePathPrefix);
+        int urlPathPrefixIndex = request.path().indexOf(this.resourceUrlPrefix);
         return urlPathPrefixIndex != -1;
     }
 

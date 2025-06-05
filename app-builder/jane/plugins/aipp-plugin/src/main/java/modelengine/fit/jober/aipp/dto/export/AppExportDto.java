@@ -46,14 +46,15 @@ public class AppExportDto {
     AppExportFlowGraph flowGraph;
 
     /**
-     * 获取icon路径.
+     * 获取头像文件的路径。
      *
-     * @param contextRoot 请求上下文根
-     * @param context 操作人上下文信息.
-     * @return {@link String} icon路径.
+     * @param contextRoot 表示请求上下文根的 {@link String}。
+     * @param context 表示操作人上下文信息的 {@link String}。
+     * @param resourcePath 表示资源目录的 {@link String}。
+     * @return 表示获取到的头像文件的路径的 {@link String}。
      */
     @JsonIgnore
-    public String getIconPath(String contextRoot, OperationContext context) {
+    public String getIconPath(String contextRoot, String resourcePath, OperationContext context) {
         Object iconAttr = this.app.getAttributes().get("icon");
         String iconContent = iconAttr instanceof Map ? ObjectUtils.cast(
                 ObjectUtils.<Map<String, Object>>cast(iconAttr).get("content")) : StringUtils.EMPTY;
@@ -61,7 +62,11 @@ public class AppExportDto {
             return iconContent;
         }
         String iconExtension = ObjectUtils.cast(ObjectUtils.<Map<String, Object>>cast(iconAttr).get("type"));
-        return AppImExportUtil.saveIconFile(iconContent, iconExtension, context.getTenantId(), contextRoot);
+        return AppImExportUtil.saveIconFile(iconContent,
+                iconExtension,
+                context.getTenantId(),
+                contextRoot,
+                resourcePath);
     }
 
     /**

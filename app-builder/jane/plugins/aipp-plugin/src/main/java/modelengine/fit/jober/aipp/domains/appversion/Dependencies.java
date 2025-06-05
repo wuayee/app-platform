@@ -67,4 +67,5 @@ public class Dependencies {
     private Integer maxQuestionLen;
     private Integer maxUserContextLen;
     private KnowledgeCenterService knowledgeCenterService;
+    private String resourcePath;
 }

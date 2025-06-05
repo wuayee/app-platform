@@ -197,7 +197,7 @@ public class AppVersionTest {
                 this.aippModelCenter,
                 converterFactory,
                 this.aippFlowDefinitionService,
-                this.flowDefinitionService, 20000, 300, this.knowledgeCenterService);
+                this.flowDefinitionService, 20000, 300, this.knowledgeCenterService, "/var/share");
     }
 
     /**
