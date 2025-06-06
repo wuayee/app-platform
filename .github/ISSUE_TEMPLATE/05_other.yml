@@ -11,15 +11,15 @@ body:
       value: |
         ## 提交其他类型的问题 / Submit Other Types of Issues
         
-        如果您的问题不属于问题报告、文档问题、功能请求或问题咨询，请使用此模板。
-        If your issue doesn't belong to bug reports, documentation issues, feature requests or questions, please use this template.
+        如果您的问题不属于问题报告、问题咨询、功能请求或文档问题，请使用此模板。
+        If your issue doesn't belong to bug reports, questions, feature requests or documentation issues, please use this template.
         
         **在提交前，请确认您的问题确实不属于以下类别：**
         **Before submitting, please confirm your issue doesn't belong to the following categories:**
-        - 🐛 [问题报告 / Bug Report](./new?template=bug_report.yml) - 项目功能错误
-        - 📚 [文档问题 / Documentation](./new?template=documentation.yml) - 文档相关问题
-        - ✨ [功能请求 / Feature Request](./new?template=feature_request.yml) - 新功能建议
-        - ❓ [问题咨询 / Question](./new?template=question.yml) - 使用相关问题
+        - 🐛 [问题报告 / Bug Report](./new?template=01_bug_report.yml) - 项目功能错误
+        - ❓ [问题咨询 / Question](./new?template=02_question.yml) - 使用相关问题
+        - ✨ [功能请求 / Feature Request](./new?template=03_feature_request.yml) - 新功能建议
+        - 📚 [文档问题 / Documentation](./new?template=04_documentation.yml) - 文档相关问题
         
   - type: input
     id: summary
