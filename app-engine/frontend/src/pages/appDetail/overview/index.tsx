@@ -64,13 +64,11 @@ const AppOverview: React.FC = () => {
       setLoading(false);
     });
   }, []);
-
   // 获取图片
   const getImgPath = async (icon) => {
     const res: any = await convertImgPath(icon);
     setAppIcon(res);
   };
-
   // 去编排点击回调
   const gotoArrange = () => {
     setBtnLoading(true);
@@ -80,16 +78,18 @@ const AppOverview: React.FC = () => {
         dispatch(setAppInfo({}));
         const newAppId = res.data.id;
         const aippId = res.data.aippId;
-
-        let url = `/app-develop/${tenantId}/app-detail/${newAppId}`;
         if (aippId) {
-          url += `/${aippId}`;
+          if (detail.appCategory === 'workflow') {
+            navigate({
+              pathname: `/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`,
+              search: '?type=chatWorkflow',
+            });
+          } else {
+            navigate(`/app-develop/${tenantId}/app-detail/${newAppId}/${aippId}`);
+          }
+        } else {
+          navigate(`/app-develop/${tenantId}/app-detail/${newAppId}`);
         }
-        if (detail.appCategory === 'workflow') {
-          url += '?type=chatWorkflow';
-        }
-
-        navigate(url);
       }
     }).catch(() => {
       setBtnLoading(false);
@@ -130,7 +130,6 @@ const AppOverview: React.FC = () => {
     const opening = findConfigValue(detail, 'opening');
     setOpening(opening || '-');
   }), [detail];
-
 
   return (
     <Spin spinning={loading}>

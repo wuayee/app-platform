@@ -142,10 +142,6 @@ module.exports = {
           globOptions: {
             ignore: ['**/icon.*'] // 忽略的文件
           }
-        },
-        {
-          from: 'plugins', // 插件目录
-          to: 'plugins', // 打包后的插件目录
         }
       ]
     })

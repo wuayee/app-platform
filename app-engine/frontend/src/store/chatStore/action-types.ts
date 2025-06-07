@@ -12,4 +12,3 @@ export const SET_REFERENCE_LIST = 'SET_REFERENCE_LIST';
 export const SET_USER_ROLE = 'SET_USER_ROLE';
 export const SET_READ_ONLY = 'SET_READ_ONLY';
 export const SET_NO_AUTH = 'SET_NO_AUTH';
-export const SET_PLUGIN_LIST = 'SET_PLUGIN_LIST';

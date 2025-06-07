@@ -1,8 +1,3 @@
 package-lock.json
 node_modules/
 build/
-packages/
-plugins/*
-!plugins/manifest.json
-!plugins/plugin.sh
-!plugins/plugin.js

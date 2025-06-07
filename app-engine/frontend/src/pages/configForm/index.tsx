@@ -5,8 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Tooltip } from 'antd';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import ComponentFactory from './configUi/components/component-factory';
 import './index.scoped.scss';
@@ -22,12 +20,8 @@ const ConfigForm = (props) => {
     handleConfigDataChange,
     inspirationChange,
     showElsa,
-    graph,
-    showConfig,
-    onChangeShowConfig,
+    graph
   } = props;
-  const { t } = useTranslation();
-
   const [configStructure, setConfigStructure] = useState([]);
   const [getCategory, setGetCategory] = useState('');
   const graphOperator = useRef(null);
@@ -66,7 +60,7 @@ const ConfigForm = (props) => {
 
   return (
     <>
-      <div className={['config-form-wrap', showConfig ? null : 'hidden'].join(' ')}>
+      <div className='config-form-wrap'>
         <div className={['config-form', showElsa ? 'config-form-elsa' : null].join(' ')}>
           <div className='config-wrap'>
             <ComponentFactory
@@ -78,14 +72,6 @@ const ConfigForm = (props) => {
             ></ComponentFactory>
           </div>
         </div>
-      </div>
-      <div className="splitter-bar">
-        <Tooltip placement='rightTop' title={t(showConfig ? 'collapseConfig' : 'expandConfig')}>
-          <div
-            className={['splitter-collapse', showConfig ? null : 'collapsed' ].join(' ')}
-            onClick={onChangeShowConfig}
-          ></div>
-        </Tooltip>
       </div>
     </>
   );

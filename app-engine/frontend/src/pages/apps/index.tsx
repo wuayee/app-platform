@@ -71,13 +71,11 @@ const Apps: React.FC = () => {
   function clickCard(item: any, e: any) {
     let id = item.runnables?.APP?.appId;
     let aippId = item.runnables?.APP?.aippId;
-    
-    let url = `/app/${tenantId}/chat/${id}`;
     if (aippId) {
-      url += `/${aippId}`;
+      navigate(`/app/${tenantId}/chat/${id}/${aippId}`);
+    } else {
+      navigate(`/app/${tenantId}/chat/${id}`);
     }
-
-    navigate(url);
   }
 
   // 点击更多操作选项
