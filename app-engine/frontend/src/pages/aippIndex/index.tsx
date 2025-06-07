@@ -12,7 +12,7 @@ import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
 import { getAppInfo, updateFormInfo } from '@/shared/http/aipp';
-import { debounce, getCurrentTime, getUiD, setSpaClassName } from '@/shared/utils/common';
+import { debounce, getCurrentTime, getUiD, setSpaClassName, getAppConfig } from '@/shared/utils/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setInspirationOpen } from '@/store/chatStore/chatStore';
 import { setAippId, setAppId, setAppInfo, setChoseNodeId, setValidateInfo } from '@/store/appInfo/appInfo';
@@ -29,6 +29,7 @@ import { RenderContext } from '@/pages/aippIndex/context';
 const AippIndex = () => {
   const { appId, tenantId, aippId } = useParams();
   const [showElsa, setShowElsa] = useState(false);
+  const [showConfig, setShowConfig] = useState(true);
   const [spinning, setSpinning] = useState(false);
   const [saveTime, setSaveTime] = useState('');
   const [reloadInspiration, setReloadInspiration] = useState('');
@@ -40,14 +41,34 @@ const AippIndex = () => {
   const inspirationRefresh = useRef<any>(false);
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const pluginList = useAppSelector((state) => state.chatCommonStore.pluginList);
   const addFlowRef = useRef<any>(null);
   const renderRef = useRef(false);
   const elsaReadOnlyRef = useRef(false);
+
+  const [pluginName, setPluginName] = useState('default');
+  const [plugin, setPlugin] = useState();
+
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
     showElsa && getAippDetails(true);
   }
+
+  const handleChangeShowConfig = () => {
+    setShowConfig(!showConfig);
+  };
+
+  useEffect(() => {
+    const found = pluginList.find((item: any) => item.name === pluginName);
+    setPlugin(found);
+  }, [pluginList, pluginName]);
+
+  useEffect(() => {
+    if (plugin) {
+      setShowConfig(false);
+    }
+  }, [plugin]);
 
   useEffect(() => {
     dispatch(setAppInfo({}));
@@ -83,11 +104,20 @@ const AippIndex = () => {
         res.data.hideHistory = true;
         aippRef.current = res.data;
         dispatch(setAppInfo(res.data));
+        RefreshChatStyle(res.data);
       }
     } finally {
       setSpinning(false);
     }
   }
+
+  // 基于appInfo更新对话界面
+  const RefreshChatStyle = (appInfo) => {
+    const appChatStyle = getAppConfig(appInfo) ? getAppConfig(appInfo).appChatStyle : null;
+    setPluginName(appChatStyle || 'default');
+  };
+
+
   // 修改aipp更新回调
   const updateAippCallBack = (partialData) => {
     if (partialData) {
@@ -181,9 +211,16 @@ const AippIndex = () => {
                   handleConfigDataChange={handleConfigDataChange}
                   inspirationChange={inspirationChange}
                   showElsa={showElsa}
+                  showConfig={showConfig}
+                  onChangeShowConfig={handleChangeShowConfig}
                 />
               )}
-              <CommonChat contextProvider={contextProvider} previewBack={changeChat} />
+              <CommonChat
+                showElsa={showElsa}
+                contextProvider={contextProvider}
+                previewBack={changeChat}
+                pluginName={pluginName}
+              />
             </div>
           </RenderContext.Provider>
         </div>
