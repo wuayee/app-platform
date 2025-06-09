@@ -66,6 +66,7 @@ public class StorePublisher implements Publisher {
             this.pluginService.addPlugin(this.buildPluginData(appData));
             return appData.getUniqueName();
         }
+        AppData.fillAppData(appData);
         PluginData pluginData = this.buildPluginData(appData);
         return this.toolService.upgradeTool(pluginData.getPluginToolDataList().get(0));
     }
@@ -137,6 +138,9 @@ public class StorePublisher implements Publisher {
         if (appData.getUniqueName() != null) {
             pluginToolData.setUniqueName(appData.getUniqueName());
         }
+        pluginToolData.setDefName(appData.getDefName());
+        pluginToolData.setDefGroupName(appData.getDefGroupName());
+        pluginToolData.setGroupName(appData.getGroupName());
         return pluginToolData;
     }
 }
