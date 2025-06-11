@@ -13,6 +13,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import modelengine.fit.jade.aipp.model.dto.ModelListDto;
+import modelengine.fit.jade.aipp.model.service.AippModelCenter;
+import modelengine.fit.jade.aipp.prompt.PromptBuilder;
+import modelengine.fit.jade.aipp.prompt.PromptMessage;
+import modelengine.fit.jade.aipp.prompt.PromptStrategy;
+import modelengine.fit.jade.aipp.prompt.UserAdvice;
+import modelengine.fit.jade.aipp.prompt.repository.PromptBuilderChain;
+import modelengine.fit.jane.common.entity.OperationContext;
+import modelengine.fit.jade.waterflow.FlowInstanceService;
+import modelengine.fit.jober.aipp.TestUtils;
+import modelengine.fit.jober.aipp.constants.AippConst;
+import modelengine.fit.jober.aipp.domains.taskinstance.AppTaskInstance;
+import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
+import modelengine.fit.jober.aipp.fel.WaterFlowAgent;
+import modelengine.fit.jober.aipp.service.AippLogService;
+import modelengine.fit.jober.aipp.service.AippLogStreamService;
+import modelengine.fit.jober.aipp.util.JsonUtils;
+import modelengine.fit.waterflow.entity.FlowErrorInfo;
+
 import modelengine.fel.core.chat.ChatMessage;
 import modelengine.fel.core.chat.ChatModel;
 import modelengine.fel.core.chat.ChatOption;
@@ -58,7 +77,6 @@ import modelengine.fitframework.util.ObjectUtils;
 import modelengine.jade.common.globalization.LocaleService;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,51 +104,21 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @ExtendWith(MockitoExtension.class)
 public class LlmComponentTest {
-    private static final String TOOL_DEFAULT_VALUE = "\"tool_async\"";
-
     @Mock
     private FlowInstanceService flowInstanceService;
-
-    @Mock
-    private MetaInstanceService metaInstanceService;
-
-    @Mock
-    private MetaService metaService;
-
     @Mock
     private ToolProvider toolProvider;
-
     @Mock
     private AippLogService aippLogService;
-
     @Mock
     private AippLogStreamService aippLogStreamService;
-
+    @Mock
+    private AppTaskInstanceService appTaskInstanceService;
     @Mock
     private PromptBuilderChain promptBuilderChain;
-
-    @Mock
-    private BrokerClient client;
-
     private final ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
-
-    private LocaleService localeService;
-
     @Mock
     private AippModelCenter aippModelCenter;
-
-    @BeforeEach
-    void setUp() {
-        Mockito.when(toolProvider.getTool(any())).thenReturn(Collections.emptyList());
-        doAnswer(invocationOnMock -> {
-            Object advice = invocationOnMock.getArgument(0);
-            Object context = invocationOnMock.getArgument(1);
-            return new PromptBuilderStub().build(ObjectUtils.cast(advice), ObjectUtils.cast(context));
-        }).when(this.promptBuilderChain).build(any(), any());
-
-        when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
-                ModelAccessInfo.builder().tag("tag").build());
-    }
 
     static class PromptBuilderStub implements PromptBuilder {
         @Override
@@ -232,6 +220,7 @@ public class LlmComponentTest {
     @Disabled("多线程阻塞，无法唤醒")
     void shouldOkWhenWaterFlowAgentWithoutAsyncTool() throws InterruptedException {
         // stub
+        this.prepareModel();
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), false);
         LlmComponent llmComponent = getLlmComponent(agent);
 
@@ -239,11 +228,10 @@ public class LlmComponentTest {
         Mockito.doNothing().when(aippLogStreamService).send(any());
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService);
         Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            Assertions.assertEquals("0123", value.get("llmOutput"));
+            AppTaskInstance instance = ObjectUtils.cast(invocation.getArgument(0));
+            Assertions.assertEquals("0123", instance.getEntity().getLlmOutput());
             return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        }).when(this.appTaskInstanceService).update(any(), any());
 
         // run
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
@@ -253,6 +241,7 @@ public class LlmComponentTest {
     @Test
     void shouldFailWhenWaterFlowAgentThrowException() throws InterruptedException {
         // stub
+        this.prepareModel();
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel("exceptionMsg"), false);
         LlmComponent llmComponent = getLlmComponent(agent);
 
@@ -268,6 +257,7 @@ public class LlmComponentTest {
     @Disabled("多线程阻塞，无法唤醒")
     void shouldOkWhenWaterFlowAgentWithAsyncTool() throws InterruptedException {
         // stub
+        this.prepareModel();
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
         LlmComponent llmComponent = getLlmComponent(agent);
 
@@ -277,9 +267,8 @@ public class LlmComponentTest {
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService);
 
         Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
+            AppTaskInstance instance = ObjectUtils.cast(invocation.getArgument(0));
+            String childInstanceId = instance.getEntity().getChildInstanceId();
             if (childInstanceId != null) {
                 Assertions.assertEquals(TestUtils.DUMMY_CHILD_INSTANCE_ID, childInstanceId);
                 Map<String, Object> businessData = new HashMap<>();
@@ -290,10 +279,10 @@ public class LlmComponentTest {
                 llmComponent.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
             } else {
                 resCnt.getAndIncrement();
-                Assertions.assertEquals("0123", value.get("llmOutput"));
+                Assertions.assertEquals("0123", instance.getEntity().getLlmOutput());
             }
             return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        }).when(this.appTaskInstanceService).update(any(), any());
         Mockito.when(toolProvider.getTool(any())).thenReturn(Collections.emptyList());
 
         // run
@@ -305,6 +294,7 @@ public class LlmComponentTest {
     @Test
     void shouldOkWhenNoTool() throws InterruptedException {
         // stub
+        this.prepareModel();
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create()
                 .map(m -> ObjectUtils.<Prompt>cast(ChatMessages.from(new AiMessage("bad"))))
                 .close();
@@ -322,12 +312,20 @@ public class LlmComponentTest {
     @Test
     void shouldFailedWhenNoTool() throws InterruptedException {
         // stub
+        this.prepareModel();
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create().just(m -> {
             int err = 1 / 0;
         }).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LlmComponent llmComponent = new LlmComponent(flowInstanceService, metaInstanceService, toolProvider, agent,
-                aippLogService, null, client, serializer, localeService, aippModelCenter, promptBuilderChain);
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
+                toolProvider,
+                agent,
+                aippLogService,
+                null,
+                serializer,
+                aippModelCenter,
+                promptBuilderChain,
+                this.appTaskInstanceService);
 
         // mock
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService);
@@ -341,27 +339,34 @@ public class LlmComponentTest {
     void shouldOkWhenUseWorkflowNoReturn() throws InterruptedException {
         AtomicReference<Prompt> prompt = new AtomicReference<>();
         // stub
+        this.prepareModel();
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create()
                 .just(prompt::set)
                 .map(m -> ObjectUtils.<Prompt>cast(ChatMessages.from(new ToolMessage("1", "\"tool_async\""))))
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LlmComponent llmComponent = new LlmComponent(flowInstanceService, metaInstanceService, toolProvider, agent,
-                this.aippLogService, null, client, serializer, localeService, aippModelCenter, promptBuilderChain);
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
+                toolProvider,
+                agent,
+                aippLogService,
+                null,
+                serializer,
+                aippModelCenter,
+                promptBuilderChain,
+                this.appTaskInstanceService);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService);
         Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
+            AppTaskInstance instance = ObjectUtils.cast(invocation.getArgument(0));
+            String childInstanceId = instance.getEntity().getChildInstanceId();
             Assertions.assertEquals("tool_async", childInstanceId);
             Map<String, Object> businessData = new HashMap<>();
             businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
             businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
             llmComponent.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
             return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        }).when(this.appTaskInstanceService).update(any(), any());
 
         // run
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
@@ -372,6 +377,7 @@ public class LlmComponentTest {
     @Test
     void shouldOkWhenUseWorkflowNormalReturn() throws InterruptedException {
         // stub
+        this.prepareModel();
         AtomicBoolean flag = new AtomicBoolean(false);
         List<Prompt> prompts = new ArrayList<>();
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create().just(m -> prompts.add(m)).map(m -> {
@@ -385,19 +391,25 @@ public class LlmComponentTest {
             return ObjectUtils.<Prompt>cast(chatMessages);
         }).just(m -> flag.set(true)).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LlmComponent llmComponent = new LlmComponent(flowInstanceService, metaInstanceService, toolProvider, agent,
-                this.aippLogService, null, client, serializer, localeService, aippModelCenter, promptBuilderChain);
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
+                toolProvider,
+                agent,
+                aippLogService,
+                null,
+                serializer,
+                aippModelCenter,
+                promptBuilderChain,
+                this.appTaskInstanceService);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService);
 
         Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
-            generateBusinessDataAndCallBack(childInstanceId, value, llmComponent);
+            AppTaskInstance instance = ObjectUtils.cast(invocation.getArgument(0));
+            generateBusinessDataAndCallBack(instance.getEntity().getChildInstanceId(), instance.getEntity().getInfos(),
+                    llmComponent);
             return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        }).when(this.appTaskInstanceService).update(any(), any());
         Mockito.when(toolProvider.getTool(any())).thenReturn(Collections.emptyList());
 
         // run
@@ -428,10 +440,15 @@ public class LlmComponentTest {
     @Test
     void shouldOkWhenUseMaxMemoryRounds() throws InterruptedException {
         // stub
-        AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create().just(m -> {
-            List<? extends ChatMessage> messages = m.messages();
-            Assertions.assertEquals(2, messages.size());
-        }).map(m -> ObjectUtils.<Prompt>cast(ChatMessages.from(new AiMessage("bad")))).close();
+        this.prepareModel();
+        AiProcessFlow<Prompt, Prompt> testAgent =
+                AiFlows.<Prompt>create()
+                        .just(m -> {
+                            List<? extends ChatMessage> messages = m.messages();
+                            Assertions.assertEquals(2, messages.size());
+                        })
+                        .map(m -> ObjectUtils.<Prompt>cast(ChatMessages.from(new AiMessage("bad"))))
+                        .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LlmComponent llmComponent = getLlmComponent(agent);
 
@@ -450,21 +467,20 @@ public class LlmComponentTest {
     @Test
     void shouldFailLLmNodeWhenHandleGivenWorkflowException() throws InterruptedException {
         // given
+        this.prepareModel();
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
         LlmComponent llmComponent = getLlmComponent(agent);
 
         CountDownLatch countDownLatch = mockFailAsyncJob(flowInstanceService);
         Mockito.doAnswer((Answer<Void>) invocation -> {
-            InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
-            Map<String, Object> value = info.getInfo().getValue();
-            String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
-            Assertions.assertNotNull(childInstanceId);
+            AppTaskInstance instance = ObjectUtils.cast(invocation.getArgument(0));
+            Assertions.assertNotNull(instance.getEntity().getChildInstanceId());
             Map<String, Object> businessData = new HashMap<>();
             businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
             llmComponent.handleException("nodeId", TestUtils.buildFlowDataWithExtraConfig(businessData, null),
                     new FlowErrorInfo(123, "error", null, null, null, null));
             return null;
-        }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
+        }).when(this.appTaskInstanceService).update(any(), any());
 
         // when
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
@@ -498,7 +514,26 @@ public class LlmComponentTest {
     }
 
     private LlmComponent getLlmComponent(final AbstractAgent<Prompt, Prompt> agent) {
-        return new LlmComponent(flowInstanceService, metaInstanceService, toolProvider, agent, aippLogService,
-                aippLogStreamService, client, serializer, localeService, aippModelCenter, promptBuilderChain);
+        return new LlmComponent(flowInstanceService,
+                toolProvider,
+                agent,
+                aippLogService,
+                aippLogStreamService,
+                serializer,
+                aippModelCenter,
+                promptBuilderChain,
+                this.appTaskInstanceService);
+    }
+
+    private void prepareModel() {
+        Mockito.when(toolProvider.getTool(any())).thenReturn(Collections.emptyList());
+        doAnswer(invocationOnMock -> {
+            Object advice = invocationOnMock.getArgument(0);
+            Object context = invocationOnMock.getArgument(1);
+            return new PromptBuilderStub().build(ObjectUtils.cast(advice), ObjectUtils.cast(context));
+        }).when(this.promptBuilderChain).build(any(), any());
+
+        when(this.aippModelCenter.getModelAccessInfo(any(), any(), any())).thenReturn(
+                ModelAccessInfo.builder().tag("tag").build());
     }
 }

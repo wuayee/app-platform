@@ -223,7 +223,7 @@
   "gotIt": "Got It",
   "successReleased": "Application released",
   "versionTip": "Invalid version format",
-  "releaseTip": "The version to be released will overwrite the historical version and cannot be rolled back",
+  "releaseTip": "The version to be released will overwrite the historical version",
   "releaseApplication": "Release Application",
   "releaseTip2": "Release the application only after it passes the debugging",
   "versionName": "Version",
@@ -233,6 +233,8 @@
   "testTip2": "Debug the workflow to ensure it runs properly before release.",
   "debug": "Debug",
   "plsEnterRequiredItem": "Set mandatory parameters",
+  "expandConfig": "Expand config",
+  "collapseConfig":  "Collapse config",
   "flowChangeWarningContent": "The workflow configuration items have been modified. Debug the workflow again. The workflow can be released once it passes the debugging",
   "noMoreTips": "Do not remind me again",
   "plsEnterString": "Enter a string",
@@ -951,5 +953,13 @@
   "reorganizeNodes": "Organize nodes",
   "zoomOut": "Zoom Out",
   "zoomIn": "Zoom In",
-  "formItemFieldTypeCannotBeEmpty": "Field type is required"
+  "formItemFieldTypeCannotBeEmpty": "Field type is required",
+  "addParallelTask": "Add Parallel Tasks",
+  "recover": "recover",
+  "exit": "exit",
+  "resetSucceed": "Reset Succeed",
+  "currentDraft": "Current Draft",
+  "loading": "Loading",
+  "noMore": "You've reached the end",
+  "latest": "latest"
 }
