@@ -164,6 +164,9 @@ const ChoreographyHead = (props) => {
 
   // 实时保存数据
   const updateGraph = async () => {
+    if (preview) {
+      return;
+    }
     const currentApp = cloneDeep(appInfo);
     currentApp.flowGraph.appearance = window.agent.serialize();
     await updateFlowInfo(tenantId, appId, currentApp.flowGraph);

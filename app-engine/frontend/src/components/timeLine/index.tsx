@@ -67,6 +67,7 @@ const TimeLineFc = (props) => {
       setTimeList([]);
       setPage(1);
       hasMoreRef.current = true;
+      elsaReadOnlyRef.current = true;
       window.agent?.readOnly();
 
       Promise.all([
