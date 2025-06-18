@@ -29,7 +29,7 @@ const InspirationList = (props) => {
     }
     return (<span className='right'>
       <img src={EditImg} alt="" onClick={() => clickInspiration(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
-      <img src={DeleteImg} alt="" onClick={() => handleDelete(item.id)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
+      <img src={DeleteImg} alt="" onClick={() => handleDelete(item)} className={inspirationValues?.showInspiration ? '' : 'not-allowed'} />
     </span>);
   };
 
