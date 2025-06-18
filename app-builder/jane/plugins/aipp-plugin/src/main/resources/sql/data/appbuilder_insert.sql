@@ -175,14 +175,14 @@ VALUES ('c6a2d574ccfb46754hb9de3ac88ef199', 'form_property_opening_content', 'zh
 
 INSERT INTO aipp_system_config(config_key, config_value, config_group, config_parent) VALUES ('system', '{"template": "You ara a prompt generator, Your job is to generate prompt from the input of the user.\n\nThe Prompt must follow the style of the example below:\n\n###\ninput:\n生活助手\n\noutput:\n角色：你是一个智能生活助手。\n背景：作为一款集成多种智能功能的应用程序，你需要熟悉各种智能家居设备、日程安排、健康数据等相关知识。\n技能：智能家居控制照明、温控、安防、日程管理（提醒、安排等）、健康监测（睡眠、运行、饮食等）、信息查询、语音交互等。\n目标：为用户提供便捷。\n限制：你可以访问用户的智能家居设备、日历、健康数据等相关信息，并根据需要进行协作和响应。\n###\n\n**DO NOT GENERATE ANY OTHER CONTENT EXCEPT OF THE PROMPT TEMPLATE**\n\ninput: {{input}}"}', 'template', NULL) ON CONFLICT (config_group, config_key) DO NOTHING;
 
-INSERT INTO "app_builder_app_type" VALUES ('4db152b24f94473ab683b1acbfe3c865', '通用', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:11.275326', '2025-01-16 17:26:11.275326') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('ad7fca4851394495a90723eb6bcd6141', '文章写作', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:53.880531', '2025-01-16 17:26:53.880531') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('099201eaee2346a7bffd76bbdbfb0c7e', '编程开发', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:02.607163', '2025-01-16 17:27:02.607163') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('19301209cff644e0bed7aede966226fa', '金融问数', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:15.121579', '2025-01-16 17:27:15.121579') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('dadb32e11d0f49c8b3b2b3b78f32adcb', '知识问答', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:24.408541', '2025-01-16 17:27:24.408541') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('bfce7a4f00ea464ca85b1bd691ffe774', '数字人', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:31.439755', '2025-01-16 17:27:31.439755') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('b653edb7eb5a49be91abcd2c5877c6ad', '办公效率', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:40.941004', '2025-01-16 17:27:40.941004') ON CONFLICT (id) DO NOTHING;
-INSERT INTO "app_builder_app_type" VALUES ('6cca24416a05436390e0a96712a4294e', '企业管理', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:50.566101', '2025-01-16 17:27:50.566101') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('4db152b24f94473ab683b1acbfe3c865', 'i18n_appBuilder_{app_type_universal}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:11.275326', '2025-01-16 17:26:11.275326') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('ad7fca4851394495a90723eb6bcd6141', 'i18n_appBuilder_{article_writing}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:26:53.880531', '2025-01-16 17:26:53.880531') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('099201eaee2346a7bffd76bbdbfb0c7e', 'i18n_appBuilder_{programming_development}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:02.607163', '2025-01-16 17:27:02.607163') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('19301209cff644e0bed7aede966226fa', 'i18n_appBuilder_{financial_question}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:15.121579', '2025-01-16 17:27:15.121579') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('dadb32e11d0f49c8b3b2b3b78f32adcb', 'i18n_appBuilder_{knowledge_quiz}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:24.408541', '2025-01-16 17:27:24.408541') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('bfce7a4f00ea464ca85b1bd691ffe774', 'i18n_appBuilder_{digital_human}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:31.439755', '2025-01-16 17:27:31.439755') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('b653edb7eb5a49be91abcd2c5877c6ad', 'i18n_appBuilder_{office_efficiency}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:40.941004', '2025-01-16 17:27:40.941004') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "app_builder_app_type" VALUES ('6cca24416a05436390e0a96712a4294e', 'i18n_appBuilder_{enterprise_management}', '31f20efc7e0848deab6a6bc10fc3021e', '2025-01-16 17:27:50.566101', '2025-01-16 17:27:50.566101') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb4687a8b9de3ac88ef1e3', 'semantic_search', 'en', 'Semantic search') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c6a2d574ccfb4687a8b9de3ac88ef1e2', 'semantic_search', 'zh', '语义检索') ON CONFLICT (id) DO NOTHING;
@@ -193,3 +193,19 @@ INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c7f27554
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('1fb34511fc3e4836908fa7b7539e840d', 'question_displayName', 'en', 'userQuestion') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('8d1d888d9735436fb673bdbd3cc57316', 'form_property_multimodal', 'zh', '多模态') ON CONFLICT (id) DO NOTHING;
 INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('380cb868c716469ab7e79ed1155957ae', 'form_property_multimodal', 'en', 'Multimodal') ON CONFLICT (id) DO NOTHING;
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('efc7224a05624148a119e75e152974c6', 'app_type_universal', 'zh', '通用');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('bb81bb533c094de482ea57dc2584e191', 'app_type_universal', 'en', 'universal');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('decaa34431e54df48d61253466514387', 'article_writing', 'zh', '文章写作');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('33734c7dbc5b480f925767b32de826b5', 'article_writing', 'en', 'article writing');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('58bab8275c8b46bfb81b79a0cf6e2243', 'programming_development', 'zh', '编程开发');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('c40ceef39e814315a0428bb184477c5a', 'programming_development', 'en', 'programming development');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('cc97faeeed8843f4a6e9e8eea36e7332', 'financial_question', 'zh', '金融问数');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('e4871761953f4369b9b82a3a2e2bc51d', 'financial_question', 'en', 'financial question');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('757b848d824e4df680e072b01497f1be', 'knowledge_quiz', 'zh', '知识问答');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('60d2738e56304682ae120249d9bca1be', 'knowledge_quiz', 'en', 'knowledge quiz');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('09241915a2be47a990ef905491301469', 'digital_human', 'zh', '数字人');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('505ccb7ac74a408fbfb987700cce6cd1', 'digital_human', 'en', 'digital human');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('2e8460108df64a508fb623b2e36fbef7', 'office_efficiency', 'zh', '办公效率');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('d0e180e87521400b83d11fd15685dc68', 'office_efficiency', 'en', 'office efficiency');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('ee61116fffe149b0b3912d88144a1390', 'enterprise_management', 'zh', '企业管理');
+INSERT INTO "public"."i18n" ("id", "key", "language", "value") VALUES ('46857145df974a73a97e5a45eb5d2a42', 'enterprise_management', 'en', 'enterprise management');
