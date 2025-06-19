@@ -719,7 +719,7 @@
   "uploadIntelligentFormComponentPackage": "上传智能表单组件包",
   "plsUploadIntelligentFormComponentPackage": "请上传智能表单组件包",
   "onlyOneFomrTip": "仅支持上传一个表单",
-  "uploadFormContent": "仅支持.zip格式文件，仅支持上传一个表单；请包含表单组件预览图 \n 上传压缩包大小不超过5MB，预览图大小不超过1MB",
+  "uploadFormContent": "仅支持.zip格式文件，仅支持上传一个表单；请包含表单组件预览图 \n 解压后的文件大小不超过5MB，预览图大小不超过1MB",
   "downloadTemplateForm": "下载模版表单",
   "componentPreview": "组件预览图",
   "emptyPreview": "暂无预览图",
