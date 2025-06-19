@@ -493,7 +493,7 @@
   "uploadIntelligentFormComponentPackage": "Intelligent Form Component Package",
   "plsUploadIntelligentFormComponentPackage": "Upload an intelligent form component package",
   "onlyOneFomrTip": "Only supports uploading one form",
-  "uploadFormContent": "Only one form in ZIP format can be uploaded. The package cannot exceed 5 MB and \n must include a form component preview image with a maximum size of 1 MB",
+  "uploadFormContent": "Only one form in ZIP format can be uploaded. The size of the decompressed file should not exceed 5MB and \n must include a form component preview image with a maximum size of 1 MB",
   "downloadTemplateForm": "Download Form Template",
   "componentPreview": "Component Preview Image",
   "emptyPreview": "No preview image available",
