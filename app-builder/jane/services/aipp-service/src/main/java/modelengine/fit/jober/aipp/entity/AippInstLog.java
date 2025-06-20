@@ -6,8 +6,6 @@
 
 package modelengine.fit.jober.aipp.entity;
 
-import com.alibaba.fastjson.JSON;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -62,13 +60,4 @@ public class AippInstLog {
 
     @Property(description = "历史数据类型 {@link AippInstLogType}")
     private String logType;
-
-    /**
-     * 获取 question 数据.
-     *
-     * @return {@link String} 问题.
-     */
-    public String getQuestion() {
-        return JSON.parseObject(this.getLogData()).getString("msg");
-    }
 }

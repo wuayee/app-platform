@@ -28,6 +28,8 @@ import static modelengine.fit.jober.aipp.util.UsefulUtils.doIfNotBlank;
 import static modelengine.fit.jober.aipp.util.UsefulUtils.doIfNull;
 import static modelengine.fitframework.util.ObjectUtils.cast;
 
+import com.alibaba.fastjson.JSON;
+
 import lombok.Getter;
 import modelengine.fel.tool.service.ToolService;
 import modelengine.fit.jade.aipp.model.dto.ModelAccessInfo;
@@ -80,6 +82,7 @@ import modelengine.fit.jober.aipp.dto.export.AppExportDto;
 import modelengine.fit.jober.aipp.dto.export.AppExportFlowGraph;
 import modelengine.fit.jober.aipp.dto.template.TemplateAppCreateDto;
 import modelengine.fit.jober.aipp.dto.template.TemplateInfoDto;
+import modelengine.fit.jober.aipp.entity.AippInstLog;
 import modelengine.fit.jober.aipp.entity.ChatSession;
 import modelengine.fit.jober.aipp.enums.AippMetaStatusEnum;
 import modelengine.fit.jober.aipp.enums.AippTypeEnum;
@@ -578,6 +581,10 @@ public class AppVersion {
             OperationContext context, Consumer<RunContext> onFinished) {
         List<AppLog> instanceLogs = instance.getLogs();
         List<QueryChatRsp> chatList = instance.getChats();
+        if (CollectionUtils.isEmpty(chatList)) {
+            LOGGER.error("ChatList is empty. [InstanceId={}]", instance.getId());
+            throw new AippParamException(AippErrCode.RE_CHAT_FAILED);
+        }
 
         // 合并参数.
         AppLog appLog = instanceLogs.iterator().next();
@@ -586,19 +593,35 @@ public class AppVersion {
 
         RunContext runContext = new RunContext(new HashMap<>(), context);
         runContext.setRestartMode(cast(mergedRestartParams.getOrDefault(RESTART_MODE, OVERWRITE.getMode())));
-        runContext.setAppId(chatList.get(0).getAppId());
-        runContext.setChatId(chatList.get(0).getChatId());
+
+        QueryChatRsp mostRecentRsp = chatList.get(0);
+        runContext.setAppId(mostRecentRsp.getAppId());
+        runContext.setChatId(mostRecentRsp.getChatId());
         runContext.setUserContext(mergedRestartParams);
         runContext.putAllToBusiness(mergedRestartParams);
-        runContext.setQuestion(appLog.getLogData().getQuestion());
+        runContext.setQuestion(this.getQuestion(appLog.getLogData()));
         if (chatList.size() == 2) {
             runContext.setAtChatId(chatList.get(1).getChatId());
         }
         if (runContext.isOverWriteMode()) {
             instance.overWrite();
         }
-        this.run(runContext, session);
+        boolean isDebug =
+                StringUtils.equals(AppState.INACTIVE.getName(), this.getState(mostRecentRsp.getAttributes()));
+        if (isDebug) {
+            this.debug(runContext, session);
+        } else {
+            this.run(runContext, session);
+        }
         onFinished.accept(runContext);
+    }
+
+    private String getState(String attributes) {
+        return ObjectUtils.cast(JsonUtils.parseObject(attributes).get(AippConst.ATTR_CHAT_STATE_KEY));
+    }
+
+    private String getQuestion(AippInstLog instLog) {
+        return JSON.parseObject(instLog.getLogData()).getString("msg");
     }
 
     /**
