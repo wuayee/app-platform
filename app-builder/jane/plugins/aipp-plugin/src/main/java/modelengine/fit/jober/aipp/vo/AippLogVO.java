@@ -84,9 +84,9 @@ public class AippLogVO {
      */
     public boolean displayable() {
         return !(StringUtils.equals(AippInstLogType.FORM.name(), this.logType)
-                || StringUtils.equals(AippInstLogType.HIDDEN_MSG.name(), this.logType) || StringUtils.equals(
-                AippInstLogType.HIDDEN_QUESTION.name(),
-                this.logType) || StringUtils.equals(AippInstLogType.HIDDEN_FORM.name(), this.logType));
+                || StringUtils.equals(AippInstLogType.HIDDEN_QUESTION.name(), this.logType) || StringUtils.equals(
+                AippInstLogType.HIDDEN_FORM.name(),
+                this.logType));
     }
 
     /**

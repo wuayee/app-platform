@@ -364,6 +364,14 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         output.put("reference", promptMetadata.getOrDefault(PROMPT_METADATA_KEY, Collections.emptyMap()));
         businessData.put("output", output);
 
+        // 如果节点配置为输出到聊天，模型回复内容需要持久化
+        boolean enableLog = checkEnableLog(businessData);
+        if (enableLog) {
+            this.aippLogService.insertLog(AippInstLogType.MSG.name(),
+                    AippLogData.builder().msg(answer).build(),
+                    businessData);
+        }
+
         // 修改taskInstance.
         AppTaskInstance updateEntity = AppTaskInstance.asUpdate(llmMeta.getVersionId(), llmMeta.getInstId())
                 .setLlmOutput(answer)
@@ -537,6 +545,14 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
         }
     }
 
+    public static boolean checkEnableLog(Map<String, Object> businessData) {
+        Object value = businessData.get(AippConst.BS_LLM_ENABLE_LOG);
+        if (value == null) {
+            return true;
+        }
+        return Boolean.parseBoolean(value.toString());
+    }
+
     static class StreamMsgSender {
         private final AippLogStreamService aippLogStreamService;
         private final ObjectSerializer serializer;
@@ -560,7 +576,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
          * @param businessData 表示流程上下文的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
          */
         public void sendMsg(String msg, Map<String, Object> businessData) {
-            boolean enableLog = this.checkEnableLog(businessData);
+            boolean enableLog = checkEnableLog(businessData);
             if (!enableLog || StringUtils.isBlank(msg) || msg.contains("<tool_call>")) {
                 return;
             }
@@ -574,17 +590,11 @@ public class LlmComponent implements FlowableService, FlowCallbackService, FlowE
          * @param businessData 表示流程上下文的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
          */
         public void sendKnowledge(Map<String, Object> promptMetadata, Map<String, Object> businessData) {
-            if (!this.checkEnableLog(businessData) || !promptMetadata.containsKey(PROMPT_METADATA_KEY)) {
+            if (!checkEnableLog(businessData) || !promptMetadata.containsKey(PROMPT_METADATA_KEY)) {
                 return;
             }
             String knowledgeData = this.serializer.serialize(promptMetadata.get(PROMPT_METADATA_KEY));
             this.sendMsgHandle(knowledgeData, StreamMsgType.KNOWLEDGE, businessData);
-        }
-
-        private Boolean checkEnableLog(Map<String, Object> businessData) {
-            return Objects.isNull(businessData.get(AippConst.BS_LLM_ENABLE_LOG))
-                    ? true
-                    : ObjectUtils.cast(businessData.get(AippConst.BS_LLM_ENABLE_LOG));
         }
 
         private void sendMsgHandle(String msg, StreamMsgType logType, Map<String, Object> businessData) {
