@@ -111,7 +111,7 @@ const ChatPreview = (props) => {
   const detailPage = location.pathname.indexOf('app-detail') !== -1;
   const storageId = detailPage ? aippId : appId;
   const chatStatus = ['ARCHIVED', 'ERROR', 'TERMINATED'];
-  const messageType = ['MSG', 'ERROR', 'META_MSG'];
+  const messageType = ['MSG', 'ERROR', 'META_MSG', 'HIDDEN_MSG'];
   const readOnly = useAppSelector((state) => state.commonStore.isReadOnly);
 
   useEffect(() => {

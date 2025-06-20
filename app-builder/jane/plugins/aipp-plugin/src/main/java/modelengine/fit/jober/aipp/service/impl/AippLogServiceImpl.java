@@ -235,6 +235,11 @@ public class AippLogServiceImpl implements AippLogService {
                 }
             }
         }
+
+        for (List<AippInstLog> logList : result.values()) {
+            logList.sort(Comparator.comparing(AippInstLog::getLogId));
+        }
+
         return result;
     }
 
@@ -362,7 +367,16 @@ public class AippLogServiceImpl implements AippLogService {
      * @return 日志id
      */
     @Override
-    public String insertLog(String logType, AippLogData logData, Map<String, Object> businessData) {
+    public String insertLogWithInterception(String logType, AippLogData logData, Map<String, Object> businessData) {
+        AippLogCreateDto logCreateDto = this.buildAippLogCreateDto(logType, logData, businessData);
+        if (logCreateDto == null) {
+            return null;
+        }
+        return this.aopAippLogService.insertLog(logCreateDto);
+    }
+
+    private AippLogCreateDto buildAippLogCreateDto(String logType, AippLogData logData,
+            Map<String, Object> businessData) {
         RunContext runContext = new RunContext(businessData, new OperationContext());
         String aippId = runContext.getAppSuiteId();
         String instId = runContext.getTaskInstanceId();
@@ -376,7 +390,7 @@ public class AippLogServiceImpl implements AippLogService {
         String path = this.buildPath(instId, parentInstId);
         String chatId = runContext.getOriginChatId();
         String atChatId = runContext.getAtChatId();
-        return this.aopAippLogService.insertLog(AippLogCreateDto.builder()
+        return AippLogCreateDto.builder()
                 .aippId(aippId)
                 .version(version)
                 .aippType(aippType)
@@ -388,8 +402,9 @@ public class AippLogServiceImpl implements AippLogService {
                 .chatId(chatId)
                 .atChatId(atChatId)
                 .isEnableLog(this.isEnableLog(businessData))
-                .build());
+                .build();
     }
+
     private Boolean isEnableLog(Map<String, Object> businessData) {
         // 兼容老数据，老数据没有这个开关的时候（enableLog为null）默认返回true。
         // 有开关后（enableLog为null），返回enableLog的值
@@ -406,7 +421,7 @@ public class AippLogServiceImpl implements AippLogService {
     @Override
     public void insertErrorLog(String msg, List<Map<String, Object>> flowData) {
         AippLogData logData = AippLogData.builder().msg(msg).build();
-        insertLog(AippInstLogType.ERROR.name(), logData, DataUtils.getBusiness(flowData));
+        insertLogWithInterception(AippInstLogType.ERROR.name(), logData, DataUtils.getBusiness(flowData));
     }
 
     /**
@@ -501,5 +516,14 @@ public class AippLogServiceImpl implements AippLogService {
             return;
         }
         this.aippLogMapper.deleteInstanceLogs(logIds);
+    }
+
+    @Override
+    public void insertLog(String logType, AippLogData logData, Map<String, Object> businessData) {
+        AippLogCreateDto logCreateDto = this.buildAippLogCreateDto(logType, logData, businessData);
+        if (logCreateDto == null) {
+            return;
+        }
+        this.aippLogMapper.insertOne(logCreateDto);
     }
 }

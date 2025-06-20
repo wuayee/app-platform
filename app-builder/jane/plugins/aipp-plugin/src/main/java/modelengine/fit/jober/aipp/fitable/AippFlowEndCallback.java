@@ -6,6 +6,8 @@
 
 package modelengine.fit.jober.aipp.fitable;
 
+import static modelengine.fit.jober.aipp.fitable.LlmComponent.checkEnableLog;
+
 import modelengine.fit.jade.aipp.formatter.OutputFormatterChain;
 import modelengine.fit.jade.aipp.formatter.constant.Constant;
 import modelengine.fit.jade.aipp.formatter.support.ResponsibilityResult;
@@ -184,7 +186,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
         logData.setFormAppearance(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_APPEARANCE_KEY)));
         logData.setFormData(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_DATA_KEY)));
         // 子应用/工作流的结束节点表单不需要在历史记录展示
-        return this.aippLogService.insertLog((this.isExistParent(businessData)
+        return this.aippLogService.insertLogWithInterception((this.isExistParent(businessData)
                 ? AippInstLogType.HIDDEN_FORM
                 : AippInstLogType.FORM).name(), logData, businessData);
     }
@@ -206,7 +208,10 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String logMsg = formatOutput.map(ResponsibilityResult::text).orElse(CHECK_TIP);
         AippInstLogType logType = formatOutput.flatMap(result -> Optional.ofNullable(LOG_STRATEGY.get(result.owner())))
                 .orElse(AippInstLogType.MSG);
-        this.aippLogService.insertLog(logType.name(), AippLogData.builder().msg(logMsg).build(), businessData);
+        if (!checkEnableLog(businessData)) {
+            logType = AippInstLogType.HIDDEN_MSG;
+        }
+        this.aippLogService.insertLogWithInterception(logType.name(), AippLogData.builder().msg(logMsg).build(), businessData);
         this.beanContainer.all(AppFlowFinishObserver.class)
                 .stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)

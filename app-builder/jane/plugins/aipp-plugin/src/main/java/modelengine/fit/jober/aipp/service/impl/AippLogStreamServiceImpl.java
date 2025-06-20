@@ -41,7 +41,8 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
     private static final List<String> OUTPUT_WITH_MSG_WHITE_LIST = Arrays.asList(AippInstLogType.MSG.name(),
             AippInstLogType.ERROR.name(),
             AippInstLogType.META_MSG.name(),
-            StreamMsgType.KNOWLEDGE.value());
+            StreamMsgType.KNOWLEDGE.value(),
+            AippInstLogType.HIDDEN_MSG.name());
 
     private final AppChatSseService appChatSseService;
     private final SensitiveFilterTools sensitiveFilterTools;
