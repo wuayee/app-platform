@@ -394,6 +394,7 @@ const ChatPreview = (props) => {
     try {
       // 初始化设置instanceId
       if (messageData.status === 'READY') {
+        saveLocalChatId(messageData);
         runningInstanceId.current = messageData.instance_id;
         setShowStop(true);
         return;
