@@ -666,8 +666,12 @@ public class AppVersionTest {
             AppTaskInstance instance = mock(AppTaskInstance.class);
             when(AppVersionTest.this.appTaskInstanceService.getInstanceById(anyString(), any())).thenReturn(
                     Optional.of(instance));
-            when(instance.getChats()).thenReturn(
-                    List.of(QueryChatRsp.builder().appId("app_version_1").chatId("chat_1").build()));
+            String attributes = "{\"state\":\"active\"}";
+            when(instance.getChats()).thenReturn(List.of(QueryChatRsp.builder()
+                    .appId("app_version_1")
+                    .attributes(attributes)
+                    .chatId("chat_1")
+                    .build()));
 
             AppLog appLog = mock(AppLog.class);
             when(instance.getLogs()).thenReturn(List.of(appLog));
@@ -716,8 +720,12 @@ public class AppVersionTest {
             AppTaskInstance instance = mock(AppTaskInstance.class);
             when(AppVersionTest.this.appTaskInstanceService.getInstanceById(anyString(), any())).thenReturn(
                     Optional.of(instance));
-            when(instance.getChats()).thenReturn(
-                    List.of(QueryChatRsp.builder().appId("app_version_1").chatId("chat_1").build(), atChat));
+            String attributes = "{\"state\":\"active\"}";
+            when(instance.getChats()).thenReturn(List.of(QueryChatRsp.builder()
+                    .appId("app_version_1")
+                    .chatId("chat_1")
+                    .attributes(attributes)
+                    .build(), atChat));
 
             AppLog appLog = mock(AppLog.class);
             when(instance.getLogs()).thenReturn(List.of(appLog));
