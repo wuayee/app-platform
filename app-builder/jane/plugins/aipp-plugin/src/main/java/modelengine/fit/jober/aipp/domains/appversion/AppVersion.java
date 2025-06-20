@@ -455,7 +455,7 @@ public class AppVersion {
         if (!this.isApp()) {
             return;
         }
-        if (context.getQuestion() == null || !StringUtils.lengthBetween(context.getQuestion(), 1, this.maxQuestionLen,
+        if (context.getQuestion() == null || !StringUtils.lengthBetween(context.getQuestion(), 0, this.maxQuestionLen,
                 true, true)) {
             throw new AippParamException(INPUT_PARAM_IS_INVALID, BS_AIPP_QUESTION_KEY);
         }
