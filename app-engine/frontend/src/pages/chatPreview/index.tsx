@@ -160,6 +160,7 @@ const ChatPreview = (props) => {
     try {
       const res:any = await getChatRecentLog(tenantId, chatId, appId);
       if (res.data && res.data.length) {
+        showTerminate(res);
         let chatArr = historyChatProcess(res);
         listRef.current = deepClone(chatArr);
         await dispatch(setChatList(chatArr));
@@ -170,6 +171,17 @@ const ChatPreview = (props) => {
       setLoading(false);
     }
   }
+
+  const showTerminate = (res) => {
+    const lastItem = res.data[res.data.length - 1];
+    if (lastItem && lastItem.status === 'RUNNING') {
+      setShowStop(true);
+      dispatch(setChatRunning(true));
+      runningInstanceId.current = lastItem.instanceId;
+    }
+    return;
+  };
+
   useEffect(() => {
     if (appInfo.id) {
       dispatch(setChatRunning(false));
