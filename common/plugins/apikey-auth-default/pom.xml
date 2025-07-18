@@ -9,63 +9,23 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>app-engine-http-interceptor</artifactId>
+    <artifactId>apikey-auth-default</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
-        <!-- FIT core -->
-        <dependency>
-            <groupId>org.fitframework</groupId>
-            <artifactId>fit-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fitframework</groupId>
-            <artifactId>fit-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fitframework.service</groupId>
-            <artifactId>fit-http-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fitframework.extension</groupId>
-            <artifactId>fit-validation-hibernate</artifactId>
-        </dependency>
-
-        <!-- Services -->
-        <dependency>
-            <groupId>modelengine.fit.jade.service</groupId>
-            <artifactId>jade-common-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>modelengine.fit.jade.service</groupId>
-            <artifactId>authentication-service</artifactId>
-        </dependency>
         <dependency>
             <groupId>modelengine.fit.jade.service</groupId>
             <artifactId>apikey-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-
-        <!-- Common -->
-        <dependency>
-            <groupId>modelengine.fit.jade.common</groupId>
-            <artifactId>ui-word-globalizer</artifactId>
-            <version>${locale.service.version}</version>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.fitframework</groupId>
-            <artifactId>fit-test-framework</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -85,7 +45,7 @@
                 <version>${fit.version}</version>
                 <configuration>
                     <category>system</category>
-                    <level>1</level>
+                    <level>4</level>
                 </configuration>
                 <executions>
                     <execution>
