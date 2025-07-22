@@ -8,13 +8,13 @@ package modelengine.fit.jober.aipp.domains.appversion.repository.impl;
 
 import modelengine.fit.jane.common.enums.DirectionEnum;
 import modelengine.fit.jober.aipp.condition.AppQueryCondition;
+import modelengine.fit.jober.aipp.converters.IconConverter;
 import modelengine.fit.jober.aipp.domains.appversion.AppVersion;
 import modelengine.fit.jober.aipp.domains.appversion.AppVersionFactory;
 import modelengine.fit.jober.aipp.domains.appversion.repository.AppVersionRepository;
 import modelengine.fit.jober.aipp.domains.appversion.serializer.AppVersionSerializer;
 import modelengine.fit.jober.aipp.enums.AippSortKeyEnum;
 import modelengine.fit.jober.aipp.mapper.AppBuilderAppMapper;
-
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.StringUtils;
 
@@ -33,9 +33,10 @@ public class AppVersionRepositoryImpl implements AppVersionRepository {
     private final AppBuilderAppMapper mapper;
     private final AppVersionSerializer serializer;
 
-    public AppVersionRepositoryImpl(AppBuilderAppMapper mapper, AppVersionFactory appVersionFactory) {
+    public AppVersionRepositoryImpl(AppBuilderAppMapper mapper, AppVersionFactory appVersionFactory,
+            IconConverter iconConverter) {
         this.mapper = mapper;
-        this.serializer = new AppVersionSerializer(appVersionFactory, this);
+        this.serializer = new AppVersionSerializer(appVersionFactory, this, iconConverter);
     }
 
     @Override
@@ -46,6 +47,7 @@ public class AppVersionRepositoryImpl implements AppVersionRepository {
     @Override
     public void update(AppVersion appVersion) {
         this.mapper.updateOne(this.serializer.serialize(appVersion));
+        Optional.ofNullable(appVersion).ifPresent(AppVersion::processIconPath);
     }
 
     @Override
@@ -61,6 +63,7 @@ public class AppVersionRepositoryImpl implements AppVersionRepository {
     @Override
     public void save(AppVersion appVersion) {
         this.mapper.insertOne(this.serializer.serialize(appVersion));
+        Optional.ofNullable(appVersion).ifPresent(AppVersion::processIconPath);
     }
 
     @Override
