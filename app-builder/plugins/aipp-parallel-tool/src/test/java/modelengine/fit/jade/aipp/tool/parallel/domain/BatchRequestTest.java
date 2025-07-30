@@ -56,7 +56,7 @@ class BatchRequestTest {
                 this.toolExecuteService,
                 this.taskExecutor,
                 this.aippInstanceStatus,
-                null);
+                new HashMap<>());
         batchRequest.post();
 
         Mockito.verify(this.taskExecutor, Mockito.times(config.getConcurrency())).post(Mockito.any());
@@ -88,7 +88,7 @@ class BatchRequestTest {
                 this.toolExecuteService,
                 this.taskExecutor,
                 this.aippInstanceStatus,
-                null);
+                new HashMap<>());
         batchRequest.post();
         Map<String, Object> result = batchRequest.await();
 
@@ -119,7 +119,7 @@ class BatchRequestTest {
                 this.toolExecuteService,
                 this.taskExecutor,
                 this.aippInstanceStatus,
-                null);
+                new HashMap<>());
         batchRequest.post();
         IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, batchRequest::await);
 
