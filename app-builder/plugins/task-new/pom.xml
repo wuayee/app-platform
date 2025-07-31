@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>modelengine.fit.jade</groupId>
-        <artifactId>app-builder-jane-parent</artifactId>
+        <artifactId>app-builder-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -16,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>modelengine.fit.jane</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>aipp-genericable</artifactId>
         </dependency>
         <dependency>
@@ -60,7 +59,7 @@
             <artifactId>fastjson</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.jane</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>aipp-service</artifactId>
         </dependency>
         <dependency>

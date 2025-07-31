@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>modelengine.fit.jade</groupId>
-        <artifactId>app-eval-plugin-parent</artifactId>
+        <artifactId>app-builder-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -59,7 +59,7 @@
             <artifactId>app-eval-dataset-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.jane</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>aipp-genericable</artifactId>
         </dependency>
 

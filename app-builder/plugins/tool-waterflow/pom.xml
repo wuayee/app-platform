@@ -41,7 +41,7 @@
             <artifactId>jober-genericable</artifactId>
         </dependency>
         <dependency>
-            <groupId>modelengine.fit.jane</groupId>
+            <groupId>modelengine.fit.jade</groupId>
             <artifactId>aipp-genericable</artifactId>
         </dependency>
         <dependency>
