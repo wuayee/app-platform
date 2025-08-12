@@ -540,7 +540,7 @@ public class LlmComponent implements FlowableService {
          */
         public void sendMsg(String msg, Map<String, Object> businessData) {
             boolean enableLog = checkEnableLog(businessData);
-            if (!enableLog || StringUtils.isBlank(msg) || msg.contains("<tool_call>")) {
+            if (!enableLog || StringUtils.isEmpty(msg) || msg.contains("<tool_call>")) {
                 return;
             }
             this.sendMsgHandle(msg, StreamMsgType.from(AippInstLogType.MSG), businessData);
