@@ -7,6 +7,7 @@
 package modelengine.fit.jober.aipp.fitable;
 
 import static modelengine.fit.jade.aipp.prompt.constant.Constant.PROMPT_METADATA_KEY;
+import static modelengine.fit.jober.aipp.constants.AippConst.INST_STATUS_KEY;
 import static modelengine.fitframework.inspection.Validation.notNull;
 
 import modelengine.fel.core.chat.ChatMessage;
@@ -23,6 +24,7 @@ import modelengine.fel.tool.mcp.client.McpClient;
 import modelengine.fel.tool.mcp.client.McpClientFactory;
 import modelengine.fel.tool.mcp.entity.Tool;
 import modelengine.fel.tool.model.transfer.ToolData;
+import modelengine.fit.jober.aipp.enums.MetaInstStatusEnum;
 import modelengine.fit.jober.aipp.util.McpUtils;
 import modelengine.fitframework.inspection.Validation;
 import modelengine.jade.store.service.ToolService;
@@ -279,7 +281,9 @@ public class LlmComponent implements FlowableService {
 
         // 如果节点配置为输出到聊天，模型回复内容需要持久化
         boolean enableLog = checkEnableLog(businessData);
-        if (enableLog) {
+        AppTaskInstance instance =
+                this.appTaskInstanceService.getInstance(llmMeta.getVersionId(), llmMeta.getInstId(), null).orElse(null);
+        if (enableLog && ! this.isTerminated(instance)) {
             Map<String, Object> llmOutput = new HashMap<>();
             llmOutput.put("output", output);
             Optional<ResponsibilityResult> formatOutput = this.formatterChain.handle(llmOutput);
@@ -297,6 +301,15 @@ public class LlmComponent implements FlowableService {
                 JsonUtils.parseObject(ObjectUtils.cast(businessData.get(AippConst.BS_HTTP_CONTEXT_KEY)),
                         OperationContext.class));
         doOnAgentComplete(llmMeta);
+    }
+
+    private boolean isTerminated(AppTaskInstance instance) {
+        if (instance == null) {
+            return false;
+        }
+        Map<String, Object> infos = instance.getEntity().getInfos();
+        return infos != null && StringUtils.equals(ObjectUtils.cast(infos.get(INST_STATUS_KEY)),
+                MetaInstStatusEnum.TERMINATED.name());
     }
 
     /**
