@@ -17,6 +17,8 @@ import ThinkBlock from './think-block';
 import StepBlock from './step-block';
 import 'highlight.js/styles/monokai-sublime.min.css';
 import './styles/message-detail.scss';
+import store from '@/store/store';
+import {setCurrentAnswer} from "@/store/chatStore/chatStore";
 
 /**
  * 消息详情
@@ -205,6 +207,10 @@ const MessageBox = (props: any) => {
       container && container.removeEventListener('click', recieveClick);
     }
   }, []);
+
+  useEffect(() => {
+    store.dispatch(setCurrentAnswer(replacedText));
+  }, [replacedText]);
   
   return (
     <>

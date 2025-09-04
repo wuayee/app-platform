@@ -83,6 +83,7 @@ const ChatPreview = (props) => {
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const isDebug = useAppSelector((state) => state.commonStore.isDebug);
+  const currentAnswer = useAppSelector((state) => state.chatCommonStore.currentAnswer);
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -594,8 +595,8 @@ const ChatPreview = (props) => {
   // 终止进行中的对话
   async function chatRunningStop(params) {
     let terminateParams: any = {};
-    params.content ? terminateParams.content = params.content : terminateParams.content = t('conversationTerminated');
-    params.instanceId ? runningInstanceId.current = params.instanceId : '';
+    terminateParams.content = params.content ? params.content : currentAnswer ? currentAnswer :
+      t('conversationTerminated');
     if (params.logId) {
       terminateParams.logId = params.logId;
     }
