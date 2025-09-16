@@ -4,32 +4,33 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-package modelengine.jade.app.engine.base.po;
+package modelengine.jade.app.engine.base.dto;
 
 import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Aipp用户应用收藏持久化类
+ * 用户反馈信息传输类。
  *
- * @since 2024-5-25
- *
+ * @author 陈潇文
+ * @since 2024-05-24
  */
-@Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UsrAppCollectionPo {
-    @Property(description = "collection id")
+@AllArgsConstructor
+public class UserFeedbackDto {
+    @Property(description = "反馈记录 id")
     private Long id;
 
-    @Property(description = "app id")
-    private String appId;
+    @Property(description = "实例id")
+    private String instanceId;
 
-    @Property(description = "usr info")
-    private String usrInfo;
+    @Property(description = "用户反馈 -1 未反馈 0 点赞 1 点踩")
+    private Integer userFeedback;
+
+    @Property(description = "用户反馈文本")
+    private String userFeedbackText;
 }

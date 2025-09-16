@@ -4,30 +4,32 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-package modelengine.jade.app.engine.base.dto;
+package modelengine.jade.app.engine.base.po;
 
 import modelengine.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户收藏应用信息传输类
+ * 应用编排用户应用收藏持久化类。
  *
- * @since 2024-5-25
- *
+ * @author 陈潇文
+ * @since 2024-05-25
  */
+@Builder
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UsrAppCollectionDto {
-    @Property(description = "收藏记录 id")
+@NoArgsConstructor
+public class UserAppCollectionPo {
+    @Property(description = "collection id")
     private Long id;
 
-    @Property(description = "应用 id")
+    @Property(description = "app id")
     private String appId;
 
-    @Property(description = "用户信息")
-    private String usrInfo;
+    @Property(description = "user info")
+    private String userInfo;
 }
