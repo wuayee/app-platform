@@ -16,24 +16,24 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 应用信息持久化类
+ * 应用信息持久化类。
  *
- * @since 2025-5-29
- *
+ * @author 陈潇文
+ * @since 2025-05-29
  */
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsrAppInfoAndCollectionPo {
+public class UserAppInfoAndCollectionPo {
     @Property(description = "collection id")
     private Long id;
 
     @Property(description = "app id")
     private String appId;
 
-    @Property(description = "usr info")
-    private String usrInfo;
+    @Property(description = "user info")
+    private String userInfo;
 
     @Property(description = "name")
     private String name;

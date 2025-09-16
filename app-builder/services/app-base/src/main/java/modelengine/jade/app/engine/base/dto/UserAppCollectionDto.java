@@ -13,24 +13,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户反馈信息传输类
+ * 用户收藏应用信息传输类。
  *
- * @since 2024-5-24
- *
+ * @author 陈潇文
+ * @since 2024-05-25
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsrFeedbackDto {
-    @Property(description = "反馈记录 id")
+public class UserAppCollectionDto {
+    @Property(description = "收藏记录 id")
     private Long id;
 
-    @Property(description = "实例id")
-    private String instanceId;
+    @Property(description = "应用 id")
+    private String appId;
 
-    @Property(description = "用户反馈 -1 未反馈 0 点赞 1 点踩")
-    private Integer usrFeedback;
-
-    @Property(description = "用户反馈文本")
-    private String usrFeedbackText;
+    @Property(description = "用户信息")
+    private String userInfo;
 }
