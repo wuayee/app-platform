@@ -777,6 +777,11 @@ public enum AippErrCode implements ErrorCode, RetCode {
     NO_PERMISSION_OPERATE_FORM(90002143, "没有权限操作该表单。"),
 
     /**
+     * 应用未打开游客模式。
+     */
+    THE_APP_IS_NOT_IN_GUEST_MODE(90002144, "应用未打开游客模式。"),
+
+    /**
      * 应用模板不存在。
      */
     TEMPLATE_NOT_FOUND(90003000, "应用模板不存在"),

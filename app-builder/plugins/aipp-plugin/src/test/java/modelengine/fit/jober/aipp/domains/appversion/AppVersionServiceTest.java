@@ -6,29 +6,6 @@
 
 package modelengine.fit.jober.aipp.domains.appversion;
 
-import static modelengine.fit.jober.aipp.common.exception.AippErrCode.AIPP_NAME_IS_DUPLICATE;
-import static modelengine.fit.jober.aipp.common.exception.AippErrCode.AIPP_NAME_LENGTH_OUT_OF_BOUNDS;
-import static modelengine.fit.jober.aipp.common.exception.AippErrCode.APP_HAS_ALREADY;
-import static modelengine.fit.jober.aipp.common.exception.AippErrCode.APP_NAME_IS_INVALID;
-import static modelengine.fit.jober.aipp.common.exception.AippErrCode.APP_NOT_FOUND;
-import static modelengine.fit.jober.aipp.enums.AippTypeEnum.NORMAL;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import modelengine.fit.jade.aipp.domain.division.service.DomainDivisionService;
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.common.exception.AippException;
@@ -49,11 +26,7 @@ import modelengine.fit.jober.aipp.domains.task.AppTask;
 import modelengine.fit.jober.aipp.domains.task.service.AppTaskService;
 import modelengine.fit.jober.aipp.domains.taskinstance.AppTaskInstance;
 import modelengine.fit.jober.aipp.domains.taskinstance.service.AppTaskInstanceService;
-import modelengine.fit.jober.aipp.dto.AppBuilderAppCreateDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderAppDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
-import modelengine.fit.jober.aipp.dto.AppBuilderSaveConfigDto;
+import modelengine.fit.jober.aipp.dto.*;
 import modelengine.fit.jober.aipp.dto.chat.CreateAppChatRequest;
 import modelengine.fit.jober.aipp.dto.chat.QueryChatRsp;
 import modelengine.fit.jober.aipp.entity.AippInstLog;
@@ -70,17 +43,18 @@ import modelengine.fit.jober.aipp.util.JsonUtils;
 import modelengine.fit.jober.common.RangedResultSet;
 import modelengine.fitframework.flowable.Choir;
 import modelengine.fitframework.util.MapBuilder;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+
+import static modelengine.fit.jober.aipp.common.exception.AippErrCode.*;
+import static modelengine.fit.jober.aipp.enums.AippTypeEnum.NORMAL;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 /**
  * {@link AppVersionService} 的测试类。
@@ -224,8 +198,9 @@ public class AppVersionServiceTest {
         doNothing().when(this.appChatRepository).saveChat(any(), any());
 
         // when.
-        Choir<Object> choir = this.appVersionService.run(
-                CreateAppChatRequest.builder().question("123").appId("app_version_1").build(), new OperationContext());
+        CreateAppChatRequest request = CreateAppChatRequest.builder().context(new CreateAppChatRequest.Context())
+                .question("123").appId("app_version_1").build();
+        Choir<Object> choir = this.appVersionService.run(request, new OperationContext());
         choir.subscribe();
 
         // then.
@@ -248,8 +223,9 @@ public class AppVersionServiceTest {
         doNothing().when(this.appChatRepository).saveChat(any(), any());
 
         // when.
-        Choir<Object> choir = this.appVersionService.debug(
-                CreateAppChatRequest.builder().question("123").appId("app_version_1").build(), new OperationContext());
+        CreateAppChatRequest request = CreateAppChatRequest.builder().context(new CreateAppChatRequest.Context())
+                .question("123").appId("app_version_1").build();
+        Choir<Object> choir = this.appVersionService.debug(request, new OperationContext());
         choir.subscribe((subscription, o) -> {
             // then.
             ArgumentCaptor<RunContext> captor = ArgumentCaptor.forClass(RunContext.class);

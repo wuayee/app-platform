@@ -14,11 +14,7 @@ import static modelengine.fit.jober.aipp.common.exception.AippErrCode.APP_VERSIO
 import static modelengine.fit.jober.aipp.common.exception.AippErrCode.INPUT_PARAM_IS_INVALID;
 import static modelengine.fit.jober.aipp.common.exception.AippErrCode.NEW_VERSION_IS_LOWER;
 import static modelengine.fit.jober.aipp.common.exception.AippErrCode.UPDATE_APP_CONFIGURATION_FAILED;
-import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_AIPP_TYPE_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_APP_IS_UPDATE;
-import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_META_STATUS_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_QUESTION_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.RESTART_MODE;
+import static modelengine.fit.jober.aipp.constants.AippConst.*;
 import static modelengine.fit.jober.aipp.enums.AippMetaStatusEnum.ACTIVE;
 import static modelengine.fit.jober.aipp.enums.AippTypeEnum.NORMAL;
 import static modelengine.fit.jober.aipp.enums.AippTypeEnum.PREVIEW;
@@ -604,6 +600,10 @@ public class AppVersion {
         runContext.setUserContext(mergedRestartParams);
         runContext.putAllToBusiness(mergedRestartParams);
         runContext.setQuestion(this.getQuestion(appLog.getLogData()));
+        runContext.setIsGuest(ObjectUtils.cast(restartParams.getOrDefault(CONTEXT_IS_GUEST, false)));
+        AppVersion appVersion = this.appVersionRepository.selectById(mostRecentRsp.getAppId())
+                .orElseThrow(() -> new AippException(APP_NOT_FOUND_WHEN_CHAT));
+        runContext.setAppCreateBy(appVersion.getData().getCreateBy());
         if (chatList.size() == 2) {
             runContext.setAtChatId(chatList.get(1).getChatId());
         }

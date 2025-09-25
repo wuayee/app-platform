@@ -162,9 +162,9 @@ public class DefaultPluginService implements PluginService {
                 return true;
             }
             String currentUserGroupId = this.domainDivisionService.getUserGroupId();
-            boolean isCurrentGroup = StringUtils.equals(data.getUserGroupId(), currentUserGroupId);
-            boolean isAllGroup = StringUtils.equals(data.getUserGroupId(), "*");
-            return !(isCurrentGroup || isAllGroup);
+            boolean isNotAccessibleGroup = !StringUtils.equals(data.getUserGroupId(), currentUserGroupId);
+            boolean isNotWildcardGroup = !StringUtils.equals(data.getUserGroupId(), "*");
+            return isNotAccessibleGroup && isNotWildcardGroup;
         };
     }
 

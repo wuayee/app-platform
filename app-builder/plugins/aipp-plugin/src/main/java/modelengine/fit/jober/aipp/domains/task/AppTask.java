@@ -489,8 +489,10 @@ public class AppTask implements AppTaskRunnable {
      * @param logId 日志id.
      * @param formArgs 表单参数.
      * @param context 操作人上下文.
+     * @param isGuest 是否是游客模式.
      */
-    public void resume(String instanceId, Long logId, Map<String, Object> formArgs, OperationContext context) {
+    public void resume(String instanceId, Long logId, Map<String, Object> formArgs, OperationContext context,
+                       boolean isGuest) {
         AppTaskInstance instance = this.appTaskInstanceService.getInstanceById(instanceId, context)
                 .orElseThrow(() -> new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
                         StringUtils.format("App task instance[{0}] not found.", instanceId)));
@@ -503,6 +505,8 @@ public class AppTask implements AppTaskRunnable {
         runContext.setAippType(Optional.ofNullable(this.getEntity().getAippType()).orElse(NORMAL.name()));
         runContext.setTaskInstanceId(instanceId);
         runContext.setHttpContext(JsonUtils.toJsonString(context));
+        runContext.setIsGuest(isGuest);
+        runContext.setAppCreateBy(this.getEntity().getCreator());
 
         // 获取人工节点开始时间戳 [记录人工节点时延]
         runContext.setResumeDuration(

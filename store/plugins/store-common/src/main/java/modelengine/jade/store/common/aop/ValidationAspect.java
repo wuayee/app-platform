@@ -9,6 +9,7 @@ package modelengine.jade.store.common.aop;
 import modelengine.fitframework.annotation.Value;
 import modelengine.fitframework.aop.JoinPoint;
 import modelengine.fitframework.aop.MethodSignature;
+import modelengine.fitframework.util.StringUtils;
 
 /**
  * 校验切面
@@ -35,7 +36,7 @@ public abstract class ValidationAspect {
         Object[] paramValues = joinPoint.getArgs();
         Object value = null;
         for (int i = 0; i < paramNames.length; i++) {
-            if (paramNames[i].equals(idKey)) {
+            if (StringUtils.equals(paramNames[i], idKey)) {
                 value = paramValues[i];
                 break;
             }

@@ -6,9 +6,6 @@
 
 package modelengine.fit.jober.aipp.fitable;
 
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_NODE_ID_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BUSINESS_DATA_INTERNAL_KEY;
-
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jade.waterflow.FlowInstanceService;
 import modelengine.fit.jober.FlowSmartFormService;
@@ -52,6 +49,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static modelengine.fit.jober.aipp.constants.AippConst.*;
 
 /**
  * aipp智能表单实现实现
@@ -111,6 +110,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
             formDataMap.put(BUSINESS_DATA_INTERNAL_KEY, businessData.get(BUSINESS_DATA_INTERNAL_KEY));
         }
         formDataMap.put(BS_NODE_ID_KEY, nodeId);
+        formDataMap.put(CONTEXT_IS_GUEST, businessData.getOrDefault(CONTEXT_IS_GUEST, false));
         String logId = this.insertFormLog(appVersion.getFormProperties(), sheetId, businessData, formDataMap);
         AppChatRsp appChatRsp = AppChatRsp.builder()
                 .chatId(chatId)

@@ -52,11 +52,7 @@ public class DomainDivisionServiceImpl extends SourceAspect implements DomainDiv
         }
         UserGroup userGroup = this.getUserGroup(username);
         String currUserGroupId = userGroup.getId();
-        for(String toBeVerifiedId : toBeVerifiedIds) {
-            if (!(StringUtils.equals(toBeVerifiedId, "*") || StringUtils.equals(toBeVerifiedId, currUserGroupId))) {
-                return false;
-            }
-        }
-        return true;
+        return toBeVerifiedIds.stream().allMatch(toBeVerifiedId -> StringUtils.equals(toBeVerifiedId, "*") ||
+                StringUtils.equals(toBeVerifiedId, currUserGroupId));
     }
 }

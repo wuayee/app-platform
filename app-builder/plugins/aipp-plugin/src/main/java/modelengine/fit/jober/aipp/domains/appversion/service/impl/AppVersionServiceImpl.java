@@ -146,6 +146,8 @@ public class AppVersionServiceImpl implements AppVersionService {
         AppVersion appVersion = this.retrieval(request.getAppId());
         RunContext runContext = RunContext.from(request, context);
         appVersion.validate(runContext, false);
+        runContext.setIsGuest(request.getContext().isGuest());
+        runContext.setAppCreateBy(appVersion.getData().getCreateBy());
         Locale locale = LocaleUtil.getLocale();
         return Choir.create(emitter -> {
             ChatSession<Object> session = new ChatSession<>(emitter, request.getAppId(), false, locale);
@@ -160,6 +162,8 @@ public class AppVersionServiceImpl implements AppVersionService {
         appVersion.updateFlows(context);
         RunContext runContext = RunContext.from(request, context);
         appVersion.validate(runContext, true);
+        runContext.setIsGuest(request.getContext().isGuest());
+        runContext.setAppCreateBy(appVersion.getData().getCreateBy());
         Locale locale = LocaleUtil.getLocale();
         return Choir.create(emitter -> {
             ChatSession<Object> session = new ChatSession<>(emitter, request.getAppId(), true, locale);

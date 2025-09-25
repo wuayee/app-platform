@@ -6,22 +6,6 @@
 
 package modelengine.fit.jober.aipp.domains.business;
 
-import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_AIPP_TYPE_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_FILE_DESC_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_ID_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_INST_ID_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_MEMORIES_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_QUESTION_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_USE_MEMORY_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_VERSION_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_CHAT_ID;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_HTTP_CONTEXT_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.BS_META_VERSION_ID_KEY;
-import static modelengine.fit.jober.aipp.constants.AippConst.CONTEXT_USER_ID;
-import static modelengine.fit.jober.aipp.constants.AippConst.PARENT_CALLBACK_ID;
-import static modelengine.fit.jober.aipp.constants.AippConst.PARENT_INSTANCE_ID;
-import static modelengine.fit.jober.aipp.constants.AippConst.RESTART_MODE;
-
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jober.aipp.constants.AippConst;
 import modelengine.fit.jober.aipp.domains.task.AppTask;
@@ -42,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static modelengine.fit.jober.aipp.constants.AippConst.*;
 
 /**
  * 运行时的上下文.
@@ -173,6 +159,24 @@ public class RunContext {
      */
     public void setAppSuiteId(String appSuiteId) {
         this.businessData.put(BS_AIPP_ID_KEY, appSuiteId);
+    }
+
+    /**
+     * 设置是否是游客模式.
+     *
+     * @param isGuest 表示是否是游客模式
+     */
+    public void setIsGuest(boolean isGuest) {
+        this.businessData.put(CONTEXT_IS_GUEST, isGuest);
+    }
+
+    /**
+     * 设置应用创建者.
+     *
+     * @param appCreateBy 表示应用创建者
+     */
+    public void setAppCreateBy(String appCreateBy) {
+        this.businessData.put(CONTEXT_APP_CREATE_BY, appCreateBy);
     }
 
     /**

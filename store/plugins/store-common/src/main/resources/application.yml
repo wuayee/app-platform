@@ -2,3 +2,5 @@ fit:
   beans:
     packages:
       - 'modelengine.jade.store.common'
+domain-division:
+  isEnable: false
