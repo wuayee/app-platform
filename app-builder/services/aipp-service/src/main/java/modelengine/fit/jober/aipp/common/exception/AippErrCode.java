@@ -777,6 +777,11 @@ public enum AippErrCode implements ErrorCode, RetCode {
     NO_PERMISSION_OPERATE_FORM(90002143, "没有权限操作该表单。"),
 
     /**
+     * 应用未打开游客模式。
+     */
+    APP_NOT_IN_GUEST_MODE(90002144, "应用未打开游客模式。"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

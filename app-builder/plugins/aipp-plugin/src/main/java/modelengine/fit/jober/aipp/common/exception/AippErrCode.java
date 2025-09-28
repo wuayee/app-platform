@@ -779,7 +779,7 @@ public enum AippErrCode implements ErrorCode, RetCode {
     /**
      * 应用未打开游客模式。
      */
-    THE_APP_IS_NOT_IN_GUEST_MODE(90002144, "应用未打开游客模式。"),
+    APP_NOT_IN_GUEST_MODE(90002144, "应用未打开游客模式。"),
 
     /**
      * 应用模板不存在。

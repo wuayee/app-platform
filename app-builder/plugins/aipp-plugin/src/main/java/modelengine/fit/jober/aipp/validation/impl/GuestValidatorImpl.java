@@ -16,10 +16,10 @@ import modelengine.fit.jober.aipp.validation.GuestValidator;
 import modelengine.fitframework.annotation.Component;
 import modelengine.fitframework.util.ObjectUtils;
 
-import static modelengine.fit.jober.aipp.common.exception.AippErrCode.THE_APP_IS_NOT_IN_GUEST_MODE;
+import static modelengine.fit.jober.aipp.common.exception.AippErrCode.APP_NOT_IN_GUEST_MODE;
 
-/**Ø
- * 游客模式校验器Impl
+/**
+ * 游客模式校验器实现类
  *
  * @author 邬涨财
  * @since 2025/09/22
@@ -43,7 +43,7 @@ public class GuestValidatorImpl implements GuestValidator {
         AppBuilderAppDto appDto = this.appGenericable.query(appId, null);
         boolean allow_guest = ObjectUtils.cast(appDto.getAttributes().getOrDefault("allow_guest", false));
         if (!allow_guest) {
-            throw new AippException(THE_APP_IS_NOT_IN_GUEST_MODE);
+            throw new AippException(APP_NOT_IN_GUEST_MODE);
         }
     }
 

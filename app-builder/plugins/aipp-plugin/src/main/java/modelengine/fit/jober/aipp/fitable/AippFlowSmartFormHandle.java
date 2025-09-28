@@ -6,6 +6,10 @@
 
 package modelengine.fit.jober.aipp.fitable;
 
+import static modelengine.fit.jober.aipp.constants.AippConst.BS_NODE_ID_KEY;
+import static modelengine.fit.jober.aipp.constants.AippConst.CONTEXT_IS_GUEST;
+import static modelengine.fit.waterflow.common.Constant.BUSINESS_DATA_INTERNAL_KEY;
+
 import modelengine.fit.jane.common.entity.OperationContext;
 import modelengine.fit.jade.waterflow.FlowInstanceService;
 import modelengine.fit.jober.FlowSmartFormService;
@@ -49,8 +53,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static modelengine.fit.jober.aipp.constants.AippConst.*;
 
 /**
  * aipp智能表单实现实现

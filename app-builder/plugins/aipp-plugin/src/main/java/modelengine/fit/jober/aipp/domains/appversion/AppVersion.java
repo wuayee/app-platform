@@ -14,7 +14,12 @@ import static modelengine.fit.jober.aipp.common.exception.AippErrCode.APP_VERSIO
 import static modelengine.fit.jober.aipp.common.exception.AippErrCode.INPUT_PARAM_IS_INVALID;
 import static modelengine.fit.jober.aipp.common.exception.AippErrCode.NEW_VERSION_IS_LOWER;
 import static modelengine.fit.jober.aipp.common.exception.AippErrCode.UPDATE_APP_CONFIGURATION_FAILED;
-import static modelengine.fit.jober.aipp.constants.AippConst.*;
+import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_AIPP_TYPE_KEY;
+import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_APP_IS_UPDATE;
+import static modelengine.fit.jober.aipp.constants.AippConst.ATTR_META_STATUS_KEY;
+import static modelengine.fit.jober.aipp.constants.AippConst.BS_AIPP_QUESTION_KEY;
+import static modelengine.fit.jober.aipp.constants.AippConst.CONTEXT_IS_GUEST;
+import static modelengine.fit.jober.aipp.constants.AippConst.RESTART_MODE;
 import static modelengine.fit.jober.aipp.enums.AippMetaStatusEnum.ACTIVE;
 import static modelengine.fit.jober.aipp.enums.AippTypeEnum.NORMAL;
 import static modelengine.fit.jober.aipp.enums.AippTypeEnum.PREVIEW;
@@ -697,7 +702,7 @@ public class AppVersion {
      * @return true/false.
      */
     public boolean isUpdated() {
-        return ObjectUtils.cast(this.attributes.getOrDefault(AippConst.ATTR_APP_IS_UPDATE, true));
+        return ObjectUtils.cast(this.attributes.getOrDefault(ATTR_APP_IS_UPDATE, true));
     }
 
     /**
@@ -974,7 +979,7 @@ public class AppVersion {
      */
     public void putAttributes(Map<String, Object> attributes) {
         this.attributes.putAll(attributes);
-        this.attributes.put(AippConst.ATTR_APP_IS_UPDATE, true);
+        this.attributes.put(ATTR_APP_IS_UPDATE, true);
     }
 
     /**
