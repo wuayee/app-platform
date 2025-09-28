@@ -147,7 +147,6 @@ app-builder/
 │   └── template.zip
 ```
 
-
 加入数据库配置项，修改后的配置项如下所示：
 
 ```yml
@@ -184,12 +183,20 @@ app-engine:
 在框架输出目录的 `bin` 目录下执行启动命令
 
 ```
-fit start -Dfit.profiles.active=prod
+fit start
 ```
 
 > 这里直接使用了 `fit` 命令，该命令请参考 `fit-framework` 项目的[指导手册](https://github.com/ModelEngine-Group/fit-framework/blob/main/docs/framework/fit/java/quick-start-guide/03.%20%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E7%9A%84%E7%83%AD%E6%8F%92%E6%8B%94%E8%83%BD%E5%8A%9B.md)。
 > 
 > 当前，`app-platform` 使用了 `fit` 的 3.5.1 版本，因此，如果采用手动编译，需要在 `fit-framework` 仓库中切换到 `v3.5.1` 标签处进行编译构建操作。
+
+**调试命令**
+
+```
+fit debug
+```
+
+> 这里的调试命令背后使用了 Java 内置的远程调试命令，通过该技术，可以在进程启动之后，在 `IDEA` 中绑定启动端口进行远程调试。
 
 ---------
 
