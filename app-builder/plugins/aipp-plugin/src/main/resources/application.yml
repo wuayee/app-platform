@@ -98,3 +98,5 @@ chat:
   session:
     file:
       path: /var/share/backup/chat-session/
+domain-division:
+  isEnable: false
